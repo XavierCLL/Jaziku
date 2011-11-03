@@ -1,0 +1,2 @@
+include license.txt
+recursive-include jaziku/locale/es/LC_MESSAGES jaziku.mo
