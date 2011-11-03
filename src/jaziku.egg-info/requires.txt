@@ -1,0 +1,6 @@
+scipy
+argparse
+python-dateutil
+matplotlib
+numpy
+PIL

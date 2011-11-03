@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: jaziku
+Version: 1-RC
+Summary: Jaziku is a software for the implementation of composite analysis                      metodology between the major indices of climate variability and major                      meteorological variables in puntual scale.
+Home-page: http://hg.ideam.gov.co/jaziku
+Author: Ines Sánchez Rodriguez, Xavier Corredor Llano
+Author-email: incsanchezro (a) gmail.com, xcorredorl (a) ideam.gov.co
+License: GNU General Public License (GPL) v3
+Description:       
+              
+Platform: platform-independent
