@@ -1,0 +1,23 @@
+### TRANSLATE ###
+
+#1.generar template
+
+xgettext jaziku.py plugins/contingency_test.py plugins/global_var.py plugins/input_arg.py plugins/input_validation.py plugins/significance_corr.py
+
+#2.actualizar y fusionar (actualiza old basado en el nuevo)
+
+msgmerge messages_old.po messages.po -U
+
+#3. treducir en lokalize u otra herramienta, copiar a lugar del idioma y compilar:
+
+msgfmt messages.po -o jaziku.mo
+
+#4. correrlo con un idioma en particular:
+
+LANG=es_CO jaziku ....
+
+### EGGS ###
+
+#generar/actualizar egg:
+
+python2 setup.py bdist_egg
