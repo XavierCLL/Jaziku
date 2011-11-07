@@ -16,7 +16,11 @@ msgfmt messages.po -o jaziku.mo
 
 LANG=es_CO jaziku ....
 
-### EGGS ###
+### EGGS AND SOURCE CODE###
+
+#source code packages
+
+python2 setup.py sdist
 
 #generar/actualizar egg:
 

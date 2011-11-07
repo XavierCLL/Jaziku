@@ -25,7 +25,7 @@
 PROG_NAME = "jaziku"
 
 #version
-VERSION = "1-RC"
+VERSION = "1.0"
 
 #valid null value for variables dependent and independent (inside files input)
 VALID_NULL = 99999
