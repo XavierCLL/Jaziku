@@ -1,2 +1,4 @@
 include license.txt
-recursive-include jaziku/locale/es/LC_MESSAGES jaziku.mo
+recursive-include doc *
+recursive-include jaziku/locale *
+recursive-include jaziku/plugins/maps *

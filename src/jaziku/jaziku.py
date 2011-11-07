@@ -72,7 +72,10 @@ SYNOPSIS RUN:
            [-p_above P_ABOVE] [-c] [-f] [-period PERIOD] [-ra]
     
 EXAMPLE:
-    jaziku
+    jaziku -stations station.csv -c -f
+    
+    jaziku -stations station.csv -p_below "Debajo" -p_normal "Normal" -p_above
+    "Encima" -c -f -period 1980-2009 -ra
 
 Copyright © 2011 IDEAM
 Instituto de Hidrología, Meteorología y Estudios Ambientales
