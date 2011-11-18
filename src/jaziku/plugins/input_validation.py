@@ -64,7 +64,7 @@ def validation_var_D(type_var_D, var_D, date_D):
         try:
             date(date_D.year, date_D.month, int(var_D))
             return var_D
-        except Exception as e:
+        except Exception, e:
             if  int(var_D) == global_var.VALID_NULL or int(var_D) == 0:
                 return var_D
             else:
