@@ -519,7 +519,7 @@ def get_contingency_table(station, lag, month):
     #show message and print "nan" (this mean null value for 
     #division by cero) in contingency tabla percent in result 
     #table, jaziku continue but the graphics will not be created 
-    #because "nan"  character could not be calculated.
+    #because "nan"  character could not be calculate.
     global threshold_problem
 
     #if threshold by below of independent variable is wrong
@@ -569,8 +569,11 @@ def get_contingency_table(station, lag, month):
     return contingency_table, contingency_table_percent, contingency_table_percent_print, thresholds_var_D_var_I
 
 def contingency_table(station):
+    '''
+    Print the contingency table for each trimester and each lag
+    '''
     
-    #directories to save contingency
+    #directories to save contingency tables
     dir_contingency = [os.path.join(station.climate_dir, _('contingency_table'), _('lag_0')),
                os.path.join(station.climate_dir, _('contingency_table'), _('lag_1')),
                os.path.join(station.climate_dir, _('contingency_table'), _('lag_2'))]
@@ -622,21 +625,27 @@ def contingency_table(station):
     return contingencies_tables_percent
 
 def result_table(station):
+    '''
+    Calculate and print the result table csv file, this file contein several 
+    variables of previous calculations and different tests.
+    '''
 
+    #dir and name to save the result table
     csv_name = os.path.join(station.climate_dir, _('result_table_{0}_{1}_{2}_{3}_({4}-{5}).csv')
                             .format(station.code, station.name, station.type_D, station.type_I,
                                     station.period_start, station.period_end))
-    #result table csv
+    
     csv_result_table = csv.writer(open(csv_name, 'w'), delimiter = ';')
     
     #print headers in result table
-    csv_result_table.writerow([_('var_D'), _('var_I'), _('Pearson'), _('Signr'), _('Is sig Signr?'),
+    csv_result_table.writerow([_('var_D'), _('var_I'), _('Pearson'), _('Sign Pearson'), _('Is sign "Sign Pearson"?'),
                                _('threshold below (var D)'), _('threshold above (var D)'),
                                _('threshold below (var I)'), _('threshold above (var I)'),
                                _('Contingency Table (CT)'), '', '', '', '', '', '', '', '',
                                _('Contingency Table in %'), '', '', '', '', '', '', '', '',
                                _('is sig risk analysis?'), '', '', '', '', '', '', '', '',
-                               _('Test Stat'), _('Crit Value'), _('Is sig CT?'), _('corr_TC')]) 
+                               _('Test Stat - Chi2'), _('Crit Value - Chi2'), _('Is sig CT?'), _('correl_CT')]) 
+    
     pearson_list = []
     is_sig_risk_analysis = []
     
@@ -657,17 +666,20 @@ def result_table(station):
                                    _('var Dep below'), _('var Dep normal'), _('var Dep above'),
                                    _('var Dep below'), _('var Dep normal'), _('var Dep above'),
                                    _('var Dep below'), _('var Dep normal'), _('var Dep above')])
+    
         pearson_list_month = []
         is_sig_risk_analysis_month = []
         
         #all months in year 1->12
         for month in range(1, 13):
             
+            #get the contingency tables and thresholds
             contingency_table, \
             contingency_table_percent, \
             contingency_table_percent_print, \
             thresholds_var_D_var_I = get_contingency_table(station, lag, month)
                 
+            #test:
             #is significance risk analysis?
             contingency_table_matrix = np.matrix(contingency_table)
             sum_per_row = contingency_table_matrix.sum(axis = 0).tolist()[0]
@@ -701,15 +713,19 @@ def result_table(station):
             #contingency test
             Observed, Expected, test_stat, crit_value, df, p_value, alpha = ct.contingency_test(contingency_table,
                                                                                              None, 0.9, -1)
-            chi_cdf = 1 - p_value
-            corr_TC = ((chi_cdf ** 2) / (station.size_time_series * 2.0)) ** (0.5)
             
+            #calculate the correlation of contingency table
+            chi_cdf = 1 - p_value
+            corr_CT = ((chi_cdf ** 2) / (station.size_time_series * 2.0)) ** (0.5)
+            
+            #test:
             #Is significant the contingency table?
             if test_stat > crit_value:
                 is_significant_CT = _('yes')
             else:
                 is_significant_CT = _('no')
                 
+            #test:
             #Is significant the singr variable?
             if (1 - singr) >= 0.05:
                 is_significant_singr = _('yes')
@@ -745,7 +761,7 @@ def result_table(station):
                                        is_sig_risk_analysis_month_list[6], is_sig_risk_analysis_month_list[7],
                                        is_sig_risk_analysis_month_list[8],
                                        print_number(test_stat), print_number(crit_value),
-                                       is_significant_CT, print_number_accuracy(corr_TC, 4)])
+                                       is_significant_CT, print_number_accuracy(corr_CT, 4)])
             
             is_sig_risk_analysis_month.append(is_sig_risk_analysis_month_list)
             
@@ -762,19 +778,26 @@ def result_table(station):
 # Graphics
 # http://matplotlib.sourceforge.net/api/pyplot_api.html            
 def graphics_climate(station):
+    '''
+    Generate bart graphics and mosaic of probability for below, normal and 
+    above for independece variable for the composite analisys. 
+    '''
     
+    #main directory for save graphics
     graphics_dir = _('graphics')
     
-    graphics_dir_corr = os.path.join(station.climate_dir, graphics_dir, _('composite_analisys')) 
+    #directory for save composite analisys graphics
+    graphics_dir_ca = os.path.join(station.climate_dir, graphics_dir, _('composite_analisys')) 
     
-    
-    if not os.path.isdir(graphics_dir_corr):
-        os.makedirs(graphics_dir_corr)
+    #create dir
+    if not os.path.isdir(graphics_dir_ca):
+        os.makedirs(graphics_dir_ca)
     
     for lag in lags:
-    
-        if not os.path.isdir(os.path.join(graphics_dir_corr, _('lag_{0}').format(lag))):
-            os.makedirs(os.path.join(graphics_dir_corr, _('lag_{0}').format(lag)))
+        
+        #create dir for lag
+        if not os.path.isdir(os.path.join(graphics_dir_ca, _('lag_{0}').format(lag))):
+            os.makedirs(os.path.join(graphics_dir_ca, _('lag_{0}').format(lag)))
         
         image_open = []
         
@@ -786,29 +809,31 @@ def graphics_climate(station):
             contingency_table_percent_print, \
             thresholds_var_D_var_I = get_contingency_table(station, lag, month)
             
-            ind = np.array([0, 0.8, 1.6])  # the x locations for the groups
-            width = 0.2       # the width of the bars
-            
+            ## graphics options for plot:
+            #the x locations for the groups
+            ind = np.array([0, 0.8, 1.6])
+            #the width of the bars  
+            width = 0.2       
+            #graphics title
             plt.title(unicode(_('Composite analisys - {0} ({1})\n{2} - {3} - lag {6} - trim {7} ({8}) - ({4}-{5})')
                       .format(station.name, station.code, station.type_I, station.type_D, station.period_start,
                               station.period_end, lag, month, trim_text[month - 1]), 'utf-8'))
-
+            #label for axis Y 
             plt.ylabel(_('probability (%)'))
-            plt.ylim(ymin = 0, ymax = 100) # adjust the max leaving min unchanged
-            #plt.ylim(ymin = 0) # adjust the min leaving max unchanged
+            # adjust the max leaving min unchanged in Y
+            plt.ylim(ymin = 0, ymax = 100) 
+            # adjust the max leaving min unchanged in X
             plt.xlim(xmin = -0.1, xmax = 2.3)
-            
             #plt.xticks([0.3, 1.1, 1.9], ('var Ind Below', 'var Ind Normal', 'var Ind Above'),)
             plt.xticks([])
-            
+            #colors for paint bars and labels: below, normal , above
             colours = ['#DD4620', '#62AD29', '#6087F1'] 
-            
+            #assigning values for plot:
             var_D_below = plt.bar(ind, column(contingency_table_percent, 0), width, color = colours[0])
-            
             var_D_normal = plt.bar(ind + width, column(contingency_table_percent, 1), width, color = colours[1])
-            
             var_D_above = plt.bar(ind + 2 * width, column(contingency_table_percent, 2), width, color = colours[2])
             
+            #assing value for each bart
             def autolabel(rects):
                 # attach some text labels
                 temp = []
@@ -830,23 +855,21 @@ def graphics_climate(station):
             #plt.legend((var_D_below[0], var_D_normal[0], var_D_above[0]), ('var Dep Below', 'var Dep Normal', 'var Dep Above'),
             #             shadow = True, fancybox = True)
             
-            ## table in graphic
-            
+            #table in graphic
             colLabels = (station.phenomenon_below, station.phenomenon_normal, station.phenomenon_above)
             rowLabels = [_('var Dep Below'), _('var Dep Normal'), _('var Dep Above')]
             
             contingency_table_percent_graph = [column(contingency_table_percent_print, 0), column(contingency_table_percent_print, 1), column(contingency_table_percent_print, 2)]
             
-            # Add a table at the bottom of the axes
+            #Add a table at the bottom of the axes
             plt.table(cellText = contingency_table_percent_graph,
                               rowLabels = rowLabels, rowColours = colours,
                               colLabels = colLabels,
                               loc = 'bottom')
             
-            #===============================================================================
-            # Save image
+            ## Save image
             plt.subplot(111)
-            image_dir_save = os.path.join(graphics_dir_corr, _('lag_{0}').format(lag),
+            image_dir_save = os.path.join(graphics_dir_ca, _('lag_{0}').format(lag),
                                           _('ca_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
                                           .format(lag, month, station.code, station.name, station.type_D,
                                                   station.type_I, station.period_start, station.period_end))
@@ -857,13 +880,12 @@ def graphics_climate(station):
             #save dir image for mosaic
             image_open.append(img_open(image_dir_save))
         
-        #===============================================================================
-        # create mosaic
+        ## create mosaic
         
-        # definition height and width of individual image
+        #definition height and width of individual image
         image_height = 450
         image_width = 600
-        mosaic_dir_save = os.path.join(graphics_dir_corr, _('mosaic_lag_{0}_{1}_{2}_{3}_{4}_({5}-{6}).png')
+        mosaic_dir_save = os.path.join(graphics_dir_ca, _('mosaic_lag_{0}_{1}_{2}_{3}_{4}_({5}-{6}).png')
                                        .format(lag, station.code, station.name, station.type_D, station.type_I,
                                                station.period_start, station.period_end))
         #http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
@@ -889,11 +911,18 @@ def graphics_climate(station):
 # Graphics
 # http://matplotlib.sourceforge.net/api/pyplot_api.html            
 def graphics_forecasting(station):
+    '''
+    Generate pie graphics and mosaic of probability for below, normal and 
+    above for independece variable for the composite analisys. 
+    '''
     
+    #main directory for save graphics
     graphics_dir = _('graphics')
     
+    #directory for save composite analisys graphics
     graphics_dir_corr = os.path.join(station.climate_dir, graphics_dir, _('composite_analisys')) 
     
+    #create dir
     if not os.path.isdir(graphics_dir_corr):
         os.makedirs(graphics_dir_corr)
     
@@ -901,9 +930,10 @@ def graphics_forecasting(station):
     
     for lag in lags:
     
-        ## Graphics pie
-        # make a square figure and axes
+        ## Options for graphics pie
+        #make a square figure and axes
         plt.figure(1, figsize = (5, 5))
+        #colors for paint pie: below, normal , above
         colours = ['#DD4620', '#62AD29', '#6087F1']
         
         labels = (_('Decrease'), _('Normal'), _('Exceed'))
@@ -911,6 +941,7 @@ def graphics_forecasting(station):
                       station.prob_exceed_var_D[lag]]
         explode = (0.03, 0.03, 0.03)
         
+        #assing value for piece of pie
         def autopct_funt(pct):
             total = sum(values_pie)
             val = pct * total / 100.0
@@ -924,9 +955,7 @@ def graphics_forecasting(station):
                           trim_text[station.f_trim - 1], station.period_start, station.period_end), 'utf-8'),
                   fontsize = 13)
         
-        
-        #===============================================================================
-        # Save image
+        ## Save image
         #plt.subplot(111)
         image_dir_save = os.path.join(station.forecasting_dir, _('prob_of_{0}_lag_{1}_trim_{2}_({3}-{4}).png')
                                       .format(station.type_D, lag, station.f_trim,
@@ -937,11 +966,9 @@ def graphics_forecasting(station):
         #save dir image for mosaic
         image_open.append(img_open(image_dir_save))
         
-    #===============================================================================
-    # create mosaic
-    
-    # definition height and width of individual image
-    image_height = 375
+    ## Create mosaic
+    #definition height and width of individual image
+    #image_height = 375
     image_width = 375
     mosaic_dir_save = os.path.join(station.forecasting_dir, _('mosaic_prob_of_{0}_trim_{1}_({3}-{4}).png')
                                    .format(station.type_D, lag, station.f_trim,
@@ -960,6 +987,10 @@ def graphics_forecasting(station):
 # Plotting
    
 def maps_climate(station):
+    '''
+    Create maps data svc file for ploting for each trimester, phenomenon and lag,
+    each file contain all stations processed.
+    '''
     
     for lag in lags:   
         
@@ -970,13 +1001,13 @@ def maps_climate(station):
     
             #if not os.path.isdir(maps_plot_dir):
                 #os.makedirs(maps_plot_dir)
-                
 
             for phenomenon in [0, 1, 2]:
                 var_below = station.contingencies_tables_percent[lag][month - 1][phenomenon][0]
                 var_normal = station.contingencies_tables_percent[lag][month - 1][phenomenon][1]
                 var_above = station.contingencies_tables_percent[lag][month - 1][phenomenon][2]
                 
+                #select index
                 if var_below > var_normal:
                     if var_below > var_above:
                         p_index = -var_below
@@ -1006,9 +1037,14 @@ def maps_climate(station):
 # Plotting
    
 def maps_forecasting(station):
+    '''
+    Create maps data svc file for ploting for each trimester, phenomenon and lag,
+    each file contain all stations processed. 
+    '''
     
     for lag in lags:   
-            
+        
+        #select index
         if station.prob_decrease_var_D[lag] > station.prob_normal_var_D[lag]:
             if station.prob_decrease_var_D[lag] > station.prob_exceed_var_D[lag]:
                 p_index = -station.prob_decrease_var_D[lag]
@@ -1037,9 +1073,13 @@ def maps_forecasting(station):
 
          
 def climate(station):
+    '''
+    Main process for climate
+    '''
     #console message
     sys.stdout.write(_("Processing climate "))
     sys.stdout.flush()
+    
     if not os.path.isdir(climate_dir):
         os.makedirs(climate_dir)
     
@@ -1079,6 +1119,9 @@ def climate(station):
     
     
 def forecasting(station):
+    '''
+    Main process for forecasting
+    '''
     
     #console message
     sys.stdout.write(_("Processing forecasting ({0}-{1}).......")
@@ -1139,6 +1182,9 @@ class Station:
         pass
        
 def main():
+    '''
+    Main process of Jaziku
+    '''
    
     # Parser and check arguments
     global args
@@ -1202,10 +1248,10 @@ def main():
         #created and define csv output file for maps climate
         phenomenon = {0:phenomenon_below, 1:phenomenon_normal, 2:phenomenon_above}
         maps_plots_files_climate = [] #maps_plots_files_climate[lag][month][phenomenon]
-        
+
+        #define maps data files and directories      
         for lag in lags:   
             
-            #define plots maps files and directories
             maps_dir = os.path.join(climate_dir, _('maps'))   
             maps_data_lag = os.path.join(maps_dir, _('maps-data'), _('lag_{0}').format(lag))
         
@@ -1246,9 +1292,9 @@ def main():
         #created and define csv output file for maps forecasting
         maps_plots_files_forecasting = [] #maps_plots_files_forecasting[lag]
         
+        #define maps data files and directories
         for lag in lags:   
             
-            #define plots maps files and directories
             maps_dir = os.path.join(forecasting_dir, _('maps'), _('maps-data'))   
         
             if not os.path.isdir(maps_dir):
@@ -1348,12 +1394,6 @@ def main():
         #delete instance 
         del station
         
-    
-    
-    
        
 if __name__ == "__main__":
     main()
-            
-
-
