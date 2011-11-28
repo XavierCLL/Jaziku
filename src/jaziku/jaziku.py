@@ -121,8 +121,6 @@ def print_error(text_error):
     print _('\n\nERROR:\n' + text_error + '\n\nFor more help run program with argument: -h')
     exit()
 
-
-
 #check python version
 if sys.version_info[0] != 2:
     print_error(_("You version of python is {0}, please use Jaziku with python v2.x ")
