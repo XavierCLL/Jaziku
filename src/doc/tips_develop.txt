@@ -6,7 +6,7 @@ xgettext jaziku.py plugins/contingency_test.py plugins/global_var.py plugins/inp
 
 #2.actualizar y fusionar (actualiza old basado en el nuevo)
 
-msgmerge messages_old.po messages.po -U
+msgmerge messages.po messages_old.po -U
 
 #3. treducir en lokalize u otra herramienta, copiar a lugar del idioma y compilar:
 
