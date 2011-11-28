@@ -18,18 +18,9 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from datetime import date
 
-#internationalization:
-import gettext
-gettext.bindtextdomain('Jaziku', 'locale')
-gettext.textdomain('input_validation')
-_ = gettext.gettext
-
 import global_var
-
-
 
 #=============================================================================== 
 # Validation var_D (dependent variable)
@@ -49,9 +40,8 @@ def validation_var_D(type_var_D, var_D, date_D):
     #define generic text for generate exception
     def returnError(e):
         #generation exception
-        raise ValueError(_("exception validation in dependent variable: value out"
-                           " of range:\n«{0}» type does not allow "
-                           "the value: {1}\n{2}")
+        raise ValueError(_("exception validation in dependent variable: value out" \
+                           " of range:\nThe value «{1}» is not valid for type variable «{0}»\n{2}")
                          .format(type_var_D, var_D, e))
     #validation for precipitation
     def if_var_D_is_PPT():
@@ -134,9 +124,8 @@ def validation_var_I(type_var_I, var_I):
     #define generic text for generate exception
     def returnError(e):
         #generation exception
-        raise ValueError(_("exception validation in independent variable: value out"
-                           " of range:\n«{0}» type does not allow "
-                           "the value: {1}\n{2}")
+        raise ValueError(_("exception validation in independent variable: value out" \
+                           " of range:\nThe value «{1}» is not valid for type variable «{0}»\n{2}")
                          .format(type_var_I, var_I, e))
     #validation for Oceanic Nino Index
     def if_var_I_is_ONI():

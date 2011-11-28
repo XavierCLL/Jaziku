@@ -18,17 +18,9 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-
-
 import sys
 import argparse  #http://docs.python.org/py3k/library/argparse.html
 import global_var
-
-#internationalization:
-import gettext
-gettext.bindtextdomain('jaziku', 'locale')
-gettext.textdomain('input_arg')
-_ = gettext.gettext
 
 #=============================================================================== 
 # Parser and check arguments

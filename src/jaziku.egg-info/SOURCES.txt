@@ -3,8 +3,9 @@ license.txt
 setup.py
 bin/jaziku
 doc/Jaziku_presentacion.odp
-doc/manual_jaziku_preliminar_version_Espanol.pdf
+doc/Manual Jaziku-1.0.0-Espanol.pdf
 doc/tips_develop.txt
+doc/tips_develop.txt~
 doc/ejemplo_del_manual/4801501_ppt.txt
 doc/ejemplo_del_manual/TSM34.txt
 doc/ejemplo_del_manual/stations_list.csv
@@ -20,8 +21,8 @@ jaziku.egg-info/dependency_links.txt
 jaziku.egg-info/requires.txt
 jaziku.egg-info/top_level.txt
 jaziku/locale/template.po
-jaziku/locale/es/LC_MESSAGES/jaziku.mo
 jaziku/locale/es/LC_MESSAGES/jaziku.po
+jaziku/locale/es/LC_MESSAGES/jazikuTODO.mo
 jaziku/plugins/__init__.py
 jaziku/plugins/contingency_test.py
 jaziku/plugins/global_var.py
