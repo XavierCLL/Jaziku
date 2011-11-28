@@ -83,13 +83,6 @@ Carrera 10 No. 20-30
 Bogotá, Colombia
 '''
 
-#import funtions in plugins 
-import plugins.global_var as global_var
-import plugins.input_validation as input_validation
-import plugins.input_arg as input_arg
-import plugins.contingency_test as ct
-import plugins.significance_corr as sc
-
 #=============================================================================== 
 # import modules
 
@@ -107,11 +100,19 @@ import numpy as np #http://www.scipy.org/Numpy_Example_List
 from scipy import stats #http://docs.scipy.org/doc/scipy/reference/stats.html
 from Image import open as img_open
 from pylab import *
+
 #internationalization:
 import gettext
-gettext.bindtextdomain('jaziku', 'locale')
-gettext.textdomain('jaziku')
-_ = gettext.gettext
+TRANSLATION_DOMAIN = "jaziku"
+LOCALE_DIR = 'locale' #os.path.join(os.path.dirname(__file__), "locale")
+gettext.install(TRANSLATION_DOMAIN, LOCALE_DIR)
+
+#import funtions in plugins 
+import plugins.global_var as global_var
+import plugins.input_validation as input_validation
+import plugins.input_arg as input_arg
+import plugins.contingency_test as ct
+import plugins.significance_corr as sc
 
 #from progressbar import Bar, Percentage, ProgressBar #http://code.google.com/p/python-progressbar/
 
@@ -1242,9 +1243,10 @@ def main():
         global climate_dir
         climate_dir = os.path.join(os.path.splitext(args.stations.name)[0], _('Jaziku-climate'))   #'results'
         if os.path.isdir(climate_dir):
-            print _("\nWarning: «{0}» output directory already \nexist, " \
-                     "Jaziku continue but the results could be mixed \n"\
-                     "or replaced of old output.".format(climate_dir))
+            print _("\nWarning: the output director for climate process:\n" \
+                    "«{0}» \nis already exist, Jaziku continue but the results\n" \
+                    "could be mixed or replaced of old output\n") \
+                    .format(climate_dir)
         #created and define csv output file for maps climate
         phenomenon = {0:phenomenon_below, 1:phenomenon_normal, 2:phenomenon_above}
         maps_plots_files_climate = [] #maps_plots_files_climate[lag][month][phenomenon]
@@ -1285,9 +1287,10 @@ def main():
         global forecasting_dir
         forecasting_dir = os.path.join(os.path.splitext(args.stations.name)[0], _('Jaziku-forecasting'))   #'results'
         if os.path.isdir(forecasting_dir):
-            print _("\nWarning: «{0}» output directory already \nexist," \
-                    "Jaziku continue but the results could be mixed \n" \
-                    "or replaced of old output.").format(forecasting_dir)
+            print _("\nWarning: the output director for forecasting process:\n" \
+                    "«{0}» \nis already exist, Jaziku continue but the results\n" \
+                    "could be mixed or replaced of old output\n") \
+                    .format(forecasting_dir)
         
         #created and define csv output file for maps forecasting
         maps_plots_files_forecasting = [] #maps_plots_files_forecasting[lag]
@@ -1327,7 +1330,7 @@ def main():
             
             #validation type_D
             if station.type_D not in input_arg.types_var_D:
-                raise Exception(_("{0} is not valid for type dependence variable").format(station.type_D))
+                raise Exception(_("{0} is not valid type for dependence variable").format(station.type_D))
           
             station.file_I = open(line_station[6], 'r')
             station.type_I = line_station[7]
@@ -1343,7 +1346,7 @@ def main():
             if args.forecasting:
                 if len(line_station) < 20:
                     raise Exception(_("For forecasting process you need define 9 probability variables "
-                                    "and trimester in stations file:"))
+                                    "and trimester to process in stations file:"))
                 station.f_var_I_B = [float(line_station[10].replace(',', '.')),
                                      float(line_station[13].replace(',', '.')),
                                      float(line_station[16].replace(',', '.'))]
@@ -1357,9 +1360,9 @@ def main():
                 try:
                     station.f_trim = int(line_station[19])
                 except:
-                    raise Exception(_("Trimester forecasting \"{0}\" is invalid, should be integer").format(line_station[19]))
+                    raise Exception(_("Trimester forecasting \"{0}\" is invalid, should be integer number").format(line_station[19]))
                 if not (1 <= station.f_trim <= 12):
-                    raise Exception(_("Trimester forecasting \"{0}\" is invalid, should be between 1-12").format(station.f_trim))
+                    raise Exception(_("Trimester forecasting \"{0}\" is invalid, should be a month valid number (1-12)").format(station.f_trim))
             
         except Exception, e:
             print_error(_("Reading stations from file ") + str(args.stations.name) + 
@@ -1383,13 +1386,13 @@ def main():
             #TODO: run forecasting without climate
             if not args.climate:
                 print_error(_("sorry, Jaziku can't run forecasting process without climate, "
-                              "this issue has not been implemented yet, \nplease run with \"-c\""))
+                              "this issue has not been implemented yet, \nplease run again with the option \"-c\""))
             station.maps_plots_files_forecasting = maps_plots_files_forecasting
             forecasting(station)
         
         if not args.climate and not args.forecasting:
-            print_error(_("Neither process (climate, forecasting) were executed, \nplease enable process"
-                          " in argument: \n'-c, --climate' for climate and/or '-f, --forecasting' for forecasting."))
+            print_error(_("Neither process (climate, forecasting) were executed, \nplease enable this process"
+                          " in arguments: \n'-c, --climate' for climate and/or '-f, --forecasting' for forecasting."))
         
         #delete instance 
         del station
