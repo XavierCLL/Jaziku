@@ -1,0 +1,9 @@
+
+version 1.0:
+* make globar version number and info version when run with -h
+* static installer, fix script install, and make for old linux version
+* final message 
+* partial run, if a station has an error continue with other station, alert in final message
+
+version 2.0:
+* graphics with NCL
