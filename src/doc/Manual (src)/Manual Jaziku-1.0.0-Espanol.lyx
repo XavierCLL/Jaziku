@@ -1,0 +1,7974 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass memoir
+\use_default_options true
+\maintain_unincluded_children false
+\language spanish
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_bookmarks false
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks true
+\pdf_pdfborder false
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 0
+\index Índice
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Instituto Colombiano de Hidrología, Meteorología y Estudios Ambientales
+ IDEAM-Subdirección de Meteorología 
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\lang english
+\begin_inset Graphics
+	filename IDEAM.jpg
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+Investigación del comportamiento de la precipitación bajo el fenómeno ENOS,
+ mediante el análisis por terciles para su aplicación en modelos de distribución
+ hipergeométrica para fines de predicción climática.(Contrato No.
+ 070 de 2011)
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\lang english
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\family sans
+\series bold
+\size giant
+\noun on
+\color blue
+\lang english
+\begin_inset VSpace 10cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\family sans
+\series bold
+\size giant
+\color blue
+\lang english
+Jazikü 
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\shape italic
+\size largest
+\color magenta
+El software para la aplicación de la Metodología de análisis compuesto entre
+ los principales índices de la variabilidad climática y las principales
+ variables meteorológicas en la escala puntual.
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\shape italic
+\size largest
+\color magenta
+(Manual de usuario)
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align right
+Elaborado por: Inés Sánchez R.
+\end_layout
+
+\begin_layout Standard
+\align right
+______________________________________
+\end_layout
+
+\begin_layout Standard
+\align right
+Revisado por : Gloria León Ariztizabal
+\end_layout
+
+\begin_layout Standard
+\align right
+Xavier Corredor
+\end_layout
+
+\begin_layout Standard
+\align right
+VoBo.______________________________________
+\end_layout
+
+\begin_layout Standard
+Bogotá D.C., Septiembre de 2011
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+Introducción
+\end_layout
+
+\begin_layout Standard
+De acuerdo con el compromiso IDEAM por promover y orientar la investigación
+ científica sobre el pronóstico del tiempo y el clima "Jazikü" es un programa
+ diseñado para evaluar las teleconexiones entre las variables meteorológicas
+ con los principales índices de la variabilidad climática que afectan el
+ clima en Colombia.
+\end_layout
+
+\begin_layout Standard
+Jazikü, sigue la metodología de análisis de compuesto propuesto por la Universid
+ad - Corporación para la Investigación Atmosférica (UCAR)), Administración
+ Nacional Oceánica y Atmosférica (NOAA) y EE.UU.
+ Departamento de Comercio (DOC) 
+\lang english
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ComLinea"
+
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ComLinea,Bar1"
+
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ComLinea,Bar1,Mont"
+
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ComLinea,Bar1,Mont"
+
+\end_inset
+
+
+\lang spanish
+ y puede producir escenarios de probabilidad bajo los cuales se espera que
+ la precipitación o cualquier otra variable en los sitios de mayor afectación
+ o áreas específicas interpoladas se comporten, en función de los valores
+ de probabilidad estimados para cada uno de los fenómenos de variabilidad
+ del clima y de la historia historia climatológica en relación al valor
+ promedio trimestral.
+ Tales escenarios se han convertido en una herramienta poderosa para la
+ toma de decisiones por los servicios meteorológicos nacionales.
+\end_layout
+
+\begin_layout Part
+Manual operativo
+\end_layout
+
+\begin_layout Chapter
+\begin_inset CommandInset label
+LatexCommand label
+name "cha:Como_usarJaziku"
+
+\end_inset
+
+Como usar Jazikü?
+\end_layout
+
+\begin_layout Standard
+Una vez Jazikü ha sido instalado correctamente en el sistema operativo,
+ existen varias opciones de corrida, que se corresponden directamente con
+ los cálculos que pueden ser elaborados por el programa (ver sección 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "cha:Resutlados_de_Jaz"
+
+\end_inset
+
+, al final ver tabla de referencia).
+ 
+\end_layout
+
+\begin_layout Standard
+A continuación se presenta el comando estándar y básico de corrida del programa:
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\family typewriter
+\shape italic
+jaziku -station stations.csv --climate
+\end_layout
+
+\begin_layout Standard
+Phyton es el compilador y lenguaje bajo el cual el programa ha sido elaborado
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Mayor información en www.python.org/
+\end_layout
+
+\end_inset
+
+ ;
+\begin_inset Quotes erd
+\end_inset
+
+jaziku
+\begin_inset Quotes erd
+\end_inset
+
+ es el código fuente del programa .
+ El comando 
+\begin_inset Quotes eld
+\end_inset
+
+-station
+\begin_inset Quotes erd
+\end_inset
+
+ indica que seguido a este y separado por un espacio el programa encontrara
+ el archivo .csv con información básica de corrida, en dirección absoluta
+ (ver sección 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Entrada-de-datos."
+
+\end_inset
+
+); 
+\begin_inset Quotes eld
+\end_inset
+
+--climate
+\begin_inset Quotes erd
+\end_inset
+
+ le indica al programa que solo se correrá en modo clima, opcionalmente
+ puede usarse -c.
+\end_layout
+
+\begin_layout Standard
+Para correr el programa en modo pronóstico (ver sección 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "cha:Resutlados_de_Jaz"
+
+\end_inset
+
+), se utiliza adicionalmente el comando 
+\begin_inset Quotes eld
+\end_inset
+
+--forecasting
+\begin_inset Quotes erd
+\end_inset
+
+ u opcionalmente -f.
+ Una opción avanzada incluye el análisis de riesgos para cada entrada de
+ la tabla de contingencia, utilizando el comando 
+\begin_inset Quotes eld
+\end_inset
+
+-ra
+\begin_inset Quotes erd
+\end_inset
+
+.Este análisis en efecto proporciona mayor confiabilidad, pero puede reducir
+ el tamaño de la muestra utilizada para el pronóstico (ver sección 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Analisis-de-riesgos"
+
+\end_inset
+
+,
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Error_generacin_pronostico"
+
+\end_inset
+
+), así
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\family typewriter
+\shape italic
+jaziku -station stations.csv --climate --forecasting
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\family typewriter
+\shape italic
+jaziku -station stations.csv --climate --forecasting -ra 
+\end_layout
+
+\begin_layout Standard
+El usuario puede seleccionar el período para el cual desea sea aplicado
+ la metodología de análisis compuesto (ver sección 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Anlisis_compuesto"
+
+\end_inset
+
+), habilitando la opción 
+\begin_inset Quotes eld
+\end_inset
+
+-period
+\begin_inset Quotes erd
+\end_inset
+
+ separado por un espacio en formato yyyy-yyyy (año-año), así
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\family typewriter
+\shape italic
+jaziku -station stations.csv --climate --forecasting -period 1990-2000
+\end_layout
+
+\begin_layout Standard
+El usuario puede hacer que Jazikü etiquete las categorias por encima, por
+ debajo y dentro de lo normal de la variable independiente, para que en
+ los resultados sea impreso bajo estos nombres (ver sección 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "cha:Resutlados_de_Jaz"
+
+\end_inset
+
+).
+ Para ello incluye en el comando de inicio las etiquetas 
+\begin_inset Quotes eld
+\end_inset
+
+-p_below
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+-p_normal
+\begin_inset Quotes erd
+\end_inset
+
+ y 
+\begin_inset Quotes eld
+\end_inset
+
+-p_above
+\begin_inset Quotes erd
+\end_inset
+
+ , donde 
+\begin_inset Quotes eld
+\end_inset
+
+-p
+\begin_inset Quotes erd
+\end_inset
+
+ hace referencia al fenómeno (phenomenon, ver sección 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Entrada-de-datos."
+
+\end_inset
+
+) que representa la variable independiente, así
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\family typewriter
+\shape italic
+jaziku -station stations.csv --climate --forecasting -period 1990-2000 -ra
+ -p_below "LaNiña" -p_normal "Neutro" -p_above "ElNiño"
+\end_layout
+
+\begin_layout Standard
+Del mismo modo adicionando el comando 
+\begin_inset Quotes eld
+\end_inset
+
+--maps
+\begin_inset Quotes erd
+\end_inset
+
+ se logra que Jazikü interpole las salidas de la climatología y el pronóstico
+ asociado.
+ Finalmente se espera una vez Jazikü ha sido corrido de manera correcta,
+ el usuario visualice
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Un ejemplo para el cual 4801501 es el código de la estación, corrido en
+ clima y pronostico, en el periodo 1990-2000
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\align block
+
+\family typewriter
+\shape italic
+########################### JAZIKU ###########################
+\end_layout
+
+\begin_layout Standard
+\align block
+
+\family typewriter
+\shape italic
+## Jaziku is a software for the implementation of composite ##
+\end_layout
+
+\begin_layout Standard
+\align block
+
+\family typewriter
+\shape italic
+## analysis metodology between the major indices of climate ##
+\end_layout
+
+\begin_layout Standard
+\align block
+
+\family typewriter
+\shape italic
+## variability and major meteorological variables in ##
+\end_layout
+
+\begin_layout Standard
+\align block
+
+\family typewriter
+\shape italic
+## puntual scale.
+ ##
+\end_layout
+
+\begin_layout Standard
+\align block
+
+\family typewriter
+\shape italic
+## ##
+\end_layout
+
+\begin_layout Standard
+\align block
+
+\family typewriter
+\shape italic
+## Version 1.0 ##
+\end_layout
+
+\begin_layout Standard
+\align block
+
+\family typewriter
+\shape italic
+## @IDEAM Colombia, 2011 ##
+\end_layout
+
+\begin_layout Standard
+\align block
+
+\family typewriter
+\shape italic
+##############################################################
+\end_layout
+
+\begin_layout Standard
+\align block
+
+\family typewriter
+\shape italic
+Setting period in: 1990-2000 
+\end_layout
+
+\begin_layout Standard
+\align block
+
+\family typewriter
+\shape italic
+################# Station: 4801501-01 (4801501)
+\end_layout
+
+\begin_layout Standard
+\align block
+
+\family typewriter
+\shape italic
+Processing climate (1990-2000)...........done
+\end_layout
+
+\begin_layout Standard
+\align block
+
+\family typewriter
+\shape italic
+Processing forecasting (1990-2000).......done
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Tabla de referencia para correr Jazikü
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\shape italic
+\color black
+Usage: python Jazikü.py [OPTION]...
+ [-T] SOURCE DEST 
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\shape italic
+\color black
+RUN Jazikü a software for the implementation of composite analysis metodology
+ between the major indices of climate variability and major meteorological
+ variables in puntual scale.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\shape italic
+\color black
+Los argumentos obligatorios para las opciones largas son también obligatorios
+ para las opciones cortas.
+ -station : seguido de la dirección absoluta del archivo inicial de corrida
+ del software, información de ubicación de archivos 
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\shape italic
+\color black
+-c, --climate :Corre la climatología de las estaciones asociadas bajo el
+ fenómeno de variabilidad climatica seleccionado 
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\shape italic
+\color black
+-f , --forecasting :Corre el pronóstico asociado 
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\shape italic
+\color black
+-ra :Para utilizar análisis de riesgos
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\shape italic
+\color black
+-period :Para indicar el período bajo el cual se desea correr la climatología
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\shape italic
+\color black
+-p_below :Label del fenómeno asociado a la var_Independiente en la categoría
+ por encima de lo normal 
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\shape italic
+\color black
+-p_normal :Label del fenomeno asociado a la var_Independiente en la categoría
+ dentro de lo normal 
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\shape italic
+\color black
+-p_above :Label del fenomeno asociado a la var_Independiente en la categoría
+ por debajo de lo normal
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\shape italic
+\color black
+Jazikü por defecto crea dos carpetas asociadas a los procedimientos -c y
+ -f
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Entrada-de-datos."
+
+\end_inset
+
+Entrada de datos.
+ 
+\end_layout
+
+\begin_layout Standard
+Jazikü a sido diseñado para que el usuario incluya en dos archivos los datos
+ correspondientes a las series de tiempo de los valores promedio mensual
+ de la variable independiente y dependiente.
+ Dichos archivos corresponden a extensiones .txt (plain text document), la
+ Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Ejemplo_formato_data"
+
+\end_inset
+
+ presenta dos ejemplos de series vistas desde el lector Kwrite de Opensuse,
+ no olvide que el valor estándar para datos perdidos o no medidos es 99999.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename kwrite1.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Ejemplo_formato_data"
+
+\end_inset
+
+Ejemplo de formato de datos de entrada
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Para correr Jazikü existen convenciones asociadas a las series de las variables
+ dependientes e independientes, a continuación son listados:
+\end_layout
+
+\begin_layout Itemize
+PPT(Precipitación)
+\end_layout
+
+\begin_layout Itemize
+NDPPT (número de días con lluvia)
+\end_layout
+
+\begin_layout Itemize
+TMIN (temperatura mínima)
+\end_layout
+
+\begin_layout Itemize
+TMAX (temperatura máxima)
+\end_layout
+
+\begin_layout Itemize
+TEMP (temperatura media)
+\end_layout
+
+\begin_layout Itemize
+PATM (presión atmosférica)
+\end_layout
+
+\begin_layout Itemize
+AHR (humedad relativa del dipolo Amazónico)
+\end_layout
+
+\begin_layout Itemize
+SST (Temperatura superficial del Mar)
+\end_layout
+
+\begin_layout Itemize
+ONI ( Índice Oceánico El Niño)
+\end_layout
+
+\begin_layout Itemize
+SOI ( Índice de la Oscilación del Sur)
+\end_layout
+
+\begin_layout Itemize
+MEI ( Índice Multivariado del ENSO)
+\end_layout
+
+\begin_layout Itemize
+OLR ( Índice de radiación de longitud de onda larga)
+\end_layout
+
+\begin_layout Itemize
+W200 ( Índice de la anomalía del viento a 200 hPa)
+\end_layout
+
+\begin_layout Itemize
+ARH (Índice de humedad del Amazonas)
+\end_layout
+
+\begin_layout Itemize
+NAO (Índice del Atlántico Norte)
+\end_layout
+
+\begin_layout Itemize
+QBO(Índice Oscilación Cuasi-bienal)
+\end_layout
+
+\begin_layout Standard
+Dado que Jazikü evalúa las consistencia de las series de tiempo al inicio
+ de su ejecución (ver sección
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "cha:inicial_INFO"
+
+\end_inset
+
+), es posible que se encuentren errores que no permitan su inicio, para
+ ello consultar la sección 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "cha:Apendice1_errores"
+
+\end_inset
+
+de este documento.
+\end_layout
+
+\begin_layout Standard
+Como Jazikü es capaz de analizar mas de una variable dependiente en función
+ de mas de una variable independiente, esto es, múltiples archivos de estación
+ en función de múltiples archivos de índices de variabilidad climática,
+ requiere de una lista de entrada que sea capaz de especificarle el tipo
+ de proceso que debe ejecutar.La Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Ejemplo_formato_de_lista_inicial"
+
+\end_inset
+
+ presenta un ejemplo de esta lista de inicio, que debe darse en formato
+ .csv .
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Entrada-de-datos."
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename stations_inicial.tif
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Ejemplo_formato_de_lista_inicial"
+
+\end_inset
+
+Ejemplo de formato de la lista inicial 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En la Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Ejemplo_formato_de_lista_inicial"
+
+\end_inset
+
+ aparecen 19 columnas , cuyos campos son especificados así:
+\end_layout
+
+\begin_layout Standard
+A y B: Lista de códigos y nombres de las estaciones de las cuales fueron
+ extraídas las series de tiempo de la variable dependiente
+\end_layout
+
+\begin_layout Standard
+C y D: Coordenadas latitud y longitud de las estaciones de las cuales fueron
+ extraídas las series de tiempo de la variable dependiente
+\end_layout
+
+\begin_layout Standard
+E :Ubicación absoluta del archivo asociado a cada una de las estaciones
+ de las cuales fueron extraídas las series de tiempo de la variable dependiente.
+ Eje: /home/Usuario/Documentos/Climatologia/2011/series/precipitacion/3506006_pp
+t.txt
+\end_layout
+
+\begin_layout Standard
+F:Convención de la variable dependiente
+\end_layout
+
+\begin_layout Standard
+G:Ubicación absoluta del archivo asociado a la serie de tiempo de la variable
+ independiente.
+ Eje: /home/Usuario/Documentos/Climatologia/2011/series/indice_tsm/TSM34.txt
+\end_layout
+
+\begin_layout Standard
+H:Convención de la variable independiente
+\end_layout
+
+\begin_layout Standard
+V:Trimestre de pronostico (un numero de 1 a 12, donde 1 corresponde al trimestre
+ Enero-Febrero-Marzo)
+\end_layout
+
+\begin_layout Standard
+I y J:Umbrales de la variable independiente, que dan lugar a las categorías
+ por encima, por debajo y dentro de lo normal (donde el valor de la columna
+ I debe ser siempre menor al valor de la columna J), de acuerdo al siguiente
+ formato:
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\family typewriter
+\shape italic
+default;default 
+\family default
+\shape default
+Hace que el programa utilice las reglas de la Tabla 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Rango_validez_Var_ind"
+
+\end_inset
+
+(ultimas dos columnas)
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\family typewriter
+\shape italic
+P##;P## 
+\family default
+\shape default
+Hace que el programa utilice los percentiles seleccionados, por ejemplo
+ al colocar 
+\begin_inset Quotes eld
+\end_inset
+
+P33;P66
+\begin_inset Quotes erd
+\end_inset
+
+, es utilizado el percentil 33 para categorizar los valores por debajo de
+ lo normal y el percentil 66 para los valores por encima de lo normal.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\family typewriter
+\shape italic
+sdn;sdn 
+\family default
+\shape default
+Hace que el programa utilice n veces (de uno hasta 3) la desviación estándar
+ de la serie
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\family typewriter
+\shape italic
+##;## 
+\family default
+\shape default
+Valores numéricos, enteros o decimales (separados por ,)ingresados por el
+ usuario bajo sus propios criterios.
+ 
+\end_layout
+
+\begin_layout Standard
+K,L y M : Valores de probabilidad de que la variable independiente a CERO
+ rezagos del trimestre de pronóstico, este por debajo de lo normal, dentro
+ de lo normal y por encima de lo normal.
+\end_layout
+
+\begin_layout Standard
+N,P y Q : Valores de probabilidad de que la variable independiente a UN
+ rezagos del trimestre de pronóstico, este por debajo de lo normal, dentro
+ de lo normal y por encima de lo normal.
+\end_layout
+
+\begin_layout Standard
+R,S y T : Valores de probabilidad de que la variable independiente a DOS
+ rezagos del trimestre de pronóstico, este por debajo de lo normal, dentro
+ de lo normal y por encima de lo normal.
+\end_layout
+
+\begin_layout Chapter
+\begin_inset CommandInset label
+LatexCommand label
+name "cha:Resutlados_de_Jaz"
+
+\end_inset
+
+Acerca de Jazikü y sus resultados
+\end_layout
+
+\begin_layout Standard
+El software Jazikü ha sido diseñado para encontrar las relaciones de la
+ metodología de análisis compuesto entre los valores de las series de tiempo
+ de las variables dependientes con las series de tiempo de las variables
+ independientes.
+ Jazikü tiene 3 divisiones fundamentales en su proceso de datos.
+ Inicia con un archivo que le da a conocer el listado de las estaciones
+ en análisis, con su respectiva ubicación geográfica, así como información
+ correspondiente a la variable dependiente e independiente, adicional solicita
+ al operador los valores de probabilidad de comportamiento de la variable
+ independiente (Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Esquema_general_J"
+
+\end_inset
+
+,también ver sección
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Entrada-de-datos."
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename jaziku_diagrama.tif
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Esquema_general_J"
+
+\end_inset
+
+Esquema general del software Jazikü
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Se espera que en dos fases siguientes Jazikü genere dos carpetas, una asociada
+ al esquema 
+\begin_inset Quotes eld
+\end_inset
+
+Jazikü - clima
+\begin_inset Quotes erd
+\end_inset
+
+ y otra asociada al esquema 
+\begin_inset Quotes eld
+\end_inset
+
+Jazikü - pronóstico
+\begin_inset Quotes erd
+\end_inset
+
+, que son guardadas en el mismo directorio de donde se corre el programa
+ y en donde se espera se encuentre ubicado el archivo de lista de inicio
+ (ver Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:resultados_todos"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+En la segunda fase (esquema Jazikü - clima), Jazikü elabora la climatología
+ de las series de la variable dependiente bajo las fases asociadas al fenómeno
+ representado por la variable independiente.
+ En esta etapa Jazikü inicialmente genera las series de valores promedio
+ trimestrales para cada uno de los trimestres del año (12 en total
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Trimestre 1(EFM): Enero-Febrero-marzo ;Trimestre 2 (FMA): Febrero-marzo-abril
+ ; Trimestre 3 (MAM): Marzo-abril-mayo ; Trimestre 4 (AMJ): Abril-mayo-junio
+ Trimestre 5 (MJJ): Mayo-junio-julio;Trimestre 6 (JJA): Junio-julio-agosto;Trime
+stre 7 (JAS): Julio-agosto-septiembre;Trimestre 8 (ASO): Agosto-septiembre-octub
+re;Trimestre 9 (SON): Septiembre-octubre-noviembre;Trimestre 10 (OND): Octubre-n
+oviembre-diciembre;Trimestre 11 (NDE): Noviembre-diciembre-enero;Trimestre
+ 12 (DEF): Diciembre-enero-febrero
+\end_layout
+
+\end_inset
+
+) tanto de la variable independiente como la dependiente.
+ Estas series son la materia prima para el desarrollo de la técnica de análisis
+ compuesto, cuyo principal resultado es la tabla de contingencia; esta tabla
+ de contingencia es evaluada mediante el procedimiento de análisis de riesgos
+ (ver Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Esquema_general_J"
+
+\end_inset
+
+) .
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename diagrama_resultados_todos.tif
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:resultados_todos"
+
+\end_inset
+
+Esquema de las carpetas de resultados de Jazikü y ubicación del archivo
+ station_list (lista de estaciones ver sección 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Entrada-de-datos."
+
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Otros estadísticos de interés son calculados por Jazikü en esta etapa, como
+ la correlación lineal de las series por trimestres, la correlación y el
+ test chi cuadrado de la tabla de contingencia.
+ Finalmente y por medio de la distribución hipergeométrica , un análisis
+ de riesgos es elaborado.
+ 
+\end_layout
+
+\begin_layout Standard
+Posterior al desarrollo de la climatología, Jazikü utiliza los valores de
+ probabilidad del fenómeno representado por la variable independiente, y
+ por medio de una combinación lineal de los valores de la tabla de contingencia,
+ genera un pronóstico de afectación de la variable dependiente, en función
+ de los valores pronosticados por la variable independiente(ver Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Esquema_general_J"
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename diagrama_resultados_clima.tif
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:resultados_J_clima"
+
+\end_inset
+
+Esquema de los resultados de Jazikü - clima
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Los resultados arrojados por el software, son guardados en la carpeta data_out
+ (ver Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:resultados_J_clima"
+
+\end_inset
+
+), esta carpeta guarda a su vez una carpeta llamada 
+\begin_inset Quotes eld
+\end_inset
+
+maps
+\begin_inset Quotes erd
+\end_inset
+
+ y otras carpetas cuyo nombre coincide con el de las estaciones incluidas
+ en la lista de estaciones.
+ La carpeta 
+\begin_inset Quotes eld
+\end_inset
+
+maps
+\begin_inset Quotes erd
+\end_inset
+
+, por rezagos guarda los archivos .csv, que deben ser utilizados para la
+ generación de mapas interpolados en función de las categorías: por encima,
+ por debajo y dentro de lo normal de la variable independiente (ver apéndice
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:apendice_carpetas_maps"
+
+\end_inset
+
+).
+ Cada una de las carpetas asociadas a cada estación , guarda a su vez las
+ series de tiempo construidas por trimestres para los valores promedio de
+ la variable dependiente e independiente, las tablas de contingencia por
+ rezagos son guardadas en la carpeta 
+\begin_inset Quotes eld
+\end_inset
+
+contingency_table
+\begin_inset Quotes erd
+\end_inset
+
+, las gráficas asociadas a estas tablas de contingencia en la carpeta 
+\begin_inset Quotes eld
+\end_inset
+
+graphics
+\begin_inset Quotes erd
+\end_inset
+
+; estas gráficas son diagramas de barras en mosaico por rezagos o de manera
+ independiente por trimestre(ver Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:resultados_J_clima"
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Standard
+Sin lugar a dudas el resultado mas importante que arroja el software es
+ la tabla de resultados.
+ En esta tabla se presentan por rezagos los valores de los estadísticos
+ calculados por el software, así como la tabla de contingencia.
+ Esta tabla se considera de gran utilidad porque en una sola fila es posible
+ encontrar la respuesta climática de la estación a los cambios de la variable
+ independiente, bajo la técnica de análisis compuesto.
+ La salida de esta tabla se da en formato .csv , que es de fácil lectura
+ bajo cualquier editor de texto
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename tabla_resultados_jaziku.tif
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:tabla_generar_d_resultados"
+
+\end_inset
+
+Esquema de la tabla general de resultados de Jazikü - clima
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+La Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:tabla_generar_d_resultados"
+
+\end_inset
+
+presenta un esquema de la tabla.
+ Nótese que las columnas han sido agrupadas por letras así: 
+\end_layout
+
+\begin_layout Itemize
+A y B : columnas de los trimestres asociados a las variables dependiente
+ e independiente 
+\end_layout
+
+\begin_layout Itemize
+C,D y E: correlación de Pearson, significancia de la correlación mediante
+ la prueba t y selección de los valores significativos con un 95% de confianza
+ (
+\begin_inset Quotes eld
+\end_inset
+
+yes
+\begin_inset Quotes erd
+\end_inset
+
+ para correlaciones significativas, 
+\begin_inset Quotes eld
+\end_inset
+
+no
+\begin_inset Quotes erd
+\end_inset
+
+ para las no significativas) 
+\end_layout
+
+\begin_layout Itemize
+F y G: Umbrales usados para calcular las tablas de contingencia de acuerdo
+ a las categorías por encima, por debajo y dentro de lo normal, de la variable
+ dependiente.
+\end_layout
+
+\begin_layout Itemize
+H y I:Umbrales usados para calcular las tablas de contingencia de acuerdo
+ a las categorías por encima, por debajo y dentro de lo normal, de la variable
+ independiente.
+\end_layout
+
+\begin_layout Itemize
+J: Valores de la tabla de contingencia en frecuencias empíricas, para cuando
+ se analiza la categoría por debajo de lo normal de la variable independiente.
+ El primer valor corresponde a la categoría por debajo de lo normal de la
+ variable dependiente, el segundo a la categoría dentro de lo normal de
+ la variable dependiente y el tercero para la categoría por encima de lo
+ normal.
+ 
+\end_layout
+
+\begin_layout Itemize
+K: Valores de la tabla de contingencia en frecuencias empíricas, para cuando
+ se analiza la categoría por dentro de lo normal de la variable independiente.
+ El primer valor corresponde a la categoría por debajo de lo normal de la
+ variable dependiente, el segundo a la categoría dentro de lo normal de
+ la variable dependiente y el tercero para la categoría por encima de lo
+ normal.
+ 
+\end_layout
+
+\begin_layout Itemize
+L: Valores de la tabla de contingencia en frecuencias empíricas, para cuando
+ se analiza la categoría por encima de lo normal de la variable independiente.
+ El primer valor corresponde a la categoría por debajo de lo normal de la
+ variable dependiente, el segundo a la categoría dentro de lo normal de
+ la variable dependiente y el tercero para la categoría por encima de lo
+ normal.
+ 
+\end_layout
+
+\begin_layout Itemize
+M,N y P: los mismos valores de las columnas agrupadas en J,K, y L, pero
+ en valores de porcentaje.
+\end_layout
+
+\begin_layout Itemize
+Q,R y S: Análisis de riesgos para cada uno de los 9 valores de la tabla
+ de contingencia.
+\end_layout
+
+\begin_layout Itemize
+P,Q y R: Valor del estadístico Chi cuadrado,valor critico contra el cual
+ es evaluado a un 95% de confianza y selección de valores significativos
+ en función del contraste de los dos valores anteriores (“yes” significativo,
+ “no” no significativas)
+\end_layout
+
+\begin_layout Itemize
+T: Correlación de la tabla de contingencia, calculada con el estadístico
+ V de Cramer.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename diagrama_forcast.tif
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:tabla_d_resultados_J_forcast"
+
+\end_inset
+
+Esquema de la tabla general de resultados de Jazikü - pronóstico
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Los resultados asociados al esquema Jazikü - pronóstico, son guardados en
+ la carpeta 
+\begin_inset Quotes eld
+\end_inset
+
+Jazikü-forecast
+\begin_inset Quotes erd
+\end_inset
+
+, esta carpeta a su vez guarda una carpeta denominada 
+\begin_inset Quotes eld
+\end_inset
+
+maps
+\begin_inset Quotes erd
+\end_inset
+
+, en esta carpeta y por rezagos son guardados los valores de pronóstico
+ de todas las estaciones incluidas en el análisis en función de su ubicación
+ geográfica (ver Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:tabla_d_resultados_J_forcast"
+
+\end_inset
+
+) para comprender los archivos allí presentados ver apéndice 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:apendice_carpetas_maps"
+
+\end_inset
+
+.
+ Las otras carpetas, una por cada estación corresponden a los valores de
+ pronóstico presentados en esquemas redondos (pie) de manera individual
+ para cada rezago y de manera conjunta para la estación.
+\end_layout
+
+\begin_layout Part
+Manual teórico
+\end_layout
+
+\begin_layout Chapter
+\begin_inset CommandInset label
+LatexCommand label
+name "cha:inicial_INFO"
+
+\end_inset
+
+Acerca de la información inicial
+\end_layout
+
+\begin_layout Standard
+Con el fin de automatizar el proceso de previsión en la metodología de análisis
+ de compuesto, es necesario seleccionar las variables dependientes e independien
+tes.
+ Son variables dependientes, todas las variables meteorológicas que deben
+ estar relacionados con los principales índices de la variabilidad climática,
+ a continuación se describen.
+ 
+\end_layout
+
+\begin_layout Section
+Variable Dependiente
+\end_layout
+
+\begin_layout Standard
+Se trata de utilizar las variables de mayor interés en el territorio nacional,
+ la Tabla 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Rango_validez_var_dep"
+
+\end_inset
+
+ muestra los valores para los cuales se estima es el rango de validez y
+ las unidades típicas en las que deben ser incluidas las series de tiempo
+ en Jazikü.
+ En esta etapa el programa efectúa varias verificaciones a fin de tener
+ la seguridad de que los valores son razonables de acuerdo con el comportamiento
+ de las variables meteorológicas, de lo contrario se rechazan los datos
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Datos_revision_gloria"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Este tipo de verificación para las variables presión, humedad relativa y
+ temperatura se corresponde con la sugerida por León (2007, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Datos_revision_gloria"
+
+\end_inset
+
+) en el documento:
+\begin_inset Quotes erd
+\end_inset
+
+Control de Calidad Automático de datos Meteorológicos
+\begin_inset Quotes erd
+\end_inset
+
+, la cual restringe las observaciones para que estén dentro de un conjunto
+ de límites de tolerancia (limites blandos), que fueron seleccionados para
+ el área comprendida entre los 30ºN y -20ºN, de acuerdo con las especificaciones
+ físicas de la variable que determinan en algunos casos limites fijos, por
+ ejemplo la humedad relativa es una variable acotada entre 0 y 100%, o que
+ bien se pueden referir a limites climatológicos determinados estadísticamente,
+ que pueden variar geográfica y/o temporalmente (tomado de 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Datos_revision_gloria"
+
+\end_inset
+
+).
+ En el caso de las variables número de días con lluvia y de la variable
+ precipitación se analizaron las condiciones mas usuales de la climatología
+ para todo el país, de acuerdo al Atlas Climatológico Nacional del IDEAM
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Atlas_climatologico"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Rango_validez_var_dep"
+
+\end_inset
+
+Rango de validez y unidades típicas en las cuales la variable dependiente
+ debe ser incluida en Jazikü
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="1.8cm">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="7cm">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Variable
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Abreviación
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Unidades
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Rango de variación
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Precipitación
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ppt 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+mm
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0 mm<=Ppt<=3500mm 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Numero de días con lluvia 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+NdPpt
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+#
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Varia entre 0 a 31 para enero, a 28 o 29 para Febrero (dependiendo de si
+ el año es bisiesto o no), a 31 para Marzo,a 30 para Abril, a 31 para para
+ Mayo,a 30 para Junio ,a 31 para Julio, a 31 para Agosto, a 30 para Septiembre
+ ,a 31 para Octubre,a 30 para Noviembre,a 31 para Diciembre
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Temperatura del aire (adherida, Máxima y Mínima Diaria)) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+T,Tmin,Tmax 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+°C
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-15°C<=Tmin<=50°C 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Presión 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+P 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+mb
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+400 mb <=P<=1100 mb
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+% HR
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+HR
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0%<=HR<=100% 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Variable Independiente
+\end_layout
+
+\begin_layout Standard
+El clima usualmente es entendido como el conjunto de condiciones medias
+ del tiempo atmosférico, agrupadas por épocas del año, no obstante no es
+ usual que los valores promedios mensuales de las variables meteorológicas
+ que lo definen sean siempre estáticos, distintos fenómenos pueden influir
+ en su variabilidad, alteraciones reflejadas a través de las anomalías climatoló
+gicas.
+ Importantes estudios ya han sido realizados con el objetivo de identificar
+ dichas afectaciones, no obstante un esquema muy completo de las teleconexiones
+ mas importantes para la precipitación del país es el presentado por Montealegre
+ (2009,
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+).
+ Quien seleccionó del océano y de la atmósfera los componentes del sistema
+ climático que mayormente inciden en la variabilidad interanual de la precipitac
+ión del país e igualmente acepto como hipótesis: “que los procesos oceánicos
+ y atmosféricos de meso y gran escala, así como la variabilidad interanual
+ de los océanos Pacífico Tropical y Atlántico Norte y Sur tienen una significati
+va relación con el comportamiento de la precipitación en Colombia”, así
+ como además examino la sensibilidad de los índices que sintetizan estos
+ procesos, de manera tan cuidadosa como para poder seleccionar los de mayor
+ conveniencia para la detectar dicha asociación.
+\end_layout
+
+\begin_layout Standard
+Montealegre (2009,
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+) analizó cerca de cincuenta de las variables que presentan los centros
+ mundiales especializados, las que clasificó en 7 grandes grupos 
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+(Atmosféricas, Precipitación, ENOS, Temperatura superficial del mar (TSM)
+ en el Pacifico, TSM en el Atlántico y De otra índole )
+\end_layout
+
+\end_inset
+
+, así como algunas otras producto del análisis de la correlación espacial;
+ dado que encontró que es posible que algunos de estos índices caractericen
+ el mismo proceso desde ángulos diferentes, en su estudio evitó tal redundancia
+ mediante un cuidadoso proceso de selección, que le permitió concluir, que
+ los fenómenos de mayor afectación y sus respectivos indicies mas relevantes,
+ con objetivos de teleconexiones son:
+\end_layout
+
+\begin_layout Itemize
+El Niño – La oscilación del sur: 
+\end_layout
+
+\begin_layout Enumerate
+Índice de la Oscilación del sur SOI
+\end_layout
+
+\begin_layout Enumerate
+Índice Oceánico del Niño-ONI 
+\end_layout
+
+\begin_layout Enumerate
+Índice multivariado – MEI 
+\end_layout
+
+\begin_layout Enumerate
+La temperatura superficial del mar en la región 3 y 3.4 
+\end_layout
+
+\begin_layout Itemize
+Vientos de la Alta troposfera tropical
+\end_layout
+
+\begin_layout Enumerate
+Valor de los vientos en la alta troposfera tropical
+\end_layout
+
+\begin_layout Itemize
+NAO - North Atlantic Oscillation 
+\end_layout
+
+\begin_layout Enumerate
+Índice de la oscilación del atlántico norte 
+\end_layout
+
+\begin_layout Itemize
+QBO – Oscilación Cuasibienal.
+\end_layout
+
+\begin_layout Enumerate
+Índice de la Oscilación Cuasibienal.
+ 
+\end_layout
+
+\begin_layout Itemize
+OLR – Radiación de onda larga saliente 
+\end_layout
+
+\begin_layout Enumerate
+Valor de la radiación de onda larga saliente 
+\end_layout
+
+\begin_layout Itemize
+ZCIT – Zona de Confluencia Intertropical 
+\end_layout
+
+\begin_layout Enumerate
+Seguimiento sinóptico de la ZCIT 
+\end_layout
+
+\begin_layout Itemize
+Dipolo Amazónico 
+\end_layout
+
+\begin_layout Enumerate
+Anomalía de humedad relativa.
+\end_layout
+
+\begin_layout Standard
+Del estudio de Montealegre (2009,
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+) , son tomados como sobresalientes e incluidos como variables independientes
+ dentro de Jazikü, todas excepto la ZCIT, por no poseer índice numérico
+ para su evaluación.
+ A continuación se presenta un breve descripción de cada índice y la Tabla
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Rango_validez_Var_ind"
+
+\end_inset
+
+, informa al usuario los rangos para los cuales el software acepta su ingreso.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Rango_validez_Var_ind"
+
+\end_inset
+
+Rango de validez en el cual la variable independiente debe ser incluida
+ en Jazikü
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="10" columns="6">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="2cm">
+<column alignment="center" valignment="top" width="1.1cm">
+<column alignment="center" valignment="top" width="2.4cm">
+<column alignment="center" valignment="top" width="3.8cm">
+<column alignment="center" valignment="top" width="1.5cm">
+<column alignment="center" valignment="top" width="1.5cm">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Índice
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+Unidades
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Rango de variación
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Fuente
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Condición por encima de lo normal 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Condición por debajo de lo normal
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Oceanic Niño Index.ONI región 3.4-<ONI>
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+Anomalía
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+-5<=ONI
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+<=5¹
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+NOAA, Climate Prediction Center, Cold andWarmepisodes by season.
+ Período 1950-2007: http://www.cpc.ncep.noaa.
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+gov/products/analysis
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+_monitoring/ensostuff/
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+ensoyears.shtml
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+El Niño: cuando es mayor a 0.5
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+La Niña:cuando es menor a -0.5
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Índice de la Oscilación del Sur SOI-<SOI>
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+Anomalía estandarizada 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+-7<=SOI
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+<=7¹
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+NOAA, Climate Prediction Center, http://www.cpc.ncep.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+noaa.gov/data/indices/
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+La Niña:cuando es mayor a 0.9
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+El Niño: cuando es menor a -1.2
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+El Índice Multivariado del ENSO, MEI-<MEI> 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+Composi-
+\end_layout
+
+\begin_layout Plain Layout
+
+\size scriptsize
+ción de valores
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+-4.552<=MEI
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+<=6.078
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+http://www.esrl.noaa.gov/psd/
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+enso/mei.ext/rank.ext.html 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+El niño:Cuando es mayor al p66
+\begin_inset CommandInset citation
+LatexCommand cite
+key "alfaro_meso"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+La Niña:Cuando es menor al p33
+\begin_inset CommandInset citation
+LatexCommand cite
+key "alfaro_meso"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Radiación de longitud tropical de onda larga, OLR tropical OLR -<OLR>
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+ W/m2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+-6<=OLR
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+<=6¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+http://www.cpc.ncep.
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+noaa.gov/data/indices/
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Cuando es mayor a 0.9
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Cuando es menor a -1.1
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+El índice de la anomalía del viento a 200 hPa,-<W200 >
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+Anomalía estandarizada 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+-7.5<=W200
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+<=7.5¹
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+http://www.cpc.ncep.
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+noaa.gov/data/indices/ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+El niño:Cuando es mayor al p66
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+La Niña:Cuando es menor al p33
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Temperatura superficial del Mar (3.4)-<TSM> 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+°C 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+-60<=TSM
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+<=60¹
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+http://www.cpc.ncep.
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+noaa.gov/data/indices/
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+sstoi.indices
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+El niño:Cuando es mayor al p66
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+La Niña:Cuando es menor al p33
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+%HR amazonas-<ARH> 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+%
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+-100<=AHR
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+<=100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+http://www.esrl.noaa.gov/psd
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+/data/reanalysis/reanalysis.
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+shtml
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+El niño:Cuando es mayor al p66
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+La Niña:Cuando es menor al p33
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Oscilación del Atlántico Norte-<NAO>
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+anomalía
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+-6.36<=NAO
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+<=6.08
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+http://www.cpc.noaa.gov
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+/products/precip/CWlink
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+/pna/norm.nao.monthly.
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+b5001.current.ascii   
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Cuando es mayor a 0
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Cuando es menor a 0
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Oscilación Cuasibienal-<QBO>
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+Km/h
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+-59.1<=QBO
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+<=33.24
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+http://www.cdc.noaa.gov
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+/Correlation/qbo.data
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+El niño:Cuando es mayor al p66
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+La Niña:Cuando es menor al p33
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+¹ Criterio:2 veces el máximo y mínimo de la serie
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Principales indices de variabilidad climática que pueden ser utilizados:
+\end_layout
+
+\begin_layout Itemize
+El índice Oceánico El Niño (ONI): Criterio del Centro de Predicción Climática,
+ (NCEP, por sus siglas en ingles) de NOAA (National Oceanic and Atmospheric
+ Administration, por sus siglas en ingles), es conocido corrientemente como
+ El Niño oceánico.
+ El ONI (Oceanic Niño Index) se obtiene mediante el promedio móvil de la
+ anomalía de la temperatura de la superficie del mar, en relación con el
+ período de referencia 1971-2000, con tres meses sucesivos: la anomalía
+ del mes, la anomalía del mes que le antecede y la del mes que le sigue,
+ en la región Niño 3.4 (5º N a 5º S y 120ºW a 170ºW)
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Gevara_Diaz"
+
+\end_inset
+
+.
+ La formula mas general del ONI es:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+ONI=(Ai-1+Ai+Ai+1)/3
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Donde, Ai, es la anomalía de la Temperatura Superficial del Mar del mes
+ Ai-1, y Ai+1, anomalía de la Temperatura Superficial del Mar de los meses
+ precedentes y siguientes al mes dado.
+ Un ONI es el promedio móvil de las anomalías de la superficie del mar de
+ tres meses consecutivos, siendo el ONI de enero, por ejemplo, el constituido
+ por la anomalía de enero, febrero, y la anomalía de diciembre del año anterior
+ (DEF); el segundo ONI de tres meses, EFM, y así sucesivamente hasta el
+ último ONI del año, con los datos de los meses noviembre, diciembre, y
+ enero del año siguiente, (NDE).
+ 
+\end_layout
+
+\begin_layout Standard
+Aplicando el concepto del índice ONI de la NOAA, la definición cuantitativa
+ de El Niño, La Niña y El ENSO quedan simplificadas de la manera siguiente:
+ Un Niño o evento Niño, (para la región Niño 3.4 del Océano Pacifico ecuatorial)
+ como una secuencia de al menos 5 ONI, cada uno con magnitud mayor o igual
+ que 0,5 ºC.
+ Una Niña o evento La Niña, también para la región Niño 3.4 como la secuencia
+ de al menos 5 ONI, cada uno con magnitud igual o menor que -0,5ºC.
+ Un ENSO o evento ENSO es la secuencia en la región Niño 3.4, en el Océano
+ Pacifico ecuatorial de al menos 5 ONI consecutivos, cada uno con valor
+ mayor o igual que 0,5ºC (un Niño) o igual o menor que -0,5ºC(una Niña),
+ es decir, que para cumplir con el criterio se requiere información de las
+ anomalías de la temperatura del mar durante siete meses consecutivos 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Gevara_Diaz"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Desde diciembre de 2008 el ONI es calculado usando la versión 3b de la reconstru
+cción de la serie extendida de la temperatura superficial del mar (por sus
+ siglas en ingles extended reconstructed sea surface temperature, ERSST).
+ Una mayor información de este nuevo conjunto de datos es dada en 
+\end_layout
+
+\begin_layout Standard
+(http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/) .
+\end_layout
+
+\begin_layout Itemize
+Índice de la Oscilación del Sur: Los patrones de calentamiento y enfriamiento
+ cíclicos de la atmósfera, que se desarrollan en las zonas del centro y
+ del este del Pacífico, coexisten con un cambio significativo de la presión
+ atmosférica a nivel del mar.
+ Esta diferencia de presión corresponde a la denominada Oscilación del Sur
+ (OS).
+ 
+\end_layout
+
+\begin_layout Standard
+Cuando la presión atmosférica aumenta en el lado este del Pacífico (y desciende
+ en el lado oeste), se dice que la OS está en su fase positiva (La Niña).
+ Por el contrario, cuando la variación de la presión atmosférica cambia
+ de sentido hacia la fase negativa (El Niño), la presión se eleva en el
+ oeste y disminuye en el este.
+ Esta alternancia entre las fases positiva y negativa del SOI, contribuye
+ a cambiar la intensidad de la circulación de los vientos descritos anteriorment
+e, debido a que un aumento/ disminución de esta diferencia de presión causa
+ que el aire superficial, que normalmente sopla hacia el oeste, se intensifique/
+ debilite dependiendo del signo del SOI imperante.
+\end_layout
+
+\begin_layout Standard
+El Índice de Oscilación del Sur (SOI, por sus siglas en ingles), utiliza
+ los registros de presión atmosférica de las estaciones meteorológicas de
+ Darwin–Australia (lado oeste del Pacífico) y Papeete– Tahití (lado este
+ del Pacífico).
+ El SOI es negativo cuando los valores de presión atmosférica son relativamente
+ más altos que la media normalizada sobre Indonesia y Australia (estación
+ meteorológica de Darwin), y más bajos que la media normalizada sobre la
+ Polinesia Francesa (estación meteorológica de Papeete).
+ Si al mismo tiempo, se observan TSM más cálidas que lo normal sobre el
+ Pacífico ecuatorial central y oriental, y ambas condiciones se mantienen
+ por unos meses, podemos decir que nos encontramos en presencia de un evento
+ El Niño en pleno desarrollo (tomado de 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Gevara_Diaz"
+
+\end_inset
+
+).
+ Las anomalías de este índice son basadas respecto al periodo 1981-2010
+ y el SOI es calculado de la siguiente manera 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Gevara_Diaz"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+StandardDeviationTahiti=SQRT(SUMMATION(1)/N)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Donde SUMMATION(1) es la suma de todos los ((TA) ** 2), N es el numero de
+ meses y TA es la anomalía en Tahití, calculada como: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+(actual(SLP)-mean(SLP))
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Donde SLP es el la presión a nivel de superficie.
+ Luego el valor de estandarizado de la anomalía en Tahití SLP y la desviación
+ estándar en Darwin (Standard Deviation Darwin) son dados como: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+StandardizedTahiti=(ActualTahiti(SLP)-MeanTahiti(SLP))\text{   }
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\text{ }StandardDeviationDarwin=SQRT(SUMMATION(1)/N)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Donde de nuevo SUMMATION(1) es la suma de todos los ((DA) ** 2), N es el
+ numero de meses y DA es la anomalía en Darwin, calculada como: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+Darwinanomaly=(actual(SLP)-mean(SLP))
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+El valor de estandarizado de la anomalía en Darwin SLP y la desviación estándar
+ en Darwin) son dados como: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+StandardizedDarwin=(ActualDarwin(SLP)-MeanDarwin(SLP))
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Por lo tanto para calcular la desviación estándar media se usa: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+MonthlyStandardDeviation(MSD)=SQRT(SUMMATION(3)/N)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta ultima expresión SUMMATION(3) es la suma de ((Standardized Tahití
+ - Standardized Darwin) ** 2), para que finalmente la ecuación del índice
+ SOI sea:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+SOI=(StandardizedTahiti-StandardizedDarwin)/MSD
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Índice Multivariado del ENSO(MEI): Es un complejo índice diseñado por KlausWolte
+r (1987
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Wol87"
+
+\end_inset
+
+) de NOAA-CIRES Climate Diagnostics Center (CDC), para reconocer el fenómeno
+ de El Niño- Oscilación del Sur, ENSO.
+ Este índice emplea como componentes principales las seis variables: temperatura
+ de la superficie del mar, temperatura del aire, presión atmosférica al
+ nivel del mar, nubosidad, componente zonal del viento y componente meridional
+ del viento.
+ 
+\end_layout
+
+\begin_layout Standard
+Los datos de estas variables son publicadas en ICOADS (Internacional comprehensi
+ve Ocean Atmosphere Data Set, (anteriormente, COAD).
+ Los sitios de ubicación de donde provienen los datos de las variables utilizada
+s en el MEI son señalados por Wolter y Timlin (1998
+\begin_inset CommandInset citation
+LatexCommand cite
+key "WolyTimm98"
+
+\end_inset
+
+) en la Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Sitios_obs_MEI-1"
+
+\end_inset
+
+ .
+ Según Wolter (1987
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Wol87"
+
+\end_inset
+
+) y Wolter and Timlin (1998
+\begin_inset CommandInset citation
+LatexCommand cite
+key "WolyTimm98"
+
+\end_inset
+
+) el índice MEI sería un promedio ponderado de los rasgos del ENSO de las
+ variables empleadas en su cálculo, y es obtenido mensualmente para los
+ dos meses precedentes.
+ Por la metodología empleada, el MEI es el primer componente principal no
+ rotado, de las seis variables utilizadas.
+ Mediante la normalización con el período de referencia 1950-93, el índice
+ MEI se hace comparable con otros índices ENSO.
+ El MEI es una media móvil de dos meses: así, el primer valor del año es
+ el promedio de diciembre del año anterior y enero; el segundo, de enero
+ y febrero,...,hasta noviembre y diciembre del año siguiente.
+ En este caso índices con signos positivos representan la fase caliente
+ del ENSO (El Niño) y los negativos del MEI, la fase fría (La Niña) (Tomado
+ de 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Gevara_Diaz"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename MEI_sitios_obs.tif
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\lang english
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Sitios_obs_MEI-1"
+
+\end_inset
+
+
+\lang spanish
+Sitios de observación del MEI
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En la Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Sitios_obs_MEI-1"
+
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+P+ y P-, representan la diferencia entre la presión al nivel del mar en
+ los sitios más occidental y oriental del Pacifico ecuatorial, respectivamente.
+ 
+\end_layout
+
+\begin_layout Standard
+U, la anomalía de la componente zonal del viento.
+ 
+\end_layout
+
+\begin_layout Standard
+V+ y V-, la anomalía de la componente meridional del viento (viento del
+ sur, positivo, viento del norte, negativo).
+\end_layout
+
+\begin_layout Standard
+SA, ubicación de la temperatura media de la superficie del mar .
+ 
+\end_layout
+
+\begin_layout Standard
+C, la anomalía de la nubosidad, en la región Niño 4.
+ 
+\end_layout
+
+\begin_layout Standard
+T, Taití y D, Darwin.
+\end_layout
+
+\begin_layout Standard
+1; 2; 3; 4, las regiones El Niño 1+2; 3, y 4, respectivamente.
+\end_layout
+
+\begin_layout Standard
+Para incluir la serie de tiempo del índice MEI, se aconseja al usuario utilizar
+ las series de rangos del MEI disponible desde enero de 2001 en : http://www.esrl.
+noaa.gov/psd/enso/mei.ext/rank.ext.html.
+ Para interpretar esta nueva forma del índice se pueden utilizar los terciles
+ o los quintiles, en este caso son usados los terciles, marcando positivo
+ (fase El Niño) a los valores por encima del percentil 66, siendo negativo
+ (fase La Niña) para valores por debajo del percentil 33 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "esrl_noaa"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Índice de radiación de longitud de onda larga (OLR tropical, o simplemente
+ OLR): Se refiere a la radiación emitida de onda larga por el tope de las
+ nubes en el océano Pacífico tropical, expresado como anomalías en W/m2,
+ constituye una medida de la temperatura de ese tope nuboso y la actividad
+ convectiva.
+ Donde OLR es negativo, el tope de la nube es alto, indicando la presencia
+ de convección y potencialmente, zonas más lluviosas, mientras que si el
+ OLR es positivo, restringe las convecciones, la nubosidad y las posibilidades
+ de precipitación (Tomado de
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Gevara_Diaz"
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Itemize
+La temperatura superficial del mar (TSM): Valioso indicador de la estructura
+ térmica de la capa superior de los océanos.
+ En consecuencia, se utiliza la TSM como variable explicativa de esta dinámica,
+ tomando en consideración también que esta variable está estrechamente relaciona
+da con los procesos convectivos que se generan en la atmósfera que se yace
+ sobre ella.
+ Para la vigilancia de la variabilidad de la TSM en la franja tropical del
+ Pacifico, se han establecido cuatro regiones muy bien definidas a saber:
+ Occidental (región Niño 4), Central (región Niño 3), Centro-occidental:
+ (región Niño 3-4) y Oriental: (región Niño 1+2).
+ En cada una de estas regiones se mide la temperatura de la superficie del
+ mar en grados Celsius y se determinan sus anomalías, evaluadas como la
+ diferencia entre un valor mensual cualquiera y su promedio climatológico
+ o valor normal 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Como El Niño y La Niña son fenómenos de carácter oceánico, la comunidad
+ científica ha desarrollado una gran cantidad de índices para caracterizar
+ estos fenómenos.
+ Probablemente los más utilizados en la actualidad son las anomalías de
+ TSM en las regiones Niño 3 y Niño 3-4.
+ Analizadas las estadísticas descriptivas de las variables explicativas
+ y de sus relaciones de asociación, los ciclos y frecuencias comunes, la
+ complejidad del proceso físico involucrado, el grado de asociación con
+ las precipitaciones, su variabilidad y algunos otros aspectos clasificatorios,
+ Montealegre 2009 (
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+) encontró que para el desarrollo del análisis de Contingencia y el análisis
+ Compuesto la TSM del Pacifico tropical centro occidental, (El Niño - región
+ N-34) es uno de los índices más adecuados.
+ 
+\end_layout
+
+\begin_layout Itemize
+Índice de la anomalía del viento a 200 hPa (WIND200): Permite apreciar el
+ patrón del viento zonal en la alta troposfera (200 hPa) en comparación
+ con el flujo al nivel isobárico de 850 hPa, a razón de anomalías opuestas.
+ El mayor interés por este flujo de viento del oeste en altura sobre los
+ trópicos, expresado por su anomalía se explica por la relación encontrada
+ con la circulación en las zonas extratropicales.
+ (Tomado de 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Gevara_Diaz"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Itemize
+Índice de la Oscilación del Atlántico Norte: este fenómeno es un subí y
+ baja a gran escala en la presión barométrica de las masas de aire atmosférico,
+ situadas entre dos celdas, la de la alta presión subtropical del Atlántico
+ (Azores), ubicada a los 38° de latitud y la baja presión polar del Ártico
+ (Islandia) a los 60° de latitud.
+ Esta oscilación tiene dos fases que se expresan mayoritariamente en invierno.
+ La fase positiva sucede cuando las presiones barométricas del anticiclón
+ de las Azores son más altas con respecto al valor promedio, mientras que
+ las presiones en Islandia son aún más bajas de lo normal.
+ Ésta marcada diferencia de presión intensifica los vientos del Oeste entre
+ los 50 y 60° de latitud Norte produciendo tormentas que cruzan el Atlántico
+ en dirección Nordeste 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "San_Mex"
+
+\end_inset
+
+; Durante la fase negativa, las diferencias de presión entre las Azores
+ e Islandia son menores.
+ El "anticiclón" de las Azores está débil y la celda ciclónica de Islandia
+ se encuentra poco activa; ambas se sitúan en latitudes más al Sur y, en
+ consecuencia, los vientos del Oeste son más tenues y aportan menos humedad
+ y calor sobre el Norte de Europa.
+ La NAO fue identificada por primera vez en a principios del siglo XX por
+ Sir Gilbert Walker (1924) e históricamente ha sido definida mediante un
+ índice que mide la diferencia de presión en superficie entre Ponta Delgada
+ (Azores) y la estación de Stykkisholmur (Islandia), la versión mas reciente
+ es la propuesta por Jones et al.
+ (1997,
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Hurrell"
+
+\end_inset
+
+) que sustituye Ponta Delgada por Gibraltar y Stykkisholmur por Reykjavik
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Hurrell"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Índice de la Oscilación Cuasibienal: la oscilación Cuasibienal es una oscilación
+ de largo plazo en el viento zonal de la baja y media estratosfera ecuatorial,
+ con un período irregular que varía entre un poco menos de dos años (20
+ meses) y hasta casi tres años (35 meses), con una duración media de 28
+ meses 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+.
+ Consiste en la alternancia de vientos del Este, dominantes durante una
+ parte del período, con vientos del Oeste en el resto del período.
+ La Oscilación Cuasibienal se calcula sobre el flujo zonal del viento en
+ un nivel alto de la atmósfera a 30mb sobre la región tropical
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Guirola"
+
+\end_inset
+
+ .
+\end_layout
+
+\begin_layout Itemize
+Dipolo Amazónico:Índice de meso-escala creado por Montealegre (2009 
+\size footnotesize
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montealegre2009"
+
+\end_inset
+
+
+\size default
+)con base en el contraste de humedad observado en dos puntos de la selva
+ Amazónica al nivel de la media Troposfera (dipolo del Amazonas), se trata
+ del promedio de humedad en el Amazonas a 500hPa, región 2º N – 73º W y
+ 6º S – 68º W, provenientes del reanálisis NCEP/NCAR versión 1.
+\end_layout
+
+\begin_layout Chapter
+Jazikü - Clima
+\end_layout
+
+\begin_layout Section
+Información calculada por Jazikü
+\end_layout
+
+\begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Anlisis_compuesto"
+
+\end_inset
+
+Análisis compuesto y Tablas de contingencia
+\end_layout
+
+\begin_layout Standard
+En estadística las tablas de contingencia se emplean para registrar y analizar
+ la relación entre dos o más variables, la asociación entre dos variables
+ continuas está determinada por la distribución de probabilidad conjunta.
+ En general esta distribución es desconocida, y en su defecto, se sustituye
+ por la tabla de contingencia.
+ Para construir esta tabla las variables continuas se dividen en categorías,
+ la variable independiente X en M categorías y variable dependiente Y, en
+ N categorías.
+ 
+\end_layout
+
+\begin_layout Standard
+Cada pareja de valores (xi, yi) pertenece a una y sólo una de las M x N
+ categorías conjuntas.
+ Luego se calculan las frecuencias empíricas fij que son el número de parejas
+ que pertenecen a la categoría ij.
+ Si la asociación entre las dos variables es muy débil, la población de
+ la M x N categorías conjuntas es similar (ver Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:ejem_TC_Alfaro_1.TIF"
+
+\end_inset
+
+) En un gráfico de tres dimensiones la superficie aparece plana porque los
+ valores de X dentro de la categoría i pueden estar asociados indistintamente
+ con valores que pertenecen a cualquiera de las N categorías de Y.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ejem_TC_Alfaro_1.TIF
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ejem_TC_Alfaro_1.TIF"
+
+\end_inset
+
+Ejemplo de variables no correlacionadas.
+ Tomado de: 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "alfaro_manual"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Si la asociación es fuerte (correlación directa), la superficie alcanza
+ valores grandes a lo largo de una de las diagonales y valores bajos en
+ las esquinas que no pertenecen a la diagonal y los valores altos se dan
+ a lo largo de la diagonal mayor y en el caso de asociación negativa (correlació
+n inversa), a lo largo de la diagonal menor (ver Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:ejem_TC_Alfaro_2.TIF"
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ejem_TC_Alfaro_2.TIF
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ejem_TC_Alfaro_2.TIF"
+
+\end_inset
+
+Ejemplo de variables correlacionadas.
+ Tomado de: 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "alfaro_manual"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Construcción e interpretación de la Tabla de contingencia 
+\end_layout
+
+\begin_layout Standard
+Para construir una Tabla de contingencia que permita interpretar gráficos
+ como los presentados en las Figs.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:ejem_TC_Alfaro_1.TIF"
+
+\end_inset
+
+y
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:ejem_TC_Alfaro_2.TIF"
+
+\end_inset
+
+, debe dividirse el conjunto de datos de la variable dependiente , en conjuntos
+ seleccionado, que en este caso son los terciles por lo que se obtienen
+ 3 categorías conjuntas que permiten cierto grado de resolución y un número
+ manejable de posibilidades.
+ Del mismo modo la variable independiente es categorizada en 3 conjuntos
+ que también permiten hacer una selección de 3 x 3 que frecuentemente es
+ buscada para categorizaciones tales como: normal, arriba de lo normal y
+ abajo de lo normal.
+ 
+\end_layout
+
+\begin_layout Standard
+Se trata entonces de encontrar las probabilidades empíricas a partir de
+ la división de las frecuencias empíricas y el número total de parejas se
+ que se obtienen de ello.
+ Es decir pij = fij /n, es la probabilidad empírica que una pareja de valores
+ pertenezca a la categoría conjunta ij.
+ 
+\end_layout
+
+\begin_layout Standard
+Entonces si se quiere hacer una validación cruzada entre un conjunto de
+ observaciones como la variable independiente, o predictora y un conjunto
+ de valores cuya proyección a futuro se desea pronosticar como variable
+ dependiente, predictante.
+ Las observaciones son divididas en terciles, dentro de las categorías de
+ la variable explicativa como los valores bajos (Obs.
+ Bajo), los valores normales (Obs.
+ Normal) y valores altos (Obs.
+ Alto), de manera que cada observación o valor tiene que pertenecer a una
+ sola categoría y estas son excluyentes a su vez, lo que garantiza que las
+ tres categorías agotan todas las posibilidades dentro de la “muestra” o
+ conjunto de observaciones o valores tomados.
+ 
+\end_layout
+
+\begin_layout Standard
+Como las categorías son terciles, cada categoría es un tercio del área total.
+ Al considerar las parejas de (valor observado, valor pronosticado) son
+ identificables nueve categorías excluyentes y exhaustivas, por ejemplo,
+ un valor bajo de la observación puede estar asociado con un valor bajo
+ (OB-PB), uno normal (OB-PN) o uno alto (OB-PA) del valor pronosticado,
+ de ahí que en el caso trivial a cada categoría le corresponde un tercio
+ del área total.
+ Entonces si la variable explicativa es un índice cualquiera divisible en
+ categorías alto, normal y bajo; y la explicada una variable meteorológica,
+ es posible construir una Tabla de la frecuencia relativa de la variable
+ explicada por debajo del primer tercil, por encima de este, o entre estos
+ dos (que con frecuencia es llamado en lo normal “ON”), si es dado un índice
+ alto, bajo o normal (ver Tabla 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Ejemplo_Tabla_cont"
+
+\end_inset
+
+) .
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:Ejemplo_Tabla_cont"
+
+\end_inset
+
+Ejemplo de Tabla de contingencia
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+categorías Vardep/VarIndp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ind.
+ Bajo
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ind.
+ Normal
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ind.
+ Alto
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No.
+ De dato debajo del primer tercil
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OB-PA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OB-PA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OB-PA
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No.de datos entre los dos terciles
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ON-PA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ON-PA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ON-PA
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No.
+ De dato encima del primer tercil
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OA-PA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OA-PA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OA-PA
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Generalmente, los valores individuales de pij o fij de la Tabla 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Ejemplo_Tabla_cont"
+
+\end_inset
+
+(los valores OB-PA, OB-PN, OB-PB…, OA-PB) pueden ser expresados en términos
+ de porcentajes, según la Ec.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:PrPQ"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+P_{ij}=\frac{f_{ij}}{\sum_{j=1}^{N}f_{ij}}\label{eq:Pij}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Debe notarse que para eventos independientes, la probabilidad que ocurra
+ simultáneamente es multiplicativa.
+ Por lo tanto, la probabilidad de que una pareja (observación, pronóstico)
+ corresponda a este caso es dada por la Ec.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:PrPQ"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+P_{r}\left\{ Q_{2}\cap P_{3}\right\} =P_{r}\left\{ Q_{2}\right\} P_{r}\left\{ P_{3}\right\} =1/3*1/3=1/9\label{eq:PrPQ}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Correlación lineal 
+\end_layout
+
+\begin_layout Standard
+De especial interés para el uso de la metodología del análisis compuesto,
+ se encuentra el calculo del coeficiente de correlación, este permite cuantifica
+r el grado de asociación de las dos variables sin considerar a una como
+ dependiente y a la otra independiente, puesto que se asume que las dos
+ tienen el mismo estatus
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cartas_estat"
+
+\end_inset
+
+.
+ Este coeficiente de correlación r, también denominado de Pearson, se define
+ como:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+r=\frac{\sum{}_{i=1}^{n}(X_{i}-\overline{X})(Y_{i}-\overline{Y})}{\sqrt{\sum{}_{i=1}^{n}(X_{i}-\overline{X})2\sum{}_{i=1}^{n}(Y_{i}-\overline{Y})2}}
+\end{equation}
+
+\end_inset
+
+Donde X e Y pueden intercambiar su lugar y el resultado no varia, el coeficiente
+ de correlación puede arrojar valores dentro del rango − 1 ≤ r ≤ 1 , donde
+ el signo indica el sentido de la asociación (directa o inversa, siempre
+ lineal); las asociaciones más fuertes son –1 y 1, para r = 0 se habla de
+ falta de asociación.
+ Una conclusión acerca de este resultado, se puede basar en el cálculo de
+ la significancia estadística de la correlación, si se asume una distribución
+ normal esta prueba de hipótesis se hace con el estadístico t para un r
+ dado, según
+\begin_inset CommandInset citation
+LatexCommand cite
+key "behaivoir"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+t=\frac{r\sqrt{(n-2)}}{\sqrt{1-r^{2}}}
+\end{equation}
+
+\end_inset
+
+Donde el numero de grados de libertad se da por n-2.
+ En esta prueba la hipótesis nula es que r = 0, por lo tanto la alternativa
+ es que las variables de hecho están correlacionadas
+\begin_inset CommandInset citation
+LatexCommand cite
+key "behaivoir"
+
+\end_inset
+
+.Típicamente esta formula es usada para evaluar la significancia tanto del
+ coeficiente de correlación de Pearson, como el de Sperman
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Zumbo"
+
+\end_inset
+
+ (Glasser & Winter, 1961
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Glasser"
+
+\end_inset
+
+; Kendall, Kendall, & Smith, 1939
+\begin_inset CommandInset citation
+LatexCommand cite
+key "kkendall"
+
+\end_inset
+
+).
+ El usuario de Jazikü, tendrá a su disposición el valor del estadístico
+ r y de la diferencia p-valué, para que los contraste a cualquier margen
+ de incertidumbre, se aconseja 0.05 (95% de confianza)
+\end_layout
+
+\begin_layout Subsection
+Prueba de bondad de ajuste χ²
+\end_layout
+
+\begin_layout Standard
+El primer enfoque inferencial aplicado a datos categóricos se desarrollo
+ a principios de siglo y trataba de determinar si un conjunto de probabilidades
+ de una tabla de contingencia eran iguales a ciertas cantidades prefijadas
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Est_book"
+
+\end_inset
+
+.
+ Este es el clásico problema de bondad de ajuste.
+ El proceso analítico se propone evaluar la discrepancia existente entre
+ las frecuencias observadas 
+\begin_inset Formula $(n_{ij})$
+\end_inset
+
+.Freeman (1987
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Fre87"
+
+\end_inset
+
+) distingue tres pruebas estadísticas de bondad de ajuste basadas en la
+ distribución χ², se presentan dos:
+\end_layout
+
+\begin_layout Itemize
+La mas conocida es la clásica prueba χ², introducida por K.Pearson (1900
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Pearson900"
+
+\end_inset
+
+), que se define como 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Est_book"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+χ²=N\sum_{i=1}^{a}\sum_{i=1}^{b}\frac{(p_{ij}-\pi_{ij})2}{\pi_{ij}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\text{χ²}=\sum_{i=1}^{a}\sum_{i=1}^{b}\frac{(n-m_{ij})^{2}}{m_{ij}}\simχ²_{(a-1)(b-1)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+La primera formulación en términos de probabilidades empíricas y esperadas
+ y la segunda en términos de valores observados y esperados
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Est_book"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Pearson planteó la utilización del estadístico χ² para analizar la independencia.
+La hipótesis nula a contrastar (Ho) será la de independencia entre los factores,
+ siendo la hipótesis alternativa (Ha) la de dependencia entre ellos 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "JVO&EMM05"
+
+\end_inset
+
+.
+ El valor calculado de χ² se compara con el valor generado por Jazikü de
+ una distribución χ² para un nivel de confianza del 95% y N-1 grados de
+ libertad (siendo N el numero total de trimestres de las series de la variable
+ dependiente e independiente).
+ Si el valor calculado es mayor que el valor generado de la distribución
+ χ² (de Jazikü) , se rechaza la hipótesis nula, con lo cual podemos concluir
+ que si existe una relación entre las variables; por el contrario si el
+ valor calculado es menor no se rechaza la hipótesis nula aceptando que
+ no existe ninguna relación entre las variables (todo a un nivel de confianza
+ del 95%)
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+(Lo mismo que decir que el valor numérico p valué arrojado por Jazikü debe
+ ser menor a 0.05 para rechazar la hipótesis nula, con lo cual podemos concluir
+ que si existe una relación entre las variables y lo contrario si el valor
+ calculado es mayor que 0.05, con lo que no se rechaza la hipótesis nula
+ aceptando que no existe ninguna relación entre las variables.Ver código
+ fuente)
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "JVO&EMM05"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+si\text{χ²}>\text{χ²}_{\text{Crit}}\Rightarrow RechazaHo(dependencia)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+si\text{χ²}\leq\text{χ²}_{\text{Crit}}\Rightarrow AceptaHo(independencia)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+El problema de la prueba con el estadístico χ² es que está influenciada
+ por el tamaño muestral, esto es que a mayor número de casos analizados
+ (a mayor N), el valor de χ² tiende a aumentar, por lo que cuanto mayor
+ sea la muestra más fácil será rechazada la hipótesis nula de independencia;
+ otro aspecto a tener en cuenta a la hora de realizar este contraste, es
+ que para que el contraste sea estadísticamente válido en cada celda de
+ la tabla deberían existir un mínimo de 5 observaciones 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "JVO&EMM05"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Coeficiente V de Cramer 
+\end_layout
+
+\begin_layout Standard
+Medida de asociación de las variables de entrada de una tabla de contingencia
+ de escala nominal hxk, con h y k >2 (usualmente cuando h,k=2, se usa el
+ coeficiente Phi)
+\begin_inset CommandInset citation
+LatexCommand cite
+key "V_Cramer2"
+
+\end_inset
+
+, este coeficiente sigue la expresión:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+V=\sqrt{\frac{\text{χ²}}{n(m-1)}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+siendo: n el tamaño muestral 
+\end_layout
+
+\begin_layout Standard
+m el mínimo entre h y k (el número de categorías de la variable independiente
+ y k número de categorías de la variable dependiente) 
+\end_layout
+
+\begin_layout Standard
+Se veriﬁca que 0 ≤ V ≤ 1, en general valores cercanos o iguales a 0 indican
+ muy baja asociación y valores cercanos a 1, alta asociación.Es importante
+ resaltar que este coeficiente sólo proporciona información sobre la relación
+ entre las variables y no sobre el sentido de la misma
+\begin_inset CommandInset citation
+LatexCommand cite
+key "V_cramer1"
+
+\end_inset
+
+, de la misma manera que se ha encontrado que el grado de asociación puede
+ ser subestimado
+\begin_inset CommandInset citation
+LatexCommand cite
+key "V_Cramer2"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Analisis-de-riesgos"
+
+\end_inset
+
+Analisis de riesgos 
+\end_layout
+
+\begin_layout Subsubsection
+Distribución hipergeometrica
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Tomado de <http://www.virtual.unal.edu.co/cursos/ciencias/2001065/html/un2/distribuc
+ion_hipergeometrica.html>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Notación: 
+\begin_inset Formula $h(x;N,n,M)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Definición: Muchas veces en la práctica es difícil realizar pruebas con
+ reposición ó reemplazamiento.
+ Por ejemplo, si en el control de calidad se pierde el elemento que se prueba,
+ pues no se puede hacer reposición directamente.
+ Se plantéa entonces la prueba sin reposición, donde los elementos de la
+ muestra se toman todos a la vez y no individualmente ó donde el elemento
+ seleccionado no se reintegra al experimento ó a la muestra nuevamente.
+\end_layout
+
+\begin_layout Standard
+La diferencia mas simple con la binomial es la forma de aplicar el muestreo.
+ En efecto, en:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $Binomial$
+\end_inset
+
+: Muestreo con reemplazamiento e independencia de pruebas ó ensayos.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $Hipergemoetrica$
+\end_inset
+
+:Muestreo sin reemplazamiento y sin independeencia entre pruebas ó ensayos.
+\end_layout
+
+\begin_layout Standard
+Sus aplicaciones estan en areas con uso considerable de muestreo de aceptación,
+ pruebas electronicas y de aseguramiento de la calidad, fabricación de piezas,
+ etc.
+\end_layout
+
+\begin_layout Standard
+En la distribución Hipergeométrica 
+\begin_inset Formula $X$
+\end_inset
+
+ cantidad de resultados éxitos en una muestra aleatoria (sin reposición)
+ de tamaño 
+\begin_inset Formula $n$
+\end_inset
+
+, tomada de una población de tamaño 
+\begin_inset Formula $N$
+\end_inset
+
+ y de la cual 
+\begin_inset Formula $M$
+\end_inset
+
+ satisface una caracteristica ó propiedad (éxito) antes del muestreo y 
+\begin_inset Formula $N-M$
+\end_inset
+
+ no la satisface (fracaso).
+ 
+\end_layout
+
+\begin_layout Standard
+Criterios ó propiedades que la caracterizan.
+ 
+\end_layout
+
+\begin_layout Standard
+1.
+ La población 
+\begin_inset Formula $N$
+\end_inset
+
+ del conjunto de unidades ó elementos es de orden fínito, de los cuales
+ una parte: 
+\begin_inset Formula $M$
+\end_inset
+
+ "son éxitos", y otra parte: 
+\begin_inset Formula $N-M$
+\end_inset
+
+ son "fracasos".
+\end_layout
+
+\begin_layout Standard
+2.
+ Cada elemento puede ser caracterizado como éxito ó fracaso.
+\end_layout
+
+\begin_layout Standard
+3.
+ Se obtiene una muestra aleatoria de 
+\begin_inset Formula $n$
+\end_inset
+
+ elementos todos a la vez (sin reemplazamiento) y no de forma independiente.
+ No son pruebas repetidas.
+\end_layout
+
+\begin_layout Standard
+4.
+ El tamaño de la muestra aleatoria 
+\begin_inset Formula $n$
+\end_inset
+
+ es grande relativamente en comparación con el tamaño de la población.
+ Generalmente: 
+\begin_inset Formula $\frac{n}{N}>5\%$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+5.
+ Se busca la probabilidad de
+\begin_inset Formula $x$
+\end_inset
+
+ número de éxitos a partir de los 
+\begin_inset Formula $M$
+\end_inset
+
+ resultados ó elementos y 
+\begin_inset Formula $(n-x)$
+\end_inset
+
+ fracasos a partir de los 
+\begin_inset Formula $N_{2}$
+\end_inset
+
+elementos asi clasificados, al obtener una muestra aleatoria de tamaño 
+\begin_inset Formula $n$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+Planteamiento:
+\end_layout
+
+\begin_layout Standard
+Supongamos un lote de 
+\begin_inset Formula $N$
+\end_inset
+
+ productos de los cuales:Obtenemos muestra de 
+\begin_inset Formula $n$
+\end_inset
+
+ productos, todos a la vez.
+ Interesa entonces la probabilidad de sacar 
+\begin_inset Formula $x$
+\end_inset
+
+ productos defectuosos (Exito), o sea: 
+\begin_inset Formula $p(x)$
+\end_inset
+
+.
+ Podemos hacer el siguiente raciocinio: De una población de 
+\begin_inset Formula $N$
+\end_inset
+
+ elementos se pueden extraer muestras de tamño 
+\begin_inset Formula $n$
+\end_inset
+
+ de 
+\begin_inset Formula $\left(\begin{array}{c}
+N\\
+n
+\end{array}\right)$
+\end_inset
+
+formas diferentes (distintas muestras de tamaño 
+\begin_inset Formula $n$
+\end_inset
+
+ ).
+ Al extraer muestras de tamaño 
+\begin_inset Formula $n$
+\end_inset
+
+ productos, el número de formas de obtener 
+\begin_inset Formula $x$
+\end_inset
+
+ productos defectuosos de 
+\begin_inset Formula $M$
+\end_inset
+
+ de ellos será: 
+\begin_inset Formula $\left(\begin{array}{c}
+M\\
+x
+\end{array}\right)$
+\end_inset
+
+ y entonces 
+\begin_inset Formula $\left(\begin{array}{c}
+N-M\\
+n-x
+\end{array}\right)$
+\end_inset
+
+ sera el número de formas de obtener 
+\begin_inset Formula $(n-x)$
+\end_inset
+
+ productos no defectuosos entre 
+\begin_inset Formula $N-M$
+\end_inset
+
+ de ellos.
+\end_layout
+
+\begin_layout Standard
+Como es el mismo evento compuesto, entonces el número de formas de seleccionar
+ 
+\begin_inset Formula $x$
+\end_inset
+
+ productos defectuosos esta ligado con el número de formas de obtener 
+\begin_inset Formula $(n-x)$
+\end_inset
+
+ productos no defectuosos.
+ Luego el total de formas posibles sera:
+\begin_inset Formula $\left(\begin{array}{c}
+M\\
+x
+\end{array}\right)$
+\end_inset
+
+ 
+\begin_inset Formula $\left(\begin{array}{c}
+N-M\\
+n-x
+\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Combinando los casos 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $h(x,n,M,N)=\left\{ \begin{array}{cc}
+\begin{array}{c}
+\frac{\left(\begin{array}{c}
+M\\
+x
+\end{array}\right)\left(\begin{array}{c}
+\begin{array}{c}
+N-M\\
+n-x
+\end{array}\end{array}\right)}{\left(\begin{array}{c}
+N\\
+n
+\end{array}\right)}\end{array} & para\,\, x=0,1,2,....,nx\leq M;(n-x)\leq N-M\\
+0 & para\,\, cualquier\,\, otro\,\, valor
+\end{array}\right\} $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Los parámetros de la distribución Hipergeométrica son entonces:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $N$
+\end_inset
+
+ :Tamaño de población.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $M$
+\end_inset
+
+: Número de elementos de 
+\begin_inset Formula $N$
+\end_inset
+
+ con una caracteristica ó propiedad específica (éxitos).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $n$
+\end_inset
+
+ : Tamaño de muestra aleatoria extraida.
+\end_layout
+
+\begin_layout Standard
+Nota: Algunos tratadistas simbolizan esta distribución con: 
+\begin_inset Formula $h(x;N,n,M)$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+Características de la Distribución Hipergeométrica.
+ 
+\end_layout
+
+\begin_layout Standard
+En la practica, si 
+\begin_inset Formula $\frac{n}{N}<5\%$
+\end_inset
+
+, no se aplica el (F.C.F.) pues su valor tendera a cero (1).
+\end_layout
+
+\begin_layout Standard
+La función de distribución acumulativa quedará definida entonces por:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+P(X\leq x)=f(x,n,M,N)=\sum_{x=0}^{n}\frac{\left(\begin{array}{c}
+M\\
+x
+\end{array}\right)\left(\begin{array}{c}
+\begin{array}{c}
+N-M\\
+n-x
+\end{array}\end{array}\right)}{\left(\begin{array}{c}
+N\\
+n
+\end{array}\right)}\label{eq:analisis_riesgos}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ejemplo
+\end_layout
+
+\begin_layout Standard
+En una empresa industrial diariamente se producen 90 unidades de unidad
+ metalmecánica, de las cuales generalmente 5 salen defectuosas.
+ Se examina en un dia cualquiera una muestra de 5 unidades.
+ Hallar la probabilidad de 
+\begin_inset Formula $x$
+\end_inset
+
+ unidades defectuosas.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left\{ \begin{array}{c}
+N=90\\
+M=5\\
+N-M=85\\
+n=5\\
+x=0,1,...,5
+\end{array}\right\} \: P(x)=\sum_{x=0}^{n}\frac{\left(\begin{array}{c}
+M\\
+x
+\end{array}\right)\left(\begin{array}{c}
+\begin{array}{c}
+N-M\\
+n-x
+\end{array}\end{array}\right)}{\left(\begin{array}{c}
+N\\
+n
+\end{array}\right)}=\frac{\left(\begin{array}{c}
+5\\
+x
+\end{array}\right)\left(\begin{array}{c}
+\begin{array}{c}
+85\\
+5-x
+\end{array}\end{array}\right)}{\left(\begin{array}{c}
+90\\
+5
+\end{array}\right)}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+que resolviendo permite definir la tabla de distribución de probabilidad:
+ 
+\begin_inset Tabular
+<lyxtabular version="3" rows="2" columns="6">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+x
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+P(x)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.746
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.230
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.0225
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.000812
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.00000967
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Metodología del analísis de riesgos
+\end_layout
+
+\begin_layout Standard
+Con el objetivo de que los pronósticos arrojados por el programa, sean fiables,
+ a continuación se presenta el marco teórico del análisis de riesgos.En este
+ tipo de análisis una distribución higrométrica es utilizada para describir
+ la distribución de probabilidad entre todos las posibles categorías de
+ la variable independiente.Este tipo de distribución hipergeométrica es muy
+ útil para procesos muestrales sin reemplazo, en los que se investiga la
+ presencia o ausencia de cierta característica Por tanto, esta distribución
+ es la equivalente a la binomial, pero cuando el muestreo se hace sin reemplazo.
+ La expresión general de la distribución es:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+P(X=x)=f(x,n,M,N)=\frac{\left(\begin{array}{c}
+M\\
+x
+\end{array}\right)\left(\begin{array}{c}
+\begin{array}{c}
+N-M\\
+n-x
+\end{array}\end{array}\right)}{\left(\begin{array}{c}
+N\\
+n
+\end{array}\right)}\label{eq:analisis_riesgos}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Donde:
+\end_layout
+
+\begin_layout Standard
+n: es el numero de veces que se presento una categoría por encima, por debajo
+ ó dentro de los normal de la variable independiente.
+\end_layout
+
+\begin_layout Standard
+N: corresponde al valor total de eventos de las tres categorías (por encima,
+ por debajo y dentro de lo normal) de la variable independiente.
+\end_layout
+
+\begin_layout Standard
+M:Es numero total de situaciones para las que se dio que la variable dependiente
+ marcó condiciones por encima, por debajo y dentro de los normal, en conjunción
+ para una de las tres categorías de la variable independiente
+\end_layout
+
+\begin_layout Standard
+x: El numero de casos por encima , por debajo ó dentro de lo normal bajo
+ alguna de estas mismas categorías para la variable independiente.
+\end_layout
+
+\begin_layout Standard
+Esta distribución de probabilidad es aplicada a cada uno de los valores
+ de la tabla de contingencia, en términos de frecuencia.
+ A continuación un ejemplo
+\end_layout
+
+\begin_layout Standard
+Sea la tabla de contingencia 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "ejemplo_tab_con_to_hyperg"
+
+\end_inset
+
+ , para cuando se quiere analizar la variación de la precipitación en función
+ del fenómeno ENOS.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "ejemplo_tab_con_to_hyperg"
+
+\end_inset
+
+Tabla de contingencia de ejemplo
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Var dep/Var Ind
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+El Niño
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Neutro
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+La Niña
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Por debajo de lo normal
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Dentro de lo normal
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Por encima de lo normal
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Total
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+14
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+23
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+17
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Supóngase que se desea saber si el valor de x=3 correspondiente a 3 casos
+ para los cuales la precipitación en la climatología se observo por encima
+ de lo normal, bajo condiciones La Niña, es un valor significativo y puede
+ ser usado para futuros pronósticos.
+ En este caso claramente n=17, M=20 y N=54.
+ La Tablas 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "ejemplo_hyperg1"
+
+\end_inset
+
+,
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "ejemplo_hyperg2"
+
+\end_inset
+
+ y 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "ejemplo_hyperg3"
+
+\end_inset
+
+, presentan los parámetros de la distribución hipergeométrica para cada
+ uno de los valores de la Tabla 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "ejemplo_tab_con_to_hyperg"
+
+\end_inset
+
+ .
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "ejemplo_hyperg1"
+
+\end_inset
+
+Valores de la distribución hipergeométrica para el ejemplo tratado, en la
+ categoría por encima de lo normal para la variable dependiente.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="3.05cm">
+<column alignment="center" valignment="top" width="3.05cm">
+<column alignment="center" valignment="top" width="3.05cm">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Parámetro
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Por encima Var D/El Niño
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Por encima Var D/Neutro
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Por encima Var D/La Niña
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+n
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+14
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+23
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+17
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+M
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+x
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+N
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+54
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+54
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+54
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "ejemplo_hyperg2"
+
+\end_inset
+
+Valores de la distribución hipergeométrica para el ejemplo tratado, en la
+ categoría dentro de lo normal para la variable dependiente.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="3.05cm">
+<column alignment="center" valignment="top" width="3.05cm">
+<column alignment="center" valignment="top" width="3.05cm">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Parámetro
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Dentro de lo normal Var D/El Niño
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Dentro de lo normal Var D/Neutro
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Dentro de lo normal Var D/La Niña
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+n
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+14
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+23
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+17
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+M
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+14
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+14
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+14
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+x
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+N
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+54
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+54
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+54
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "ejemplo_hyperg3"
+
+\end_inset
+
+Valores de la distribución hipergeométrica para el ejemplo tratado, en la
+ categoría por debajo de lo normal para la variable dependiente.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="2.3cm">
+<column alignment="center" valignment="top" width="2.3cm">
+<column alignment="center" valignment="top" width="2.3cm">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Parámetro
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Por encima Var D/El Niño
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Por encima Var D/Neutro
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Por encima Var D/La Niña
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+n
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+14
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+23
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+17
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+M
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+x
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+N
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+54
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+54
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+54
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+La interpretación de los resultados es la siguiente: Una vez hallados los
+ valores de los parámetros de la distribución hipergeométrica para cada
+ uno de los valores asociados a la tabla de contingencia en cuestión, se
+ halla el valor de la probabilidad discreta de que un determinado evento
+ ocurra según la distribución hipergeométrica P(x) o valor de probabilidad
+ distribuida.La significancia estadística se determina mediante la comparación
+ del valor P(x) respecto de si cae en alguna de las colas , derecha o izquierda
+ de la distribución de probabilidad.
+ Estos en relación al intervalo de confidencia del 90% de la distribución
+ acumulada, así:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\begin{array}{c}
+Sí\, P_{CDF}(x)\leq0.10\:\Longrightarrow El\: valor\: cae\: sobre\: la\: cola\: izquierda\\
+Sí\,1-P_{CDF}(x)\leq0.10\:\Longrightarrow El\: valor\: cae\: sobre\: la\: cola\: derecha
+\end{array}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De comprobarse que una de las dos anteriores condiciones se cumple, es posible
+ utilizar el valor x, para condiciones de pronostico, de lo contrario la
+ climatología y otras técnicas deben ser utilizadas.
+ En el ejemplo indicado, para el que x=3, el valor de 
+\begin_inset Formula $P(x)=0.0337,P_{CDF}(x)=0.042116\, y\,1-P_{CDF}(x)=0.991537$
+\end_inset
+
+, indicando que el valor cae en la cola izquierda y es significativo por
+ ser menor a 0.10.
+\end_layout
+
+\begin_layout Chapter
+Jazikü - Pronóstico
+\end_layout
+
+\begin_layout Section
+Pronóstico operativo mensual de predicción climática de los posibles escenarios
+ de impacto, en la variable dependiente debido al fenómeno ENOS
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Pronstico_operativo_mensual"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+El Objetivo es realizar el pronóstico de, dada una fase del fenómeno ENOS
+ la variable dependiente se vea afectada.
+ Esto es posible si se tienen en cuenta los pronósticos de ocurrencia para
+ cada fenómeno de la oscilación que es realizado por el IRI (International
+ Research Institute for Climate and Society) y que corresponden a un análisis
+ de la distribución de acontecimientos históricos ponderado por el centro
+ de predicción climática en la región El Niño 3.4, en función de las previsiones
+ de temperatura superficial del mar, que están disponibles en su página
+ web : http//portal.iri.columbia.edu/ en el link Enso Forecast y que son actualizad
+os cada mes.
+ Las Ecs.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:PvdepAbove"
+
+\end_inset
+
+a 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:PvdepBelow"
+
+\end_inset
+
+, permiten hallar la probabilidad de que dadas las probabilidades de que
+ en el próximo periodo el fenómeno El Niño – La oscilación del sur, se dé
+ una fase El Niño, La Niña o Neutro, la variable dependiente en la locación
+ de interés sea afectada por disminución, aumento o tendencia a la normalidad
+ en su régimen.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+P_{V-Dep_{Above}}=\left\{ \begin{array}{c}
+\left[P_{V-Dep_{Above}}(sí\: V-Ind_{above})*(P_{IRI}V-Ind_{Above})\right]\\
++\left[P_{V-Dep_{Above}}(sí\: V-Ind_{Normal})*(P_{IRI}V-Ind_{Normal})\right]\\
++\left[P_{V-Dep_{Above}}(sí\: V-Ind_{Below})*(P_{IRI}V-Ind_{Below})\right]
+\end{array}\right\} \label{eq:PvdepAbove}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+P_{V-Dep_{Normal}}=\left\{ \begin{array}{c}
+\left[P_{V-Dep_{Normal}}(sí\: V-Ind_{above})*(P_{IRI}V-Ind_{Above})\right]\\
++\left[P_{V-Dep_{Normal}}(sí\: V-Ind_{Normal})*(P_{IRI}V-Ind_{Normal})\right]\\
++\left[P_{V-Dep_{Normal}}(sí\: V-Ind_{Below})*(P_{IRI}V-Ind_{Below})\right]
+\end{array}\right\} \label{eq:PvdepNormal}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+P_{V-Dep_{Normal}}=\left\{ \begin{array}{c}
+\left[P_{V-Dep_{Below}}(sí\: V-Ind_{above})*(P_{IRI}V-Ind_{Above})\right]\\
++\left[P_{V-Dep_{Below}}(sí\: V-Ind_{Normal})*(P_{IRI}V-Ind_{Normal})\right]\\
++\left[P_{V-Dep_{Below}}(sí\: V-Ind_{Below})*(P_{IRI}V-Ind_{Below})\right]
+\end{array}\right\} \label{eq:PvdepBelow}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+\size small
+Nota.
+ En las Ecs.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:PvdepAbove"
+
+\end_inset
+
+a 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:PvdepBelow"
+
+\end_inset
+
+, las primeras entradas de cada paréntesis corresponden a las salidas de
+ la tabla de contingencia y las segundas a los pronósticos del fenómeno
+ ENOS.
+\end_layout
+
+\begin_layout Standard
+Para presentar los resultados de las Ecs.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:PvdepAbove"
+
+\end_inset
+
+a 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:PvdepBelow"
+
+\end_inset
+
+, se pueden utilizar distintos tipos de gráficos, particularmente la NOAA
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ComLinea"
+
+\end_inset
+
+, recomienda el uso de diagramas circulares para representar la división
+ porcentual de la probabilidad de tendencia deficitaria, de ganancia y a
+ la normalidad de la variable dependiente analizada para una estación bajo
+ las probabilidades de que el fenómeno se encuentre en su fase cálida, neutra
+ o fría.
+ Sin embargo gracias al uso operativo, este tipo de grafico puede ser cambiado
+ a conveniencia del pronosticador.
+ 
+\end_layout
+
+\begin_layout Standard
+Antes de emitir cualquier pronóstico, es necesario determinar si las relaciones
+ halladas en la tabla de contingencia son significativas estadísticamente.
+ Esto se logra mediante el ajuste a una distribución de probabilidad hipergeomét
+rica de la distribución de probabilidad entre todos los posibles resultados
+ de una categoría dentro El Niño o La Niña o Neutro.
+ De manera tal, que la distribución hipergeométrica sea utilizada como una
+ aproximación para describir la distribución de probabilidad entre todos
+ los posibles resultados de una categoría dentro de las fases del fenómeno
+ (ver sección
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Analisis-de-riesgos"
+
+\end_inset
+
+).
+ Entonces la creación de una curva de distribución basada en los valores
+ de probabilidad discreta de la ocurrencia de un determinado evento, determina
+ la significancia estadística del valor P(x) si se encuentra en la cola
+ izquierda o derecha de la distribución 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "esp2004"
+
+\end_inset
+
+, esto es si el valor x de la distribución asociado al valor n, en un test
+ del 10% de significancia se encuentra en algunas de las colas de la distribució
+n, se acepta que el valor x es estadísticamente significativo y se puede
+ aceptar con confianza el valor de la probabilidad de x 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "esp2004"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Chapter
+Reconocimientos y licencias de uso
+\end_layout
+
+\begin_layout Standard
+Jazikü mantiene la definición de software libre que permite a los usuarios
+ ejecutar, copiar, distribuir, estudiar, cambiar y mejorar el software.
+ Más precisamente
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Mayor información en: <http://www.gnu.org/licenses/gpl.html> ; <www.gnu.org/philosoph
+y/free-sw.es.html>
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+* Se tiene libertad de ejecutar el programa, para propósito académicos (i.e)
+ (libertad 0) .
+\end_layout
+
+\begin_layout Standard
+* La libertad de estudiar cómo trabaja el programa, y cambiarlo para propósitos
+ propios.
+ 
+\end_layout
+
+\begin_layout Standard
+* La libertad de redistribuir copias para que pueda ayudar al prójimo (libertad
+ 2).
+\end_layout
+
+\begin_layout Standard
+* La libertad de distribuir copias de sus versiones modificadas a terceros
+ (la 3ª libertad).
+ Si lo hace, puede dar a toda la comunidad una oportunidad de beneficiarse
+ de sus cambios.
+ El acceso al código fuente es una condición necesaria para ello.
+ 
+\end_layout
+
+\begin_layout Standard
+Es producto de los contratos 070/2011 y 066/2011 a nombre de Inés Sánchez
+ Rodríguez y de Xavier Corredo Llano respectivamente, y dirigidos por la
+ Dra.
+ Gloria León Aristizabal.
+ La propiedad y uso es del IDEAM, pero la autoría es de sus directos creadores.
+ Agradecemos citar:
+\end_layout
+
+\begin_layout Standard
+Sánchez Rodríguez, Inés Concepción; Corredor Llano, Xavier & León Aristizabal,
+ Gloria.
+ Instituto de Hidrología, Meteorología y Estudios Ambientales (IDEAM)-Grupo
+ de tiempo y clima.(2011).En: Notas técnicas contratos <IDEAM - 070 de 2011>
+ y <IDEAM - 066 de 2011> .
+\end_layout
+
+\begin_layout Part
+Apéndices
+\end_layout
+
+\begin_layout Chapter
+\begin_inset CommandInset label
+LatexCommand label
+name "cha:Apendice1_errores"
+
+\end_inset
+
+Apéndice 1:Posibles errores arrojados por Jazikü
+\end_layout
+
+\begin_layout Section
+Error por mala definición del período al correr Jazikü
+\end_layout
+
+\begin_layout Standard
+Es posible que el usuario incluya en el comando estándar de corrida de Jazikü
+ (ver sección 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "cha:Como_usarJaziku"
+
+\end_inset
+
+), un período para el cual alguna de las variables (dependiente e independiente)
+ no este definida.
+ El mensaje mostrado es:
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\family typewriter
+\shape italic
+Setting period in: 1990-2100
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\family typewriter
+\shape italic
+################# Station: 4801501-01 (4801501)
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\family typewriter
+\shape italic
+Processing climate 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\family typewriter
+\shape italic
+ERROR: period define in argument 1990-2100 is outside the common period
+ 1985-2009
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\family typewriter
+\shape italic
+For more help run program with argument: -h
+\end_layout
+
+\begin_layout Section
+Errores en el modulo de entrada de datos.
+ 
+\end_layout
+
+\begin_layout Standard
+Un error general para cuando los valores fueron construidos como texto e
+ implícitamente el editor los ha guardado bajo comillas es: 
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\family typewriter
+\shape italic
+ERROR: 3 Reading from file 4801501_ppt.txt in line: 1.
+ 4 invalid literal for int() with base 10: '"1985'
+\end_layout
+
+\begin_layout Subsection
+Variable precipitación
+\end_layout
+
+\begin_layout Standard
+Un caso típico es incluir en la variable precipitación valores negativos
+ o fuera del rango; a continuación se presentan el avisos dado por Jazikü
+ para cuando en la variable dependiente de la estación 4801501 en la linea
+ 18 y 20 presentan dichos errores.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\shape italic
+ERROR: Reading from file 4801501_ppt.txt in line: 20.
+ exception validation in dependent variable: value out of range: ?PPT? type
+ does not allow the value: -312.3 precipitation not valid
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\shape italic
+ERROR: Reading from file 4801501_ppt.txt in line: 18.
+ exception validation in dependent variable: value out of range: ?PPT? type
+ does not allow the value: 10000.0 precipitation not valid
+\end_layout
+
+\begin_layout Subsection
+Variable numero de días con lluvia
+\end_layout
+
+\begin_layout Standard
+Para cuando se incluyen valores negativos y cuando la variable supera los
+ valores de máximos de días para los meses , incluyendo los años biciestos
+ los errores son:
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\shape italic
+ERROR: Reading from file 4801501_NdPpt.txt in line: 14.
+ exception validation in dependent variable: value out of range: ?NDPPT?
+ type does not allow the value: -1.0 precipitation not valid
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\shape italic
+ERROR: Reading from file 4801501_NdPpt.txt in line: 11.
+ exception validation in dependent variable: value out of range: ?NDPPT?
+ type does not allow the value: 31.0 day is out of range for month
+\end_layout
+
+\begin_layout Subsection
+Variable temperatura media, máxima y mínima 
+\end_layout
+
+\begin_layout Standard
+Errores comunes en la inclusión de la variable temperatura, son principalmente
+ el uso de valores fuera del rango , lo que es usual por errores en la transcrip
+ción de las cifras significativas.
+ Cuando se presenta esta situación el error reportado por Jazikü es: 
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\shape italic
+ERROR: Reading from file 4801501_Temp.txt in line: 219.
+ exception validation in dependent variable: value out of range: «TMAX»
+ type does not allow the value: 220.0 maximun temperature not valid
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\shape italic
+For more help run program with argument: -h 
+\end_layout
+
+\begin_layout Subsection
+Variable presión 
+\end_layout
+
+\begin_layout Standard
+En relación a la variable presión, son frecuentes errores en la transcripción
+ de los datos, que pueden llevar a valores por fuera del rango de validez
+ ya establecido, este error es reflejado por Jazikü como : 
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\shape italic
+ERROR: Reading from file 4801501_ppt.txt in line: 233.
+ exception validation in dependent variable: value out of range: «PATM»
+ type does not allow the value: -15.0 atmosfere pressure not valid
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\shape italic
+For more help run program with argument: -h 
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\shape italic
+ERROR: Reading from file 4801501_ppt.txt in line: 180.
+ exception validation in dependent variable: value out of range: «PATM»
+ type does not allow the value: 3000.0 atmosfere pressure not valid
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\shape italic
+For more help run program with argument: -h 
+\end_layout
+
+\begin_layout Subsection
+Variable humedad relativa 
+\end_layout
+
+\begin_layout Standard
+Debido a que esta variable es dada en porcentaje, es posible que el usuario
+ en vez de incluir valores en el rango de 0 a 100 lo haga en el rango de
+ 0 a1, por lo cual se pide extrema cautela al respecto.
+ El error mas común también para esta variable, se relaciona con la transcripció
+n de los datos, que pueden llevar a valores por fuera del rango de validez
+ ya establecido, este error es reflejado por Jazikü como : 
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\shape italic
+ERROR: Reading from file 4801501_Hrel.txt in line: 2.
+ exception validation in dependent variable: value out of range: «HR» type
+ does not allow the value: 232.9 % of relative humidity not valid
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\shape italic
+For more help run program with argument: -h 
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\shape italic
+ERROR: Reading from file 4801501_Hrel.txt in line: 1.
+ exception validation in dependent variable: value out of range: «HR» type
+ does not allow the value: -3.0 % of relative humidity not valid
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\shape italic
+For more help run program with argument: -h 
+\end_layout
+
+\begin_layout Section
+Errores en la variable independiente
+\end_layout
+
+\begin_layout Standard
+El siguiente es un claro aviso de Jazikü para cuando el usuario esta intentado
+ incluir en la variable independiente de temperatura superficial del mar
+ fuera del rango de validación y/o negativo 
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\family typewriter
+\shape italic
+ERROR: Reading from file TSM34.txt in line: 442.
+ exception validation in independent variable: value out of range: ?TSM?
+ type does not allow the value: -151.0 Sea surface temperature not valid
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\shape italic
+ERROR: Reading from file TSM34.txt in line: 441.
+ exception validation in independent variable: value out of range: ?TSM?
+ type does not allow the value: 100.0 Sea surface temperature not valid
+\end_layout
+
+\begin_layout Section
+Error por inconsistencia de la tabla de contingencia.
+ 
+\end_layout
+
+\begin_layout Standard
+Supóngase que el usuario ha escogido unos umbrales de tal tipo que (ver
+ sección 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Entrada-de-datos."
+
+\end_inset
+
+), para una determinada categoría de la variable independiente, no existe
+ ni un caso para el cual la variable dependiente mostró variación alguna.
+ Esto es, que en efecto los tres valores correspondientes a las categorías
+ por encima, por debajo y dentro de lo normal de la variable dependiente
+ son cero (dada la categoría de la variable independiente), o lo que es
+ lo mismo un 
+\begin_inset Quotes eld
+\end_inset
+
+n=0
+\begin_inset Quotes erd
+\end_inset
+
+ en alguna de las categorías de la Ec.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:analisis_riesgos"
+
+\end_inset
+
+, usada para el calculo de la distribución Hipergeométrica.
+\end_layout
+
+\begin_layout Standard
+Jazikü no realiza conversión a valores de porcentaje de la tabla de contingencia
+ indicando con un valor 
+\begin_inset Quotes eld
+\end_inset
+
+null
+\begin_inset Quotes erd
+\end_inset
+
+ la imposibilidad de la operación.No obstante continua haciendo todo el proceso
+ del modulo clima para las otras categorías de la variable independiente
+ que si fuere el caso, si presentan valores de frecuencias asociadas (casos
+ en los que bajo una categoría especifica de la variable Independiente,
+ la respuesta de la variable dependiente es de un número diferente de cero
+ eventos por debajo de lo normal, dentro de lo normal ó por encima de lo
+ normal).
+ 
+\end_layout
+
+\begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Error_generacin_pronostico"
+
+\end_inset
+
+Error en generación de pronóstico .
+ 
+\end_layout
+
+\begin_layout Standard
+Cuando se encuentra que uno de los valores provenientes de la tabla de contingen
+cia utilizados en las Ecs.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:PvdepAbove"
+
+\end_inset
+
+,
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:PvdepNormal"
+
+\end_inset
+
+,
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:PvdepBelow"
+
+\end_inset
+
+, no pasa el análisis de riesgos (yes/no, ver sección
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "cha:Resutlados_de_Jaz"
+
+\end_inset
+
+,Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:tabla_generar_d_resultados"
+
+\end_inset
+
+), Jazikü no cuenta con información suficiente para el calculo del pronostico
+ asociado y no realiza el calculo.
+ Se espera que los valores de la tabla de contingencia en cada una de las
+ categorías sean siempre los tres confiables (pasen el análisis de riesgos)
+ para poder obtener un pronostico óptimo.
+ 
+\end_layout
+
+\begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:apendice_carpetas_maps"
+
+\end_inset
+
+Acerca del contenido de las carpetas 
+\begin_inset Quotes eld
+\end_inset
+
+maps
+\begin_inset Quotes erd
+\end_inset
+
+ generadas por el software
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename maps_jaziku.tif
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:resultados_maps"
+
+\end_inset
+
+Esquema de las tablas de resultados de las carpetas maps
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Los archivos guardados en la carpeta 
+\begin_inset Quotes eld
+\end_inset
+
+maps
+\begin_inset Quotes erd
+\end_inset
+
+ de los resultados de los módulos de clima y pronóstico de Jazikü, siguen
+ el formato mostrado en la Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:resultados_maps"
+
+\end_inset
+
+.
+ En cualquier caso las columnas A,B,C y D, corresponden a el código de la
+ estación, nombre de la estación y ubicación geográfica, conforme la información
+ incluida por el usuario al inicio del proceso (ver sección 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Entrada-de-datos."
+
+\end_inset
+
+).
+ Cuando la tabla proviene del módulo Jazikü - clima, las columnas E,F y
+ G, corresponden a los valores en porcentaje de la tabla de contingencia,
+ para la fase del fenómeno, el trimestre y el rezago indicado en la dirección
+ absoluta del archivo.
+ En cambio para cuando los resultados provienen del módulo de pronostico,
+ las columnas E,F y G, corresponden al pronostico de la variable dependiente
+ según las probabilidades de la variable dependiente, resultado de la combinació
+n lineal mostrada en la sección 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Pronstico_operativo_mensual"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+La columna índice (H) se calcula según el ciclo IF de la Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:cicloif_indice.TIF"
+
+\end_inset
+
+ y la columna suma (I) que es la suma de cada uno de los valores por debajo,
+ por encima y dentro de lo normal bajo la categoría El Niño, La Niña o Neutro,
+ siempre debe ser 100.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename cicloif_indice.TIF
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:cicloif_indice.TIF"
+
+\end_inset
+
+Ciclo IF para la columna índice.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Ejemplo de aplicación del software
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:info_serie_ejemplo"
+
+\end_inset
+
+Información de la ubicación de la estación de la cual se extrajo la información
+ de la variable precipitación utilizada para la revisión del software
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="2" columns="8">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+DEPTO 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+CODIGO 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+NOMBRE 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+CAT 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+ELEV 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+LA_G 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+LO_G 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+MUNICIPIO
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+AMAZONAS 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+4801501 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+APTO VASQUEZ COBO 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+SP 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+84
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+-4°12'S
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+69°57'W 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+LETICIA
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A continuación se presenta un ejemplo de aplicación del software para la
+ serie de precipitación de la estación 4801501 (código IDEAM) correspondiente
+ al aeropuerto Vázquez Cobo de la ciudad de Leticia en el departamento del
+ Amazonas colombiano (ver Tabla 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:info_serie_ejemplo"
+
+\end_inset
+
+), en el período 1985-2009.
+ Ya se ha comprobado que la serie es homogénea.
+ La Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Series_Ver_dep_ejemplo"
+
+\end_inset
+
+ presenta la serie de la que de ahora en adelante será llamada variable
+ dependiente; por su parte fue seleccionada la serie de la Temperatura Superfici
+al del Mar en el pacifico tropical (región EL Niño 3.4) como variable independien
+te, su serie en el período 1950-2009 es mostrada en la Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Series_VerINDEP_ejemplo"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Para correr el ejemplo, digite en la Shell
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\family typewriter
+\shape italic
+jaziku -station stations.csv --climate --forecasting 
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\family typewriter
+\shape italic
+-p_below "La Niña" -p_normal "Neutro" -p_above "El Niño"
+\end_layout
+
+\begin_layout Standard
+Se espera que el software seleccione el período común como 1986-2009 .
+ El archivo 
+\begin_inset Quotes eld
+\end_inset
+
+stations.csv
+\begin_inset Quotes erd
+\end_inset
+
+, debe tener la estructura 
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+No olvide incluir las direcciones absolutas en las que han sido guardados
+ las series de la variables dependiente e independientes
+\end_layout
+
+\end_inset
+
+ (ver sección
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Entrada-de-datos."
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\shape italic
+4801501;4801501_ppt;"4.20";"-84.06";/../4801501_ppt.txt;"PPT";
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\shape italic
+"/../TSM34.txt";"SST";p33;p66;36;63;1;10;82;8;40;58;2;1
+\end_layout
+
+\begin_layout Standard
+Donde se ha indicado que el código de la estación es: 
+\begin_inset Quotes eld
+\end_inset
+
+4801501
+\begin_inset Quotes erd
+\end_inset
+
+, el nombre de la estación es :
+\begin_inset Quotes erd
+\end_inset
+
+4801501_ppt
+\begin_inset Quotes erd
+\end_inset
+
+, su latitud y longitud son: 
+\begin_inset Quotes eld
+\end_inset
+
+4.20" y"-84.06, la ubicación del archivo que contiene la serie de la variable
+ dependiente es: 
+\begin_inset Quotes eld
+\end_inset
+
+/../4801501_ppt.txt
+\begin_inset Quotes erd
+\end_inset
+
+, la variable asociada a la variable dependiente es: "PPT" (precipitación),
+ la ubicación del archivo que guarda la serie de la variable independiente
+ es:"/../TSM34.txt", la clase de la variable independiente es: "SST" (temperatura
+ superficial del mar), los umbrales para dar categorías por encima y por
+ debajo de lo normal de la variable independiente son: 
+\begin_inset Quotes eld
+\end_inset
+
+p33
+\begin_inset Quotes erd
+\end_inset
+
+ y 
+\begin_inset Quotes eld
+\end_inset
+
+p66
+\begin_inset Quotes erd
+\end_inset
+
+, los valores de pronóstico de la variable independiente para el rezago
+ 0 en el trimestre EFM son: por debajo de lo normal 
+\begin_inset Quotes eld
+\end_inset
+
+36
+\begin_inset Quotes erd
+\end_inset
+
+, dentro de lo normal 
+\begin_inset Quotes eld
+\end_inset
+
+63
+\begin_inset Quotes erd
+\end_inset
+
+ por encima de lo normal 
+\begin_inset Quotes eld
+\end_inset
+
+1
+\begin_inset Quotes erd
+\end_inset
+
+, respectivamente para el rezago 1 son: 
+\begin_inset Quotes eld
+\end_inset
+
+10
+\begin_inset Quotes erd
+\end_inset
+
+,
+\begin_inset Quotes erd
+\end_inset
+
+82
+\begin_inset Quotes erd
+\end_inset
+
+ y 
+\begin_inset Quotes eld
+\end_inset
+
+8
+\begin_inset Quotes erd
+\end_inset
+
+, mientras que para el rezago 2 son: 
+\begin_inset Quotes eld
+\end_inset
+
+40
+\begin_inset Quotes erd
+\end_inset
+
+,
+\begin_inset Quotes erd
+\end_inset
+
+58
+\begin_inset Quotes erd
+\end_inset
+
+ y 
+\begin_inset Quotes eld
+\end_inset
+
+2
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Finalmente el trimestre para el cual se realiza el pronóstico es: 
+\begin_inset Quotes eld
+\end_inset
+
+1
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Dado que se ha decidido correr los módulos pronóstico y clima, es de esperarse
+ obtener las carpetas
+\end_layout
+
+\begin_layout Standard
+1.
+ Jazikü-climate 
+\end_layout
+
+\begin_layout Standard
+1.1 4801501_4801501_ppt,maps 
+\end_layout
+
+\begin_layout Standard
+1.1.1 Contingency_table,graphics, time_series y 
+\end_layout
+
+\begin_layout Standard
+result_table_4801501_4801501_ppt_PPT_SST_(1985-2009) (tabla de resultados)
+ 
+\end_layout
+
+\begin_layout Standard
+2.Jazikü-forecasting
+\end_layout
+
+\begin_layout Standard
+2.1.
+ 4801501_4801501_ppt,maps 
+\end_layout
+
+\begin_layout Standard
+2.2 Mosaic_prob_var_D_trim_1_(jfm)_(1985-2009), 
+\end_layout
+
+\begin_layout Standard
+prob_var_D_lag_0_trim_1_(jfm)_(1985-2009), 
+\end_layout
+
+\begin_layout Standard
+prob_var_D_lag_1_trim_1_(jfm)_(1985-2009), 
+\end_layout
+
+\begin_layout Standard
+prob_var_D_lag_2_trim_1_(jfm)_(1985-2009) 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ejemplo_how_to_run_4801501_serie.TIF
+	scale 50
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Series_Ver_dep_ejemplo"
+
+\end_inset
+
+Series de ejemplo de variable dependiente, precipitacion estación 4801501
+ en el perído 1986-2009 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ejemplo_how_to_run_TSM_serie.TIF
+	scale 45
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Series_VerINDEP_ejemplo"
+
+\end_inset
+
+Series de ejemplo de variable independiente,Temperatura Superficial del
+ Mar en la region El Niño3.4, período 1950-2009
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En las subcarpetas 1.1.1, es posible encontrar las tablas de contingencia
+ por rezagos, las gráficas de las tablas de contingencia, las series de
+ tiempo de los trimestres utilizados para aplicar el análisis compuesto
+ y la tabla de resultados asociada a la estación (ver sección 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:resultados_J_clima"
+
+\end_inset
+
+).
+ Compruebe que la tabla de resultados se corresponde con la mostrada en
+ la Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Tabla_resultado_Var_dep_ejemplo"
+
+\end_inset
+
+ Consecuentemente el pronóstico asociado al trimestre 1 como el marcado
+ en el archivo stations.csv, debe corresponder con el mostrado en la Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Pronostico_ejemplo"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ejemplo_how_to_run_4801501_TSM_Tabla_resultados.TIF
+	scale 45
+	rotateAngle 90
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Tabla_resultado_Var_dep_ejemplo"
+
+\end_inset
+
+ Tabla de resultados obtenida después de usar el software Jazikü cuando
+ se utilizó a manera de ejemplo como variable dependiente, precipitación
+ estación 4801501 en el período 1986-2009 y como variable independiente
+ la serie de TSM en la región El Niño 3.4 en el período 1950-2009.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename mosaic_prob_var_D_trim_1_(jfm)_(1985-2009).png
+	scale 30
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Pronostico_ejemplo"
+
+\end_inset
+
+Pronóstico asociado para el comportamiento de la variable precipitación
+ de la estación 
+\family typewriter
+\shape italic
+4801501
+\family default
+\shape default
+, para probabilidades de la variable independiente(Por debajo de lo normal
+ 
+\begin_inset Quotes eld
+\end_inset
+
+36
+\begin_inset Quotes erd
+\end_inset
+
+, dentro de lo normal 
+\begin_inset Quotes eld
+\end_inset
+
+63
+\begin_inset Quotes erd
+\end_inset
+
+ por encima de lo normal 
+\begin_inset Quotes eld
+\end_inset
+
+1
+\begin_inset Quotes erd
+\end_inset
+
+, respectivamente para el rezago 1 
+\begin_inset Quotes eld
+\end_inset
+
+10
+\begin_inset Quotes erd
+\end_inset
+
+,
+\begin_inset Quotes erd
+\end_inset
+
+82
+\begin_inset Quotes erd
+\end_inset
+
+ y 
+\begin_inset Quotes eld
+\end_inset
+
+8
+\begin_inset Quotes erd
+\end_inset
+
+, mientras que para el rezago 2 
+\begin_inset Quotes eld
+\end_inset
+
+40
+\begin_inset Quotes erd
+\end_inset
+
+,
+\begin_inset Quotes erd
+\end_inset
+
+58
+\begin_inset Quotes erd
+\end_inset
+
+ y 
+\begin_inset Quotes eld
+\end_inset
+
+2
+\begin_inset Quotes erd
+\end_inset
+
+),Temperatura Superficial del Mar en la región El Niño3.4, trimestre EFM.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "bibliografia"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
