@@ -417,12 +417,19 @@ def get_thresholds_var_I(station):
     #thresholds by below and by above of var I with particular values, 
     #these values validation with type of var I
     def thresholds_with_particular_values(below, above):
+        
+        try:
+            below = float(below)
+            above = float(above)
+        except:
+            print_error(_("threshoulds ​​could not were identified:\n{0} - {1}").format(below, above))
+            
         if below > above:
             print_error(_("threshold below of independent variable can't be greater than threshold above:\n{0} - {1}")
                         .format(below, above))
         try:
-            threshold_below_var_I = input_validation.validation_var_I(station.type_I, float(below))
-            threshold_above_var_I = input_validation.validation_var_I(station.type_I, float(above))
+            threshold_below_var_I = input_validation.validation_var_I(station.type_I, below)
+            threshold_above_var_I = input_validation.validation_var_I(station.type_I, above)
             return threshold_below_var_I, threshold_above_var_I
         except Exception, e:
             print_error(_("Problem with thresholds of independent variable:\n\n{0}").format(e))
