@@ -41,7 +41,7 @@ def validation_var_D(type_var_D, var_D, date_D):
     def returnError(e):
         #generation exception
         raise ValueError(_("exception validation in dependent variable: value out" \
-                           " of range:\nThe value «{1}» is not valid for type variable «{0}»\n{2}")
+                           " of range:\nThe value \"{1}\" is not valid for type variable \"{0}\"\n{2}")
                          .format(type_var_D, var_D, e))
     #validation for precipitation
     def if_var_D_is_PPT():
@@ -125,7 +125,7 @@ def validation_var_I(type_var_I, var_I):
     def returnError(e):
         #generation exception
         raise ValueError(_("exception validation in independent variable: value out" \
-                           " of range:\nThe value «{1}» is not valid for type variable «{0}»\n{2}")
+                           " of range:\nThe value \"{1}\" is not valid for type variable \"{0}\"\n{2}")
                          .format(type_var_I, var_I, e))
     #validation for Oceanic Nino Index
     def if_var_I_is_ONI():
