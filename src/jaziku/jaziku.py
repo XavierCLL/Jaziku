@@ -523,27 +523,27 @@ def get_contingency_table(station, lag, month):
 
     #if threshold by below of independent variable is wrong
     if float(sum_per_column_percent[0]) == 0 and not threshold_problem[0]:
-        print _(u'\n\nWarning:\nThe thresholds selected «{0}» and «{1}» are not suitable for\n' \
-                u'compound analysis of variable «{2}» with relation to «{3}»\n' \
-                u'inside category «{4}». Therefore, the graphics will not be created.') \
+        print _(u'\n\nWarning:\nThe thresholds selected \"{0}\" and \"{1}\" are not suitable for\n' \
+                u'compound analysis of variable \"{2}\" with relation to \"{3}\"\n' \
+                u'inside category \"{4}\". Therefore, the graphics will not be created.') \
                 .format(station.threshold_below_var_I, station.threshold_below_var_I,
                        station.type_D, station.type_I, station.phenomenon_below)
         threshold_problem[0] = True
     
     #if threshold by below or above calculating normal phenomenon of independent variable is wrong
     if float(sum_per_column_percent[1]) == 0 and not threshold_problem[1]:
-        print _(u'\n\nWarning:\nThe thresholds selected «{0}» and «{1}» are not suitable for\n' \
-                u'compound analysis of variable «{2}» with relation to «{3}»\n' \
-                u'inside category «{4}». Therefore, the graphics will not be created.') \
+        print _(u'\n\nWarning:\nThe thresholds selected \"{0}\" and \"{1}\" are not suitable for\n' \
+                u'compound analysis of variable \"{2}\" with relation to \"{3}\"\n' \
+                u'inside category \"{4}\". Therefore, the graphics will not be created.') \
                 .format(station.threshold_below_var_I, station.threshold_below_var_I,
                        station.type_D, station.type_I, station.phenomenon_normal)
         threshold_problem[1] = True
     
     #if threshold by above of independent variable is wrong
     if float(sum_per_column_percent[2]) == 0 and not threshold_problem[2]:
-        print _(u'\n\nWarning:\nThe thresholds selected «{0}» and «{1}» are not suitable for\n' \
-                u'compound analysis of variable «{2}» with relation to «{3}»\n' \
-                u'inside category «{4}». Therefore, the graphics will not be created.') \
+        print _(u'\n\nWarning:\nThe thresholds selected \"{0}\" and \"{1}\" are not suitable for\n' \
+                u'compound analysis of variable \"{2}\" with relation to \"{3}\"\n' \
+                u'inside category \"{4}\". Therefore, the graphics will not be created.') \
                .format(station.threshold_below_var_I, station.threshold_below_var_I,
                        station.type_D, station.type_I, station.phenomenon_above)
         threshold_problem[2] = True
@@ -1240,11 +1240,13 @@ def main():
         #climate dir output result
         global climate_dir
         climate_dir = os.path.join(os.path.splitext(args.stations.name)[0], _('Jaziku-climate'))   #'results'
+        
+        print _("\nSave the result for climate in:\n -> {0}").format(climate_dir)
+        
         if os.path.isdir(climate_dir):
-            print _("\nWarning: the output director for climate process:\n" \
-                    "«{0}» \nis already exist, Jaziku continue but the results\n" \
-                    "could be mixed or replaced of old output\n") \
-                    .format(climate_dir)
+            print _("\n\tWarning: the output director for climate process\n" \
+                    "\tis already exist, Jaziku continue but the results\n" \
+                    "\tcould be mixed or replaced of old output.")
         #created and define csv output file for maps climate
         phenomenon = {0:phenomenon_below, 1:phenomenon_normal, 2:phenomenon_above}
         maps_plots_files_climate = [] #maps_plots_files_climate[lag][month][phenomenon]
@@ -1284,11 +1286,13 @@ def main():
         #forecasting dir output result
         global forecasting_dir
         forecasting_dir = os.path.join(os.path.splitext(args.stations.name)[0], _('Jaziku-forecasting'))   #'results'
+        
+        print _("\nSave the result for forecasting in:\n -> {0}").format(forecasting_dir)
+        
         if os.path.isdir(forecasting_dir):
-            print _("\nWarning: the output director for forecasting process:\n" \
-                    "«{0}» \nis already exist, Jaziku continue but the results\n" \
-                    "could be mixed or replaced of old output\n") \
-                    .format(forecasting_dir)
+            print _("\n\tWarning: the output director for forecasting process\n" \
+                    "\tis already exist, Jaziku continue but the results\n" \
+                    "\tcould be mixed or replaced of old output.")
         
         #created and define csv output file for maps forecasting
         maps_plots_files_forecasting = [] #maps_plots_files_forecasting[lag]
@@ -1363,8 +1367,8 @@ def main():
                     raise Exception(_("Trimester forecasting \"{0}\" is invalid, should be a month valid number (1-12)").format(station.f_trim))
             
         except Exception, e:
-            print_error(_("Reading stations from file ") + str(args.stations.name) + 
-                        _(" in line ") + str(stations.line_num) + ":\n" + ';'.join(line_station) + "\n\n" + str(e))
+            print_error(_("Reading stations from file \"{0}\" in line {1}:\n").format(args.stations.name, stations.line_num) + 
+                         ';'.join(line_station) + "\n\n" + str(e))
             
         #console message
         print _("\n################# Station: {0} ({1})").format(station.name, station.code)
