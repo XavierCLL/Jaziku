@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-27 23:13-0500\n"
-"PO-Revision-Date: 2011-11-27 23:15-0500\n"
+"POT-Creation-Date: 2011-11-29 13:06-0500\n"
+"PO-Revision-Date: 2011-11-29 13:08-0500\n"
 "Last-Translator: Xavier Corredor Llano <xavier.corredor.llano@gmail.com>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: \n"
@@ -27,12 +27,12 @@ msgstr ""
 "\n"
 "ERROR:\n"
 
-#: jaziku.py:128
+#: jaziku.py:126
 msgid "You version of python is {0}, please use Jaziku with python v2.x "
 msgstr ""
 "La version de python que tienes es {0}, por favor usa Jaziku con python v2.x"
 
-#: jaziku.py:166 jaziku.py:194
+#: jaziku.py:164 jaziku.py:192
 msgid ""
 "Reading from file \"{0}\" in line: {1}\n"
 "\n"
@@ -42,37 +42,37 @@ msgstr ""
 "\n"
 "{2}"
 
-#: jaziku.py:216
+#: jaziku.py:214
 msgid "period define in argument {0}-{1} is outside the common period {2}-{3}"
 msgstr ""
 "el periodo definido en el argumento {0}-{1} esta por fuera del periodo común "
 "{2}-{3}"
 
-#: jaziku.py:288 jaziku.py:289 jaziku.py:290
+#: jaziku.py:286 jaziku.py:287 jaziku.py:288
 msgid "time_series"
 msgstr ""
 
-#: jaziku.py:288 jaziku.py:578
+#: jaziku.py:286 jaziku.py:576
 msgid "lag_0"
 msgstr ""
 
-#: jaziku.py:289 jaziku.py:579
+#: jaziku.py:287 jaziku.py:577
 msgid "lag_1"
 msgstr ""
 
-#: jaziku.py:290 jaziku.py:580
+#: jaziku.py:288 jaziku.py:578
 msgid "lag_2"
 msgstr ""
 
-#: jaziku.py:299
+#: jaziku.py:297
 msgid "meanLag_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv"
 msgstr ""
 
-#: jaziku.py:328
+#: jaziku.py:326
 msgid "Lag_"
 msgstr ""
 
-#: jaziku.py:411
+#: jaziku.py:409
 msgid ""
 "thresholds of independent variable were defined as N standard desviation\n"
 "but are outside of range, this values should be 1, 2 or 3:\n"
@@ -83,7 +83,7 @@ msgstr ""
 "estándar N pero están fuera del rango, éstos valores deben ser 1, 2 o 3:\n"
 "sd{0} sd{1}"
 
-#: jaziku.py:423 jaziku.py:448
+#: jaziku.py:421 jaziku.py:446
 msgid ""
 "threshold below of independent variable can't be greater than threshold "
 "above:\n"
@@ -93,7 +93,7 @@ msgstr ""
 "umbral por encima:\n"
 "{0} - {1}"
 
-#: jaziku.py:430
+#: jaziku.py:428
 msgid ""
 "Problem with thresholds of independent variable:\n"
 "\n"
@@ -103,7 +103,7 @@ msgstr ""
 "\n"
 "{0}"
 
-#: jaziku.py:444
+#: jaziku.py:442
 msgid ""
 "thresholds of independent variable were defined as percentile\n"
 "but are outside of range 0-100:\n"
@@ -113,165 +113,165 @@ msgstr ""
 "pero están fuera del rango 0-100:\n"
 "{0} - {1}"
 
-#: jaziku.py:528 jaziku.py:537 jaziku.py:546
+#: jaziku.py:526 jaziku.py:535 jaziku.py:544
 msgid ""
 "\n"
 "\n"
 "Warning:\n"
-"The thresholds selected «{0}» and «{1}» are not suitable for\n"
-"compound analysis of variable «{2}» with relation to «{3}»\n"
-"inside category «{4}». Therefore, the graphics will not be created."
+"The thresholds selected \"{0}\" and \"{1}\" are not suitable for\n"
+"compound analysis of variable \"{2}\" with relation to \"{3}\"\n"
+"inside category \"{4}\". Therefore, the graphics will not be created."
 msgstr ""
 "\n"
 "\n"
 "Advertencia:\n"
-"El umbral seleccionado «{0}» y «{1}» no son adecuados para el \n"
-"análisis compuesto de la variable «{2}» en relación a «{3}»\n"
-"dentro de la categoría «{4}». Por tal motivo, las gráficas no\n"
+"El umbral seleccionado \"{0}\" y \"{1}\" no son adecuados para el \n"
+"análisis compuesto de la variable \"{2}\" en relación a \"{3}\"\n"
+"dentro de la categoría \"{4}\". Por tal motivo, las gráficas no\n"
 "serán creadas."
 
-#: jaziku.py:578 jaziku.py:579 jaziku.py:580
+#: jaziku.py:576 jaziku.py:577 jaziku.py:578
 msgid "contingency_table"
 msgstr ""
 
-#: jaziku.py:604
+#: jaziku.py:602
 msgid "contingency_table_Lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv"
 msgstr ""
 
-#: jaziku.py:610
+#: jaziku.py:608
 msgid "var I Below"
 msgstr "var I por debajo"
 
-#: jaziku.py:610
+#: jaziku.py:608
 msgid "var I Normal"
 msgstr "var I normal"
 
-#: jaziku.py:610
+#: jaziku.py:608
 msgid "var I Above"
 msgstr "var I por encima"
 
-#: jaziku.py:611
+#: jaziku.py:609
 msgid "var D Below"
 msgstr "var D por debajo"
 
-#: jaziku.py:615
+#: jaziku.py:613
 msgid "var D Normal"
 msgstr "var D normal"
 
-#: jaziku.py:619
+#: jaziku.py:617
 msgid "var D Above"
 msgstr "var D por encima"
 
-#: jaziku.py:635
+#: jaziku.py:633
 msgid "result_table_{0}_{1}_{2}_{3}_({4}-{5}).csv"
 msgstr ""
 
-#: jaziku.py:642
+#: jaziku.py:640
 msgid "var_D"
 msgstr ""
 
-#: jaziku.py:642
+#: jaziku.py:640
 msgid "var_I"
 msgstr ""
 
-#: jaziku.py:642
+#: jaziku.py:640
 msgid "Pearson"
 msgstr ""
 
-#: jaziku.py:642
+#: jaziku.py:640
 msgid "Sign Pearson"
 msgstr ""
 
-#: jaziku.py:642
+#: jaziku.py:640
 msgid "Is sign \"Sign Pearson\"?"
 msgstr "Es significante la \"Sign Pearson\"?"
 
-#: jaziku.py:643
+#: jaziku.py:641
 msgid "threshold below (var D)"
 msgstr "umbral por debajo (var D)"
 
-#: jaziku.py:643
+#: jaziku.py:641
 msgid "threshold above (var D)"
 msgstr "umbral por encima (var D)"
 
-#: jaziku.py:644
+#: jaziku.py:642
 msgid "threshold below (var I)"
 msgstr "umbral por debajo (var I)"
 
-#: jaziku.py:644
+#: jaziku.py:642
 msgid "threshold above (var I)"
 msgstr "umbral por encima (var I)"
 
-#: jaziku.py:645
+#: jaziku.py:643
 msgid "Contingency Table (CT)"
 msgstr "Table de contingencia (TC)"
 
-#: jaziku.py:646
+#: jaziku.py:644
 msgid "Contingency Table in %"
 msgstr "Table de contingencia en %"
 
-#: jaziku.py:647
+#: jaziku.py:645
 msgid "is sig risk analysis?"
 msgstr "es sign el análisis de riesgo?"
 
-#: jaziku.py:648
+#: jaziku.py:646
 msgid "Test Stat - Chi2"
 msgstr "Test Estadístico - Chi2"
 
-#: jaziku.py:648
+#: jaziku.py:646
 msgid "Crit Value - Chi2"
 msgstr "Valor Critico - Chi2"
 
-#: jaziku.py:648
+#: jaziku.py:646
 msgid "Is sig CT?"
 msgstr "es sig la TC?"
 
-#: jaziku.py:648
+#: jaziku.py:646
 msgid "correl_CT"
 msgstr "correl_TC"
 
-#: jaziku.py:656
+#: jaziku.py:654
 msgid "Lag {0}"
 msgstr "Rezago {0}"
 
-#: jaziku.py:664 jaziku.py:665 jaziku.py:666 jaziku.py:667 jaziku.py:668
-#: jaziku.py:669
+#: jaziku.py:662 jaziku.py:663 jaziku.py:664 jaziku.py:665 jaziku.py:666
+#: jaziku.py:667
 msgid "var Dep below"
 msgstr "var Dep por debajo"
 
-#: jaziku.py:664 jaziku.py:665 jaziku.py:666 jaziku.py:667 jaziku.py:668
-#: jaziku.py:669
+#: jaziku.py:662 jaziku.py:663 jaziku.py:664 jaziku.py:665 jaziku.py:666
+#: jaziku.py:667
 msgid "var Dep normal"
 msgstr "var Dep normal"
 
-#: jaziku.py:664 jaziku.py:665 jaziku.py:666 jaziku.py:667 jaziku.py:668
-#: jaziku.py:669
+#: jaziku.py:662 jaziku.py:663 jaziku.py:664 jaziku.py:665 jaziku.py:666
+#: jaziku.py:667
 msgid "var Dep above"
 msgstr "var Dep por encima"
 
-#: jaziku.py:699 jaziku.py:725 jaziku.py:732 jaziku.py:1146 jaziku.py:1148
-#: jaziku.py:1150 jaziku.py:1152 jaziku.py:1154 jaziku.py:1156 jaziku.py:1158
-#: jaziku.py:1160 jaziku.py:1162
+#: jaziku.py:697 jaziku.py:723 jaziku.py:730 jaziku.py:1144 jaziku.py:1146
+#: jaziku.py:1148 jaziku.py:1150 jaziku.py:1152 jaziku.py:1154 jaziku.py:1156
+#: jaziku.py:1158 jaziku.py:1160
 msgid "yes"
 msgstr "si"
 
-#: jaziku.py:701 jaziku.py:727 jaziku.py:734
+#: jaziku.py:699 jaziku.py:725 jaziku.py:732
 msgid "no"
 msgstr "no"
 
-#: jaziku.py:788 jaziku.py:921
+#: jaziku.py:786 jaziku.py:919
 msgid "graphics"
 msgstr ""
 
-#: jaziku.py:791 jaziku.py:924
+#: jaziku.py:789 jaziku.py:922
 msgid "composite_analisys"
 msgstr ""
 
-#: jaziku.py:800 jaziku.py:801 jaziku.py:873 jaziku.py:1258
+#: jaziku.py:798 jaziku.py:799 jaziku.py:871 jaziku.py:1258
 msgid "lag_{0}"
 msgstr ""
 
-#: jaziku.py:819
+#: jaziku.py:817
 msgid ""
 "Composite analisys - {0} ({1})\n"
 "{2} - {3} - lag {6} - trim {7} ({8}) - ({4}-{5})"
@@ -279,43 +279,43 @@ msgstr ""
 "Análisis compuesto - {0} ({1})\n"
 "{2} - {3} - rez {6} - trim {7} ({8}) - ({4}-{5})"
 
-#: jaziku.py:823
+#: jaziku.py:821
 msgid "probability (%)"
 msgstr "probabilidad (%)"
 
-#: jaziku.py:861
+#: jaziku.py:859
 msgid "var Dep Below"
 msgstr "var Dep por debajo"
 
-#: jaziku.py:861
+#: jaziku.py:859
 msgid "var Dep Normal"
 msgstr "var Dep normal"
 
-#: jaziku.py:861
+#: jaziku.py:859
 msgid "var Dep Above"
 msgstr "var Dep por encima"
 
-#: jaziku.py:874
+#: jaziku.py:872
 msgid "ca_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png"
 msgstr ""
 
-#: jaziku.py:889
+#: jaziku.py:887
 msgid "mosaic_lag_{0}_{1}_{2}_{3}_{4}_({5}-{6}).png"
 msgstr ""
 
-#: jaziku.py:940
+#: jaziku.py:938
 msgid "Decrease"
 msgstr "Descenso"
 
-#: jaziku.py:940
+#: jaziku.py:938
 msgid "Normal"
 msgstr "Normal"
 
-#: jaziku.py:940
+#: jaziku.py:938
 msgid "Exceed"
 msgstr "Excedencia"
 
-#: jaziku.py:954
+#: jaziku.py:952
 msgid ""
 "Probability forecasted of {0} - {1}\n"
 "{2} - lag {3} - trim {4} ({5}) - ({6}-{7})"
@@ -323,27 +323,27 @@ msgstr ""
 "Probabilidad pronosticada de {0} - {1}\n"
 "{2} - rez {3} - trim {4} ({5}) - ({6}-{7})"
 
-#: jaziku.py:961
+#: jaziku.py:959
 msgid "prob_of_{0}_lag_{1}_trim_{2}_({3}-{4}).png"
 msgstr ""
 
-#: jaziku.py:974
+#: jaziku.py:972
 msgid "mosaic_prob_of_{0}_trim_{1}_({3}-{4}).png"
 msgstr ""
 
-#: jaziku.py:1081
+#: jaziku.py:1079
 msgid "Processing climate "
 msgstr "Procesando clima"
 
-#: jaziku.py:1117 jaziku.py:1178
+#: jaziku.py:1115 jaziku.py:1176
 msgid "done"
 msgstr "hecho"
 
-#: jaziku.py:1128
+#: jaziku.py:1126
 msgid "Processing forecasting ({0}-{1})......."
-msgstr "Procesando pronostico (0}-1})......."
+msgstr "Procesando pronóstico ({0}-{1})......."
 
-#: jaziku.py:1195
+#: jaziku.py:1193
 msgid ""
 "\n"
 "########################### JAZIKU ###########################\n"
@@ -367,7 +367,7 @@ msgstr ""
 "## @IDEAM Colombia, 2011                                      ##\n"
 "################################################################ "
 
-#: jaziku.py:1211
+#: jaziku.py:1209
 msgid ""
 "\n"
 "Setting period in: {0}-{1}"
@@ -375,7 +375,7 @@ msgstr ""
 "\n"
 "Configurando el periodo en: {0}-{1}"
 
-#: jaziku.py:1213
+#: jaziku.py:1211
 msgid ""
 "the period must be: year_start-year_end (ie. 1980-2008)\n"
 "\n"
@@ -385,89 +385,97 @@ msgstr ""
 "\n"
 "{0}"
 
-#: jaziku.py:1221 jaziku.py:1222
+#: jaziku.py:1219 jaziku.py:1220
 msgid "ndj"
 msgstr "nde"
 
-#: jaziku.py:1221 jaziku.py:1222
+#: jaziku.py:1219 jaziku.py:1220
 msgid "djf"
 msgstr "def"
 
-#: jaziku.py:1221
+#: jaziku.py:1219
 msgid "jfm"
 msgstr "efm"
 
-#: jaziku.py:1221
+#: jaziku.py:1219
 msgid "fma"
 msgstr ""
 
-#: jaziku.py:1221
+#: jaziku.py:1219
 msgid "mam"
 msgstr ""
 
-#: jaziku.py:1221
+#: jaziku.py:1219
 msgid "amj"
 msgstr ""
 
-#: jaziku.py:1221
+#: jaziku.py:1219
 msgid "mjj"
 msgstr ""
 
-#: jaziku.py:1222
+#: jaziku.py:1220
 msgid "jja"
 msgstr ""
 
-#: jaziku.py:1222
+#: jaziku.py:1220
 msgid "jas"
 msgstr ""
 
-#: jaziku.py:1222
+#: jaziku.py:1220
 msgid "aso"
 msgstr ""
 
-#: jaziku.py:1222
+#: jaziku.py:1220
 msgid "son"
 msgstr ""
 
-#: jaziku.py:1222
+#: jaziku.py:1220
 msgid "ond"
 msgstr ""
 
-#: jaziku.py:1228
+#: jaziku.py:1226
 msgid "var Ind below"
 msgstr "var I por debajo"
 
-#: jaziku.py:1233
+#: jaziku.py:1231
 msgid "var Ind normal"
 msgstr "var I normal"
 
-#: jaziku.py:1238
+#: jaziku.py:1236
 msgid "var Ind above"
 msgstr "var I por encima"
 
-#: jaziku.py:1244
+#: jaziku.py:1242
 msgid "Jaziku-climate"
 msgstr ""
 
-#: jaziku.py:1246
+#: jaziku.py:1244
 msgid ""
 "\n"
-"Warning: the output director for climate process:\n"
-"«{0}» \n"
-"is already exist, Jaziku continue but the results\n"
-"could be mixed or replaced of old output\n"
+"Save the result for climate in:\n"
+" -> {0}"
 msgstr ""
 "\n"
-"Advertencia: El directorio de salida  para el proceso del clima:\n"
-"«{0}» \n"
-"ya existe,Jaziku continua pero el resultado puede mezclarse\n"
-"o ser reemplazada con la corrida anterior.\n"
+"Guardar los resultados para el clima en:\n"
+" -> {0}"
 
-#: jaziku.py:1257 jaziku.py:1301
+#: jaziku.py:1247
+msgid ""
+"\n"
+"\tWarning: the output director for climate process\n"
+"\tis already exist, Jaziku continue but the results\n"
+"\tcould be mixed or replaced of old output."
+msgstr ""
+"\n"
+"\tAdvertencia: El directorio de salida para el proceso del clima\n"
+"\tya existe, Jaziku continua pero el resultado puede mezclarse\n"
+"\to ser reemplazada con la corrida anterior."
+
+#: jaziku.py:1257 jaziku.py:1303
 msgid "maps"
 msgstr ""
 
-#: jaziku.py:1258 jaziku.py:1301
+#: jaziku.py:1258 jaziku.py:1303
 msgid "maps-data"
 msgstr ""
 
@@ -475,15 +483,15 @@ msgstr ""
 msgid "map_data_lag_{0}_trim_{1}_{2}.csv"
 msgstr ""
 
-#: jaziku.py:1276 jaziku.py:1309
+#: jaziku.py:1276 jaziku.py:1311
 msgid "code"
 msgstr "código"
 
-#: jaziku.py:1276 jaziku.py:1309
+#: jaziku.py:1276 jaziku.py:1311
 msgid "lat"
 msgstr ""
 
-#: jaziku.py:1276 jaziku.py:1309
+#: jaziku.py:1276 jaziku.py:1311
 msgid "lon"
 msgstr ""
 
@@ -507,7 +515,7 @@ msgstr "var por encima"
 msgid "p_index"
 msgstr "indice"
 
-#: jaziku.py:1277 jaziku.py:1310
+#: jaziku.py:1277 jaziku.py:1312
 msgid "sum"
 msgstr ""
 
@@ -518,46 +526,54 @@ msgstr ""
 #: jaziku.py:1290
 msgid ""
 "\n"
-"Warning: the output director for forecasting process:\n"
-"«{0}» \n"
-"is already exist, Jaziku continue but the results\n"
-"could be mixed or replaced of old output\n"
+"Save the result for forecasting in:\n"
+" -> {0}"
 msgstr ""
 "\n"
-"Advertencia: El directorio de salida  para el proceso del pronóstico:\n"
-"«{0}» \n"
-"ya existe,Jaziku continua pero el resultado puede mezclarse\n"
-"o ser reemplazada con la corrida anterior.\n"
+"Guardar los resultados para el pronóstico en:\n"
+" -> {0}"
 
-#: jaziku.py:1306
+#: jaziku.py:1293
+msgid ""
+"\n"
+"\tWarning: the output director for forecasting process\n"
+"\tis already exist, Jaziku continue but the results\n"
+"\tcould be mixed or replaced of old output."
+msgstr ""
+"\n"
+"\tAdvertencia: El directorio de salida para el proceso del pronóstico\n"
+"\tya existe, Jaziku continua pero el resultado puede mezclarse\n"
+"\to ser reemplazada con la corrida anterior."
+
+#: jaziku.py:1308
 msgid "map_data_lag_{0}.csv"
 msgstr ""
 
-#: jaziku.py:1309
+#: jaziku.py:1311
 msgid "prob_decrease_var_D"
 msgstr "prob_descenso_var_D"
 
-#: jaziku.py:1309
+#: jaziku.py:1311
 msgid "prob_normal_var_D"
 msgstr "prob_normal_var_D"
 
-#: jaziku.py:1310
+#: jaziku.py:1312
 msgid "prob_exceed_var_D"
 msgstr "prob_excedencia_var_D"
 
-#: jaziku.py:1310
+#: jaziku.py:1312
 msgid "index"
 msgstr "indice"
 
-#: jaziku.py:1333
+#: jaziku.py:1335
 msgid "{0} is not valid type for dependence variable"
 msgstr "{0} no es un tipo de variable valida para la variable independiente"
 
-#: jaziku.py:1340
+#: jaziku.py:1342
 msgid "{0} is not valid type for independence variable"
 msgstr "{0} no es un tipo de variable valida para la variable independiente"
 
-#: jaziku.py:1348
+#: jaziku.py:1350
 msgid ""
 "For forecasting process you need define 9 probability variables and "
 "trimester to process in stations file:"
@@ -565,28 +581,24 @@ msgstr ""
 "Para procesar el pronostico (forecasting) necesitas definir las 9 "
 "probabilidades y su trimestre a calcular en el archivo de estaciones:"
 
-#: jaziku.py:1363
+#: jaziku.py:1365
 msgid "Trimester forecasting \"{0}\" is invalid, should be integer number"
 msgstr ""
-"El trimestre del pronostico\"{0}\" no es valido, debe ser un numero entero"
+"El trimestre del pronostico \"{0}\" no es valido, debe ser un numero entero"
 
-#: jaziku.py:1365
+#: jaziku.py:1367
 msgid ""
 "Trimester forecasting \"{0}\" is invalid, should be a month valid number "
 "(1-12)"
 msgstr ""
-"El trimestre del pronostico\"{0}\" no es valido, debe ser un numero de mes "
+"El trimestre del pronostico \"{0}\" no es valido, debe ser un numero de mes "
 "valido (1-12)"
 
-#: jaziku.py:1368
-msgid "Reading stations from file "
-msgstr "Leyendo las estaciones desde el archivo"
+#: jaziku.py:1370
+msgid "Reading stations from file \"{0}\" in line {1}:\n"
+msgstr "Leyendo del archivo \"{0}\" en la linea {1}:\n"
 
-#: jaziku.py:1369
-msgid " in line "
-msgstr " en la linea "
-
-#: jaziku.py:1372
+#: jaziku.py:1374
 msgid ""
 "\n"
 "################# Station: {0} ({1})"
@@ -594,7 +606,7 @@ msgstr ""
 "\n"
 "################# Estación: {0} ({1})"
 
-#: jaziku.py:1388
+#: jaziku.py:1390
 msgid ""
 "sorry, Jaziku can't run forecasting process without climate, this issue has "
 "not been implemented yet, \n"
@@ -604,13 +616,13 @@ msgstr ""
 "sin clima, esta caracteristica aún no ha sido implementada, por favor "
 "corralo de nuevo con la opcion \"-c\""
 
-#: jaziku.py:1394
+#: jaziku.py:1396
 msgid ""
 "Neither process (climate, forecasting) were executed, \n"
 "please enable this process in arguments: \n"
 "'-c, --climate' for climate and/or '-f, --forecasting' for forecasting."
 msgstr ""
-"Ninguno de los procesos (clima, pronóstico) fueron ejecutados,\n"
+"Ninguno de los procesos (clima y/o pronóstico) no fueron ejecutados,\n"
 "por favor habilite éstos procesos en los argumentos:\n"
 "'-c, --climate' para clima y/o '-f, --forecasting' para pronóstico."
 
@@ -663,11 +675,11 @@ msgstr "Habilitar el análisis de riesgo para el proceso de pronóstico"
 #: plugins/input_validation.py:43
 msgid ""
 "exception validation in dependent variable: value out of range:\n"
-"The value «{1}» is not valid for type variable «{0}»\n"
+"The value \"{1}\" is not valid for type variable \"{0}\"\n"
 "{2}"
 msgstr ""
 "error en la validación de la variable dependiente: valor fuera del rango:\n"
-"El valor «{1}» no es valido para el tipo de variable «{0}»\n"
+"El valor \"{1}\" no es valido para el tipo de variable \"{0}\"\n"
 "{2}"
 
 #: plugins/input_validation.py:51
@@ -698,11 +710,11 @@ msgstr "% de humedad relativa no valida"
 #: plugins/input_validation.py:127
 msgid ""
 "exception validation in independent variable: value out of range:\n"
-"The value «{1}» is not valid for type variable «{0}»\n"
+"The value \"{1}\" is not valid for type variable \"{0}\"\n"
 "{2}"
 msgstr ""
 "error en la validación de la variable independiente: valor fuera del rango:\n"
-"El valor «{1}» no es valido para el tipo de variable «{0}»\n"
+"El valor \"{1}\" no es valido para el tipo de variable \"{0}\"\n"
 "{2}"
 
 #: plugins/input_validation.py:135
@@ -741,31 +753,15 @@ msgstr "Indice de la oscilacion quasibienal no valida"
 msgid "North Atlantic Oscillation index not valid"
 msgstr "Indice de la oscilación del Atlántico norte no valida"
 
-#~ msgid ""
-#~ "\n"
-#~ "Warning: «{0}» output directory already \n"
-#~ "exist,Jaziku continue but the results could be mixed \n"
-#~ "or replaced of old output."
-#~ msgstr ""
-#~ "\n"
-#~ "Advertencia: El directorio de salida «{0}» ya existe,\n"
-#~ "Jaziku continua pero el resultado puede mezclarse\n"
-#~ "o ser reemplazada con la corrida anterior."
+#~ msgid "Reading stations from file "
+#~ msgstr "Leyendo las estaciones desde el archivo "
 
-#~ msgid "{0} is not valid for type dependence variable"
-#~ msgstr "{0} no es un tipo de variable valida para la variable dependiente"
+#~ msgid " in line "
+#~ msgstr " en la linea "
 
 #~ msgid ""
-#~ "Problem importing module, check if you system installed all module\n"
-#~ "required for Jaziku, install from repository or download\n"
-#~ "and install it from website, please check error:\n"
-#~ ">>"
+#~ "\n"
+#~ "Warning: the output director for climate process {0}"
 #~ msgstr ""
-#~ "Problemas importando modulo, revisa si el modulo requerido por \n"
-#~ "Jaziku esta instalado en tu sistema,  sino instalalo desde los "
-#~ "repositorios\n"
-#~ "o desde la pagina del proyecto, revisa el siguiente error:\n"
-#~ ">>"
-
-#~ msgid "Contingency Table"
-#~ msgstr "Table de contingencia (TC)"
+#~ "\n"
+#~ "yeaaaaaaaaaaa {0}"
