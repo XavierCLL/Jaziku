@@ -31,7 +31,7 @@ VERSION = "1.0"
 COMPILE_DATE = "29 nov 2011"
 
 #valid null value for variables dependent and independent (inside files input)
-VALID_NULL = 99999
+VALID_NULL = [99999, -99999]
 
 #accuracy of number decimal places, only for print result
 ACCURACY = 3

@@ -250,21 +250,21 @@ def meanTrim(var_1, var_2, var_3):
     '''
     Return average from 3 values, ignoring valid null values.
     '''
-    if int(var_1) == global_var.VALID_NULL and int(var_2) == global_var.VALID_NULL and int(var_3) == global_var.VALID_NULL:
+    if int(var_1) in global_var.VALID_NULL and int(var_2) in global_var.VALID_NULL and int(var_3) in global_var.VALID_NULL:
         return  global_var.VALID_NULL
-    if int(var_1) != global_var.VALID_NULL and int(var_2) == global_var.VALID_NULL and int(var_3) == global_var.VALID_NULL:
+    if int(var_1) not in global_var.VALID_NULL and int(var_2) in global_var.VALID_NULL and int(var_3) in global_var.VALID_NULL:
         return  var_1
-    if int(var_1) == global_var.VALID_NULL and int(var_2) != global_var.VALID_NULL and int(var_3) == global_var.VALID_NULL:
+    if int(var_1) in global_var.VALID_NULL and int(var_2) not in global_var.VALID_NULL and int(var_3) in global_var.VALID_NULL:
         return  var_2    
-    if int(var_1) == global_var.VALID_NULL and int(var_2) == global_var.VALID_NULL and int(var_3) != global_var.VALID_NULL:
+    if int(var_1) in global_var.VALID_NULL and int(var_2) in global_var.VALID_NULL and int(var_3) not in global_var.VALID_NULL:
         return  var_3
-    if int(var_1) != global_var.VALID_NULL and int(var_2) != global_var.VALID_NULL and int(var_3) == global_var.VALID_NULL:
+    if int(var_1) not in global_var.VALID_NULL and int(var_2) not in global_var.VALID_NULL and int(var_3) in global_var.VALID_NULL:
         return  (var_1 + var_2) / 2.0
-    if int(var_1) == global_var.VALID_NULL and int(var_2) != global_var.VALID_NULL and int(var_3) != global_var.VALID_NULL:
+    if int(var_1) in global_var.VALID_NULL and int(var_2) not in global_var.VALID_NULL and int(var_3) not in global_var.VALID_NULL:
         return  (var_2 + var_3) / 2.0
-    if int(var_1) != global_var.VALID_NULL and int(var_2) == global_var.VALID_NULL and int(var_3) != global_var.VALID_NULL:
+    if int(var_1) not in global_var.VALID_NULL and int(var_2) in global_var.VALID_NULL and int(var_3) not in global_var.VALID_NULL:
         return  (var_1 + var_3) / 2.0
-    if int(var_1) != global_var.VALID_NULL and int(var_2) != global_var.VALID_NULL and int(var_3) != global_var.VALID_NULL:
+    if int(var_1) not in global_var.VALID_NULL and int(var_2) not in global_var.VALID_NULL and int(var_3) not in global_var.VALID_NULL:
         return  (var_1 + var_2 + var_3) / 3.0
 
 
