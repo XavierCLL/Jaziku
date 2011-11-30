@@ -28,11 +28,13 @@ import global_var
 #Create parser arguments
 arguments = argparse.ArgumentParser(
                                  prog = global_var.PROG_NAME,
-                                 description = _('''%(prog)s is a software for the implementation of composite analysis 
-                                                metodology between the major indices of climate variability and major 
-                                                meteorological variables in puntual scale.'''),
-                                 epilog = "Copyright © 2011 IDEAM - "\
-                                          "Bogotá, Colombia")
+                                 description = _("Jaziku is a software for the implementation of composite analysis\n"  
+                                                 "metodology between the major indices of climate variability and\n" 
+                                                 "major meteorological variables in puntual scale.\n"),
+                                 epilog = "Jaziku, version {0} - {1}\n" \
+                                          "Copyright © 2011 IDEAM - Colombia"
+                                          .format(global_var.VERSION, global_var.COMPILE_DATE),
+                                          formatter_class = argparse.RawTextHelpFormatter)
         
 ### Input arguments for dependent variable
 #Set path to file of stations list

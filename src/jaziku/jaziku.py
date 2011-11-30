@@ -118,7 +118,7 @@ import plugins.significance_corr as sc
 
 #Print error generic function, this is called on any error occurred in Jaziku
 def print_error(text_error):
-    print _('\n\nERROR:\n' + text_error + '\n\nFor more help run program with argument: -h')
+    print _('\n\nERROR:\n{0}\n\nFor more help run program with argument: -h').format(text_error)
     exit()
 
 #check python version
@@ -1203,9 +1203,10 @@ def main():
             "## variability and major meteorological variables in        ##\n" \
             "## puntual scale.                                           ##\n" \
             "##                                                          ##\n" \
-            "## Version 1.0                                              ##\n" \
-            "## @IDEAM Colombia, 2011                                    ##\n" \
-            "##############################################################")
+            "## Version {0} - {1}\t                            ##\n" \
+            "## Copyright © 2011 IDEAM - Colombia                        ##\n" \
+            "##############################################################") \
+            .format(global_var.VERSION, global_var.COMPILE_DATE)
     
     # set period for process if is defined as argument
     if args.period:
@@ -1251,9 +1252,9 @@ def main():
         print _("\nSave the result for climate in:\n -> {0}").format(climate_dir)
         
         if os.path.isdir(climate_dir):
-            print _("\n\tWarning: the output director for climate process\n" \
-                    "\tis already exist, Jaziku continue but the results\n" \
-                    "\tcould be mixed or replaced of old output.")
+            print _("\n   Warning: the output director for climate process\n" \
+                    "   is already exist, Jaziku continue but the results\n" \
+                    "   could be mixed or replaced of old output.")
         #created and define csv output file for maps climate
         phenomenon = {0:phenomenon_below, 1:phenomenon_normal, 2:phenomenon_above}
         maps_plots_files_climate = [] #maps_plots_files_climate[lag][month][phenomenon]
@@ -1297,9 +1298,9 @@ def main():
         print _("\nSave the result for forecasting in:\n -> {0}").format(forecasting_dir)
         
         if os.path.isdir(forecasting_dir):
-            print _("\n\tWarning: the output director for forecasting process\n" \
-                    "\tis already exist, Jaziku continue but the results\n" \
-                    "\tcould be mixed or replaced of old output.")
+            print _("\n   Warning: the output director for forecasting process\n" \
+                    "   is already exist, Jaziku continue but the results\n" \
+                    "   could be mixed or replaced of old output.")
         
         #created and define csv output file for maps forecasting
         maps_plots_files_forecasting = [] #maps_plots_files_forecasting[lag]
