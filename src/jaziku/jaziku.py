@@ -251,7 +251,7 @@ def meanTrim(var_1, var_2, var_3):
     Return average from 3 values, ignoring valid null values.
     '''
     if int(var_1) in global_var.VALID_NULL and int(var_2) in global_var.VALID_NULL and int(var_3) in global_var.VALID_NULL:
-        return  global_var.VALID_NULL
+        return  global_var.VALID_NULL[1]
     if int(var_1) not in global_var.VALID_NULL and int(var_2) in global_var.VALID_NULL and int(var_3) in global_var.VALID_NULL:
         return  var_1
     if int(var_1) in global_var.VALID_NULL and int(var_2) not in global_var.VALID_NULL and int(var_3) in global_var.VALID_NULL:
