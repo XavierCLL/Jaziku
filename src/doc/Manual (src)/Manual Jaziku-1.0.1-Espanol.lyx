@@ -296,6 +296,60 @@ reference "cha:Resutlados_de_Jaz"
 \end_layout
 
 \begin_layout Standard
+Jaziku es un programa que corre en la consola también llamada shell o terminal,
+ por el momento no se tiene pensado en crear una interfaz gráfica, ejecutarlo
+ bajo la consola da mayor robustez, simplicidad y se puede automatizar fácilment
+e, además que realmente no es difícil usar la consola, si nunca haz usado
+ la terminal, no te preocupes, créeme que para poderte defender dentro de
+ ella solo necesitas de algunos comandos.
+ 
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Si quieres aprender usar bien la consola 
+\begin_inset CommandInset href
+LatexCommand href
+name "recomiendo éste libro"
+target "http://linuxcommand.org/tlcl.php"
+
+\end_inset
+
+ corto, claro, rápido y sencillo.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Cuando se instala adecuadamente Jaziku queda instalado en el sistema, es
+ decir, se puede ejecutar en cualquier parte o estar ubicado en cualquier
+ directorio dentro de la consola, ahora bien, si queremos usar la ruta relativa
+ de los archivos que enlazamos en Jaziku (esto es, solo poniendo los nombres
+ de los archivos sin la ruta completa donde están almacenados (ruta absoluta))
+ abrimos la consola y entramos (con el comando 
+\begin_inset Quotes eld
+\end_inset
+
+cd
+\begin_inset Quotes erd
+\end_inset
+
+) en la carpeta donde están los archivos a procesar, una ves ubicado donde
+ están los archivos a procesar (puedes verificar con el comando 
+\begin_inset Quotes eld
+\end_inset
+
+ls
+\begin_inset Quotes erd
+\end_inset
+
+) puedes correr Jaziku.
+\end_layout
+
+\begin_layout Standard
 A continuación se presenta el comando estándar y básico de corrida del programa:
 \end_layout
 
@@ -445,7 +499,7 @@ jaziku -station stations.csv --climate --forecasting -period 1990-2000
 \end_layout
 
 \begin_layout Standard
-El usuario puede hacer que Jazikü etiquete las categorias por encima, por
+El usuario puede hacer que Jazikü etiquete las categorías por encima, por
  debajo y dentro de lo normal de la variable independiente, para que en
  los resultados sea impreso bajo estos nombres (ver sección 
 \begin_inset CommandInset ref
@@ -515,8 +569,8 @@ Del mismo modo adicionando el comando
 \begin_inset Quotes erd
 \end_inset
 
- se logra que Jazikü interpole las salidas de la climatología y el pronóstico
- asociado.
+ (en desarrollo) se logra que Jazikü interpole las salidas de la climatología
+ y el pronóstico asociado.
  Finalmente se espera una vez Jazikü ha sido corrido de manera correcta,
  el usuario visualice
 \begin_inset Foot
@@ -537,7 +591,7 @@ Un ejemplo para el cual 4801501 es el código de la estación, corrido en
 
 \family typewriter
 \shape italic
-########################### JAZIKU ###########################
+$ jaziku -stations stations_list.csv -c -f -period 1990-2000
 \end_layout
 
 \begin_layout Standard
@@ -545,7 +599,7 @@ Un ejemplo para el cual 4801501 es el código de la estación, corrido en
 
 \family typewriter
 \shape italic
-## Jaziku is a software for the implementation of composite ##
+########################### JAZIKU ########################### 
 \end_layout
 
 \begin_layout Standard
@@ -553,7 +607,7 @@ Un ejemplo para el cual 4801501 es el código de la estación, corrido en
 
 \family typewriter
 \shape italic
-## analysis metodology between the major indices of climate ##
+## Jaziku is a software for the implementation of composite ## 
 \end_layout
 
 \begin_layout Standard
@@ -561,7 +615,43 @@ Un ejemplo para el cual 4801501 es el código de la estación, corrido en
 
 \family typewriter
 \shape italic
-## variability and major meteorological variables in ##
+## analysis metodology between the major indices of climate ## 
+\end_layout
+
+\begin_layout Standard
+\align block
+
+\family typewriter
+\shape italic
+## variability and major meteorological variables in 
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+## 
 \end_layout
 
 \begin_layout Standard
@@ -570,7 +660,175 @@ Un ejemplo para el cual 4801501 es el código de la estación, corrido en
 \family typewriter
 \shape italic
 ## puntual scale.
- ##
+ 
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+## 
 \end_layout
 
 \begin_layout Standard
@@ -578,7 +836,235 @@ Un ejemplo para el cual 4801501 es el código de la estación, corrido en
 
 \family typewriter
 \shape italic
-## ##
+## 
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+## 
 \end_layout
 
 \begin_layout Standard
@@ -586,7 +1072,187 @@ Un ejemplo para el cual 4801501 es el código de la estación, corrido en
 
 \family typewriter
 \shape italic
-## Version 1.0 ##
+## Version 1.0 
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+## 
 \end_layout
 
 \begin_layout Standard
@@ -594,7 +1260,147 @@ Un ejemplo para el cual 4801501 es el código de la estación, corrido en
 
 \family typewriter
 \shape italic
-## @IDEAM Colombia, 2011 ##
+## @IDEAM Colombia, 2011 
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+##
 \end_layout
 
 \begin_layout Standard
@@ -603,34 +1409,38 @@ Un ejemplo para el cual 4801501 es el código de la estación, corrido en
 \family typewriter
 \shape italic
 ##############################################################
+\begin_inset Newline newline
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-\align block
 
 \family typewriter
 \shape italic
-Setting period in: 1990-2000 
+Setting period in: 1990-2000
+\begin_inset Newline newline
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-\align block
 
 \family typewriter
 \shape italic
-################# Station: 4801501-01 (4801501)
+################# Station: APTO VASQUEZ COBO (4801501) 
 \end_layout
 
 \begin_layout Standard
-\align block
 
 \family typewriter
 \shape italic
-Processing climate (1990-2000)...........done
+Processing climate (1990-2000)...........done 
 \end_layout
 
 \begin_layout Standard
-\align block
 
 \family typewriter
 \shape italic
@@ -795,7 +1605,8 @@ reference "fig:Ejemplo_formato_data"
 \end_inset
 
  presenta dos ejemplos de series vistas desde el lector Kwrite de Opensuse,
- no olvide que el valor estándar para datos perdidos o no medidos es 99999.
+ los valor que acepta Jaziku para datos perdidos o no medidos es 99999 o
+ -99999.
 \end_layout
 
 \begin_layout Standard
