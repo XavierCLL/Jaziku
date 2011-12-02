@@ -25,3 +25,7 @@ python2 setup.py sdist
 #generar/actualizar egg:
 
 python2 setup.py bdist_egg
+
+#generar/actualiza exe for windows:
+
+python2 setup.py bdist_wininst
