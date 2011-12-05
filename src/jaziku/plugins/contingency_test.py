@@ -44,14 +44,14 @@ def contingency_test(O, E = None, alpha = 0.10, side = 0):
     colsum = [0.0] * n
     rowsum = [0.0] * m 
  
-    #compute all marginal sums.
+    # compute all marginal sums.
     for i in range(m):
         rowsum[i] = sum([O[i][j] for j in range(n)])
     for j in range(n):
         colsum[j] = sum([O[i][j] for i in range(m)])
     Tot = float(sum(rowsum))
  
-    #Compute expected values.
+    # Compute expected values.
     for i in range(m):
         for j in range(n):
             E[i][j] = (colsum[j] * rowsum[i]) / Tot    
@@ -66,13 +66,13 @@ def contingency_test(O, E = None, alpha = 0.10, side = 0):
     # Determine critical value.
     if m == 1:  # single row?
         df = n - 1
-    elif n == 1: #single column?
+    elif n == 1: # single column?
         df = m - 1
     else:
         df = (m - 1) * (n - 1)
  
     if side == -1:
-        critvalue = stat.chi2.ppf(alpha, df)  #http://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.chi2.html#scipy.stats.chi2
+        critvalue = stat.chi2.ppf(alpha, df)  # http://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.chi2.html#scipy.stats.chi2
         pvalue = stat.chi2.cdf(teststat, df)
     elif side == 0:
         critvalue = stat.chi2.ppf(1 - alpha / 2.0, df)
