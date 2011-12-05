@@ -21,22 +21,22 @@
 #=============================================================================== 
 # Global variables
 
-#name program
+# name program
 PROG_NAME = "jaziku"
 
-#version
+# version
 VERSION = "1.0"
 
-#compilation date
-COMPILE_DATE = "29 nov 2011"
+# compilation date
+COMPILE_DATE = "5 dic 2011"
 
-#valid null value for variables dependent and independent (inside files input)
+# valid null value for variables dependent and independent (inside files input)
 VALID_NULL = [99999, -99999]
 
-#accuracy of number decimal places, only for print result
+# accuracy of number decimal places, only for print result
 ACCURACY = 3
 
-#directory to save all results, this can be absolute or relative path 
-#import Jaziku_utils.input_arg as input_arg
-#args = input_arg.arguments.parse_args()
-#DIR_RESULTS = args.file_D.split('.')[0] + args.file_I.split('.')[0]   #'results'
+# directory to save all results, this can be absolute or relative path 
+# import Jaziku_utils.input_arg as input_arg
+# args = input_arg.arguments.parse_args()
+# DIR_RESULTS = args.file_D.split('.')[0] + args.file_I.split('.')[0]   # 'results'

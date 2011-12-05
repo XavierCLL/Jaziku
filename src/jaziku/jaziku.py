@@ -88,41 +88,41 @@ Bogotá, Colombia
 
 import sys
 import os.path
-import argparse  #http://docs.python.org/py3k/library/argparse.html
+import argparse  # http://docs.python.org/py3k/library/argparse.html
 import csv
 from datetime import date
-#http://labix.org/python-dateutil 
-#and if this required setuptools install: 
-#http://pypi.python.org/pypi/distribute   
+# http://labix.org/python-dateutil 
+# and if this required setuptools install: 
+# http://pypi.python.org/pypi/distribute   
 from dateutil.relativedelta import relativedelta 
 import matplotlib.pyplot as plt
-import numpy as np #http://www.scipy.org/Numpy_Example_List
-from scipy import stats #http://docs.scipy.org/doc/scipy/reference/stats.html
+import numpy as np # http://www.scipy.org/Numpy_Example_List
+from scipy import stats # http://docs.scipy.org/doc/scipy/reference/stats.html
 from Image import open as img_open
 from pylab import *
 import re
 
-#internationalization:
+# internationalization:
 import gettext
 TRANSLATION_DOMAIN = "jaziku"
-LOCALE_DIR = 'locale' #os.path.join(os.path.dirname(__file__), "locale")
+LOCALE_DIR = 'locale' # os.path.join(os.path.dirname(__file__), "locale")
 gettext.install(TRANSLATION_DOMAIN, LOCALE_DIR)
 
-#import funtions in plugins 
+# import funtions in plugins 
 import plugins.global_var as global_var
 import plugins.input_validation as input_validation
 import plugins.input_arg as input_arg
 import plugins.contingency_test as ct
 import plugins.significance_corr as sc
 
-#from progressbar import Bar, Percentage, ProgressBar #http://code.google.com/p/python-progressbar/
+# from progressbar import Bar, Percentage, ProgressBar # http://code.google.com/p/python-progressbar/
 
-#Print error generic function, this is called on any error occurred in Jaziku
+# Print error generic function, this is called on any error occurred in Jaziku
 def print_error(text_error):
     print _('\n\nERROR:\n{0}\n\nFor more help run program with argument: -h').format(text_error)
     exit()
 
-#check python version
+# check python version
 if sys.version_info[0] != 2:
     print_error(_("You version of python is {0}, please use Jaziku with python v2.x ")
                 .format(sys.version_info[0]))
@@ -130,10 +130,10 @@ if sys.version_info[0] != 2:
 #=============================================================================== 
 # General fuctions
     
-#Print number to csv file acording to accuracy and fix decimal character
+# Print number to csv file acording to accuracy and fix decimal character
 def print_number(num):
     return str(round(float(num), global_var.ACCURACY)).replace('.', ',')
-#Print number to csv file acording to define accuracy and fix decimal character
+# Print number to csv file acording to define accuracy and fix decimal character
 def print_number_accuracy(num, accuracy):
     return str(round(float(num), accuracy)).replace('.', ',')
 
@@ -153,10 +153,10 @@ def read_var_D(station):
     file_D = station.file_D
     reader_csv = csv.reader(file_D, delimiter = '\t')
     
-    #reader_csv = csv.reader(fo, delimiter = '\t')
-    #reader_csv.write(data.replace('\x00', ''))
+    # reader_csv = csv.reader(fo, delimiter = '\t')
+    # reader_csv.write(data.replace('\x00', ''))
     
-    #Read line to line file_D, validation and save var_D
+    # Read line to line file_D, validation and save var_D
     try:
         for row in reader_csv:
             row[0] = row[0].replace('/', '-') 
@@ -166,19 +166,20 @@ def read_var_D(station):
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
                 month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
                 value = float(row[1])
-                #set date of dependent variable from file_D, column 1, format: yyyy-mm
+                # set date of dependent variable from file_D, column 1, format: yyyy-mm
                 date_D.append(date(year, month, 1))
-                #set values of dependent variable
+                # set values of dependent variable
                 var_D.append(input_validation.validation_var_D(station.type_D, value, date_D[-1]))
             
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
                             .format(station.file_D.name, reader_csv.line_num, e))
     except csv.Error, e:
-        # this except if when some case Microsoft Office put garbage in file,
+        # this except if when this file is created with Microsoft Office
+        # in some case Microsoft Office when export put garbage in file,
         # this is invisible null byte but can't no process correctly, then 
-        # temporal solution is read data and write in other file finished with
-        # "_FIX" words.
+        # this exception in this case read and repair data and write in other file 
+        # finished with "_FIX" words.
         
         file_D.seek(0)
         file_D_fix = file_D.read()
@@ -187,8 +188,8 @@ def read_var_D(station):
         fo.write(file_D_fix.replace('\x00', ''))
         fo.close()
         
-        print "\n\n\tWarning: Repairing file \"{0}\"of NULL bytes garbage,\n"\
-              "\tsave new file as: {1}".format(station.file_D.name, name_fix)
+        print _("\n\n\tWarning: Repairing file \"{0}\"of NULL bytes garbage,\n"\
+              "\tsave new file as: {1}").format(station.file_D.name, name_fix)
         
         reader_csv_fix = csv.reader(open(name_fix, 'rb'), delimiter = '\t')
         
@@ -201,9 +202,9 @@ def read_var_D(station):
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
                 month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
                 value = float(row[1])
-                #set date of dependent variable from file_D, column 1, format: yyyy-mm
+                # set date of dependent variable from file_D, column 1, format: yyyy-mm
                 date_D.append(date(year, month, 1))
-                #set values of dependent variable
+                # set values of dependent variable
                 var_D.append(input_validation.validation_var_D(station.type_D, value, date_D[-1]))
             
             except Exception, e:
@@ -226,7 +227,7 @@ def read_var_I(station):
     
     file_I = station.file_I
     reader_csv = csv.reader(file_I, delimiter = '\t')
-    #Read line to line file_I, validation and save var_I
+    # Read line to line file_I, validation and save var_I
     try:
         for row in reader_csv:
             row[0] = row[0].replace('/', '-') 
@@ -236,9 +237,9 @@ def read_var_I(station):
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
                 month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
                 value = float(row[1])
-                #set date of independent variable from file_I, column 1, format: yyyy-mm
+                # set date of independent variable from file_I, column 1, format: yyyy-mm
                 date_I.append(date(year, month, 1))
-                #set values of independent variable
+                # set values of independent variable
                 var_I.append(input_validation.validation_var_I(station.type_I, value))
             
             except Exception, e:
@@ -246,10 +247,11 @@ def read_var_I(station):
                             .format(station.file_I.name, reader_csv.line_num, e))
                 
     except csv.Error, e:
-        # this except if when some case Microsoft Office put garbage in file,
+        # this except if when this file is created with Microsoft Office
+        # in some case Microsoft Office when export put garbage in file,
         # this is invisible null byte but can't no process correctly, then 
-        # temporal solution is read data and write in other file finished with
-        # "_FIX" words.
+        # this exception in this case read and repair data and write in other file 
+        # finished with "_FIX" words.
         
         file_I.seek(0)
         file_I_fix = file_I.read()
@@ -258,8 +260,8 @@ def read_var_I(station):
         fo.write(file_I_fix.replace('\x00', ''))
         fo.close()
         
-        print "\n\n\tWarning: Repairing file \"{0}\"of NULL bytes garbage,\n"\
-              "\tsave new file as: {1}".format(station.file_I.name, name_fix)
+        print _("\n\n\tWarning: Repairing file \"{0}\"of NULL bytes garbage,\n"\
+              "\tsave new file as: {1}").format(station.file_I.name, name_fix)
         
         reader_csv_fix = csv.reader(open(name_fix, 'rb'), delimiter = '\t')
         
@@ -272,9 +274,9 @@ def read_var_I(station):
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
                 month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
                 value = float(row[1])
-                #set date of independent variable from file_I, column 1, format: yyyy-mm
+                # set date of independent variable from file_I, column 1, format: yyyy-mm
                 date_I.append(date(year, month, 1))
-                #set values of independent variable
+                # set values of independent variable
                 var_I.append(input_validation.validation_var_I(station.type_I, value))
             
             except Exception, e:
@@ -293,12 +295,12 @@ def calculate_common_period(station):
     
     Return: common_period[[  date ,  var_D ,  var_I ],... ]
     '''
-    #interceptions values of date_D and date_I (python set fuctions wuau!!)
+    # interceptions values of date_D and date_I (python set fuctions wuau!!)
     common_date = list(set(station.date_D) & set(station.date_I))
-    #sort common date
+    # sort common date
     common_date.sort()
-    #initialized variable common_period
-    #format list: [[  date ,  var_D ,  var_I ],... ]
+    # initialized variable common_period
+    # format list: [[  date ,  var_D ,  var_I ],... ]
     if args.period:
         if period_start < common_date[0].year or period_end > common_date[-1].year:
             print_error(_("period define in argument {0}-{1} is outside the common period {2}-{3}")
@@ -307,9 +309,9 @@ def calculate_common_period(station):
         common_date = common_date[common_date.index(date(period_start, 1, 1)):common_date.index(date(period_end, 12, 1))]
         
     common_period = []
-    #set values matrix for common_period
+    # set values matrix for common_period
     for date_period in common_date:
-        #common_period format list: [[  date ,  var_D ,  var_I ],... ]
+        # common_period format list: [[  date ,  var_D ,  var_I ],... ]
         common_period.append([date_period, station.var_D[station.date_D.index(date_period)],
                               station.var_I[station.date_I.index(date_period)]])
     return common_period
@@ -335,7 +337,7 @@ def get_lag_values(station, lag, trim, var):
 #===============================================================================
 # Calculate lags 0, 1 and 2 (rezagos 0, 1 y 2)
 
-#calculate average from 3 values
+# calculate average from 3 values
 def meanTrim(var_1, var_2, var_3):
     '''
     Return average from 3 values, ignoring valid null values.
@@ -366,13 +368,13 @@ def calculate_lags(station):
     commond period and -1 year above of end commond period.
     ''' 
     
-    #initialized Lag_X 
-    #format list: [trim, [ date, meanTrim_var_D, meanTrim_var_I ]], ...
+    # initialized Lag_X 
+    # format list: [trim, [ date, meanTrim_var_D, meanTrim_var_I ]], ...
     Lag_0 = []
     Lag_1 = []
     Lag_2 = []
     
-    #directories to save lags
+    # directories to save lags
     dir_lag = [os.path.join(station.climate_dir, _('time_series'), _('lag_0')),
                os.path.join(station.climate_dir, _('time_series'), _('lag_1')),
                os.path.join(station.climate_dir, _('time_series'), _('lag_2'))]
@@ -382,44 +384,44 @@ def calculate_lags(station):
         if not os.path.isdir(dir_lag[lag]):
             os.makedirs(dir_lag[lag])
         
-        #all months in year 1->12
+        # all months in year 1->12
         for month in range(1, 13):
             csv_name = os.path.join(dir_lag[lag], _('meanLag_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv')
                                     .format(lag, month, station.code, station.name, station.type_D,
                                             station.type_I, station.period_start, station.period_end))
-            #output write file: [[ yyyy/month, meanLag_X_var_D, meanLag_X_var_I ],... ]
+            # output write file: [[ yyyy/month, meanLag_X_var_D, meanLag_X_var_I ],... ]
             csv_file_write = csv.writer(open(csv_name, 'w'), delimiter = ';')
-            #temporal var initialize iter_date = start common_period + 1 year, month=1, day=1
+            # temporal var initialize iter_date = start common_period + 1 year, month=1, day=1
             iter_date = date(station.period_start + 1, 1, 1)
-            #temporal var initialize end_date = end common_period - 1 year, month=12, day=31
+            # temporal var initialize end_date = end common_period - 1 year, month=12, day=31
             end_date = date(station.period_end - 1, 12, 31)
         
-            #iteration for years from first-year +1 to end-year -1 inside range common_period
+            # iteration for years from first-year +1 to end-year -1 inside range common_period
             while True:
                 if iter_date >= end_date: break
 
-                #calculate var_D for this months
+                # calculate var_D for this months
                 var_D_1 = station.var_D[station.date_D.index(iter_date + relativedelta(months = month - 1))]
                 var_D_2 = station.var_D[station.date_D.index(iter_date + relativedelta(months = month))]
                 var_D_3 = station.var_D[station.date_D.index(iter_date + relativedelta(months = month + 1))]
-                #calculate meanTrim_var_D
+                # calculate meanTrim_var_D
                 meanTrim_var_D = meanTrim(var_D_1, var_D_2, var_D_3)
                 
-                #calculate var_I for this months
+                # calculate var_I for this months
                 var_I_1 = station.var_I[station.date_I.index(iter_date + relativedelta(months = month - 1 - lag))]
                 var_I_2 = station.var_I[station.date_I.index(iter_date + relativedelta(months = month - lag))]
                 var_I_3 = station.var_I[station.date_I.index(iter_date + relativedelta(months = month + 1 - lag))]
-                #calculate meanTrim_var_I
+                # calculate meanTrim_var_I
                 meanTrim_var_I = meanTrim(var_I_1, var_I_2, var_I_3)
                 
-                #add line in list: Lag_X                        
+                # add line in list: Lag_X                        
                 vars()[_('Lag_') + str(lag)].append([month, [iter_date, meanTrim_var_D, meanTrim_var_I]])
     
-                #add line output file csv_file_write
+                # add line output file csv_file_write
                 csv_file_write.writerow([str(iter_date.year) + "/" + str(month),
                                              print_number(meanTrim_var_D),
                                              print_number(meanTrim_var_I)])
-                #next year
+                # next year
                 iter_date += relativedelta(years = +1)
 
     return Lag_0, Lag_1, Lag_2
@@ -436,42 +438,42 @@ def get_thresholds_var_I(station):
     deviation N) and particular value. 
     ''' 
     
-    #Calculate percentile "below" and "above"
+    # Calculate percentile "below" and "above"
     def percentiles(below, above):
         threshold_below_var_I = stats.scoreatpercentile(station.var_I_values, below)
         threshold_above_var_I = stats.scoreatpercentile(station.var_I_values, above)
         return threshold_below_var_I, threshold_above_var_I
     
-    #thresholds by below and by above of var I by default
+    # thresholds by below and by above of var I by default
     def thresholds_by_default():
-        #validation for Oceanic Nino Index
+        # validation for Oceanic Nino Index
         def if_var_I_is_ONI():
             return -0.5, 0.5
-        #validation for Index of the Southern Oscillation NOAA
+        # validation for Index of the Southern Oscillation NOAA
         def if_var_I_is_SOI():
             return -1.2, 0.9
-        #validation for Multivariate ENSO index
+        # validation for Multivariate ENSO index
         def if_var_I_is_MEI():
             return percentiles(33, 66)
-        #validation for Radiation wavelength Long tropical
+        # validation for Radiation wavelength Long tropical
         def if_var_I_is_OLR():
             return -1.1, 0.9
-        #validation for Index of wind anomaly
+        # validation for Index of wind anomaly
         def if_var_I_is_W200():
             return percentiles(33, 66)
-        #validation for Sea surface temperature
+        # validation for Sea surface temperature
         def if_var_I_is_SST():
             return percentiles(33, 66)
-        #validation for % Amazon relative humidity
+        # validation for % Amazon relative humidity
         def if_var_I_is_ARH():
             return percentiles(33, 66)
-        #validation for quasibienal oscillation index
+        # validation for quasibienal oscillation index
         def if_var_I_is_QBO():
             return percentiles(33, 66)
-        #validation for North atlantic oscillation index
+        # validation for North atlantic oscillation index
         def if_var_I_is_NAO():
             return 0, 0
-        #switch validation
+        # switch validation
         select_threshold_var_I = {
           "ONI": if_var_I_is_ONI,
           "SOI": if_var_I_is_SOI,
@@ -487,7 +489,7 @@ def get_thresholds_var_I(station):
         threshold_below_var_I, threshold_above_var_I = select_threshold_var_I[station.type_I]()
         return threshold_below_var_I, threshold_above_var_I
 
-    #thresholds by below and by above of var I with standard deviation
+    # thresholds by below and by above of var I with standard deviation
     def thresholds_with_std_deviation(below, above):
         def func_standard_deviation(values):
             avg = float((sum(values))) / len(values)
@@ -504,8 +506,8 @@ def get_thresholds_var_I(station):
         
         return avg - below * std_desv, avg + above * std_desv
         
-    #thresholds by below and by above of var I with particular values, 
-    #these values validation with type of var I
+    # thresholds by below and by above of var I with particular values, 
+    # these values validation with type of var I
     def thresholds_with_particular_values(below, above):
         
         try:
@@ -530,7 +532,7 @@ def get_thresholds_var_I(station):
     if station.threshold_below_var_I == "default" and station.threshold_above_var_I == "default":
         return thresholds_by_default()
     
-    #if are define as percentile
+    # if are define as percentile
     if ''.join(list(station.threshold_below_var_I)[0:1]) == "p" and\
        ''.join(list(station.threshold_above_var_I)[0:1]) == "p":
         below = float(''.join(list(station.threshold_below_var_I)[1::]))
@@ -544,14 +546,14 @@ def get_thresholds_var_I(station):
                         .format(below, above))
         return percentiles(below, above)
     
-    #if are define as standard deviation
+    # if are define as standard deviation
     if ''.join(list(station.threshold_below_var_I)[0:2]) == "sd" and\
        ''.join(list(station.threshold_above_var_I)[0:2]) == "sd":
         below = int(''.join(list(station.threshold_below_var_I)[2::]))
         above = int(''.join(list(station.threshold_above_var_I)[2::]))
         return thresholds_with_std_deviation(below, above)
     
-    #if are define as particular values
+    # if are define as particular values
     return thresholds_with_particular_values(station.threshold_below_var_I, station.threshold_above_var_I)
         
     
@@ -563,18 +565,18 @@ def get_contingency_table(station, lag, month):
     above of dependent and independent variable.
     '''
     
-    #get all values of var D and var I based on this lag and month
+    # get all values of var D and var I based on this lag and month
     station.var_D_values = get_lag_values(station, lag, month, 'var_D')
     station.var_I_values = get_lag_values(station, lag, month, 'var_I')
     
-    #the thresholds of dependent variable are: percentile 33 and 66 
+    # the thresholds of dependent variable are: percentile 33 and 66 
     p33_D = stats.scoreatpercentile(station.var_D_values, 33)
     p66_D = stats.scoreatpercentile(station.var_D_values, 66)
 
-    #calculate thresholds as defined by the user in station file
+    # calculate thresholds as defined by the user in station file
     threshold_below_var_I, threshold_above_var_I = get_thresholds_var_I(station)
     
-    #this is to print later in contingency table
+    # this is to print later in contingency table
     thresholds_var_D_var_I = [print_number(p33_D), print_number(p66_D),
                               print_number(threshold_below_var_I), print_number(threshold_above_var_I)]
     
@@ -610,15 +612,15 @@ def get_contingency_table(station, lag, month):
     
     sum_per_column_percent = contingency_table_percent.sum(axis = 1)
     
-    #threshold_problem is global variable for detect problem with
-    #threshold of independent variable, if a problem is detected
-    #show message and print "nan" (this mean null value for 
-    #division by cero) in contingency tabla percent in result 
-    #table, jaziku continue but the graphics will not be created 
-    #because "nan"  character could not be calculate.
+    # threshold_problem is global variable for detect problem with
+    # threshold of independent variable, if a problem is detected
+    # show message and print "nan" (this mean null value for 
+    # division by cero) in contingency tabla percent in result 
+    # table, jaziku continue but the graphics will not be created 
+    # because "nan"  character could not be calculate.
     global threshold_problem
 
-    #if threshold by below of independent variable is wrong
+    # if threshold by below of independent variable is wrong
     if float(sum_per_column_percent[0]) == 0 and not threshold_problem[0]:
         print _(u'\n\nWarning:\nThe thresholds selected \"{0}\" and \"{1}\" are not suitable for\n' \
                 u'compound analysis of variable \"{2}\" with relation to \"{3}\"\n' \
@@ -627,7 +629,7 @@ def get_contingency_table(station, lag, month):
                        station.type_D, station.type_I, station.phenomenon_below)
         threshold_problem[0] = True
     
-    #if threshold by below or above calculating normal phenomenon of independent variable is wrong
+    # if threshold by below or above calculating normal phenomenon of independent variable is wrong
     if float(sum_per_column_percent[1]) == 0 and not threshold_problem[1]:
         print _(u'\n\nWarning:\nThe thresholds selected \"{0}\" and \"{1}\" are not suitable for\n' \
                 u'compound analysis of variable \"{2}\" with relation to \"{3}\"\n' \
@@ -636,7 +638,7 @@ def get_contingency_table(station, lag, month):
                        station.type_D, station.type_I, station.phenomenon_normal)
         threshold_problem[1] = True
     
-    #if threshold by above of independent variable is wrong
+    # if threshold by above of independent variable is wrong
     if float(sum_per_column_percent[2]) == 0 and not threshold_problem[2]:
         print _(u'\n\nWarning:\nThe thresholds selected \"{0}\" and \"{1}\" are not suitable for\n' \
                 u'compound analysis of variable \"{2}\" with relation to \"{3}\"\n' \
@@ -646,16 +648,16 @@ def get_contingency_table(station, lag, month):
         threshold_problem[2] = True
 
     try:
-        #not shows error if there are any problem with threshold
+        # not shows error if there are any problem with threshold
         sys.stderr = open(os.devnull, 'w')
-        #Calculating contingency table percent
+        # Calculating contingency table percent
         contingency_table_percent = [(contingency_table_percent[0] * 100 / float(sum_per_column_percent[0])).tolist()[0],
                                      (contingency_table_percent[1] * 100 / float(sum_per_column_percent[1])).tolist()[0],
                                      (contingency_table_percent[2] * 100 / float(sum_per_column_percent[2])).tolist()[0]]
     except:
         pass
     
-    #Contingency table percent to print in result table and graphics (reduce the number of decimals)
+    # Contingency table percent to print in result table and graphics (reduce the number of decimals)
     contingency_table_percent_print = []
     for row in contingency_table_percent:
         contingency_table_percent_print.append([print_number_accuracy(row[0], 1),
@@ -669,7 +671,7 @@ def contingency_table(station):
     Print the contingency table for each trimester and each lag
     '''
     
-    #directories to save contingency tables
+    # directories to save contingency tables
     dir_contingency = [os.path.join(station.climate_dir, _('contingency_table'), _('lag_0')),
                os.path.join(station.climate_dir, _('contingency_table'), _('lag_1')),
                os.path.join(station.climate_dir, _('contingency_table'), _('lag_2'))]
@@ -683,7 +685,7 @@ def contingency_table(station):
             os.makedirs(dir_contingency[lag])
         
         month_list = []
-        #all months in year 1->12
+        # all months in year 1->12
         for month in range(1, 13):
             
             contingency_table, \
@@ -694,7 +696,7 @@ def contingency_table(station):
             month_list.append(contingency_table_percent)
             
             ## print result in csv file
-            #add new line in csv_contingency_table
+            # add new line in csv_contingency_table
             
             csv_name = os.path.join(dir_contingency[lag], _('contingency_table_Lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv')
                                     .format(lag, month, station.code, station.name, station.type_D, station.type_I,
@@ -726,14 +728,14 @@ def result_table(station):
     variables of previous calculations and different tests.
     '''
 
-    #dir and name to save the result table
+    # dir and name to save the result table
     csv_name = os.path.join(station.climate_dir, _('result_table_{0}_{1}_{2}_{3}_({4}-{5}).csv')
                             .format(station.code, station.name, station.type_D, station.type_I,
                                     station.period_start, station.period_end))
     
     csv_result_table = csv.writer(open(csv_name, 'w'), delimiter = ';')
     
-    #print headers in result table
+    # print headers in result table
     csv_result_table.writerow([_('var_D'), _('var_I'), _('Pearson'), _('Sign Pearson'), _('Is sign "Sign Pearson"?'),
                                _('threshold below (var D)'), _('threshold above (var D)'),
                                _('threshold below (var I)'), _('threshold above (var I)'),
@@ -747,7 +749,7 @@ def result_table(station):
     
     for lag in lags:
             
-        #print division line between lags
+        # print division line between lags
         csv_result_table.writerow([_('Lag {0}').format(lag), '', '', '', '', '', '', '', '',
                                    station.phenomenon_below.encode("utf-8"), '', '',
                                    station.phenomenon_normal.encode("utf-8"), '', '',
@@ -766,17 +768,17 @@ def result_table(station):
         pearson_list_month = []
         is_sig_risk_analysis_month = []
         
-        #all months in year 1->12
+        # all months in year 1->12
         for month in range(1, 13):
             
-            #get the contingency tables and thresholds
+            # get the contingency tables and thresholds
             contingency_table, \
             contingency_table_percent, \
             contingency_table_percent_print, \
             thresholds_var_D_var_I = get_contingency_table(station, lag, month)
                 
-            #test:
-            #is significance risk analysis?
+            # test:
+            # is significance risk analysis?
             contingency_table_matrix = np.matrix(contingency_table)
             sum_per_row = contingency_table_matrix.sum(axis = 0).tolist()[0]
             sum_per_column = contingency_table_matrix.sum(axis = 1).tolist()
@@ -795,34 +797,34 @@ def result_table(station):
                     else:
                         is_sig_risk_analysis_month_list.append(_('no'))
                     
-            #get values of var D and I from this lag and month
+            # get values of var D and I from this lag and month
             var_D_values = get_lag_values(station, lag, month, 'var_D')
             var_I_values = get_lag_values(station, lag, month, 'var_I')
             
-            #calculate pearson correlation of var_D and var_I
+            # calculate pearson correlation of var_D and var_I
             pearson = stats.pearsonr(var_D_values, var_I_values)[0]
             pearson_list_month.append(pearson)
             
-            #significance correlation
+            # significance correlation
             singr, T_test, t_crit = sc.corrtest(rho = 0, r = pearson, n = len(station.common_period) + 1, alpha = 0.05, side = 0)
             
-            #contingency test
+            # contingency test
             Observed, Expected, test_stat, crit_value, df, p_value, alpha = ct.contingency_test(contingency_table,
                                                                                              None, 0.9, -1)
             
-            #calculate the correlation of contingency table
+            # calculate the correlation of contingency table
             chi_cdf = 1 - p_value
             corr_CT = ((chi_cdf ** 2) / (station.size_time_series * 2.0)) ** (0.5)
             
-            #test:
-            #Is significant the contingency table?
+            # test:
+            # Is significant the contingency table?
             if test_stat > crit_value:
                 is_significant_CT = _('yes')
             else:
                 is_significant_CT = _('no')
                 
-            #test:
-            #Is significant the singr variable?
+            # test:
+            # Is significant the singr variable?
             if (1 - singr) >= 0.05:
                 is_significant_singr = _('yes')
             else:
@@ -832,7 +834,7 @@ def result_table(station):
             #===============================================================================
             # result table (csv file), add one line of this trimester and lag
             
-            #add new line in csv_file_write
+            # add new line in csv_file_write
             csv_result_table.writerow([trim_text[month - 1], trim_text[month - 1 - lag],
                                        print_number(pearson), print_number(singr), is_significant_singr,
                                        thresholds_var_D_var_I[0], thresholds_var_D_var_I[1],
@@ -879,25 +881,25 @@ def graphics_climate(station):
     above for independece variable for the composite analisys. 
     '''
     
-    #main directory for save graphics
+    # main directory for save graphics
     graphics_dir = _('graphics')
     
-    #directory for save composite analisys graphics
+    # directory for save composite analisys graphics
     graphics_dir_ca = os.path.join(station.climate_dir, graphics_dir, _('composite_analisys')) 
     
-    #create dir
+    # create dir
     if not os.path.isdir(graphics_dir_ca):
         os.makedirs(graphics_dir_ca)
     
     for lag in lags:
         
-        #create dir for lag
+        # create dir for lag
         if not os.path.isdir(os.path.join(graphics_dir_ca, _('lag_{0}').format(lag))):
             os.makedirs(os.path.join(graphics_dir_ca, _('lag_{0}').format(lag)))
         
         image_open = []
         
-        #all months in year 1->12
+        # all months in year 1->12
         for month in range(1, 13):
             
             contingency_table, \
@@ -906,30 +908,30 @@ def graphics_climate(station):
             thresholds_var_D_var_I = get_contingency_table(station, lag, month)
             
             ## graphics options for plot:
-            #the x locations for the groups
+            # the x locations for the groups
             ind = np.array([0, 0.8, 1.6])
-            #the width of the bars  
+            # the width of the bars  
             width = 0.2       
-            #graphics title
+            # graphics title
             plt.title(unicode(_('Composite analisys - {0} ({1})\n{2} - {3} - lag {6} - trim {7} ({8}) - ({4}-{5})')
                       .format(station.name, station.code, station.type_I, station.type_D, station.period_start,
                               station.period_end, lag, month, trim_text[month - 1]), 'utf-8'))
-            #label for axis Y 
+            # label for axis Y 
             plt.ylabel(_('probability (%)'))
-            # adjust the max leaving min unchanged in Y
+            #  adjust the max leaving min unchanged in Y
             plt.ylim(ymin = 0, ymax = 100) 
-            # adjust the max leaving min unchanged in X
+            #  adjust the max leaving min unchanged in X
             plt.xlim(xmin = -0.1, xmax = 2.3)
-            #plt.xticks([0.3, 1.1, 1.9], ('var Ind Below', 'var Ind Normal', 'var Ind Above'),)
+            # plt.xticks([0.3, 1.1, 1.9], ('var Ind Below', 'var Ind Normal', 'var Ind Above'),)
             plt.xticks([])
-            #colors for paint bars and labels: below, normal , above
+            # colors for paint bars and labels: below, normal , above
             colours = ['#DD4620', '#62AD29', '#6087F1'] 
-            #assigning values for plot:
+            # assigning values for plot:
             var_D_below = plt.bar(ind, column(contingency_table_percent, 0), width, color = colours[0])
             var_D_normal = plt.bar(ind + width, column(contingency_table_percent, 1), width, color = colours[1])
             var_D_above = plt.bar(ind + 2 * width, column(contingency_table_percent, 2), width, color = colours[2])
             
-            #assing value for each bart
+            # assing value for each bart
             def autolabel(rects):
                 # attach some text labels
                 temp = []
@@ -948,16 +950,16 @@ def graphics_climate(station):
             autolabel(var_D_above)
             
             plt.subplots_adjust(bottom = 0.15, left = 0.22, right = 0.97)
-            #plt.legend((var_D_below[0], var_D_normal[0], var_D_above[0]), ('var Dep Below', 'var Dep Normal', 'var Dep Above'),
+            # plt.legend((var_D_below[0], var_D_normal[0], var_D_above[0]), ('var Dep Below', 'var Dep Normal', 'var Dep Above'),
             #             shadow = True, fancybox = True)
             
-            #table in graphic
+            # table in graphic
             colLabels = (station.phenomenon_below, station.phenomenon_normal, station.phenomenon_above)
             rowLabels = [_('var Dep Below'), _('var Dep Normal'), _('var Dep Above')]
             
             contingency_table_percent_graph = [column(contingency_table_percent_print, 0), column(contingency_table_percent_print, 1), column(contingency_table_percent_print, 2)]
             
-            #Add a table at the bottom of the axes
+            # Add a table at the bottom of the axes
             plt.table(cellText = contingency_table_percent_graph,
                               rowLabels = rowLabels, rowColours = colours,
                               colLabels = colLabels,
@@ -973,18 +975,18 @@ def graphics_climate(station):
             plt.savefig(image_dir_save, dpi = 75)
             plt.close()
             
-            #save dir image for mosaic
+            # save dir image for mosaic
             image_open.append(img_open(image_dir_save))
         
         ## create mosaic
         
-        #definition height and width of individual image
+        # definition height and width of individual image
         image_height = 450
         image_width = 600
         mosaic_dir_save = os.path.join(graphics_dir_ca, _('mosaic_lag_{0}_{1}_{2}_{3}_{4}_({5}-{6}).png')
                                        .format(lag, station.code, station.name, station.type_D, station.type_I,
                                                station.period_start, station.period_end))
-        #http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
+        # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
         plt.figure(figsize = ((image_width * 3) / 100, (image_height * 4) / 100))
         plt.savefig(mosaic_dir_save, dpi = 100)
         mosaic = img_open(mosaic_dir_save)
@@ -1012,13 +1014,13 @@ def graphics_forecasting(station):
     above for independece variable for the composite analisys. 
     '''
     
-    #main directory for save graphics
+    # main directory for save graphics
     graphics_dir = _('graphics')
     
-    #directory for save composite analisys graphics
+    # directory for save composite analisys graphics
     graphics_dir_corr = os.path.join(station.climate_dir, graphics_dir, _('composite_analisys')) 
     
-    #create dir
+    # create dir
     if not os.path.isdir(graphics_dir_corr):
         os.makedirs(graphics_dir_corr)
     
@@ -1027,9 +1029,9 @@ def graphics_forecasting(station):
     for lag in lags:
     
         ## Options for graphics pie
-        #make a square figure and axes
+        # make a square figure and axes
         plt.figure(1, figsize = (5, 5))
-        #colors for paint pie: below, normal , above
+        # colors for paint pie: below, normal , above
         colours = ['#DD4620', '#62AD29', '#6087F1']
         
         labels = (_('Decrease'), _('Normal'), _('Exceed'))
@@ -1037,7 +1039,7 @@ def graphics_forecasting(station):
                       station.prob_exceed_var_D[lag]]
         explode = (0.03, 0.03, 0.03)
         
-        #assing value for piece of pie
+        # assing value for piece of pie
         def autopct_funt(pct):
             total = sum(values_pie)
             val = pct * total / 100.0
@@ -1052,25 +1054,25 @@ def graphics_forecasting(station):
                   fontsize = 13)
         
         ## Save image
-        #plt.subplot(111)
+        # plt.subplot(111)
         image_dir_save = os.path.join(station.forecasting_dir, _('prob_of_{0}_lag_{1}_trim_{2}_({3}-{4}).png')
                                       .format(station.type_D, lag, station.f_trim,
                                               station.period_start, station.period_end))
         plt.savefig(image_dir_save, dpi = 75)
         plt.close()
         
-        #save dir image for mosaic
+        # save dir image for mosaic
         image_open.append(img_open(image_dir_save))
         
     ## Create mosaic
-    #definition height and width of individual image
-    #image_height = 375
+    # definition height and width of individual image
+    # image_height = 375
     image_width = 375
     mosaic_dir_save = os.path.join(station.forecasting_dir, _('mosaic_prob_of_{0}_trim_{1}_({3}-{4}).png')
                                    .format(station.type_D, lag, station.f_trim,
                                            station.period_start, station.period_end))
-    #http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
-    plt.figure(figsize = (11.25, 3.75)) #http://www.classical-webdesigns.co.uk/resources/pixelinchconvert.html
+    # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
+    plt.figure(figsize = (11.25, 3.75)) # http://www.classical-webdesigns.co.uk/resources/pixelinchconvert.html
     plt.savefig(mosaic_dir_save, dpi = 100)
     mosaic = img_open(mosaic_dir_save)
     mosaic.paste(image_open[0], (0, 0))
@@ -1090,20 +1092,15 @@ def maps_climate(station):
     
     for lag in lags:   
         
-        #all months in year 1->12
+        # all months in year 1->12
         for month in range(1, 13):
         
-            #maps_plot_dir = os.path.join(maps_dir, 'maps-plot', 'lag_{0}'.format(lag))
-    
-            #if not os.path.isdir(maps_plot_dir):
-                #os.makedirs(maps_plot_dir)
-
             for phenomenon in [0, 1, 2]:
                 var_below = station.contingencies_tables_percent[lag][month - 1][phenomenon][0]
                 var_normal = station.contingencies_tables_percent[lag][month - 1][phenomenon][1]
                 var_above = station.contingencies_tables_percent[lag][month - 1][phenomenon][2]
                 
-                #select index
+                # select index
                 if var_below > var_normal:
                     if var_below > var_above:
                         p_index = -var_below
@@ -1140,7 +1137,7 @@ def maps_forecasting(station):
     
     for lag in lags:   
         
-        #select index
+        # select index
         if station.prob_decrease_var_D[lag] > station.prob_normal_var_D[lag]:
             if station.prob_decrease_var_D[lag] > station.prob_exceed_var_D[lag]:
                 p_index = -station.prob_decrease_var_D[lag]
@@ -1172,14 +1169,14 @@ def climate(station):
     '''
     Main process for climate
     '''
-    #console message
+    # console message
     sys.stdout.write(_("Processing climate "))
     sys.stdout.flush()
     
     if not os.path.isdir(climate_dir):
         os.makedirs(climate_dir)
     
-    station.climate_dir = os.path.join(climate_dir, station.code + '_' + station.name)   #'results'
+    station.climate_dir = os.path.join(climate_dir, station.code + '_' + station.name)   # 'results'
     if not os.path.isdir(station.climate_dir):
         os.makedirs(station.climate_dir)
         
@@ -1219,7 +1216,7 @@ def forecasting(station):
     Main process for forecasting
     '''
     
-    #console message
+    # console message
     sys.stdout.write(_("Processing forecasting ({0}-{1}).......")
                      .format(station.period_start, station.period_end))
     sys.stdout.flush()
@@ -1227,7 +1224,7 @@ def forecasting(station):
     if not os.path.isdir(forecasting_dir):
         os.makedirs(forecasting_dir)
     
-    station.forecasting_dir = os.path.join(forecasting_dir, station.code + '_' + station.name)   #'results'
+    station.forecasting_dir = os.path.join(forecasting_dir, station.code + '_' + station.name)   # 'results'
     if not os.path.isdir(station.forecasting_dir):
         os.makedirs(station.forecasting_dir)
     
@@ -1286,7 +1283,7 @@ def main():
     global args
     args = input_arg.arguments.parse_args()
     
-    #console message
+    # console message
     print _("\n########################### JAZIKU ###########################\n" \
             "## Jaziku is a software for the implementation of composite ##\n" \
             "## analysis metodology between the major indices of climate ##\n" \
@@ -1308,26 +1305,26 @@ def main():
         except Exception, e:
             print_error(_('the period must be: year_start-year_end (ie. 1980-2008)\n\n{0}').format(e))
             
-    #number of lags
+    # number of lags
     global lags
     lags = [0, 1, 2]
     
-    #trimester text for print
+    # trimester text for print
     global trim_text
     trim_text = {-2:_('ndj'), -1:_('djf'), 0:_('jfm'), 1:_('fma'), 2:_('mam'), 3:_('amj'), 4:_('mjj'),
                  5:_('jja'), 6:_('jas'), 7:_('aso'), 8:_('son'), 9:_('ond'), 10:_('ndj'), 11:_('djf')}
     
-    #if phenomenon below is defined inside arguments
+    # if phenomenon below is defined inside arguments
     if args.p_below:
         phenomenon_below = unicode(args.p_below, 'utf-8')
     else:
         phenomenon_below = _('var Ind below')
-    #if phenomenon normal is defined inside arguments
+    # if phenomenon normal is defined inside arguments
     if args.p_normal:
         phenomenon_normal = unicode(args.p_normal, 'utf-8')
     else:
         phenomenon_normal = _('var Ind normal')
-    #if phenomenon above is defined inside arguments
+    # if phenomenon above is defined inside arguments
     if args.p_above:
         phenomenon_above = unicode(args.p_above, 'utf-8')
     else:
@@ -1335,9 +1332,9 @@ def main():
     
     ### maps_plots_files_climate
     if args.climate:
-        #climate dir output result
+        # climate dir output result
         global climate_dir
-        climate_dir = os.path.join(os.path.splitext(args.stations.name)[0], _('Jaziku-climate'))   #'results'
+        climate_dir = os.path.join(os.path.splitext(args.stations.name)[0], _('Jaziku-climate'))   # 'results'
         
         print _("\nSave the result for climate in:\n -> {0}").format(climate_dir)
         
@@ -1345,11 +1342,11 @@ def main():
             print _("\n   Warning: the output director for climate process\n" \
                     "   is already exist, Jaziku continue but the results\n" \
                     "   could be mixed or replaced of old output.")
-        #created and define csv output file for maps climate
+        # created and define csv output file for maps climate
         phenomenon = {0:phenomenon_below, 1:phenomenon_normal, 2:phenomenon_above}
-        maps_plots_files_climate = [] #maps_plots_files_climate[lag][month][phenomenon]
+        maps_plots_files_climate = [] # maps_plots_files_climate[lag][month][phenomenon]
 
-        #define maps data files and directories      
+        # define maps data files and directories      
         for lag in lags:   
             
             maps_dir = os.path.join(climate_dir, _('maps'))   
@@ -1358,7 +1355,7 @@ def main():
             if not os.path.isdir(maps_data_lag):
                 os.makedirs(maps_data_lag)
          
-            #all months in year 1->12
+            # all months in year 1->12
             month_list = []
             for month in range(1, 13):
                 categories_list = []
@@ -1381,9 +1378,9 @@ def main():
             
     ### maps_plots_files_forecasting
     if args.forecasting:
-        #forecasting dir output result
+        # forecasting dir output result
         global forecasting_dir
-        forecasting_dir = os.path.join(os.path.splitext(args.stations.name)[0], _('Jaziku-forecasting'))   #'results'
+        forecasting_dir = os.path.join(os.path.splitext(args.stations.name)[0], _('Jaziku-forecasting'))   # 'results'
         
         print _("\nSave the result for forecasting in:\n -> {0}").format(forecasting_dir)
         
@@ -1392,10 +1389,10 @@ def main():
                     "   is already exist, Jaziku continue but the results\n" \
                     "   could be mixed or replaced of old output.")
         
-        #created and define csv output file for maps forecasting
-        maps_plots_files_forecasting = [] #maps_plots_files_forecasting[lag]
+        # created and define csv output file for maps forecasting
+        maps_plots_files_forecasting = [] # maps_plots_files_forecasting[lag]
         
-        #define maps data files and directories
+        # define maps data files and directories
         for lag in lags:   
             
             maps_dir = os.path.join(forecasting_dir, _('maps'), _('maps-data'))   
@@ -1411,7 +1408,7 @@ def main():
                 
             maps_plots_files_forecasting.append(csv_file)
       
-    #read stations list from stations file (-station arguments) and process station by station
+    # read stations list from stations file (-station arguments) and process station by station
     stations = csv.reader(args.stations, delimiter = ';')
     for line_station in stations:
         station = Station()
@@ -1428,14 +1425,14 @@ def main():
             station.file_D = open(line_station[4], 'rb')
             station.type_D = line_station[5]
             
-            #validation type_D
+            # validation type_D
             if station.type_D not in input_arg.types_var_D:
                 raise Exception(_("{0} is not valid type for dependence variable").format(station.type_D))
           
             station.file_I = open(line_station[6], 'r')
             station.type_I = line_station[7]
             
-            #validation type_I
+            # validation type_I
             if station.type_I not in input_arg.types_var_I:
                 raise Exception(_("{0} is not valid type for independence variable").format(station.type_I))
                 
@@ -1468,22 +1465,22 @@ def main():
             print_error(_("Reading stations from file \"{0}\" in line {1}:\n").format(args.stations.name, stations.line_num) + 
                          ';'.join(line_station) + "\n\n" + str(e))
             
-        #console message
+        # console message
         print _("\n################# Station: {0} ({1})").format(station.name, station.code)
             
-        #define phenomenon label
+        # define phenomenon label
         station.phenomenon_below = phenomenon_below
         station.phenomenon_normal = phenomenon_normal
         station.phenomenon_above = phenomenon_above
         
          
-        #run process (climate, forecasting) from input arguments 
+        # run process (climate, forecasting) from input arguments 
         if args.climate:
             station.maps_plots_files_climate = maps_plots_files_climate
             station = climate(station)
             
         if args.forecasting:
-            #TODO: run forecasting without climate
+            # TODO: run forecasting without climate
             if not args.climate:
                 print_error(_("sorry, Jaziku can't run forecasting process without climate, "
                               "this issue has not been implemented yet, \nplease run again with the option \"-c\""))
@@ -1494,7 +1491,7 @@ def main():
             print_error(_("Neither process (climate, forecasting) were executed, \nplease enable this process"
                           " in arguments: \n'-c, --climate' for climate and/or '-f, --forecasting' for forecasting."))
         
-        #delete instance 
+        # delete instance 
         del station
         
        
