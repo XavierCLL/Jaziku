@@ -100,6 +100,7 @@ import numpy as np #http://www.scipy.org/Numpy_Example_List
 from scipy import stats #http://docs.scipy.org/doc/scipy/reference/stats.html
 from Image import open as img_open
 from pylab import *
+import re
 
 #internationalization:
 import gettext
@@ -148,21 +149,67 @@ def read_var_D(station):
     '''
     date_D = []
     var_D = []
-    reader_csv = csv.reader(station.file_D, delimiter = '\t')
+    
+    file_D = station.file_D
+    reader_csv = csv.reader(file_D, delimiter = '\t')
+    
+    #reader_csv = csv.reader(fo, delimiter = '\t')
+    #reader_csv.write(data.replace('\x00', ''))
+    
     #Read line to line file_D, validation and save var_D
-    for row in reader_csv:
-        row[0] = row[0].replace('/', '-') 
-        row[1] = row[1].replace(',', '.')
-        try:
-            #set date of dependent variable from file_D, column 1, format: yyyy-mm
-            date_D.append(date(int(row[0].split("-")[0]),
-                               int(row[0].split("-")[1]), 1))
-            #set values of dependent variable
-            var_D.append(input_validation.validation_var_D(station.type_D, float(row[1]), date_D[-1]))
+    try:
+        for row in reader_csv:
+            row[0] = row[0].replace('/', '-') 
+            row[1] = row[1].replace(',', '.')
+            try:
+                # delete garbage characters and convert format
+                year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
+                month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
+                value = float(row[1])
+                #set date of dependent variable from file_D, column 1, format: yyyy-mm
+                date_D.append(date(year, month, 1))
+                #set values of dependent variable
+                var_D.append(input_validation.validation_var_D(station.type_D, value, date_D[-1]))
+            
+            except Exception, e:
+                print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
+                            .format(station.file_D.name, reader_csv.line_num, e))
+    except csv.Error, e:
+        # this except if when some case Microsoft Office put garbage in file,
+        # this is invisible null byte but can't no process correctly, then 
+        # temporal solution is read data and write in other file finished with
+        # "_FIX" words.
         
-        except Exception, e:
-            print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
-                        .format(station.file_D.name, reader_csv.line_num, e))
+        file_D.seek(0)
+        file_D_fix = file_D.read()
+        name_fix = station.file_D.name.split('.')[0] + "_FIX.txt"
+        fo = open(name_fix, 'wb')
+        fo.write(file_D_fix.replace('\x00', ''))
+        fo.close()
+        
+        print "\n\n\tWarning: Repairing file \"{0}\"of NULL bytes garbage,\n"\
+              "\tsave new file as: {1}".format(station.file_D.name, name_fix)
+        
+        reader_csv_fix = csv.reader(open(name_fix, 'rb'), delimiter = '\t')
+        
+        # Now read fix file
+        for row in reader_csv_fix:
+            row[0] = row[0].replace('/', '-') 
+            row[1] = row[1].replace(',', '.')
+            try:
+                # delete garbage characters and convert format
+                year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
+                month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
+                value = float(row[1])
+                #set date of dependent variable from file_D, column 1, format: yyyy-mm
+                date_D.append(date(year, month, 1))
+                #set values of dependent variable
+                var_D.append(input_validation.validation_var_D(station.type_D, value, date_D[-1]))
+            
+            except Exception, e:
+                print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
+                            .format(station.file_D.name, reader_csv_fix.line_num, e))
+                    
     return var_D, date_D
     
 #=============================================================================== 
@@ -176,21 +223,64 @@ def read_var_I(station):
     '''
     date_I = []
     var_I = []
-    reader_csv = csv.reader(station.file_I, delimiter = '\t')
+    
+    file_I = station.file_I
+    reader_csv = csv.reader(file_I, delimiter = '\t')
     #Read line to line file_I, validation and save var_I
-    for row in reader_csv:
-        row[0] = row[0].replace('/', '-') 
-        row[1] = row[1].replace(',', '.')
-        try:
-            #set date of independent variable from file_I, column 1, format: yyyy-mm
-            date_I.append(date(int(row[0].split("-")[0]),
-                               int(row[0].split("-")[1]), 1))
-            #set values of independent variable
-            var_I.append(input_validation.validation_var_I(station.type_I, float(row[1])))
+    try:
+        for row in reader_csv:
+            row[0] = row[0].replace('/', '-') 
+            row[1] = row[1].replace(',', '.')
+            try:
+                # delete garbage characters and convert format
+                year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
+                month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
+                value = float(row[1])
+                #set date of independent variable from file_I, column 1, format: yyyy-mm
+                date_I.append(date(year, month, 1))
+                #set values of independent variable
+                var_I.append(input_validation.validation_var_I(station.type_I, value))
+            
+            except Exception, e:
+                print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
+                            .format(station.file_I.name, reader_csv.line_num, e))
+                
+    except csv.Error, e:
+        # this except if when some case Microsoft Office put garbage in file,
+        # this is invisible null byte but can't no process correctly, then 
+        # temporal solution is read data and write in other file finished with
+        # "_FIX" words.
         
-        except Exception, e:
-            print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
-                        .format(station.file_I.name, reader_csv.line_num, e))
+        file_I.seek(0)
+        file_I_fix = file_I.read()
+        name_fix = station.file_I.name.split('.')[0] + "_FIX.txt"
+        fo = open(name_fix, 'wb')
+        fo.write(file_I_fix.replace('\x00', ''))
+        fo.close()
+        
+        print "\n\n\tWarning: Repairing file \"{0}\"of NULL bytes garbage,\n"\
+              "\tsave new file as: {1}".format(station.file_I.name, name_fix)
+        
+        reader_csv_fix = csv.reader(open(name_fix, 'rb'), delimiter = '\t')
+        
+        # Now read fix file
+        for row in reader_csv_fix:
+            row[0] = row[0].replace('/', '-') 
+            row[1] = row[1].replace(',', '.')
+            try:
+                # delete garbage characters and convert format
+                year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
+                month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
+                value = float(row[1])
+                #set date of independent variable from file_I, column 1, format: yyyy-mm
+                date_I.append(date(year, month, 1))
+                #set values of independent variable
+                var_I.append(input_validation.validation_var_I(station.type_I, value))
+            
+            except Exception, e:
+                print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
+                            .format(station.file_I.name, reader_csv_fix.line_num, e))        
+        
     return var_I, date_I
 
 #=============================================================================== 
