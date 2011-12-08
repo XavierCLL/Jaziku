@@ -17,6 +17,7 @@ optional (but recommend) packages:
 * matplotlib (or python-matplotlib)
 * numpy (or python-numpy)
 * PIL (or python-image)
+* python-dateutil
 
 if you have not install all or some previous
 (optional) packages, please install:
