@@ -1,8 +1,11 @@
 
-version 1.0
+version 1.1:
 * detect spaces or tabs null in input csv files
 * static installer, fix script install, and make for old linux version
 * final message 
+* fix when the name of station fron station list contain spaces at the start or/and final of name
+* fix maps files when actived labels in argument
+* fix translation 
 
 version 1.5:
 * Interpolation of the data in "maps" folder as the product of a strict study of interpolation schemes knowns, 
