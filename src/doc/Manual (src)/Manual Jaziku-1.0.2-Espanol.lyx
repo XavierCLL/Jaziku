@@ -1652,9 +1652,14 @@ Ejemplo de formato de datos de entrada
 
 \begin_layout Standard
 Para correr Jazikü existen convenciones asociadas a las series de las variables
- dependientes e independientes, a continuación son listados:
+ dependientes e independientes.
 \end_layout
 
+\begin_layout Itemize
+Para la variable dependiente son:
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 PPT(Precipitación)
 \end_layout
@@ -1683,10 +1688,12 @@ PATM (presión atmosférica)
 AHR (humedad relativa del dipolo Amazónico)
 \end_layout
 
+\end_deeper
 \begin_layout Itemize
-SST (Temperatura superficial del Mar)
+Para la variable independiente son:
 \end_layout
 
+\begin_deeper
 \begin_layout Itemize
 ONI ( Índice Oceánico El Niño)
 \end_layout
@@ -1708,6 +1715,10 @@ W200 ( Índice de la anomalía del viento a 200 hPa)
 \end_layout
 
 \begin_layout Itemize
+SST (Temperatura superficial del Mar)
+\end_layout
+
+\begin_layout Itemize
 ARH (Índice de humedad del Amazonas)
 \end_layout
 
@@ -1719,24 +1730,33 @@ NAO (Índice del Atlántico Norte)
 QBO(Índice Oscilación Cuasi-bienal)
 \end_layout
 
-\begin_layout Standard
-Dado que Jazikü evalúa las consistencia de las series de tiempo al inicio
- de su ejecución (ver sección
+\end_deeper
+\begin_layout Verse
+
+\shape italic
+(Para más información de las variables y sus rangos por favor consultar
+ el capitulo 
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand vref
 reference "cha:inicial_INFO"
 
 \end_inset
 
-), es posible que se encuentren errores que no permitan su inicio, para
- ello consultar la sección 
+).
+ 
+\end_layout
+
+\begin_layout Standard
+Dado que Jazikü evalúa las consistencia de las series de tiempo al inicio
+ de su ejecución, es posible que se encuentren errores que no permitan su
+ inicio, para ello consultar la sección 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "cha:Apendice1_errores"
 
 \end_inset
 
-de este documento.
+ de éste documento.
 \end_layout
 
 \begin_layout Standard
@@ -1872,7 +1892,7 @@ reference "Rango_validez_Var_ind"
 
 \end_inset
 
-(ultimas dos columnas)
+ (ultimas dos columnas)
 \end_layout
 
 \begin_layout Standard
@@ -2618,7 +2638,7 @@ key "Atlas_climatologico"
 \begin_inset Float table
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Caption
@@ -2700,7 +2720,7 @@ Precipitación
 \begin_inset Text
 
 \begin_layout Plain Layout
-Ppt 
+PPT
 \end_layout
 
 \end_inset
@@ -2718,7 +2738,7 @@ mm
 \begin_inset Text
 
 \begin_layout Plain Layout
-0 mm<=Ppt<=3500mm 
+0 mm<=PPT<=3500mm 
 \end_layout
 
 \end_inset
@@ -2738,7 +2758,7 @@ Numero de días con lluvia
 \begin_inset Text
 
 \begin_layout Plain Layout
-NdPpt
+NDPPT
 \end_layout
 
 \end_inset
@@ -2756,7 +2776,8 @@ NdPpt
 \begin_inset Text
 
 \begin_layout Plain Layout
-Varia entre 0 a 31 para enero, a 28 o 29 para Febrero (dependiendo de si
+Numero de días que sea valido para el mes y año correspondiente, es decir,
+ varia entre 0 a 31 para enero, a 28 o 29 para Febrero (dependiendo de si
  el año es bisiesto o no), a 31 para Marzo,a 30 para Abril, a 31 para para
  Mayo,a 30 para Junio ,a 31 para Julio, a 31 para Agosto, a 30 para Septiembre
  ,a 31 para Octubre,a 30 para Noviembre,a 31 para Diciembre
@@ -2779,7 +2800,7 @@ Temperatura del aire (adherida, Máxima y Mínima Diaria))
 \begin_inset Text
 
 \begin_layout Plain Layout
-T,Tmin,Tmax 
+TEMP,TMIN,TMAX 
 \end_layout
 
 \end_inset
@@ -2797,7 +2818,7 @@ T,Tmin,Tmax
 \begin_inset Text
 
 \begin_layout Plain Layout
--15°C<=Tmin<=50°C 
+-15°C<=TEMP,TMIN,TMAX<=50°C 
 \end_layout
 
 \end_inset
@@ -2817,7 +2838,7 @@ Presión
 \begin_inset Text
 
 \begin_layout Plain Layout
-P 
+PATM
 \end_layout
 
 \end_inset
@@ -2835,7 +2856,7 @@ mb
 \begin_inset Text
 
 \begin_layout Plain Layout
-400 mb <=P<=1100 mb
+400 mb <=PATM<=1100 mb
 \end_layout
 
 \end_inset
@@ -2855,7 +2876,7 @@ mb
 \begin_inset Text
 
 \begin_layout Plain Layout
-HR
+AHR
 \end_layout
 
 \end_inset
@@ -2873,7 +2894,7 @@ HR
 \begin_inset Text
 
 \begin_layout Plain Layout
-0%<=HR<=100% 
+0%<=AHR<=100% 
 \end_layout
 
 \end_inset
@@ -2956,6 +2977,7 @@ status collapsed
 El Niño – La oscilación del sur: 
 \end_layout
 
+\begin_deeper
 \begin_layout Enumerate
 Índice de la Oscilación del sur SOI
 \end_layout
@@ -2972,55 +2994,68 @@ El Niño – La oscilación del sur:
 La temperatura superficial del mar en la región 3 y 3.4 
 \end_layout
 
+\end_deeper
 \begin_layout Itemize
 Vientos de la Alta troposfera tropical
 \end_layout
 
+\begin_deeper
 \begin_layout Enumerate
 Valor de los vientos en la alta troposfera tropical
 \end_layout
 
+\end_deeper
 \begin_layout Itemize
 NAO - North Atlantic Oscillation 
 \end_layout
 
+\begin_deeper
 \begin_layout Enumerate
 Índice de la oscilación del atlántico norte 
 \end_layout
 
+\end_deeper
 \begin_layout Itemize
 QBO – Oscilación Cuasibienal.
 \end_layout
 
+\begin_deeper
 \begin_layout Enumerate
 Índice de la Oscilación Cuasibienal.
  
 \end_layout
 
+\end_deeper
 \begin_layout Itemize
 OLR – Radiación de onda larga saliente 
 \end_layout
 
+\begin_deeper
 \begin_layout Enumerate
 Valor de la radiación de onda larga saliente 
 \end_layout
 
+\end_deeper
 \begin_layout Itemize
 ZCIT – Zona de Confluencia Intertropical 
 \end_layout
 
+\begin_deeper
 \begin_layout Enumerate
 Seguimiento sinóptico de la ZCIT 
 \end_layout
 
+\end_deeper
 \begin_layout Itemize
 Dipolo Amazónico 
 \end_layout
 
+\begin_deeper
 \begin_layout Enumerate
 Anomalía de humedad relativa.
 \end_layout
 
+\end_deeper
 \begin_layout Standard
 Del estudio de Montealegre (2009,
 \begin_inset CommandInset citation
@@ -3048,7 +3083,7 @@ reference "Rango_validez_Var_ind"
 \begin_inset Float table
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Caption
@@ -3095,6 +3130,7 @@ Rango de validez en el cual la variable independiente debe ser incluida
 
 \begin_layout Plain Layout
 
+\series bold
 \size scriptsize
 Unidades
 \end_layout
@@ -3660,7 +3696,7 @@ Temperatura superficial del Mar (3.4)-<TSM>
 \begin_layout Plain Layout
 
 \size footnotesize
--60<=TSM
+-60<=SST
 \end_layout
 
 \begin_layout Plain Layout
