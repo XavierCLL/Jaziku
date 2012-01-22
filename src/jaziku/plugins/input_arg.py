@@ -9,37 +9,40 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # Jaziku is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-import argparse  #http://docs.python.org/py3k/library/argparse.html
+import argparse  # http://docs.python.org/py3k/library/argparse.html
 import global_var
 
-#=============================================================================== 
-# Parser and check arguments
+#==============================================================================
+# PARSER AND CHECK ARGUMENTS
 
 # Create parser arguments
 arguments = argparse.ArgumentParser(
-                                 prog = global_var.PROG_NAME,
-                                 description = _("Jaziku is a software for the implementation of composite analysis\n"  
-                                                 "metodology between the major indices of climate variability and\n" 
-                                                 "major meteorological variables in puntual scale.\n"),
-                                 epilog = "Jaziku, version {0} - {1}\n" \
-                                          "Copyright © 2011 IDEAM - Colombia"
-                                          .format(global_var.VERSION, global_var.COMPILE_DATE),
-                                          formatter_class = argparse.RawTextHelpFormatter)
-        
+                 prog = global_var.PROG_NAME,
+                 description = _("Jaziku is a software for the implementation "
+                                 "of composite analysis\n metodology between "
+                                 "the major indices of climate variability "
+                                 "and\n major meteorological variables in "
+                                 "puntual scale.\n"),
+                 epilog = "Jaziku, version {0} - {1}\n" \
+                          "Copyright © 2011 IDEAM - Colombia"
+                          .format(global_var.VERSION, global_var.COMPILE_DATE),
+                          formatter_class = argparse.RawTextHelpFormatter)
+
 ### Input arguments for dependent variable
 # Set path to file of stations list
-arguments.add_argument('-stations', type = argparse.FileType('r'), required = True,
-                    default = sys.stdin, help = _('Path absolute or relative to file stations list'))
+arguments.add_argument('-stations', type = argparse.FileType('r'),
+                       required = True, default = sys.stdin,
+                       help = _('Path absolute or relative to file stations list'))
 ### climate and forecasting set
 # enable/disable climate process
 arguments.add_argument('-c', '--climate', action = 'store_true', default = False,
@@ -63,9 +66,10 @@ arguments.add_argument('-p_normal', type = str,
 arguments.add_argument('-p_above', type = str,
                     help = _('Set phenomenon above label'))
 # set period process
-arguments.add_argument('-period', type = str,
-                    help = _('Set specific period for process, e.g. 1980-2010'), required = False)
+arguments.add_argument('-period', type = str, required = False,
+                    help = _('Set specific period for process, e.g. 1980-2010'))
 # enable/disable forescasting process
-arguments.add_argument('-ra', '--risk-analysis', action = 'store_true', default = False,
-                    help = _('Enable risk analysis for forecasting process'), required = False)
+arguments.add_argument('-ra', '--risk-analysis', action = 'store_true',
+                       default = False, required = False,
+                       help = _('Enable risk analysis for forecasting process'))
 
