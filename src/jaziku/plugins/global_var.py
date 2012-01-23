@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright © 2011 IDEAM
+# Copyright © 2011-2012 IDEAM
 #
 # This file is part of Jaziku.
 #
@@ -25,7 +25,7 @@
 PROG_NAME = "jaziku"
 
 # version
-VERSION = "1.0"
+VERSION = "0.1"
 
 # compilation date
 COMPILE_DATE = "5 dic 2011"
