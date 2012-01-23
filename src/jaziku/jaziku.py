@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #==============================================================================
-# Copyright © 2011 IDEAM
+# Copyright © 2011-2012 IDEAM
 # Instituto de Hidrología, Meteorología y Estudios Ambientales
 # Carrera 10 No. 20-30
 # Bogotá, Colombia
@@ -1219,7 +1219,7 @@ def graphics_forecasting(station):
     mosaic.save(mosaic_dir_save)
     plt.close()
 
-#===============================================================================
+#==============================================================================
 # PLOTTING MAPS
 # create file for ploting
 # TODO: generate maps from previus file, plot all index from all stations
@@ -1473,7 +1473,7 @@ def main():
             "## puntual scale.                                           ##\n" \
             "##                                                          ##\n" \
             "## Version {0} - {1}\t                            ##\n" \
-            "## Copyright © 2011 IDEAM - Colombia                        ##\n" \
+            "## Copyright © 2011-2012 IDEAM - Colombia                   ##\n" \
             "##############################################################") \
             .format(global_var.VERSION, global_var.COMPILE_DATE)
 
