@@ -173,8 +173,15 @@ def read_var_D(station):
     # Read line to line file_D, validation and save var_D
     try:
         for row in reader_csv:
-            row[0] = row[0].replace('/', '-')
-            row[1] = row[1].replace(',', '.')
+            try:
+                row[0] = row[0].replace('/', '-')
+                row[1] = row[1].replace(',', '.')
+            except Exception, e:
+                print_error(_("Reading from file \"{0}\" in line: {1}\n\n"
+                              "this could be caused by wrong line or garbage "
+                              "character,\nplease check manually, fix it and "
+                              "run again.")
+                             .format(station.file_D.name, reader_csv.line_num))
             try:
                 # delete garbage characters and convert format
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
@@ -214,8 +221,15 @@ def read_var_D(station):
 
         # Now read fix file
         for row in reader_csv_fix:
-            row[0] = row[0].replace('/', '-')
-            row[1] = row[1].replace(',', '.')
+            try:
+                row[0] = row[0].replace('/', '-')
+                row[1] = row[1].replace(',', '.')
+            except Exception, e:
+                print_error(_("Reading from file \"{0}\" in line: {1}\n\n"
+                              "this could be caused by wrong line or garbage "
+                              "character,\nplease check manually, fix it and "
+                              "run again.")
+                             .format(station.file_D.name, reader_csv.line_num))
             try:
                 # delete garbage characters and convert format
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
@@ -252,8 +266,15 @@ def read_var_I(station):
     # Read line to line file_I, validation and save var_I
     try:
         for row in reader_csv:
-            row[0] = row[0].replace('/', '-')
-            row[1] = row[1].replace(',', '.')
+            try:
+                row[0] = row[0].replace('/', '-')
+                row[1] = row[1].replace(',', '.')
+            except Exception, e:
+                print_error(_("Reading from file \"{0}\" in line: {1}\n\n"
+                              "this could be caused by wrong line or garbage "
+                              "character,\nplease check manually, fix it and "
+                              "run again.")
+                             .format(station.file_D.name, reader_csv.line_num))
             try:
                 # delete garbage characters and convert format
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
@@ -293,8 +314,15 @@ def read_var_I(station):
 
         # Now read fix file
         for row in reader_csv_fix:
-            row[0] = row[0].replace('/', '-')
-            row[1] = row[1].replace(',', '.')
+            try:
+                row[0] = row[0].replace('/', '-')
+                row[1] = row[1].replace(',', '.')
+            except Exception, e:
+                print_error(_("Reading from file \"{0}\" in line: {1}\n\n"
+                              "this could be caused by wrong line or garbage "
+                              "character,\nplease check manually, fix it and "
+                              "run again.")
+                             .format(station.file_D.name, reader_csv.line_num))
             try:
                 # delete garbage characters and convert format
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
