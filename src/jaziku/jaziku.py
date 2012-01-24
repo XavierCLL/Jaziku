@@ -1035,6 +1035,9 @@ def graphics_climate(station):
             ind = np.array([0, 0.8, 1.6])
             # the width of the bars  
             width = 0.2
+
+            plt.figure()
+
             # graphics title
             plt.title(unicode(_('Composite analisys - {0} ({1})\n{2} - {3} - '
                                 'lag {6} - trim {7} ({8}) - ({4}-{5})')
@@ -1042,6 +1045,7 @@ def graphics_climate(station):
                                         station.type_D, station.period_start,
                                         station.period_end, lag, month,
                                         trim_text[month - 1]), 'utf-8'))
+
             # label for axis Y 
             plt.ylabel(_('probability (%)'))
             #  adjust the max leaving min unchanged in Y
@@ -1107,7 +1111,8 @@ def graphics_climate(station):
                                      station.type_I, station.period_start, station.period_end))
 
             plt.savefig(image_dir_save, dpi = 75)
-            plt.close()
+            #plt.close()
+            plt.clf()
 
             # save dir image for mosaic
             image_open.append(img_open(image_dir_save))
@@ -1139,8 +1144,7 @@ def graphics_climate(station):
         mosaic.paste(image_open[10], (image_width, image_height * 3))
         mosaic.paste(image_open[11], (image_width * 2, image_height * 3))
         mosaic.save(mosaic_dir_save)
-        plt.close()
-
+        plt.clf()
 
 def graphics_forecasting(station):
     '''
@@ -1196,7 +1200,7 @@ def graphics_forecasting(station):
                          .format(station.type_D, lag, station.f_trim,
                                  station.period_start, station.period_end))
         plt.savefig(image_dir_save, dpi = 75)
-        plt.close()
+        plt.clf()
 
         # save dir image for mosaic
         image_open.append(img_open(image_dir_save))
@@ -1217,7 +1221,7 @@ def graphics_forecasting(station):
     mosaic.paste(image_open[1], (image_width, 0))
     mosaic.paste(image_open[2], (image_width * 2, 0))
     mosaic.save(mosaic_dir_save)
-    plt.close()
+    plt.clf()
 
 #==============================================================================
 # PLOTTING MAPS
