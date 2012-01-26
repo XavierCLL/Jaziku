@@ -10,13 +10,14 @@ msgmerge jaziku.po messages.po -U
 
 #3. treducir en lokalize u otra herramienta, copiar a lugar del idioma y compilar:
 
-msgfmt jaziku..po -o jaziku.mo
+msgfmt jaziku.po -o jaziku.mo
 
 #4. correrlo con un idioma en particular:
 
 LANG=es_CO jaziku ....
 
-### EGGS AND SOURCE CODE###
+
+### EGGS AND SOURCE CODE ###
 
 #source code packages
 

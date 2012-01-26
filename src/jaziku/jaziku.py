@@ -101,6 +101,8 @@ from scipy import stats  # http://docs.scipy.org/doc/scipy/reference/stats.html
 from Image import open as img_open
 from pylab import *
 import re
+# color text console  #http://pypi.python.org/pypi/clint/
+from clint.textui import colored
 
 # internationalization:
 import gettext
@@ -129,8 +131,8 @@ def print_error(text_error):
     Jaziku
     '''
 
-    print _('\n\nERROR:\n{0}\n\nFor more help run program with argument: -h')\
-           .format(text_error)
+    print colored.red(_('\n\nERROR:\n{0}\n\n').format(text_error)) + \
+          _('For more help run program with argument: -h')
     exit()
 
 
@@ -213,9 +215,9 @@ def read_var_D(station):
         fo.write(file_D_fix.replace('\x00', ''))
         fo.close()
 
-        print _("\n\n\tWarning: Repairing file \"{0}\" of NULL bytes garbage,"\
-              "\n\tsaving new file as: {1}").format(station.file_D.name,
-                                                    name_fix)
+        print colored.yellow(_("\n\n\tWarning: Repairing file \"{0}\" of NULL"\
+                               " bytes garbage,\n\tsaving new file as: {1}")
+                               .format(station.file_D.name, name_fix))
 
         reader_csv_fix = csv.reader(open(name_fix, 'rb'), delimiter = '\t')
 
@@ -306,9 +308,9 @@ def read_var_I(station):
         fo.write(file_I_fix.replace('\x00', ''))
         fo.close()
 
-        print _("\n\n\tWarning: Repairing file \"{0}\" of NULL bytes garbage,"\
-              "\n\tsaving new file as: {1}").format(station.file_I.name,
-                                                    name_fix)
+        print colored.yellow(_("\n\n\tWarning: Repairing file \"{0}\" of NULL"\
+                               " bytes garbage,\n\tsaving new file as: {1}")
+                               .format(station.file_I.name, name_fix))
 
         reader_csv_fix = csv.reader(open(name_fix, 'rb'), delimiter = '\t')
 
@@ -751,29 +753,35 @@ def get_contingency_table(station, lag, month):
 
     # if threshold by below of independent variable is wrong
     if float(sum_per_column_percent[0]) == 0 and not threshold_problem[0]:
-        print _(u'\n\nWarning:\nThe thresholds selected \"{0}\" and \"{1}\" are not suitable for\n' \
-                u'compound analysis of variable \"{2}\" with relation to \"{3}\"\n' \
-                u'inside category \"{4}\". Therefore, the graphics will not be created.') \
-                .format(station.threshold_below_var_I, station.threshold_below_var_I,
-                       station.type_D, station.type_I, station.phenomenon_below)
+        print colored.yellow(
+            _(u'\n\nWarning:\nThe thresholds selected \"{0}\" and \"{1}\" '
+              u'are not suitable for\ncompound analysis of variable \"{2}\" '
+              u'with relation to \"{3}\"\ninside category \"{4}\". Therefore,'
+              u' the graphics will not be created.')
+              .format(station.threshold_below_var_I, station.threshold_above_var_I,
+                      station.type_D, station.type_I, station.phenomenon_below))
         threshold_problem[0] = True
 
     # if threshold by below or above calculating normal phenomenon of independent variable is wrong
     if float(sum_per_column_percent[1]) == 0 and not threshold_problem[1]:
-        print _(u'\n\nWarning:\nThe thresholds selected \"{0}\" and \"{1}\" are not suitable for\n' \
-                u'compound analysis of variable \"{2}\" with relation to \"{3}\"\n' \
-                u'inside category \"{4}\". Therefore, the graphics will not be created.') \
-                .format(station.threshold_below_var_I, station.threshold_below_var_I,
-                       station.type_D, station.type_I, station.phenomenon_normal)
+        print colored.yellow(
+            _(u'\n\nWarning:\nThe thresholds selected \"{0}\" and \"{1}\" '
+              u'are not suitable for\ncompound analysis of variable \"{2}\" '
+              u'with relation to \"{3}\"\ninside category \"{4}\". Therefore,'
+              u' the graphics will not be created.')
+              .format(station.threshold_below_var_I, station.threshold_above_var_I,
+                      station.type_D, station.type_I, station.phenomenon_normal))
         threshold_problem[1] = True
 
     # if threshold by above of independent variable is wrong
     if float(sum_per_column_percent[2]) == 0 and not threshold_problem[2]:
-        print _(u'\n\nWarning:\nThe thresholds selected \"{0}\" and \"{1}\" are not suitable for\n' \
-                u'compound analysis of variable \"{2}\" with relation to \"{3}\"\n' \
-                u'inside category \"{4}\". Therefore, the graphics will not be created.') \
-               .format(station.threshold_below_var_I, station.threshold_below_var_I,
-                       station.type_D, station.type_I, station.phenomenon_above)
+        print colored.yellow(
+            _(u'\n\nWarning:\nThe thresholds selected \"{0}\" and \"{1}\" '
+              u'are not suitable for\ncompound analysis of variable \"{2}\" '
+              u'with relation to \"{3}\"\ninside category \"{4}\". Therefore,'
+              u' the graphics will not be created.')
+              .format(station.threshold_below_var_I, station.threshold_above_var_I,
+                      station.type_D, station.type_I, station.phenomenon_above))
         threshold_problem[2] = True
 
     try:
@@ -1386,7 +1394,7 @@ def climate(station):
 
     maps_climate(station)
 
-    print _("done")
+    print colored.green(_("done"))
 
     return station
 
@@ -1464,7 +1472,7 @@ def forecasting(station):
 
     maps_forecasting(station)
 
-    print _("done")
+    print colored.green(_("done"))
 
 #==============================================================================
 # STATION CLASS
@@ -1555,9 +1563,10 @@ def main():
         print _("\nSave the result for climate in:\n -> {0}").format(climate_dir)
 
         if os.path.isdir(climate_dir):
-            print _("\n   Warning: the output director for climate process\n" \
-                    "   is already exist, Jaziku continue but the results\n" \
-                    "   could be mixed or replaced of old output.")
+            print colored.yellow(\
+                _("\n   Warning: the output director for climate process\n" \
+                "   is already exist, Jaziku continue but the results\n" \
+                "   could be mixed or replaced of old output."))
         # created and define csv output file for maps climate
         phenomenon = {0:phenomenon_below, 1:phenomenon_normal, 2:phenomenon_above}
         maps_plots_files_climate = [] # maps_plots_files_climate[lag][month][phenomenon]
@@ -1604,9 +1613,10 @@ def main():
         print _("\nSave the result for forecasting in:\n -> {0}").format(forecasting_dir)
 
         if os.path.isdir(forecasting_dir):
-            print _("\n   Warning: the output director for forecasting process\n" \
-                    "   is already exist, Jaziku continue but the results\n" \
-                    "   could be mixed or replaced of old output.")
+            print colored.yellow(\
+                _("\n   Warning: the output director for forecasting process\n" \
+                "   is already exist, Jaziku continue but the results\n" \
+                "   could be mixed or replaced of old output."))
 
         # created and define csv output file for maps forecasting
         maps_plots_files_forecasting = [] # maps_plots_files_forecasting[lag]

@@ -34,7 +34,7 @@ arguments = argparse.ArgumentParser(
                                  "and\n major meteorological variables in "
                                  "puntual scale.\n"),
                  epilog = "Jaziku, version {0} - {1}\n" \
-                          "Copyright © 2011 IDEAM - Colombia"
+                          "Copyright © 2011-2012 IDEAM - Colombia"
                           .format(global_var.VERSION, global_var.COMPILE_DATE),
                           formatter_class = argparse.RawTextHelpFormatter)
 

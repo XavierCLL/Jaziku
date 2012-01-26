@@ -1,3 +1,11 @@
 
 0.2
- * applied some PEP8 rules, fix TYPO and reorganize code
+
+features:
+ * change numeration version
+ * applied some PEP8 rules, fix typos and reorganize code
+ * aplied color text in console information for errors, warnings and process 
+
+bugfixes:
+ * fix "Segmentation fault" in plt.close() using pyplot
+ * show and info error when found wrong line or garbage character in input files

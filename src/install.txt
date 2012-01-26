@@ -18,6 +18,7 @@ optional (but recommend) packages:
 * numpy (or python-numpy)
 * PIL (or python-image)
 * python-dateutil
+* python-clint
 
 if you have not install all or some previous
 (optional) packages, please install:
