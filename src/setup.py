@@ -62,7 +62,7 @@ setup(name = global_var.PROG_NAME,
       packages = find_packages(),
       py_modules = ["jaziku"],
       scripts = [ "bin/jaziku" ],
-      install_requires = ["scipy", "argparse", "python-dateutil", "matplotlib", "numpy", "PIL"],
+      install_requires = ["scipy", "argparse", "python-dateutil", "matplotlib", "numpy", "PIL", "clint"],
       package_data = {"jaziku":get_package_data("jaziku",('.po','.mo')),
                       "doc":get_package_data("doc",('.pdf','.odp','.txt','.csv'))}
       )
