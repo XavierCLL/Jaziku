@@ -175,6 +175,11 @@ def read_var_D(station):
     # Read line to line file_D, validation and save var_D
     try:
         for row in reader_csv:
+
+            # if row is null o empty, e.g. empty but with tabs or spaces
+            if not row or not row[0].strip():
+                continue
+
             try:
                 row[0] = row[0].replace('/', '-')
                 row[1] = row[1].replace(',', '.')
@@ -223,6 +228,11 @@ def read_var_D(station):
 
         # Now read fix file
         for row in reader_csv_fix:
+
+            # if row is null o empty, e.g. empty but with tabs or spaces
+            if not row or not row[0].strip():
+                continue
+
             try:
                 row[0] = row[0].replace('/', '-')
                 row[1] = row[1].replace(',', '.')
@@ -268,6 +278,11 @@ def read_var_I(station):
     # Read line to line file_I, validation and save var_I
     try:
         for row in reader_csv:
+
+            # if row is null o empty, e.g. empty but with tabs or spaces
+            if not row or not row[0].strip():
+                continue
+
             try:
                 row[0] = row[0].replace('/', '-')
                 row[1] = row[1].replace(',', '.')
@@ -316,6 +331,11 @@ def read_var_I(station):
 
         # Now read fix file
         for row in reader_csv_fix:
+
+            # if row is null o empty, e.g. empty but with tabs or spaces
+            if not row or not row[0].strip():
+                continue
+
             try:
                 row[0] = row[0].replace('/', '-')
                 row[1] = row[1].replace(',', '.')
@@ -1642,6 +1662,13 @@ def main():
     stations = csv.reader(args.stations, delimiter = ';')
     for line_station in stations:
         station = Station()
+
+        # trim all items in line_station
+        line_station = [i.strip() for i in line_station]
+
+        # if line of station is null o empty, e.g. empty but with tabs or spaces
+        if not line_station or not line_station[0].strip():
+            continue
 
         global threshold_problem
         threshold_problem = [False, False, False]
