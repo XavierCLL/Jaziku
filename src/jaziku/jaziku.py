@@ -1658,6 +1658,9 @@ def main():
 
             maps_plots_files_forecasting.append(csv_file)
 
+    # counter stations processed 
+    stations_processed = 0
+
     # read stations list from stations file (-station arguments) and process station by station
     stations = csv.reader(args.stations, delimiter = ';')
     for line_station in stations:
@@ -1757,8 +1760,13 @@ def main():
                           "--climate' for climate and/or '-f, --forecasting' "
                           "for forecasting."))
 
+        stations_processed += 1
+
         # delete instance 
         del station
+
+    print colored.green(_("\nProcess completed, {0} stations processed\n").
+                        format(stations_processed)) + _("Good bye.\n")
 
 
 # Run main() when call jaziku.py
