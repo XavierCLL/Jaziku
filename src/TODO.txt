@@ -1,9 +1,9 @@
 
 version 0.2:
-* detect spaces or tabs null in input csv files
+* - detect spaces or tabs null in input csv files
 * static installer, fix script install, and make for old linux version
 * final message 
-* fix when the name of station from station list contain spaces at the start or/and final of name
+* - fix when the name of station from station list contain spaces at the start or/and final of name
 * fix maps files when actived labels in argument
 * fix translation 
 
