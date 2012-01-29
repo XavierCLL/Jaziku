@@ -5,6 +5,7 @@ features:
  * change numeration version
  * applied some PEP8 rules, fix typos and reorganize code
  * aplied color text in console information for errors, warnings and process 
+ * final message when Jaziku has finished
 
 bugfixes:
  * fix "Segmentation fault" in plt.close() using pyplot
