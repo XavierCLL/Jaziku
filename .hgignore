@@ -1,0 +1,14 @@
+syntax: regexp
+^\.settings$
+syntax: regexp
+^\.project$
+syntax: regexp
+^\.pydevproject$
+syntax: regexp
+^\.settings$
+syntax: regexp
+^\.project$
+syntax: regexp
+^src/build$
+syntax: regexp
+^src/jaziku\.egg-info$
