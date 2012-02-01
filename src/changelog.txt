@@ -12,3 +12,5 @@ bugfixes:
  * show and info error when found wrong line or garbage character in input files
  * fix crash when the name or number from files (station list and files 
    variables input) contain spaces or tabs at the start or/and final of this.
+ * fix memory leak using pyplot library    
+ 

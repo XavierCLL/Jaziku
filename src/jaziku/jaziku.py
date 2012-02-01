@@ -361,6 +361,7 @@ def read_var_I(station):
 
     return var_I, date_I
 
+
 #==============================================================================
 # UTILITIES FUCTIONS
 
@@ -699,6 +700,7 @@ def get_thresholds_var_I(station):
     # if are define as particular values
     return thresholds_with_particular_values(station.threshold_below_var_I,
                                              station.threshold_above_var_I)
+
 
 #==============================================================================
 # MAIN CALCULATIONS
@@ -1044,6 +1046,7 @@ def result_table(station):
 
     return station
 
+
 #===============================================================================
 # GRAPHICS
 # Generate bart graphics and mosaic for climate of pies for forecasting
@@ -1164,8 +1167,8 @@ def graphics_climate(station):
                                      station.type_I, station.period_start, station.period_end))
 
             plt.savefig(image_dir_save, dpi = 75)
-            #plt.close()
-            #plt.clf()
+            plt.clf()
+
             # save dir image for mosaic
             image_open.append(img_open(image_dir_save))
 
@@ -1197,7 +1200,6 @@ def graphics_climate(station):
         mosaic.paste(image_open[11], (image_width * 2, image_height * 3))
         mosaic.save(mosaic_dir_save)
         plt.clf()
-        plt.close('all')
 
 def graphics_forecasting(station):
     '''
@@ -1254,7 +1256,6 @@ def graphics_forecasting(station):
                                  station.period_start, station.period_end))
         plt.savefig(image_dir_save, dpi = 75)
         plt.clf()
-        plt.close()
 
         # save dir image for mosaic
         image_open.append(img_open(image_dir_save))
@@ -1276,7 +1277,7 @@ def graphics_forecasting(station):
     mosaic.paste(image_open[2], (image_width * 2, 0))
     mosaic.save(mosaic_dir_save)
     plt.clf()
-    plt.close()
+
 
 #==============================================================================
 # PLOTTING MAPS
@@ -1365,6 +1366,7 @@ def maps_forecasting(station):
                                          station.prob_normal_var_D[lag],
                                          station.prob_exceed_var_D[lag]]))])
 
+
 #==============================================================================
 # CLIMATE AND FORECASTING MAIN PROCESS
 
@@ -1408,8 +1410,8 @@ def climate(station):
 
     station = result_table(station)
 
-    if not threshold_problem[0] and not threshold_problem[1] and not threshold_problem[2]:
-        graphics_climate(station)
+    #if not threshold_problem[0] and not threshold_problem[1] and not threshold_problem[2]:
+    #    graphics_climate(station)
 
     maps_climate(station)
 
@@ -1493,9 +1495,10 @@ def forecasting(station):
 
     print colored.green(_("done"))
 
+
 #==============================================================================
 # STATION CLASS
-# for storage several variables
+# for storage several variables of each station
 
 
 class Station:
@@ -1503,8 +1506,12 @@ class Station:
     Generic station class
     '''
 
+    # counter stations processed 
+    stations_processed = 0
+
     def __init__(self):
-        pass
+        Station.stations_processed += 1
+
 
 #==============================================================================
 # MAIN PROCESS
@@ -1657,9 +1664,6 @@ def main():
 
             maps_plots_files_forecasting.append(csv_file)
 
-    # counter stations processed 
-    stations_processed = 0
-
     # read stations list from stations file (-station arguments) and process station by station
     stations = csv.reader(args.stations, delimiter = ';')
     for line_station in stations:
@@ -1759,13 +1763,15 @@ def main():
                           "--climate' for climate and/or '-f, --forecasting' "
                           "for forecasting."))
 
-        stations_processed += 1
+        # clear and delete all instances of maps created by pyplot
+        plt.close('all')
 
         # delete instance 
         del station
 
+
     print colored.green(_("\nProcess completed!, {0} stations processed.\n").
-                        format(stations_processed)) + _("Good bye :)\n")
+                        format(Station.stations_processed)) + _("Good bye :)\n")
 
 
 # Run main() when call jaziku.py
