@@ -117,9 +117,6 @@ import plugins.input_arg as input_arg
 import plugins.contingency_test as ct
 import plugins.significance_corr as sc
 
-# from progressbar import Bar, Percentage, ProgressBar
-# http://code.google.com/p/python-progressbar/
-
 
 #==============================================================================
 # PRINT FUCTIONS
@@ -1092,7 +1089,7 @@ def graphics_climate(station):
             # the width of the bars  
             width = 0.2
 
-            plt.figure()
+            #plt.figure()
 
             # graphics title
             plt.title(unicode(_('Composite analisys - {0} ({1})\n{2} - {3} - '
@@ -1168,8 +1165,7 @@ def graphics_climate(station):
 
             plt.savefig(image_dir_save, dpi = 75)
             #plt.close()
-            plt.clf()
-
+            #plt.clf()
             # save dir image for mosaic
             image_open.append(img_open(image_dir_save))
 
@@ -1201,6 +1197,7 @@ def graphics_climate(station):
         mosaic.paste(image_open[11], (image_width * 2, image_height * 3))
         mosaic.save(mosaic_dir_save)
         plt.clf()
+        plt.close('all')
 
 def graphics_forecasting(station):
     '''
@@ -1257,6 +1254,7 @@ def graphics_forecasting(station):
                                  station.period_start, station.period_end))
         plt.savefig(image_dir_save, dpi = 75)
         plt.clf()
+        plt.close()
 
         # save dir image for mosaic
         image_open.append(img_open(image_dir_save))
@@ -1278,6 +1276,7 @@ def graphics_forecasting(station):
     mosaic.paste(image_open[2], (image_width * 2, 0))
     mosaic.save(mosaic_dir_save)
     plt.clf()
+    plt.close()
 
 #==============================================================================
 # PLOTTING MAPS
@@ -1580,7 +1579,7 @@ def main():
         climate_dir = \
             os.path.join(os.path.splitext(args.stations.name)[0], _('Jaziku-climate'))   # 'results'
 
-        print _("\nSave the result for climate in:\n -> {0}").format(climate_dir)
+        print _("\nSaving the result for climate in:\n -> {0}").format(climate_dir)
 
         if os.path.isdir(climate_dir):
             print colored.yellow(\
@@ -1630,7 +1629,7 @@ def main():
         forecasting_dir = \
             os.path.join(os.path.splitext(args.stations.name)[0], _('Jaziku-forecasting'))   # 'results'
 
-        print _("\nSave the result for forecasting in:\n -> {0}").format(forecasting_dir)
+        print _("\nSaving the result for forecasting in:\n -> {0}").format(forecasting_dir)
 
         if os.path.isdir(forecasting_dir):
             print colored.yellow(\
@@ -1765,8 +1764,8 @@ def main():
         # delete instance 
         del station
 
-    print colored.green(_("\nProcess completed, {0} stations processed\n").
-                        format(stations_processed)) + _("Good bye.\n")
+    print colored.green(_("\nProcess completed!, {0} stations processed.\n").
+                        format(stations_processed)) + _("Good bye :)\n")
 
 
 # Run main() when call jaziku.py
