@@ -1667,7 +1667,6 @@ def main():
     # read stations list from stations file (-station arguments) and process station by station
     stations = csv.reader(args.stations, delimiter = ';')
     for line_station in stations:
-        station = Station()
 
         # trim all items in line_station
         line_station = [i.strip() for i in line_station]
@@ -1675,6 +1674,9 @@ def main():
         # if line of station is null o empty, e.g. empty but with tabs or spaces
         if not line_station or not line_station[0].strip():
             continue
+
+        # new instance of station
+        station = Station()
 
         global threshold_problem
         threshold_problem = [False, False, False]

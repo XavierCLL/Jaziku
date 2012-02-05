@@ -5,7 +5,7 @@ features:
  * change numeration version
  * applied some PEP8 rules, fix typos and reorganize code
  * aplied color text in console information for errors, warnings and process 
- * final message when Jaziku has finished
+ * final message with number of stations processed when Jaziku has finished
 
 bugfixes:
  * fix "Segmentation fault" in plt.close() using pyplot
@@ -13,4 +13,6 @@ bugfixes:
  * fix crash when the name or number from files (station list and files 
    variables input) contain spaces or tabs at the start or/and final of this.
  * fix memory leak using pyplot library    
+ * fix several strings messages, correct to translate after install, translation
+   works now.
  
