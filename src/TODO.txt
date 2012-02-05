@@ -5,7 +5,7 @@ version 0.2:
 * final message 
 * - fix when the name of station from station list contain spaces at the start or/and final of name
 * fix maps files when actived labels in argument
-* fix translation 
+* - fix translation 
 
 version 0.3:
 * Change the resolution of analysis of trimesters to months and even days (being able)
