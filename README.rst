@@ -50,7 +50,7 @@ http://hg.ideam.gov.co:8000/meteorologia/jaziku/files/tip/src/dist
 
 Install
 --------------
-please read (files) `install.txt <http://hg.ideam.gov.co:8000/meteorologia/jaziku/files/tip/src/install.txt>`
+please read (files) `install.txt <http://hg.ideam.gov.co:8000/meteorologia/jaziku/files/tip/src/install.txt>`_
 
 
 Synopsis run
