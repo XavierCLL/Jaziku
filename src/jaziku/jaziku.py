@@ -107,7 +107,7 @@ from clint.textui import colored
 # internationalization:
 import gettext
 TRANSLATION_DOMAIN = "jaziku"
-LOCALE_DIR = 'locale'  # os.path.join(os.path.dirname(__file__), "locale")
+LOCALE_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "locale") # 'locale'
 gettext.install(TRANSLATION_DOMAIN, LOCALE_DIR)
 
 # import funtions in plugins
@@ -128,8 +128,8 @@ def print_error(text_error):
     Jaziku
     '''
 
-    print colored.red(_('\n\nERROR:\n{0}\n\n').format(text_error)) + \
-          _('For more help run program with argument: -h')
+    print colored.red(_('\n\nERROR:\n{0}\n\n').format(text_error))
+    print _("For more help run program with argument: -h")
     exit()
 
 
@@ -653,7 +653,7 @@ def get_thresholds_var_I(station):
             below = float(below)
             above = float(above)
         except:
-            print_error(_("threshoulds ​​could not were identified:\n{0} - {1}")
+            print_error(_("threshoulds could not were identified:\n{0} - {1}")
                         .format(below, above))
 
         if below > above:
@@ -1377,7 +1377,7 @@ def climate(station):
     '''
 
     # console message
-    sys.stdout.write(_("Processing climate "))
+    sys.stdout.write(_("Processing climate"))
     sys.stdout.flush()
 
     if not os.path.isdir(climate_dir):
@@ -1398,7 +1398,7 @@ def climate(station):
 
     station.period_end = station.common_period[-1][0].year
 
-    sys.stdout.write("({0}-{1})...........".format(station.period_start,
+    sys.stdout.write(" ({0}-{1})...........".format(station.period_start,
                                                    station.period_end))
     sys.stdout.flush()
 
@@ -1410,8 +1410,8 @@ def climate(station):
 
     station = result_table(station)
 
-    #if not threshold_problem[0] and not threshold_problem[1] and not threshold_problem[2]:
-    #    graphics_climate(station)
+    if not threshold_problem[0] and not threshold_problem[1] and not threshold_problem[2]:
+        graphics_climate(station)
 
     maps_climate(station)
 
@@ -1532,14 +1532,14 @@ def main():
     args = input_arg.arguments.parse_args()
 
     # console message
-    print _("\n########################### JAZIKU ###########################\n" \
-            "## Jaziku is a software for the implementation of composite ##\n" \
-            "## analysis metodology between the major indices of climate ##\n" \
-            "## variability and major meteorological variables in        ##\n" \
-            "## puntual scale.                                           ##\n" \
-            "##                                                          ##\n" \
-            "## Version {0} - {1}\t                            ##\n" \
-            "## Copyright © 2011-2012 IDEAM - Colombia                   ##\n" \
+    print _("\n########################### JAZIKU ###########################\n"
+            "## Jaziku is a software for the implementation of composite ##\n"
+            "## analysis metodology between the major indices of climate ##\n"
+            "## variability and major meteorological variables in        ##\n"
+            "## puntual scale.                                           ##\n"
+            "##                                                          ##\n"
+            "## Version {0} - {1}\t                            ##\n"
+            "## Copyright 2011-2012 IDEAM - Colombia                     ##\n"
             "##############################################################") \
             .format(global_var.VERSION, global_var.COMPILE_DATE)
 
@@ -1708,8 +1708,8 @@ def main():
             if args.forecasting:
                 if len(line_station) < 20:
                     raise Exception(_("For forecasting process you need define "
-                                      "9 probability variables and trimester to "
-                                      "process in stations file:"))
+                                      "9 probability\n variables and trimester to "
+                                      "process in stations file."))
                 station.f_var_I_B = [float(line_station[10].replace(',', '.')),
                                      float(line_station[13].replace(',', '.')),
                                      float(line_station[16].replace(',', '.'))]
@@ -1766,12 +1766,13 @@ def main():
         # clear and delete all instances of maps created by pyplot
         plt.close('all')
 
-        # delete instance 
+        # delete instance
         del station
 
 
-    print colored.green(_("\nProcess completed!, {0} stations processed.\n").
-                        format(Station.stations_processed)) + _("Good bye :)\n")
+    print colored.green(_("\nProcess completed!, {0} station(s) processed.\n")
+                        .format(Station.stations_processed))
+    print _("Good bye :)\n")
 
 
 # Run main() when call jaziku.py
