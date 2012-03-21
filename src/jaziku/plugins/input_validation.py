@@ -28,6 +28,8 @@ import global_var
 #==============================================================================
 # Validation var_D (dependent variable)
 #
+# If inputs are monthly:
+#
 #     Variable        Abbreviation   Units          Range of variation
 #  Precipitation----------PPT         mm             0mm<=Ppt<=3500mm
 #  Num. of days
@@ -37,7 +39,18 @@ import global_var
 #  Temp. medium----------TEMP        °C             -15°C<=Tmin<=50°C
 #  Atmosfere pressure----PATM        mb              400mb<=P<=1100mb
 #  % relative humidity----HR          -                0%<=HR<=100%
-
+#
+# If inputs are daily:
+#
+#     Variable        Abbreviation   Units          Range of variation
+#  Precipitation----------PPT         mm             0mm<=Ppt<=200mm
+#  Num. of days
+#   with rain------------NDPPT        -     (0 or num of days valid for month/year)
+#  Temp. min-------------TMIN        °C             -15°C<=Tmin<=22°C
+#  Temp. max-------------TMAX        °C             -15°C<=Tmin<=34°C
+#  Temp. medium----------TEMP        °C             -15°C<=Tmin<=34°C
+#  Atmosfere pressure----PATM        mb              400mb<=P<=1100mb
+#  % relative humidity----HR          -                0%<=HR<=100%
 
 def validation_var_D(type_var_D, var_D, date_D):
     '''

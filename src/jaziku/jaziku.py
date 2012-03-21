@@ -77,7 +77,7 @@ EXAMPLE:
     jaziku -stations station.csv -p_below "Debajo" -p_normal "Normal" -p_above
     "Encima" -c -f -period 1980-2009 -ra
 
-Copyright © 2011 IDEAM
+Copyright © 2011-2012 IDEAM
 Instituto de Hidrología, Meteorología y Estudios Ambientales
 Carrera 10 No. 20-30
 Bogotá, Colombia
@@ -106,6 +106,7 @@ from clint.textui import colored
 
 # internationalization:
 import gettext
+import locale
 TRANSLATION_DOMAIN = "jaziku"
 LOCALE_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "locale") # 'locale'
 gettext.install(TRANSLATION_DOMAIN, LOCALE_DIR)
@@ -421,7 +422,7 @@ def get_lag_values(station, lag, trim, var):
     return [row[var_select[var]] for row in temp_list]
 
 
-def meanTrim(var_1, var_2, var_3):
+def ArithmeticMeanTrim(var_1, var_2, var_3):
     '''
     Return average from 3 values, ignoring valid null values.
     '''
@@ -476,7 +477,7 @@ def calculate_lags(station):
     '''
 
     # initialized Lag_X
-    # format list: [trim, [ date, meanTrim_var_D, meanTrim_var_I ]], ...
+    # format list: [trim, [ date, ArithmeticMeanTrim_var_D, ArithmeticMeanTrim_var_I ]], ...
     Lag_0 = []
     Lag_1 = []
     Lag_2 = []
@@ -494,7 +495,7 @@ def calculate_lags(station):
         # all months in year 1->12
         for month in range(1, 13):
             csv_name = os.path.join(dir_lag[lag],
-                                    _('meanLag_{0}_trim_{1}_{2}_{3}_{4}_{5}_'
+                                    _('Arithmetic_Mean_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_'
                                       '({6}-{7}).csv')
                                     .format(lag, month, station.code,
                                             station.name, station.type_D,
@@ -503,7 +504,7 @@ def calculate_lags(station):
                                             station.period_end))
 
             # output write file:
-            # [[ yyyy/month, meanLag_X_var_D, meanLag_X_var_I ],... ]
+            # [[ yyyy/month, ArithmeticMean_Lag_X_var_D, ArithmeticMean_Lag_X_var_I ],... ]
             csv_file_write = csv.writer(open(csv_name, 'w'), delimiter = ';')
             # temporal var initialize iter_date = start common_period + 1 year,
             # month=1, day=1
@@ -525,8 +526,8 @@ def calculate_lags(station):
                                         relativedelta(months = month))]
                 var_D_3 = station.var_D[station.date_D.index(iter_date +
                                         relativedelta(months = month + 1))]
-                # calculate meanTrim_var_D
-                meanTrim_var_D = meanTrim(var_D_1, var_D_2, var_D_3)
+                # calculate ArithmeticMeanTrim_var_D
+                ArithmeticMeanTrim_var_D = ArithmeticMeanTrim(var_D_1, var_D_2, var_D_3)
 
                 # calculate var_I for this months
                 var_I_1 = station.var_I[station.date_I.index(iter_date +
@@ -535,18 +536,18 @@ def calculate_lags(station):
                                         relativedelta(months = month - lag))]
                 var_I_3 = station.var_I[station.date_I.index(iter_date +
                                         relativedelta(months = month + 1 - lag))]
-                # calculate meanTrim_var_I
-                meanTrim_var_I = meanTrim(var_I_1, var_I_2, var_I_3)
+                # calculate ArithmeticMeanTrim_var_I
+                ArithmeticMeanTrim_var_I = ArithmeticMeanTrim(var_I_1, var_I_2, var_I_3)
 
                 # add line in list: Lag_X
-                vars()[_('Lag_') + str(lag)].append([month, [iter_date,
-                                                             meanTrim_var_D,
-                                                             meanTrim_var_I]])
+                vars()['Lag_' + str(lag)].append([month, [iter_date,
+                                                             ArithmeticMeanTrim_var_D,
+                                                             ArithmeticMeanTrim_var_I]])
 
                 # add line output file csv_file_write
                 csv_file_write.writerow([str(iter_date.year) + "/" + str(month),
-                                             print_number(meanTrim_var_D),
-                                             print_number(meanTrim_var_I)])
+                                             print_number(ArithmeticMeanTrim_var_D),
+                                             print_number(ArithmeticMeanTrim_var_I)])
                 # next year
                 iter_date += relativedelta(years = +1)
 
@@ -704,7 +705,7 @@ def get_thresholds_var_I(station):
 
 #==============================================================================
 # MAIN CALCULATIONS
-# Contingency table and result table    
+# Contingency table and result table
 
 
 def get_contingency_table(station, lag, month):
@@ -718,7 +719,7 @@ def get_contingency_table(station, lag, month):
     station.var_D_values = get_lag_values(station, lag, month, 'var_D')
     station.var_I_values = get_lag_values(station, lag, month, 'var_I')
 
-    # the thresholds of dependent variable are: percentile 33 and 66 
+    # the thresholds of dependent variable are: percentile 33 and 66
     p33_D = stats.scoreatpercentile(station.var_D_values, 33)
     p66_D = stats.scoreatpercentile(station.var_D_values, 66)
 
@@ -764,9 +765,9 @@ def get_contingency_table(station, lag, month):
 
     # threshold_problem is global variable for detect problem with
     # threshold of independent variable, if a problem is detected
-    # show message and print "nan" (this mean null value for 
-    # division by cero) in contingency tabla percent in result 
-    # table, jaziku continue but the graphics will not be created 
+    # show message and print "nan" (this mean null value for
+    # division by cero) in contingency tabla percent in result
+    # table, jaziku continue but the graphics will not be created
     # because "nan"  character could not be calculate.
     global threshold_problem
 
@@ -859,7 +860,7 @@ def contingency_table(station):
             # add new line in csv_contingency_table
 
             csv_name = \
-                os.path.join(dir_contingency[lag], _('contingency_table_Lag'
+                os.path.join(dir_contingency[lag], _('Contingency_Table_lag'
                     '_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv')
                     .format(lag, month, station.code, station.name, station.type_D,
                             station.type_I, station.period_start, station.period_end))
@@ -889,15 +890,16 @@ def contingency_table(station):
     return contingencies_tables_percent
 
 
-def result_table(station):
+def result_table_CA(station):
     '''
-    Calculate and print the result table csv file, this file contein several 
-    variables of previous calculations and different tests.
+    Calculate and print the result table for composite analisys (CA) in csv
+    file, this file contein several variables of previous calculations and
+    different tests.
     '''
 
     # dir and name to save the result table
     csv_name = \
-    os.path.join(station.climate_dir, _('result_table_{0}_{1}_{2}_{3}_({4}-{5}).csv')
+    os.path.join(station.climate_dir, _('Result_Table_CA_{0}_{1}_{2}_{3}_({4}-{5}).csv')
                 .format(station.code, station.name, station.type_D, station.type_I,
                         station.period_start, station.period_end))
 
@@ -912,7 +914,7 @@ def result_table(station):
          '', '', '', '', '', '', '', '', _('Contingency Table in %'),
          '', '', '', '', '', '', '', '', _('is sig risk analysis?'),
          '', '', '', '', '', '', '', '', _('Test Stat - Chi2'),
-         _('Crit Value - Chi2'), _('Is sig CT?'), _('correl_CT')])
+         _('Crit Value - Chi2'), _('Is sig CT?'), _('Correl CT')])
 
     pearson_list = []
     is_sig_risk_analysis = []
@@ -931,12 +933,12 @@ def result_table(station):
 
         csv_result_table.writerow([
              '', '', '', '', '', '', '', '', '',
-             _('var Dep below'), _('var Dep normal'), _('var Dep above'),
-             _('var Dep below'), _('var Dep normal'), _('var Dep above'),
-             _('var Dep below'), _('var Dep normal'), _('var Dep above'),
-             _('var Dep below'), _('var Dep normal'), _('var Dep above'),
-             _('var Dep below'), _('var Dep normal'), _('var Dep above'),
-             _('var Dep below'), _('var Dep normal'), _('var Dep above')])
+             _('var D below'), _('var D normal'), _('var D above'),
+             _('var D below'), _('var D normal'), _('var D above'),
+             _('var D below'), _('var D normal'), _('var D above'),
+             _('var D below'), _('var D normal'), _('var D above'),
+             _('var D below'), _('var D normal'), _('var D above'),
+             _('var D below'), _('var D normal'), _('var D above')])
 
         pearson_list_month = []
         is_sig_risk_analysis_month = []
@@ -1089,10 +1091,10 @@ def graphics_climate(station):
             ## graphics options for plot:
             # the x locations for the groups
             ind = np.array([0, 0.8, 1.6])
-            # the width of the bars  
+            # the width of the bars
             width = 0.2
 
-            #plt.figure()
+            plt.figure()
 
             # graphics title
             plt.title(unicode(_('Composite analisys - {0} ({1})\n{2} - {3} - '
@@ -1147,7 +1149,7 @@ def graphics_climate(station):
             colLabels = (station.phenomenon_below, station.phenomenon_normal,
                          station.phenomenon_above)
 
-            rowLabels = [_('var Dep Below'), _('var Dep Normal'), _('var Dep Above')]
+            rowLabels = [_('var D below'), _('var D normal'), _('var D above')]
 
             contingency_table_percent_graph = [column(contingency_table_percent_print, 0),
                                                column(contingency_table_percent_print, 1),
@@ -1167,7 +1169,7 @@ def graphics_climate(station):
                                      station.type_I, station.period_start, station.period_end))
 
             plt.savefig(image_dir_save, dpi = 75)
-            plt.clf()
+            #plt.clf()
 
             # save dir image for mosaic
             image_open.append(img_open(image_dir_save))
@@ -1199,6 +1201,7 @@ def graphics_climate(station):
         mosaic.paste(image_open[10], (image_width, image_height * 3))
         mosaic.paste(image_open[11], (image_width * 2, image_height * 3))
         mosaic.save(mosaic_dir_save)
+        del image_open
         plt.clf()
 
 def graphics_forecasting(station):
@@ -1224,7 +1227,7 @@ def graphics_forecasting(station):
 
         ## Options for graphics pie
         # make a square figure and axes
-        plt.figure(1, figsize = (5, 5))
+        plt.figure(figsize = (5, 5))
         # colors for paint pie: below, normal , above
         colours = ['#DD4620', '#62AD29', '#6087F1']
 
@@ -1408,7 +1411,7 @@ def climate(station):
 
     station.contingencies_tables_percent = contingency_table(station)
 
-    station = result_table(station)
+    station = result_table_CA(station)
 
     if not threshold_problem[0] and not threshold_problem[1] and not threshold_problem[2]:
         graphics_climate(station)
@@ -1524,12 +1527,37 @@ def main():
 
     # check python version
     if sys.version_info[0] != 2:
-        print_error(_("You version of python is {0}, please use Jaziku with python"
-                  " v2.x ").format(sys.version_info[0]))
+        print_error(_("You version of python is {0}, please use Jaziku with "
+                      "python v2.x ").format(sys.version_info[0]))
 
     # Parser and check arguments
     global args
     args = input_arg.arguments.parse_args()
+
+    # Setting language
+    settings_language = (colored.green(locale.getdefaultlocale()[0][0:2])
+                         + _(" (locale system)"))
+    if args.l:
+        if args.l == "en" or args.l == "EN" or args.l == "En":
+            lang = gettext.NullTranslations()
+        else:
+            try:
+                lang = gettext.translation(TRANSLATION_DOMAIN, LOCALE_DIR,
+                                           languages = [args.l],
+                                           codeset = "utf-8")
+            except:
+                print_error(_("\"{0}\" language not available.").format(args.l))
+
+        if 'lang' in locals():
+            lang.install()
+            settings_language = colored.green(args.l)
+
+    # set settings default
+    settings = {"climate": _("disabled"), "forecasting": _("disabled"),
+                "p_below": "-", "p_normal": "-", "p_above": "-", "period": "-",
+                "risk-analysis": _("disabled"),
+                "language": settings_language}
+
 
     # console message
     print _("\n########################### JAZIKU ###########################\n"
@@ -1549,7 +1577,7 @@ def main():
         try:
             period_start = int(args.period.split('-')[0])
             period_end = int(args.period.split('-')[1])
-            print _("\nSetting period in: {0}-{1}").format(period_start, period_end)
+            settings["period"] = colored.green("{0}-{1}".format(period_start, period_end))
         except Exception, e:
             print_error(_('the period must be: year_start-year_end (ie. 1980-2008)\n\n{0}').format(e))
 
@@ -1566,25 +1594,48 @@ def main():
     # if phenomenon below is defined inside arguments
     if args.p_below:
         phenomenon_below = unicode(args.p_below, 'utf-8')
+        settings["p_below"] = colored.green(args.p_below)
     else:
-        phenomenon_below = _('var Ind below')
+        phenomenon_below = _('var_I_below')
     # if phenomenon normal is defined inside arguments
     if args.p_normal:
         phenomenon_normal = unicode(args.p_normal, 'utf-8')
+        settings["p_normal"] = colored.green(args.p_normal)
     else:
-        phenomenon_normal = _('var Ind normal')
+        phenomenon_normal = _('var_I_normal')
     # if phenomenon above is defined inside arguments
     if args.p_above:
         phenomenon_above = unicode(args.p_above, 'utf-8')
+        settings["p_above"] = colored.green(args.p_above)
     else:
-        phenomenon_above = _('var Ind above')
+        phenomenon_above = _('var_I_above')
+
+    # set settings for process
+    if args.climate:
+        settings["climate"] = colored.green(_("enabled"))
+    if args.forecasting:
+        settings["forecasting"] = colored.green(_("enabled"))
+    if args.risk_analysis:
+        settings["risk_analysis"] = colored.green(_("enabled"))
+
+    # print settings
+    print _("\nConfiguration run:")
+    print "   {0} -------- {1}".format("climate", settings["climate"])
+    print "   {0} ---- {1}".format("forecasting", settings["forecasting"])
+    print "   {0} -------- {1}".format("p_below", settings["p_below"])
+    print "   {0} ------- {1}".format("p_normal", settings["p_normal"])
+    print "   {0} -------- {1}".format("p_above", settings["p_above"])
+    print "   {0} --------- {1}".format("period", settings["period"])
+    print "   {0} -- {1}".format("risk-analysis", settings["risk-analysis"])
+    print "   {0} ------- {1}".format("language", settings["language"])
+
 
     ### maps_plots_files_climate
     if args.climate:
         # climate dir output result
         global climate_dir
         climate_dir = \
-            os.path.join(os.path.splitext(args.stations.name)[0], _('Jaziku-climate'))   # 'results'
+            os.path.join(os.path.splitext(args.stations.name)[0], _('Jaziku_Climate'))   # 'results'
 
         print _("\nSaving the result for climate in:\n -> {0}").format(climate_dir)
 
@@ -1601,7 +1652,7 @@ def main():
         for lag in lags:
 
             maps_dir = os.path.join(climate_dir, _('maps'))
-            maps_data_lag = os.path.join(maps_dir, _('maps-data'), _('lag_{0}').format(lag))
+            maps_data_lag = os.path.join(maps_dir, _('maps_data'), _('lag_{0}').format(lag))
 
             if not os.path.isdir(maps_data_lag):
                 os.makedirs(maps_data_lag)
@@ -1613,13 +1664,13 @@ def main():
                 for category in phenomenon:
                     maps_data_phenom = os.path.join(maps_data_lag, phenomenon[category])
 
-                    if not os.path.isdir(maps_data_phenom):
-                        os.makedirs(maps_data_phenom)
+                    if not os.path.isdir(maps_data_phenom.encode('utf-8')):
+                        os.makedirs(maps_data_phenom.encode('utf-8'))
 
                     csv_name = \
-                        os.path.join(maps_data_phenom, _(u'map_data_lag_{0}_trim_{1}_{2}.csv')
-                                     .format(lag, month, phenomenon[category]))
-                    csv_file = csv.writer(open(csv_name, 'w'), delimiter = ';')
+                        os.path.join(maps_data_phenom, _(u'Map_Data_lag_{0}_trim_{1}_{2}.csv')
+                                     .format(lag, month, phenomenon[category]).encode('utf-8'))
+                    csv_file = csv.writer(open(csv_name.encode('utf-8'), 'w'), delimiter = ';')
                     csv_file.writerow([_('code'), _('lat'), _('lon'), _('pearson'),
                                        _('var_below'), _('var_normal'), _('var_above'),
                                        _('p_index'), _('sum')])
@@ -1634,7 +1685,7 @@ def main():
         # forecasting dir output result
         global forecasting_dir
         forecasting_dir = \
-            os.path.join(os.path.splitext(args.stations.name)[0], _('Jaziku-forecasting'))   # 'results'
+            os.path.join(os.path.splitext(args.stations.name)[0], _('Jaziku_Forecasting'))   # 'results'
 
         print _("\nSaving the result for forecasting in:\n -> {0}").format(forecasting_dir)
 
@@ -1650,12 +1701,12 @@ def main():
         # define maps data files and directories
         for lag in lags:
 
-            maps_dir = os.path.join(forecasting_dir, _('maps'), _('maps-data'))
+            maps_dir = os.path.join(forecasting_dir, _('maps'), _('maps_data'))
 
             if not os.path.isdir(maps_dir):
                 os.makedirs(maps_dir)
 
-            csv_name = os.path.join(maps_dir, _(u'map_data_lag_{0}.csv')
+            csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}.csv')
                                     .format(lag))
             csv_file = csv.writer(open(csv_name, 'w'), delimiter = ';')
             csv_file.writerow([_('code'), _('lat'), _('lon'), _('prob_decrease_var_D'),
