@@ -924,12 +924,12 @@ def result_table_CA(station):
         # print division line between lags
         csv_result_table.writerow([
              _('Lag {0}').format(lag), '', '', '', '', '', '', '', '',
-             station.phenomenon_below.encode("utf-8"), '', '',
-             station.phenomenon_normal.encode("utf-8"), '', '',
-             station.phenomenon_above.encode("utf-8"), '', '',
-             station.phenomenon_below.encode("utf-8"), '', '',
-             station.phenomenon_normal.encode("utf-8"), '', '',
-             station.phenomenon_above.encode("utf-8")])
+             station.phenomenon_below, '', '',
+             station.phenomenon_normal, '', '',
+             station.phenomenon_above, '', '',
+             station.phenomenon_below, '', '',
+             station.phenomenon_normal, '', '',
+             station.phenomenon_above])
 
         csv_result_table.writerow([
              '', '', '', '', '', '', '', '', '',
@@ -1530,6 +1530,10 @@ def main():
         print_error(_("You version of python is {0}, please use Jaziku with "
                       "python v2.x ").format(sys.version_info[0]))
 
+    # set encoding to utf-8
+    reload(sys)
+    sys.setdefaultencoding("utf-8")
+
     # Parser and check arguments
     global args
     args = input_arg.arguments.parse_args()
@@ -1664,13 +1668,13 @@ def main():
                 for category in phenomenon:
                     maps_data_phenom = os.path.join(maps_data_lag, phenomenon[category])
 
-                    if not os.path.isdir(maps_data_phenom.encode('utf-8')):
-                        os.makedirs(maps_data_phenom.encode('utf-8'))
+                    if not os.path.isdir(maps_data_phenom):
+                        os.makedirs(maps_data_phenom)
 
                     csv_name = \
                         os.path.join(maps_data_phenom, _(u'Map_Data_lag_{0}_trim_{1}_{2}.csv')
-                                     .format(lag, month, phenomenon[category]).encode('utf-8'))
-                    csv_file = csv.writer(open(csv_name.encode('utf-8'), 'w'), delimiter = ';')
+                                     .format(lag, month, phenomenon[category]))
+                    csv_file = csv.writer(open(csv_name, 'w'), delimiter = ';')
                     csv_file.writerow([_('code'), _('lat'), _('lon'), _('pearson'),
                                        _('var_below'), _('var_normal'), _('var_above'),
                                        _('p_index'), _('sum')])
