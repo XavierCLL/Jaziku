@@ -4,11 +4,13 @@ Jaziku documentation!
 
 Developers
 --------------
+
 Ines Sánchez Rodriguez < incsanchezro (a) gmail.com >
 Xavier Corredor Llano < xcorredorl (a) ideam.gov.co >
 
 Description
 --------------
+
 Jaziku is a software for the implementation of composite analysis
 metodology between the major indices of climate variability and major
 meteorological variables in puntual scale.
@@ -41,30 +43,36 @@ and Central and Eastern North American Precipitation. Journal of Climate,
 
 Source code
 --------------
+
 http://hg.ideam.gov.co:8000/meteorologia/jaziku/summary
     
 Download
 --------------
+
 stable prepared package (for build and eggs packages):
 http://hg.ideam.gov.co:8000/meteorologia/jaziku/files/tip/src/dist
 
 Install
 --------------
+
 please read (files) `install.txt <http://hg.ideam.gov.co:8000/meteorologia/jaziku/files/tip/src/install.txt>`_
 
 
 Synopsis run
 --------------
+
 - jaziku [-h] -stations STATIONS [-p_below P_BELOW] [-p_normal P_NORMAL] [-p_above P_ABOVE] [-c] [-f] [-period PERIOD] [-ra]
 
 Example
 --------------
+
 - jaziku -stations station.csv -c -f
 
 - jaziku -stations station.csv -p_below "Debajo" -p_normal "Normal" -p_above "Encima" -c -f -period 1980-2009 -ra
 
 Licence
 --------------
+
 GNU General Public License - GPLv3
 Copyright © 2011-2012 IDEAM
 Instituto de Hidrología, Meteorología y Estudios Ambientales

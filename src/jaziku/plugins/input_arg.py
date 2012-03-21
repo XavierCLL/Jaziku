@@ -58,13 +58,13 @@ types_var_I = ['ONI', 'SOI', 'MEI', 'OLR', 'W200', 'SST', 'ARH', 'QBO', 'NAO']
 
 # Set phenomenon below (optional)
 arguments.add_argument('-p_below', type = str,
-                    help = _('Set phenomenon below label'))
+                    help = _('Set phenomenon (var I) below label'))
 # Set phenomenon normal (optional)
 arguments.add_argument('-p_normal', type = str,
-                    help = _('Set phenomenon normal label'))
+                    help = _('Set phenomenon (var I) normal label'))
 # Set phenomenon above (optional)
 arguments.add_argument('-p_above', type = str,
-                    help = _('Set phenomenon above label'))
+                    help = _('Set phenomenon (var I) above label'))
 # set period process
 arguments.add_argument('-period', type = str, required = False,
                     help = _('Set specific period for process, e.g. 1980-2010'))
@@ -72,4 +72,6 @@ arguments.add_argument('-period', type = str, required = False,
 arguments.add_argument('-ra', '--risk-analysis', action = 'store_true',
                        default = False, required = False,
                        help = _('Enable risk analysis for forecasting process'))
+# Set language (optional), if not set get language from system
+arguments.add_argument('-l', type = str, help = _('Set language'))
 
