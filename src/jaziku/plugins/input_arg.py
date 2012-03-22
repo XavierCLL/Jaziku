@@ -46,10 +46,10 @@ arguments.add_argument('-stations', type = argparse.FileType('r'),
 ### climate and forecasting set
 # enable/disable climate process
 arguments.add_argument('-c', '--climate', action = 'store_true', default = False,
-                    help = _('Enable climate process'), required = False)
+                       help = _('Enable climate process'), required = False)
 # enable/disable forescasting process
 arguments.add_argument('-f', '--forecasting', action = 'store_true', default = False,
-                    help = _('Enable forecasting process'), required = False)
+                       help = _('Enable forecasting process'), required = False)
 # Valid input types for dependent variable
 types_var_D = ['PPT', 'NDPPT', 'TMIN', 'TMAX', 'TEMP', 'PATM', 'HR']
 ### Input arguments for independent variable
@@ -58,20 +58,19 @@ types_var_I = ['ONI', 'SOI', 'MEI', 'OLR', 'W200', 'SST', 'ARH', 'QBO', 'NAO']
 
 # Set phenomenon below (optional)
 arguments.add_argument('-p_below', type = str,
-                    help = _('Set phenomenon (var I) below label'))
+                       help = _('Set phenomenon (var I) below label'))
 # Set phenomenon normal (optional)
 arguments.add_argument('-p_normal', type = str,
-                    help = _('Set phenomenon (var I) normal label'))
+                       help = _('Set phenomenon (var I) normal label'))
 # Set phenomenon above (optional)
 arguments.add_argument('-p_above', type = str,
-                    help = _('Set phenomenon (var I) above label'))
+                       help = _('Set phenomenon (var I) above label'))
 # set period process
 arguments.add_argument('-period', type = str, required = False,
-                    help = _('Set specific period for process, e.g. 1980-2010'))
+                       help = _('Set specific period for process, e.g. 1980-2010'))
 # enable/disable forescasting process
 arguments.add_argument('-ra', '--risk-analysis', action = 'store_true',
                        default = False, required = False,
                        help = _('Enable risk analysis for forecasting process'))
 # Set language (optional), if not set get language from system
 arguments.add_argument('-l', type = str, help = _('Set language'))
-
