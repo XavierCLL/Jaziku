@@ -30,7 +30,7 @@ PROGRAM:
     Jaziku
 
 ABOUT NAME:
-    Jazikü is a word in huitoto mean jungle, forest.
+    Jaziku is a word in huitoto mean jungle, forest.
 
 DEVELOPERS:
     Ines Sánchez Rodriguez < incsanchezro (a) gmail.com >
@@ -69,13 +69,13 @@ DESCRIPTION:
 
 SYNOPSIS RUN:
     jaziku [-h] -stations STATIONS [-p_below P_BELOW] [-p_normal P_NORMAL]
-           [-p_above P_ABOVE] [-c] [-f] [-period PERIOD] [-ra]
+           [-p_above P_ABOVE] [-c] [-f] [-period PERIOD] [-ra] [-l LANG]
 
 EXAMPLE:
     jaziku -stations station.csv -c -f
 
     jaziku -stations station.csv -p_below "Debajo" -p_normal "Normal" -p_above
-    "Encima" -c -f -period 1980-2009 -ra
+    "Encima" -c -f -period 1980-2009 -ra -l es
 
 Copyright © 2011-2012 IDEAM
 Instituto de Hidrología, Meteorología y Estudios Ambientales

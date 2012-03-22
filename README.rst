@@ -61,14 +61,14 @@ please read (files) `install.txt <http://hg.ideam.gov.co:8000/meteorologia/jazik
 Synopsis run
 --------------
 
-- jaziku [-h] -stations STATIONS [-p_below P_BELOW] [-p_normal P_NORMAL] [-p_above P_ABOVE] [-c] [-f] [-period PERIOD] [-ra]
+- jaziku [-h] -stations STATIONS [-p_below P_BELOW] [-p_normal P_NORMAL] [-p_above P_ABOVE] [-c] [-f] [-period PERIOD] [-ra] [-l LANG]
 
 Example
 --------------
 
 - jaziku -stations station.csv -c -f
 
-- jaziku -stations station.csv -p_below "Debajo" -p_normal "Normal" -p_above "Encima" -c -f -period 1980-2009 -ra
+- jaziku -stations station.csv -p_below "Debajo" -p_normal "Normal" -p_above "Encima" -c -f -period 1980-2009 -ra -l es
 
 Licence
 --------------

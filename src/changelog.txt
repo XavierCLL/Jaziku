@@ -6,6 +6,9 @@ features:
  * applied some PEP8 rules, fix typos and reorganize code
  * aplied color text in console information for errors, warnings and process 
  * final message with number of stations processed when Jaziku has finished
+ * new argument input "-l" language selector, e.g. "-l es" 
+ * show in terminal the run configuration
+ * changes filename outputs for the results and some text inside files/graphics
 
 bugfixes:
  * fix "Segmentation fault" in plt.close() using pyplot
