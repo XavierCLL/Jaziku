@@ -271,7 +271,22 @@ def read_var_I(station):
     date_I = []
     var_I = []
 
-    file_I = station.file_I
+    # read from internal variable independent files of Jaziku,
+    # located in plugins/var_I/
+    if station.file_I == "default":
+        if station.type_I in global_var.internal_var_I_types:
+            internal_file_I_name = global_var.internal_var_I_files[station.type_I]
+            internal_file_I_dir = \
+                os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                             "plugins", "var_I", internal_file_I_name)
+            file_I = open(internal_file_I_dir, 'r')
+        else:
+            prit_error(_("you defined that Jaziku get data of independent variable\n"
+                         "from internal files but the file for the type of\n"
+                         "independent variable don't exist"))
+    else:
+        file_I = open(station.file_I, 'r')
+
     reader_csv = csv.reader(file_I, delimiter = '\t')
     # Read line to line file_I, validation and save var_I
     try:
@@ -1750,7 +1765,7 @@ def main():
                 raise Exception(_("{0} is not valid type for dependence variable")
                                 .format(station.type_D))
 
-            station.file_I = open(line_station[6], 'r')
+            station.file_I = line_station[6]
             station.type_I = line_station[7]
 
             # validation type_I
