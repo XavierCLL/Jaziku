@@ -129,7 +129,7 @@ def print_error(text_error):
     Jaziku
     '''
 
-    print colored.red(_('\n\nERROR:\n{0}\n\n').format(text_error))
+    print colored.red(_('fail\n\nERROR:\n{0}\n\n').format(text_error))
     print _("For more help run program with argument: -h")
     exit()
 
@@ -271,7 +271,22 @@ def read_var_I(station):
     date_I = []
     var_I = []
 
-    file_I = station.file_I
+    # read from internal variable independent files of Jaziku,
+    # located in plugins/var_I/
+    if station.file_I == "default":
+        if station.type_I in global_var.internal_var_I_types:
+            internal_file_I_name = global_var.internal_var_I_files[station.type_I]
+            internal_file_I_dir = \
+                os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                             "plugins", "var_I", internal_file_I_name)
+            file_I = open(internal_file_I_dir, 'r')
+        else:
+            prit_error(_("you defined that Jaziku get data of independent variable\n"
+                         "from internal files but the file for the type of\n"
+                         "independent variable don't exist"))
+    else:
+        file_I = open(station.file_I, 'r')
+
     reader_csv = csv.reader(file_I, delimiter = '\t')
     # Read line to line file_I, validation and save var_I
     try:
@@ -383,6 +398,8 @@ def calculate_common_period(station):
     if args.period:
         if (period_start < common_date[0].year or
             period_end > common_date[-1].year):
+            sys.stdout.write(_("Calculating the common period........."))
+            sys.stdout.flush()
             print_error(_("period define in argument {0}-{1} is outside the "
                           "common period {2}-{3}")
                         .format(period_start, period_end, common_date[0].year,
@@ -422,7 +439,7 @@ def get_lag_values(station, lag, trim, var):
     return [row[var_select[var]] for row in temp_list]
 
 
-def MeanTrim(var_1, var_2, var_3):
+def arithmetic_mean_trim(var_1, var_2, var_3):
     '''
     Return average from 3 values, ignoring valid null values.
     '''
@@ -466,6 +483,39 @@ def MeanTrim(var_1, var_2, var_3):
         int(var_2) not in global_var.VALID_NULL and
         int(var_3) not in global_var.VALID_NULL):
         return  (var_1 + var_2 + var_3) / 3.0
+
+
+def check_consistent_data(station, var):
+    '''
+    Check if the data are consistent, this is that the amount of null value
+    not exceed in 15% of the total number of values inside common period
+    '''
+
+    # temporal var initialize iter_date = start common_period + 1 year,
+    # month=1, day=1
+    iter_date = date(station.period_start + 1, 1, 1)
+    # temporal var initialize end_date = end common_period - 1 year,
+    # month=12, day=31
+    end_date = date(station.period_end - 1, 12, 1)
+
+    if var == "D":
+        values_in_common_period = station.var_D[station.date_D.index(iter_date):station.date_D.index(end_date) + 3]
+    if var == "I":
+        values_in_common_period = station.var_I[station.date_I.index(iter_date) - 2:station.date_I.index(end_date) + 3]
+
+    null_counter = 0
+    for value in values_in_common_period:
+        if value in global_var.VALID_NULL:
+            null_counter += 1
+
+    sys.stdout.write(_("({0} null of {1})...").format(null_counter, len(values_in_common_period)))
+    sys.stdout.flush()
+
+    if  null_counter / float(len(values_in_common_period)) >= 0.15:
+        print_error(_("the number of null values is greater than 15% of total\n"
+                    "of values inside common period, therefore, for Jaziku\n"
+                    "the data are not consistent for process."))
+#    return len(values_in_common_period), null_counter
 
 
 def calculate_lags(station):
@@ -526,8 +576,8 @@ def calculate_lags(station):
                                         relativedelta(months = month))]
                 var_D_3 = station.var_D[station.date_D.index(iter_date +
                                         relativedelta(months = month + 1))]
-                # calculate MeanTrim_var_D
-                MeanTrim_var_D = MeanTrim(var_D_1, var_D_2, var_D_3)
+                # calculate ArithmeticMeanTrim_var_D
+                ArithmeticMeanTrim_var_D = arithmetic_mean_trim(var_D_1, var_D_2, var_D_3)
 
                 # calculate var_I for this months
                 var_I_1 = station.var_I[station.date_I.index(iter_date +
@@ -536,18 +586,18 @@ def calculate_lags(station):
                                         relativedelta(months = month - lag))]
                 var_I_3 = station.var_I[station.date_I.index(iter_date +
                                         relativedelta(months = month + 1 - lag))]
-                # calculate MeanTrim_var_I
-                MeanTrim_var_I = MeanTrim(var_I_1, var_I_2, var_I_3)
+                # calculate ArithmeticMeanTrim_var_I
+                ArithmeticMeanTrim_var_I = arithmetic_mean_trim(var_I_1, var_I_2, var_I_3)
 
                 # add line in list: Lag_X
                 vars()['Lag_' + str(lag)].append([month, [iter_date,
-                                                             MeanTrim_var_D,
-                                                             MeanTrim_var_I]])
+                                                         ArithmeticMeanTrim_var_D,
+                                                         ArithmeticMeanTrim_var_I]])
 
                 # add line output file csv_file_write
                 csv_file_write.writerow([str(iter_date.year) + "/" + str(month),
-                                             print_number(MeanTrim_var_D),
-                                             print_number(MeanTrim_var_I)])
+                                             print_number(ArithmeticMeanTrim_var_D),
+                                             print_number(ArithmeticMeanTrim_var_I)])
                 # next year
                 iter_date += relativedelta(years = +1)
 
@@ -1371,6 +1421,52 @@ def maps_forecasting(station):
 
 
 #==============================================================================
+# PRE-PROCESS: READ, VALIDATED AND CHECK DATA
+
+def pre_process(station):
+    '''
+    Read var I and varD from files, validated and check consistent
+    '''
+
+    # -------------------------------------------------------------------------
+    # Reading the variables from files and validate
+    # console message
+    sys.stdout.write(_("Read and validate the variables...."))
+    sys.stdout.flush()
+
+    station.var_D, station.date_D = read_var_D(station)
+
+    station.var_I, station.date_I = read_var_I(station)
+
+    print colored.green(_("done"))
+
+    # -------------------------------------------------------------------------
+    # Calculating common period and process period 
+    station.common_period = calculate_common_period(station)
+
+    station.period_start = station.common_period[0][0].year
+
+    station.period_end = station.common_period[-1][0].year
+
+    # -------------------------------------------------------------------------
+    # check if the data are consistent for var D
+    sys.stdout.write(_("Check if var_D are consistent"))
+    sys.stdout.flush()
+
+    check_consistent_data(station, "D")
+
+    print colored.green(_("done"))
+
+    # -------------------------------------------------------------------------
+    # check if the data are consistent for var I
+    sys.stdout.write(_("Check if var_I are consistent "))
+    sys.stdout.flush()
+
+    check_consistent_data(station, "I")
+
+    print colored.green(_("done"))
+
+#==============================================================================
 # CLIMATE AND FORECASTING MAIN PROCESS
 
 
@@ -1390,16 +1486,6 @@ def climate(station):
         os.path.join(climate_dir, station.code + '_' + station.name)   # 'results'
     if not os.path.isdir(station.climate_dir):
         os.makedirs(station.climate_dir)
-
-    station.var_D, station.date_D = read_var_D(station)
-
-    station.var_I, station.date_I = read_var_I(station)
-
-    station.common_period = calculate_common_period(station)
-
-    station.period_start = station.common_period[0][0].year
-
-    station.period_end = station.common_period[-1][0].year
 
     sys.stdout.write(" ({0}-{1})...........".format(station.period_start,
                                                    station.period_end))
@@ -1750,7 +1836,7 @@ def main():
                 raise Exception(_("{0} is not valid type for dependence variable")
                                 .format(station.type_D))
 
-            station.file_I = open(line_station[6], 'r')
+            station.file_I = line_station[6]
             station.type_I = line_station[7]
 
             # validation type_I
@@ -1799,8 +1885,15 @@ def main():
         station.phenomenon_normal = phenomenon_normal
         station.phenomenon_above = phenomenon_above
 
+        # run pre_process: read, validated and check data
+        pre_process(station)
 
         # run process (climate, forecasting) from input arguments 
+        if not args.climate and not args.forecasting:
+            print_error(_("Neither process (climate, forecasting) were executed, "
+                          "\nplease enable this process in arguments: \n'-c, "
+                          "--climate' for climate and/or '-f, --forecasting' "
+                          "for forecasting."))
         if args.climate:
             station.maps_plots_files_climate = maps_plots_files_climate
             station = climate(station)
@@ -1814,11 +1907,6 @@ def main():
             station.maps_plots_files_forecasting = maps_plots_files_forecasting
             forecasting(station)
 
-        if not args.climate and not args.forecasting:
-            print_error(_("Neither process (climate, forecasting) were executed, "
-                          "\nplease enable this process in arguments: \n'-c, "
-                          "--climate' for climate and/or '-f, --forecasting' "
-                          "for forecasting."))
 
         # clear and delete all instances of maps created by pyplot
         plt.close('all')

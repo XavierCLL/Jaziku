@@ -36,6 +36,20 @@ VALID_NULL = [99999, -99999]
 # accuracy of number decimal places, only for print result
 ACCURACY = 3
 
+# types of internal variable independent
+internal_var_I_types = ["ONI", "SOI", "MEI", "OLR", "W200", "SST", "ARH", "NAO", "QBO"]
+
+# namefiles of internal variable independent
+internal_var_I_files = {"ONI": "ONI_1950_2011_CPC.txt",
+                        "SOI": "SOI_1951_2011_CPC_NOAA.txt",
+                        "MEI": "MEI_1950_2011_ESRL_NOAA.txt",
+                        "OLR": "OLR_1974_2011_CPC_NCEP_NOAA.txt",
+                        "W200": "W200_1979_2011_CPC_NCEP_NOAA.txt",
+                        "SST": "SST_1950_2011_CPC_NCEP_NOAA.txt",
+                        "ARH": "????",
+                        "NAO": "NAO_1950_2011_CPC_NCEP_NOAA.txt",
+                        "QBO": "QBO_1950_2011_ESRL_NOAA.txt"}
+
 # directory to save all results, this can be absolute or relative path
 # import Jaziku_utils.input_arg as input_arg
 # args = input_arg.arguments.parse_args()
