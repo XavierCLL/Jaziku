@@ -10,7 +10,7 @@ version 0.2: (in the coming days)
 version 0.3: (start: march 8, release: march 30)
 * put internal independents variables inside jaziku
 * enable run with particular independent variable file
-* Change the resolution of analysis of trimesters to months and even days (being able)
+* Change the resolution of analysis of trimesters to months and even days
 
 version 0.4: (start: april 9, release: may 31)
 * Interpolation of the data in "maps" folder as the product of a strict study of interpolation schemes knowns, 
@@ -19,6 +19,7 @@ version 0.4: (start: april 9, release: may 31)
 
 version 0.5: (start: july 23, release: august 30)
 * Homogenety analysis
+* change input options to file configuration
 
 version 0.6: (start: august 30, release: september 30)
 * Time Series analysis consistensy
