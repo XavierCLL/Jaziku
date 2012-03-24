@@ -422,7 +422,7 @@ def get_lag_values(station, lag, trim, var):
     return [row[var_select[var]] for row in temp_list]
 
 
-def ArithmeticMeanTrim(var_1, var_2, var_3):
+def MeanTrim(var_1, var_2, var_3):
     '''
     Return average from 3 values, ignoring valid null values.
     '''
@@ -477,7 +477,7 @@ def calculate_lags(station):
     '''
 
     # initialized Lag_X
-    # format list: [trim, [ date, ArithmeticMeanTrim_var_D, ArithmeticMeanTrim_var_I ]], ...
+    # format list: [trim, [ date, MeanTrim_var_D, MeanTrim_var_I ]], ...
     Lag_0 = []
     Lag_1 = []
     Lag_2 = []
@@ -495,7 +495,7 @@ def calculate_lags(station):
         # all months in year 1->12
         for month in range(1, 13):
             csv_name = os.path.join(dir_lag[lag],
-                                    _('Arithmetic_Mean_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_'
+                                    _('Mean_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_'
                                       '({6}-{7}).csv')
                                     .format(lag, month, station.code,
                                             station.name, station.type_D,
@@ -504,7 +504,7 @@ def calculate_lags(station):
                                             station.period_end))
 
             # output write file:
-            # [[ yyyy/month, ArithmeticMean_Lag_X_var_D, ArithmeticMean_Lag_X_var_I ],... ]
+            # [[ yyyy/month, Mean_Lag_X_var_D, Mean_Lag_X_var_I ],... ]
             csv_file_write = csv.writer(open(csv_name, 'w'), delimiter = ';')
             # temporal var initialize iter_date = start common_period + 1 year,
             # month=1, day=1
@@ -526,8 +526,8 @@ def calculate_lags(station):
                                         relativedelta(months = month))]
                 var_D_3 = station.var_D[station.date_D.index(iter_date +
                                         relativedelta(months = month + 1))]
-                # calculate ArithmeticMeanTrim_var_D
-                ArithmeticMeanTrim_var_D = ArithmeticMeanTrim(var_D_1, var_D_2, var_D_3)
+                # calculate MeanTrim_var_D
+                MeanTrim_var_D = MeanTrim(var_D_1, var_D_2, var_D_3)
 
                 # calculate var_I for this months
                 var_I_1 = station.var_I[station.date_I.index(iter_date +
@@ -536,18 +536,18 @@ def calculate_lags(station):
                                         relativedelta(months = month - lag))]
                 var_I_3 = station.var_I[station.date_I.index(iter_date +
                                         relativedelta(months = month + 1 - lag))]
-                # calculate ArithmeticMeanTrim_var_I
-                ArithmeticMeanTrim_var_I = ArithmeticMeanTrim(var_I_1, var_I_2, var_I_3)
+                # calculate MeanTrim_var_I
+                MeanTrim_var_I = MeanTrim(var_I_1, var_I_2, var_I_3)
 
                 # add line in list: Lag_X
                 vars()['Lag_' + str(lag)].append([month, [iter_date,
-                                                             ArithmeticMeanTrim_var_D,
-                                                             ArithmeticMeanTrim_var_I]])
+                                                             MeanTrim_var_D,
+                                                             MeanTrim_var_I]])
 
                 # add line output file csv_file_write
                 csv_file_write.writerow([str(iter_date.year) + "/" + str(month),
-                                             print_number(ArithmeticMeanTrim_var_D),
-                                             print_number(ArithmeticMeanTrim_var_I)])
+                                             print_number(MeanTrim_var_D),
+                                             print_number(MeanTrim_var_I)])
                 # next year
                 iter_date += relativedelta(years = +1)
 
