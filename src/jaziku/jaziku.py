@@ -422,7 +422,7 @@ def get_lag_values(station, lag, trim, var):
     return [row[var_select[var]] for row in temp_list]
 
 
-def MeanTrim(var_1, var_2, var_3):
+def mean_trim(var_1, var_2, var_3):
     '''
     Return average from 3 values, ignoring valid null values.
     '''
@@ -527,7 +527,7 @@ def calculate_lags(station):
                 var_D_3 = station.var_D[station.date_D.index(iter_date +
                                         relativedelta(months = month + 1))]
                 # calculate MeanTrim_var_D
-                MeanTrim_var_D = MeanTrim(var_D_1, var_D_2, var_D_3)
+                MeanTrim_var_D = mean_trim(var_D_1, var_D_2, var_D_3)
 
                 # calculate var_I for this months
                 var_I_1 = station.var_I[station.date_I.index(iter_date +
@@ -537,7 +537,7 @@ def calculate_lags(station):
                 var_I_3 = station.var_I[station.date_I.index(iter_date +
                                         relativedelta(months = month + 1 - lag))]
                 # calculate MeanTrim_var_I
-                MeanTrim_var_I = MeanTrim(var_I_1, var_I_2, var_I_3)
+                MeanTrim_var_I = mean_trim(var_I_1, var_I_2, var_I_3)
 
                 # add line in list: Lag_X
                 vars()['Lag_' + str(lag)].append([month, [iter_date,
