@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-22 14:58-0500\n"
+"POT-Creation-Date: 2012-03-24 16:56-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -74,7 +74,7 @@ msgid "lag_2"
 msgstr ""
 
 #: jaziku.py:498
-msgid "Arithmetic_Mean_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv"
+msgid "Mean_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv"
 msgstr ""
 
 #: jaziku.py:640

@@ -25,10 +25,10 @@
 PROG_NAME = "jaziku"
 
 # version
-VERSION = "0.2"
+VERSION = "0.2.1"
 
 # compilation date
-COMPILE_DATE = "12/03/2012"
+COMPILE_DATE = "24/03/2012"
 
 # valid null value for variables dependent and independent (inside files input)
 VALID_NULL = [99999, -99999]

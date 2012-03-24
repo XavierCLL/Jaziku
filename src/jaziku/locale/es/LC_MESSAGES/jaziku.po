@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-22 14:58-0500\n"
-"PO-Revision-Date: 2012-03-22 15:13-0500\n"
+"POT-Creation-Date: 2012-03-24 16:56-0500\n"
+"PO-Revision-Date: 2012-03-24 16:57-0500\n"
 "Last-Translator: Xavier Corredor Llano <xavier.corredor.llano@gmail.com>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -93,8 +93,8 @@ msgid "lag_2"
 msgstr "rezago_2"
 
 #: jaziku.py:498
-msgid "Arithmetic_Mean_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv"
-msgstr "Media_Aritmetica_rez_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv"
+msgid "Mean_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv"
+msgstr "Media_rez_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv"
 
 #: jaziku.py:640
 msgid ""
