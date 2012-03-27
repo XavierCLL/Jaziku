@@ -393,6 +393,9 @@ def calculate_common_period(station):
     common_date = list(set(station.date_D) & set(station.date_I))
     # sort common date
     common_date.sort()
+
+    print len(common_date)
+    print common_date
     # initialized variable common_period
     # format list: [[  date ,  var_D ,  var_I ],... ]
     if args.period:
@@ -406,7 +409,7 @@ def calculate_common_period(station):
                                 common_date[-1].year))
 
         common_date = common_date[common_date.index(date(period_start, 1, 1)):
-                                  common_date.index(date(period_end, 12, 1))]
+                                  common_date.index(date(period_end, 12, 1)) + 1]
 
     common_period = []
     # set values matrix for common_period
@@ -415,6 +418,10 @@ def calculate_common_period(station):
         common_period.append([date_period,
                               station.var_D[station.date_D.index(date_period)],
                               station.var_I[station.date_I.index(date_period)]])
+
+    print len(common_date)
+    print common_date
+
     return common_period
 
 
@@ -439,7 +446,7 @@ def get_lag_values(station, lag, trim, var):
     return [row[var_select[var]] for row in temp_list]
 
 
-def arithmetic_mean_trim(var_1, var_2, var_3):
+def mean_trim(var_1, var_2, var_3):
     '''
     Return average from 3 values, ignoring valid null values.
     '''
@@ -527,7 +534,7 @@ def calculate_lags(station):
     '''
 
     # initialized Lag_X
-    # format list: [trim, [ date, MeanTrim_var_D, MeanTrim_var_I ]], ...
+    # format list: [trim, [ date, mean_trim_var_D, mean_trim_var_I ]], ...
     Lag_0 = []
     Lag_1 = []
     Lag_2 = []
@@ -576,8 +583,8 @@ def calculate_lags(station):
                                         relativedelta(months = month))]
                 var_D_3 = station.var_D[station.date_D.index(iter_date +
                                         relativedelta(months = month + 1))]
-                # calculate ArithmeticMeanTrim_var_D
-                ArithmeticMeanTrim_var_D = arithmetic_mean_trim(var_D_1, var_D_2, var_D_3)
+                # calculate mean_trim_var_D
+                mean_trim_var_D = mean_trim(var_D_1, var_D_2, var_D_3)
 
                 # calculate var_I for this months
                 var_I_1 = station.var_I[station.date_I.index(iter_date +
@@ -586,18 +593,18 @@ def calculate_lags(station):
                                         relativedelta(months = month - lag))]
                 var_I_3 = station.var_I[station.date_I.index(iter_date +
                                         relativedelta(months = month + 1 - lag))]
-                # calculate ArithmeticMeanTrim_var_I
-                ArithmeticMeanTrim_var_I = arithmetic_mean_trim(var_I_1, var_I_2, var_I_3)
+                # calculate mean_trim_var_I
+                mean_trim_var_I = mean_trim(var_I_1, var_I_2, var_I_3)
 
                 # add line in list: Lag_X
                 vars()['Lag_' + str(lag)].append([month, [iter_date,
-                                                         ArithmeticMeanTrim_var_D,
-                                                         ArithmeticMeanTrim_var_I]])
+                                                         mean_trim_var_D,
+                                                         mean_trim_var_I]])
 
                 # add line output file csv_file_write
                 csv_file_write.writerow([str(iter_date.year) + "/" + str(month),
-                                             print_number(ArithmeticMeanTrim_var_D),
-                                             print_number(ArithmeticMeanTrim_var_I)])
+                                             print_number(mean_trim_var_D),
+                                             print_number(mean_trim_var_I)])
                 # next year
                 iter_date += relativedelta(years = +1)
 
@@ -1441,7 +1448,7 @@ def pre_process(station):
     print colored.green(_("done"))
 
     # -------------------------------------------------------------------------
-    # Calculating common period and process period 
+    # Calculating common period and process period
     station.common_period = calculate_common_period(station)
 
     station.period_start = station.common_period[0][0].year
@@ -1450,7 +1457,7 @@ def pre_process(station):
 
     # -------------------------------------------------------------------------
     # check if the data are consistent for var D
-    sys.stdout.write(_("Check if var_D are consistent"))
+    sys.stdout.write(_("Check if var_D are consistent "))
     sys.stdout.flush()
 
     check_consistent_data(station, "D")
@@ -1595,7 +1602,7 @@ class Station:
     Generic station class
     '''
 
-    # counter stations processed 
+    # counter stations processed
     stations_processed = 0
 
     def __init__(self):
@@ -1738,7 +1745,7 @@ def main():
         phenomenon = {0:phenomenon_below, 1:phenomenon_normal, 2:phenomenon_above}
         maps_plots_files_climate = [] # maps_plots_files_climate[lag][month][phenomenon]
 
-        # define maps data files and directories      
+        # define maps data files and directories
         for lag in lags:
 
             maps_dir = os.path.join(climate_dir, _('maps'))
@@ -1888,7 +1895,7 @@ def main():
         # run pre_process: read, validated and check data
         pre_process(station)
 
-        # run process (climate, forecasting) from input arguments 
+        # run process (climate, forecasting) from input arguments
         if not args.climate and not args.forecasting:
             print_error(_("Neither process (climate, forecasting) were executed, "
                           "\nplease enable this process in arguments: \n'-c, "
