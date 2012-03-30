@@ -167,6 +167,11 @@ def read_var_D(station):
     file_D = station.file_D
     reader_csv = csv.reader(file_D, delimiter = '\t')
 
+    # validation type_D
+    if station.type_D not in input_arg.types_var_D:
+        raise Exception(_("{0} is not valid type for dependence variable")
+                        .format(station.type_D))
+
     # reader_csv = csv.reader(fo, delimiter = '\t')
     # reader_csv.write(data.replace('\x00', ''))
 
@@ -272,6 +277,7 @@ def read_var_I(station):
     var_I = []
 
     # read from internal variable independent files of Jaziku,
+    # check and notify if Jaziku are using the independent variable inside
     # located in plugins/var_I/
     if station.file_I == "default":
         if station.type_I in global_var.internal_var_I_types:
@@ -280,12 +286,43 @@ def read_var_I(station):
                 os.path.join(os.path.dirname(os.path.realpath(__file__)),
                              "plugins", "var_I", internal_file_I_name)
             file_I = open(internal_file_I_dir, 'r')
+
+            split_internal_var_I = internal_file_I_name.split(".")[0].split("_")
+            print colored.yellow(
+                    _("\n   You are using internal files for independent variable\n"
+                      "   defined as {0} which has data from {1} to {2} and\n"
+                      "   the source of data obtained in {3}\n"
+                      "   url: {4} .....................")
+                      .format(split_internal_var_I[0], split_internal_var_I[1],
+                              split_internal_var_I[2], ' '.join(split_internal_var_I[3::]),
+                              global_var.internal_var_I_urls[station.type_I])),
+
         else:
-            prit_error(_("you defined that Jaziku get data of independent variable\n"
+            print_error(_("you defined that Jaziku get data of independent variable\n"
                          "from internal files but the file for the type of\n"
-                         "independent variable don't exist"))
+                         "independent variable \"{0}\" don't exist").format(station.type_I))
     else:
         file_I = open(station.file_I, 'r')
+
+    # check and validate if file I is defined as particular file with
+    # particular range validation
+    if station.range_below_I != "none" and station.range_above_I != "none":
+        try:
+            station.range_below_I = float(station.range_below_I.replace(',', '.'))
+            station.range_above_I = float(station.range_above_I.replace(',', '.'))
+        except:
+            raise Exception(_("Problem with particular range validation for "
+                              "independent\nvariable: {0};{1} this should be "
+                              "a valid number or \"none\".").format(station.range_below_I,
+                                                  station.range_above_I))
+    else:
+        # validation type_I
+        if station.type_I not in input_arg.types_var_I:
+            raise Exception(_("{0} is not valid type for independence variable")
+                            .format(station.type_I))
+        station.range_below_I = "None"
+        station.range_above_I = "None"
+
 
     reader_csv = csv.reader(file_I, delimiter = '\t')
     # Read line to line file_I, validation and save var_I
@@ -315,12 +352,13 @@ def read_var_I(station):
                 date_I.append(date(year, month, 1))
                 # set values of independent variable
                 var_I.append(input_validation.validation_var_I(station.type_I,
-                                                               value))
+                                                               value,
+                                                               station.range_below_I,
+                                                               station.range_above_I))
 
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
-                            .format(station.file_I.name,
-                                    reader_csv.line_num, e))
+                            .format(file_I.name, reader_csv.line_num, e))
 
     except csv.Error, e:
         # this except if when this file is created with Microsoft Office
@@ -394,17 +432,15 @@ def calculate_common_period(station):
     # sort common date
     common_date.sort()
 
-    print len(common_date)
-    print common_date
     # initialized variable common_period
     # format list: [[  date ,  var_D ,  var_I ],... ]
     if args.period:
         if (period_start < common_date[0].year or
             period_end > common_date[-1].year):
-            sys.stdout.write(_("Calculating the common period........."))
+            sys.stdout.write(_("Calculating the common period ................... "))
             sys.stdout.flush()
-            print_error(_("period define in argument {0}-{1} is outside the "
-                          "common period {2}-{3}")
+            print_error(_("The period defined in argument {0}-{1} is outside the "
+                          "common period {2}-{3}.")
                         .format(period_start, period_end, common_date[0].year,
                                 common_date[-1].year))
 
@@ -419,8 +455,19 @@ def calculate_common_period(station):
                               station.var_D[station.date_D.index(date_period)],
                               station.var_I[station.date_I.index(date_period)]])
 
-    print len(common_date)
-    print common_date
+    # check if the common period at least 3 years
+    # because the data process is:
+    #     common-period-start + 1 to common-period-end - 1
+    if len(common_date) < 36:
+        sys.stdout.write(_("Calculating the common period ................... "))
+        sys.stdout.flush()
+        if args.period:
+            print_error(_("The period defined in argument must be at least 3 "
+                          "years for process."))
+        else:
+            print_error(_("The common period calculated {0}-{1} has not at "
+                          "least 3 years.").format(common_date[0].year,
+                                                   common_date[-1].year))
 
     return common_period
 
@@ -515,7 +562,7 @@ def check_consistent_data(station, var):
         if value in global_var.VALID_NULL:
             null_counter += 1
 
-    sys.stdout.write(_("({0} null of {1})...").format(null_counter, len(values_in_common_period)))
+    sys.stdout.write(_("({0} null of {1}) .... ").format(null_counter, len(values_in_common_period)))
     sys.stdout.flush()
 
     if  null_counter / float(len(values_in_common_period)) >= 0.15:
@@ -679,6 +726,9 @@ def get_thresholds_var_I(station):
           "NAO": if_var_I_is_NAO
         }
 
+        if station.type_I not in select_threshold_var_I:
+            print_error("the threshoulds can't be define as \"default\" if the\n"
+                        "type of independent variable is a particular value.")
         threshold_below_var_I, \
         threshold_above_var_I = select_threshold_var_I[station.type_I]()
         return threshold_below_var_I, threshold_above_var_I
@@ -1438,7 +1488,7 @@ def pre_process(station):
     # -------------------------------------------------------------------------
     # Reading the variables from files and validate
     # console message
-    sys.stdout.write(_("Read and validate the variables...."))
+    sys.stdout.write(_("Read and validate the variables ................. "))
     sys.stdout.flush()
 
     station.var_D, station.date_D = read_var_D(station)
@@ -1494,7 +1544,7 @@ def climate(station):
     if not os.path.isdir(station.climate_dir):
         os.makedirs(station.climate_dir)
 
-    sys.stdout.write(" ({0}-{1})...........".format(station.period_start,
+    sys.stdout.write(" ({0}-{1}) .................. ".format(station.period_start,
                                                    station.period_end))
     sys.stdout.flush()
 
@@ -1522,7 +1572,7 @@ def forecasting(station):
     '''
 
     # console message
-    sys.stdout.write(_("Processing forecasting ({0}-{1}).......")
+    sys.stdout.write(_("Processing forecasting ({0}-{1}) .............. ")
                      .format(station.period_start, station.period_end))
     sys.stdout.flush()
 
@@ -1726,8 +1776,8 @@ def main():
     print "   {0} -- {1}".format("risk-analysis", settings["risk-analysis"])
     print "   {0} ------- {1}".format("language", settings["language"])
 
-
-    ### maps_plots_files_climate
+    # -------------------------------------------------------------------------
+    # maps_plots_files_climate
     if args.climate:
         # climate dir output result
         global climate_dir
@@ -1777,7 +1827,8 @@ def main():
 
             maps_plots_files_climate.append(month_list)
 
-    ### maps_plots_files_forecasting
+    # -------------------------------------------------------------------------
+    # maps_plots_files_forecasting
     if args.forecasting:
         # forecasting dir output result
         global forecasting_dir
@@ -1812,7 +1863,9 @@ def main():
 
             maps_plots_files_forecasting.append(csv_file)
 
-    # read stations list from stations file (-station arguments) and process station by station
+    # -------------------------------------------------------------------------
+    # read all stations from stations list inside stations file 
+    # (-station arguments)and process station by station
     stations = csv.reader(args.stations, delimiter = ';')
     for line_station in stations:
 
@@ -1838,43 +1891,36 @@ def main():
             station.file_D = open(line_station[4], 'rb')
             station.type_D = line_station[5]
 
-            # validation type_D
-            if station.type_D not in input_arg.types_var_D:
-                raise Exception(_("{0} is not valid type for dependence variable")
-                                .format(station.type_D))
-
             station.file_I = line_station[6]
             station.type_I = line_station[7]
 
-            # validation type_I
-            if station.type_I not in input_arg.types_var_I:
-                raise Exception(_("{0} is not valid type for independence variable")
-                                .format(station.type_I))
+            station.range_below_I = line_station[8]
+            station.range_above_I = line_station[9]
 
-            station.threshold_below_var_I = line_station[8].replace(',', '.')
-            station.threshold_above_var_I = line_station[9].replace(',', '.')
+            station.threshold_below_var_I = line_station[10].replace(',', '.')
+            station.threshold_above_var_I = line_station[11].replace(',', '.')
 
 
             if args.forecasting:
-                if len(line_station) < 20:
+                if len(line_station) < 22:
                     raise Exception(_("For forecasting process you need define "
                                       "9 probability\n variables and trimester to "
                                       "process in stations file."))
-                station.f_var_I_B = [float(line_station[10].replace(',', '.')),
-                                     float(line_station[13].replace(',', '.')),
-                                     float(line_station[16].replace(',', '.'))]
-                station.f_var_I_N = [float(line_station[11].replace(',', '.')),
-                                     float(line_station[14].replace(',', '.')),
-                                     float(line_station[17].replace(',', '.'))]
-                station.f_var_I_A = [float(line_station[12].replace(',', '.')),
+                station.f_var_I_B = [float(line_station[12].replace(',', '.')),
                                      float(line_station[15].replace(',', '.')),
                                      float(line_station[18].replace(',', '.'))]
+                station.f_var_I_N = [float(line_station[13].replace(',', '.')),
+                                     float(line_station[16].replace(',', '.')),
+                                     float(line_station[19].replace(',', '.'))]
+                station.f_var_I_A = [float(line_station[14].replace(',', '.')),
+                                     float(line_station[17].replace(',', '.')),
+                                     float(line_station[20].replace(',', '.'))]
 
                 try:
-                    station.f_trim = int(line_station[19])
+                    station.f_trim = int(line_station[21])
                 except:
                     raise Exception(_("Trimester forecasting \"{0}\" is invalid, "
-                                      "should be integer number").format(line_station[19]))
+                                      "should be integer number").format(line_station[21]))
                 if not (1 <= station.f_trim <= 12):
                     raise Exception(_("Trimester forecasting \"{0}\" is invalid, "
                                       "should be a month valid number (1-12)").format(station.f_trim))
@@ -1885,7 +1931,7 @@ def main():
                         ';'.join(line_station) + "\n\n" + str(e))
 
         # console message
-        print _("\n################# Station: {0} ({1})").format(station.name, station.code)
+        print _("\n################# STATION: {0} ({1})").format(station.name, station.code)
 
         # define phenomenon label
         station.phenomenon_below = phenomenon_below

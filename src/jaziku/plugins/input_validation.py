@@ -148,7 +148,7 @@ def validation_var_D(type_var_D, var_D, date_D):
 # quasibienal oscillation index--QBO            Km/h          -59.1<=QBO<=33.24
 
 
-def validation_var_I(type_var_I, var_I):
+def validation_var_I(type_var_I, var_I, range_below_I, range_above_I):
     '''
     Fuction for validation (independent variable) depending on the type of
     variable
@@ -161,6 +161,13 @@ def validation_var_I(type_var_I, var_I):
                            "value out of range:\nThe value \"{1}\" is not "
                            "valid for type variable \"{0}\"\n{2}")
                          .format(type_var_I, var_I, e))
+
+    # if defined as particular range
+    if type(range_below_I) is float and type(range_above_I) is float:
+        if (range_below_I <= var_I <= range_above_I) or int(var_I) in global_var.VALID_NULL:
+            return var_I
+        else:
+            returnError(_("{0} not valid").format(type_var_I))
 
     # validation for Oceanic Nino Index
     def if_var_I_is_ONI():

@@ -50,6 +50,17 @@ internal_var_I_files = {"ONI": "ONI_1950_2011_CPC.txt",
                         "NAO": "NAO_1950_2011_CPC_NCEP_NOAA.txt",
                         "QBO": "QBO_1950_2011_ESRL_NOAA.txt"}
 
+# namefiles of internal variable independent
+internal_var_I_urls = {"ONI": "http://goo.gl/bppGe",
+                        "SOI": "http://goo.gl/nhF4D",
+                        "MEI": "http://goo.gl/KWEwZ",
+                        "OLR": "http://goo.gl/goMpA",
+                        "W200": "http://goo.gl/aliLh",
+                        "SST": "http://goo.gl/WcYSg",
+                        "ARH": "????",
+                        "NAO": "http://goo.gl/1uDjY",
+                        "QBO": "http://goo.gl/UO6PX"}
+
 # directory to save all results, this can be absolute or relative path
 # import Jaziku_utils.input_arg as input_arg
 # args = input_arg.arguments.parse_args()
