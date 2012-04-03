@@ -46,18 +46,18 @@ internal_var_I_files = {"ONI": "ONI_1950_2011_CPC.txt",
                         "OLR": "OLR_1974_2011_CPC_NCEP_NOAA.txt",
                         "W200": "W200_1979_2011_CPC_NCEP_NOAA.txt",
                         "SST": "SST_1950_2011_CPC_NCEP_NOAA.txt",
-                        "ARH": "????",
+                        #"ARH": "????",
                         "NAO": "NAO_1950_2011_CPC_NCEP_NOAA.txt",
                         "QBO": "QBO_1950_2011_ESRL_NOAA.txt"}
 
-# namefiles of internal variable independent
+# urls where get the internal files for independent variable
 internal_var_I_urls = {"ONI": "http://goo.gl/bppGe",
                         "SOI": "http://goo.gl/nhF4D",
                         "MEI": "http://goo.gl/KWEwZ",
                         "OLR": "http://goo.gl/goMpA",
                         "W200": "http://goo.gl/aliLh",
                         "SST": "http://goo.gl/WcYSg",
-                        "ARH": "????",
+                        #"ARH": "????",
                         "NAO": "http://goo.gl/1uDjY",
                         "QBO": "http://goo.gl/UO6PX"}
 

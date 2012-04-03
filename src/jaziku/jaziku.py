@@ -175,6 +175,7 @@ def read_var_D(station):
     # reader_csv = csv.reader(fo, delimiter = '\t')
     # reader_csv.write(data.replace('\x00', ''))
 
+    first = True
     # Read line to line file_D, validation and save var_D
     try:
         for row in reader_csv:
@@ -183,9 +184,21 @@ def read_var_D(station):
             if not row or not row[0].strip():
                 continue
 
+            # check if var D is daily or month
+            if first:
+                try:
+                    float(row[3])
+                    station.is_var_D_daily = True
+                except:
+                    station.is_var_D_daily = False
+                first = False
+
+            # get values
             try:
                 row[0] = row[0].replace('/', '-')
                 row[1] = row[1].replace(',', '.')
+                if station.is_var_D_daily:
+                    row[3] = row[3].replace(',', '.')
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n"
                               "this could be caused by wrong line or garbage "
@@ -196,10 +209,14 @@ def read_var_D(station):
                 # delete garbage characters and convert format
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
                 month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
+                if station.is_var_D_daily:
+                    day = int(re.sub(r'[^\w]', '', row[0].split("-")[2]))
+                else:
+                    day = 1
                 value = float(row[1])
                 # set date of dependent variable from file_D, column 1,
-                # format: yyyy-mm
-                date_D.append(date(year, month, 1))
+                # format: yyyy-mm-dd
+                date_D.append(date(year, month, day))
                 # set values of dependent variable
                 var_D.append(input_validation.validation_var_D(station.type_D,
                                                                value,
@@ -229,6 +246,7 @@ def read_var_D(station):
 
         reader_csv_fix = csv.reader(open(name_fix, 'rb'), delimiter = '\t')
 
+        first = False
         # Now read fix file
         for row in reader_csv_fix:
 
@@ -236,9 +254,20 @@ def read_var_D(station):
             if not row or not row[0].strip():
                 continue
 
+            # check if var D is daily or month
+            if first:
+                try:
+                    float(row[3])
+                    station.is_var_D_daily = True
+                except:
+                    station.is_var_D_daily = False
+                first = False
+
             try:
                 row[0] = row[0].replace('/', '-')
                 row[1] = row[1].replace(',', '.')
+                if station.is_var_D_daily:
+                    row[3] = row[3].replace(',', '.')
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n"
                               "this could be caused by wrong line or garbage "
@@ -249,10 +278,14 @@ def read_var_D(station):
                 # delete garbage characters and convert format
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
                 month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
+                if station.is_var_D_daily:
+                    day = int(re.sub(r'[^\w]', '', row[0].split("-")[2]))
+                else:
+                    day = 1
                 value = float(row[1])
                 # set date of dependent variable from file_D, column 1,
                 # format: yyyy-mm
-                date_D.append(date(year, month, 1))
+                date_D.append(date(year, month, day))
                 # set values of dependent variable
                 var_D.append(input_validation.validation_var_D(station.type_D,
                                                                value,
@@ -263,7 +296,10 @@ def read_var_D(station):
                             .format(station.file_D.name,
                                     reader_csv_fix.line_num, e))
 
-    return var_D, date_D
+    station.var_D = var_D
+    station.date_D = date_D
+
+    return station
 
 
 def read_var_I(station):
@@ -325,6 +361,7 @@ def read_var_I(station):
 
 
     reader_csv = csv.reader(file_I, delimiter = '\t')
+    first = True
     # Read line to line file_I, validation and save var_I
     try:
         for row in reader_csv:
@@ -333,9 +370,21 @@ def read_var_I(station):
             if not row or not row[0].strip():
                 continue
 
+            # check if var I is daily or month
+            if first:
+                try:
+                    float(row[3])
+                    station.is_var_I_daily = True
+                except:
+                    station.is_var_I_daily = False
+                first = False
+
+            # get values
             try:
                 row[0] = row[0].replace('/', '-')
                 row[1] = row[1].replace(',', '.')
+                if station.is_var_I_daily:
+                    row[3] = row[3].replace(',', '.')
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n"
                               "this could be caused by wrong line or garbage "
@@ -346,10 +395,14 @@ def read_var_I(station):
                 # delete garbage characters and convert format
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
                 month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
+                if station.is_var_I_daily:
+                    day = int(re.sub(r'[^\w]', '', row[0].split("-")[2]))
+                else:
+                    day = 1
                 value = float(row[1])
                 # set date of independent variable from file_I, column 1,
                 # format: yyyy-mm
-                date_I.append(date(year, month, 1))
+                date_I.append(date(year, month, day))
                 # set values of independent variable
                 var_I.append(input_validation.validation_var_I(station.type_I,
                                                                value,
@@ -380,6 +433,7 @@ def read_var_I(station):
 
         reader_csv_fix = csv.reader(open(name_fix, 'rb'), delimiter = '\t')
 
+        first = False
         # Now read fix file
         for row in reader_csv_fix:
 
@@ -387,9 +441,20 @@ def read_var_I(station):
             if not row or not row[0].strip():
                 continue
 
+            # check if var I is daily or month
+            if first:
+                try:
+                    float(row[3])
+                    station.is_var_I_daily = True
+                except:
+                    station.is_var_I_daily = False
+                first = False
+
             try:
                 row[0] = row[0].replace('/', '-')
                 row[1] = row[1].replace(',', '.')
+                if station.is_var_I_daily:
+                    row[3] = row[3].replace(',', '.')
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n"
                               "this could be caused by wrong line or garbage "
@@ -400,10 +465,14 @@ def read_var_I(station):
                 # delete garbage characters and convert format
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
                 month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
+                if station.is_var_I_daily:
+                    day = int(re.sub(r'[^\w]', '', row[0].split("-")[2]))
+                else:
+                    day = 1
                 value = float(row[1])
                 # set date of independent variable from file_I, column 1,
                 # format: yyyy-mm
-                date_I.append(date(year, month, 1))
+                date_I.append(date(year, month, day))
                 # set values of independent variable
                 var_I.append(input_validation.validation_var_I(station.type_I,
                                                                value))
@@ -413,7 +482,10 @@ def read_var_I(station):
                             .format(station.file_I.name,
                                     reader_csv_fix.line_num, e))
 
-    return var_I, date_I
+    station.var_I = var_I
+    station.date_I = date_I
+
+    return station
 
 
 #==============================================================================
@@ -615,13 +687,11 @@ def calculate_lags(station):
             iter_date = date(station.period_start + 1, 1, 1)
             # temporal var initialize end_date = end common_period - 1 year,
             # month=12, day=31
-            end_date = date(station.period_end - 1, 12, 31)
+            end_date = date(station.period_end - 1, 12, 1)
 
             # iteration for years from first-year +1 to end-year -1 inside
             # range common_period
-            while True:
-                if iter_date >= end_date:
-                    break
+            while iter_date <= end_date:
 
                 # calculate var_D for this months
                 var_D_1 = station.var_D[station.date_D.index(iter_date +
@@ -1486,16 +1556,30 @@ def pre_process(station):
     '''
 
     # -------------------------------------------------------------------------
-    # Reading the variables from files and validate
-    # console message
-    sys.stdout.write(_("Read and validate the variables ................. "))
+    # Reading the variables from files and check based on range validation
+
+    # var D
+    sys.stdout.write(_("Read and check(range validation) var D .......... "))
     sys.stdout.flush()
-
-    station.var_D, station.date_D = read_var_D(station)
-
-    station.var_I, station.date_I = read_var_I(station)
-
+    station = read_var_D(station)  # <--
     print colored.green(_("done"))
+
+    if station.is_var_D_daily:
+        print colored.yellow(_("   the dependent variable has data daily"))
+    else:
+        print colored.yellow(_("   the dependent variable has data monthly"))
+
+    # var I
+    sys.stdout.write(_("Read and check(range validation) var I .......... "))
+    sys.stdout.flush()
+    station = read_var_I(station)  # <--
+    print colored.green(_("done"))
+
+    if station.is_var_I_daily:
+        print colored.yellow(_("   the independent variable has data daily"))
+    else:
+        print colored.yellow(_("   the independent variable has data monthly"))
+
 
     # -------------------------------------------------------------------------
     # Calculating common period and process period
@@ -1536,6 +1620,7 @@ def climate(station):
     sys.stdout.write(_("Processing climate"))
     sys.stdout.flush()
 
+    # create directory for output files
     if not os.path.isdir(climate_dir):
         os.makedirs(climate_dir)
 
@@ -1576,6 +1661,7 @@ def forecasting(station):
                      .format(station.period_start, station.period_end))
     sys.stdout.flush()
 
+    # create directory for output files
     if not os.path.isdir(forecasting_dir):
         os.makedirs(forecasting_dir)
 
