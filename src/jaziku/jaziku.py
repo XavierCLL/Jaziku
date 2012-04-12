@@ -1133,33 +1133,33 @@ def result_table_CA(station):
     different tests.
     '''
 
-    # dir and name to save the result table
-    csv_name = \
-    os.path.join(station.climate_dir, _('Result_Table_CA_{0}_{1}_{2}_{3}_({4}-{5}).csv')
-                .format(station.code, station.name, station.type_D, station.type_I,
-                        station.period_start, station.period_end))
-
-    csv_result_table = csv.writer(open(csv_name, 'w'), delimiter = ';')
-
-    # print headers in result table
-    csv_result_table.writerow([
-         _('var_D'), _('var_I'), _('Pearson'), _('Sign Pearson'),
-         _('Is sign "Sign Pearson"?'), _('threshold below (var D)'),
-         _('threshold above (var D)'), _('threshold below (var I)'),
-         _('threshold above (var I)'), _('Contingency Table (CT)'),
-         '', '', '', '', '', '', '', '', _('Contingency Table in %'),
-         '', '', '', '', '', '', '', '', _('is sig risk analysis?'),
-         '', '', '', '', '', '', '', '', _('Test Stat - Chi2'),
-         _('Crit Value - Chi2'), _('Is sig CT?'), _('Correl CT')])
-
     pearson_list = []
     is_sig_risk_analysis = []
 
     for lag in lags:
 
+        # dir and name to save the result table
+        csv_name = \
+        os.path.join(station.climate_dir, _('Result_Table_CA_lag_{0}_{1}_{2}_{3}_{4}_({5}-{6}).csv')
+                    .format(lag, station.name, station.code, station.type_D, station.type_I,
+                            station.period_start, station.period_end))
+
+        csv_result_table = csv.writer(open(csv_name, 'w'), delimiter = ';')
+
+        # print headers in result table
+        csv_result_table.writerow([
+             _('var_D'), _('var_I'), _('Pearson'), _('Sign Pearson'),
+             _('Is sign \'Sign Pearson\'?'), _('threshold below (var D)'),
+             _('threshold above (var D)'), _('threshold below (var I)'),
+             _('threshold above (var I)'), _('Contingency Table (CT)'),
+             '', '', '', '', '', '', '', '', _('Contingency Table in %'),
+             '', '', '', '', '', '', '', '', _('is sig risk analysis?'),
+             '', '', '', '', '', '', '', '', _('Test Stat - Chi2'),
+             _('Crit Value - Chi2'), _('Is sig CT?'), _('Correl CT')])
+
         # print division line between lags
         csv_result_table.writerow([
-             _('Lag {0}').format(lag), '', '', '', '', '', '', '', '',
+             '', '', '', '', '', '', '', '', '',
              station.phenomenon_below, '', '',
              station.phenomenon_normal, '', '',
              station.phenomenon_above, '', '',
