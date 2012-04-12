@@ -1,18 +1,12 @@
 
-version 0.2: (in the coming days)
-* detect spaces or tabs null in input csv files
-* static installer, fix script install, and make for old linux version
-* final message 
-* fix when the name of station from station list contain spaces at the start or/and final of name
-* fix maps files when actived labels in argument
-* fix translation 
-
 version 0.3: (start: march 8, release: march 30)
 * put internal independents variables inside jaziku
 * enable run with particular independent variable file
 * Change the resolution of analysis of trimesters to months and even days
 
 version 0.4: (start: april 9, release: may 31)
+* Add altitude parameter for stations and print in results (maps files)
+* Get parameters and configurations from configuration file (e.g jaziku -run config_file)
 * Interpolation of the data in "maps" folder as the product of a strict study of interpolation schemes knowns, 
   graphics interpolation with NCL and generate maps (argument --maps)
 * Expansion to more variables such as riverflow
