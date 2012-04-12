@@ -90,6 +90,7 @@ import sys
 import os.path
 import argparse  # http://docs.python.org/py3k/library/argparse.html
 import csv
+from calendar import monthrange
 from datetime import date
 # http://labix.org/python-dateutil
 # and if this required setuptools install:
@@ -184,27 +185,26 @@ def read_var_D(station):
             if not row or not row[0].strip():
                 continue
 
-            # check if var D is daily or month
-            if first:
-                try:
-                    float(row[3])
-                    station.is_var_D_daily = True
-                except:
-                    station.is_var_D_daily = False
-                first = False
-
             # get values
             try:
                 row[0] = row[0].replace('/', '-')
                 row[1] = row[1].replace(',', '.')
-                if station.is_var_D_daily:
-                    row[3] = row[3].replace(',', '.')
+
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n"
                               "this could be caused by wrong line or garbage "
                               "character,\nplease check manually, fix it and "
                               "run again.")
                              .format(station.file_D.name, reader_csv.line_num))
+
+            # check if var D is daily or month
+            if first:
+                if size(row[0].split("-")) == 3:
+                    station.is_var_D_daily = True
+                else:
+                    station.is_var_D_daily = False
+                first = False
+
             try:
                 # delete garbage characters and convert format
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
@@ -254,26 +254,25 @@ def read_var_D(station):
             if not row or not row[0].strip():
                 continue
 
-            # check if var D is daily or month
-            if first:
-                try:
-                    float(row[3])
-                    station.is_var_D_daily = True
-                except:
-                    station.is_var_D_daily = False
-                first = False
-
             try:
                 row[0] = row[0].replace('/', '-')
                 row[1] = row[1].replace(',', '.')
-                if station.is_var_D_daily:
-                    row[3] = row[3].replace(',', '.')
+
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n"
                               "this could be caused by wrong line or garbage "
                               "character,\nplease check manually, fix it and "
                               "run again.")
                              .format(station.file_D.name, reader_csv.line_num))
+
+            # check if var D is daily or month
+            if first:
+                if size(row[0].split("-")) == 3:
+                    station.is_var_D_daily = True
+                else:
+                    station.is_var_D_daily = False
+                first = False
+
             try:
                 # delete garbage characters and convert format
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
@@ -370,27 +369,25 @@ def read_var_I(station):
             if not row or not row[0].strip():
                 continue
 
-            # check if var I is daily or month
-            if first:
-                try:
-                    float(row[3])
-                    station.is_var_I_daily = True
-                except:
-                    station.is_var_I_daily = False
-                first = False
-
             # get values
             try:
                 row[0] = row[0].replace('/', '-')
                 row[1] = row[1].replace(',', '.')
-                if station.is_var_I_daily:
-                    row[3] = row[3].replace(',', '.')
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n"
                               "this could be caused by wrong line or garbage "
                               "character,\nplease check manually, fix it and "
                               "run again.")
-                             .format(station.file_D.name, reader_csv.line_num))
+                             .format(station.file_I.name, reader_csv.line_num))
+
+            # check if var I is daily or month
+            if first:
+                if size(row[0].split("-")) == 3:
+                    station.is_var_I_daily = True
+                else:
+                    station.is_var_I_daily = False
+                first = False
+
             try:
                 # delete garbage characters and convert format
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
@@ -441,26 +438,25 @@ def read_var_I(station):
             if not row or not row[0].strip():
                 continue
 
-            # check if var I is daily or month
-            if first:
-                try:
-                    float(row[3])
-                    station.is_var_I_daily = True
-                except:
-                    station.is_var_I_daily = False
-                first = False
-
             try:
                 row[0] = row[0].replace('/', '-')
                 row[1] = row[1].replace(',', '.')
-                if station.is_var_I_daily:
-                    row[3] = row[3].replace(',', '.')
+
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n"
                               "this could be caused by wrong line or garbage "
                               "character,\nplease check manually, fix it and "
                               "run again.")
-                             .format(station.file_D.name, reader_csv.line_num))
+                             .format(station.file_I.name, reader_csv.line_num))
+
+            # check if var I is daily or month
+            if first:
+                if size(row[0].split("-")) == 3:
+                    station.is_var_I_daily = True
+                else:
+                    station.is_var_I_daily = False
+                first = False
+
             try:
                 # delete garbage characters and convert format
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
@@ -565,50 +561,22 @@ def get_lag_values(station, lag, trim, var):
     return [row[var_select[var]] for row in temp_list]
 
 
-def mean_trim(var_1, var_2, var_3):
+def mean(values):
     '''
-    Return average from 3 values, ignoring valid null values.
+    Return the mean from all values, ignoring valid null values.
     '''
 
-    if (int(var_1) in global_var.VALID_NULL and
-        int(var_2) in global_var.VALID_NULL and
-        int(var_3) in global_var.VALID_NULL):
-        return  global_var.VALID_NULL[1]
+    mean = 0
+    count = 0
+    for value in values:
+        if int(value) not in global_var.VALID_NULL:
+            mean += value
+            count += 1.0
 
-    if (int(var_1) not in global_var.VALID_NULL and
-        int(var_2) in global_var.VALID_NULL and
-        int(var_3) in global_var.VALID_NULL):
-        return  var_1
+    if count == 0:
+        return global_var.VALID_NULL[1]
 
-    if (int(var_1) in global_var.VALID_NULL and
-        int(var_2) not in global_var.VALID_NULL and
-        int(var_3) in global_var.VALID_NULL):
-        return  var_2
-
-    if (int(var_1) in global_var.VALID_NULL and
-        int(var_2) in global_var.VALID_NULL and
-        int(var_3) not in global_var.VALID_NULL):
-        return  var_3
-
-    if (int(var_1) not in global_var.VALID_NULL and
-        int(var_2) not in global_var.VALID_NULL and
-        int(var_3) in global_var.VALID_NULL):
-        return  (var_1 + var_2) / 2.0
-
-    if (int(var_1) in global_var.VALID_NULL and
-        int(var_2) not in global_var.VALID_NULL and
-        int(var_3) not in global_var.VALID_NULL):
-        return  (var_2 + var_3) / 2.0
-
-    if (int(var_1) not in global_var.VALID_NULL and
-        int(var_2) in global_var.VALID_NULL and
-        int(var_3) not in global_var.VALID_NULL):
-        return  (var_1 + var_3) / 2.0
-
-    if (int(var_1) not in global_var.VALID_NULL and
-        int(var_2) not in global_var.VALID_NULL and
-        int(var_3) not in global_var.VALID_NULL):
-        return  (var_1 + var_2 + var_3) / 3.0
+    return mean / count
 
 
 def check_consistent_data(station, var):
@@ -663,67 +631,158 @@ def calculate_lags(station):
                os.path.join(station.climate_dir, _('time_series'), _('lag_1')),
                os.path.join(station.climate_dir, _('time_series'), _('lag_2'))]
 
-    for lag in lags:
+    if station.state_of_data == 1:
 
-        if not os.path.isdir(dir_lag[lag]):
-            os.makedirs(dir_lag[lag])
+        for lag in lags:
 
-        # all months in year 1->12
-        for month in range(1, 13):
-            csv_name = os.path.join(dir_lag[lag],
-                                    _('Mean_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_'
-                                      '({6}-{7}).csv')
-                                    .format(lag, month, station.code,
-                                            station.name, station.type_D,
-                                            station.type_I,
-                                            station.period_start,
-                                            station.period_end))
+            if not os.path.isdir(dir_lag[lag]):
+                os.makedirs(dir_lag[lag])
 
-            # output write file:
-            # [[ yyyy/month, Mean_Lag_X_var_D, Mean_Lag_X_var_I ],... ]
-            csv_file_write = csv.writer(open(csv_name, 'w'), delimiter = ';')
-            # temporal var initialize iter_date = start common_period + 1 year,
-            # month=1, day=1
-            iter_date = date(station.period_start + 1, 1, 1)
-            # temporal var initialize end_date = end common_period - 1 year,
-            # month=12, day=31
-            end_date = date(station.period_end - 1, 12, 1)
+            # all months in year 1->12
+            for month in range(1, 13):
+                csv_name = os.path.join(dir_lag[lag],
+                                        _('Mean_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_'
+                                          '({6}-{7}).csv')
+                                        .format(lag, month, station.code,
+                                                station.name, station.type_D,
+                                                station.type_I,
+                                                station.period_start,
+                                                station.period_end))
 
-            # iteration for years from first-year +1 to end-year -1 inside
-            # range common_period
-            while iter_date <= end_date:
+                # output write file:
+                # [[ yyyy/month, Mean_Lag_X_var_D, Mean_Lag_X_var_I ],... ]
+                csv_file_write = csv.writer(open(csv_name, 'w'), delimiter = ';')
+                # temporal var initialize iter_date = start common_period + 1 year,
+                # month=1, day=1
+                iter_date = date(station.period_start + 1, 1, 1)
+                # temporal var initialize end_date = end common_period - 1 year,
+                # month=12, day=31
+                end_date = date(station.period_end - 1, 12, 1)
 
-                # calculate var_D for this months
-                var_D_1 = station.var_D[station.date_D.index(iter_date +
-                                        relativedelta(months = month - 1))]
-                var_D_2 = station.var_D[station.date_D.index(iter_date +
-                                        relativedelta(months = month))]
-                var_D_3 = station.var_D[station.date_D.index(iter_date +
-                                        relativedelta(months = month + 1))]
-                # calculate mean_trim_var_D
-                mean_trim_var_D = mean_trim(var_D_1, var_D_2, var_D_3)
+                # iteration for years from first-year +1 to end-year -1 inside
+                # range common_period
+                while iter_date <= end_date:
 
-                # calculate var_I for this months
-                var_I_1 = station.var_I[station.date_I.index(iter_date +
-                                        relativedelta(months = month - 1 - lag))]
-                var_I_2 = station.var_I[station.date_I.index(iter_date +
-                                        relativedelta(months = month - lag))]
-                var_I_3 = station.var_I[station.date_I.index(iter_date +
-                                        relativedelta(months = month + 1 - lag))]
-                # calculate mean_trim_var_I
-                mean_trim_var_I = mean_trim(var_I_1, var_I_2, var_I_3)
+                    # calculate var_D for this months
+                    var_D_1 = station.var_D[station.date_D.index(iter_date +
+                                            relativedelta(months = month - 1))]
+                    var_D_2 = station.var_D[station.date_D.index(iter_date +
+                                            relativedelta(months = month))]
+                    var_D_3 = station.var_D[station.date_D.index(iter_date +
+                                            relativedelta(months = month + 1))]
+                    # calculate mean_trim_var_D
+                    mean_trim_var_D = mean([var_D_1, var_D_2, var_D_3])
 
-                # add line in list: Lag_X
-                vars()['Lag_' + str(lag)].append([month, [iter_date,
-                                                         mean_trim_var_D,
-                                                         mean_trim_var_I]])
+                    # calculate var_I for this months
+                    var_I_1 = station.var_I[station.date_I.index(iter_date +
+                                            relativedelta(months = month - 1 - lag))]
+                    var_I_2 = station.var_I[station.date_I.index(iter_date +
+                                            relativedelta(months = month - lag))]
+                    var_I_3 = station.var_I[station.date_I.index(iter_date +
+                                            relativedelta(months = month + 1 - lag))]
+                    # calculate mean_trim_var_I
+                    mean_trim_var_I = mean([var_I_1, var_I_2, var_I_3])
 
-                # add line output file csv_file_write
-                csv_file_write.writerow([str(iter_date.year) + "/" + str(month),
-                                             print_number(mean_trim_var_D),
-                                             print_number(mean_trim_var_I)])
-                # next year
-                iter_date += relativedelta(years = +1)
+                    # add line in list: Lag_X
+                    vars()['Lag_' + str(lag)].append([month, [iter_date,
+                                                             mean_trim_var_D,
+                                                             mean_trim_var_I]])
+
+                    # add line output file csv_file_write
+                    csv_file_write.writerow([str(iter_date.year) + "/" + str(month),
+                                                 print_number(mean_trim_var_D),
+                                                 print_number(mean_trim_var_I)])
+                    # next year
+                    iter_date += relativedelta(years = +1)
+
+    if station.state_of_data == 2:
+
+        for lag in lags:
+
+            if not os.path.isdir(dir_lag[lag]):
+                os.makedirs(dir_lag[lag])
+
+            # all months in year 1->12
+            for month in range(1, 13):
+                csv_name = os.path.join(dir_lag[lag],
+                                        _('Mean_lag_{0}_{1}days_month_{2}_{3}_'
+                                          '{4}_{5}_{6}_({7}-{8}).csv')
+                                        .format(lag, station.analysis_interval,
+                                                month, station.code,
+                                                station.name, station.type_D,
+                                                station.type_I,
+                                                station.period_start,
+                                                station.period_end))
+
+                # output write file:
+                # [[ yyyy/month, Mean_Lag_X_var_D, Mean_Lag_X_var_I ],... ]
+                csv_file_write = csv.writer(open(csv_name, 'w'), delimiter = ';')
+
+                #days_for_this_month = monthrange(iter_date, month)[1]
+
+                # range based on analysis interval
+                if station.analysis_interval == 5:
+                    range_analysis_interval = [0, 5, 10, 15, 20, 25, 31]
+                if station.analysis_interval == 10:
+                    range_analysis_interval = [0, 10, 20, 31]
+                if station.analysis_interval == 15:
+                    range_analysis_interval = [0, 15, 31]
+
+                for day in range_analysis_interval[0:-1]:
+                    print "nexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxt"
+                    # temporal var initialize iter_date = start common_period + 1 year,
+                    # month=1, day=1
+                    iter_date = date(station.period_start + 1, 1, 1)
+                    # temporal var initialize end_date = end common_period - 1 year,
+                    # month=12, day=31
+                    end_date = date(station.period_end - 1, 12, 31)
+
+                    # iteration for years from first-year +1 to end-year -1 inside
+                    # range common_period
+                    while iter_date <= end_date:
+
+                        # test if day exist in month and year
+                        if day > monthrange(iter_date.year, month)[1]:
+                            iter_date += relativedelta(years = +1)
+                            continue
+
+                        var_D_values = []
+                        # from day to next iterator based on analysis interval
+                        for iter_day in range(day, range_analysis_interval[range_analysis_interval.index(day) + 1]):
+                            now = iter_date + relativedelta(months = month - 1,
+                                                            days = iter_day)
+                            # check if continues with the same month
+                            if now.month == month:
+                                index_var_D = station.date_D.index(now)
+                                var_D_values.append(station.var_D[index_var_D])
+
+                        print var_D_values
+                        mean_var_D = mean(var_D_values)
+
+
+                        # calculate var_I for this months
+                        var_I_1 = station.var_I[station.date_I.index(iter_date +
+                                                relativedelta(months = month - 1 - lag))]
+                        var_I_2 = station.var_I[station.date_I.index(iter_date +
+                                                relativedelta(months = month - lag))]
+                        var_I_3 = station.var_I[station.date_I.index(iter_date +
+                                                relativedelta(months = month + 1 - lag))]
+                        # calculate mean_trim_var_I
+                        mean_trim_var_I = mean([var_I_1, var_I_2, var_I_3])
+
+                        # add line in list: Lag_X
+                        vars()['Lag_' + str(lag)].append([month, [iter_date,
+                                                                 mean_var_D,
+                                                                 mean_trim_var_I]])
+
+                        # add line output file csv_file_write
+                        csv_file_write.writerow([str(iter_date.year) + "/" + str(month)
+                                                     + "/" + str(day + 1),
+                                                     print_number(mean_var_D),
+                                                     print_number(mean_trim_var_I)])
+                        # next year
+                        iter_date += relativedelta(years = +1)
+
 
     return Lag_0, Lag_1, Lag_2
 
@@ -1580,7 +1639,6 @@ def pre_process(station):
     else:
         print colored.yellow(_("   the independent variable has data monthly"))
 
-
     # -------------------------------------------------------------------------
     # Calculating common period and process period
     station.common_period = calculate_common_period(station)
@@ -1606,6 +1664,83 @@ def pre_process(station):
     check_consistent_data(station, "I")
 
     print colored.green(_("done"))
+
+    return station
+
+#==============================================================================
+# PROCESS:
+
+
+def process(station):
+
+
+    # -------------------------------------------------------------------------
+    # State of the data for process, calculate and write output based on type
+    # of data (daily or monthly) of dependent and independent variable
+    #
+    # | state |  var D  |  var I  |
+    # |   1   | monthly | monthly |
+    # |   2   |  daily  | monthly |
+    # |   3   | monthly |  daily  |
+    # |   4   |  daily  |  daily  |
+
+    if not station.is_var_D_daily and not station.is_var_I_daily:
+        station.state_of_data = 1
+    if station.is_var_D_daily and not station.is_var_I_daily:
+        station.state_of_data = 2
+    if not station.is_var_D_daily and station.is_var_I_daily:
+        station.state_of_data = 3
+    if station.is_var_D_daily and station.is_var_I_daily:
+        station.state_of_data = 4
+
+
+    # -------------------------------------------------------------------------
+    # State 1: var_D=monthly and var_D=monthly
+
+    if station.state_of_data == 1:
+        # run process (climate, forecasting) from input arguments
+        if not args.climate and not args.forecasting:
+            print_error(_("Neither process (climate, forecasting) were executed, "
+                          "\nplease enable this process in arguments: \n'-c, "
+                          "--climate' for climate and/or '-f, --forecasting' "
+                          "for forecasting."))
+        if args.climate:
+            station = climate(station)
+
+        if args.forecasting:
+            # TODO: run forecasting without climate
+            if not args.climate:
+                print_error(_("sorry, Jaziku can't run forecasting process "
+                              "without climate, this issue has not been implemented "
+                              "yet, \nplease run again with the option \"-c\""))
+            forecasting(station)
+
+    # -------------------------------------------------------------------------
+    # State 2: var_D=daily and var_D=monthly
+
+    if station.state_of_data == 2:
+
+        # run process (climate, forecasting) from input arguments
+        if not args.climate and not args.forecasting:
+            print_error(_("Neither process (climate, forecasting) were executed, "
+                          "\nplease enable this process in arguments: \n'-c, "
+                          "--climate' for climate and/or '-f, --forecasting' "
+                          "for forecasting."))
+
+        if args.climate:
+            station = climate(station)
+
+        if args.forecasting:
+            # TODO: run forecasting without climate
+            if not args.climate:
+                print_error(_("sorry, Jaziku can't run forecasting process "
+                              "without climate, this issue has not been implemented "
+                              "yet, \nplease run again with the option \"-c\""))
+            forecasting(station)
+
+
+
+    return station
 
 #==============================================================================
 # CLIMATE AND FORECASTING MAIN PROCESS
@@ -1634,6 +1769,7 @@ def climate(station):
     sys.stdout.flush()
 
     station.Lag_0, station.Lag_1, station.Lag_2 = calculate_lags(station)
+    print station.Lag_0
 
     station.size_time_series = (len(station.common_period) / 12) - 2
 
@@ -1986,27 +2122,32 @@ def main():
             station.threshold_below_var_I = line_station[10].replace(',', '.')
             station.threshold_above_var_I = line_station[11].replace(',', '.')
 
+            station.analysis_interval = line_station[12].replace(',', '.')
+            if station.analysis_interval == "none":
+                station.analysis_interval = None
+            else:
+                station.analysis_interval = int(station.analysis_interval[0:-4])
 
             if args.forecasting:
-                if len(line_station) < 22:
+                if len(line_station) < 23:
                     raise Exception(_("For forecasting process you need define "
                                       "9 probability\n variables and trimester to "
                                       "process in stations file."))
-                station.f_var_I_B = [float(line_station[12].replace(',', '.')),
-                                     float(line_station[15].replace(',', '.')),
-                                     float(line_station[18].replace(',', '.'))]
-                station.f_var_I_N = [float(line_station[13].replace(',', '.')),
+                station.f_var_I_B = [float(line_station[13].replace(',', '.')),
                                      float(line_station[16].replace(',', '.')),
                                      float(line_station[19].replace(',', '.'))]
-                station.f_var_I_A = [float(line_station[14].replace(',', '.')),
+                station.f_var_I_N = [float(line_station[14].replace(',', '.')),
                                      float(line_station[17].replace(',', '.')),
                                      float(line_station[20].replace(',', '.'))]
+                station.f_var_I_A = [float(line_station[15].replace(',', '.')),
+                                     float(line_station[18].replace(',', '.')),
+                                     float(line_station[21].replace(',', '.'))]
 
                 try:
-                    station.f_trim = int(line_station[21])
+                    station.f_trim = int(line_station[22])
                 except:
                     raise Exception(_("Trimester forecasting \"{0}\" is invalid, "
-                                      "should be integer number").format(line_station[21]))
+                                      "should be integer number").format(line_station[22]))
                 if not (1 <= station.f_trim <= 12):
                     raise Exception(_("Trimester forecasting \"{0}\" is invalid, "
                                       "should be a month valid number (1-12)").format(station.f_trim))
@@ -2015,6 +2156,13 @@ def main():
             print_error(_("Reading stations from file \"{0}\" in line {1}:\n")
                         .format(args.stations.name, stations.line_num) +
                         ';'.join(line_station) + "\n\n" + str(e))
+
+        # set maps plots files for this station
+        if args.climate:
+            station.maps_plots_files_climate = maps_plots_files_climate
+
+        if args.forecasting:
+            station.maps_plots_files_forecasting = maps_plots_files_forecasting
 
         # console message
         print _("\n################# STATION: {0} ({1})").format(station.name, station.code)
@@ -2025,27 +2173,10 @@ def main():
         station.phenomenon_above = phenomenon_above
 
         # run pre_process: read, validated and check data
-        pre_process(station)
+        station = pre_process(station)
 
-        # run process (climate, forecasting) from input arguments
-        if not args.climate and not args.forecasting:
-            print_error(_("Neither process (climate, forecasting) were executed, "
-                          "\nplease enable this process in arguments: \n'-c, "
-                          "--climate' for climate and/or '-f, --forecasting' "
-                          "for forecasting."))
-        if args.climate:
-            station.maps_plots_files_climate = maps_plots_files_climate
-            station = climate(station)
-
-        if args.forecasting:
-            # TODO: run forecasting without climate
-            if not args.climate:
-                print_error(_("sorry, Jaziku can't run forecasting process "
-                              "without climate, this issue has not been implemented "
-                              "yet, \nplease run again with the option \"-c\""))
-            station.maps_plots_files_forecasting = maps_plots_files_forecasting
-            forecasting(station)
-
+        # run process:
+        station = process(station)
 
         # clear and delete all instances of maps created by pyplot
         plt.close('all')

@@ -1,5 +1,20 @@
 
-0.2
+0.3.0
+features:
+ * now you can run using internal files for independents variables, defining as 
+   "default" in "file_I" section inside stations list file.
+ * enable run with particular independent variable file
+
+bugfixes:
+ * bugfix the size data when set particular common period
+ * bugfix when the common period defined is minor of 3 years
+ * fix TYPOS
+
+0.2.1
+ * change name function and filename results of Arithmetic Mean Trim to mean_trim
+
+
+0.2.0
 
 features:
  * change numeration version
