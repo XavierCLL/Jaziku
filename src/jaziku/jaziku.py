@@ -166,7 +166,7 @@ def read_var_D(station):
     var_D = []
 
     file_D = station.file_D
-    reader_csv = csv.reader(file_D, delimiter = '\t')
+    reader_csv = csv.reader(file_D, delimiter='\t')
 
     # validation type_D
     if station.type_D not in input_arg.types_var_D:
@@ -244,7 +244,7 @@ def read_var_D(station):
                                " bytes garbage,\n\tsaving new file as: {1}")
                                .format(station.file_D.name, name_fix))
 
-        reader_csv_fix = csv.reader(open(name_fix, 'rb'), delimiter = '\t')
+        reader_csv_fix = csv.reader(open(name_fix, 'rb'), delimiter='\t')
 
         first = False
         # Now read fix file
@@ -359,7 +359,7 @@ def read_var_I(station):
         station.range_above_I = "None"
 
 
-    reader_csv = csv.reader(file_I, delimiter = '\t')
+    reader_csv = csv.reader(file_I, delimiter='\t')
     first = True
     # Read line to line file_I, validation and save var_I
     try:
@@ -428,7 +428,7 @@ def read_var_I(station):
                                " bytes garbage,\n\tsaving new file as: {1}")
                                .format(station.file_I.name, name_fix))
 
-        reader_csv_fix = csv.reader(open(name_fix, 'rb'), delimiter = '\t')
+        reader_csv_fix = csv.reader(open(name_fix, 'rb'), delimiter='\t')
 
         first = False
         # Now read fix file
@@ -546,18 +546,22 @@ def column(matrix, i):
     return [row[i] for row in matrix]
 
 
-def get_lag_values(station, lag, trim, var):
+def get_lag_values(station, var, lag, month, day=None):
     '''
     Return all values of var_D, var_I or date
-    of specific lag and trimester.
+    of specific lag, month and/or day.
     '''
 
     var_select = {'date': 0, 'var_D': 1, 'var_I': 2}
     lag_select = {0: station.Lag_0, 1: station.Lag_1, 2: station.Lag_2}
     temp_list = []
     for line in lag_select[lag]:
-        if trim == line[0]:
-            temp_list.append(line[1])
+        if day:
+            if month == line[0].month and day == line[0].day:
+                temp_list.append(line)
+        else:
+            if month == line[0].month:
+                temp_list.append(line)
     return [row[var_select[var]] for row in temp_list]
 
 
@@ -621,7 +625,7 @@ def calculate_lags(station):
     '''
 
     # initialized Lag_X
-    # format list: [trim, [ date, mean_trim_var_D, mean_trim_var_I ]], ...
+    # format list: [trim, [ date, mean_var_D, mean_var_I ]], ...
     Lag_0 = []
     Lag_1 = []
     Lag_2 = []
@@ -630,6 +634,55 @@ def calculate_lags(station):
     dir_lag = [os.path.join(station.climate_dir, _('time_series'), _('lag_0')),
                os.path.join(station.climate_dir, _('time_series'), _('lag_1')),
                os.path.join(station.climate_dir, _('time_series'), _('lag_2'))]
+
+    # range based on analysis interval
+    if station.analysis_interval == 5:
+        range_analysis_interval = [0, 5, 10, 15, 20, 25, 31]
+    if station.analysis_interval == 10:
+        range_analysis_interval = [0, 10, 20, 31]
+    if station.analysis_interval == 15:
+        range_analysis_interval = [0, 15, 31]
+
+    def get_var_D_values():
+        var_D_values = []
+        if station.is_var_D_daily:
+            # from day to next iterator based on analysis interval
+            interval_day_var_D = \
+                range(day, range_analysis_interval[range_analysis_interval.index(day) + 1])
+            for iter_day in interval_day_var_D:
+                now = date(iter_year, month, 1) + relativedelta(days=iter_day)
+                # check if continues with the same month
+                if now.month == month:
+                    index_var_D = station.date_D.index(now)
+                    var_D_values.append(station.var_D[index_var_D])
+        else:
+            # get the three values for var_D in this month
+            for iter_month in range(3):
+                var_D_values.append(station.var_D[station.date_D.index(
+                    date(iter_year, month, 1) + relativedelta(months=iter_month))])
+
+        return var_D_values
+
+    def get_var_I_values():
+        var_I_values = []
+        if station.is_var_I_daily:
+            # from day to next iterator based on analysis interval
+            interval_day_var_I = range(day - range_analysis_interval[1] * lag,
+                                       day - range_analysis_interval[1] * (lag - 1))
+            for iter_day in interval_day_var_I:
+                now = date(iter_year, month, 1) + relativedelta(days=iter_day)
+                # check if continues with the same month
+                if now.month == month:
+                    index_var_I = station.date_I.index(now)
+                    var_I_values.append(station.var_I[index_var_I])
+        else:
+            # get the three values for var_I in this month
+            for iter_month in range(3):
+                var_I_values.append(station.var_I[station.date_I.index(
+                    date(iter_year, month, 1) + relativedelta(months=iter_month - lag))])
+
+        return var_I_values
+
 
     if station.state_of_data == 1:
 
@@ -651,51 +704,37 @@ def calculate_lags(station):
 
                 # output write file:
                 # [[ yyyy/month, Mean_Lag_X_var_D, Mean_Lag_X_var_I ],... ]
-                csv_file_write = csv.writer(open(csv_name, 'w'), delimiter = ';')
-                # temporal var initialize iter_date = start common_period + 1 year,
+                csv_file_write = csv.writer(open(csv_name, 'w'), delimiter=';')
+                # temporal var initialize iter_year = start common_period + 1 year,
                 # month=1, day=1
-                iter_date = date(station.period_start + 1, 1, 1)
-                # temporal var initialize end_date = end common_period - 1 year,
+                iter_year = station.period_start + 1
+                # temporal var initialize end_year = end common_period - 1 year,
                 # month=12, day=31
-                end_date = date(station.period_end - 1, 12, 1)
+                end_year = station.period_end - 1
 
                 # iteration for years from first-year +1 to end-year -1 inside
                 # range common_period
-                while iter_date <= end_date:
+                while iter_year <= end_year:
 
-                    # calculate var_D for this months
-                    var_D_1 = station.var_D[station.date_D.index(iter_date +
-                                            relativedelta(months = month - 1))]
-                    var_D_2 = station.var_D[station.date_D.index(iter_date +
-                                            relativedelta(months = month))]
-                    var_D_3 = station.var_D[station.date_D.index(iter_date +
-                                            relativedelta(months = month + 1))]
-                    # calculate mean_trim_var_D
-                    mean_trim_var_D = mean([var_D_1, var_D_2, var_D_3])
+                    # get values and calculate mean_var_D
+                    mean_var_D = mean(get_var_D_values())
 
-                    # calculate var_I for this months
-                    var_I_1 = station.var_I[station.date_I.index(iter_date +
-                                            relativedelta(months = month - 1 - lag))]
-                    var_I_2 = station.var_I[station.date_I.index(iter_date +
-                                            relativedelta(months = month - lag))]
-                    var_I_3 = station.var_I[station.date_I.index(iter_date +
-                                            relativedelta(months = month + 1 - lag))]
-                    # calculate mean_trim_var_I
-                    mean_trim_var_I = mean([var_I_1, var_I_2, var_I_3])
+                    # get values and calculate mean_var_I
+                    mean_var_I = mean(get_var_I_values())
 
                     # add line in list: Lag_X
-                    vars()['Lag_' + str(lag)].append([month, [iter_date,
-                                                             mean_trim_var_D,
-                                                             mean_trim_var_I]])
+                    vars()['Lag_' + str(lag)].append([date(iter_year, month, 1),
+                                                     mean_var_D,
+                                                     mean_var_I])
 
                     # add line output file csv_file_write
-                    csv_file_write.writerow([str(iter_date.year) + "/" + str(month),
-                                                 print_number(mean_trim_var_D),
-                                                 print_number(mean_trim_var_I)])
+                    csv_file_write.writerow([str(iter_year) + "/" + str(month),
+                                                 print_number(mean_var_D),
+                                                 print_number(mean_var_I)])
                     # next year
-                    iter_date += relativedelta(years = +1)
+                    iter_year += 1
 
-    if station.state_of_data == 2:
+    if station.state_of_data in [2, 3, 4]:
 
         for lag in lags:
 
@@ -716,72 +755,45 @@ def calculate_lags(station):
 
                 # output write file:
                 # [[ yyyy/month, Mean_Lag_X_var_D, Mean_Lag_X_var_I ],... ]
-                csv_file_write = csv.writer(open(csv_name, 'w'), delimiter = ';')
+                csv_file_write = csv.writer(open(csv_name, 'w'), delimiter=';')
 
-                #days_for_this_month = monthrange(iter_date, month)[1]
-
-                # range based on analysis interval
-                if station.analysis_interval == 5:
-                    range_analysis_interval = [0, 5, 10, 15, 20, 25, 31]
-                if station.analysis_interval == 10:
-                    range_analysis_interval = [0, 10, 20, 31]
-                if station.analysis_interval == 15:
-                    range_analysis_interval = [0, 15, 31]
+                #days_for_this_month = monthrange(iter_year, month)[1]
 
                 for day in range_analysis_interval[0:-1]:
-                    print "nexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxt"
-                    # temporal var initialize iter_date = start common_period + 1 year,
+                    # temporal var initialize iter_year = start common_period + 1 year,
                     # month=1, day=1
-                    iter_date = date(station.period_start + 1, 1, 1)
-                    # temporal var initialize end_date = end common_period - 1 year,
+                    iter_year = station.period_start + 1
+                    # temporal var initialize end_year = end common_period - 1 year,
                     # month=12, day=31
-                    end_date = date(station.period_end - 1, 12, 31)
+                    end_year = station.period_end - 1
 
                     # iteration for years from first-year +1 to end-year -1 inside
                     # range common_period
-                    while iter_date <= end_date:
+                    while iter_year <= end_year:
 
                         # test if day exist in month and year
-                        if day > monthrange(iter_date.year, month)[1]:
-                            iter_date += relativedelta(years = +1)
+                        if day > monthrange(iter_year, month)[1]:
+                            iter_year += relativedelta(years= +1)
                             continue
 
-                        var_D_values = []
-                        # from day to next iterator based on analysis interval
-                        for iter_day in range(day, range_analysis_interval[range_analysis_interval.index(day) + 1]):
-                            now = iter_date + relativedelta(months = month - 1,
-                                                            days = iter_day)
-                            # check if continues with the same month
-                            if now.month == month:
-                                index_var_D = station.date_D.index(now)
-                                var_D_values.append(station.var_D[index_var_D])
+                        # get values and calculate mean_var_D
+                        mean_var_D = mean(get_var_D_values())
 
-                        print var_D_values
-                        mean_var_D = mean(var_D_values)
-
-
-                        # calculate var_I for this months
-                        var_I_1 = station.var_I[station.date_I.index(iter_date +
-                                                relativedelta(months = month - 1 - lag))]
-                        var_I_2 = station.var_I[station.date_I.index(iter_date +
-                                                relativedelta(months = month - lag))]
-                        var_I_3 = station.var_I[station.date_I.index(iter_date +
-                                                relativedelta(months = month + 1 - lag))]
-                        # calculate mean_trim_var_I
-                        mean_trim_var_I = mean([var_I_1, var_I_2, var_I_3])
+                        # get values and calculate mean_var_I
+                        mean_var_I = mean(get_var_I_values())
 
                         # add line in list: Lag_X
-                        vars()['Lag_' + str(lag)].append([month, [iter_date,
-                                                                 mean_var_D,
-                                                                 mean_trim_var_I]])
+                        vars()['Lag_' + str(lag)].append([date(iter_year, month, day + 1),
+                                                         mean_var_D,
+                                                         mean_var_I])
 
                         # add line output file csv_file_write
-                        csv_file_write.writerow([str(iter_date.year) + "/" + str(month)
+                        csv_file_write.writerow([str(iter_year) + "/" + str(month)
                                                      + "/" + str(day + 1),
                                                      print_number(mean_var_D),
-                                                     print_number(mean_trim_var_I)])
+                                                     print_number(mean_var_I)])
                         # next year
-                        iter_date += relativedelta(years = +1)
+                        iter_year += 1
 
 
     return Lag_0, Lag_1, Lag_2
@@ -952,8 +964,8 @@ def get_contingency_table(station, lag, month):
     '''
 
     # get all values of var D and var I based on this lag and month
-    station.var_D_values = get_lag_values(station, lag, month, 'var_D')
-    station.var_I_values = get_lag_values(station, lag, month, 'var_I')
+    station.var_D_values = get_lag_values(station, 'var_D', lag, month)
+    station.var_I_values = get_lag_values(station, 'var_I', lag, month)
 
     # the thresholds of dependent variable are: percentile 33 and 66
     p33_D = stats.scoreatpercentile(station.var_D_values, 33)
@@ -997,7 +1009,7 @@ def get_contingency_table(station, lag, month):
     tertile_size = station.size_time_series / 3.0
     contingency_table_percent = np.matrix(contingency_table) * tertile_size
 
-    sum_per_column_percent = contingency_table_percent.sum(axis = 1)
+    sum_per_column_percent = contingency_table_percent.sum(axis=1)
 
     # threshold_problem is global variable for detect problem with
     # threshold of independent variable, if a problem is detected
@@ -1100,7 +1112,7 @@ def contingency_table(station):
                     '_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv')
                     .format(lag, month, station.code, station.name, station.type_D,
                             station.type_I, station.period_start, station.period_end))
-            csv_contingency_table = csv.writer(open(csv_name, 'w'), delimiter = ';')
+            csv_contingency_table = csv.writer(open(csv_name, 'w'), delimiter=';')
 
             csv_contingency_table.writerow(['', _('var I Below'),
                                             _('var I Normal'),
@@ -1144,7 +1156,7 @@ def result_table_CA(station):
                     .format(lag, station.name, station.code, station.type_D, station.type_I,
                             station.period_start, station.period_end))
 
-        csv_result_table = csv.writer(open(csv_name, 'w'), delimiter = ';')
+        csv_result_table = csv.writer(open(csv_name, 'w'), delimiter=';')
 
         # print headers in result table
         csv_result_table.writerow([
@@ -1191,8 +1203,8 @@ def result_table_CA(station):
             # test:
             # is significance risk analysis?
             contingency_table_matrix = np.matrix(contingency_table)
-            sum_per_row = contingency_table_matrix.sum(axis = 0).tolist()[0]
-            sum_per_column = contingency_table_matrix.sum(axis = 1).tolist()
+            sum_per_row = contingency_table_matrix.sum(axis=0).tolist()[0]
+            sum_per_column = contingency_table_matrix.sum(axis=1).tolist()
             sum_contingency_table = contingency_table_matrix.sum()
 
             is_sig_risk_analysis_month_list = []
@@ -1202,15 +1214,15 @@ def result_table_CA(station):
                     n = sum_per_row[r]
                     N = sum_contingency_table
                     X = stats.hypergeom.cdf(Xi, N, M, n)
-                    Y = stats.hypergeom.sf(Xi, N, M, n, loc = 1)
+                    Y = stats.hypergeom.sf(Xi, N, M, n, loc=1)
                     if X <= 0.1 or Y <= 0.1:
                         is_sig_risk_analysis_month_list.append(_('yes'))
                     else:
                         is_sig_risk_analysis_month_list.append(_('no'))
 
             # get values of var D and I from this lag and month
-            var_D_values = get_lag_values(station, lag, month, 'var_D')
-            var_I_values = get_lag_values(station, lag, month, 'var_I')
+            var_D_values = get_lag_values(station, 'var_D', lag, month)
+            var_I_values = get_lag_values(station, 'var_I', lag, month)
 
             # calculate pearson correlation of var_D and var_I
             pearson = stats.pearsonr(var_D_values, var_I_values)[0]
@@ -1218,8 +1230,8 @@ def result_table_CA(station):
 
             # significance correlation
             singr, T_test, t_crit = \
-                sc.corrtest(rho = 0, r = pearson, n = len(station.common_period) + 1,
-                            alpha = 0.05, side = 0)
+                sc.corrtest(rho=0, r=pearson, n=len(station.common_period) + 1,
+                            alpha=0.05, side=0)
 
             # contingency test
             Observed, Expected, test_stat, crit_value, df, p_value, alpha = \
@@ -1293,8 +1305,8 @@ def result_table_CA(station):
 
 def graphics_climate(station):
     '''
-    Generate bart graphics and mosaic of probability for below, normal and 
-    above for independece variable for the composite analisys. 
+    Generate bart graphics and mosaic of probability for below, normal and
+    above for independece variable for the composite analisys.
     '''
 
     # main directory for save graphics
@@ -1343,20 +1355,20 @@ def graphics_climate(station):
             # label for axis Y 
             plt.ylabel(_('probability (%)'))
             #  adjust the max leaving min unchanged in Y
-            plt.ylim(ymin = 0, ymax = 100)
+            plt.ylim(ymin=0, ymax=100)
             #  adjust the max leaving min unchanged in X
-            plt.xlim(xmin = -0.1, xmax = 2.3)
+            plt.xlim(xmin= -0.1, xmax=2.3)
             # plt.xticks([0.3, 1.1, 1.9], ('var Ind Below', 'var Ind Normal', 'var Ind Above'),)
             plt.xticks([])
             # colors for paint bars and labels: below, normal , above
             colours = ['#DD4620', '#62AD29', '#6087F1']
             # assigning values for plot:
             var_D_below = plt.bar(ind, column(contingency_table_percent, 0),
-                                  width, color = colours[0])
+                                  width, color=colours[0])
             var_D_normal = plt.bar(ind + width, column(contingency_table_percent, 1),
-                                   width, color = colours[1])
+                                   width, color=colours[1])
             var_D_above = plt.bar(ind + 2 * width, column(contingency_table_percent, 2),
-                                  width, color = colours[2])
+                                  width, color=colours[2])
 
             # assing value for each bart
             def autolabel(rects):
@@ -1364,19 +1376,19 @@ def graphics_climate(station):
                 temp = []
                 for rect in rects:
                     temp.append(rect.get_height())
-                temp.sort(reverse = True)
+                temp.sort(reverse=True)
                 max_heigth = temp[0]
 
                 for rect in rects:
                     height = rect.get_height()
                     plt.text(rect.get_x() + rect.get_width() / 2.0, 0.015 * max_heigth +
-                             height, round(height, 1), ha = 'center', va = 'bottom')
+                             height, round(height, 1), ha='center', va='bottom')
 
             autolabel(var_D_below)
             autolabel(var_D_normal)
             autolabel(var_D_above)
 
-            plt.subplots_adjust(bottom = 0.15, left = 0.22, right = 0.97)
+            plt.subplots_adjust(bottom=0.15, left=0.22, right=0.97)
             # plt.legend((var_D_below[0], var_D_normal[0], var_D_above[0]), 
             #            ('var Dep Below', 'var Dep Normal', 'var Dep Above'),
             #             shadow = True, fancybox = True)
@@ -1392,9 +1404,9 @@ def graphics_climate(station):
                                                column(contingency_table_percent_print, 2)]
 
             # Add a table at the bottom of the axes
-            plt.table(cellText = contingency_table_percent_graph,
-                                 rowLabels = rowLabels, rowColours = colours,
-                                 colLabels = colLabels, loc = 'bottom')
+            plt.table(cellText=contingency_table_percent_graph,
+                                 rowLabels=rowLabels, rowColours=colours,
+                                 colLabels=colLabels, loc='bottom')
 
             ## Save image
             plt.subplot(111)
@@ -1404,7 +1416,7 @@ def graphics_climate(station):
                              .format(lag, month, station.code, station.name, station.type_D,
                                      station.type_I, station.period_start, station.period_end))
 
-            plt.savefig(image_dir_save, dpi = 75)
+            plt.savefig(image_dir_save, dpi=75)
             #plt.clf()
 
             # save dir image for mosaic
@@ -1421,8 +1433,8 @@ def graphics_climate(station):
                                 station.period_start, station.period_end))
 
         # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
-        plt.figure(figsize = ((image_width * 3) / 100, (image_height * 4) / 100))
-        plt.savefig(mosaic_dir_save, dpi = 100)
+        plt.figure(figsize=((image_width * 3) / 100, (image_height * 4) / 100))
+        plt.savefig(mosaic_dir_save, dpi=100)
         mosaic = img_open(mosaic_dir_save)
         mosaic.paste(image_open[0], (0, 0))
         mosaic.paste(image_open[1], (image_width, 0))
@@ -1440,10 +1452,11 @@ def graphics_climate(station):
         del image_open
         plt.clf()
 
+
 def graphics_forecasting(station):
     '''
-    Generate pie graphics and mosaic of probability for below, normal and 
-    above for independece variable for the composite analisys. 
+    Generate pie graphics and mosaic of probability for below, normal and
+    above for independece variable for the composite analisys.
     '''
 
     # main directory for save graphics
@@ -1463,7 +1476,7 @@ def graphics_forecasting(station):
 
         ## Options for graphics pie
         # make a square figure and axes
-        plt.figure(figsize = (5, 5))
+        plt.figure(figsize=(5, 5))
         # colors for paint pie: below, normal , above
         colours = ['#DD4620', '#62AD29', '#6087F1']
 
@@ -1477,15 +1490,15 @@ def graphics_forecasting(station):
         def autopct_funt(pct):
             total = sum(values_pie)
             val = pct * total / 100.0
-            return '{p:1.1f}%\n({v:1.2f})'.format(p = pct, v = val)
+            return '{p:1.1f}%\n({v:1.2f})'.format(p=pct, v=val)
 
-        plt.pie(values_pie, colors = colours, explode = explode, labels = labels,
-                autopct = '%1.1f%%', shadow = True)  #'%1.1f%%'
+        plt.pie(values_pie, colors=colours, explode=explode, labels=labels,
+                autopct='%1.1f%%', shadow=True)  #'%1.1f%%'
 
         plt.title(unicode(_('Probability forecasted of {0} - {1}\n{2} - lag {3} - trim {4} ({5}) - ({6}-{7})')
                           .format(station.type_D, station.name, station.type_I, lag, station.f_trim,
                           trim_text[station.f_trim - 1], station.period_start, station.period_end),
-                          'utf-8'), fontsize = 13)
+                          'utf-8'), fontsize=13)
 
         ## Save image
         # plt.subplot(111)
@@ -1493,7 +1506,7 @@ def graphics_forecasting(station):
             os.path.join(station.forecasting_dir, _('prob_of_{0}_lag_{1}_trim_{2}_({3}-{4}).png')
                          .format(station.type_D, lag, station.f_trim,
                                  station.period_start, station.period_end))
-        plt.savefig(image_dir_save, dpi = 75)
+        plt.savefig(image_dir_save, dpi=75)
         plt.clf()
 
         # save dir image for mosaic
@@ -1508,8 +1521,8 @@ def graphics_forecasting(station):
                      .format(station.type_D, lag, station.f_trim,
                              station.period_start, station.period_end))
     # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
-    plt.figure(figsize = (11.25, 3.75))  # http://www.classical-webdesigns.co.uk/resources/pixelinchconvert.html
-    plt.savefig(mosaic_dir_save, dpi = 100)
+    plt.figure(figsize=(11.25, 3.75))  # http://www.classical-webdesigns.co.uk/resources/pixelinchconvert.html
+    plt.savefig(mosaic_dir_save, dpi=100)
     mosaic = img_open(mosaic_dir_save)
     mosaic.paste(image_open[0], (0, 0))
     mosaic.paste(image_open[1], (image_width, 0))
@@ -1570,8 +1583,8 @@ def maps_climate(station):
 
 def maps_forecasting(station):
     '''
-    Create maps data svc file for ploting for each trimester, phenomenon and 
-    lag, each file contain all stations processed. 
+    Create maps data svc file for ploting for each trimester, phenomenon and
+    lag, each file contain all stations processed.
     '''
 
     for lag in lags:
@@ -1912,8 +1925,8 @@ def main():
         else:
             try:
                 lang = gettext.translation(TRANSLATION_DOMAIN, LOCALE_DIR,
-                                           languages = [args.l],
-                                           codeset = "utf-8")
+                                           languages=[args.l],
+                                           codeset="utf-8")
             except:
                 print_error(_("\"{0}\" language not available.").format(args.l))
 
@@ -2039,7 +2052,7 @@ def main():
                     csv_name = \
                         os.path.join(maps_data_phenom, _(u'Map_Data_lag_{0}_trim_{1}_{2}.csv')
                                      .format(lag, month, phenomenon[category]))
-                    csv_file = csv.writer(open(csv_name, 'w'), delimiter = ';')
+                    csv_file = csv.writer(open(csv_name, 'w'), delimiter=';')
                     csv_file.writerow([_('code'), _('lat'), _('lon'), _('pearson'),
                                        _('var_below'), _('var_normal'), _('var_above'),
                                        _('p_index'), _('sum')])
@@ -2078,7 +2091,7 @@ def main():
 
             csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}.csv')
                                     .format(lag))
-            csv_file = csv.writer(open(csv_name, 'w'), delimiter = ';')
+            csv_file = csv.writer(open(csv_name, 'w'), delimiter=';')
             csv_file.writerow([_('code'), _('lat'), _('lon'), _('prob_decrease_var_D'),
                                _('prob_normal_var_D'), _('prob_exceed_var_D'),
                                _('index'), _('sum')])
@@ -2088,7 +2101,7 @@ def main():
     # -------------------------------------------------------------------------
     # read all stations from stations list inside stations file 
     # (-station arguments)and process station by station
-    stations = csv.reader(args.stations, delimiter = ';')
+    stations = csv.reader(args.stations, delimiter=';')
     for line_station in stations:
 
         # trim all items in line_station
