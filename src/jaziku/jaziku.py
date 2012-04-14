@@ -503,17 +503,17 @@ def calculate_common_period(station):
     # initialized variable common_period
     # format list: [[  date ,  var_D ,  var_I ],... ]
     if args.period:
-        if (period_start < common_date[0].year or
-            period_end > common_date[-1].year):
-            sys.stdout.write(_("Calculating the common period ................... "))
+        if (args_period_start < common_date[0].year + 1 or
+            args_period_end > common_date[-1].year - 1):
+            sys.stdout.write(_("Calculating the process period .................. "))
             sys.stdout.flush()
-            print_error(_("The period defined in argument {0}-{1} is outside the "
-                          "common period {2}-{3}.")
-                        .format(period_start, period_end, common_date[0].year,
-                                common_date[-1].year))
+            print_error(_("The period defined in argument {0}-{1} is outside in the\n"
+                          "maximum process period for this station: {2}-{3}.")
+                        .format(args_period_start, args_period_end, common_date[0].year + 1,
+                                common_date[-1].year - 1))
 
-        common_date = common_date[common_date.index(date(period_start, 1, 1)):
-                                  common_date.index(date(period_end, 12, 1)) + 1]
+        common_date = common_date[common_date.index(date(args_period_start, 1, 1)):
+                                  common_date.index(date(args_period_end, 12, 1)) + 1]
 
     common_period = []
     # set values matrix for common_period
@@ -591,10 +591,10 @@ def check_consistent_data(station, var):
 
     # temporal var initialize iter_date = start common_period + 1 year,
     # month=1, day=1
-    iter_date = date(station.period_start + 1, 1, 1)
+    iter_date = date(station.process_period['start'] + 1, 1, 1)
     # temporal var initialize end_date = end common_period - 1 year,
     # month=12, day=31
-    end_date = date(station.period_end - 1, 12, 1)
+    end_date = date(station.process_period['end'] - 1, 12, 1)
 
     if var == "D":
         values_in_common_period = station.var_D[station.date_D.index(iter_date):station.date_D.index(end_date) + 3]
@@ -699,22 +699,18 @@ def calculate_lags(station):
                                         .format(lag, month, station.code,
                                                 station.name, station.type_D,
                                                 station.type_I,
-                                                station.period_start,
-                                                station.period_end))
+                                                station.process_period['start'],
+                                                station.process_period['end']))
 
                 # output write file:
                 # [[ yyyy/month, Mean_Lag_X_var_D, Mean_Lag_X_var_I ],... ]
                 csv_file_write = csv.writer(open(csv_name, 'w'), delimiter=';')
-                # temporal var initialize iter_year = start common_period + 1 year,
-                # month=1, day=1
-                iter_year = station.period_start + 1
-                # temporal var initialize end_year = end common_period - 1 year,
-                # month=12, day=31
-                end_year = station.period_end - 1
+
+                iter_year = station.process_period['start']
 
                 # iteration for years from first-year +1 to end-year -1 inside
                 # range common_period
-                while iter_year <= end_year:
+                while iter_year <= station.process_period['end']:
 
                     # get values and calculate mean_var_D
                     mean_var_D = mean(get_var_D_values())
@@ -750,8 +746,8 @@ def calculate_lags(station):
                                                 month, station.code,
                                                 station.name, station.type_D,
                                                 station.type_I,
-                                                station.period_start,
-                                                station.period_end))
+                                                station.process_period['start'],
+                                                station.process_period['end']))
 
                 # output write file:
                 # [[ yyyy/month, Mean_Lag_X_var_D, Mean_Lag_X_var_I ],... ]
@@ -760,16 +756,12 @@ def calculate_lags(station):
                 #days_for_this_month = monthrange(iter_year, month)[1]
 
                 for day in range_analysis_interval[0:-1]:
-                    # temporal var initialize iter_year = start common_period + 1 year,
-                    # month=1, day=1
-                    iter_year = station.period_start + 1
-                    # temporal var initialize end_year = end common_period - 1 year,
-                    # month=12, day=31
-                    end_year = station.period_end - 1
+
+                    iter_year = station.process_period['start']
 
                     # iteration for years from first-year +1 to end-year -1 inside
                     # range common_period
-                    while iter_year <= end_year:
+                    while iter_year <= station.process_period['end']:
 
                         # test if day exist in month and year
                         if day > monthrange(iter_year, month)[1]:
@@ -1111,7 +1103,7 @@ def contingency_table(station):
                 os.path.join(dir_contingency[lag], _('Contingency_Table_lag'
                     '_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv')
                     .format(lag, month, station.code, station.name, station.type_D,
-                            station.type_I, station.period_start, station.period_end))
+                            station.type_I, station.process_period['start'], station.process_period['end']))
             csv_contingency_table = csv.writer(open(csv_name, 'w'), delimiter=';')
 
             csv_contingency_table.writerow(['', _('var I Below'),
@@ -1154,7 +1146,7 @@ def result_table_CA(station):
         csv_name = \
         os.path.join(station.climate_dir, _('Result_Table_CA_lag_{0}_{1}_{2}_{3}_{4}_({5}-{6}).csv')
                     .format(lag, station.name, station.code, station.type_D, station.type_I,
-                            station.period_start, station.period_end))
+                            station.process_period['start'], station.process_period['end']))
 
         csv_result_table = csv.writer(open(csv_name, 'w'), delimiter=';')
 
@@ -1348,8 +1340,8 @@ def graphics_climate(station):
             plt.title(unicode(_('Composite analisys - {0} ({1})\n{2} - {3} - '
                                 'lag {6} - trim {7} ({8}) - ({4}-{5})')
                                 .format(station.name, station.code, station.type_I,
-                                        station.type_D, station.period_start,
-                                        station.period_end, lag, month,
+                                        station.type_D, station.process_period['start'],
+                                        station.process_period['end'], lag, month,
                                         trim_text[month - 1]), 'utf-8'))
 
             # label for axis Y 
@@ -1414,7 +1406,7 @@ def graphics_climate(station):
                 os.path.join(graphics_dir_ca, _('lag_{0}').format(lag),
                              _('ca_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
                              .format(lag, month, station.code, station.name, station.type_D,
-                                     station.type_I, station.period_start, station.period_end))
+                                     station.type_I, station.process_period['start'], station.process_period['end']))
 
             plt.savefig(image_dir_save, dpi=75)
             #plt.clf()
@@ -1430,7 +1422,7 @@ def graphics_climate(station):
         mosaic_dir_save = \
             os.path.join(graphics_dir_ca, _('mosaic_lag_{0}_{1}_{2}_{3}_{4}_({5}-{6}).png')
                         .format(lag, station.code, station.name, station.type_D, station.type_I,
-                                station.period_start, station.period_end))
+                                station.process_period['start'], station.process_period['end']))
 
         # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
         plt.figure(figsize=((image_width * 3) / 100, (image_height * 4) / 100))
@@ -1497,7 +1489,7 @@ def graphics_forecasting(station):
 
         plt.title(unicode(_('Probability forecasted of {0} - {1}\n{2} - lag {3} - trim {4} ({5}) - ({6}-{7})')
                           .format(station.type_D, station.name, station.type_I, lag, station.f_trim,
-                          trim_text[station.f_trim - 1], station.period_start, station.period_end),
+                          trim_text[station.f_trim - 1], station.process_period['start'], station.process_period['end']),
                           'utf-8'), fontsize=13)
 
         ## Save image
@@ -1505,7 +1497,7 @@ def graphics_forecasting(station):
         image_dir_save = \
             os.path.join(station.forecasting_dir, _('prob_of_{0}_lag_{1}_trim_{2}_({3}-{4}).png')
                          .format(station.type_D, lag, station.f_trim,
-                                 station.period_start, station.period_end))
+                                 station.process_period['start'], station.process_period['end']))
         plt.savefig(image_dir_save, dpi=75)
         plt.clf()
 
@@ -1519,7 +1511,7 @@ def graphics_forecasting(station):
     mosaic_dir_save = \
         os.path.join(station.forecasting_dir, _('mosaic_prob_of_{0}_trim_{1}_({3}-{4}).png')
                      .format(station.type_D, lag, station.f_trim,
-                             station.period_start, station.period_end))
+                             station.process_period['start'], station.process_period['end']))
     # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
     plt.figure(figsize=(11.25, 3.75))  # http://www.classical-webdesigns.co.uk/resources/pixelinchconvert.html
     plt.savefig(mosaic_dir_save, dpi=100)
@@ -1656,9 +1648,8 @@ def pre_process(station):
     # Calculating common period and process period
     station.common_period = calculate_common_period(station)
 
-    station.period_start = station.common_period[0][0].year
-
-    station.period_end = station.common_period[-1][0].year
+    station.process_period = {'start': station.common_period[0][0].year,
+                              'end': station.common_period[-1][0].year}
 
     # -------------------------------------------------------------------------
     # check if the data are consistent for var D
@@ -1777,8 +1768,8 @@ def climate(station):
     if not os.path.isdir(station.climate_dir):
         os.makedirs(station.climate_dir)
 
-    sys.stdout.write(" ({0}-{1}) .................. ".format(station.period_start,
-                                                   station.period_end))
+    sys.stdout.write(" ({0}-{1}) .................. ".format(station.process_period['start'],
+                                                   station.process_period['end']))
     sys.stdout.flush()
 
     station.Lag_0, station.Lag_1, station.Lag_2 = calculate_lags(station)
@@ -1807,7 +1798,7 @@ def forecasting(station):
 
     # console message
     sys.stdout.write(_("Processing forecasting ({0}-{1}) .............. ")
-                     .format(station.period_start, station.period_end))
+                     .format(station.process_period['start'], station.process_period['end']))
     sys.stdout.flush()
 
     # create directory for output files
@@ -1955,11 +1946,11 @@ def main():
 
     # set period for process if is defined as argument
     if args.period:
-        global period_start, period_end
+        global args_period_start, args_period_end
         try:
-            period_start = int(args.period.split('-')[0])
-            period_end = int(args.period.split('-')[1])
-            settings["period"] = colored.green("{0}-{1}".format(period_start, period_end))
+            args_period_start = int(args.period.split('-')[0])
+            args_period_end = int(args.period.split('-')[1])
+            settings["period"] = colored.green("{0}-{1}".format(args_period_start, args_period_end))
         except Exception, e:
             print_error(_('the period must be: year_start-year_end (ie. 1980-2008)\n\n{0}').format(e))
 
