@@ -4,6 +4,8 @@ features:
  * now you can run using internal files for independents variables, defining as 
    "default" in "file_I" section inside stations list file.
  * enable run with particular independent variable file
+ * change period defined in argument as process period instead of common period,
+   ATTENTION! this affects titles, namefiles and captions of all results
 
 bugfixes:
  * bugfix the size data when set particular common period
