@@ -512,8 +512,8 @@ def calculate_common_period(station):
                         .format(args_period_start, args_period_end, common_date[0].year + 1,
                                 common_date[-1].year - 1))
 
-        common_date = common_date[common_date.index(date(args_period_start, 1, 1)):
-                                  common_date.index(date(args_period_end, 12, 1)) + 1]
+        common_date = common_date[common_date.index(date(args_period_start - 1, 1, 1)):
+                                  common_date.index(date(args_period_end + 1, 12, 1)) + 1]
 
     common_period = []
     # set values matrix for common_period
@@ -529,7 +529,7 @@ def calculate_common_period(station):
     if len(common_date) < 36:
         sys.stdout.write(_("Calculating the common period ................... "))
         sys.stdout.flush()
-        if args.period:
+        if args.period:  # FIXME: realy necessary?
             print_error(_("The period defined in argument must be at least 3 "
                           "years for process."))
         else:
@@ -591,10 +591,10 @@ def check_consistent_data(station, var):
 
     # temporal var initialize iter_date = start common_period + 1 year,
     # month=1, day=1
-    iter_date = date(station.process_period['start'] + 1, 1, 1)
+    iter_date = date(station.process_period['start'], 1, 1)  # FIXME:
     # temporal var initialize end_date = end common_period - 1 year,
     # month=12, day=31
-    end_date = date(station.process_period['end'] - 1, 12, 1)
+    end_date = date(station.process_period['end'], 12, 1)  # FIXME:
 
     if var == "D":
         values_in_common_period = station.var_D[station.date_D.index(iter_date):station.date_D.index(end_date) + 3]
@@ -622,6 +622,9 @@ def calculate_lags(station):
     and save csv file of time series for each lag and trimester,
     the lags are calculated based in: +1 year below of start
     commond period and -1 year above of end commond period.
+
+    Return:
+    station with: Lag_0, Lag_1, Lag_2 and range_analysis_interval
     '''
 
     # initialized Lag_X
@@ -636,19 +639,25 @@ def calculate_lags(station):
                os.path.join(station.climate_dir, _('time_series'), _('lag_2'))]
 
     # range based on analysis interval
+    range_analysis_interval = None
     if station.analysis_interval == 5:
-        range_analysis_interval = [0, 5, 10, 15, 20, 25, 31]
+        range_analysis_interval = [1, 6, 11, 16, 21, 26]
     if station.analysis_interval == 10:
-        range_analysis_interval = [0, 10, 20, 31]
+        range_analysis_interval = [1, 11, 21]
     if station.analysis_interval == 15:
-        range_analysis_interval = [0, 15, 31]
+        range_analysis_interval = [1, 16]
 
     def get_var_D_values():
         var_D_values = []
         if station.is_var_D_daily:
+            # clone range for add the last day (32) for calculate interval_day_var_D
+            rai_plus = list(range_analysis_interval)
+            rai_plus.append(32)
             # from day to next iterator based on analysis interval
+            # e.g. [0,1,2,3,4] for first iteration for 5 days
             interval_day_var_D = \
-                range(day, range_analysis_interval[range_analysis_interval.index(day) + 1])
+                range(day - 1, rai_plus[rai_plus.index(day) + 1] - 1)
+
             for iter_day in interval_day_var_D:
                 now = date(iter_year, month, 1) + relativedelta(days=iter_day)
                 # check if continues with the same month
@@ -665,10 +674,11 @@ def calculate_lags(station):
 
     def get_var_I_values():
         var_I_values = []
-        if station.is_var_I_daily:
+        if station.is_var_I_daily:  # TODO: need test!!
             # from day to next iterator based on analysis interval
-            interval_day_var_I = range(day - range_analysis_interval[1] * lag,
-                                       day - range_analysis_interval[1] * (lag - 1))
+            interval_day_var_I = range(day - 1 - range_analysis_interval[1] * lag,
+                                       day - 1 - range_analysis_interval[1] * (lag - 1))
+
             for iter_day in interval_day_var_I:
                 now = date(iter_year, month, 1) + relativedelta(days=iter_day)
                 # check if continues with the same month
@@ -755,7 +765,7 @@ def calculate_lags(station):
 
                 #days_for_this_month = monthrange(iter_year, month)[1]
 
-                for day in range_analysis_interval[0:-1]:
+                for day in range_analysis_interval:
 
                     iter_year = station.process_period['start']
 
@@ -775,20 +785,22 @@ def calculate_lags(station):
                         mean_var_I = mean(get_var_I_values())
 
                         # add line in list: Lag_X
-                        vars()['Lag_' + str(lag)].append([date(iter_year, month, day + 1),
+                        vars()['Lag_' + str(lag)].append([date(iter_year, month, day),
                                                          mean_var_D,
                                                          mean_var_I])
 
                         # add line output file csv_file_write
                         csv_file_write.writerow([str(iter_year) + "/" + str(month)
-                                                     + "/" + str(day + 1),
+                                                     + "/" + str(day),
                                                      print_number(mean_var_D),
                                                      print_number(mean_var_I)])
                         # next year
                         iter_year += 1
 
+    station.range_analysis_interval = range_analysis_interval
+    station.Lag_0, station.Lag_1, station.Lag_2 = Lag_0, Lag_1, Lag_2
 
-    return Lag_0, Lag_1, Lag_2
+    return station
 
 
 def get_thresholds_var_I(station):
@@ -948,16 +960,22 @@ def get_thresholds_var_I(station):
 # Contingency table and result table
 
 
-def get_contingency_table(station, lag, month):
+def get_contingency_table(station, lag, month, day=None):
     '''
     Calculate and return the contingency table in absolute values,
     values in percent, values to print and thresholds by below and
     above of dependent and independent variable.
     '''
 
-    # get all values of var D and var I based on this lag and month
-    station.var_D_values = get_lag_values(station, 'var_D', lag, month)
-    station.var_I_values = get_lag_values(station, 'var_I', lag, month)
+    if day is None:
+        # get all values of var D and var I based on this lag and month
+        station.var_D_values = get_lag_values(station, 'var_D', lag, month)
+        station.var_I_values = get_lag_values(station, 'var_I', lag, month)
+
+    if day is not None:
+        # get all values of var D and var I based on this lag and month
+        station.var_D_values = get_lag_values(station, 'var_D', lag, month, day)
+        station.var_I_values = get_lag_values(station, 'var_I', lag, month, day)
 
     # the thresholds of dependent variable are: percentile 33 and 66
     p33_D = stats.scoreatpercentile(station.var_D_values, 33)
@@ -1071,61 +1089,32 @@ def contingency_table(station):
     Print the contingency table for each trimester and each lag
     '''
 
-    # directories to save contingency tables
-    dir_contingency = \
-        [os.path.join(station.climate_dir, _('contingency_table'), _('lag_0')),
-         os.path.join(station.climate_dir, _('contingency_table'), _('lag_1')),
-         os.path.join(station.climate_dir, _('contingency_table'), _('lag_2'))]
-
     # [lag][month][phenomenon][data(0,1,2)]
     contingencies_tables_percent = []
 
     for lag in lags:
 
-        if not os.path.isdir(dir_contingency[lag]):
-            os.makedirs(dir_contingency[lag])
-
-        month_list = []
+        tmp_var_list = []
         # all months in year 1->12
         for month in range(1, 13):
+            if station.state_of_data in [1, 3]:
+                contingency_table, \
+                contingency_table_percent, \
+                contingency_table_percent_print, \
+                thresholds_var_D_var_I = get_contingency_table(station, lag, month)
 
-            contingency_table, \
-            contingency_table_percent, \
-            contingency_table_percent_print, \
-            thresholds_var_D_var_I = get_contingency_table(station, lag, month)
+                tmp_var_list.append(contingency_table_percent)
 
-            month_list.append(contingency_table_percent)
+            if station.state_of_data in [2, 4]:
+                for day in station.range_analysis_interval:
+                    contingency_table, \
+                    contingency_table_percent, \
+                    contingency_table_percent_print, \
+                    thresholds_var_D_var_I = get_contingency_table(station, lag,
+                                                                   month, day)
+                    tmp_var_list.append(contingency_table_percent)
 
-            ## print result in csv file
-            # add new line in csv_contingency_table
-
-            csv_name = \
-                os.path.join(dir_contingency[lag], _('Contingency_Table_lag'
-                    '_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv')
-                    .format(lag, month, station.code, station.name, station.type_D,
-                            station.type_I, station.process_period['start'], station.process_period['end']))
-            csv_contingency_table = csv.writer(open(csv_name, 'w'), delimiter=';')
-
-            csv_contingency_table.writerow(['', _('var I Below'),
-                                            _('var I Normal'),
-                                            _('var I Above')])
-
-            csv_contingency_table.writerow([_('var D Below'),
-                                       contingency_table_percent_print[0][0],
-                                       contingency_table_percent_print[1][0],
-                                       contingency_table_percent_print[2][0]])
-
-            csv_contingency_table.writerow([_('var D Normal'),
-                                       contingency_table_percent_print[0][1],
-                                       contingency_table_percent_print[1][1],
-                                       contingency_table_percent_print[2][1]])
-
-            csv_contingency_table.writerow([_('var D Above'),
-                                       contingency_table_percent_print[0][2],
-                                       contingency_table_percent_print[1][2],
-                                       contingency_table_percent_print[2][2]])
-
-        contingencies_tables_percent.append(month_list)
+        contingencies_tables_percent.append(tmp_var_list)
 
     return contingencies_tables_percent
 
@@ -1139,6 +1128,98 @@ def result_table_CA(station):
 
     pearson_list = []
     is_sig_risk_analysis = []
+
+    def result_table_CA_main_process():
+        # test:
+        # is significance risk analysis?
+        contingency_table_matrix = np.matrix(contingency_table)
+        sum_per_row = contingency_table_matrix.sum(axis=0).tolist()[0]
+        sum_per_column = contingency_table_matrix.sum(axis=1).tolist()
+        sum_contingency_table = contingency_table_matrix.sum()
+
+        is_sig_risk_analysis_month_list = []
+        for c, column_table in enumerate(contingency_table):
+            for r, Xi in enumerate(column_table):
+                M = sum_per_column[c]
+                n = sum_per_row[r]
+                N = sum_contingency_table
+                X = stats.hypergeom.cdf(Xi, N, M, n)
+                Y = stats.hypergeom.sf(Xi, N, M, n, loc=1)
+                if X <= 0.1 or Y <= 0.1:
+                    is_sig_risk_analysis_month_list.append(_('yes'))
+                else:
+                    is_sig_risk_analysis_month_list.append(_('no'))
+
+        # get values of var D and I from this lag and month
+        var_D_values = get_lag_values(station, 'var_D', lag, month)
+
+        var_I_values = get_lag_values(station, 'var_I', lag, month)
+
+        # calculate pearson correlation of var_D and var_I
+        pearson = stats.pearsonr(var_D_values, var_I_values)[0]
+        pearson_list_month.append(pearson)
+
+        # significance correlation
+        singr, T_test, t_crit = \
+            sc.corrtest(rho=0, r=pearson, n=len(station.common_period) + 1,
+                        alpha=0.05, side=0)
+
+        # contingency test
+        Observed, Expected, test_stat, crit_value, df, p_value, alpha = \
+            ct.contingency_test(contingency_table, None, 0.9, -1)
+
+        # calculate the correlation of contingency table
+        chi_cdf = 1 - p_value
+        corr_CT = ((chi_cdf ** 2) / (station.size_time_series * 2.0)) ** (0.5)
+
+        # test:
+        # Is significant the contingency table?
+        if test_stat > crit_value:
+            is_significant_CT = _('yes')
+        else:
+            is_significant_CT = _('no')
+
+        # test:
+        # Is significant the singr variable?
+        if (1 - singr) >= 0.05:
+            is_significant_singr = _('yes')
+        else:
+            is_significant_singr = _('no')
+
+        #===============================================================================
+        # result table (csv file), add one line of this trimester and lag
+
+        # add new line in csv_file_write
+        csv_result_table.writerow([
+             var_D_text, var_I_text,
+             print_number(pearson), print_number(singr), is_significant_singr,
+             thresholds_var_D_var_I[0], thresholds_var_D_var_I[1],
+             thresholds_var_D_var_I[2], thresholds_var_D_var_I[3],
+             contingency_table[0][0], contingency_table[0][1],
+             contingency_table[0][2], contingency_table[1][0],
+             contingency_table[1][1], contingency_table[1][2],
+             contingency_table[2][0], contingency_table[2][1],
+             contingency_table[2][2],
+             contingency_table_percent_print[0][0],
+             contingency_table_percent_print[0][1],
+             contingency_table_percent_print[0][2],
+             contingency_table_percent_print[1][0],
+             contingency_table_percent_print[1][1],
+             contingency_table_percent_print[1][2],
+             contingency_table_percent_print[2][0],
+             contingency_table_percent_print[2][1],
+             contingency_table_percent_print[2][2],
+             is_sig_risk_analysis_month_list[0], is_sig_risk_analysis_month_list[1],
+             is_sig_risk_analysis_month_list[2], is_sig_risk_analysis_month_list[3],
+             is_sig_risk_analysis_month_list[4], is_sig_risk_analysis_month_list[5],
+             is_sig_risk_analysis_month_list[6], is_sig_risk_analysis_month_list[7],
+             is_sig_risk_analysis_month_list[8],
+             print_number(test_stat), print_number(crit_value),
+             is_significant_CT, print_number_accuracy(corr_CT, 4)])
+
+        is_sig_risk_analysis_month.append(is_sig_risk_analysis_month_list)
+
+
 
     for lag in lags:
 
@@ -1186,99 +1267,40 @@ def result_table_CA(station):
         # all months in year 1->12
         for month in range(1, 13):
 
-            # get the contingency tables and thresholds
-            contingency_table, \
-            contingency_table_percent, \
-            contingency_table_percent_print, \
-            thresholds_var_D_var_I = get_contingency_table(station, lag, month)
+            if station.state_of_data in [1, 3]:
+                # get the contingency tables and thresholds
+                contingency_table, \
+                contingency_table_percent, \
+                contingency_table_percent_print, \
+                thresholds_var_D_var_I = get_contingency_table(station, lag, month)
 
-            # test:
-            # is significance risk analysis?
-            contingency_table_matrix = np.matrix(contingency_table)
-            sum_per_row = contingency_table_matrix.sum(axis=0).tolist()[0]
-            sum_per_column = contingency_table_matrix.sum(axis=1).tolist()
-            sum_contingency_table = contingency_table_matrix.sum()
+                # for print text date in result table
+                var_D_text = trim_text[month - 1]
+                var_I_text = trim_text[month - 1 - lag]
 
-            is_sig_risk_analysis_month_list = []
-            for c, column_table in enumerate(contingency_table):
-                for r, Xi in enumerate(column_table):
-                    M = sum_per_column[c]
-                    n = sum_per_row[r]
-                    N = sum_contingency_table
-                    X = stats.hypergeom.cdf(Xi, N, M, n)
-                    Y = stats.hypergeom.sf(Xi, N, M, n, loc=1)
-                    if X <= 0.1 or Y <= 0.1:
-                        is_sig_risk_analysis_month_list.append(_('yes'))
-                    else:
-                        is_sig_risk_analysis_month_list.append(_('no'))
+                result_table_CA_main_process()
 
-            # get values of var D and I from this lag and month
-            var_D_values = get_lag_values(station, 'var_D', lag, month)
-            var_I_values = get_lag_values(station, 'var_I', lag, month)
+            if station.state_of_data in [2, 4]:
+                for day in station.range_analysis_interval:
+                    # get the contingency tables and thresholds
+                    contingency_table, \
+                    contingency_table_percent, \
+                    contingency_table_percent_print, \
+                    thresholds_var_D_var_I = get_contingency_table(station, lag, month, day)
 
-            # calculate pearson correlation of var_D and var_I
-            pearson = stats.pearsonr(var_D_values, var_I_values)[0]
-            pearson_list_month.append(pearson)
+                    # this is for calculate date for print in result table
+                    # this depend on range analysis interval and lags (var_I)
+                    # the year no matter
+                    date_now = date(2000, month, day)
 
-            # significance correlation
-            singr, T_test, t_crit = \
-                sc.corrtest(rho=0, r=pearson, n=len(station.common_period) + 1,
-                            alpha=0.05, side=0)
+                    # for print text date in result table
+                    var_D_text = month_text[date_now.month - 1] + " " + str(day)
+                    var_I_text = month_text[(date_now - relativedelta(days=(station.range_analysis_interval[1] - 1) * lag)).month - 1] + \
+                        " " + str(station.range_analysis_interval[station.range_analysis_interval.index(day) - lag])
 
-            # contingency test
-            Observed, Expected, test_stat, crit_value, df, p_value, alpha = \
-                ct.contingency_test(contingency_table, None, 0.9, -1)
+                    result_table_CA_main_process()
 
-            # calculate the correlation of contingency table
-            chi_cdf = 1 - p_value
-            corr_CT = ((chi_cdf ** 2) / (station.size_time_series * 2.0)) ** (0.5)
 
-            # test:
-            # Is significant the contingency table?
-            if test_stat > crit_value:
-                is_significant_CT = _('yes')
-            else:
-                is_significant_CT = _('no')
-
-            # test:
-            # Is significant the singr variable?
-            if (1 - singr) >= 0.05:
-                is_significant_singr = _('yes')
-            else:
-                is_significant_singr = _('no')
-
-            #===============================================================================
-            # result table (csv file), add one line of this trimester and lag
-
-            # add new line in csv_file_write
-            csv_result_table.writerow([
-                 trim_text[month - 1], trim_text[month - 1 - lag],
-                 print_number(pearson), print_number(singr), is_significant_singr,
-                 thresholds_var_D_var_I[0], thresholds_var_D_var_I[1],
-                 thresholds_var_D_var_I[2], thresholds_var_D_var_I[3],
-                 contingency_table[0][0], contingency_table[0][1],
-                 contingency_table[0][2], contingency_table[1][0],
-                 contingency_table[1][1], contingency_table[1][2],
-                 contingency_table[2][0], contingency_table[2][1],
-                 contingency_table[2][2],
-                 contingency_table_percent_print[0][0],
-                 contingency_table_percent_print[0][1],
-                 contingency_table_percent_print[0][2],
-                 contingency_table_percent_print[1][0],
-                 contingency_table_percent_print[1][1],
-                 contingency_table_percent_print[1][2],
-                 contingency_table_percent_print[2][0],
-                 contingency_table_percent_print[2][1],
-                 contingency_table_percent_print[2][2],
-                 is_sig_risk_analysis_month_list[0], is_sig_risk_analysis_month_list[1],
-                 is_sig_risk_analysis_month_list[2], is_sig_risk_analysis_month_list[3],
-                 is_sig_risk_analysis_month_list[4], is_sig_risk_analysis_month_list[5],
-                 is_sig_risk_analysis_month_list[6], is_sig_risk_analysis_month_list[7],
-                 is_sig_risk_analysis_month_list[8],
-                 print_number(test_stat), print_number(crit_value),
-                 is_significant_CT, print_number_accuracy(corr_CT, 4)])
-
-            is_sig_risk_analysis_month.append(is_sig_risk_analysis_month_list)
 
         pearson_list.append(pearson_list_month)
         is_sig_risk_analysis.append(is_sig_risk_analysis_month)
@@ -1312,6 +1334,94 @@ def graphics_climate(station):
     if not os.path.isdir(graphics_dir_ca):
         os.makedirs(graphics_dir_ca)
 
+    def create_graphic():
+        ## graphics options for plot:
+        # the x locations for the groups
+        ind = np.array([0, 0.8, 1.6])
+        # the width of the bars
+        width = 0.2
+
+        plt.figure()
+
+
+        # graphics title
+        plt.title(unicode(_('Composite analisys - {0} ({1})\n{2} - {3} - '
+                            'lag {6} - trim {7} ({8}) - ({4}-{5})')
+                            .format(station.name, station.code, station.type_I,
+                                    station.type_D, station.process_period['start'],
+                                    station.process_period['end'], lag, month,
+                                    trim_text[month - 1]), 'utf-8'))
+
+        # label for axis Y 
+        plt.ylabel(_('probability (%)'))
+        #  adjust the max leaving min unchanged in Y
+        plt.ylim(ymin=0, ymax=100)
+        #  adjust the max leaving min unchanged in X
+        plt.xlim(xmin= -0.1, xmax=2.3)
+        # plt.xticks([0.3, 1.1, 1.9], ('var Ind Below', 'var Ind Normal', 'var Ind Above'),)
+        plt.xticks([])
+        # colors for paint bars and labels: below, normal , above
+        colours = ['#DD4620', '#62AD29', '#6087F1']
+        # assigning values for plot:
+        var_D_below = plt.bar(ind, column(contingency_table_percent, 0),
+                              width, color=colours[0])
+        var_D_normal = plt.bar(ind + width, column(contingency_table_percent, 1),
+                               width, color=colours[1])
+        var_D_above = plt.bar(ind + 2 * width, column(contingency_table_percent, 2),
+                              width, color=colours[2])
+
+        # assing value for each bart
+        def autolabel(rects):
+            # attach some text labels
+            temp = []
+            for rect in rects:
+                temp.append(rect.get_height())
+            temp.sort(reverse=True)
+            max_heigth = temp[0]
+
+            for rect in rects:
+                height = rect.get_height()
+                plt.text(rect.get_x() + rect.get_width() / 2.0, 0.015 * max_heigth +
+                         height, round(height, 1), ha='center', va='bottom')
+
+        autolabel(var_D_below)
+        autolabel(var_D_normal)
+        autolabel(var_D_above)
+
+        plt.subplots_adjust(bottom=0.15, left=0.22, right=0.97)
+        # plt.legend((var_D_below[0], var_D_normal[0], var_D_above[0]), 
+        #            ('var Dep Below', 'var Dep Normal', 'var Dep Above'),
+        #             shadow = True, fancybox = True)
+
+        # table in graphic
+        colLabels = (station.phenomenon_below, station.phenomenon_normal,
+                     station.phenomenon_above)
+
+        rowLabels = [_('var D below'), _('var D normal'), _('var D above')]
+
+        contingency_table_percent_graph = [column(contingency_table_percent_print, 0),
+                                           column(contingency_table_percent_print, 1),
+                                           column(contingency_table_percent_print, 2)]
+
+        # Add a table at the bottom of the axes
+        plt.table(cellText=contingency_table_percent_graph,
+                             rowLabels=rowLabels, rowColours=colours,
+                             colLabels=colLabels, loc='bottom')
+
+        ## Save image
+        plt.subplot(111)
+        image_dir_save = \
+            os.path.join(graphics_dir_ca, _('lag_{0}').format(lag),
+                         _('ca_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
+                         .format(lag, month, station.code, station.name, station.type_D,
+                                 station.type_I, station.process_period['start'], station.process_period['end']))
+
+        plt.savefig(image_dir_save, dpi=75)
+        #plt.clf()
+
+        # save dir image for mosaic
+        image_open.append(img_open(image_dir_save))
+
     for lag in lags:
 
         # create dir for lag
@@ -1323,96 +1433,24 @@ def graphics_climate(station):
         # all months in year 1->12
         for month in range(1, 13):
 
-            contingency_table, \
-            contingency_table_percent, \
-            contingency_table_percent_print, \
-            thresholds_var_D_var_I = get_contingency_table(station, lag, month)
+            if station.state_of_data == 1:
+                contingency_table, \
+                contingency_table_percent, \
+                contingency_table_percent_print, \
+                thresholds_var_D_var_I = get_contingency_table(station, lag, month)
+                create_graphic()
 
-            ## graphics options for plot:
-            # the x locations for the groups
-            ind = np.array([0, 0.8, 1.6])
-            # the width of the bars
-            width = 0.2
+            if station.state_of_data in [2, 3, 4]:
 
-            plt.figure()
+                for iter_day in station.range_analysis_interval:
 
-            # graphics title
-            plt.title(unicode(_('Composite analisys - {0} ({1})\n{2} - {3} - '
-                                'lag {6} - trim {7} ({8}) - ({4}-{5})')
-                                .format(station.name, station.code, station.type_I,
-                                        station.type_D, station.process_period['start'],
-                                        station.process_period['end'], lag, month,
-                                        trim_text[month - 1]), 'utf-8'))
 
-            # label for axis Y 
-            plt.ylabel(_('probability (%)'))
-            #  adjust the max leaving min unchanged in Y
-            plt.ylim(ymin=0, ymax=100)
-            #  adjust the max leaving min unchanged in X
-            plt.xlim(xmin= -0.1, xmax=2.3)
-            # plt.xticks([0.3, 1.1, 1.9], ('var Ind Below', 'var Ind Normal', 'var Ind Above'),)
-            plt.xticks([])
-            # colors for paint bars and labels: below, normal , above
-            colours = ['#DD4620', '#62AD29', '#6087F1']
-            # assigning values for plot:
-            var_D_below = plt.bar(ind, column(contingency_table_percent, 0),
-                                  width, color=colours[0])
-            var_D_normal = plt.bar(ind + width, column(contingency_table_percent, 1),
-                                   width, color=colours[1])
-            var_D_above = plt.bar(ind + 2 * width, column(contingency_table_percent, 2),
-                                  width, color=colours[2])
+                    contingency_table, \
+                    contingency_table_percent, \
+                    contingency_table_percent_print, \
+                    thresholds_var_D_var_I = get_contingency_table(station, lag, month, iter_day)
+                    create_graphic()
 
-            # assing value for each bart
-            def autolabel(rects):
-                # attach some text labels
-                temp = []
-                for rect in rects:
-                    temp.append(rect.get_height())
-                temp.sort(reverse=True)
-                max_heigth = temp[0]
-
-                for rect in rects:
-                    height = rect.get_height()
-                    plt.text(rect.get_x() + rect.get_width() / 2.0, 0.015 * max_heigth +
-                             height, round(height, 1), ha='center', va='bottom')
-
-            autolabel(var_D_below)
-            autolabel(var_D_normal)
-            autolabel(var_D_above)
-
-            plt.subplots_adjust(bottom=0.15, left=0.22, right=0.97)
-            # plt.legend((var_D_below[0], var_D_normal[0], var_D_above[0]), 
-            #            ('var Dep Below', 'var Dep Normal', 'var Dep Above'),
-            #             shadow = True, fancybox = True)
-
-            # table in graphic
-            colLabels = (station.phenomenon_below, station.phenomenon_normal,
-                         station.phenomenon_above)
-
-            rowLabels = [_('var D below'), _('var D normal'), _('var D above')]
-
-            contingency_table_percent_graph = [column(contingency_table_percent_print, 0),
-                                               column(contingency_table_percent_print, 1),
-                                               column(contingency_table_percent_print, 2)]
-
-            # Add a table at the bottom of the axes
-            plt.table(cellText=contingency_table_percent_graph,
-                                 rowLabels=rowLabels, rowColours=colours,
-                                 colLabels=colLabels, loc='bottom')
-
-            ## Save image
-            plt.subplot(111)
-            image_dir_save = \
-                os.path.join(graphics_dir_ca, _('lag_{0}').format(lag),
-                             _('ca_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
-                             .format(lag, month, station.code, station.name, station.type_D,
-                                     station.type_I, station.process_period['start'], station.process_period['end']))
-
-            plt.savefig(image_dir_save, dpi=75)
-            #plt.clf()
-
-            # save dir image for mosaic
-            image_open.append(img_open(image_dir_save))
 
         ## create mosaic
 
@@ -1441,7 +1479,7 @@ def graphics_climate(station):
         mosaic.paste(image_open[10], (image_width, image_height * 3))
         mosaic.paste(image_open[11], (image_width * 2, image_height * 3))
         mosaic.save(mosaic_dir_save)
-        del image_open
+        #del image_open #TODO:
         plt.clf()
 
 
@@ -1648,8 +1686,8 @@ def pre_process(station):
     # Calculating common period and process period
     station.common_period = calculate_common_period(station)
 
-    station.process_period = {'start': station.common_period[0][0].year,
-                              'end': station.common_period[-1][0].year}
+    station.process_period = {'start': station.common_period[0][0].year + 1,
+                              'end': station.common_period[-1][0].year - 1}
 
     # -------------------------------------------------------------------------
     # check if the data are consistent for var D
@@ -1772,7 +1810,7 @@ def climate(station):
                                                    station.process_period['end']))
     sys.stdout.flush()
 
-    station.Lag_0, station.Lag_1, station.Lag_2 = calculate_lags(station)
+    station = calculate_lags(station)
     print station.Lag_0
 
     station.size_time_series = (len(station.common_period) / 12) - 2
@@ -1963,6 +2001,12 @@ def main():
     trim_text = {-2:_('ndj'), -1:_('djf'), 0:_('jfm'), 1:_('fma'), 2:_('mam'),
                  3:_('amj'), 4:_('mjj'), 5:_('jja'), 6:_('jas'), 7:_('aso'),
                  8:_('son'), 9:_('ond'), 10:_('ndj'), 11:_('djf')}
+
+    # trimester text for print
+    global month_text
+    month_text = {-2:_('nov'), -1:_('dec'), 0:_('jan'), 1:_('feb'), 2:_('mar'),
+                 3:_('apr'), 4:_('may'), 5:_('jun'), 6:_('jul'), 7:_('aug'),
+                 8:_('sep'), 9:_('oct'), 10:_('nov'), 11:_('dec')}
 
     # if phenomenon below is defined inside arguments
     if args.p_below:

@@ -1,11 +1,13 @@
 
 0.3.0
-features:
+features/changes:
  * now you can run using internal files for independents variables, defining as 
    "default" in "file_I" section inside stations list file.
  * enable run with particular independent variable file
  * change period defined in argument as process period instead of common period,
    ATTENTION! this affects titles, namefiles and captions of all results
+ * Result table csv file now write by lags
+ * Deleted contingency table in results
 
 bugfixes:
  * bugfix the size data when set particular common period
@@ -18,7 +20,7 @@ bugfixes:
 
 0.2.0
 
-features:
+features/changes:
  * change numeration version
  * applied some PEP8 rules, fix typos and reorganize code
  * aplied color text in console information for errors, warnings and process 
