@@ -20,36 +20,36 @@
 
 import sys
 import argparse  # http://docs.python.org/py3k/library/argparse.html
-import global_var
+import globals
 
 #==============================================================================
 # PARSER AND CHECK ARGUMENTS
 
 # Create parser arguments
 arguments = argparse.ArgumentParser(
-                 prog = global_var.PROG_NAME,
-                 description = _("Jaziku is a software for the implementation "
+                 prog=globals.PROG_NAME,
+                 description=_("Jaziku is a software for the implementation "
                                  "of composite analysis\n metodology between "
                                  "the major indices of climate variability "
                                  "and\n major meteorological variables in "
                                  "puntual scale.\n"),
-                 epilog = "Jaziku, version {0} - {1}\n" \
+                 epilog="Jaziku, version {0} - {1}\n" \
                           "Copyright © 2011-2012 IDEAM - Colombia"
-                          .format(global_var.VERSION, global_var.COMPILE_DATE),
-                          formatter_class = argparse.RawTextHelpFormatter)
+                          .format(globals.VERSION, globals.COMPILE_DATE),
+                          formatter_class=argparse.RawTextHelpFormatter)
 
 ### Input arguments for dependent variable
 # Set path to file of stations list
-arguments.add_argument('-stations', type = argparse.FileType('r'),
-                       required = True, default = sys.stdin,
-                       help = _('Path absolute or relative to file stations list'))
+arguments.add_argument('-stations', type=argparse.FileType('r'),
+                       required=True, default=sys.stdin,
+                       help=_('Path absolute or relative to file stations list'))
 ### climate and forecasting set
 # enable/disable climate process
-arguments.add_argument('-c', '--climate', action = 'store_true', default = False,
-                       help = _('Enable climate process'), required = False)
+arguments.add_argument('-c', '--climate', action='store_true', default=False,
+                       help=_('Enable climate process'), required=False)
 # enable/disable forescasting process
-arguments.add_argument('-f', '--forecasting', action = 'store_true', default = False,
-                       help = _('Enable forecasting process'), required = False)
+arguments.add_argument('-f', '--forecasting', action='store_true', default=False,
+                       help=_('Enable forecasting process'), required=False)
 # Valid input types for dependent variable
 types_var_D = ['PPT', 'NDPPT', 'TMIN', 'TMAX', 'TEMP', 'PATM', 'HR']
 ### Input arguments for independent variable
@@ -57,20 +57,20 @@ types_var_D = ['PPT', 'NDPPT', 'TMIN', 'TMAX', 'TEMP', 'PATM', 'HR']
 types_var_I = ['ONI', 'SOI', 'MEI', 'OLR', 'W200', 'SST', 'ARH', 'QBO', 'NAO']
 
 # Set phenomenon below (optional)
-arguments.add_argument('-p_below', type = str,
-                       help = _('Set phenomenon (var I) below label'))
+arguments.add_argument('-p_below', type=str,
+                       help=_('Set phenomenon (var I) below label (e.g. \'-p_below "el niño"\')'))
 # Set phenomenon normal (optional)
-arguments.add_argument('-p_normal', type = str,
-                       help = _('Set phenomenon (var I) normal label'))
+arguments.add_argument('-p_normal', type=str,
+                       help=_('Set phenomenon (var I) normal label (e.g. \'-p_normal "normal"\')'))
 # Set phenomenon above (optional)
-arguments.add_argument('-p_above', type = str,
-                       help = _('Set phenomenon (var I) above label'))
+arguments.add_argument('-p_above', type=str,
+                       help=_('Set phenomenon (var I) above label (e.g. \'-p_above "la niña"\')'))
 # set period process
-arguments.add_argument('-period', type = str, required = False,
-                       help = _('Set specific period for process, e.g. 1980-2010'))
+arguments.add_argument('-period', type=str, required=False,
+                       help=_('Set specific period for process (e.g. 1980-2010)'))
 # enable/disable forescasting process
-arguments.add_argument('-ra', '--risk-analysis', action = 'store_true',
-                       default = False, required = False,
-                       help = _('Enable risk analysis for forecasting process'))
+arguments.add_argument('-ra', '--risk-analysis', action='store_true',
+                       default=False, required=False,
+                       help=_('Enable risk analysis for forecasting process'))
 # Set language (optional), if not set get language from system
-arguments.add_argument('-l', type = str, help = _('Set language'))
+arguments.add_argument('-l', type=str, help=_('Set language (e.g. \'-l en\' for english, \'-l es\' spanish,...)'))

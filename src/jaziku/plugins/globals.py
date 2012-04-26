@@ -61,6 +61,19 @@ internal_var_I_urls = {"ONI": "http://goo.gl/bppGe",
                         "NAO": "http://goo.gl/1uDjY",
                         "QBO": "http://goo.gl/UO6PX"}
 
+# maps files for climate:
+maps_files_climate = {'5days':None, '10days':None, '15days':None, 'trimester':None}
+# maps files for forecasting:
+maps_files_forecasting = {'5days':None, '10days':None, '15days':None, 'trimester':None}
+
+
+# phenomenon based on arguments or not, start with default value
+phenomenon_below = _('var_I_below')
+phenomenon_normal = _('var_I_normal')
+phenomenon_above = _('var_I_above')
+
+
+
 # directory to save all results, this can be absolute or relative path
 # import Jaziku_utils.input_arg as input_arg
 # args = input_arg.arguments.parse_args()

@@ -53,10 +53,10 @@ dir_stations_output = csv_data_input.split('.')[0]
 stations_dir = "dependent_var_files"
 
 stations_list_name = "stations_list.csv"
-csv_stations_list = csv.writer(open(stations_list_name, 'w'), delimiter = ';')
+csv_stations_list = csv.writer(open(stations_list_name, 'w'), delimiter=';')
 
 #get values from file input
-reader = csv.reader(open(csv_data_input, 'rb'), delimiter = ';')
+reader = csv.reader(open(csv_data_input, 'rb'), delimiter=';')
 is_first_time_run = True
 values = []
 for row in reader:
@@ -85,7 +85,7 @@ for year in range(years):
                 if not os.path.isdir(stations_dir):
                     os.makedirs(stations_dir)
                 file_name = os.path.join(stations_dir, station)
-                csv_stations.append(csv.writer(open(file_name + ".txt", 'w'), delimiter = '\t'))
+                csv_stations.append(csv.writer(open(file_name + ".txt", 'w'), delimiter='\t'))
                 #write station list
                 csv_stations_list.writerow(["(code)", station, "(lat)", "(lon)", file_name + ".txt",
                                             "(type var dep)", "(dir var indep)", "(type var indep)",
