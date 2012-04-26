@@ -8,11 +8,17 @@ features/changes:
    ATTENTION! this affects titles, namefiles and captions of all results
  * Result table csv file now write by lags
  * Deleted contingency table in results
+ * Changed the resolution of analysis of trimesters to months and even days, now 
+   Jaziku can read var D and I with data daily and can print results for 5, 10, 
+   and 15 days, with these changes all result (graphics, tables, ...) are different
+   depended if data as daily and how to print result (5,10,15 days) 
+ * Now maps files (and maps, in the next release) for climate and forecasting
+   are ordered and grouped based on analysis interval
 
 bugfixes:
  * bugfix the size data when set particular common period
- * bugfix when the common period defined is minor of 3 years
  * fix TYPOS
+ * fix when Jaziku detect language from system 
 
 0.2.1
  * change name function and filename results of Arithmetic Mean Trim to mean_trim

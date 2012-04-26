@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import global_var
+import globals
 import contingency_test
 import input_arg
 import input_validation

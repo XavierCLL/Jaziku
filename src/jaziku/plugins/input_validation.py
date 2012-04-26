@@ -20,7 +20,7 @@
 
 from datetime import date
 
-import global_var
+import globals
 
 #==============================================================================
 # VALIDATION FOR DEPENDENT AND INDEPENDENT VARIABLE
@@ -68,7 +68,7 @@ def validation_var_D(type_var_D, var_D, date_D):
 
     # validation for precipitation
     def if_var_D_is_PPT():
-        if (0 <= var_D <= 3500) or int(var_D) in global_var.VALID_NULL:
+        if (0 <= var_D <= 3500) or int(var_D) in globals.VALID_NULL:
             return var_D
         else:
             returnError(_("precipitation not valid"))
@@ -79,42 +79,42 @@ def validation_var_D(type_var_D, var_D, date_D):
             date(date_D.year, date_D.month, int(var_D))
             return var_D
         except Exception, e:
-            if  int(var_D) in global_var.VALID_NULL or int(var_D) == 0:
+            if  int(var_D) in globals.VALID_NULL or int(var_D) == 0:
                 return var_D
             else:
                 returnError(e)
 
     # validation for minimum temperature
     def if_var_D_is_TMIN():
-        if (-15 <= var_D <= 50) or int(var_D) in global_var.VALID_NULL:
+        if (-15 <= var_D <= 50) or int(var_D) in globals.VALID_NULL:
             return var_D
         else:
             returnError(_("minimum temperature not valid"))
 
     # validation for maximun temperature
     def if_var_D_is_TMAX():
-        if (-15 <= var_D <= 50) or int(var_D) in global_var.VALID_NULL:
+        if (-15 <= var_D <= 50) or int(var_D) in globals.VALID_NULL:
             return var_D
         else:
             returnError(_("maximun temperature not valid"))
 
     # validation for medium temperature
     def if_var_D_is_TEMP():
-        if (-15 <= var_D <= 50) or int(var_D) in global_var.VALID_NULL:
+        if (-15 <= var_D <= 50) or int(var_D) in globals.VALID_NULL:
             return var_D
         else:
             returnError(_("medium temperature not valid"))
 
     # validation for atmosfere pressure
     def if_var_D_is_PATM():
-        if (400 <= var_D <= 1100) or int(var_D) in global_var.VALID_NULL:
+        if (400 <= var_D <= 1100) or int(var_D) in globals.VALID_NULL:
             return var_D
         else:
             returnError(_("atmosfere pressure not valid"))
 
     # validation for % of relative humidity
     def if_var_D_is_HR():
-        if (0 <= var_D <= 100) or int(var_D) in global_var.VALID_NULL:
+        if (0 <= var_D <= 100) or int(var_D) in globals.VALID_NULL:
             return var_D
         else:
             returnError(_("% of relative humidity not valid"))
@@ -164,70 +164,70 @@ def validation_var_I(type_var_I, var_I, range_below_I, range_above_I):
 
     # if defined as particular range
     if type(range_below_I) is float and type(range_above_I) is float:
-        if (range_below_I <= var_I <= range_above_I) or int(var_I) in global_var.VALID_NULL:
+        if (range_below_I <= var_I <= range_above_I) or int(var_I) in globals.VALID_NULL:
             return var_I
         else:
             returnError(_("{0} not valid").format(type_var_I))
 
     # validation for Oceanic Nino Index
     def if_var_I_is_ONI():
-        if (-5 <= var_I <= 5) or int(var_I) in global_var.VALID_NULL:
+        if (-5 <= var_I <= 5) or int(var_I) in globals.VALID_NULL:
             return var_I
         else:
             returnError(_("Oceanic Nino Index not valid"))
 
     # validation for Index of the Southern Oscillation NOAA
     def if_var_I_is_SOI():
-        if (-7 <= var_I <= 7) or int(var_I) in global_var.VALID_NULL:
+        if (-7 <= var_I <= 7) or int(var_I) in globals.VALID_NULL:
             return var_I
         else:
             returnError(_("Index of the Southern Oscillation NOAA not valid"))
 
     # validation for Multivariate ENSO index
     def if_var_I_is_MEI():
-        if (-4.552 <= var_I <= 6.078) or int(var_I) in global_var.VALID_NULL:
+        if (-4.552 <= var_I <= 6.078) or int(var_I) in globals.VALID_NULL:
             return var_I
         else:
             returnError(_("Multivariate ENSO index not valid"))
 
     # validation for Radiation wavelength Long tropical
     def if_var_I_is_OLR():
-        if (-6 <= var_I <= 6) or int(var_I) in global_var.VALID_NULL:
+        if (-6 <= var_I <= 6) or int(var_I) in globals.VALID_NULL:
             return var_I
         else:
             returnError(_("Radiation wavelength Long tropical not valid"))
 
     # validation for Index of wind anomaly
     def if_var_I_is_W200():
-        if (-7.5 <= var_I <= 7.5) or int(var_I) in global_var.VALID_NULL:
+        if (-7.5 <= var_I <= 7.5) or int(var_I) in globals.VALID_NULL:
             return var_I
         else:
             returnError(_("Index of wind anomaly not valid"))
 
     # validation for Sea surface temperature
     def if_var_I_is_SST():
-        if (-60 <= var_I <= 60) or int(var_I) in global_var.VALID_NULL:
+        if (-60 <= var_I <= 60) or int(var_I) in globals.VALID_NULL:
             return var_I
         else:
             returnError(_("Sea surface temperature not valid"))
 
     # validation for % Amazon relative humidity
     def if_var_I_is_ARH():
-        if (-100 <= var_I <= 100) or int(var_I) in global_var.VALID_NULL:
+        if (-100 <= var_I <= 100) or int(var_I) in globals.VALID_NULL:
             return var_I
         else:
             returnError(_("% Amazon relative humidity not valid"))
 
     # validation for North atlantic oscillation index
     def if_var_I_is_NAO():
-        if (-6.36 <= var_I <= 6.08) or int(var_I) in global_var.VALID_NULL:
+        if (-6.36 <= var_I <= 6.08) or int(var_I) in globals.VALID_NULL:
             return var_I
         else:
             returnError(_("North Atlantic Oscillation index not valid"))
 
     # validation for quasibienal oscillation index
     def if_var_I_is_QBO():
-        if (-59.1 <= var_I <= 33.24) or int(var_I) in global_var.VALID_NULL:
+        if (-59.1 <= var_I <= 33.24) or int(var_I) in globals.VALID_NULL:
             return var_I
         else:
             returnError(_("Quasibienal Oscillation Index not valid"))
