@@ -32,7 +32,7 @@ from math import sqrt
 from scipy.stats import t
 
 
-def ttest(samplestat, se, df, alpha = 0.05, side = 0):
+def ttest(samplestat, se, df, alpha=0.05, side=0):
     """
     T-test of a sample statistic.
     Arguments:
@@ -44,7 +44,7 @@ def ttest(samplestat, se, df, alpha = 0.05, side = 0):
              0  double sided test
              +1 right-sided test
     """
-    Ttest = samplestat / se
+    Ttest = samplestat / se  # TODO: check if se == 0
     if side == 0:
         pvalue = t.cdf(Ttest, df)
         if Ttest > 0:
@@ -63,7 +63,7 @@ def ttest(samplestat, se, df, alpha = 0.05, side = 0):
         return pvalue, Ttest, tcrit
 
 
-def corrtest(rho, r, n, alpha = 0.05, side = 0):
+def corrtest(rho, r, n, alpha=0.05, side=0):
     se = sqrt((1 - r * r) / (n - 2.0))
     return ttest(r - rho, se, n - 2, alpha, side)
 
