@@ -590,6 +590,24 @@ def mean(values):
     return mean / count
 
 
+def daily2monthly(var_daily, date_daily):
+    var_monthly = []
+    date_monthly = []
+
+    _iter = 0
+    for year in range(date_daily[0].year, date_daily[-1].year + 1):
+        for month in range(1, 13):
+            var_month_list = []
+            while date_daily[_iter].month == month:
+                var_month_list.append(var_daily[_iter])
+                _iter += 1
+                if _iter > date_daily.index(date_daily[-1]):
+                    break
+            var_monthly.append(mean(var_month_list))
+            date_monthly.append(date(year, month, 1))
+
+    return var_monthly, date_monthly
+
 def check_consistent_data(station, var):
     '''
     Check if the data are consistent, this is that the amount of null value
@@ -647,12 +665,13 @@ def calculate_lags(station):
 
     # range based on analysis interval
     range_analysis_interval = None
-    if station.analysis_interval_num_days == 5:
-        range_analysis_interval = [1, 6, 11, 16, 21, 26]
-    if station.analysis_interval_num_days == 10:
-        range_analysis_interval = [1, 11, 21]
-    if station.analysis_interval_num_days == 15:
-        range_analysis_interval = [1, 16]
+    if station.analysis_interval != "trimester":
+        if station.analysis_interval_num_days == 5:
+            range_analysis_interval = [1, 6, 11, 16, 21, 26]
+        if station.analysis_interval_num_days == 10:
+            range_analysis_interval = [1, 11, 21]
+        if station.analysis_interval_num_days == 15:
+            range_analysis_interval = [1, 16]
 
     def get_var_D_values():
         var_D_values = []
@@ -701,7 +720,7 @@ def calculate_lags(station):
         return var_I_values
 
 
-    if station.state_of_data == 1:
+    if station.state_of_data in [1, 3]:
 
         for lag in lags:
 
@@ -747,7 +766,7 @@ def calculate_lags(station):
                     # next year
                     iter_year += 1
 
-    if station.state_of_data in [2, 3, 4]:
+    if station.state_of_data in [2, 4]:
 
         for lag in lags:
 
@@ -1171,7 +1190,6 @@ def result_table_CA(station):
 
         # calculate pearson correlation of var_D and var_I
         pearson = stats.pearsonr(var_D_values, var_I_values)[0]
-
         # significance correlation
         singr, T_test, t_crit = \
             sc.corrtest(rho=0, r=pearson, n=len(station.common_period) + 1,
@@ -1719,8 +1737,7 @@ def maps_climate(station):
                     var_above = station.contingencies_tables_percent[lag][month - 1][phenomenon][2]
 
                     p_index = calculate_index()
-
-                    globals.maps_files_climate[lag][month - 1][phenomenon]\
+                    globals.maps_files_climate[station.analysis_interval][lag][month - 1][phenomenon]\
                         .writerow([station.code, station.lat, station.lon,
                                    print_number(station.pearson_list[lag][month - 1]),
                                    print_number(var_below), print_number(var_normal),
@@ -1778,7 +1795,6 @@ def maps_forecasting(station):
 
                 globals.maps_files_forecasting[station.analysis_interval].append(csv_file)
 
-
     def calculate_index():
         # select index
         if station.prob_decrease_var_D[lag] > station.prob_normal_var_D[lag]:
@@ -1807,7 +1823,6 @@ def maps_forecasting(station):
         month = station.forecasting_date[0]
         day = station.forecasting_date[1]
         forecasting_date_text = month_text[month - 1] + "-" + str(day)
-
 
     for lag in lags:
 
@@ -1893,7 +1908,6 @@ def pre_process(station):
 
 def process(station):
 
-
     # -------------------------------------------------------------------------
     # State of the data for process, calculate and write output based on type
     # of data (daily or monthly) of dependent and independent variable
@@ -1917,6 +1931,11 @@ def process(station):
         print colored.cyan(_(" Results will be made by trimester"))
     if station.state_of_data in [2, 4]:
         print colored.cyan(_(" Results will be made every {} days").format(station.analysis_interval_num_days))
+
+    if station.state_of_data == 3:
+        print colored.cyan(_(" Converting all var I to data monthly"))
+        station.var_I, station.date_I = daily2monthly(station.var_I, station.date_I)
+        station.is_var_I_daily = False
 
     # run process (climate, forecasting) from input arguments
     if not args.climate and not args.forecasting:
@@ -2050,7 +2069,7 @@ def forecasting(station):
             for column in range(3):
                 for row in range(3):
                     if not args.risk_analysis or station.is_sig_risk_analysis[lag][station.forecasting_date - 1][_iter] == _('yes'):
-                        vars()[items_CT[_iter]] = \
+                        items_CT[items_CT.keys()[_iter]] = \
                             station.contingencies_tables_percent[lag][station.forecasting_date - 1][column][row] / 100.0
                         _iter += 1
 
@@ -2331,6 +2350,11 @@ def main():
                     except:
                         pass
                 station.analysis_interval_num_days = int(station.analysis_interval[0:_count])
+
+            translate_analysis_interval = [_("5days"), _("10days"), _("15days"), _("trimester")]
+
+            station.analysis_interval = \
+                translate_analysis_interval[options_analysis_interval.index(station.analysis_interval)]
 
             if args.forecasting:
                 if len(line_station) < 23:
