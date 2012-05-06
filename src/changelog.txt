@@ -14,6 +14,8 @@ features/changes:
    depended if data as daily and how to print result (5,10,15 days) 
  * Now maps files (and maps, in the next release) for climate and forecasting
    are ordered and grouped based on analysis interval
+ * Added 3 new variables independent (SSTA_CAR and AREA_WHWP) and one variable 
+   dependent (AFR)
 
 bugfixes:
  * bugfix the size data when set particular common period
