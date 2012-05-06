@@ -37,7 +37,7 @@ VALID_NULL = [99999, -99999]
 ACCURACY = 3
 
 # types of internal variable independent
-internal_var_I_types = ["ONI", "SOI", "MEI", "OLR", "W200", "SST", "ARH", "NAO", "QBO"]
+internal_var_I_types = ["ONI", "SOI", "MEI", "OLR", "W200", "SST", "ARH", "NAO", "QBO", "SSTA_CAR", "AREA_WHWP"]
 
 # namefiles of internal variable independent
 internal_var_I_files = {"ONI": "ONI_1950_2011_CPC.txt",
@@ -48,18 +48,23 @@ internal_var_I_files = {"ONI": "ONI_1950_2011_CPC.txt",
                         "SST": "SST_1950_2011_CPC_NCEP_NOAA.txt",
                         #"ARH": "????",
                         "NAO": "NAO_1950_2011_CPC_NCEP_NOAA.txt",
-                        "QBO": "QBO_1950_2011_ESRL_NOAA.txt"}
+                        "QBO": "QBO_1950_2011_ESRL_NOAA.txt",
+                        "SSTA_CAR": "SSTA_CAR_1951_2010_ESRL_NOAA.txt",
+                        "AREA_WHWP": "AREA_WHWP_1948_2011_ESRL_NOAA.txt"}
 
 # urls where get the internal files for independent variable
-internal_var_I_urls = {"ONI": "http://goo.gl/bppGe",
-                        "SOI": "http://goo.gl/nhF4D",
-                        "MEI": "http://goo.gl/KWEwZ",
-                        "OLR": "http://goo.gl/goMpA",
-                        "W200": "http://goo.gl/aliLh",
-                        "SST": "http://goo.gl/WcYSg",
+internal_var_I_urls = {"ONI": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears.shtml
+                        "SOI": "http://goo.gl/scbO7", # http://www.cpc.ncep.noaa.gov/data/indices/soi
+                        "MEI": "http://goo.gl/dQsdb", # http://www.esrl.noaa.gov/psd/enso/mei/table.html
+                        "OLR": "http://goo.gl/goMpA", # http://www.cpc.ncep.noaa.gov/data/indices/olr
+                        "W200": "http://goo.gl/aliLh", # http://www.cpc.ncep.noaa.gov/data/indices/zwnd200
+                        "SST": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
                         #"ARH": "????",
-                        "NAO": "http://goo.gl/1uDjY",
-                        "QBO": "http://goo.gl/UO6PX"}
+                        "NAO": "http://goo.gl/1uDjY", # http://www.cpc.ncep.noaa.gov/products/precip/CWlink/pna/nao.shtml
+                        "QBO": "http://goo.gl/UO6PX", # http://www.esrl.noaa.gov/psd/data/climateindices/list/
+                        "SSTA_CAR": "http://goo.gl/BsAeN", # http://www.esrl.noaa.gov/psd/forecasts/sstlim/forcar.html
+                        "AREA_WHWP":"http://goo.gl/mV4QI" # http://www.esrl.noaa.gov/psd/data/correlation/whwp.data 
+                        }
 
 # maps files for climate:
 maps_files_climate = {'5days':None, '10days':None, '15days':None, 'trimester':None}

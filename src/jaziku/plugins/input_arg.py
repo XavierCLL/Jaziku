@@ -51,10 +51,10 @@ arguments.add_argument('-c', '--climate', action='store_true', default=False,
 arguments.add_argument('-f', '--forecasting', action='store_true', default=False,
                        help=_('Enable forecasting process'), required=False)
 # Valid input types for dependent variable
-types_var_D = ['PPT', 'NDPPT', 'TMIN', 'TMAX', 'TEMP', 'PATM', 'HR']
+types_var_D = ['PPT', 'NDPPT', 'TMIN', 'TMAX', 'TEMP', 'PATM', 'HR', 'AFR']
 ### Input arguments for independent variable
 # Valid input types for independent variable
-types_var_I = ['ONI', 'SOI', 'MEI', 'OLR', 'W200', 'SST', 'ARH', 'QBO', 'NAO']
+types_var_I = ['ONI', 'SOI', 'MEI', 'OLR', 'W200', 'SST', 'ARH', 'QBO', 'NAO', 'SSTA_CAR', 'AREA_WHWP']
 
 # Set phenomenon below (optional)
 arguments.add_argument('-p_below', type=str,

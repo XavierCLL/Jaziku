@@ -25,3 +25,7 @@ version 0.7:  (pending)
 
 to be analyzed:
 * partial run, if a station has an error continue with other station, alert in final message
+
+TODO: ARTS AND PROMOTIONS
+* logo
+* webpage

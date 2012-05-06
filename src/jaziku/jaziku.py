@@ -136,6 +136,9 @@ def print_error(text_error):
 
 
 def print_error_line_stations(station, text_error):
+    '''
+    Print error generic function occurred in a line from stations file.
+    '''
 
     print_error(_("Reading stations from file \"{0}\" in line {1}:\n")
                   .format(args.stations.name, station.line_num) +
@@ -207,16 +210,16 @@ def read_var_D(station):
             # check if var D is daily or month
             if first:
                 if size(row[0].split("-")) == 3:
-                    station.is_var_D_daily = True
+                    station.data_of_var_D = "daily"
                 else:
-                    station.is_var_D_daily = False
+                    station.data_of_var_D = "monthly"
                 first = False
 
             try:
                 # delete garbage characters and convert format
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
                 month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
-                if station.is_var_D_daily:
+                if station.data_of_var_D == "daily":
                     day = int(re.sub(r'[^\w]', '', row[0].split("-")[2]))
                 else:
                     day = 1
@@ -227,7 +230,8 @@ def read_var_D(station):
                 # set values of dependent variable
                 var_D.append(input_validation.validation_var_D(station.type_D,
                                                                value,
-                                                               date_D[-1]))
+                                                               date_D[-1],
+                                                               station.data_of_var_D))
 
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
@@ -275,16 +279,16 @@ def read_var_D(station):
             # check if var D is daily or month
             if first:
                 if size(row[0].split("-")) == 3:
-                    station.is_var_D_daily = True
+                    station.data_of_var_D = "daily"
                 else:
-                    station.is_var_D_daily = False
+                    station.data_of_var_D = "monthly"
                 first = False
 
             try:
                 # delete garbage characters and convert format
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
                 month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
-                if station.is_var_D_daily:
+                if station.data_of_var_D == "daily":
                     day = int(re.sub(r'[^\w]', '', row[0].split("-")[2]))
                 else:
                     day = 1
@@ -295,7 +299,8 @@ def read_var_D(station):
                 # set values of dependent variable
                 var_D.append(input_validation.validation_var_D(station.type_D,
                                                                value,
-                                                               date_D[-1]))
+                                                               date_D[-1],
+                                                               station.data_of_var_D))
 
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
@@ -390,16 +395,16 @@ def read_var_I(station):
             # check if var I is daily or month
             if first:
                 if size(row[0].split("-")) == 3:
-                    station.is_var_I_daily = True
+                    station.data_of_var_I = "daily"
                 else:
-                    station.is_var_I_daily = False
+                    station.data_of_var_I = "monthly"
                 first = False
 
             try:
                 # delete garbage characters and convert format
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
                 month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
-                if station.is_var_I_daily:
+                if station.data_of_var_I == "daily":
                     day = int(re.sub(r'[^\w]', '', row[0].split("-")[2]))
                 else:
                     day = 1
@@ -459,16 +464,16 @@ def read_var_I(station):
             # check if var I is daily or month
             if first:
                 if size(row[0].split("-")) == 3:
-                    station.is_var_I_daily = True
+                    station.data_of_var_I = "daily"
                 else:
-                    station.is_var_I_daily = False
+                    station.data_of_var_I = "monthly"
                 first = False
 
             try:
                 # delete garbage characters and convert format
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
                 month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
-                if station.is_var_I_daily:
+                if station.data_of_var_I == "daily":
                     day = int(re.sub(r'[^\w]', '', row[0].split("-")[2]))
                 else:
                     day = 1
@@ -675,7 +680,7 @@ def calculate_lags(station):
 
     def get_var_D_values():
         var_D_values = []
-        if station.is_var_D_daily:
+        if station.data_of_var_D == "daily":
             # clone range for add the last day (32) for calculate interval_day_var_D
             rai_plus = list(range_analysis_interval)
             rai_plus.append(32)
@@ -690,7 +695,7 @@ def calculate_lags(station):
                 if now.month == month:
                     index_var_D = station.date_D.index(now)
                     var_D_values.append(station.var_D[index_var_D])
-        else:
+        if station.data_of_var_D == "monthly":
             # get the three values for var_D in this month
             for iter_month in range(3):
                 var_D_values.append(station.var_D[station.date_D.index(
@@ -700,7 +705,7 @@ def calculate_lags(station):
 
     def get_var_I_values():
         var_I_values = []
-        if station.is_var_I_daily:  # TODO: need test!!
+        if station.data_of_var_I == "daily":  # TODO: need test!!
             # from day to next iterator based on analysis interval
             interval_day_var_I = range(day - 1 - range_analysis_interval[1] * lag,
                                        day - 1 - range_analysis_interval[1] * (lag - 1))
@@ -711,7 +716,7 @@ def calculate_lags(station):
                 if now.month == month:
                     index_var_I = station.date_I.index(now)
                     var_I_values.append(station.var_I[index_var_I])
-        else:
+        if station.data_of_var_I == "monthly":
             # get the three values for var_I in this month
             for iter_month in range(3):
                 var_I_values.append(station.var_I[station.date_I.index(
@@ -1859,9 +1864,9 @@ def pre_process(station):
     station = read_var_D(station)  # <--
     print colored.green(_("done"))
 
-    if station.is_var_D_daily:
+    if station.data_of_var_D == "daily":
         print colored.cyan(_(" ↳the dependent variable has data daily"))
-    else:
+    if station.data_of_var_D == "monthly":
         print colored.cyan(_(" ↳the dependent variable has data monthly"))
 
     # var I
@@ -1870,9 +1875,9 @@ def pre_process(station):
     station = read_var_I(station)  # <--
     print colored.green(_("done"))
 
-    if station.is_var_I_daily:
+    if station.data_of_var_I == "daily":
         print colored.cyan(_(" ↳the independent variable has data daily"))
-    else:
+    if station.data_of_var_I == "monthly":
         print colored.cyan(_(" ↳the independent variable has data monthly"))
 
     # -------------------------------------------------------------------------
@@ -1918,13 +1923,13 @@ def process(station):
     # |   3   | monthly |  daily  |
     # |   4   |  daily  |  daily  |
 
-    if not station.is_var_D_daily and not station.is_var_I_daily:
+    if station.data_of_var_D == "monthly" and station.data_of_var_I == "monthly":
         station.state_of_data = 1
-    if station.is_var_D_daily and not station.is_var_I_daily:
+    if station.data_of_var_D == "daily" and station.data_of_var_I == "monthly":
         station.state_of_data = 2
-    if not station.is_var_D_daily and station.is_var_I_daily:
+    if station.data_of_var_D == "monthly" and station.data_of_var_I == "daily":
         station.state_of_data = 3
-    if station.is_var_D_daily and station.is_var_I_daily:
+    if station.data_of_var_D == "daily" and station.data_of_var_I == "daily":
         station.state_of_data = 4
 
     if station.state_of_data in [1, 3]:
@@ -1935,7 +1940,7 @@ def process(station):
     if station.state_of_data == 3:
         print colored.cyan(_(" Converting all var I to data monthly"))
         station.var_I, station.date_I = daily2monthly(station.var_I, station.date_I)
-        station.is_var_I_daily = False
+        station.data_of_var_I = "monthly"
 
     # run process (climate, forecasting) from input arguments
     if not args.climate and not args.forecasting:
