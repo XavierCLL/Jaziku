@@ -15,12 +15,14 @@ features/changes:
  * Now maps files (and maps, in the next release) for climate and forecasting
    are ordered and grouped based on analysis interval
  * Added 3 new variables independent (SSTA_CAR and AREA_WHWP) and one variable 
-   dependent (AFR)
+   dependent (RUNOFF)
 
 bugfixes:
  * bugfix the size data when set particular common period
  * fix TYPOS
  * fix when Jaziku detect language from system 
+ * fix crash and memory overflow when open many file
+ * check different cases to run data daily/monthly and analisis interval defined
 
 0.2.1
  * change name function and filename results of Arithmetic Mean Trim to mean_trim

@@ -39,7 +39,7 @@ import globals
 #  Temp. medium----------TEMP        °C             -15°C<=Tmin<=50°C
 #  Atmosfere pressure----PATM        mb              400mb<=P<=1100mb
 #  % relative humidity----HR          -                0%<=HR<=100%
-#  Average flow rate-----AFR        m^3/s                0 to 3300
+#  Runoff---------------RUNOFF      m^3/s                0 to 3300
 #
 # If inputs are daily:
 #
@@ -52,7 +52,7 @@ import globals
 #  Temp. medium----------TEMP        °C             -15°C<=Tmin<=34°C
 #  Atmosfere pressure----PATM        mb              400mb<=P<=1100mb
 #  % relative humidity----HR          -                0%<=HR<=100%
-#  Average flow rate-----AFR        m^3/s                0 to 3300
+#  Runoff---------------RUNOFF      m^3/s                0 to 3300
 
 
 def validation_var_D(type_var_D, var_D, date_D, data_of_var_D):
@@ -150,12 +150,12 @@ def validation_var_D(type_var_D, var_D, date_D, data_of_var_D):
         else:
             returnError(_("% of relative humidity not valid"))
 
-    # validation for Average flow rate
-    def if_var_D_is_AFR():
+    # validation for Runoff
+    def if_var_D_is_RUNOFF():
         if (0 <= var_D <= 3300) or int(var_D) in globals.VALID_NULL:
             return var_D
         else:
-            returnError(_("Average flow rate not valid"))
+            returnError(_("Runoff not valid"))
 
     # switch validation
     validation = {
@@ -166,7 +166,7 @@ def validation_var_D(type_var_D, var_D, date_D, data_of_var_D):
       "TEMP": if_var_D_is_TEMP,
       "PATM": if_var_D_is_PATM,
       "HR": if_var_D_is_HR,
-      "AFR": if_var_D_is_AFR
+      "RUNOFF": if_var_D_is_RUNOFF
     }
     return validation[type_var_D]()
 
