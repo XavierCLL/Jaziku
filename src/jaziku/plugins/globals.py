@@ -25,7 +25,7 @@
 PROG_NAME = "jaziku"
 
 # version
-VERSION = "0.2"
+VERSION = "0.3.0"
 
 # compilation date
 COMPILE_DATE = "12/03/2012"

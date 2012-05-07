@@ -4,9 +4,9 @@
 import os
 import os.path as osp
 from setuptools import setup, find_packages
-from jaziku.plugins import global_var
+from jaziku.plugins import globals
 
-name = global_var.PROG_NAME
+name = globals.PROG_NAME
 
 def get_package_data(name, extlist):
     """Return data files for package *name* with extensions in *extlist*"""
@@ -19,8 +19,8 @@ def get_package_data(name, extlist):
                 flist.append(osp.join(dirpath, fname)[offset:])
     return flist
 
-setup(name = global_var.PROG_NAME,
-      version = global_var.VERSION,
+setup(name = globals.PROG_NAME,
+      version = globals.VERSION,
       license = "GNU General Public License (GPL) v3",
       description = "Jaziku is a software for the implementation of composite analysis "\
                      "metodology between the major indices of climate variability and major "\

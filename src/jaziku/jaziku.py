@@ -370,7 +370,6 @@ def read_var_I(station):
         station.range_below_I = "None"
         station.range_above_I = "None"
 
-
     reader_csv = csv.reader(file_I, delimiter='\t')
     first = True
     # Read line to line file_I, validation and save var_I
@@ -541,7 +540,7 @@ def calculate_common_period(station):
     if len(common_date) < 36:
         sys.stdout.write(_("Calculating the common period ................... "))
         sys.stdout.flush()
-        if args.period:  # FIXME: realy necessary?
+        if args.period:
             print_error(_("The period defined in argument must be at least 3 "
                           "years for process."))
         else:
@@ -612,6 +611,7 @@ def daily2monthly(var_daily, date_daily):
             date_monthly.append(date(year, month, 1))
 
     return var_monthly, date_monthly
+
 
 def check_consistent_data(station, var):
     '''
@@ -724,7 +724,6 @@ def calculate_lags(station):
 
         return var_I_values
 
-
     if station.state_of_data in [1, 3]:
 
         for lag in lags:
@@ -745,7 +744,8 @@ def calculate_lags(station):
 
                 # output write file:
                 # [[ yyyy/month, Mean_Lag_X_var_D, Mean_Lag_X_var_I ],... ]
-                csv_file_write = csv.writer(open(csv_name, 'w'), delimiter=';')
+                open_file = open(csv_name, 'w')
+                csv_file = csv.writer(open_file, delimiter=';')
 
                 iter_year = station.process_period['start']
 
@@ -764,12 +764,15 @@ def calculate_lags(station):
                                                      mean_var_D,
                                                      mean_var_I])
 
-                    # add line output file csv_file_write
-                    csv_file_write.writerow([str(iter_year) + "/" + str(month),
+                    # add line output file csv_file
+                    csv_file.writerow([str(iter_year) + "/" + str(month),
                                                  print_number(mean_var_D),
                                                  print_number(mean_var_I)])
                     # next year
                     iter_year += 1
+
+                open_file.close()
+                del csv_file
 
     if station.state_of_data in [2, 4]:
 
@@ -792,7 +795,8 @@ def calculate_lags(station):
 
                 # output write file:
                 # [[ yyyy/month, Mean_Lag_X_var_D, Mean_Lag_X_var_I ],... ]
-                csv_file_write = csv.writer(open(csv_name, 'w'), delimiter=';')
+                open_file = open(csv_name, 'a')
+                csv_file = csv.writer(open_file, delimiter=';')
 
                 #days_for_this_month = monthrange(iter_year, month)[1]
 
@@ -820,13 +824,16 @@ def calculate_lags(station):
                                                          mean_var_D,
                                                          mean_var_I])
 
-                        # add line output file csv_file_write
-                        csv_file_write.writerow([str(iter_year) + "/" + str(month)
+                        # add line output file csv_file
+                        csv_file.writerow([str(iter_year) + "/" + str(month)
                                                      + "/" + str(day),
                                                      print_number(mean_var_D),
                                                      print_number(mean_var_I)])
                         # next year
                         iter_year += 1
+
+                open_file.close()
+                del csv_file
 
     station.range_analysis_interval = range_analysis_interval
     station.Lag_0, station.Lag_1, station.Lag_2 = Lag_0, Lag_1, Lag_2
@@ -952,7 +959,6 @@ def get_thresholds_var_I(station):
             print_error(_("Problem with thresholds of independent "
                           "variable:\n\n{0}").format(e))
 
-
     ## now analisys threshold input in arguments
     # if are define as default
     if (station.threshold_below_var_I == "default" and
@@ -1019,7 +1025,6 @@ def get_contingency_table(station, lag, month, day=None):
     thresholds_var_D_var_I = [print_number(p33_D), print_number(p66_D),
                               print_number(threshold_below_var_I),
                               print_number(threshold_above_var_I)]
-
 
     ## Calculating contingency table with absolute values
     contingency_table = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
@@ -1263,7 +1268,8 @@ def result_table_CA(station):
                     .format(lag, station.name, station.code, station.type_D, station.type_I,
                             station.process_period['start'], station.process_period['end']))
 
-        csv_result_table = csv.writer(open(csv_name, 'w'), delimiter=';')
+        open_file = open(csv_name, 'w')
+        csv_result_table = csv.writer(open_file, delimiter=';')
 
         # print headers in result table
         csv_result_table.writerow([
@@ -1345,7 +1351,8 @@ def result_table_CA(station):
                 pearson_list_month.append(pearson_list_day)
                 is_sig_risk_analysis_month.append(is_sig_risk_analysis_list_day)
 
-
+        open_file.close()
+        #del csv_result_table
 
         pearson_list.append(pearson_list_month)
         is_sig_risk_analysis.append(is_sig_risk_analysis_month)
@@ -1396,7 +1403,7 @@ def graphics_climate(station):
                                     station.process_period['end'], lag,
                                     title_period), 'utf-8'))
 
-        # label for axis Y 
+        # label for axis Y
         plt.ylabel(_('probability (%)'))
         #  adjust the max leaving min unchanged in Y
         plt.ylim(ymin=0, ymax=100)
@@ -1433,7 +1440,7 @@ def graphics_climate(station):
         autolabel(var_D_above)
 
         plt.subplots_adjust(bottom=0.15, left=0.22, right=0.97)
-        # plt.legend((var_D_below[0], var_D_normal[0], var_D_above[0]), 
+        # plt.legend((var_D_below[0], var_D_normal[0], var_D_above[0]),
         #            ('var Dep Below', 'var Dep Normal', 'var Dep Above'),
         #             shadow = True, fancybox = True)
 
@@ -1499,7 +1506,6 @@ def graphics_climate(station):
                     filename_period = month_text[month - 1] + "_" + str(day)
 
                     create_graphic()
-
 
         ## create mosaic
         # definition height and width of individual image
@@ -1595,7 +1601,7 @@ def graphics_forecasting(station):
             return '{p:1.1f}%\n({v:1.2f})'.format(p=pct, v=val)
 
         plt.pie(values_pie, colors=colours, explode=explode, labels=labels,
-                autopct='%1.1f%%', shadow=True)  #'%1.1f%%'
+                autopct='%1.1f%%', shadow=True)  # '%1.1f%%'
 
         plt.title(unicode(_('Probability forecasted of {0} - {1}\n{2} - lag {3} - {4} - ({5}-{6})')
                           .format(station.type_D, station.name, station.type_I, lag, title_date_graphic,
@@ -1651,13 +1657,17 @@ def maps_climate(station):
     if globals.maps_files_climate[station.analysis_interval] is None:
 
         # create and define csv output file for maps climate
-        phenomenon = {0:globals.phenomenon_below, 1:globals.phenomenon_normal, 2:globals.phenomenon_above}
-        globals.maps_files_climate[station.analysis_interval] = [] # [lag][month][phenomenon]
+        phenomenon = {0: globals.phenomenon_below,
+                      1: globals.phenomenon_normal,
+                      2: globals.phenomenon_above}
+        globals.maps_files_climate[station.analysis_interval] = []  # [lag][month][phenomenon]
 
         # define maps data files and directories
         for lag in lags:
-
+            #import pdb
+            #pdb.set_trace()
             maps_dir = os.path.join(climate_dir, _('maps'))
+
             maps_data_lag = os.path.join(maps_dir, _('maps_data'),
                                          station.analysis_interval,
                                          _('lag_{0}').format(lag))
@@ -1667,6 +1677,7 @@ def maps_climate(station):
             # all months in year 1->12
             month_list = []
             for month in range(1, 13):
+
                 if station.state_of_data in [1, 3]:
                     categories_list = []
                     for category in phenomenon:
@@ -1678,17 +1689,24 @@ def maps_climate(station):
                         csv_name = \
                             os.path.join(maps_data_phenom, _(u'Map_Data_lag_{0}_trim_{1}_{2}.csv')
                                          .format(lag, month, phenomenon[category]))
-                        csv_file = csv.writer(open(csv_name, 'w'), delimiter=';')
+
+                        # write new row in file
+                        open_file = open(csv_name, 'w')
+                        csv_file = csv.writer(open_file, delimiter=';')
                         csv_file.writerow([_('code'), _('lat'), _('lon'), _('pearson'),
                                            _('var_below'), _('var_normal'), _('var_above'),
                                            _('p_index'), _('sum')])
-                        categories_list.append(csv_file)
+                        open_file.close()
+                        del csv_file
+
+                        categories_list.append(csv_name)
 
                     month_list.append(categories_list)
                 if station.state_of_data in [2, 4]:
                     day_list = []
                     for day in station.range_analysis_interval:
                         categories_list = []
+
                         for category in phenomenon:
                             maps_data_phenom = os.path.join(maps_data_lag, phenomenon[category])
 
@@ -1700,11 +1718,18 @@ def maps_climate(station):
                                              .format(lag,
                                                      month_text[month - 1] + "_" + str(day),
                                                      phenomenon[category]))
-                            csv_file = csv.writer(open(csv_name, 'w'), delimiter=';')
+
+                            # write new row in file
+                            open_file = open(csv_name, 'w')
+                            csv_file = csv.writer(open_file, delimiter=';')
                             csv_file.writerow([_('code'), _('lat'), _('lon'), _('pearson'),
                                                _('var_below'), _('var_normal'), _('var_above'),
                                                _('p_index'), _('sum')])
-                            categories_list.append(csv_file)
+                            open_file.close()
+                            del csv_file
+
+                            categories_list.append(csv_name)
+
                         day_list.append(categories_list)
 
                     month_list.append(day_list)
@@ -1742,14 +1767,20 @@ def maps_climate(station):
                     var_above = station.contingencies_tables_percent[lag][month - 1][phenomenon][2]
 
                     p_index = calculate_index()
-                    globals.maps_files_climate[station.analysis_interval][lag][month - 1][phenomenon]\
-                        .writerow([station.code, station.lat, station.lon,
+
+                    # write new row in file
+                    csv_name = globals.maps_files_climate[station.analysis_interval][lag][month - 1][phenomenon]
+                    open_file = open(csv_name, 'a')
+                    csv_file = csv.writer(open_file, delimiter=';')
+                    csv_file.writerow([station.code, station.lat, station.lon,
                                    print_number(station.pearson_list[lag][month - 1]),
                                    print_number(var_below), print_number(var_normal),
                                    print_number(var_above), print_number(p_index),
                                    print_number(sum([float(var_below),
                                                      float(var_normal),
                                                      float(var_above)]))])
+                    open_file.close()
+                    del csv_file
 
             if station.state_of_data in [2, 4]:
                 for day in range(len(station.range_analysis_interval)):
@@ -1760,14 +1791,19 @@ def maps_climate(station):
 
                         p_index = calculate_index()
 
-                        globals.maps_files_climate[station.analysis_interval][lag][month - 1][day][phenomenon]\
-                            .writerow([station.code, station.lat, station.lon,
+                        # write new row in file
+                        csv_name = globals.maps_files_climate[station.analysis_interval][lag][month - 1][day][phenomenon]
+                        open_file = open(csv_name, 'a')
+                        csv_file = csv.writer(open_file, delimiter=';')
+                        csv_file.writerow([station.code, station.lat, station.lon,
                                        print_number(station.pearson_list[lag][month - 1][day]),
                                        print_number(var_below), print_number(var_normal),
                                        print_number(var_above), print_number(p_index),
                                        print_number(sum([float(var_below),
                                                          float(var_normal),
                                                          float(var_above)]))])
+                        open_file.close()
+                        del csv_file
 
 
 def maps_forecasting(station):
@@ -1790,15 +1826,19 @@ def maps_forecasting(station):
                 if not os.path.isdir(maps_dir):
                     os.makedirs(maps_dir)
 
+                # write the headers in file
                 csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}.csv')
                                         .format(lag))
-                csv_file = csv.writer(open(csv_name, 'w'), delimiter=';')
+                open_file = open(csv_name, 'w')
+                csv_file = csv.writer(open_file, delimiter=';')
                 csv_file.writerow([_('code'), _('lat'), _('lon'),
                                    _('forecasting_date'), _('prob_decrease_var_D'),
                                    _('prob_normal_var_D'), _('prob_exceed_var_D'),
                                    _('index'), _('sum')])
+                open_file.close()
+                del csv_file
 
-                globals.maps_files_forecasting[station.analysis_interval].append(csv_file)
+                globals.maps_files_forecasting[station.analysis_interval].append(csv_name)
 
     def calculate_index():
         # select index
@@ -1833,8 +1873,11 @@ def maps_forecasting(station):
 
         p_index = calculate_index()
 
-        globals.maps_files_forecasting[station.analysis_interval][lag]\
-            .writerow([station.code,
+        # write new row in file
+        csv_name = globals.maps_files_forecasting[station.analysis_interval][lag]
+        open_file = open(csv_name, 'a')
+        csv_file = csv.writer(open_file, delimiter=';')
+        csv_file.writerow([station.code,
                        print_number_accuracy(station.lat, 4),
                        print_number_accuracy(station.lon, 4),
                        forecasting_date_text,
@@ -1845,6 +1888,8 @@ def maps_forecasting(station):
                        print_number(sum([station.prob_decrease_var_D[lag],
                                          station.prob_normal_var_D[lag],
                                          station.prob_exceed_var_D[lag]]))])
+        open_file.close()
+        del csv_file
 
 
 #==============================================================================
@@ -1922,7 +1967,7 @@ def process(station):
     # |   2   |  daily  | monthly |
     # |   3   | monthly |  daily  |
     # |   4   |  daily  |  daily  |
-
+    #
     if station.data_of_var_D == "monthly" and station.data_of_var_I == "monthly":
         station.state_of_data = 1
     if station.data_of_var_D == "daily" and station.data_of_var_I == "monthly":
@@ -1932,10 +1977,30 @@ def process(station):
     if station.data_of_var_D == "daily" and station.data_of_var_I == "daily":
         station.state_of_data = 4
 
+    # define if results will made by trimester or every n days
     if station.state_of_data in [1, 3]:
         print colored.cyan(_(" Results will be made by trimester"))
+        if station.analysis_interval != "trimester":
+            text_error = _("var_D (and or not var_I) has data monthly but you define the\n"
+                           "analisys interval as \"{0}\", this must be, in this\n"
+                           "case, as \"trimester\".").format(station.analysis_interval)
+            print_error_line_stations(station, text_error)
     if station.state_of_data in [2, 4]:
-        print colored.cyan(_(" Results will be made every {} days").format(station.analysis_interval_num_days))
+        # if analysis_interval is defined by trimester but var_I or/and var_D has data
+        # daily, first convert in data monthly and continue with results by trimester
+        if station.analysis_interval == "trimester":
+            print colored.cyan(_(" Results will be made by trimester"))
+            if station.data_of_var_D == "daily":
+                print colored.cyan(_(" Converting all var D to data monthly"))
+                station.var_D, station.date_D = daily2monthly(station.var_D, station.date_D)
+                station.data_of_var_D = "monthly"
+            if station.data_of_var_I == "daily":
+                print colored.cyan(_(" Converting all var I to data monthly"))
+                station.var_I, station.date_I = daily2monthly(station.var_I, station.date_I)
+                station.data_of_var_I = "monthly"
+            station.state_of_data = 1
+        else:
+            print colored.cyan(_(" Results will be made every {} days").format(station.analysis_interval_num_days))
 
     if station.state_of_data == 3:
         print colored.cyan(_(" Converting all var I to data monthly"))
@@ -1952,13 +2017,12 @@ def process(station):
         station = climate(station)
 
     if args.forecasting:
-        # TODO: run forecasting without climate
+        # TODO: run forecasting without climate¿?
         if not args.climate:
             print_error(_("sorry, Jaziku can't run forecasting process "
                           "without climate, this issue has not been implemented "
                           "yet, \nplease run again with the option \"-c\""))
         forecasting(station)
-
 
     return station
 
@@ -2067,7 +2131,7 @@ def forecasting(station):
     prob_exceed_var_D = []
     for lag in lags:
 
-        items_CT = {'a':0, 'b':0, 'c':0, 'd':0, 'e':0, 'f':0, 'g':0, 'h':0, 'i':0}
+        items_CT = {'a': 0, 'b': 0, 'c': 0, 'd': 0, 'e': 0, 'f': 0, 'g': 0, 'h': 0, 'i': 0}
 
         if station.state_of_data in [1, 3]:
             _iter = 0
@@ -2152,7 +2216,6 @@ def main():
     global args
     args = input_arg.arguments.parse_args()
 
-
     if args.l:
         if args.l == "en" or args.l == "EN" or args.l == "En":
             lang = gettext.NullTranslations()
@@ -2187,13 +2250,11 @@ def main():
             lang = gettext.NullTranslations()
             lang.install()
 
-
     # set settings default
     settings = {"climate": _("disabled"), "forecasting": _("disabled"),
                 "p_below": "-", "p_normal": "-", "p_above": "-", "period": "-",
                 "risk-analysis": _("disabled"),
                 "language": settings_language}
-
 
     # console message
     print _("\n########################### JAZIKU ###########################\n"
@@ -2223,15 +2284,15 @@ def main():
 
     # trimester text for print
     global trim_text
-    trim_text = {-2:_('ndj'), -1:_('djf'), 0:_('jfm'), 1:_('fma'), 2:_('mam'),
-                 3:_('amj'), 4:_('mjj'), 5:_('jja'), 6:_('jas'), 7:_('aso'),
-                 8:_('son'), 9:_('ond'), 10:_('ndj'), 11:_('djf')}
+    trim_text = {-2: _('ndj'), -1: _('djf'), 0: _('jfm'), 1: _('fma'), 2: _('mam'),
+                 3: _('amj'), 4: _('mjj'), 5: _('jja'), 6: _('jas'), 7: _('aso'),
+                 8: _('son'), 9: _('ond'), 10: _('ndj'), 11: _('djf')}
 
     # month text for print
     global month_text
-    month_text = {-2:_('nov'), -1:_('dec'), 0:_('jan'), 1:_('feb'), 2:_('mar'),
-                 3:_('apr'), 4:_('may'), 5:_('jun'), 6:_('jul'), 7:_('aug'),
-                 8:_('sep'), 9:_('oct'), 10:_('nov'), 11:_('dec')}
+    month_text = {-2: _('nov'), -1: _('dec'), 0: _('jan'), 1: _('feb'), 2: _('mar'),
+                  3: _('apr'), 4: _('may'), 5: _('jun'), 6: _('jul'), 7: _('aug'),
+                  8: _('sep'), 9: _('oct'), 10: _('nov'), 11: _('dec')}
 
     # if phenomenon below is defined inside arguments, else default value
     if args.p_below:
@@ -2281,7 +2342,6 @@ def main():
                   "   is already exist, Jaziku continue but the results\n" \
                   "   could be mixed or replaced of old output."))
 
-
     # -------------------------------------------------------------------------
     # globals.maps_files_forecasting
     if args.forecasting:
@@ -2298,9 +2358,8 @@ def main():
                   "   is already exist, Jaziku continue but the results\n" \
                   "   could be mixed or replaced of old output."))
 
-
     # -------------------------------------------------------------------------
-    # read all stations from stations list inside stations file 
+    # read all stations from stations list inside stations file
     # (-station arguments) and process station by station
     stations = csv.reader(args.stations, delimiter=';')
     for line_station in stations:
@@ -2400,7 +2459,6 @@ def main():
 
         # delete instance
         del station
-
 
     print colored.green(_("\nProcess completed!, {0} station(s) processed.\n")
                         .format(Station.stations_processed))
