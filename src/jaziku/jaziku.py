@@ -619,17 +619,28 @@ def check_consistent_data(station, var):
     not exceed in 15% of the total number of values inside common period
     '''
 
-    # temporal var initialize iter_date = start common_period + 1 year,
+    # temporal var initialize start_date = start common_period + 1 year,
     # month=1, day=1
-    iter_date = date(station.process_period['start'], 1, 1)  # FIXME:
+    start_date = date(station.process_period['start'], 1, 1)
     # temporal var initialize end_date = end common_period - 1 year,
     # month=12, day=31
-    end_date = date(station.process_period['end'], 12, 1)  # FIXME:
+    if (var == "D" and station.data_of_var_D == "daily") or\
+       (var == "I" and station.data_of_var_I == "daily"):
+        end_date = date(station.process_period['end'], 12, 31)
+        if station.analysis_interval == "trimester":
+            date_plus = monthrange(station.process_period['end'] + 1, 1)[1] + \
+                        monthrange(station.process_period['end'] + 1, 2)[1]
+            date_minus = 61
+        else:
+            date_plus = date_minus = station.analysis_interval_num_days * 2
+    else:
+        end_date = date(station.process_period['end'], 12, 1)
+        date_plus = date_minus = 2
 
     if var == "D":
-        values_in_common_period = station.var_D[station.date_D.index(iter_date):station.date_D.index(end_date) + 3]
+        values_in_common_period = station.var_D[station.date_D.index(start_date):station.date_D.index(end_date) + date_plus + 1]
     if var == "I":
-        values_in_common_period = station.var_I[station.date_I.index(iter_date) - 2:station.date_I.index(end_date) + 3]
+        values_in_common_period = station.var_I[station.date_I.index(start_date) - date_minus:station.date_I.index(end_date) + date_plus + 1]
 
     null_counter = 0
     for value in values_in_common_period:
@@ -1489,8 +1500,8 @@ def graphics_climate(station):
                 contingency_table_percent_print, \
                 thresholds_var_D_var_I = get_contingency_table(station, lag, month)
 
-                title_period = "trim {0} ({1})".format(month, trim_text[month - 1])
-                filename_period = "trim_{0}".format(month)
+                title_period = _("trim {0} ({1})").format(month, trim_text[month - 1])
+                filename_period = _("trim_{0}").format(month)
                 create_graphic()
 
             if station.state_of_data in [2, 4]:
@@ -1512,9 +1523,10 @@ def graphics_climate(station):
         image_height = 450
         image_width = 600
         mosaic_dir_save = \
-            os.path.join(graphics_dir_ca, _('mosaic_lag_{0}_{1}_{2}_{3}_{4}_({5}-{6}).png')
-                        .format(lag, station.code, station.name, station.type_D, station.type_I,
-                                station.process_period['start'], station.process_period['end']))
+            os.path.join(graphics_dir_ca, _('mosaic_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
+                        .format(lag, station.analysis_interval, station.code, station.name,
+                                station.type_D, station.type_I, station.process_period['start'],
+                                station.process_period['end']))
 
         if station.state_of_data in [1, 3]:
             # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
@@ -1664,8 +1676,7 @@ def maps_climate(station):
 
         # define maps data files and directories
         for lag in lags:
-            #import pdb
-            #pdb.set_trace()
+
             maps_dir = os.path.join(climate_dir, _('maps'))
 
             maps_data_lag = os.path.join(maps_dir, _('maps_data'),
