@@ -28,7 +28,7 @@ PROG_NAME = "jaziku"
 VERSION = "0.3.0"
 
 # compilation date
-COMPILE_DATE = "07/05/2012"
+COMPILE_DATE = "12/05/2012"
 
 # valid null value for variables dependent and independent (inside files input)
 VALID_NULL = [99999, -99999]

@@ -38,7 +38,7 @@ import globals
 #  Temp. max-------------TMAX        °C             -15°C<=Tmin<=50°C
 #  Temp. medium----------TEMP        °C             -15°C<=Tmin<=50°C
 #  Atmosfere pressure----PATM        mb              400mb<=P<=1100mb
-#  % relative humidity----HR          -                0%<=HR<=100%
+#  % relative humidity----RH          -                0%<=RH<=100%
 #  Runoff---------------RUNOFF      m^3/s                0 to 3300
 #
 # If inputs are daily:
@@ -51,7 +51,7 @@ import globals
 #  Temp. max-------------TMAX        °C             -15°C<=Tmin<=34°C
 #  Temp. medium----------TEMP        °C             -15°C<=Tmin<=34°C
 #  Atmosfere pressure----PATM        mb              400mb<=P<=1100mb
-#  % relative humidity----HR          -                0%<=HR<=100%
+#  % relative humidity----RH          -                0%<=RH<=100%
 #  Runoff---------------RUNOFF      m^3/s                0 to 3300
 
 
@@ -144,7 +144,7 @@ def validation_var_D(type_var_D, var_D, date_D, data_of_var_D):
             returnError(_("atmosfere pressure not valid"))
 
     # validation for % of relative humidity
-    def if_var_D_is_HR():
+    def if_var_D_is_RH():
         if (0 <= var_D <= 100) or int(var_D) in globals.VALID_NULL:
             return var_D
         else:
@@ -165,7 +165,7 @@ def validation_var_D(type_var_D, var_D, date_D, data_of_var_D):
       "TMAX": if_var_D_is_TMAX,
       "TEMP": if_var_D_is_TEMP,
       "PATM": if_var_D_is_PATM,
-      "HR": if_var_D_is_HR,
+      "RH": if_var_D_is_RH,
       "RUNOFF": if_var_D_is_RUNOFF
     }
     return validation[type_var_D]()
@@ -188,7 +188,7 @@ def validation_var_D(type_var_D, var_D, date_D, data_of_var_D):
 # Carribbean (CAR) Index-------SSTA_CAR         °C              -1.3 to 1.3
 # Monthly anomaly of the
 # ocean surface area Ocean                Area anomaly scaled
-# region >28.5C----------------SSTA_WHWP     by 10e6 km^2        -13 to 14
+# region >28.5C----------------AREA_WHWP     by 10e6 km^2        -13 to 14
 
 def validation_var_I(type_var_I, var_I, range_below_I, range_above_I):
     '''
@@ -300,6 +300,6 @@ def validation_var_I(type_var_I, var_I, range_below_I, range_above_I):
       "NAO": if_var_I_is_NAO,
       "QBO": if_var_I_is_QBO,
       "SSTA_CAR": if_var_I_is_SSTA_CAR,
-      "SSTA_WHWP": if_var_I_is_AREA_WHWP
+      "AREA_WHWP": if_var_I_is_AREA_WHWP
     }
     return validation[type_var_I]()
