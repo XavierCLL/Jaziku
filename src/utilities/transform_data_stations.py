@@ -38,12 +38,16 @@
 import csv
 import os
 import sys
+from clint.textui import colored
 
 if len(sys.argv) < 2:
     print "Error, missing argument.\nUse: python {0} FILE_DATA.csv".format(sys.argv[0])
     exit()
 
-print "\nProcessing file: {0}".format(sys.argv[1])
+print colored.green("\nTRANDFORM DATA SCRIPT FOR JAZIKU\n")
+print colored.yellow("Important: This transform data script version is input valid for Jaziku 0.3.x")
+
+print "\nProcessing file: " + colored.blue(sys.argv[1])
 
 #csv file from arguments
 csv_data_input = sys.argv[1]
@@ -88,14 +92,20 @@ for year in range(years):
                 csv_stations.append(csv.writer(open(file_name + ".txt", 'w'), delimiter='\t'))
                 #write station list
                 csv_stations_list.writerow(["(code)", station, "(lat)", "(lon)", file_name + ".txt",
-                                            "(type var dep)", "(dir var indep)", "(type var indep)",
-                                            "(threshold below)", "(threshold above)", "(forecasting options...)"])
+                                            "(type var dep)", "(dir var indep [default or dir to file])", "(type var indep)",
+                                            "(min value for check var I [none or value])",
+                                            "(max value for check var I [none or value])",
+                                            "(threshold below [default or personal threshold])",
+                                            "(threshold above [default or personal threshold])",
+                                            "(analysis interval [5days,10days,15days or trimester])"
+                                            "(forecasting values: 9 values)", "(forecasting date [trimester or month/day])"])
 
         for month in range(12):
 
             for number, station in enumerate(csv_stations):
                 station.writerow(["{0}-{1}".format(values[month * years + year][0], values[month * years + year][1]), values[month * years + year][number + 2]])
 
-print "\nSaving result in dir: {0}/".format(stations_dir)
-print "\nSaving stations list file: {0}\n(basic structure with station name and link to file dep var)".format(stations_list_name)
-print "\nDone"
+print "\nSaving result in dir: " + colored.green(stations_dir)
+print "\nSaving stations list file: " + colored.green(stations_list_name)
+print colored.yellow("\nComplete the stations_list.csv file before running with Jaziku")
+print colored.green("\nDone\n")
