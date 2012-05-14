@@ -251,8 +251,8 @@ def read_var_D(station):
         fo.write(file_D_fix.replace('\x00', ''))
         fo.close()
 
-        print colored.yellow(_("\n\n\tWarning: Repairing file \"{0}\" of NULL"\
-                               " bytes garbage,\n\tsaving new file as: {1}")
+        print colored.yellow(_("\n\n   Warning: Repairing file \"{0}\" of NULL"\
+                               " bytes garbage,\n   saving new file as: {1}")
                                .format(station.file_D.name, name_fix))
 
         reader_csv_fix = csv.reader(open(name_fix, 'rb'), delimiter='\t')
@@ -336,10 +336,11 @@ def read_var_I(station):
 
             split_internal_var_I = internal_file_I_name.split(".")[0].split("_")
             print colored.yellow(
-                    _("\n   You are using internal files for independent variable\n"
-                      "   defined as {0} which has data from {1} to {2} and\n"
-                      "   the source of data obtained in {3}\n"
-                      "   url: {4} .....................")
+                    _("\n   You are using internal files for independent\n"
+                      "   variable defined as {0} which has data from\n"
+                      "   {1} to {2} and the source of data was\n"
+                      "   obtained in {3}.\n"
+                      "   url: {4} ...................")
                       .format(split_internal_var_I[0], split_internal_var_I[1],
                               split_internal_var_I[2], ' '.join(split_internal_var_I[3::]),
                               globals.internal_var_I_urls[station.type_I])),
@@ -358,15 +359,17 @@ def read_var_I(station):
             station.range_below_I = float(station.range_below_I.replace(',', '.'))
             station.range_above_I = float(station.range_above_I.replace(',', '.'))
         except:
-            raise Exception(_("Problem with particular range validation for "
+            print_error_line_stations(station,
+                            (_("Problem with particular range validation for "
                               "independent\nvariable: {0};{1} this should be "
                               "a valid number or \"none\".").format(station.range_below_I,
-                                                  station.range_above_I))
+                                                  station.range_above_I)))
     else:
         # validation type_I
         if station.type_I not in input_arg.types_var_I:
-            raise Exception(_("{0} is not valid type for independence variable")
-                            .format(station.type_I))
+            print_error_line_stations(station,
+                                      _("{0} is not valid type for independence variable")
+                                      .format(station.type_I))
         station.range_below_I = "None"
         station.range_above_I = "None"
 
@@ -435,8 +438,8 @@ def read_var_I(station):
         fo.write(file_I_fix.replace('\x00', ''))
         fo.close()
 
-        print colored.yellow(_("\n\n\tWarning: Repairing file \"{0}\" of NULL"\
-                               " bytes garbage,\n\tsaving new file as: {1}")
+        print colored.yellow(_("\n\n   Warning: Repairing file \"{0}\" of NULL"\
+                               " bytes garbage,\n   saving new file as: {1}")
                                .format(station.file_I.name, name_fix))
 
         reader_csv_fix = csv.reader(open(name_fix, 'rb'), delimiter='\t')
@@ -516,10 +519,10 @@ def calculate_common_period(station):
     if args.period:
         if (args_period_start < common_date[0].year + 1 or
             args_period_end > common_date[-1].year - 1):
-            sys.stdout.write(_("Calculating the process period .................. "))
+            sys.stdout.write(_("Calculating the process period ................ "))
             sys.stdout.flush()
             print_error(_("The period defined in argument {0}-{1} is outside in the\n"
-                          "maximum process period for this station: {2}-{3}.")
+                          "maximum possible period for this station: {2}-{3}.")
                         .format(args_period_start, args_period_end, common_date[0].year + 1,
                                 common_date[-1].year - 1))
 
@@ -538,15 +541,12 @@ def calculate_common_period(station):
     # because the data process is:
     #     common-period-start + 1 to common-period-end - 1
     if len(common_date) < 36:
-        sys.stdout.write(_("Calculating the common period ................... "))
+        sys.stdout.write(_("Calculating the common period ................. "))
         sys.stdout.flush()
-        if args.period:
-            print_error(_("The period defined in argument must be at least 3 "
-                          "years for process."))
-        else:
-            print_error(_("The common period calculated {0}-{1} has not at "
-                          "least 3 years.").format(common_date[0].year,
-                                                   common_date[-1].year))
+
+        print_error(_("The common period calculated {0}-{1} has not at "
+                      "least 3 years.").format(common_date[0].year,
+                                               common_date[-1].year))
 
     return common_period
 
@@ -647,7 +647,7 @@ def check_consistent_data(station, var):
         if value in globals.VALID_NULL:
             null_counter += 1
 
-    sys.stdout.write(_("({0} null of {1}) .... ").format(null_counter, len(values_in_common_period)))
+    sys.stdout.write(_("({0} null of {1})\t").format(null_counter, len(values_in_common_period)))
     sys.stdout.flush()
 
     if  null_counter / float(len(values_in_common_period)) >= 0.15:
@@ -1083,9 +1083,9 @@ def get_contingency_table(station, lag, month, day=None):
     # if threshold by below of independent variable is wrong
     if float(sum_per_column_percent[0]) == 0 and not threshold_problem[0]:
         print colored.yellow(
-            _(u'\n\nWarning:\nThe thresholds selected \"{0}\" and \"{1}\" '
-              u'are not suitable for\ncompound analysis of variable \"{2}\" '
-              u'with relation to \"{3}\"\ninside category \"{4}\". Therefore,'
+            _(u'\n\n   Warning:\n   The thresholds selected \"{0}\" and \"{1}\" '
+              u'are not suitable for\n   compound analysis of variable \"{2}\" '
+              u'with relation to \"{3}\"\n   inside category \"{4}\". Therefore,'
               u' the graphics will not be created.')
               .format(station.threshold_below_var_I, station.threshold_above_var_I,
                       station.type_D, station.type_I, globals.phenomenon_below))
@@ -1094,9 +1094,9 @@ def get_contingency_table(station, lag, month, day=None):
     # if threshold by below or above calculating normal phenomenon of independent variable is wrong
     if float(sum_per_column_percent[1]) == 0 and not threshold_problem[1]:
         print colored.yellow(
-            _(u'\n\nWarning:\nThe thresholds selected \"{0}\" and \"{1}\" '
-              u'are not suitable for\ncompound analysis of variable \"{2}\" '
-              u'with relation to \"{3}\"\ninside category \"{4}\". Therefore,'
+            _(u'\n\n   Warning:\n   The thresholds selected \"{0}\" and \"{1}\" '
+              u'are not suitable for\n   compound analysis of variable \"{2}\" '
+              u'with relation to \"{3}\"\n   inside category \"{4}\". Therefore,'
               u' the graphics will not be created.')
               .format(station.threshold_below_var_I, station.threshold_above_var_I,
                       station.type_D, station.type_I, globals.phenomenon_normal))
@@ -1105,9 +1105,9 @@ def get_contingency_table(station, lag, month, day=None):
     # if threshold by above of independent variable is wrong
     if float(sum_per_column_percent[2]) == 0 and not threshold_problem[2]:
         print colored.yellow(
-            _(u'\n\nWarning:\nThe thresholds selected \"{0}\" and \"{1}\" '
-              u'are not suitable for\ncompound analysis of variable \"{2}\" '
-              u'with relation to \"{3}\"\ninside category \"{4}\". Therefore,'
+            _(u'\n\n   Warning:\n   The thresholds selected \"{0}\" and \"{1}\" '
+              u'are not suitable for\n   compound analysis of variable \"{2}\" '
+              u'with relation to \"{3}\"\n   inside category \"{4}\". Therefore,'
               u' the graphics will not be created.')
               .format(station.threshold_below_var_I, station.threshold_above_var_I,
                       station.type_D, station.type_I, globals.phenomenon_above))
@@ -1528,7 +1528,7 @@ def graphics_climate(station):
         image_width = 600
         mosaic_dir_save = \
             os.path.join(graphics_dir_ca, _('mosaic_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
-                        .format(lag, station.analysis_interval, station.code, station.name,
+                        .format(lag, station.translate_analysis_interval, station.code, station.name,
                                 station.type_D, station.type_I, station.process_period['start'],
                                 station.process_period['end']))
 
@@ -1669,9 +1669,7 @@ def maps_climate(station):
 
     # -------------------------------------------------------------------------
     # create maps plots files for climate process, only once
-
     if globals.maps_files_climate[station.analysis_interval] is None:
-
         # create and define csv output file for maps climate
         phenomenon = {0: globals.phenomenon_below,
                       1: globals.phenomenon_normal,
@@ -1684,7 +1682,7 @@ def maps_climate(station):
             maps_dir = os.path.join(climate_dir, _('maps'))
 
             maps_data_lag = os.path.join(maps_dir, _('maps_data'),
-                                         station.analysis_interval,
+                                         station.translate_analysis_interval,
                                          _('lag_{0}').format(lag))
 
             if not os.path.isdir(maps_data_lag):
@@ -1836,7 +1834,7 @@ def maps_forecasting(station):
 
                 maps_dir = os.path.join(forecasting_dir, _('maps'),
                                         _('maps_data'),
-                                        station.analysis_interval)
+                                        station.translate_analysis_interval)
 
                 if not os.path.isdir(maps_dir):
                     os.makedirs(maps_dir)
@@ -1919,26 +1917,26 @@ def pre_process(station):
     # Reading the variables from files and check based on range validation
 
     # var D
-    sys.stdout.write(_("Read and check(range validation) var D .......... "))
+    sys.stdout.write(_("Read and check(range validation) var D ........ "))
     sys.stdout.flush()
     station = read_var_D(station)  # <--
     print colored.green(_("done"))
 
     if station.data_of_var_D == "daily":
-        print colored.cyan(_(" ↳the dependent variable has data daily"))
+        print colored.cyan(_("   the dependent variable has data daily"))
     if station.data_of_var_D == "monthly":
-        print colored.cyan(_(" ↳the dependent variable has data monthly"))
+        print colored.cyan(_("   the dependent variable has data monthly"))
 
     # var I
-    sys.stdout.write(_("Read and check(range validation) var I .......... "))
+    sys.stdout.write(_("Read and check(range validation) var I ........ "))
     sys.stdout.flush()
     station = read_var_I(station)  # <--
     print colored.green(_("done"))
 
     if station.data_of_var_I == "daily":
-        print colored.cyan(_(" ↳the independent variable has data daily"))
+        print colored.cyan(_("   the independent variable has data daily"))
     if station.data_of_var_I == "monthly":
-        print colored.cyan(_(" ↳the independent variable has data monthly"))
+        print colored.cyan(_("   the independent variable has data monthly"))
 
     # -------------------------------------------------------------------------
     # Calculating common period and process period
@@ -1994,7 +1992,7 @@ def process(station):
 
     # define if results will made by trimester or every n days
     if station.state_of_data in [1, 3]:
-        print colored.cyan(_(" Results will be made by trimester"))
+        print colored.cyan(_("   Results will be made by trimesters"))
         if station.analysis_interval != "trimester":
             text_error = _("var_D (and or not var_I) has data monthly but you define the\n"
                            "analisys interval as \"{0}\", this must be, in this\n"
@@ -2004,21 +2002,21 @@ def process(station):
         # if analysis_interval is defined by trimester but var_I or/and var_D has data
         # daily, first convert in data monthly and continue with results by trimester
         if station.analysis_interval == "trimester":
-            print colored.cyan(_(" Results will be made by trimester"))
+            print colored.cyan(_("   Results will be made by trimesters"))
             if station.data_of_var_D == "daily":
-                print colored.cyan(_(" Converting all var D to data monthly"))
+                print colored.cyan(_("   Converting all var D to data monthly"))
                 station.var_D, station.date_D = daily2monthly(station.var_D, station.date_D)
                 station.data_of_var_D = "monthly"
             if station.data_of_var_I == "daily":
-                print colored.cyan(_(" Converting all var I to data monthly"))
+                print colored.cyan(_("   Converting all var I to data monthly"))
                 station.var_I, station.date_I = daily2monthly(station.var_I, station.date_I)
                 station.data_of_var_I = "monthly"
             station.state_of_data = 1
         else:
-            print colored.cyan(_(" Results will be made every {} days").format(station.analysis_interval_num_days))
+            print colored.cyan(_("   Results will be made every {} days").format(station.analysis_interval_num_days))
 
     if station.state_of_data == 3:
-        print colored.cyan(_(" Converting all var I to data monthly"))
+        print colored.cyan(_("   Converting all var I to data monthly"))
         station.var_I, station.date_I = daily2monthly(station.var_I, station.date_I)
         station.data_of_var_I = "monthly"
 
@@ -2051,7 +2049,9 @@ def climate(station):
     '''
 
     # console message
-    sys.stdout.write(_("Processing climate"))
+    sys.stdout.write(_("Processing climate ({0}-{1}) ................ ")
+                     .format(station.process_period['start'],
+                             station.process_period['end']))
     sys.stdout.flush()
 
     # create directory for output files
@@ -2063,10 +2063,6 @@ def climate(station):
     if not os.path.isdir(station.climate_dir):
         os.makedirs(station.climate_dir)
 
-    sys.stdout.write(" ({0}-{1}) .................. ".format(station.process_period['start'],
-                                                   station.process_period['end']))
-    sys.stdout.flush()
-
     station = calculate_lags(station)
 
     station.size_time_series = (len(station.common_period) / 12) - 2
@@ -2077,6 +2073,10 @@ def climate(station):
 
     if not threshold_problem[0] and not threshold_problem[1] and not threshold_problem[2]:
         graphics_climate(station)
+    else:
+        sys.stdout.write(_("\ncontinue without make graphics for climate .... "))
+        sys.stdout.flush()
+
 
     maps_climate(station)
 
@@ -2091,7 +2091,7 @@ def forecasting(station):
     '''
 
     # console message
-    sys.stdout.write(_("Processing forecasting ({0}-{1}) .............. ")
+    sys.stdout.write(_("Processing forecasting ({0}-{1}) ............ ")
                      .format(station.process_period['start'], station.process_period['end']))
     sys.stdout.flush()
 
@@ -2127,10 +2127,11 @@ def forecasting(station):
                   .format(station.forecasting_date[0]))
         if station.forecasting_date[1] not in station.range_analysis_interval:
             print_error_line_stations(station,
-                _("Start day for forecasting process \"{0}\" is invalid,\n"
-                  "should be a valid start day based on range analysis\n"
-                  "interval, these are for this station: {1}")
-                  .format(station.forecasting_date[1], station.range_analysis_interval))
+                _("Start day (month/day) for forecasting process \"{0}\"\nis invalid, "
+                  "should be a valid start day based on\nrange analysis "
+                  "interval, the valid start days for\n{1} are: {2}")
+                  .format(station.forecasting_date[1], station.translate_analysis_interval,
+                          station.range_analysis_interval))
 
     # create directory for output files
     if not os.path.isdir(forecasting_dir):
@@ -2221,7 +2222,7 @@ def main():
     # check python version
     if sys.version_info[0] != 2 and sys.version_info[1] < 6:
         print_error(_("You version of python is {0}, please use Jaziku with "
-                      "python v2.6 or higher.").format(sys.version_info[0:2]))
+                      "python v2.6 or v2.7").format(sys.version_info[0:2]))
 
     # set encoding to utf-8
     reload(sys)
@@ -2432,7 +2433,7 @@ def main():
 
             translate_analysis_interval = [_("5days"), _("10days"), _("15days"), _("trimester")]
 
-            station.analysis_interval = \
+            station.translate_analysis_interval = \
                 translate_analysis_interval[options_analysis_interval.index(station.analysis_interval)]
 
             if args.forecasting:
