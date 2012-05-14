@@ -718,18 +718,23 @@ def calculate_lags(station):
         var_I_values = []
         if station.data_of_var_I == "daily":
             # from day to next iterator based on analysis interval
-            start_interval = day - 1 - (range_analysis_interval[1] - 1) * lag
-            end_interval = day - 1 - (range_analysis_interval[1] - 1) * (lag - 1)
-            if end_interval == 30:
-                end_interval = 32
-            interval_day_var_I = range(start_interval, end_interval)
+            start_interval = range_analysis_interval[range_analysis_interval.index(day) - lag]
+            try:
+                end_interval = range_analysis_interval[range_analysis_interval.index(day) + 1 - lag]
+            except:
+                end_interval = range_analysis_interval[0]
 
-            for iter_day in interval_day_var_I:
-                now = date(iter_year, month, 1) + relativedelta(days=iter_day)
-                # check if continues with the same month
-                if now.month <= month:
-                    index_var_I = station.date_I.index(now)
-                    var_I_values.append(station.var_I[index_var_I])
+            start_date = date(iter_year, month, start_interval)
+
+            if range_analysis_interval.index(day) - lag < 0:
+                start_date += relativedelta(months= -1)
+
+            iter_date = start_date
+
+            while iter_date.day != end_interval:
+                index_var_I = station.date_I.index(iter_date)
+                var_I_values.append(station.var_I[index_var_I])
+                iter_date += relativedelta(days=1)
 
         if station.data_of_var_I == "monthly":
             # get the three values for var_I in this month
