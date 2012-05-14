@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-05-13 23:48-0500\n"
-"PO-Revision-Date: 2012-05-13 23:52-0500\n"
+"PO-Revision-Date: 2012-05-14 00:01-0500\n"
 "Last-Translator: Xavier Corredor Llano <xavier.corredor.llano@gmail.com>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -1014,7 +1014,7 @@ msgstr ""
 
 #: plugins/input_validation.py:212
 msgid "{0} not valid"
-msgstr "{0}no válido"
+msgstr "{0} no válido"
 
 #: plugins/input_validation.py:219
 msgid "Oceanic Nino Index not valid"
