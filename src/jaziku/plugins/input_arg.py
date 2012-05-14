@@ -73,4 +73,4 @@ arguments.add_argument('-ra', '--risk-analysis', action='store_true',
                        default=False, required=False,
                        help=_('Enable risk analysis for forecasting process'))
 # Set language (optional), if not set get language from system
-arguments.add_argument('-l', type=str, help=_('Set language (e.g. \'-l en\' for english, \'-l es\' spanish,...)'))
+arguments.add_argument('-l', type=str, help=_('Set language (e.g. \'-l en\' for english, \'-l es\' for spanish)'))

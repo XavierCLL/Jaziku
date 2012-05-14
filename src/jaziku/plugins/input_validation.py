@@ -286,7 +286,7 @@ def validation_var_I(type_var_I, var_I, range_below_I, range_above_I):
         if (-13 <= var_I <= 14) or int(var_I) in globals.VALID_NULL:
             return var_I
         else:
-            returnError(_("Monthly anomaly of the ocean surface area Ocean region not valid"))
+            returnError(_("Monthly anomaly of the ocean surface area ocean region not valid"))
 
     # switch validation
     validation = {
