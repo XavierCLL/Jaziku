@@ -17,6 +17,7 @@ features/changes:
  * Added 3 new variables independent (SSTA_CAR and AREA_WHWP) and one variable 
    dependent (RUNOFF)
  * Updated transform_data_stations script
+ * add two new arguments: --disable-consistent-data and --disable-graphics
 
 bugfixes:
  * bugfix the size data when set particular common period

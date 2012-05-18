@@ -1995,23 +1995,24 @@ def pre_process(station):
     station.process_period = {'start': station.common_period[0][0].year + 1,
                               'end': station.common_period[-1][0].year - 1}
 
-    # -------------------------------------------------------------------------
-    # check if the data are consistent for var D
-    sys.stdout.write(_("Check if var_D are consistent "))
-    sys.stdout.flush()
+    if not args.disable_consistent_data:
+        # -------------------------------------------------------------------------
+        # check if the data are consistent for var D
+        sys.stdout.write(_("Check if var_D are consistent "))
+        sys.stdout.flush()
 
-    check_consistent_data(station, "D")
+        check_consistent_data(station, "D")
 
-    print colored.green(_("done"))
+        print colored.green(_("done"))
 
-    # -------------------------------------------------------------------------
-    # check if the data are consistent for var I
-    sys.stdout.write(_("Check if var_I are consistent "))
-    sys.stdout.flush()
+        # -------------------------------------------------------------------------
+        # check if the data are consistent for var I
+        sys.stdout.write(_("Check if var_I are consistent "))
+        sys.stdout.flush()
 
-    check_consistent_data(station, "I")
+        check_consistent_data(station, "I")
 
-    print colored.green(_("done"))
+        print colored.green(_("done"))
 
     return station
 
@@ -2121,12 +2122,11 @@ def climate(station):
 
     station = result_table_CA(station)
 
-    if not threshold_problem[0] and not threshold_problem[1] and not threshold_problem[2]:
+    if not threshold_problem[0] and not threshold_problem[1] and not threshold_problem[2] and not args.disable_graphics:
         graphics_climate(station)
     else:
         sys.stdout.write(_("\ncontinue without make graphics for climate .... "))
         sys.stdout.flush()
-
 
     maps_climate(station)
 
@@ -2235,8 +2235,11 @@ def forecasting(station):
     station.prob_normal_var_D = prob_normal_var_D
     station.prob_exceed_var_D = prob_exceed_var_D
 
-    if not threshold_problem[0] and not threshold_problem[1] and not threshold_problem[2]:
+    if not threshold_problem[0] and not threshold_problem[1] and not threshold_problem[2] and not args.disable_graphics:
         graphics_forecasting(station)
+    else:
+        sys.stdout.write(_("\ncontinue without make graphics for forecasting  "))
+        sys.stdout.flush()
 
     maps_forecasting(station)
 

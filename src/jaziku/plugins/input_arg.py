@@ -69,8 +69,16 @@ arguments.add_argument('-p_above', type=str,
 arguments.add_argument('-period', type=str, required=False,
                        help=_('Set specific period for process (e.g. 1980-2010)'))
 # enable/disable forescasting process
-arguments.add_argument('-ra', '--risk-analysis', action='store_true',
+arguments.add_argument('--risk-analysis', action='store_true',
                        default=False, required=False,
                        help=_('Enable risk analysis for forecasting process'))
+# disable check consistent data
+arguments.add_argument('--disable-consistent-data', action='store_true',
+                       default=False, required=False,
+                       help=_('disable check consistent data for var_D and var_I'))
+# disable create graphics for climate and forecasting
+arguments.add_argument('--disable-graphics', action='store_true',
+                       default=False, required=False,
+                       help=_('disable create graphics for climate and forecasting'))
 # Set language (optional), if not set get language from system
 arguments.add_argument('-l', type=str, help=_('Set language (e.g. \'-l en\' for english, \'-l es\' for spanish)'))
