@@ -26,6 +26,8 @@ bugfixes:
  * check different cases to run data daily/monthly and analisis interval defined
  * fixed range interval for var I and different lags when data is daily and 
    result is in 5, 10 or 15 days
+ * fixed constant value for var I when run case 2 (var_D daily and var_I monthly)
+   for 5, 10 and 15 days 
  
 
 0.2.1

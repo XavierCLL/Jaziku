@@ -110,6 +110,8 @@ import gettext
 import locale
 TRANSLATION_DOMAIN = "jaziku"
 LOCALE_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "locale") # 'locale'
+gettext.bindtextdomain(TRANSLATION_DOMAIN, LOCALE_DIR)
+gettext.textdomain(TRANSLATION_DOMAIN)
 gettext.install(TRANSLATION_DOMAIN, LOCALE_DIR)
 
 # import funtions in plugins
@@ -737,10 +739,24 @@ def calculate_lags(station):
                 iter_date += relativedelta(days=1)
 
         if station.data_of_var_I == "monthly":
-            # get the three values for var_I in this month
-            for iter_month in range(3):
-                var_I_values.append(station.var_I[station.date_I.index(
-                    date(iter_year, month, 1) + relativedelta(months=iter_month - lag))])
+            if station.state_of_data in [1, 3]:
+                # get the three values for var_I in this month
+                for iter_month in range(3):
+                    var_I_values.append(station.var_I[station.date_I.index(
+                        date(iter_year, month, 1) + relativedelta(months=iter_month - lag))])
+            if station.state_of_data in [2]:
+                # keep constant value for month
+                if station.analysis_interval == "trimester":
+                    var_I_values.append(station.var_I[station.date_I.index(
+                            date(iter_year, month, 1) + relativedelta(months= -lag))])
+                else:
+                    real_date = date(iter_year, month, day) + relativedelta(days= -station.analysis_interval_num_days * lag)
+                    # e.g if lag 2 in march and calculate to 15days go to february and not january
+                    if month - real_date.month > 1:
+                        real_date = date(real_date.year, real_date.month + 1, 1)
+
+                    var_I_values.append(station.var_I[station.date_I.index(
+                            date(real_date.year, real_date.month, 1))])
 
         return var_I_values
 
@@ -761,6 +777,9 @@ def calculate_lags(station):
                                                 station.type_I,
                                                 station.process_period['start'],
                                                 station.process_period['end']))
+
+                if os.path.isfile(csv_name):
+                    os.remove(csv_name)
 
                 # output write file:
                 # [[ yyyy/month, Mean_Lag_X_var_D, Mean_Lag_X_var_I ],... ]
@@ -813,9 +832,12 @@ def calculate_lags(station):
                                                 station.process_period['start'],
                                                 station.process_period['end']))
 
+                if os.path.isfile(csv_name):
+                    os.remove(csv_name)
+
                 # output write file:
                 # [[ yyyy/month, Mean_Lag_X_var_D, Mean_Lag_X_var_I ],... ]
-                open_file = open(csv_name, 'a')
+                open_file = open(csv_name, 'w')
                 csv_file = csv.writer(open_file, delimiter=';')
 
                 #days_for_this_month = monthrange(iter_year, month)[1]
@@ -880,41 +902,49 @@ def get_thresholds_var_I(station):
     # thresholds by below and by above of var I by default
     def thresholds_by_default():
 
-        # validation for Oceanic Nino Index
+        # thresholds for Oceanic Nino Index
         def if_var_I_is_ONI():
             return -0.5, 0.5
 
-        # validation for Index of the Southern Oscillation NOAA
+        # thresholds for Index of the Southern Oscillation NOAA
         def if_var_I_is_SOI():
             return -1.2, 0.9
 
-        # validation for Multivariate ENSO index
+        # thresholds for Multivariate ENSO index
         def if_var_I_is_MEI():
             return percentiles(33, 66)
 
-        # validation for Radiation wavelength Long tropical
+        # thresholds for Radiation wavelength Long tropical
         def if_var_I_is_OLR():
             return -1.1, 0.9
 
-        # validation for Index of wind anomaly
+        # thresholds for Index of wind anomaly
         def if_var_I_is_W200():
             return percentiles(33, 66)
 
-        # validation for Sea surface temperature
+        # thresholds for Sea surface temperature
         def if_var_I_is_SST():
             return percentiles(33, 66)
 
-        # validation for % Amazon relative humidity
+        # thresholds for % Amazon relative humidity
         def if_var_I_is_ARH():
             return percentiles(33, 66)
 
-        # validation for quasibienal oscillation index
+        # thresholds for quasibienal oscillation index
         def if_var_I_is_QBO():
             return percentiles(33, 66)
 
-        # validation for North atlantic oscillation index
+        # thresholds for North atlantic oscillation index
         def if_var_I_is_NAO():
             return 0, 0
+
+        # thresholds for Carribbean (CAR) Index
+        def if_var_I_is_SSTA_CAR():
+            return percentiles(33, 66)
+
+        # thresholds for Monthly anomaly of the ocean surface area Ocean region
+        def if_var_I_is_AREA_WHWP():
+            return percentiles(33, 66)
 
         # switch validation
         select_threshold_var_I = {
@@ -926,7 +956,9 @@ def get_thresholds_var_I(station):
           "SST": if_var_I_is_SST,
           "ARH": if_var_I_is_ARH,
           "QBO": if_var_I_is_QBO,
-          "NAO": if_var_I_is_NAO
+          "NAO": if_var_I_is_NAO,
+          "SSTA_CAR": if_var_I_is_SSTA_CAR,
+          "AREA_WHWP": if_var_I_is_AREA_WHWP
         }
 
         if station.type_I not in select_threshold_var_I:
@@ -1288,6 +1320,9 @@ def result_table_CA(station):
                     .format(lag, station.name, station.code, station.type_D, station.type_I,
                             station.process_period['start'], station.process_period['end']))
 
+        if os.path.isfile(csv_name):
+            os.remove(csv_name)
+
         open_file = open(csv_name, 'w')
         csv_result_table = csv.writer(open_file, delimiter=';')
 
@@ -1355,7 +1390,7 @@ def result_table_CA(station):
 
                     # this is for calculate date for print in result table
                     # this depend on range analysis interval and lags (var_I)
-                    # the year no matter
+                    # the year no matter (tested)
                     date_now = date(2000, month, day)
 
                     # for print text date in result table
@@ -1708,6 +1743,9 @@ def maps_climate(station):
                             os.path.join(maps_data_phenom, _(u'Map_Data_lag_{0}_trim_{1}_{2}.csv')
                                          .format(lag, month, phenomenon[category]))
 
+                        if os.path.isfile(csv_name):
+                            os.remove(csv_name)
+
                         # write new row in file
                         open_file = open(csv_name, 'w')
                         csv_file = csv.writer(open_file, delimiter=';')
@@ -1736,6 +1774,9 @@ def maps_climate(station):
                                              .format(lag,
                                                      month_text[month - 1] + "_" + str(day),
                                                      phenomenon[category]))
+
+                            if os.path.isfile(csv_name):
+                                os.remove(csv_name)
 
                             # write new row in file
                             open_file = open(csv_name, 'w')
@@ -1847,6 +1888,10 @@ def maps_forecasting(station):
                 # write the headers in file
                 csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}.csv')
                                         .format(lag))
+
+                if os.path.isfile(csv_name):
+                    os.remove(csv_name)
+
                 open_file = open(csv_name, 'w')
                 csv_file = csv.writer(open_file, delimiter=';')
                 csv_file.writerow([_('code'), _('lat'), _('lon'),
@@ -1980,11 +2025,11 @@ def process(station):
     # State of the data for process, calculate and write output based on type
     # of data (daily or monthly) of dependent and independent variable
     #
-    # | state |  var D  |  var I  |
-    # |   1   | monthly | monthly |
-    # |   2   |  daily  | monthly |
-    # |   3   | monthly |  daily  |
-    # |   4   |  daily  |  daily  |
+    # | state |  var D  |  var I  |         possible results
+    # |   1   | monthly | monthly |            trimester
+    # |   2   |  daily  | monthly | 5days, 10days, 15days and trimester
+    # |   3   | monthly |  daily  |            trimester
+    # |   4   |  daily  |  daily  | 5days, 10days, 15days and trimester
     #
     if station.data_of_var_D == "monthly" and station.data_of_var_I == "monthly":
         station.state_of_data = 1
@@ -2355,7 +2400,8 @@ def main():
         climate_dir = \
             os.path.join(os.path.splitext(args.stations.name)[0], _('Jaziku_Climate'))   # 'results'
 
-        print _("\nSaving the result for climate in:\n -> {0}").format(climate_dir)
+        print _("\nSaving the result for climate in:")
+        print "   " + colored.cyan(climate_dir)
 
         if os.path.isdir(climate_dir):
             print colored.yellow(\
@@ -2371,7 +2417,8 @@ def main():
         forecasting_dir = \
             os.path.join(os.path.splitext(args.stations.name)[0], _('Jaziku_Forecasting'))   # 'results'
 
-        print _("\nSaving the result for forecasting in:\n -> {0}").format(forecasting_dir)
+        print _("\nSaving the result for forecasting in:").format(forecasting_dir)
+        print "   " + colored.cyan(forecasting_dir)
 
         if os.path.isdir(forecasting_dir):
             print colored.yellow(\
@@ -2481,8 +2528,11 @@ def main():
         # delete instance
         del station
 
-    print colored.green(_("\nProcess completed!, {0} station(s) processed.\n")
-                        .format(Station.stations_processed))
+    print colored.green(gettext.ngettext(
+                        "\nProcess completed!, {0} station processed.\n",
+                        "\nProcess completed!, {0} stations processed.\n",
+                        Station.stations_processed).format(Station.stations_processed))
+
     print _("Good bye :)\n")
 
 
