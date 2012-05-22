@@ -34,7 +34,7 @@ COMPILE_DATE = "17/05/2012"
 VALID_NULL = [99999, -99999]
 
 # accuracy of number decimal places, only for print result
-ACCURACY = 3
+ACCURACY = 5
 
 # types of internal variable independent
 internal_var_I_types = ["ONI", "SOI", "MEI", "OLR", "W200", "SST", "ARH", "NAO", "QBO", "SSTA_CAR", "AREA_WHWP"]
