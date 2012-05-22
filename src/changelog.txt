@@ -18,6 +18,7 @@ features/changes:
    dependent (RUNOFF)
  * Updated transform_data_stations script
  * add two new arguments: --disable-consistent-data and --disable-graphics
+ * set to default acuracy to 5 decimal point for print result
 
 bugfixes:
  * bugfix the size data when set particular common period
@@ -29,6 +30,8 @@ bugfixes:
    result is in 5, 10 or 15 days
  * fixed constant value for var I when run case 2 (var_D daily and var_I monthly)
    for 5, 10 and 15 days 
+ * fixed calculating pearson for data daily
+ * fixed table order for calculate forecasting
  
 
 0.2.1
