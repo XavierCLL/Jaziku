@@ -2205,13 +2205,14 @@ def forecasting(station):
     for lag in lags:
 
         items_CT = {'a': 0, 'b': 0, 'c': 0, 'd': 0, 'e': 0, 'f': 0, 'g': 0, 'h': 0, 'i': 0}
+        order_CT = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
 
         if station.state_of_data in [1, 3]:
             _iter = 0
             for column in range(3):
                 for row in range(3):
                     if not args.risk_analysis or station.is_sig_risk_analysis[lag][station.forecasting_date - 1][_iter] == _('yes'):
-                        items_CT[items_CT.keys()[_iter]] = \
+                        items_CT[order_CT[_iter]] = \
                             station.contingencies_tables_percent[lag][station.forecasting_date - 1][column][row] / 100.0
                         _iter += 1
 
@@ -2222,7 +2223,7 @@ def forecasting(station):
             for column in range(3):
                 for row in range(3):
                     if not args.risk_analysis or station.is_sig_risk_analysis[lag][month - 1][day][_iter] == _('yes'):
-                        items_CT[items_CT.keys()[_iter]] = \
+                        items_CT[order_CT[_iter]] = \
                             station.contingencies_tables_percent[lag][month - 1][day][column][row] / 100.0
                         _iter += 1
 
