@@ -1245,10 +1245,17 @@ def result_table_CA(station):
                 else:
                     is_sig_risk_analysis_list.append(_('no'))
 
-        # get values of var D and I from this lag and month
-        var_D_values = get_lag_values(station, 'var_D', lag, month)
+        if station.state_of_data in [1, 3]:
+            # get values of var D and I from this lag and month
+            var_D_values = get_lag_values(station, 'var_D', lag, month)
 
-        var_I_values = get_lag_values(station, 'var_I', lag, month)
+            var_I_values = get_lag_values(station, 'var_I', lag, month)
+
+        if station.state_of_data in [2, 4]:
+            # get values of var D and I from this lag, month and day
+            var_D_values = get_lag_values(station, 'var_D', lag, month, day)
+
+            var_I_values = get_lag_values(station, 'var_I', lag, month, day)
 
         # calculate pearson correlation of var_D and var_I
         pearson = stats.pearsonr(var_D_values, var_I_values)[0]
