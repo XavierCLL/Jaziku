@@ -12,3 +12,5 @@ syntax: regexp
 ^src/build$
 syntax: regexp
 ^src/jaziku\.egg-info$
+syntax: regexp
+^src/dist$
