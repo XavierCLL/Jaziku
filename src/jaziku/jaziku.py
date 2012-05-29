@@ -618,7 +618,7 @@ def daily2monthly(var_daily, date_daily):
 def check_consistent_data(station, var):
     '''
     Check if the data are consistent, this is that the amount of null value
-    not exceed in 15% of the total number of values inside common period
+    not exceed in 15% of the total number of values inside process period
     '''
 
     # temporal var initialize start_date = start common_period + 1 year,

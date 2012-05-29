@@ -1,9 +1,4 @@
 
-version 0.3: (start: march 8, release: march 30)
-* put internal independents variables inside jaziku
-* enable run with particular independent variable file
-* Change the resolution of analysis of trimesters to months and even days
-
 version 0.4: (start: april 9, release: may 31)
 * Add altitude parameter for stations and print in results (maps files)
 * Get parameters and configurations from configuration file (e.g jaziku -run config_file)
