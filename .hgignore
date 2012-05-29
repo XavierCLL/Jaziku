@@ -7,8 +7,8 @@ syntax: regexp
 syntax: regexp
 ^\.settings$
 syntax: regexp
-^\.project$
-syntax: regexp
 ^src/build$
 syntax: regexp
 ^src/jaziku\.egg-info$
+syntax: regexp
+^src/dist$

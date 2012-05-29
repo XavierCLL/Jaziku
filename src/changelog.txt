@@ -1,3 +1,8 @@
+0.4.0
+features/changes:
+
+bugfixes:
+
 
 0.3.0
 features/changes:
@@ -17,6 +22,9 @@ features/changes:
  * Added 3 new variables independent (SSTA_CAR and AREA_WHWP) and one variable 
    dependent (RUNOFF)
  * Updated transform_data_stations script
+ * Consistent data analysis for independent and dependent variable, 
+   check the number of null values from all values inside the process period, 
+   continue only if it have less than 15%
  * add two new arguments: --disable-consistent-data and --disable-graphics
  * set to default acuracy to 5 decimal point for print result
 
