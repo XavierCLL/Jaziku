@@ -1,6 +1,10 @@
 0.4.0
 features/changes:
-
+ * get configuration run and station list in the same file, delete all arguments
+   when run Jaziku, now only argument is "-runfile" and this files contains all
+   the necessary to run Jaziku.
+ * adds parameters for maps options in runfile
+ 
 bugfixes:
 
 
@@ -47,7 +51,6 @@ bugfixes:
 
 
 0.2.0
-
 features/changes:
  * change numeration version
  * applied some PEP8 rules, fix typos and reorganize code

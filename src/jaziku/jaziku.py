@@ -143,7 +143,7 @@ def print_error_line_stations(station, text_error):
     '''
 
     print_error(_("Reading stations from file \"{0}\" in line {1}:\n")
-                  .format(args.stations.name, station.line_num) +
+                  .format(args.runfile.name, run_file.line_num) +
                   ';'.join(station.line_station) + "\n\n" + text_error)
 
 
@@ -181,7 +181,7 @@ def read_var_D(station):
     reader_csv = csv.reader(file_D, delimiter='\t')
 
     # validation type_D
-    if station.type_D not in input_arg.types_var_D:
+    if station.type_D not in globals.types_var_D:
         raise Exception(_("{0} is not valid type for dependence variable")
                         .format(station.type_D))
 
@@ -368,7 +368,7 @@ def read_var_I(station):
                                                   station.range_above_I)))
     else:
         # validation type_I
-        if station.type_I not in input_arg.types_var_I:
+        if station.type_I not in globals.types_var_I:
             print_error_line_stations(station,
                                       _("{0} is not valid type for independence variable")
                                       .format(station.type_I))
@@ -518,7 +518,7 @@ def calculate_common_period(station):
 
     # initialized variable common_period
     # format list: [[  date ,  var_D ,  var_I ],... ]
-    if args.period:
+    if globals.config_run['process_period']:
         if (args_period_start < common_date[0].year + 1 or
             args_period_end > common_date[-1].year - 1):
             sys.stdout.write(_("Calculating the process period ................ "))
@@ -2002,7 +2002,7 @@ def pre_process(station):
     station.process_period = {'start': station.common_period[0][0].year + 1,
                               'end': station.common_period[-1][0].year - 1}
 
-    if not args.disable_consistent_data:
+    if globals.config_run['consistent_data']:
         # -------------------------------------------------------------------------
         # check if the data are consistent for var D
         sys.stdout.write(_("Check if var_D are consistent "))
@@ -2079,17 +2079,17 @@ def process(station):
         station.data_of_var_I = "monthly"
 
     # run process (climate, forecasting) from input arguments
-    if not args.climate and not args.forecasting:
+    if not globals.config_run['climate_process'] and not globals.config_run['forecasting_process']:
         print_error(_("Neither process (climate, forecasting) were executed, "
                       "\nplease enable this process in arguments: \n'-c, "
                       "--climate' for climate and/or '-f, --forecasting' "
                       "for forecasting."))
-    if args.climate:
+    if globals.config_run['climate_process']:
         station = climate(station)
 
-    if args.forecasting:
+    if globals.config_run['forecasting_process']:
         # TODO: run forecasting without climate¿?
-        if not args.climate:
+        if not globals.config_run['climate_process']:
             print_error(_("sorry, Jaziku can't run forecasting process "
                           "without climate, this issue has not been implemented "
                           "yet, \nplease run again with the option \"-c\""))
@@ -2129,7 +2129,7 @@ def climate(station):
 
     station = result_table_CA(station)
 
-    if not threshold_problem[0] and not threshold_problem[1] and not threshold_problem[2] and not args.disable_graphics:
+    if not threshold_problem[0] and not threshold_problem[1] and not threshold_problem[2] and globals.config_run['graphics']:
         graphics_climate(station)
     else:
         sys.stdout.write(_("\ncontinue without make graphics for climate .... "))
@@ -2211,7 +2211,7 @@ def forecasting(station):
             _iter = 0
             for column in range(3):
                 for row in range(3):
-                    if not args.risk_analysis or station.is_sig_risk_analysis[lag][station.forecasting_date - 1][_iter] == _('yes'):
+                    if not globals.config_run['risk_analysis'] or station.is_sig_risk_analysis[lag][station.forecasting_date - 1][_iter] == _('yes'):
                         items_CT[order_CT[_iter]] = \
                             station.contingencies_tables_percent[lag][station.forecasting_date - 1][column][row] / 100.0
                         _iter += 1
@@ -2222,7 +2222,7 @@ def forecasting(station):
             _iter = 0
             for column in range(3):
                 for row in range(3):
-                    if not args.risk_analysis or station.is_sig_risk_analysis[lag][month - 1][day][_iter] == _('yes'):
+                    if not globals.config_run['risk_analysis'] or station.is_sig_risk_analysis[lag][month - 1][day][_iter] == _('yes'):
                         items_CT[order_CT[_iter]] = \
                             station.contingencies_tables_percent[lag][month - 1][day][column][row] / 100.0
                         _iter += 1
@@ -2243,7 +2243,7 @@ def forecasting(station):
     station.prob_normal_var_D = prob_normal_var_D
     station.prob_exceed_var_D = prob_exceed_var_D
 
-    if not threshold_problem[0] and not threshold_problem[1] and not threshold_problem[2] and not args.disable_graphics:
+    if not threshold_problem[0] and not threshold_problem[1] and not threshold_problem[2] and globals.config_run['graphics']:
         graphics_forecasting(station)
     else:
         sys.stdout.write(_("\ncontinue without make graphics for forecasting  "))
@@ -2289,24 +2289,80 @@ def main():
     reload(sys)
     sys.setdefaultencoding("utf-8")
 
+    # -------------------------------------------------------------------------
+    # reading configuration run and list of stations from file
+
     # Parser and check arguments
     global args
     args = input_arg.arguments.parse_args()
 
-    if args.l:
-        if args.l == "en" or args.l == "EN" or args.l == "En":
+    global run_file
+    run_file = csv.reader(args.runfile, delimiter=';')
+
+    in_config_run = False
+    in_station_list = False
+    stations = []
+
+    # read line by line runfile
+    for line_in_run_file in run_file:
+
+        # trim all items in line_in_run_file
+        line_in_run_file = [i.strip() for i in line_in_run_file]
+
+        # if line is null o empty, e.g. empty but with tabs or spaces
+        if not line_in_run_file or not line_in_run_file[0].strip():
+            continue
+
+        # is the first line, start read configuration run
+        if not in_config_run and not in_station_list:
+            if line_in_run_file[1] == "CONFIGURATION RUN":
+                in_config_run = True
+                continue
+
+        # read configuration run
+        if in_config_run:
+            if line_in_run_file[0][0:3] == "## ":
+                continue
+
+            if line_in_run_file[0] in globals.config_run:
+                # in this case, for python 'disable' is None,
+                # then let default value (it is 'None')
+                if line_in_run_file[1] == "disable":
+                    globals.config_run[line_in_run_file[0]] = False
+                elif line_in_run_file[1] == "enable":
+                    globals.config_run[line_in_run_file[0]] = True
+                else:
+                    globals.config_run[line_in_run_file[0]] = line_in_run_file[1]
+            else:
+                if line_in_run_file[1] == "STATIONS LIST":
+                    in_config_run = False
+                    in_station_list = True
+                else:
+                    print_error("error read line in configuration file, in line {0}:\n{1}"
+                                .format(run_file.line_num, line_in_run_file[0]))
+
+        # read all station from file
+        if in_station_list:
+            if line_in_run_file[0][0:2] == "##":
+                continue
+            stations.append(line_in_run_file)
+
+    # -------------------------------------------------------------------------
+    # setting language
+    if globals.config_run['language'] and globals.config_run['language'] != "autodetect":
+        if globals.config_run['language'] == "en" or globals.config_run['language'] == "EN" or globals.config_run['language'] == "En":
             lang = gettext.NullTranslations()
         else:
             try:
                 lang = gettext.translation(TRANSLATION_DOMAIN, LOCALE_DIR,
-                                           languages=[args.l],
+                                           languages=[globals.config_run['language']],
                                            codeset="utf-8")
             except:
-                print_error(_("\"{0}\" language not available.").format(args.l))
+                print_error(_("\"{0}\" language not available.").format(globals.config_run['language']))
 
         if 'lang' in locals():
             lang.install()
-            settings_language = colored.green(args.l)
+            settings_language = colored.green(globals.config_run['language'])
     else:
         # Setting language based on locale language system,
         # when not defined language in arguments
@@ -2327,11 +2383,22 @@ def main():
             lang = gettext.NullTranslations()
             lang.install()
 
+    # -------------------------------------------------------------------------
+    # start message
+
     # set settings default
-    settings = {"climate": _("disabled"), "forecasting": _("disabled"),
-                "p_below": "-", "p_normal": "-", "p_above": "-", "period": "-",
-                "risk-analysis": _("disabled"),
-                "language": settings_language}
+    settings = {"climate_process": _("disabled"),
+                "forecasting_process": _("disabled"),
+                "process_period": "-",
+                "language": settings_language,
+                "consistent_data": _("disabled"),
+                "risk_analysis": _("disabled"),
+                "graphics":_("disabled"),
+                "phen_below_label": "-",
+                "phen_normal_label": "-",
+                "phen_above_label": "-",
+                "maps":_("disabled"),
+                "region": None}
 
     # console message
     print _("\n########################### JAZIKU ###########################\n"
@@ -2346,11 +2413,11 @@ def main():
             .format(globals.VERSION, globals.COMPILE_DATE)
 
     # set period for process if is defined as argument
-    if args.period:
+    if globals.config_run['process_period']:
         global args_period_start, args_period_end
         try:
-            args_period_start = int(args.period.split('-')[0])
-            args_period_end = int(args.period.split('-')[1])
+            args_period_start = int(globals.config_run['process_period'].split('-')[0])
+            args_period_end = int(globals.config_run['process_period'].split('-')[1])
             settings["period"] = colored.green("{0}-{1}".format(args_period_start, args_period_end))
         except Exception, e:
             print_error(_('the period must be: year_start-year_end (ie. 1980-2008)\n\n{0}').format(e))
@@ -2372,44 +2439,70 @@ def main():
                   8: _('sep'), 9: _('oct'), 10: _('nov'), 11: _('dec')}
 
     # if phenomenon below is defined inside arguments, else default value
-    if args.p_below:
-        globals.phenomenon_below = unicode(args.p_below, 'utf-8')
-        settings["p_below"] = colored.green(args.p_below)
+    if globals.config_run['phen_below_label'] and globals.config_run['phen_below_label'] != "default":
+        globals.phenomenon_below = unicode(globals.config_run['phen_below_label'], 'utf-8')
+        settings["phen_below_label"] = colored.green(globals.config_run['phen_below_label'])
+    else:
+        settings["phen_below_label"] = globals.phenomenon_below
     # if phenomenon normal is defined inside arguments, else default value
-    if args.p_normal:
-        globals.phenomenon_normal = unicode(args.p_normal, 'utf-8')
-        settings["p_normal"] = colored.green(args.p_normal)
+    if globals.config_run['phen_normal_label'] and globals.config_run['phen_normal_label'] != "default":
+        globals.phenomenon_normal = unicode(globals.config_run['phen_normal_label'], 'utf-8')
+        settings["phen_normal_label"] = colored.green(globals.config_run['phen_normal_label'])
+    else:
+        settings["phen_normal_label"] = globals.phenomenon_normal
     # if phenomenon above is defined inside arguments, else default value
-    if args.p_above:
-        globals.phenomenon_above = unicode(args.p_above, 'utf-8')
-        settings["p_above"] = colored.green(args.p_above)
+    if globals.config_run['phen_above_label'] and globals.config_run['phen_above_label'] != "default":
+        globals.phenomenon_above = unicode(globals.config_run['phen_above_label'], 'utf-8')
+        settings["phen_above_label"] = colored.green(globals.config_run['phen_above_label'])
+    else:
+        settings["phen_above_label"] = globals.phenomenon_above
 
     # set settings for process
-    if args.climate:
-        settings["climate"] = colored.green(_("enabled"))
-    if args.forecasting:
-        settings["forecasting"] = colored.green(_("enabled"))
-    if args.risk_analysis:
+    if globals.config_run['climate_process']:
+        settings["climate_process"] = colored.green(_("enabled"))
+    if globals.config_run['forecasting_process']:
+        settings["forecasting_process"] = colored.green(_("enabled"))
+
+    if globals.config_run['risk_analysis']:
         settings["risk_analysis"] = colored.green(_("enabled"))
+
+    if globals.config_run['consistent_data']:
+        settings["consistent_data"] = colored.green(_("enabled"))
+
+    # maps settings
+    if globals.config_run['maps']:
+        settings["maps"] = colored.green(_("enabled"))
+    if globals.config_run['region']:
+        settings["region"] = colored.green(globals.config_run['region'])
 
     # print settings
     print _("\nConfiguration run:")
-    print "   {0} -------- {1}".format("climate", settings["climate"])
-    print "   {0} ---- {1}".format("forecasting", settings["forecasting"])
-    print "   {0} -------- {1}".format("p_below", settings["p_below"])
-    print "   {0} ------- {1}".format("p_normal", settings["p_normal"])
-    print "   {0} -------- {1}".format("p_above", settings["p_above"])
-    print "   {0} --------- {1}".format("period", settings["period"])
-    print "   {0} -- {1}".format("risk-analysis", settings["risk-analysis"])
-    print "   {0} ------- {1}".format("language", settings["language"])
+    print colored.cyan("   General options")
+    print "   {0} ------ {1}".format("climate process", settings["climate_process"])
+    print "   {0} -- {1}".format("forecasting process", settings["forecasting_process"])
+    print "   {0} ------- {1}".format("process period", settings["process_period"])
+    print "   {0} ------------- {1}".format("language", settings["language"])
+    print colored.cyan("   Check options")
+    print "   {0} ------ {1}".format("consistent data", settings["consistent_data"])
+    print "   {0} ------- {1}".format("risk  analysis", settings["risk_analysis"])
+    print colored.cyan("   Output options")
+    print "   {0} ------------- {1}".format("graphics", settings["graphics"])
+    print "   {0} ----- {1}".format("phen below label", settings["phen_below_label"])
+    print "   {0} ---- {1}".format("phen normal label", settings["phen_normal_label"])
+    print "   {0} ----- {1}".format("phen above label", settings["phen_above_label"])
+    print colored.cyan("   Maps options")
+    print "   {0} ----------------- {1}".format("maps", settings["maps"])
+    if globals.config_run['maps']:
+        print "   {0} --------------- {1}".format("region", settings["region"])
 
     # -------------------------------------------------------------------------
     # globals.maps_files_climate
-    if args.climate:
+
+    if globals.config_run['climate_process']:
         # climate dir output result
         global climate_dir
         climate_dir = \
-            os.path.join(os.path.splitext(args.stations.name)[0], _('Jaziku_Climate'))   # 'results'
+            os.path.join(os.path.splitext(args.runfile.name)[0], _('Jaziku_Climate'))   # 'results'
 
         print _("\nSaving the result for climate in:")
         print "   " + colored.cyan(climate_dir)
@@ -2422,11 +2515,12 @@ def main():
 
     # -------------------------------------------------------------------------
     # globals.maps_files_forecasting
-    if args.forecasting:
+
+    if globals.config_run['forecasting_process']:
         # forecasting dir output result
         global forecasting_dir
         forecasting_dir = \
-            os.path.join(os.path.splitext(args.stations.name)[0], _('Jaziku_Forecasting'))   # 'results'
+            os.path.join(os.path.splitext(args.runfile.name)[0], _('Jaziku_Forecasting'))   # 'results'
 
         print _("\nSaving the result for forecasting in:").format(forecasting_dir)
         print "   " + colored.cyan(forecasting_dir)
@@ -2438,9 +2532,8 @@ def main():
                   "   could be mixed or replaced of old output."))
 
     # -------------------------------------------------------------------------
-    # read all stations from stations list inside stations file
-    # (-station arguments) and process station by station
-    stations = csv.reader(args.stations, delimiter=';')
+    # process each station from stations list
+
     for line_station in stations:
 
         # trim all items in line_station
@@ -2499,7 +2592,7 @@ def main():
             station.translate_analysis_interval = \
                 translate_analysis_interval[options_analysis_interval.index(station.analysis_interval)]
 
-            if args.forecasting:
+            if globals.config_run['forecasting_process']:
                 if len(line_station) < 23:
                     raise Exception(_("For forecasting process you need define "
                                       "9 probability\n variables and trimester to "
@@ -2518,11 +2611,11 @@ def main():
 
         except Exception, e:
             print_error(_("Reading stations from file \"{0}\" in line {1}:\n")
-                        .format(args.stations.name, stations.line_num) +
+                        .format(args.runfile.name, run_file.line_num) +
                         ';'.join(line_station) + "\n\n" + str(e))
 
         station.line_station = line_station
-        station.line_num = stations.line_num
+        station.line_num = run_file.line_num
 
         # console message
         print _("\n################# STATION: {0} ({1})").format(station.name, station.code)
