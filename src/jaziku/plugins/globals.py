@@ -25,7 +25,7 @@
 PROG_NAME = "jaziku"
 
 # version
-VERSION = "0.3.0"
+VERSION = "0.4.0"
 
 # compilation date
 COMPILE_DATE = "23/05/2012"
@@ -35,6 +35,12 @@ VALID_NULL = [99999, -99999]
 
 # accuracy of number decimal places, only for print result
 ACCURACY = 5
+
+# Valid input types for dependent variable
+types_var_D = ['PPT', 'NDPPT', 'TMIN', 'TMAX', 'TEMP', 'PATM', 'RH', 'RUNOFF']
+
+# Valid input types for independent variable
+types_var_I = ['ONI', 'SOI', 'MEI', 'OLR', 'W200', 'SST', 'ARH', 'QBO', 'NAO', 'SSTA_CAR', 'AREA_WHWP']
 
 # types of internal variable independent
 internal_var_I_types = ["ONI", "SOI", "MEI", "OLR", "W200", "SST", "ARH", "NAO", "QBO", "SSTA_CAR", "AREA_WHWP"]
@@ -46,7 +52,7 @@ internal_var_I_files = {"ONI": "ONI_1950_2011_CPC.txt",
                         "OLR": "OLR_1974_2011_CPC_NCEP_NOAA.txt",
                         "W200": "W200_1979_2011_CPC_NCEP_NOAA.txt",
                         "SST": "SST_1950_2011_CPC_NCEP_NOAA.txt",
-                        #"ARH": "????",
+                        #"ARH": "????",  #TODO:
                         "NAO": "NAO_1950_2011_CPC_NCEP_NOAA.txt",
                         "QBO": "QBO_1950_2011_ESRL_NOAA.txt",
                         "SSTA_CAR": "SSTA_CAR_1951_2010_ESRL_NOAA.txt",
@@ -59,17 +65,17 @@ internal_var_I_urls = {"ONI": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.
                         "OLR": "http://goo.gl/goMpA", # http://www.cpc.ncep.noaa.gov/data/indices/olr
                         "W200": "http://goo.gl/aliLh", # http://www.cpc.ncep.noaa.gov/data/indices/zwnd200
                         "SST": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-                        #"ARH": "????",
+                        #"ARH": "????",  #TODO:
                         "NAO": "http://goo.gl/1uDjY", # http://www.cpc.ncep.noaa.gov/products/precip/CWlink/pna/nao.shtml
                         "QBO": "http://goo.gl/UO6PX", # http://www.esrl.noaa.gov/psd/data/climateindices/list/
                         "SSTA_CAR": "http://goo.gl/BsAeN", # http://www.esrl.noaa.gov/psd/forecasts/sstlim/forcar.html
-                        "AREA_WHWP":"http://goo.gl/mV4QI" # http://www.esrl.noaa.gov/psd/data/correlation/whwp.data 
+                        "AREA_WHWP": "http://goo.gl/mV4QI" # http://www.esrl.noaa.gov/psd/data/correlation/whwp.data 
                         }
 
 # maps files for climate:
-maps_files_climate = {'5days':None, '10days':None, '15days':None, 'trimester':None}
+maps_files_climate = {'5days': None, '10days': None, '15days': None, 'trimester': None}
 # maps files for forecasting:
-maps_files_forecasting = {'5days':None, '10days':None, '15days':None, 'trimester':None}
+maps_files_forecasting = {'5days': None, '10days': None, '15days': None, 'trimester': None}
 
 
 # phenomenon based on arguments or not, start with default value
@@ -77,7 +83,19 @@ phenomenon_below = _('var_I_below')
 phenomenon_normal = _('var_I_normal')
 phenomenon_above = _('var_I_above')
 
-
+# configuration run reade and set from runfile
+config_run = {'climate_process': None,
+              'forecasting_process': None,
+              'process_period': None,
+              'language': None,
+              'consistent_data': None,
+              'risk_analysis': None,
+              'graphics': None,
+              'phen_below_label': None,
+              'phen_normal_label': None,
+              'phen_above_label': None,
+              'maps': None,
+              'region': None}
 
 # directory to save all results, this can be absolute or relative path
 # import Jaziku_utils.input_arg as input_arg

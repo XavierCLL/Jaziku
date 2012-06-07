@@ -39,46 +39,8 @@ arguments = argparse.ArgumentParser(
                           formatter_class=argparse.RawTextHelpFormatter)
 
 ### Input arguments for dependent variable
-# Set path to file of stations list
-arguments.add_argument('-stations', type=argparse.FileType('r'),
+# Set path toxx configuration run file
+arguments.add_argument('-runfile', type=argparse.FileType('r'),
                        required=True, default=sys.stdin,
-                       help=_('Path absolute or relative to file stations list'))
-### climate and forecasting set
-# enable/disable climate process
-arguments.add_argument('-c', '--climate', action='store_true', default=False,
-                       help=_('Enable climate process'), required=False)
-# enable/disable forescasting process
-arguments.add_argument('-f', '--forecasting', action='store_true', default=False,
-                       help=_('Enable forecasting process'), required=False)
-# Valid input types for dependent variable
-types_var_D = ['PPT', 'NDPPT', 'TMIN', 'TMAX', 'TEMP', 'PATM', 'RH', 'RUNOFF']
-### Input arguments for independent variable
-# Valid input types for independent variable
-types_var_I = ['ONI', 'SOI', 'MEI', 'OLR', 'W200', 'SST', 'ARH', 'QBO', 'NAO', 'SSTA_CAR', 'AREA_WHWP']
+                       help=_('Path absolute or relative to configuration run file'))
 
-# Set phenomenon below (optional)
-arguments.add_argument('-p_below', type=str,
-                       help=_('Set phenomenon (var I) below label (e.g. \'-p_below "el niño"\')'))
-# Set phenomenon normal (optional)
-arguments.add_argument('-p_normal', type=str,
-                       help=_('Set phenomenon (var I) normal label (e.g. \'-p_normal "normal"\')'))
-# Set phenomenon above (optional)
-arguments.add_argument('-p_above', type=str,
-                       help=_('Set phenomenon (var I) above label (e.g. \'-p_above "la niña"\')'))
-# set period process
-arguments.add_argument('-period', type=str, required=False,
-                       help=_('Set specific period for process (e.g. 1980-2010)'))
-# enable/disable forescasting process
-arguments.add_argument('--risk-analysis', action='store_true',
-                       default=False, required=False,
-                       help=_('Enable risk analysis for forecasting process'))
-# disable check consistent data
-arguments.add_argument('--disable-consistent-data', action='store_true',
-                       default=False, required=False,
-                       help=_('disable check consistent data for var_D and var_I'))
-# disable create graphics for climate and forecasting
-arguments.add_argument('--disable-graphics', action='store_true',
-                       default=False, required=False,
-                       help=_('disable create graphics for climate and forecasting'))
-# Set language (optional), if not set get language from system
-arguments.add_argument('-l', type=str, help=_('Set language (e.g. \'-l en\' for english, \'-l es\' for spanish)'))
