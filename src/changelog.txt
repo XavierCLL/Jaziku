@@ -4,6 +4,7 @@ features/changes:
    when run Jaziku, now only argument is "-runfile" and this files contains all
    the necessary to run Jaziku.
  * adds parameters for maps options in runfile
+ * ignore station line in runfile that begin with "#"
  
 bugfixes:
 

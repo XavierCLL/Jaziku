@@ -2462,6 +2462,8 @@ def main():
         settings["climate_process"] = colored.green(_("enabled"))
     if globals.config_run['forecasting_process']:
         settings["forecasting_process"] = colored.green(_("enabled"))
+    if globals.config_run['process_period']:
+        settings["process_period"] = colored.green(globals.config_run['process_period'])
 
     if globals.config_run['risk_analysis']:
         settings["risk_analysis"] = colored.green(_("enabled"))
@@ -2484,7 +2486,7 @@ def main():
     print "   {0} ------------- {1}".format("language", settings["language"])
     print colored.cyan("   Check options")
     print "   {0} ------ {1}".format("consistent data", settings["consistent_data"])
-    print "   {0} ------- {1}".format("risk  analysis", settings["risk_analysis"])
+    print "   {0} -------- {1}".format("risk analysis", settings["risk_analysis"])
     print colored.cyan("   Output options")
     print "   {0} ------------- {1}".format("graphics", settings["graphics"])
     print "   {0} ----- {1}".format("phen below label", settings["phen_below_label"])
@@ -2540,7 +2542,7 @@ def main():
         line_station = [i.strip() for i in line_station]
 
         # if line of station is null o empty, e.g. empty but with tabs or spaces
-        if not line_station or not line_station[0].strip():
+        if not line_station or not line_station[0].strip() or line_station[0].strip()[0] == "#":
             continue
 
         # new instance of station
@@ -2633,9 +2635,17 @@ def main():
         del station
 
     print colored.green(gettext.ngettext(
-                        "\nProcess completed!, {0} station processed.\n",
-                        "\nProcess completed!, {0} stations processed.\n",
+                        "\n{0} station processed.",
+                        "\n{0} stations processed.",
                         Station.stations_processed).format(Station.stations_processed))
+
+
+    # process to create maps
+    if globals.config_run['maps']:
+        print _("\n################# MAP: {0}").format(globals.config_run['region'])
+
+
+    print colored.green(_("\nProcess completed!"))
 
     print _("Good bye :)\n")
 
