@@ -92,6 +92,7 @@ import argparse  # http://docs.python.org/py3k/library/argparse.html
 import csv
 from calendar import monthrange
 from datetime import date
+from subprocess import call
 # http://labix.org/python-dateutil
 # and if this required setuptools install:
 # http://pypi.python.org/pypi/distribute
@@ -120,19 +121,23 @@ import plugins.input_validation as input_validation
 import plugins.input_arg as input_arg
 import plugins.contingency_test as ct
 import plugins.significance_corr as sc
+import plugins.interpolation as interpolation
+import plugins.maps.ncl as ncl
 
 
 #==============================================================================
 # PRINT FUCTIONS
 
 
-def print_error(text_error):
+def print_error(text_error, wait_value=True):
     '''
     Print error generic function, this is called on any error occurred in
     Jaziku
     '''
-
-    print colored.red(_('fail\n\nERROR:\n{0}\n\n').format(text_error))
+    if wait_value:
+        print colored.red(_('fail\n\nERROR:\n{0}\n\n').format(text_error))
+    else:
+        print colored.red(_('\nERROR:\n{0}\n\n').format(text_error))
     print _("For more help run program with argument: -h")
     exit()
 
@@ -1708,7 +1713,7 @@ def graphics_forecasting(station):
 # TODO: generate maps from previus file, plot all index from all stations
 
 
-def maps_climate(station):
+def maps_data_climate(station):
     '''
     Create maps data csv file for ploting for each trimester, phenomenon and lag,
     each file contain all stations processed.
@@ -1728,12 +1733,13 @@ def maps_climate(station):
 
             maps_dir = os.path.join(climate_dir, _('maps'))
 
-            maps_data_lag = os.path.join(maps_dir, _('maps_data'),
+            maps_data_lag = os.path.join(maps_dir,
                                          station.translate_analysis_interval,
                                          _('lag_{0}').format(lag))
 
             if not os.path.isdir(maps_data_lag):
                 os.makedirs(maps_data_lag)
+
             # all months in year 1->12
             month_list = []
             for month in range(1, 13):
@@ -1838,7 +1844,7 @@ def maps_climate(station):
                     csv_name = globals.maps_files_climate[station.analysis_interval][lag][month - 1][phenomenon]
                     open_file = open(csv_name, 'a')
                     csv_file = csv.writer(open_file, delimiter=';')
-                    csv_file.writerow([station.code, station.lat, station.lon,
+                    csv_file.writerow([station.code, print_number(station.lat), print_number(station.lon),
                                    print_number(station.pearson_list[lag][month - 1]),
                                    print_number(var_below), print_number(var_normal),
                                    print_number(var_above), print_number(p_index),
@@ -1861,7 +1867,7 @@ def maps_climate(station):
                         csv_name = globals.maps_files_climate[station.analysis_interval][lag][month - 1][day][phenomenon]
                         open_file = open(csv_name, 'a')
                         csv_file = csv.writer(open_file, delimiter=';')
-                        csv_file.writerow([station.code, station.lat, station.lon,
+                        csv_file.writerow([station.code, print_number(station.lat), print_number(station.lon),
                                        print_number(station.pearson_list[lag][month - 1][day]),
                                        print_number(var_below), print_number(var_normal),
                                        print_number(var_above), print_number(p_index),
@@ -1872,7 +1878,7 @@ def maps_climate(station):
                         del csv_file
 
 
-def maps_forecasting(station):
+def maps_data_forecasting(station):
     '''
     Create maps data csv file for ploting for each trimester, phenomenon and
     lag, each file contain all stations processed.
@@ -1880,21 +1886,31 @@ def maps_forecasting(station):
     # -------------------------------------------------------------------------
     # create maps plots files for forecasting process, only once
 
-    if globals.maps_files_forecasting[station.analysis_interval] is None:
-        globals.maps_files_forecasting[station.analysis_interval] = []
-        # define maps data files and directories
-        for lag in lags:
+    # select text for forecasting date
+    if station.state_of_data in [1, 3]:
+        forecasting_date_formated = trim_text[station.forecasting_date - 1]
+    if station.state_of_data in [2, 4]:
+        month = station.forecasting_date[0]
+        day = station.forecasting_date[1]
+        forecasting_date_formated = month_text[month - 1] + "_" + str(day)
+
+    if forecasting_date_formated not in globals.maps_files_forecasting[station.analysis_interval]:
+
+        if station.state_of_data in [1, 3]:
+            lags_list = []
+            # define maps data files and directories
+            for lag in lags:
 
                 maps_dir = os.path.join(forecasting_dir, _('maps'),
-                                        _('maps_data'),
-                                        station.translate_analysis_interval)
+                                        station.translate_analysis_interval,
+                                        trim_text[station.forecasting_date - 1])
 
                 if not os.path.isdir(maps_dir):
                     os.makedirs(maps_dir)
 
                 # write the headers in file
-                csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}.csv')
-                                        .format(lag))
+                csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}_{1}.csv')
+                                        .format(lag, trim_text[station.forecasting_date - 1]))
 
                 if os.path.isfile(csv_name):
                     os.remove(csv_name)
@@ -1908,7 +1924,39 @@ def maps_forecasting(station):
                 open_file.close()
                 del csv_file
 
-                globals.maps_files_forecasting[station.analysis_interval].append(csv_name)
+                lags_list.append(csv_name)
+            globals.maps_files_forecasting[station.analysis_interval][forecasting_date_formated] = lags_list
+
+        if station.state_of_data in [2, 4]:
+            lags_list = []
+            # define maps data files and directories
+            for lag in lags:
+
+                maps_dir = os.path.join(forecasting_dir, _('maps'),
+                                        station.translate_analysis_interval,
+                                        forecasting_date_formated)
+
+                if not os.path.isdir(maps_dir):
+                    os.makedirs(maps_dir)
+
+                # write the headers in file
+                csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}_{1}.csv')
+                                        .format(lag, forecasting_date_formated))
+
+                if os.path.isfile(csv_name):
+                    os.remove(csv_name)
+
+                open_file = open(csv_name, 'w')
+                csv_file = csv.writer(open_file, delimiter=';')
+                csv_file.writerow([_('code'), _('lat'), _('lon'),
+                                   _('forecasting_date'), _('prob_decrease_var_D'),
+                                   _('prob_normal_var_D'), _('prob_exceed_var_D'),
+                                   _('index'), _('sum')])
+                open_file.close()
+                del csv_file
+
+                lags_list.append(csv_name)
+            globals.maps_files_forecasting[station.analysis_interval][forecasting_date_formated] = lags_list
 
     def calculate_index():
         # select index
@@ -1931,26 +1979,18 @@ def maps_forecasting(station):
 
         return p_index
 
-    # select text for forecasting date
-    if station.state_of_data in [1, 3]:
-        forecasting_date_text = month_text[station.forecasting_date - 1]
-    if station.state_of_data in [2, 4]:
-        month = station.forecasting_date[0]
-        day = station.forecasting_date[1]
-        forecasting_date_text = month_text[month - 1] + "-" + str(day)
-
     for lag in lags:
 
         p_index = calculate_index()
 
         # write new row in file
-        csv_name = globals.maps_files_forecasting[station.analysis_interval][lag]
+        csv_name = globals.maps_files_forecasting[station.analysis_interval][forecasting_date_formated][lag]
         open_file = open(csv_name, 'a')
         csv_file = csv.writer(open_file, delimiter=';')
         csv_file.writerow([station.code,
                        print_number_accuracy(station.lat, 4),
                        print_number_accuracy(station.lon, 4),
-                       forecasting_date_text,
+                       forecasting_date_formated,
                        print_number(station.prob_decrease_var_D[lag]),
                        print_number(station.prob_normal_var_D[lag]),
                        print_number(station.prob_exceed_var_D[lag]),
@@ -2135,7 +2175,7 @@ def climate(station):
         sys.stdout.write(_("\ncontinue without make graphics for climate .... "))
         sys.stdout.flush()
 
-    maps_climate(station)
+    maps_data_climate(station)
 
     print colored.green(_("done"))
 
@@ -2249,10 +2289,289 @@ def forecasting(station):
         sys.stdout.write(_("\ncontinue without make graphics for forecasting  "))
         sys.stdout.flush()
 
-    maps_forecasting(station)
+    maps_data_forecasting(station)
 
     print colored.green(_("done"))
 
+#==============================================================================
+# MAPS
+
+
+def maps(grid):
+
+    print "\n################# {0}: {1}".format(_("MAP"), grid.grid_name)
+
+    ## Colombia
+    grid.corner_nw = [13.3, -79.7]  # [lat, lon]
+    grid.corner_ne = [13.3, -66.2]
+    grid.corner_se = [-5.0, -66.2]
+    grid.corner_sw = [-5.0, -79.7]
+
+    # check if the grid is a rectangle
+    if grid.corner_nw[0] != grid.corner_ne[0] and \
+       grid.corner_se[0] != grid.corner_sw[0] and \
+       grid.corner_nw[1] != grid.corner_sw[1] and \
+       grid.corner_ne[1] != grid.corner_se[1]:
+        print_error("The corners of grid don't form a rectangle.")
+
+    # set variables for grid
+    grid.grid_propieties()
+
+    grid.print_grid_propieties()
+
+    ## Matrix with real data and null value for empty value
+    # base_matrix[lat, lon]
+    global base_matrix
+    base_matrix = np.matrix(np.empty([grid.lat_size, grid.lon_size]))
+    # initialize matrix with null value
+    base_matrix.fill(globals.VALID_NULL[1])
+
+    phenomenon = {0: globals.phenomenon_below,
+                  1: globals.phenomenon_normal,
+                  2: globals.phenomenon_above}
+
+    def process_map():
+        # copy matrix from base_matrix
+        matrix = base_matrix.copy()
+        # read values from saved file and set points on matrix
+        open_file = open(file_map_points, 'rb')
+        csv_file = csv.reader(open_file, delimiter=';')
+        first_line = True
+        for line in csv_file:
+            if first_line:
+                first_line = False
+                continue
+            latitude = float(line[1].replace(',', '.'))
+            longitude = float(line[2].replace(',', '.'))
+            index = float(line[7].replace(',', '.'))
+            # set the index value on matrix
+            matrix, point_state = grid.set_point_on_grid(matrix, latitude, longitude, index)
+
+            if point_state == "point not added" and message_warning:
+                print colored.yellow(\
+                    _("\n   Warning: The point lat:{lat} lon:{lon}\n" \
+                      "   of the station code: {code} was not added\n" \
+                      "   because the point is outside of the grid.").
+                    format(lat=latitude, lon=longitude, code=line[0]))
+                sys.stdout.write("                                                ")
+                sys.stdout.flush()
+            if point_state in ["average", "maximum", "minimum"] and message_warning:
+                print colored.yellow(\
+                    _("\n   Warning: for the point lat:{lat} lon:{lon}\n" \
+                      "   Jaziku detect overlapping of two values, Jaziku\n" \
+                      "   will put the {state} value.").
+                    format(lat=latitude, lon=longitude, state=point_state))
+                sys.stdout.write("                                                ")
+                sys.stdout.flush()
+            if point_state == "neither" and message_warning:
+                print colored.yellow(\
+                    _("\n   Warning: for the point lat:{lat} lon:{lon}\n" \
+                      "   Jaziku detect overlapping of two values, Jaziku\n" \
+                      "   will not put the {state} values.").
+                    format(lat=latitude, lon=longitude, state=point_state))
+                sys.stdout.write("                                                ")
+                sys.stdout.flush()
+
+        open_file.close()
+        del csv_file
+
+        # save matrix for interpolation
+        open_file = open(inc_file, 'wb')
+        open_file.write("Cont_data" + '\n')
+
+        # convert matrix (column per column) to linear values
+        matrix_vector = np.asarray(matrix.T).reshape(-1)
+
+        # save values to file INC
+        for value in matrix_vector:
+            if int(value) == globals.VALID_NULL[1]:
+                open_file.write(str(int(value)) + '\n')
+            else:
+                open_file.write(str(value) + '\n')
+        open_file.write('/')
+        open_file.close()
+
+        # make ordinary kriging interpolation with HPGL
+
+        matrix_interpolation = interpolation.ordinary_kriging(grid, inc_file)
+
+        #matrix_interpolation = np.matrix(matrix_interpolation)
+
+        #matrix_interpolation_vector = np.asarray(matrix_interpolation.T).reshape(-1)
+
+        # save file for NCL
+        open_ncl_file = open(ncl_data, 'wb')
+        tsv_file = csv.writer(open_ncl_file, delimiter='\t')
+        tsv_file.writerow([_('lat'), _('lon'), _('value')])
+
+        for lon_index, lon_value in enumerate(grid.lon_coordinates):
+            for lat_index, lat_value in enumerate(grid.lat_coordinates):
+                tsv_file.writerow([lat_value, lon_value, matrix_interpolation[lat_index][lon_index]])
+
+        open_ncl_file.close()
+        del tsv_file
+
+        shape_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                  "plugins", "maps", "shapes")
+
+        # make ncl file for map
+        base_path_file = os.path.join(base_path, base_file)
+        # make and write ncl file for ncl process
+        ncl_file = ncl.make_ncl_file(grid, base_path_file, shape_path)
+        devnull = os.open(os.devnull, os.O_WRONLY)
+        # call ncl command for make maps base on ncl_file
+        call(["ncl", os.path.abspath(ncl_file)], shell=False, stdout=devnull)
+        # trim png created
+        call(["convert",
+              os.path.join(os.path.abspath(base_path_file) + ".png"),
+              "-trim",
+              os.path.join(os.path.abspath(base_path_file) + ".png")], shell=False)
+
+
+        del matrix
+
+    # -------------------------------------------------------------------------
+    # Process maps for CLIMATE
+
+    print _("Processing maps for climate:")
+
+    # walking file by file of maps directory and make interpolation and map for each file
+    for analysis_interval in ['5days', '10days', '15days', 'trimester']:
+
+        if globals.maps_files_climate[analysis_interval] is None:
+            continue
+
+        # console message
+        if analysis_interval == 'trimester':
+            sys.stdout.write("                {0} ..................... ".format(analysis_interval))
+        else:
+            sys.stdout.write("                {0}\t....................... ".format(analysis_interval))
+        sys.stdout.flush()
+
+        for lag in lags:
+
+            # all months in year 1->12
+            for month in range(1, 13):
+
+                if analysis_interval == 'trimester':
+                    for category in [0, 1, 2]:  # phenomenons var_I
+                        # show only once
+                        if lag == 0 and month == 1 and category == 0:
+                            message_warning = True
+                        else:
+                            message_warning = False
+
+                        # file where saved points for plot map
+                        file_map_points = globals.maps_files_climate[analysis_interval][lag][month - 1][category]
+
+                        # save matrix for interpolation
+                        base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
+
+                        # make dir with the name of grid
+                        if not os.path.isdir(base_path):
+                            os.makedirs(base_path)
+
+                        base_file = _(u'Map_lag_{0}_{1}_{2}').format(lag, trim_text[month - 1], phenomenon[category])
+
+                        # file for interpolation
+                        inc_file = os.path.join(base_path, base_file + ".INC")
+
+                        # save file for NCL
+                        ncl_data = os.path.join(base_path, base_file + ".tsv")
+
+                        #process_map()
+
+                else:
+                    # range based on analysis interval
+                    if analysis_interval == '5days':
+                        range_analysis_interval = [1, 6, 11, 16, 21, 26]
+                    if analysis_interval == '10days':
+                        range_analysis_interval = [1, 11, 21]
+                    if analysis_interval == '15days':
+                        range_analysis_interval = [1, 16]
+                    for day in range(len(range_analysis_interval)):
+                        for category in [0, 1, 2]:  # phenomenons var_I
+                            # show only once
+                            if lag == 0 and month == 1 and category == 0 and day == 0:
+                                message_warning = True
+                            else:
+                                message_warning = False
+
+                            # file where saved points for plot map
+                            file_map_points = globals.maps_files_climate[analysis_interval][lag][month - 1][day][category]
+
+                            # save matrix for interpolation
+                            base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
+
+                            # make dir with the name of grid
+                            if not os.path.isdir(base_path):
+                                os.makedirs(base_path)
+
+                            base_file = _(u'Map_lag_{0}_{1}_{2}')\
+                                         .format(lag,
+                                                 month_text[month - 1] + "_" + str(range_analysis_interval[day]),
+                                                 phenomenon[category])
+
+                            # file for interpolation
+                            inc_file = os.path.join(base_path, base_file + ".INC")
+
+                            # save file for NCL
+                            ncl_data = os.path.join(base_path, base_file + ".tsv")
+
+                            #process_map()
+        print colored.green(_("done"))
+
+    # -------------------------------------------------------------------------
+    # Process maps for FORECASTING
+
+    if globals.config_run['forecasting_process']:
+
+        print _("Processing maps for forecasting:")
+
+        # walking file by file of maps directory and make interpolation and map for each file
+        for analysis_interval in ['5days', '10days', '15days', 'trimester']:
+
+            if globals.maps_files_forecasting[analysis_interval] == {}:
+                continue
+
+            # console message
+            if analysis_interval == 'trimester':
+                sys.stdout.write("                {0} ..................... ".format(analysis_interval))
+            else:
+                sys.stdout.write("                {0}\t....................... ".format(analysis_interval))
+            sys.stdout.flush()
+
+            for forecasting_date in globals.maps_files_forecasting[analysis_interval]:
+
+                for lag in lags:
+                    # show only once
+                    if lag == 0:
+                        message_warning = True
+                    else:
+                        message_warning = False
+
+                    # file where saved points for plot map
+                    file_map_points = globals.maps_files_forecasting[analysis_interval][forecasting_date][lag]
+                    # save matrix for interpolation
+                    base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
+
+                    # make dir with the name of grid
+                    if not os.path.isdir(base_path):
+                        os.makedirs(base_path)
+
+                    base_file = _(u'Map_lag_{0}_{1}').format(lag, forecasting_date)
+
+                    # file for interpolation
+                    inc_file = os.path.join(base_path, base_file + ".INC")
+
+                    # save file for NCL
+                    ncl_data = os.path.join(base_path, base_file + ".tsv")
+
+                    process_map()
+
+            print colored.green(_("done"))
+
+        del base_matrix
 
 #==============================================================================
 # STATION CLASS
@@ -2270,6 +2589,149 @@ class Station:
     def __init__(self):
         Station.stations_processed += 1
 
+#==============================================================================
+# GRID CLASS
+# for storage several variables of each grid
+
+
+class Grid:
+    '''
+    Generic grid class
+    '''
+
+    fields = ["grid_name",
+              "corner_nw",
+              "corner_ne",
+              "corner_se",
+              "corner_sw",
+              "grid_resolution",
+              "semivariogram_type",
+              "radiuses",
+              "max_neighbours"]
+
+    # all instances of grid class
+    all_grids = []
+
+    # counter grids processed
+    grids_processed = 0
+
+    def __init__(self):
+        self.__class__.all_grids.append(self)
+        Grid.grids_processed += 1
+
+    def  grid_propieties(self):
+        '''
+        Set values and default values for grid variables
+        '''
+
+        # number of decimal from grid resolution
+        self.decimal_resolution = len(str(self.grid_resolution).split('.')[1])
+
+        # adjust corners rounded decimal point to decimal resolution (defined in runfile)
+        self.corner_nw = [round(self.corner_nw[0], self.decimal_resolution),
+                          round(self.corner_nw[1], self.decimal_resolution)]
+        self.corner_ne = [round(self.corner_ne[0], self.decimal_resolution),
+                          round(self.corner_ne[1], self.decimal_resolution)]
+        self.corner_se = [round(self.corner_se[0], self.decimal_resolution),
+                          round(self.corner_se[1], self.decimal_resolution)]
+        self.corner_sw = [round(self.corner_sw[0], self.decimal_resolution),
+                          round(self.corner_sw[1], self.decimal_resolution)]
+
+        # calculate the number of values of grid (height and width based on grid resolution)
+        # this is equal to height(lat) and width(lon) of matrix
+        self.lat_size = int(abs(self.corner_nw[0] - self.corner_sw[0]) / self.grid_resolution + 1)
+        self.lon_size = int(abs(self.corner_nw[1] - self.corner_ne[1]) / self.grid_resolution + 1)
+
+        # make list of coordinate of latitude, this is a list of latitude for this grid
+        lat_coordinates_list = np.linspace(self.corner_nw[0], self.corner_sw[0], self.lat_size).tolist()
+        self.lat_coordinates = [round(item, self.decimal_resolution) for item in lat_coordinates_list]
+
+        # make list of coordinate of longitude, this is a list of longitude for this grid
+        lon_coordinates_list = np.linspace(self.corner_nw[1], self.corner_ne[1], self.lon_size).tolist()
+        self.lon_coordinates = [round(item, self.decimal_resolution) for item in lon_coordinates_list]
+
+        # interpolation type TODO:
+        self.interpolation_type = "ordinary kriging"
+
+        # set the semivariogram type for interpolation
+        #     0 – spherical, 1 – exponential, 2 – gaussian;
+        if self.semivariogram_type == "default" or self.semivariogram_type == "spherical":
+            self.semivariogram_type = 0
+        elif self.semivariogram_type == "exponential":
+            self.semivariogram_type = 1
+        elif self.semivariogram_type == "gaussian":
+            self.semivariogram_type = 2
+        else:
+            self.semivariogram_type = None
+
+        # set the radiuses for interpolation
+        if self.radiuses == "default":
+            radius = max([self.lat_size, self.lon_size]) * 2
+            self.radiuses = [radius, radius]
+        else:
+            self.radiuses = [int(self.radiuses[0]), int(self.radiuses[1])]
+
+        # set the max_neighbours
+        if self.max_neighbours == "default":
+            self.max_neighbours = Station.stations_processed
+        else:
+            self.max_neighbours = int(self.max_neighbours)
+
+    def  print_grid_propieties(self):
+        print colored.cyan(_("   Mesh size: {0}x{1}").format(self.lat_size, self.lon_size))
+
+        # interpolation type TODO:
+        print colored.cyan(_("   Interpolation type: {0}").format(self.interpolation_type))
+
+        # the semivariogram type for interpolation
+        #     0 – spherical, 1 – exponential, 2 – gaussian;
+        if self.semivariogram_type == 0:
+            print colored.cyan(_("   Semivariogram type: spherical"))
+        elif self.semivariogram_type == 1:
+            print colored.cyan(_("   Semivariogram type: exponential"))
+        elif self.semivariogram_type == 2:
+            print colored.cyan(_("   Semivariogram type: gaussian"))
+        else:
+            print_error(_("The semivariogram type is wrong, the options are:\n"
+                        "default, spherical, exponential or gaussian"), False)
+
+        # print radiuses
+        print colored.cyan(_("   Radiuses: {0} {1}").format(self.radiuses[0], self.radiuses[1]))
+
+        # max_neighbours:
+        print colored.cyan(_("   Max neighbours: {0}").format(self.max_neighbours))
+
+    def set_point_on_grid(self, matrix, lat, lon, value):
+
+        # round decimal point to decimal resolution
+        lat = round(lat, self.decimal_resolution)
+        lon = round(lon, self.decimal_resolution)
+
+        # get location index for lat and lon
+        try:
+            lat_location = self.lat_coordinates.index(lat)
+            lon_location = self.lon_coordinates.index(lon)
+        except:
+            return matrix, "point not added"
+
+        ## put value in the base matrix
+        # first check if already exist value in this point on matrix (overlapping)
+        if int(matrix[lat_location, lon_location]) != globals.VALID_NULL[1]:
+            if globals.config_run['overlapping'] == "average":
+                matrix[lat_location, lon_location] = mean([matrix[lat_location, lon_location], value])
+                return matrix, "average"
+            if globals.config_run['overlapping'] == "maximum":
+                matrix[lat_location, lon_location] = max([matrix[lat_location, lon_location], value])
+                return matrix, "maximum"
+            if globals.config_run['overlapping'] == "minimum":
+                matrix[lat_location, lon_location] = min([matrix[lat_location, lon_location], value])
+                return matrix, "minimum"
+            if globals.config_run['overlapping'] == "neither":
+                return matrix, "neither"
+        else:
+            matrix[lat_location, lon_location] = value
+
+        return matrix, True
 
 #==============================================================================
 # MAIN PROCESS
@@ -2281,7 +2743,7 @@ def main():
     '''
 
     # check python version
-    if sys.version_info[0] != 2 and sys.version_info[1] < 6:
+    if sys.version_info[0] != 2 or sys.version_info[1] < 6:
         print_error(_("You version of python is {0}, please use Jaziku with "
                       "python v2.6 or v2.7").format(sys.version_info[0:2]))
 
@@ -2290,7 +2752,7 @@ def main():
     sys.setdefaultencoding("utf-8")
 
     # -------------------------------------------------------------------------
-    # reading configuration run and list of stations from file
+    # reading configuration run, list of grids and stations from runfile
 
     # Parser and check arguments
     global args
@@ -2301,11 +2763,13 @@ def main():
 
     in_config_run = False
     in_station_list = False
+    in_grids_list = False
+
+    grid = None
     stations = []
 
-    # read line by line runfile
+    # read line by line the RUNFILE
     for line_in_run_file in run_file:
-
         # trim all items in line_in_run_file
         line_in_run_file = [i.strip() for i in line_in_run_file]
 
@@ -2314,12 +2778,12 @@ def main():
             continue
 
         # is the first line, start read configuration run
-        if not in_config_run and not in_station_list:
+        if not in_config_run and not in_grids_list and not in_station_list:
             if line_in_run_file[1] == "CONFIGURATION RUN":
                 in_config_run = True
                 continue
 
-        # read configuration run
+        # read CONFIGURATION RUN
         if in_config_run:
             if line_in_run_file[0][0:3] == "## ":
                 continue
@@ -2334,14 +2798,45 @@ def main():
                 else:
                     globals.config_run[line_in_run_file[0]] = line_in_run_file[1]
             else:
-                if line_in_run_file[1] == "STATIONS LIST":
+                if line_in_run_file[1] == "GRIDS LIST":
+                    in_config_run = False
+                    in_grids_list = True
+                    continue
+                elif line_in_run_file[1] == "STATIONS LIST":
                     in_config_run = False
                     in_station_list = True
                 else:
-                    print_error("error read line in configuration file, in line {0}:\n{1}"
+                    print_error(_("error read line in \"CONFIGURATION RUN\" in runfile, line {0}:\n{1}")
                                 .format(run_file.line_num, line_in_run_file[0]))
 
-        # read all station from file
+        # read GRIDS LIST
+        if in_grids_list:
+            if line_in_run_file[0][0:2] == "##" and line_in_run_file[0] != "################":
+                if grid:
+                    del grid
+                grid = Grid()
+                continue
+
+            if line_in_run_file[0] in Grid.fields:
+                if len(line_in_run_file) == 2:
+                    try:
+                        setattr(Grid.all_grids[-1], line_in_run_file[0], float(line_in_run_file[1]))
+                    except:
+                        setattr(Grid.all_grids[-1], line_in_run_file[0], line_in_run_file[1])
+                if len(line_in_run_file) == 3:
+                    try:
+                        setattr(Grid.all_grids[-1], line_in_run_file[0], [float(line_in_run_file[1]), float(line_in_run_file[2])])
+                    except:
+                        setattr(Grid.all_grids[-1], line_in_run_file[0], [line_in_run_file[1], line_in_run_file[2]])
+            else:
+                if line_in_run_file[1] == "STATIONS LIST":
+                    in_grids_list = False
+                    in_station_list = True
+                else:
+                    print_error(_("error read line in \"GRIDS LIST\" in runfile, line {0}:\n{1}")
+                                .format(run_file.line_num, line_in_run_file[0]))
+
+        # read STATIONS LIST
         if in_station_list:
             if line_in_run_file[0][0:2] == "##":
                 continue
@@ -2351,7 +2846,9 @@ def main():
     # setting language
     if globals.config_run['language'] and globals.config_run['language'] != "autodetect":
         if globals.config_run['language'] == "en" or globals.config_run['language'] == "EN" or globals.config_run['language'] == "En":
+            settings_language = colored.green(globals.config_run['language'])
             lang = gettext.NullTranslations()
+            lang.install()
         else:
             try:
                 lang = gettext.translation(TRANSLATION_DOMAIN, LOCALE_DIR,
@@ -2368,7 +2865,7 @@ def main():
         # when not defined language in arguments
         try:
             locale_languaje = locale.getdefaultlocale()[0][0:2]
-            settings_language = colored.green(locale_languaje) + _(" (locale system)")
+            settings_language = colored.green(locale_languaje) + _(" (system language)")
             try:
                 if locale_languaje != "en":
                     lang = gettext.translation(TRANSLATION_DOMAIN, LOCALE_DIR,
@@ -2387,18 +2884,19 @@ def main():
     # start message
 
     # set settings default
+    global settings
     settings = {"climate_process": _("disabled"),
                 "forecasting_process": _("disabled"),
                 "process_period": "-",
                 "language": settings_language,
                 "consistent_data": _("disabled"),
                 "risk_analysis": _("disabled"),
-                "graphics":_("disabled"),
+                "graphics": _("disabled"),
                 "phen_below_label": "-",
                 "phen_normal_label": "-",
                 "phen_above_label": "-",
-                "maps":_("disabled"),
-                "region": None}
+                "maps": _("disabled"),
+                "overlapping": None}
 
     # console message
     print _("\n########################### JAZIKU ###########################\n"
@@ -2443,18 +2941,21 @@ def main():
         globals.phenomenon_below = unicode(globals.config_run['phen_below_label'], 'utf-8')
         settings["phen_below_label"] = colored.green(globals.config_run['phen_below_label'])
     else:
+        globals.phenomenon_below = _('var_I_below')
         settings["phen_below_label"] = globals.phenomenon_below
     # if phenomenon normal is defined inside arguments, else default value
     if globals.config_run['phen_normal_label'] and globals.config_run['phen_normal_label'] != "default":
         globals.phenomenon_normal = unicode(globals.config_run['phen_normal_label'], 'utf-8')
         settings["phen_normal_label"] = colored.green(globals.config_run['phen_normal_label'])
     else:
+        globals.phenomenon_normal = _('var_I_normal')
         settings["phen_normal_label"] = globals.phenomenon_normal
     # if phenomenon above is defined inside arguments, else default value
     if globals.config_run['phen_above_label'] and globals.config_run['phen_above_label'] != "default":
         globals.phenomenon_above = unicode(globals.config_run['phen_above_label'], 'utf-8')
         settings["phen_above_label"] = colored.green(globals.config_run['phen_above_label'])
     else:
+        globals.phenomenon_above = _('var_I_above')
         settings["phen_above_label"] = globals.phenomenon_above
 
     # set settings for process
@@ -2474,8 +2975,16 @@ def main():
     # maps settings
     if globals.config_run['maps']:
         settings["maps"] = colored.green(_("enabled"))
-    if globals.config_run['region']:
-        settings["region"] = colored.green(globals.config_run['region'])
+
+    # set the overlapping solution
+    if globals.config_run['overlapping'] == "default" or not globals.config_run['overlapping']:
+        globals.config_run['overlapping'] = "average"
+        settings['overlapping'] = globals.config_run['overlapping']
+    elif globals.config_run['overlapping'] in ["average", "maximum", "minimum", "neither"]:
+        settings['overlapping'] = colored.green(globals.config_run['overlapping'])
+    else:
+        print_error(_("The overlapping solution is wrong, the options are:\n"
+                    "default, average, maximum, minimum or neither"), False)
 
     # print settings
     print _("\nConfiguration run:")
@@ -2495,7 +3004,7 @@ def main():
     print colored.cyan("   Maps options")
     print "   {0} ----------------- {1}".format("maps", settings["maps"])
     if globals.config_run['maps']:
-        print "   {0} --------------- {1}".format("region", settings["region"])
+        print "   {0} ---------- {1}".format("overlapping", settings["overlapping"])
 
     # -------------------------------------------------------------------------
     # globals.maps_files_climate
@@ -2639,11 +3148,20 @@ def main():
                         "\n{0} stations processed.",
                         Station.stations_processed).format(Station.stations_processed))
 
+    # -------------------------------------------------------------------------
+    # MAPS
 
     # process to create maps
     if globals.config_run['maps']:
-        print _("\n################# MAP: {0}").format(globals.config_run['region'])
 
+        for grid in Grid.all_grids:
+            maps(grid)
+            del grid
+
+        print colored.green(gettext.ngettext(
+                        "\n{0} map processed.",
+                        "\n{0} maps processed.",
+                        Grid.grids_processed).format(Grid.grids_processed))
 
     print colored.green(_("\nProcess completed!"))
 
