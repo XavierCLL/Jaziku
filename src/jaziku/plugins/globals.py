@@ -75,13 +75,13 @@ internal_var_I_urls = {"ONI": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.
 # maps files for climate:
 maps_files_climate = {'5days': None, '10days': None, '15days': None, 'trimester': None}
 # maps files for forecasting:
-maps_files_forecasting = {'5days': None, '10days': None, '15days': None, 'trimester': None}
+maps_files_forecasting = {'5days': {}, '10days': {}, '15days': {}, 'trimester': {}}
 
 
 # phenomenon based on arguments or not, start with default value
-phenomenon_below = _('var_I_below')
-phenomenon_normal = _('var_I_normal')
-phenomenon_above = _('var_I_above')
+phenomenon_below = None
+phenomenon_normal = None
+phenomenon_above = None
 
 # configuration run reade and set from runfile
 config_run = {'climate_process': None,
@@ -95,7 +95,7 @@ config_run = {'climate_process': None,
               'phen_normal_label': None,
               'phen_above_label': None,
               'maps': None,
-              'region': None}
+              'overlapping': None}
 
 # directory to save all results, this can be absolute or relative path
 # import Jaziku_utils.input_arg as input_arg

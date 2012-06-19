@@ -9,6 +9,7 @@ version 0.4: (start: april 9, release: may 31)
 version 0.5: (start: july 23, release: august 30)
 * Homogenety analysis
 * change input options to file configuration
+* group and divide directory based on type var_I and var_D
 
 version 0.6: (start: august 30, release: september 30)
 * Time Series analysis consistensy
