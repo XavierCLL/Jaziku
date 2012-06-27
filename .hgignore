@@ -13,6 +13,4 @@ syntax: regexp
 syntax: regexp
 ^src/dist$
 syntax: regexp
-^src/jaziku/plugins/maps/shapes$
-syntax: regexp
 ^src/jaziku/plugins/maps/watermarking$
