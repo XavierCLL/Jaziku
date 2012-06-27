@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
-from jaziku.plugins import globals
+from jaziku.plugins import globals_vars
 
-name = globals.PROG_NAME
+name = globals_vars.PROG_NAME
 
-setup(name=globals.PROG_NAME,
-      version=globals.VERSION,
+setup(name=globals_vars.PROG_NAME,
+      version=globals_vars.VERSION,
       license="GNU General Public License (GPL) v3",
       description="Jaziku is a software for the implementation of composite analysis "\
                      "metodology between the major indices of climate variability and major "\

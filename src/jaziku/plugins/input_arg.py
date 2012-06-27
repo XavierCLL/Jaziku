@@ -20,14 +20,14 @@
 
 import sys
 import argparse  # http://docs.python.org/py3k/library/argparse.html
-import globals
+import globals_vars
 
 #==============================================================================
 # PARSER AND CHECK ARGUMENTS
 
 # Create parser arguments
 arguments = argparse.ArgumentParser(
-                 prog=globals.PROG_NAME,
+                 prog=globals_vars.PROG_NAME,
                  description=_("Jaziku is a software for the implementation "
                                  "of composite analysis\n metodology between "
                                  "the major indices of climate variability "
@@ -35,7 +35,7 @@ arguments = argparse.ArgumentParser(
                                  "puntual scale.\n"),
                  epilog="Jaziku, version {0} - {1}\n" \
                           "Copyright © 2011-2012 IDEAM - Colombia"
-                          .format(globals.VERSION, globals.COMPILE_DATE),
+                          .format(globals_vars.VERSION, globals_vars.COMPILE_DATE),
                           formatter_class=argparse.RawTextHelpFormatter)
 
 ### Input arguments for dependent variable

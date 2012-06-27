@@ -2,7 +2,7 @@
 
 #1. generar template
 
-xgettext jaziku.py plugins/contingency_test.py plugins/globals.py plugins/input_arg.py plugins/input_validation.py plugins/significance_corr.py
+xgettext jaziku.py plugins/contingency_test.py plugins/globals_vars.py plugins/input_arg.py plugins/input_validation.py plugins/interpolation.py plugins/significance_corr.py plugins/maps/ncl_generator.py plugins/maps/set_grid.py
 
 #2. mover a la carpeta del idioma xx: 
 

@@ -28,7 +28,7 @@ PROG_NAME = "jaziku"
 VERSION = "0.4.0"
 
 # compilation date
-COMPILE_DATE = "23/05/2012"
+COMPILE_DATE = "27/06/2012"
 
 # valid null value for variables dependent and independent (inside files input)
 VALID_NULL = [99999, -99999]
@@ -38,9 +38,11 @@ ACCURACY = 5
 
 # Valid input types for dependent variable
 types_var_D = ['PPT', 'NDPPT', 'TMIN', 'TMAX', 'TEMP', 'PATM', 'RH', 'RUNOFF']
+type_var_D = None  # only one type for all stations
 
 # Valid input types for independent variable
 types_var_I = ['ONI', 'SOI', 'MEI', 'OLR', 'W200', 'SST', 'ARH', 'QBO', 'NAO', 'SSTA_CAR', 'AREA_WHWP']
+type_var_I = None  # only one type for all stations
 
 # types of internal variable independent
 internal_var_I_types = ["ONI", "SOI", "MEI", "OLR", "W200", "SST", "ARH", "NAO", "QBO", "SSTA_CAR", "AREA_WHWP"]
@@ -74,6 +76,8 @@ internal_var_I_urls = {"ONI": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.
 
 # maps files for climate:
 maps_files_climate = {'5days': None, '10days': None, '15days': None, 'trimester': None}
+# maps files for correlation:
+maps_files_correlation = {'5days': None, '10days': None, '15days': None, 'trimester': None}
 # maps files for forecasting:
 maps_files_forecasting = {'5days': {}, '10days': {}, '15days': {}, 'trimester': {}}
 
@@ -95,7 +99,8 @@ config_run = {'climate_process': None,
               'phen_normal_label': None,
               'phen_above_label': None,
               'maps': None,
-              'overlapping': None}
+              'overlapping': None,
+              "shape_boundary": None}
 
 # directory to save all results, this can be absolute or relative path
 # import Jaziku_utils.input_arg as input_arg

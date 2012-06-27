@@ -11,9 +11,18 @@ features/changes:
    in this version) and the user can change parameters for interpolation in 
    runfile 
  * Generate maps with NCL based in files output of interpolation 
+ * Shapes and grids internal with particular ncl scripts and extreme lat and lon
+   definition
+ * Personal shape
+ * Maps for correlations
+ * Climate/forecasting and correlation palette colors bar for NCL
+ * Posibility for run many countries or regions and group based on their names
+ * Posibility to delete data outside of shape, the shape mask method consist 
+   in delete all data outside boundaries of shape analyzing all points in mesh
  
 bugfixes:
- * bug translation in phenomenon label
+ * many fixies and comprobations of all features and changes
+ * (especifig bug that affect 0.3 version) bug translation in phenomenon label
 
 
 0.3.0
