@@ -26,7 +26,7 @@ import pylab
 import os
 import sys
 
-import globals
+import globals_vars
 
 
 def redirect_stdout():
@@ -60,7 +60,7 @@ def ordinary_kriging(base_grid, inc_file):
 
         size = (base_grid.lat_size, base_grid.lon_size, 1)  # (alto, ancho, paso)
         grid = SugarboxGrid(base_grid.lat_size, base_grid.lon_size, 1)
-        data = load_cont_property(os.path.abspath(inc_file), globals.VALID_NULL[1], size)
+        data = load_cont_property(os.path.abspath(inc_file), globals_vars.VALID_NULL[1], size)
 
         semivariogram = CovarianceModel(type=base_grid.semivariogram_type,
                                      ranges=(base_grid.radiuses[0] / 2,
@@ -73,7 +73,7 @@ def ordinary_kriging(base_grid, inc_file):
                                           max_neighbours=base_grid.max_neighbours,
                                           cov_model=semivariogram)
 
-        #write_property(ik_result, os.path.abspath(inc_out), "OK_RESULT", globals.VALID_NULL[1])
+        #write_property(ik_result, os.path.abspath(inc_out), "OK_RESULT", globals_vars.VALID_NULL[1])
 
         #figure()
         #pylab.imshow(ik_result[0][:, :, 0])

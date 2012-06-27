@@ -116,13 +116,14 @@ gettext.textdomain(TRANSLATION_DOMAIN)
 gettext.install(TRANSLATION_DOMAIN, LOCALE_DIR)
 
 # import funtions in plugins
-import plugins.globals as globals
+import plugins.globals_vars as globals_vars
 import plugins.input_validation as input_validation
 import plugins.input_arg as input_arg
 import plugins.contingency_test as ct
 import plugins.significance_corr as sc
 import plugins.interpolation as interpolation
-import plugins.maps.ncl as ncl
+import plugins.maps.ncl_generator as ncl_generator
+import plugins.maps.set_grid as set_grid
 
 
 #==============================================================================
@@ -156,7 +157,7 @@ def print_number(num):
     '''
     Print number to csv file acording to accuracy and fix decimal character
     '''
-    return str(round(float(num), globals.ACCURACY)).replace('.', ',')
+    return str(round(float(num), globals_vars.ACCURACY)).replace('.', ',')
 
 
 def print_number_accuracy(num, accuracy):
@@ -186,7 +187,7 @@ def read_var_D(station):
     reader_csv = csv.reader(file_D, delimiter='\t')
 
     # validation type_D
-    if station.type_D not in globals.types_var_D:
+    if station.type_D not in globals_vars.types_var_D:
         raise Exception(_("{0} is not valid type for dependence variable")
                         .format(station.type_D))
 
@@ -334,8 +335,8 @@ def read_var_I(station):
     # check and notify if Jaziku are using the independent variable inside
     # located in plugins/var_I/
     if station.file_I == "default":
-        if station.type_I in globals.internal_var_I_types:
-            internal_file_I_name = globals.internal_var_I_files[station.type_I]
+        if station.type_I in globals_vars.internal_var_I_types:
+            internal_file_I_name = globals_vars.internal_var_I_files[station.type_I]
             internal_file_I_dir = \
                 os.path.join(os.path.dirname(os.path.realpath(__file__)),
                              "plugins", "var_I", internal_file_I_name)
@@ -350,7 +351,7 @@ def read_var_I(station):
                       "   url: {4} ...................")
                       .format(split_internal_var_I[0], split_internal_var_I[1],
                               split_internal_var_I[2], ' '.join(split_internal_var_I[3::]),
-                              globals.internal_var_I_urls[station.type_I])),
+                              globals_vars.internal_var_I_urls[station.type_I])),
 
         else:
             print_error(_("you defined that Jaziku get data of independent variable\n"
@@ -373,7 +374,7 @@ def read_var_I(station):
                                                   station.range_above_I)))
     else:
         # validation type_I
-        if station.type_I not in globals.types_var_I:
+        if station.type_I not in globals_vars.types_var_I:
             print_error_line_stations(station,
                                       _("{0} is not valid type for independence variable")
                                       .format(station.type_I))
@@ -523,7 +524,7 @@ def calculate_common_period(station):
 
     # initialized variable common_period
     # format list: [[  date ,  var_D ,  var_I ],... ]
-    if globals.config_run['process_period']:
+    if globals_vars.config_run['process_period']:
         if (args_period_start < common_date[0].year + 1 or
             args_period_end > common_date[-1].year - 1):
             sys.stdout.write(_("Calculating the process period ................ "))
@@ -591,12 +592,12 @@ def mean(values):
     mean = 0
     count = 0
     for value in values:
-        if int(value) not in globals.VALID_NULL:
+        if int(value) not in globals_vars.VALID_NULL:
             mean += value
             count += 1.0
 
     if count == 0:
-        return globals.VALID_NULL[1]
+        return globals_vars.VALID_NULL[1]
 
     return mean / count
 
@@ -651,7 +652,7 @@ def check_consistent_data(station, var):
 
     null_counter = 0
     for value in values_in_common_period:
-        if value in globals.VALID_NULL:
+        if value in globals_vars.VALID_NULL:
             null_counter += 1
 
     sys.stdout.write(_("({0} null of {1})\t").format(null_counter, len(values_in_common_period)))
@@ -1130,7 +1131,7 @@ def get_contingency_table(station, lag, month, day=None):
               u'with relation to \"{3}\"\n   inside category \"{4}\". Therefore,'
               u' the graphics will not be created.')
               .format(station.threshold_below_var_I, station.threshold_above_var_I,
-                      station.type_D, station.type_I, globals.phenomenon_below))
+                      station.type_D, station.type_I, globals_vars.phenomenon_below))
         threshold_problem[0] = True
 
     # if threshold by below or above calculating normal phenomenon of independent variable is wrong
@@ -1141,7 +1142,7 @@ def get_contingency_table(station, lag, month, day=None):
               u'with relation to \"{3}\"\n   inside category \"{4}\". Therefore,'
               u' the graphics will not be created.')
               .format(station.threshold_below_var_I, station.threshold_above_var_I,
-                      station.type_D, station.type_I, globals.phenomenon_normal))
+                      station.type_D, station.type_I, globals_vars.phenomenon_normal))
         threshold_problem[1] = True
 
     # if threshold by above of independent variable is wrong
@@ -1152,7 +1153,7 @@ def get_contingency_table(station, lag, month, day=None):
               u'with relation to \"{3}\"\n   inside category \"{4}\". Therefore,'
               u' the graphics will not be created.')
               .format(station.threshold_below_var_I, station.threshold_above_var_I,
-                      station.type_D, station.type_I, globals.phenomenon_above))
+                      station.type_D, station.type_I, globals_vars.phenomenon_above))
         threshold_problem[2] = True
 
     try:
@@ -1352,12 +1353,12 @@ def result_table_CA(station):
         # print division line between lags
         csv_result_table.writerow([
              '', '', '', '', '', '', '', '', '',
-             globals.phenomenon_below, '', '',
-             globals.phenomenon_normal, '', '',
-             globals.phenomenon_above, '', '',
-             globals.phenomenon_below, '', '',
-             globals.phenomenon_normal, '', '',
-             globals.phenomenon_above])
+             globals_vars.phenomenon_below, '', '',
+             globals_vars.phenomenon_normal, '', '',
+             globals_vars.phenomenon_above, '', '',
+             globals_vars.phenomenon_below, '', '',
+             globals_vars.phenomenon_normal, '', '',
+             globals_vars.phenomenon_above])
 
         csv_result_table.writerow([
              '', '', '', '', '', '', '', '', '',
@@ -1512,8 +1513,8 @@ def graphics_climate(station):
         #             shadow = True, fancybox = True)
 
         # table in graphic
-        colLabels = (globals.phenomenon_below, globals.phenomenon_normal,
-                     globals.phenomenon_above)
+        colLabels = (globals_vars.phenomenon_below, globals_vars.phenomenon_normal,
+                     globals_vars.phenomenon_above)
 
         rowLabels = [_('var D below'), _('var D normal'), _('var D above')]
 
@@ -1721,12 +1722,12 @@ def maps_data_climate(station):
 
     # -------------------------------------------------------------------------
     # create maps plots files for climate process, only once
-    if globals.maps_files_climate[station.analysis_interval] is None:
+    if globals_vars.maps_files_climate[station.analysis_interval] is None:
         # create and define csv output file for maps climate
-        phenomenon = {0: globals.phenomenon_below,
-                      1: globals.phenomenon_normal,
-                      2: globals.phenomenon_above}
-        globals.maps_files_climate[station.analysis_interval] = []  # [lag][month][phenomenon]
+        phenomenon = {0: globals_vars.phenomenon_below,
+                      1: globals_vars.phenomenon_normal,
+                      2: globals_vars.phenomenon_above}
+        globals_vars.maps_files_climate[station.analysis_interval] = []  # [lag][month][phenomenon]
 
         # define maps data files and directories
         for lag in lags:
@@ -1806,7 +1807,7 @@ def maps_data_climate(station):
 
                     month_list.append(day_list)
 
-            globals.maps_files_climate[station.analysis_interval].append(month_list)
+            globals_vars.maps_files_climate[station.analysis_interval].append(month_list)
 
     def calculate_index():
         # select index
@@ -1841,7 +1842,7 @@ def maps_data_climate(station):
                     p_index = calculate_index()
 
                     # write new row in file
-                    csv_name = globals.maps_files_climate[station.analysis_interval][lag][month - 1][phenomenon]
+                    csv_name = globals_vars.maps_files_climate[station.analysis_interval][lag][month - 1][phenomenon]
                     open_file = open(csv_name, 'a')
                     csv_file = csv.writer(open_file, delimiter=';')
                     csv_file.writerow([station.code, print_number(station.lat), print_number(station.lon),
@@ -1864,7 +1865,7 @@ def maps_data_climate(station):
                         p_index = calculate_index()
 
                         # write new row in file
-                        csv_name = globals.maps_files_climate[station.analysis_interval][lag][month - 1][day][phenomenon]
+                        csv_name = globals_vars.maps_files_climate[station.analysis_interval][lag][month - 1][day][phenomenon]
                         open_file = open(csv_name, 'a')
                         csv_file = csv.writer(open_file, delimiter=';')
                         csv_file.writerow([station.code, print_number(station.lat), print_number(station.lon),
@@ -1894,7 +1895,7 @@ def maps_data_forecasting(station):
         day = station.forecasting_date[1]
         forecasting_date_formated = month_text[month - 1] + "_" + str(day)
 
-    if forecasting_date_formated not in globals.maps_files_forecasting[station.analysis_interval]:
+    if forecasting_date_formated not in globals_vars.maps_files_forecasting[station.analysis_interval]:
 
         if station.state_of_data in [1, 3]:
             lags_list = []
@@ -1925,7 +1926,7 @@ def maps_data_forecasting(station):
                 del csv_file
 
                 lags_list.append(csv_name)
-            globals.maps_files_forecasting[station.analysis_interval][forecasting_date_formated] = lags_list
+            globals_vars.maps_files_forecasting[station.analysis_interval][forecasting_date_formated] = lags_list
 
         if station.state_of_data in [2, 4]:
             lags_list = []
@@ -1956,7 +1957,7 @@ def maps_data_forecasting(station):
                 del csv_file
 
                 lags_list.append(csv_name)
-            globals.maps_files_forecasting[station.analysis_interval][forecasting_date_formated] = lags_list
+            globals_vars.maps_files_forecasting[station.analysis_interval][forecasting_date_formated] = lags_list
 
     def calculate_index():
         # select index
@@ -1984,7 +1985,7 @@ def maps_data_forecasting(station):
         p_index = calculate_index()
 
         # write new row in file
-        csv_name = globals.maps_files_forecasting[station.analysis_interval][forecasting_date_formated][lag]
+        csv_name = globals_vars.maps_files_forecasting[station.analysis_interval][forecasting_date_formated][lag]
         open_file = open(csv_name, 'a')
         csv_file = csv.writer(open_file, delimiter=';')
         csv_file.writerow([station.code,
@@ -2042,7 +2043,7 @@ def pre_process(station):
     station.process_period = {'start': station.common_period[0][0].year + 1,
                               'end': station.common_period[-1][0].year - 1}
 
-    if globals.config_run['consistent_data']:
+    if globals_vars.config_run['consistent_data']:
         # -------------------------------------------------------------------------
         # check if the data are consistent for var D
         sys.stdout.write(_("Check if var_D are consistent "))
@@ -2119,17 +2120,17 @@ def process(station):
         station.data_of_var_I = "monthly"
 
     # run process (climate, forecasting) from input arguments
-    if not globals.config_run['climate_process'] and not globals.config_run['forecasting_process']:
+    if not globals_vars.config_run['climate_process'] and not globals_vars.config_run['forecasting_process']:
         print_error(_("Neither process (climate, forecasting) were executed, "
                       "\nplease enable this process in arguments: \n'-c, "
                       "--climate' for climate and/or '-f, --forecasting' "
                       "for forecasting."))
-    if globals.config_run['climate_process']:
+    if globals_vars.config_run['climate_process']:
         station = climate(station)
 
-    if globals.config_run['forecasting_process']:
+    if globals_vars.config_run['forecasting_process']:
         # TODO: run forecasting without climate¿?
-        if not globals.config_run['climate_process']:
+        if not globals_vars.config_run['climate_process']:
             print_error(_("sorry, Jaziku can't run forecasting process "
                           "without climate, this issue has not been implemented "
                           "yet, \nplease run again with the option \"-c\""))
@@ -2169,7 +2170,7 @@ def climate(station):
 
     station = result_table_CA(station)
 
-    if not threshold_problem[0] and not threshold_problem[1] and not threshold_problem[2] and globals.config_run['graphics']:
+    if not threshold_problem[0] and not threshold_problem[1] and not threshold_problem[2] and globals_vars.config_run['graphics']:
         graphics_climate(station)
     else:
         sys.stdout.write(_("\ncontinue without make graphics for climate .... "))
@@ -2251,7 +2252,7 @@ def forecasting(station):
             _iter = 0
             for column in range(3):
                 for row in range(3):
-                    if not globals.config_run['risk_analysis'] or station.is_sig_risk_analysis[lag][station.forecasting_date - 1][_iter] == _('yes'):
+                    if not globals_vars.config_run['risk_analysis'] or station.is_sig_risk_analysis[lag][station.forecasting_date - 1][_iter] == _('yes'):
                         items_CT[order_CT[_iter]] = \
                             station.contingencies_tables_percent[lag][station.forecasting_date - 1][column][row] / 100.0
                         _iter += 1
@@ -2262,7 +2263,7 @@ def forecasting(station):
             _iter = 0
             for column in range(3):
                 for row in range(3):
-                    if not globals.config_run['risk_analysis'] or station.is_sig_risk_analysis[lag][month - 1][day][_iter] == _('yes'):
+                    if not globals_vars.config_run['risk_analysis'] or station.is_sig_risk_analysis[lag][month - 1][day][_iter] == _('yes'):
                         items_CT[order_CT[_iter]] = \
                             station.contingencies_tables_percent[lag][month - 1][day][column][row] / 100.0
                         _iter += 1
@@ -2283,7 +2284,7 @@ def forecasting(station):
     station.prob_normal_var_D = prob_normal_var_D
     station.prob_exceed_var_D = prob_exceed_var_D
 
-    if not threshold_problem[0] and not threshold_problem[1] and not threshold_problem[2] and globals.config_run['graphics']:
+    if not threshold_problem[0] and not threshold_problem[1] and not threshold_problem[2] and globals_vars.config_run['graphics']:
         graphics_forecasting(station)
     else:
         sys.stdout.write(_("\ncontinue without make graphics for forecasting  "))
@@ -2298,21 +2299,37 @@ def forecasting(station):
 
 
 def maps(grid):
+    # set name_grid, country and grid_path
+    if isinstance(grid.grid, list):
+        if len(grid.grid) == 1:
+            grid.grid_name = grid.grid_fullname = grid.country = grid.grid[0]
+        else:
+            grid.grid_name = grid.grid[0]
+            grid.grid_fullname = grid.grid[0] + " (" + grid.grid[1] + ")"
+            grid.country = grid.grid[1]
+        if not grid.shape_path:
+            grid.grid_path = os.path.join(grid.grid[1], grid.grid[0])
+    else:
+        grid.grid_name = grid.grid_fullname = grid.country = grid.grid
+        if not grid.shape_path:
+            grid.grid_path = os.path.join(grid.grid, grid.grid)
 
-    print "\n################# {0}: {1}".format(_("MAP"), grid.grid_name)
+    print "\n################# {0}: {1}".format(_("MAP"), grid.grid_fullname)
 
-    ## Colombia
-    grid.corner_nw = [13.3, -79.7]  # [lat, lon]
-    grid.corner_ne = [13.3, -66.2]
-    grid.corner_se = [-5.0, -66.2]
-    grid.corner_sw = [-5.0, -79.7]
+    # check if grid defined path to shape else search and set internal lat and lon of grid
+    if not grid.shape_path:
+        print colored.yellow(_("   Setting internal grid"))
+        grid = set_grid.search_and_set_internal_grid(grid)
+    else:
+        print colored.yellow(_("   Setting particular shape"))
+        grid = set_grid.set_particular_grid(grid)
 
-    # check if the grid is a rectangle
-    if grid.corner_nw[0] != grid.corner_ne[0] and \
-       grid.corner_se[0] != grid.corner_sw[0] and \
-       grid.corner_nw[1] != grid.corner_sw[1] and \
-       grid.corner_ne[1] != grid.corner_se[1]:
-        print_error("The corners of grid don't form a rectangle.")
+    # check the latitude and longitude
+    if grid.minlat >= grid.maxlat or \
+       grid.minlon >= grid.maxlon or \
+       - 90 > grid.minlat > 90 or \
+       - 180 > grid.minlat > 180:
+        print_error(_("The latitude and/or longitude are wrong,\nthese should be decimal degrees."), False)
 
     # set variables for grid
     grid.grid_propieties()
@@ -2324,11 +2341,11 @@ def maps(grid):
     global base_matrix
     base_matrix = np.matrix(np.empty([grid.lat_size, grid.lon_size]))
     # initialize matrix with null value
-    base_matrix.fill(globals.VALID_NULL[1])
+    base_matrix.fill(globals_vars.VALID_NULL[1])
 
-    phenomenon = {0: globals.phenomenon_below,
-                  1: globals.phenomenon_normal,
-                  2: globals.phenomenon_above}
+    phenomenon = {0: globals_vars.phenomenon_below,
+                  1: globals_vars.phenomenon_normal,
+                  2: globals_vars.phenomenon_above}
 
     def process_map():
         # copy matrix from base_matrix
@@ -2343,7 +2360,11 @@ def maps(grid):
                 continue
             latitude = float(line[1].replace(',', '.'))
             longitude = float(line[2].replace(',', '.'))
-            index = float(line[7].replace(',', '.'))
+
+            if grid.in_process["correlation"]:
+                index = float(line[3].replace(',', '.'))  # get pearson value
+            if grid.in_process["climate"] or grid.in_process["forecasting"]:
+                index = float(line[7].replace(',', '.'))  # get index value
             # set the index value on matrix
             matrix, point_state = grid.set_point_on_grid(matrix, latitude, longitude, index)
 
@@ -2355,7 +2376,7 @@ def maps(grid):
                     format(lat=latitude, lon=longitude, code=line[0]))
                 sys.stdout.write("                                                ")
                 sys.stdout.flush()
-            if point_state in ["average", "maximum", "minimum"] and message_warning:
+            if point_state in [_("average"), _("maximum"), _("minimum")] and message_warning:
                 print colored.yellow(\
                     _("\n   Warning: for the point lat:{lat} lon:{lon}\n" \
                       "   Jaziku detect overlapping of two values, Jaziku\n" \
@@ -2363,7 +2384,7 @@ def maps(grid):
                     format(lat=latitude, lon=longitude, state=point_state))
                 sys.stdout.write("                                                ")
                 sys.stdout.flush()
-            if point_state == "neither" and message_warning:
+            if point_state == _("neither") and message_warning:
                 print colored.yellow(\
                     _("\n   Warning: for the point lat:{lat} lon:{lon}\n" \
                       "   Jaziku detect overlapping of two values, Jaziku\n" \
@@ -2384,7 +2405,7 @@ def maps(grid):
 
         # save values to file INC
         for value in matrix_vector:
-            if int(value) == globals.VALID_NULL[1]:
+            if int(value) == globals_vars.VALID_NULL[1]:
                 open_file.write(str(int(value)) + '\n')
             else:
                 open_file.write(str(value) + '\n')
@@ -2411,34 +2432,45 @@ def maps(grid):
         open_ncl_file.close()
         del tsv_file
 
-        shape_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                  "plugins", "maps", "shapes")
-
         # make ncl file for map
         base_path_file = os.path.join(base_path, base_file)
         # make and write ncl file for ncl process
-        ncl_file = ncl.make_ncl_file(grid, base_path_file, shape_path)
+        ncl_file = ncl_generator.make_ncl_file(grid, base_path_file, globals_vars)
         devnull = os.open(os.devnull, os.O_WRONLY)
+
+        ## COLORMAP
+        # setting path to colormap
+        path_to_colormap = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                         "plugins", "maps", "colormaps")
+        # set colormap ncl variable into variables system
+        os.environ["NCARG_COLORMAPS"] = path_to_colormap
+
+        ## NCL
         # call ncl command for make maps base on ncl_file
         call(["ncl", os.path.abspath(ncl_file)], shell=False, stdout=devnull)
+
+        ## TRANSFORM IMAGE
         # trim png created
         call(["convert",
               os.path.join(os.path.abspath(base_path_file) + ".png"),
               "-trim",
               os.path.join(os.path.abspath(base_path_file) + ".png")], shell=False)
 
-
         del matrix
 
     # -------------------------------------------------------------------------
     # Process maps for CLIMATE
+    grid.in_process = {}
+    grid.in_process["climate"] = True
+    grid.in_process["correlation"] = False
+    grid.in_process["forecasting"] = False
 
     print _("Processing maps for climate:")
 
     # walking file by file of maps directory and make interpolation and map for each file
     for analysis_interval in ['5days', '10days', '15days', 'trimester']:
 
-        if globals.maps_files_climate[analysis_interval] is None:
+        if globals_vars.maps_files_climate[analysis_interval] is None:
             continue
 
         # console message
@@ -2462,7 +2494,7 @@ def maps(grid):
                             message_warning = False
 
                         # file where saved points for plot map
-                        file_map_points = globals.maps_files_climate[analysis_interval][lag][month - 1][category]
+                        file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][category]
 
                         # save matrix for interpolation
                         base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
@@ -2473,13 +2505,16 @@ def maps(grid):
 
                         base_file = _(u'Map_lag_{0}_{1}_{2}').format(lag, trim_text[month - 1], phenomenon[category])
 
+                        grid.date = trim_text[month - 1]
+                        grid.lag = lag
+
                         # file for interpolation
                         inc_file = os.path.join(base_path, base_file + ".INC")
 
                         # save file for NCL
                         ncl_data = os.path.join(base_path, base_file + ".tsv")
 
-                        #process_map()
+                        process_map()
 
                 else:
                     # range based on analysis interval
@@ -2498,7 +2533,7 @@ def maps(grid):
                                 message_warning = False
 
                             # file where saved points for plot map
-                            file_map_points = globals.maps_files_climate[analysis_interval][lag][month - 1][day][category]
+                            file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][day][category]
 
                             # save matrix for interpolation
                             base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
@@ -2512,26 +2547,142 @@ def maps(grid):
                                                  month_text[month - 1] + "_" + str(range_analysis_interval[day]),
                                                  phenomenon[category])
 
+                            grid.date = month_text[month - 1] + "_" + str(range_analysis_interval[day])
+                            grid.lag = lag
+
                             # file for interpolation
                             inc_file = os.path.join(base_path, base_file + ".INC")
 
                             # save file for NCL
                             ncl_data = os.path.join(base_path, base_file + ".tsv")
 
-                            #process_map()
+                            process_map()
+
+        print colored.green(_("done"))
+
+    # -------------------------------------------------------------------------
+    # Process maps for CORRELATION
+
+    grid.in_process["climate"] = False
+    grid.in_process["correlation"] = True
+    grid.in_process["forecasting"] = False
+
+    print _("Processing maps for correlation:")
+
+    # walking file by file of maps directory and make interpolation and map for each file
+    for analysis_interval in ['5days', '10days', '15days', 'trimester']:
+
+        if globals_vars.maps_files_climate[analysis_interval] is None:
+            continue
+
+        # console message
+        if analysis_interval == 'trimester':
+            sys.stdout.write("                {0} ..................... ".format(analysis_interval))
+        else:
+            sys.stdout.write("                {0}\t....................... ".format(analysis_interval))
+        sys.stdout.flush()
+
+        for lag in lags:
+
+            # all months in year 1->12
+            for month in range(1, 13):
+
+                if analysis_interval == 'trimester':
+                    category = 1  # normal
+                    # show only once
+                    if lag == 0 and month == 1:
+                        message_warning = True
+                    else:
+                        message_warning = False
+
+                    # file where saved points for plot map
+                    file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][category]
+
+                    # save matrix for interpolation
+                    base_path = os.path.join(climate_dir, _('maps'),
+                                             translate_analysis_interval[options_analysis_interval.index(analysis_interval)],
+                                             _('lag_{0}').format(lag),
+                                             _('Correlation'),
+                                             grid.grid_name)
+
+                    # make dir with the name of grid
+                    if not os.path.isdir(base_path):
+                        os.makedirs(base_path)
+
+                    base_file = _(u'Map_correlation_lag_{0}_{1}').format(lag, trim_text[month - 1])
+
+                    grid.date = trim_text[month - 1]
+                    grid.lag = lag
+
+                    # file for interpolation
+                    inc_file = os.path.join(base_path, base_file + ".INC")
+
+                    # save file for NCL
+                    ncl_data = os.path.join(base_path, base_file + ".tsv")
+
+                    process_map()
+
+                else:
+                    # range based on analysis interval
+                    if analysis_interval == '5days':
+                        range_analysis_interval = [1, 6, 11, 16, 21, 26]
+                    if analysis_interval == '10days':
+                        range_analysis_interval = [1, 11, 21]
+                    if analysis_interval == '15days':
+                        range_analysis_interval = [1, 16]
+                    for day in range(len(range_analysis_interval)):
+                        category = 1  # phenomenons var_I
+                        # show only once
+                        if lag == 0 and month == 1 and day == 0:
+                            message_warning = True
+                        else:
+                            message_warning = False
+
+                        # file where saved points for plot map
+                        file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][day][category]
+
+                        # save matrix for interpolation
+                        base_path = os.path.join(climate_dir, _('maps'),
+                                                 translate_analysis_interval[options_analysis_interval.index(analysis_interval)],
+                                                 _('lag_{0}').format(lag),
+                                                 _('Correlation'),
+                                                 grid.grid_name)
+
+                        # make dir with the name of grid
+                        if not os.path.isdir(base_path):
+                            os.makedirs(base_path)
+
+                        base_file = _(u'Map_correlation_lag_{0}_{1}')\
+                                     .format(lag, month_text[month - 1] + "_" + str(range_analysis_interval[day]))
+
+                        grid.date = month_text[month - 1] + "_" + str(range_analysis_interval[day])
+                        grid.lag = lag
+
+                        # file for interpolation
+                        inc_file = os.path.join(base_path, base_file + ".INC")
+
+                        # save file for NCL
+                        ncl_data = os.path.join(base_path, base_file + ".tsv")
+
+                        process_map()
+
         print colored.green(_("done"))
 
     # -------------------------------------------------------------------------
     # Process maps for FORECASTING
 
-    if globals.config_run['forecasting_process']:
+    if globals_vars.config_run['forecasting_process']:
+
+        grid.in_process["climate"] = False
+        grid.in_process["correlation"] = False
+        grid.in_process["forecasting"] = True
 
         print _("Processing maps for forecasting:")
 
         # walking file by file of maps directory and make interpolation and map for each file
         for analysis_interval in ['5days', '10days', '15days', 'trimester']:
 
-            if globals.maps_files_forecasting[analysis_interval] == {}:
+            if globals_vars.maps_files_forecasting[analysis_interval] == {}:
                 continue
 
             # console message
@@ -2541,7 +2692,7 @@ def maps(grid):
                 sys.stdout.write("                {0}\t....................... ".format(analysis_interval))
             sys.stdout.flush()
 
-            for forecasting_date in globals.maps_files_forecasting[analysis_interval]:
+            for forecasting_date in globals_vars.maps_files_forecasting[analysis_interval]:
 
                 for lag in lags:
                     # show only once
@@ -2551,7 +2702,7 @@ def maps(grid):
                         message_warning = False
 
                     # file where saved points for plot map
-                    file_map_points = globals.maps_files_forecasting[analysis_interval][forecasting_date][lag]
+                    file_map_points = globals_vars.maps_files_forecasting[analysis_interval][forecasting_date][lag]
                     # save matrix for interpolation
                     base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
 
@@ -2560,6 +2711,9 @@ def maps(grid):
                         os.makedirs(base_path)
 
                     base_file = _(u'Map_lag_{0}_{1}').format(lag, forecasting_date)
+
+                    grid.date = forecasting_date
+                    grid.lag = lag
 
                     # file for interpolation
                     inc_file = os.path.join(base_path, base_file + ".INC")
@@ -2571,7 +2725,7 @@ def maps(grid):
 
             print colored.green(_("done"))
 
-        del base_matrix
+    del base_matrix
 
 #==============================================================================
 # STATION CLASS
@@ -2599,11 +2753,12 @@ class Grid:
     Generic grid class
     '''
 
-    fields = ["grid_name",
-              "corner_nw",
-              "corner_ne",
-              "corner_se",
-              "corner_sw",
+    fields = ["grid",
+              "minlat",
+              "maxlat",
+              "minlon",
+              "maxlon",
+              "shape_path",
               "grid_resolution",
               "semivariogram_type",
               "radiuses",
@@ -2624,30 +2779,37 @@ class Grid:
         Set values and default values for grid variables
         '''
 
+        # set the radiuses for interpolation
+        if self.grid_resolution == "default":
+            # set grid resolution basesd in 70 division of grid for minimun side
+            self.grid_resolution = min([abs(self.maxlat - self.minlat),
+                                        abs(self.maxlon - self.minlon)]) / 70
+
         # number of decimal from grid resolution
         self.decimal_resolution = len(str(self.grid_resolution).split('.')[1])
 
-        # adjust corners rounded decimal point to decimal resolution (defined in runfile)
-        self.corner_nw = [round(self.corner_nw[0], self.decimal_resolution),
-                          round(self.corner_nw[1], self.decimal_resolution)]
-        self.corner_ne = [round(self.corner_ne[0], self.decimal_resolution),
-                          round(self.corner_ne[1], self.decimal_resolution)]
-        self.corner_se = [round(self.corner_se[0], self.decimal_resolution),
-                          round(self.corner_se[1], self.decimal_resolution)]
-        self.corner_sw = [round(self.corner_sw[0], self.decimal_resolution),
-                          round(self.corner_sw[1], self.decimal_resolution)]
+        # adjust extreme latitude and longitude values in rounded decimal point
+        # to decimal resolution (defined in runfile)
+        self.minlat = round(self.minlat, self.decimal_resolution)
+        self.maxlat = round(self.maxlat, self.decimal_resolution)
+        self.minlon = round(self.minlon, self.decimal_resolution)
+        self.maxlon = round(self.maxlon, self.decimal_resolution)
 
         # calculate the number of values of grid (height and width based on grid resolution)
         # this is equal to height(lat) and width(lon) of matrix
-        self.lat_size = int(abs(self.corner_nw[0] - self.corner_sw[0]) / self.grid_resolution + 1)
-        self.lon_size = int(abs(self.corner_nw[1] - self.corner_ne[1]) / self.grid_resolution + 1)
+        self.lat_size = int(abs(self.maxlat - self.minlat) / self.grid_resolution + 1)
+        self.lon_size = int(abs(self.maxlon - self.minlon) / self.grid_resolution + 1)
 
         # make list of coordinate of latitude, this is a list of latitude for this grid
-        lat_coordinates_list = np.linspace(self.corner_nw[0], self.corner_sw[0], self.lat_size).tolist()
+        lat_coordinates_list = np.linspace(max(self.maxlat, self.minlat),
+                                           min(self.maxlat, self.minlat),
+                                           self.lat_size).tolist()
         self.lat_coordinates = [round(item, self.decimal_resolution) for item in lat_coordinates_list]
 
         # make list of coordinate of longitude, this is a list of longitude for this grid
-        lon_coordinates_list = np.linspace(self.corner_nw[1], self.corner_ne[1], self.lon_size).tolist()
+        lon_coordinates_list = np.linspace(min(self.maxlon, self.minlon),
+                                           max(self.maxlon, self.minlon),
+                                           self.lon_size).tolist()
         self.lon_coordinates = [round(item, self.decimal_resolution) for item in lon_coordinates_list]
 
         # interpolation type TODO:
@@ -2666,7 +2828,7 @@ class Grid:
 
         # set the radiuses for interpolation
         if self.radiuses == "default":
-            radius = max([self.lat_size, self.lon_size]) * 2
+            radius = max([self.lat_size, self.lon_size]) * 3
             self.radiuses = [radius, radius]
         else:
             self.radiuses = [int(self.radiuses[0]), int(self.radiuses[1])]
@@ -2676,6 +2838,13 @@ class Grid:
             self.max_neighbours = Station.stations_processed
         else:
             self.max_neighbours = int(self.max_neighbours)
+
+        ## what do with data outside of boundary shape
+        self.shape_mask = False
+        # delete data outside of shape in mesh data
+        # if grid_resolution is thin, the shape mask is better
+        if globals_vars.config_run['shape_boundary'] == "shape_mask":
+            self.shape_mask = True
 
     def  print_grid_propieties(self):
         print colored.cyan(_("   Mesh size: {0}x{1}").format(self.lat_size, self.lon_size))
@@ -2707,27 +2876,38 @@ class Grid:
         lat = round(lat, self.decimal_resolution)
         lon = round(lon, self.decimal_resolution)
 
-        # get location index for lat and lon
-        try:
-            lat_location = self.lat_coordinates.index(lat)
-            lon_location = self.lon_coordinates.index(lon)
-        except:
+        # check if point is outside of the grid
+        if lat < min(self.lat_coordinates) or \
+           lat > max(self.lat_coordinates) or \
+           lon < min(self.lon_coordinates) or \
+           lon > max(self.lon_coordinates):
             return matrix, "point not added"
+
+        def closest(target, collection):
+            return min((abs(target - i), i) for i in collection)[1]
+
+        # search the closest value in coordinates list
+        lat_closest = closest(lat, self.lat_coordinates)
+        lon_closest = closest(lon, self.lon_coordinates)
+
+        # set the location in coordinates list
+        lat_location = self.lat_coordinates.index(lat_closest)
+        lon_location = self.lon_coordinates.index(lon_closest)
 
         ## put value in the base matrix
         # first check if already exist value in this point on matrix (overlapping)
-        if int(matrix[lat_location, lon_location]) != globals.VALID_NULL[1]:
-            if globals.config_run['overlapping'] == "average":
+        if int(matrix[lat_location, lon_location]) != globals_vars.VALID_NULL[1]:
+            if globals_vars.config_run['overlapping'] == "average":
                 matrix[lat_location, lon_location] = mean([matrix[lat_location, lon_location], value])
-                return matrix, "average"
-            if globals.config_run['overlapping'] == "maximum":
+                return matrix, _("average")
+            if globals_vars.config_run['overlapping'] == "maximum":
                 matrix[lat_location, lon_location] = max([matrix[lat_location, lon_location], value])
-                return matrix, "maximum"
-            if globals.config_run['overlapping'] == "minimum":
+                return matrix, _("maximum")
+            if globals_vars.config_run['overlapping'] == "minimum":
                 matrix[lat_location, lon_location] = min([matrix[lat_location, lon_location], value])
-                return matrix, "minimum"
-            if globals.config_run['overlapping'] == "neither":
-                return matrix, "neither"
+                return matrix, _("minimum")
+            if globals_vars.config_run['overlapping'] == "neither":
+                return matrix, _("neither")
         else:
             matrix[lat_location, lon_location] = value
 
@@ -2771,10 +2951,10 @@ def main():
     # read line by line the RUNFILE
     for line_in_run_file in run_file:
         # trim all items in line_in_run_file
-        line_in_run_file = [i.strip() for i in line_in_run_file]
+        line_in_run_file = [i.strip() for i in line_in_run_file if i != '']
 
         # if line is null o empty, e.g. empty but with tabs or spaces
-        if not line_in_run_file or not line_in_run_file[0].strip():
+        if not line_in_run_file or not line_in_run_file[0].strip() or line_in_run_file == []:
             continue
 
         # is the first line, start read configuration run
@@ -2788,15 +2968,15 @@ def main():
             if line_in_run_file[0][0:3] == "## ":
                 continue
 
-            if line_in_run_file[0] in globals.config_run:
+            if line_in_run_file[0] in globals_vars.config_run:
                 # in this case, for python 'disable' is None,
                 # then let default value (it is 'None')
                 if line_in_run_file[1] == "disable":
-                    globals.config_run[line_in_run_file[0]] = False
+                    globals_vars.config_run[line_in_run_file[0]] = False
                 elif line_in_run_file[1] == "enable":
-                    globals.config_run[line_in_run_file[0]] = True
+                    globals_vars.config_run[line_in_run_file[0]] = True
                 else:
-                    globals.config_run[line_in_run_file[0]] = line_in_run_file[1]
+                    globals_vars.config_run[line_in_run_file[0]] = line_in_run_file[1]
             else:
                 if line_in_run_file[1] == "GRIDS LIST":
                     in_config_run = False
@@ -2818,14 +2998,16 @@ def main():
                 continue
 
             if line_in_run_file[0] in Grid.fields:
+                if len(line_in_run_file) == 1:
+                    setattr(Grid.all_grids[-1], line_in_run_file[0], None)
                 if len(line_in_run_file) == 2:
                     try:
-                        setattr(Grid.all_grids[-1], line_in_run_file[0], float(line_in_run_file[1]))
+                        setattr(Grid.all_grids[-1], line_in_run_file[0], float(line_in_run_file[1].replace(',', '.')))
                     except:
                         setattr(Grid.all_grids[-1], line_in_run_file[0], line_in_run_file[1])
                 if len(line_in_run_file) == 3:
                     try:
-                        setattr(Grid.all_grids[-1], line_in_run_file[0], [float(line_in_run_file[1]), float(line_in_run_file[2])])
+                        setattr(Grid.all_grids[-1], line_in_run_file[0], [float(line_in_run_file[1].replace(',', '.')), float(line_in_run_file[2].replace(',', '.'))])
                     except:
                         setattr(Grid.all_grids[-1], line_in_run_file[0], [line_in_run_file[1], line_in_run_file[2]])
             else:
@@ -2844,22 +3026,22 @@ def main():
 
     # -------------------------------------------------------------------------
     # setting language
-    if globals.config_run['language'] and globals.config_run['language'] != "autodetect":
-        if globals.config_run['language'] == "en" or globals.config_run['language'] == "EN" or globals.config_run['language'] == "En":
-            settings_language = colored.green(globals.config_run['language'])
+    if globals_vars.config_run['language'] and globals_vars.config_run['language'] != "autodetect":
+        if globals_vars.config_run['language'] == "en" or globals_vars.config_run['language'] == "EN" or globals_vars.config_run['language'] == "En":
+            settings_language = colored.green(globals_vars.config_run['language'])
             lang = gettext.NullTranslations()
             lang.install()
         else:
             try:
                 lang = gettext.translation(TRANSLATION_DOMAIN, LOCALE_DIR,
-                                           languages=[globals.config_run['language']],
+                                           languages=[globals_vars.config_run['language']],
                                            codeset="utf-8")
             except:
-                print_error(_("\"{0}\" language not available.").format(globals.config_run['language']))
+                print_error(_("\"{0}\" language not available.").format(globals_vars.config_run['language']))
 
         if 'lang' in locals():
             lang.install()
-            settings_language = colored.green(globals.config_run['language'])
+            settings_language = colored.green(globals_vars.config_run['language'])
     else:
         # Setting language based on locale language system,
         # when not defined language in arguments
@@ -2896,7 +3078,8 @@ def main():
                 "phen_normal_label": "-",
                 "phen_above_label": "-",
                 "maps": _("disabled"),
-                "overlapping": None}
+                "overlapping": None,
+                "shape_boundary": _("disabled")}
 
     # console message
     print _("\n########################### JAZIKU ###########################\n"
@@ -2908,14 +3091,14 @@ def main():
             "## Version {0} - {1}\t                            ##\n"
             "## Copyright 2011-2012 IDEAM - Colombia                     ##\n"
             "##############################################################") \
-            .format(globals.VERSION, globals.COMPILE_DATE)
+            .format(globals_vars.VERSION, globals_vars.COMPILE_DATE)
 
     # set period for process if is defined as argument
-    if globals.config_run['process_period']:
+    if globals_vars.config_run['process_period']:
         global args_period_start, args_period_end
         try:
-            args_period_start = int(globals.config_run['process_period'].split('-')[0])
-            args_period_end = int(globals.config_run['process_period'].split('-')[1])
+            args_period_start = int(globals_vars.config_run['process_period'].split('-')[0])
+            args_period_end = int(globals_vars.config_run['process_period'].split('-')[1])
             settings["period"] = colored.green("{0}-{1}".format(args_period_start, args_period_end))
         except Exception, e:
             print_error(_('the period must be: year_start-year_end (ie. 1980-2008)\n\n{0}').format(e))
@@ -2926,65 +3109,73 @@ def main():
 
     # trimester text for print
     global trim_text
-    trim_text = {-2: _('ndj'), -1: _('djf'), 0: _('jfm'), 1: _('fma'), 2: _('mam'),
-                 3: _('amj'), 4: _('mjj'), 5: _('jja'), 6: _('jas'), 7: _('aso'),
-                 8: _('son'), 9: _('ond'), 10: _('ndj'), 11: _('djf')}
+    trim_text = {-2: _('NDJ'), -1: _('DJF'), 0: _('JFM'), 1: _('FMA'), 2: _('MAM'),
+                 3: _('AMJ'), 4: _('MJJ'), 5: _('JJA'), 6: _('JAS'), 7: _('ASO'),
+                 8: _('SON'), 9: _('OND'), 10: _('NDJ'), 11: _('DJF')}
 
     # month text for print
     global month_text
-    month_text = {-2: _('nov'), -1: _('dec'), 0: _('jan'), 1: _('feb'), 2: _('mar'),
-                  3: _('apr'), 4: _('may'), 5: _('jun'), 6: _('jul'), 7: _('aug'),
-                  8: _('sep'), 9: _('oct'), 10: _('nov'), 11: _('dec')}
+    month_text = {-2: _('Nov'), -1: _('Dec'), 0: _('Jan'), 1: _('Feb'), 2: _('Mar'),
+                  3: _('Apr'), 4: _('May'), 5: _('Jun'), 6: _('Jul'), 7: _('Aug'),
+                  8: _('Sep'), 9: _('Oct'), 10: _('Nov'), 11: _('Dec')}
 
     # if phenomenon below is defined inside arguments, else default value
-    if globals.config_run['phen_below_label'] and globals.config_run['phen_below_label'] != "default":
-        globals.phenomenon_below = unicode(globals.config_run['phen_below_label'], 'utf-8')
-        settings["phen_below_label"] = colored.green(globals.config_run['phen_below_label'])
+    if globals_vars.config_run['phen_below_label'] and globals_vars.config_run['phen_below_label'] != "default":
+        globals_vars.phenomenon_below = unicode(globals_vars.config_run['phen_below_label'], 'utf-8')
+        settings["phen_below_label"] = colored.green(globals_vars.config_run['phen_below_label'])
     else:
-        globals.phenomenon_below = _('var_I_below')
-        settings["phen_below_label"] = globals.phenomenon_below
+        globals_vars.phenomenon_below = _('var_I_below')
+        settings["phen_below_label"] = globals_vars.phenomenon_below
     # if phenomenon normal is defined inside arguments, else default value
-    if globals.config_run['phen_normal_label'] and globals.config_run['phen_normal_label'] != "default":
-        globals.phenomenon_normal = unicode(globals.config_run['phen_normal_label'], 'utf-8')
-        settings["phen_normal_label"] = colored.green(globals.config_run['phen_normal_label'])
+    if globals_vars.config_run['phen_normal_label'] and globals_vars.config_run['phen_normal_label'] != "default":
+        globals_vars.phenomenon_normal = unicode(globals_vars.config_run['phen_normal_label'], 'utf-8')
+        settings["phen_normal_label"] = colored.green(globals_vars.config_run['phen_normal_label'])
     else:
-        globals.phenomenon_normal = _('var_I_normal')
-        settings["phen_normal_label"] = globals.phenomenon_normal
+        globals_vars.phenomenon_normal = _('var_I_normal')
+        settings["phen_normal_label"] = globals_vars.phenomenon_normal
     # if phenomenon above is defined inside arguments, else default value
-    if globals.config_run['phen_above_label'] and globals.config_run['phen_above_label'] != "default":
-        globals.phenomenon_above = unicode(globals.config_run['phen_above_label'], 'utf-8')
-        settings["phen_above_label"] = colored.green(globals.config_run['phen_above_label'])
+    if globals_vars.config_run['phen_above_label'] and globals_vars.config_run['phen_above_label'] != "default":
+        globals_vars.phenomenon_above = unicode(globals_vars.config_run['phen_above_label'], 'utf-8')
+        settings["phen_above_label"] = colored.green(globals_vars.config_run['phen_above_label'])
     else:
-        globals.phenomenon_above = _('var_I_above')
-        settings["phen_above_label"] = globals.phenomenon_above
+        globals_vars.phenomenon_above = _('var_I_above')
+        settings["phen_above_label"] = globals_vars.phenomenon_above
 
     # set settings for process
-    if globals.config_run['climate_process']:
+    if globals_vars.config_run['climate_process']:
         settings["climate_process"] = colored.green(_("enabled"))
-    if globals.config_run['forecasting_process']:
+    if globals_vars.config_run['forecasting_process']:
         settings["forecasting_process"] = colored.green(_("enabled"))
-    if globals.config_run['process_period']:
-        settings["process_period"] = colored.green(globals.config_run['process_period'])
+    if globals_vars.config_run['process_period']:
+        settings["process_period"] = colored.green(globals_vars.config_run['process_period'])
 
-    if globals.config_run['risk_analysis']:
+    if globals_vars.config_run['risk_analysis']:
         settings["risk_analysis"] = colored.green(_("enabled"))
 
-    if globals.config_run['consistent_data']:
+    if globals_vars.config_run['consistent_data']:
         settings["consistent_data"] = colored.green(_("enabled"))
 
     # maps settings
-    if globals.config_run['maps']:
+    if globals_vars.config_run['maps']:
         settings["maps"] = colored.green(_("enabled"))
 
     # set the overlapping solution
-    if globals.config_run['overlapping'] == "default" or not globals.config_run['overlapping']:
-        globals.config_run['overlapping'] = "average"
-        settings['overlapping'] = globals.config_run['overlapping']
-    elif globals.config_run['overlapping'] in ["average", "maximum", "minimum", "neither"]:
-        settings['overlapping'] = colored.green(globals.config_run['overlapping'])
+    if globals_vars.config_run['overlapping'] == "default" or not globals_vars.config_run['overlapping']:
+        globals_vars.config_run['overlapping'] = "average"
+        settings['overlapping'] = globals_vars.config_run['overlapping']
+    elif globals_vars.config_run['overlapping'] in ["average", "maximum", "minimum", "neither"]:
+        settings['overlapping'] = colored.green(globals_vars.config_run['overlapping'])
     else:
         print_error(_("The overlapping solution is wrong, the options are:\n"
                     "default, average, maximum, minimum or neither"), False)
+
+    if globals_vars.config_run['shape_boundary'] in ["shape_mask"]:
+        settings["shape_boundary"] = colored.green(globals_vars.config_run['shape_boundary'])
+    elif globals_vars.config_run['shape_boundary'] in ["default", False]:
+        globals_vars.config_run['shape_boundary'] = False
+    else:
+        print_error(_("The shape_boundary is wrong, the options are:\n"
+                    "disable, default or shape_mask"), False)
 
     # print settings
     print _("\nConfiguration run:")
@@ -3003,13 +3194,14 @@ def main():
     print "   {0} ----- {1}".format("phen above label", settings["phen_above_label"])
     print colored.cyan("   Maps options")
     print "   {0} ----------------- {1}".format("maps", settings["maps"])
-    if globals.config_run['maps']:
+    if globals_vars.config_run['maps']:
         print "   {0} ---------- {1}".format("overlapping", settings["overlapping"])
+        print "   {0} ------- {1}".format("shape boundary", settings["shape_boundary"])
 
     # -------------------------------------------------------------------------
-    # globals.maps_files_climate
+    # globals_vars.maps_files_climate
 
-    if globals.config_run['climate_process']:
+    if globals_vars.config_run['climate_process']:
         # climate dir output result
         global climate_dir
         climate_dir = \
@@ -3025,9 +3217,9 @@ def main():
                   "   could be mixed or replaced of old output."))
 
     # -------------------------------------------------------------------------
-    # globals.maps_files_forecasting
+    # globals_vars.maps_files_forecasting
 
-    if globals.config_run['forecasting_process']:
+    if globals_vars.config_run['forecasting_process']:
         # forecasting dir output result
         global forecasting_dir
         forecasting_dir = \
@@ -3041,6 +3233,12 @@ def main():
                 _("\n   Warning: the output director for forecasting process\n" \
                   "   is already exist, Jaziku continue but the results\n" \
                   "   could be mixed or replaced of old output."))
+
+    # analysis_interval
+    global options_analysis_interval
+    options_analysis_interval = ["5days", "10days", "15days", "trimester"]
+    global translate_analysis_interval
+    translate_analysis_interval = [_("5days"), _("10days"), _("15days"), _("trimester")]
 
     # -------------------------------------------------------------------------
     # process each station from stations list
@@ -3068,9 +3266,11 @@ def main():
 
             station.file_D = open(line_station[4], 'rb')
             station.type_D = line_station[5]
+            globals_vars.type_var_D = station.type_D  # TODO:
 
             station.file_I = line_station[6]
             station.type_I = line_station[7]
+            globals_vars.type_var_I = station.type_I  # TODO:
 
             station.range_below_I = line_station[8]
             station.range_above_I = line_station[9]
@@ -3080,7 +3280,6 @@ def main():
 
             station.analysis_interval = line_station[12]
 
-            options_analysis_interval = ["5days", "10days", "15days", "trimester"]
             if station.analysis_interval not in options_analysis_interval:
                 raise Exception(_("The analysis interval {0} is invalid,\n"
                                   "should be one of these: {1}")
@@ -3098,12 +3297,10 @@ def main():
                         pass
                 station.analysis_interval_num_days = int(station.analysis_interval[0:_count])
 
-            translate_analysis_interval = [_("5days"), _("10days"), _("15days"), _("trimester")]
-
             station.translate_analysis_interval = \
                 translate_analysis_interval[options_analysis_interval.index(station.analysis_interval)]
 
-            if globals.config_run['forecasting_process']:
+            if globals_vars.config_run['forecasting_process']:
                 if len(line_station) < 23:
                     raise Exception(_("For forecasting process you need define "
                                       "9 probability\n variables and trimester to "
@@ -3152,7 +3349,7 @@ def main():
     # MAPS
 
     # process to create maps
-    if globals.config_run['maps']:
+    if globals_vars.config_run['maps']:
 
         for grid in Grid.all_grids:
             maps(grid)
