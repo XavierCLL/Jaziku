@@ -1,10 +1,9 @@
 # Guainia
 
-# Set the four coordinates points for specify grid for region, area or country
-corner_nw = [4.152,-71.108]
-corner_ne = [4.152,-66.67]
-corner_se = [1.046,-66.67]
-corner_sw = [1.046,-71.108]
-
+# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+maxlat=4.152
+minlat=1.046
+minlon=-71.108
+maxlon=-66.67
 # set True or False if this region need particular ncl script
-need_particular_ncl_sript = False
+need_particular_ncl_script = False

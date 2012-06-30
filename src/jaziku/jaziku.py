@@ -2456,6 +2456,11 @@ def maps(grid):
               "-trim",
               os.path.join(os.path.abspath(base_path_file) + ".png")], shell=False)
 
+        # delete files
+        os.remove(os.path.abspath(base_path_file) + ".INC")
+        os.remove(os.path.abspath(base_path_file) + ".ncl")
+        os.remove(os.path.abspath(base_path_file) + ".tsv")
+
         del matrix
 
     # -------------------------------------------------------------------------

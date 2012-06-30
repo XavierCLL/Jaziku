@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-26 22:26-0500\n"
+"POT-Creation-Date: 2012-06-29 18:25-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,7 +39,7 @@ msgstr ""
 msgid "For more help run program with argument: -h"
 msgstr ""
 
-#: jaziku.py:151 jaziku.py:3321
+#: jaziku.py:151 jaziku.py:3326
 msgid "Reading stations from file \"{0}\" in line {1}:\n"
 msgstr ""
 
@@ -304,8 +304,8 @@ msgstr ""
 msgid "probability (%)"
 msgstr ""
 
-#: jaziku.py:1532 jaziku.py:1546 jaziku.py:1547 jaziku.py:1739 jaziku.py:2604
-#: jaziku.py:2647
+#: jaziku.py:1532 jaziku.py:1546 jaziku.py:1547 jaziku.py:1739 jaziku.py:2609
+#: jaziku.py:2652
 msgid "lag_{0}"
 msgstr ""
 
@@ -329,7 +329,8 @@ msgstr ""
 msgid "Decrease"
 msgstr ""
 
-#: jaziku.py:1660
+#: jaziku.py:1660 plugins/maps/shapes/Colombia/ncl.py:445
+#: plugins/maps/shapes/Colombia/Colombia/ncl.py:345
 msgid "Normal"
 msgstr ""
 
@@ -351,7 +352,7 @@ msgstr ""
 msgid "mosaic_prob_of_{0}_{1}_({3}-{4}).png"
 msgstr ""
 
-#: jaziku.py:1735 jaziku.py:1905 jaziku.py:1936 jaziku.py:2602 jaziku.py:2645
+#: jaziku.py:1735 jaziku.py:1905 jaziku.py:1936 jaziku.py:2607 jaziku.py:2650
 msgid "maps"
 msgstr ""
 
@@ -428,7 +429,7 @@ msgid "Read and check(range validation) var D ........ "
 msgstr ""
 
 #: jaziku.py:2021 jaziku.py:2032 jaziku.py:2054 jaziku.py:2063 jaziku.py:2181
-#: jaziku.py:2295 jaziku.py:2561 jaziku.py:2669 jaziku.py:2726
+#: jaziku.py:2295 jaziku.py:2566 jaziku.py:2674 jaziku.py:2731
 msgid "done"
 msgstr ""
 
@@ -573,15 +574,15 @@ msgid ""
 "   because the point is outside of the grid."
 msgstr ""
 
-#: jaziku.py:2379 jaziku.py:2902
+#: jaziku.py:2379 jaziku.py:2907
 msgid "average"
 msgstr ""
 
-#: jaziku.py:2379 jaziku.py:2905
+#: jaziku.py:2379 jaziku.py:2910
 msgid "maximum"
 msgstr ""
 
-#: jaziku.py:2379 jaziku.py:2908
+#: jaziku.py:2379 jaziku.py:2913
 msgid "minimum"
 msgstr ""
 
@@ -593,7 +594,7 @@ msgid ""
 "   will put the {state} value."
 msgstr ""
 
-#: jaziku.py:2387 jaziku.py:2910
+#: jaziku.py:2387 jaziku.py:2915
 msgid "neither"
 msgstr ""
 
@@ -609,107 +610,107 @@ msgstr ""
 msgid "value"
 msgstr ""
 
-#: jaziku.py:2468
+#: jaziku.py:2473
 msgid "Processing maps for climate:"
 msgstr ""
 
-#: jaziku.py:2506 jaziku.py:2545
+#: jaziku.py:2511 jaziku.py:2550
 msgid "Map_lag_{0}_{1}_{2}"
 msgstr ""
 
-#: jaziku.py:2570
+#: jaziku.py:2575
 msgid "Processing maps for correlation:"
 msgstr ""
 
-#: jaziku.py:2605 jaziku.py:2648
+#: jaziku.py:2610 jaziku.py:2653
 msgid "Correlation"
 msgstr ""
 
-#: jaziku.py:2612 jaziku.py:2655
+#: jaziku.py:2617 jaziku.py:2660
 msgid "Map_correlation_lag_{0}_{1}"
 msgstr ""
 
-#: jaziku.py:2680
+#: jaziku.py:2685
 msgid "Processing maps for forecasting:"
 msgstr ""
 
-#: jaziku.py:2713
+#: jaziku.py:2718
 msgid "Map_lag_{0}_{1}"
 msgstr ""
 
-#: jaziku.py:2850
+#: jaziku.py:2855
 msgid "   Mesh size: {0}x{1}"
 msgstr ""
 
-#: jaziku.py:2853
+#: jaziku.py:2858
 msgid "   Interpolation type: {0}"
 msgstr ""
 
-#: jaziku.py:2858
+#: jaziku.py:2863
 msgid "   Semivariogram type: spherical"
 msgstr ""
 
-#: jaziku.py:2860
+#: jaziku.py:2865
 msgid "   Semivariogram type: exponential"
 msgstr ""
 
-#: jaziku.py:2862
+#: jaziku.py:2867
 msgid "   Semivariogram type: gaussian"
 msgstr ""
 
-#: jaziku.py:2864
+#: jaziku.py:2869
 msgid ""
 "The semivariogram type is wrong, the options are:\n"
 "default, spherical, exponential or gaussian"
 msgstr ""
 
-#: jaziku.py:2868
+#: jaziku.py:2873
 msgid "   Radiuses: {0} {1}"
 msgstr ""
 
-#: jaziku.py:2871
+#: jaziku.py:2876
 msgid "   Max neighbours: {0}"
 msgstr ""
 
-#: jaziku.py:2927
+#: jaziku.py:2932
 msgid ""
 "You version of python is {0}, please use Jaziku with python v2.6 or v2.7"
 msgstr ""
 
-#: jaziku.py:2989
+#: jaziku.py:2994
 msgid ""
 "error read line in \"CONFIGURATION RUN\" in runfile, line {0}:\n"
 "{1}"
 msgstr ""
 
-#: jaziku.py:3018
+#: jaziku.py:3023
 msgid ""
 "error read line in \"GRIDS LIST\" in runfile, line {0}:\n"
 "{1}"
 msgstr ""
 
-#: jaziku.py:3040
+#: jaziku.py:3045
 msgid "\"{0}\" language not available."
 msgstr ""
 
-#: jaziku.py:3050
+#: jaziku.py:3055
 msgid " (system language)"
 msgstr ""
 
-#: jaziku.py:3057
+#: jaziku.py:3062
 msgid " (language '{0}' has not was translated yet)"
 msgstr ""
 
-#: jaziku.py:3061
+#: jaziku.py:3066
 msgid " (other languages were not detected)"
 msgstr ""
 
-#: jaziku.py:3070 jaziku.py:3071 jaziku.py:3074 jaziku.py:3075 jaziku.py:3076
-#: jaziku.py:3080 jaziku.py:3082
+#: jaziku.py:3075 jaziku.py:3076 jaziku.py:3079 jaziku.py:3080 jaziku.py:3081
+#: jaziku.py:3085 jaziku.py:3087
 msgid "disabled"
 msgstr ""
 
-#: jaziku.py:3085
+#: jaziku.py:3090
 msgid ""
 "\n"
 "########################### JAZIKU ###########################\n"
@@ -723,154 +724,154 @@ msgid ""
 "##############################################################"
 msgstr ""
 
-#: jaziku.py:3104
+#: jaziku.py:3109
 msgid ""
 "the period must be: year_start-year_end (ie. 1980-2008)\n"
 "\n"
 "{0}"
 msgstr ""
 
-#: jaziku.py:3112 jaziku.py:3114
+#: jaziku.py:3117 jaziku.py:3119
 msgid "NDJ"
 msgstr ""
 
-#: jaziku.py:3112 jaziku.py:3114
+#: jaziku.py:3117 jaziku.py:3119
 msgid "DJF"
 msgstr ""
 
-#: jaziku.py:3112
+#: jaziku.py:3117
 msgid "JFM"
 msgstr ""
 
-#: jaziku.py:3112
+#: jaziku.py:3117
 msgid "FMA"
 msgstr ""
 
-#: jaziku.py:3112
+#: jaziku.py:3117
 msgid "MAM"
 msgstr ""
 
-#: jaziku.py:3113
+#: jaziku.py:3118
 msgid "AMJ"
 msgstr ""
 
-#: jaziku.py:3113
+#: jaziku.py:3118
 msgid "MJJ"
 msgstr ""
 
-#: jaziku.py:3113
+#: jaziku.py:3118
 msgid "JJA"
 msgstr ""
 
-#: jaziku.py:3113
+#: jaziku.py:3118
 msgid "JAS"
 msgstr ""
 
-#: jaziku.py:3113
+#: jaziku.py:3118
 msgid "ASO"
 msgstr ""
 
-#: jaziku.py:3114
+#: jaziku.py:3119
 msgid "SON"
 msgstr ""
 
-#: jaziku.py:3114
+#: jaziku.py:3119
 msgid "OND"
 msgstr ""
 
-#: jaziku.py:3118 jaziku.py:3120
+#: jaziku.py:3123 jaziku.py:3125
 msgid "Nov"
 msgstr ""
 
-#: jaziku.py:3118 jaziku.py:3120
+#: jaziku.py:3123 jaziku.py:3125
 msgid "Dec"
 msgstr ""
 
-#: jaziku.py:3118
+#: jaziku.py:3123
 msgid "Jan"
 msgstr ""
 
-#: jaziku.py:3118
+#: jaziku.py:3123
 msgid "Feb"
 msgstr ""
 
-#: jaziku.py:3118
+#: jaziku.py:3123
 msgid "Mar"
 msgstr ""
 
-#: jaziku.py:3119
+#: jaziku.py:3124
 msgid "Apr"
 msgstr ""
 
-#: jaziku.py:3119
+#: jaziku.py:3124
 msgid "May"
 msgstr ""
 
-#: jaziku.py:3119
+#: jaziku.py:3124
 msgid "Jun"
 msgstr ""
 
-#: jaziku.py:3119
+#: jaziku.py:3124
 msgid "Jul"
 msgstr ""
 
-#: jaziku.py:3119
+#: jaziku.py:3124
 msgid "Aug"
 msgstr ""
 
-#: jaziku.py:3120
+#: jaziku.py:3125
 msgid "Sep"
 msgstr ""
 
-#: jaziku.py:3120
+#: jaziku.py:3125
 msgid "Oct"
 msgstr ""
 
-#: jaziku.py:3127
+#: jaziku.py:3132
 msgid "var_I_below"
 msgstr ""
 
-#: jaziku.py:3134
+#: jaziku.py:3139
 msgid "var_I_normal"
 msgstr ""
 
-#: jaziku.py:3141
+#: jaziku.py:3146
 msgid "var_I_above"
 msgstr ""
 
-#: jaziku.py:3146 jaziku.py:3148 jaziku.py:3153 jaziku.py:3156 jaziku.py:3160
+#: jaziku.py:3151 jaziku.py:3153 jaziku.py:3158 jaziku.py:3161 jaziku.py:3165
 msgid "enabled"
 msgstr ""
 
-#: jaziku.py:3169
+#: jaziku.py:3174
 msgid ""
 "The overlapping solution is wrong, the options are:\n"
 "default, average, maximum, minimum or neither"
 msgstr ""
 
-#: jaziku.py:3177
+#: jaziku.py:3182
 msgid ""
 "The shape_boundary is wrong, the options are:\n"
 "disable, default or shape_mask"
 msgstr ""
 
-#: jaziku.py:3181
+#: jaziku.py:3186
 msgid ""
 "\n"
 "Configuration run:"
 msgstr ""
 
-#: jaziku.py:3208
+#: jaziku.py:3213
 msgid "Jaziku_Climate"
 msgstr ""
 
-#: jaziku.py:3210
+#: jaziku.py:3215
 msgid ""
 "\n"
 "Saving the result for climate in:"
 msgstr ""
 
-#: jaziku.py:3215
+#: jaziku.py:3220
 msgid ""
 "\n"
 "   Warning: the output director for climate process\n"
@@ -878,17 +879,17 @@ msgid ""
 "   could be mixed or replaced of old output."
 msgstr ""
 
-#: jaziku.py:3226
+#: jaziku.py:3231
 msgid "Jaziku_Forecasting"
 msgstr ""
 
-#: jaziku.py:3228
+#: jaziku.py:3233
 msgid ""
 "\n"
 "Saving the result for forecasting in:"
 msgstr ""
 
-#: jaziku.py:3233
+#: jaziku.py:3238
 msgid ""
 "\n"
 "   Warning: the output director for forecasting process\n"
@@ -896,41 +897,41 @@ msgid ""
 "   could be mixed or replaced of old output."
 msgstr ""
 
-#: jaziku.py:3241
+#: jaziku.py:3246
 msgid "5days"
 msgstr ""
 
-#: jaziku.py:3241
+#: jaziku.py:3246
 msgid "10days"
 msgstr ""
 
-#: jaziku.py:3241
+#: jaziku.py:3246
 msgid "15days"
 msgstr ""
 
-#: jaziku.py:3241
+#: jaziku.py:3246
 msgid "trimester"
 msgstr ""
 
-#: jaziku.py:3284
+#: jaziku.py:3289
 msgid ""
 "The analysis interval {0} is invalid,\n"
 "should be one of these: {1}"
 msgstr ""
 
-#: jaziku.py:3305
+#: jaziku.py:3310
 msgid ""
 "For forecasting process you need define 9 probability\n"
 " variables and trimester to process in stations file."
 msgstr ""
 
-#: jaziku.py:3329
+#: jaziku.py:3334
 msgid ""
 "\n"
 "################# STATION: {0} ({1})"
 msgstr ""
 
-#: jaziku.py:3344
+#: jaziku.py:3349
 msgid ""
 "\n"
 "{0} station processed."
@@ -940,7 +941,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: jaziku.py:3359
+#: jaziku.py:3364
 msgid ""
 "\n"
 "{0} map processed."
@@ -950,13 +951,13 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: jaziku.py:3363
+#: jaziku.py:3368
 msgid ""
 "\n"
 "Process completed!"
 msgstr ""
 
-#: jaziku.py:3365
+#: jaziku.py:3370
 msgid "Good bye :)\n"
 msgstr ""
 
@@ -1098,4 +1099,14 @@ msgstr ""
 msgid ""
 "Can't set particular shape, please check files in shape path\n"
 "this should be contain inside .shp .prj .sbn .sbx .shx"
+msgstr ""
+
+#: plugins/maps/shapes/Colombia/ncl.py:444
+#: plugins/maps/shapes/Colombia/Colombia/ncl.py:344
+msgid "Below"
+msgstr ""
+
+#: plugins/maps/shapes/Colombia/ncl.py:446
+#: plugins/maps/shapes/Colombia/Colombia/ncl.py:346
+msgid "Above"
 msgstr ""
