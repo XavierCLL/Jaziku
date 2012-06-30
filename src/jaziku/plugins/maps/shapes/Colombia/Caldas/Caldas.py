@@ -1,10 +1,9 @@
 # Caldas
 
-# Set the four coordinates points for specify grid for region, area or country
-corner_nw = [5.834,-76.006]
-corner_ne = [5.834,-74.575]
-corner_se = [4.691,-74.575]
-corner_sw = [4.691,-76.006]
-
+# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+maxlat=5.834
+minlat=4.691
+minlon=-76.006
+maxlon=-74.575
 # set True or False if this region need particular ncl script
-need_particular_ncl_sript = False
+need_particular_ncl_script = False

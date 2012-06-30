@@ -200,7 +200,7 @@ begin
 
   minlat = min(lat)
   maxlat = max(lat)
-  minlon = min(lon)
+  minlon = min(lon)-0.0001
   maxlon = max(lon)+0.0001
 
   f = addfile("{shape}","r")
@@ -217,11 +217,11 @@ begin
   gres@mpPerimOn     = True
   gres@mpOutlineDrawOrder = "PostDraw"
   gres@mpFillOn               = True
-  gres@mpOceanFillColor       = 0
+  gres@mpOceanFillColor       = -1
   gres@mpLandFillColor        = -1
-  gres@mpInlandWaterFillColor = 0
-  gres@mpFillAreaSpecifiers   = (/"Venezuela","Brazil", "Peru","Ecuador","Panama"/)
-  gres@mpSpecifiedFillColors  = (/    0, 0, 0,  0, 0/)
+  gres@mpInlandWaterFillColor = -1
+  ;gres@mpFillAreaSpecifiers   = (/"Venezuela","Brazil", "Peru","Ecuador","Panama"/)
+  ;gres@mpSpecifiedFillColors  = (/    0, 0, 0,  0, 0/)
   gres@mpFillDrawOrder        = "Draw"
   gres@pmTickMarkDisplayMode = "Always"
   gres@mpProjection  = "Mercator"
@@ -405,7 +405,7 @@ begin
   res@lbLabelFontHeightF          = 0.011
   res@lbTitleOn                   = {color_bar_title_on}
   res@lbTitlePosition             = "Left"
-  res@lbTitleString               = "{below}                                {normal}                                 {above}"
+  res@lbTitleString               = "{below}                          {normal}                           {above}"
   res@lbTitleFontHeightF          = 0.015
   res@lbTitleDirection            = "Across"
   res@lbTitleAngleF               = 90

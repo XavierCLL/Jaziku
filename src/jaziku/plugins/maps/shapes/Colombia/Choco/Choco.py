@@ -1,10 +1,9 @@
 # Choco
 
-# Set the four coordinates points for specify grid for region, area or country
-corner_nw = [8.763,-78.114]
-corner_ne = [8.763,-75.828]
-corner_se = [3.845,-75.828]
-corner_sw = [3.845,-78.114]
-
+# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+maxlat=8.763
+minlat=3.845
+minlon=-78.114
+maxlon=-75.828
 # set True or False if this region need particular ncl script
-need_particular_ncl_sript = False
+need_particular_ncl_script = False
