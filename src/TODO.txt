@@ -7,12 +7,11 @@ version 0.4: (start: april 9, release: may 31)
 * Expansion to more variables such as riverflow
 
 version 0.5: (start: july 23, release: august 30)
-* Homogenety analysis
-* change input options to file configuration
+* Time Series analysis consistensy
 * group and divide directory based on type var_I and var_D
 
 version 0.6: (start: august 30, release: september 30)
-* Time Series analysis consistensy
+* Homogenety analysis
 * Calculation of Pearson correlation coefficients as well as quarterly and lags, as phases of the phenomenon
 
 version 0.7:  (pending)
