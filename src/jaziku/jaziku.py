@@ -525,17 +525,18 @@ def calculate_common_period(station):
     # initialized variable common_period
     # format list: [[  date ,  var_D ,  var_I ],... ]
     if globals_vars.config_run['process_period']:
-        if (args_period_start < common_date[0].year + 1 or
-            args_period_end > common_date[-1].year - 1):
+        if (globals_vars.config_run['process_period']['start'] < common_date[0].year + 1 or
+            globals_vars.config_run['process_period']['end'] > common_date[-1].year - 1):
             sys.stdout.write(_("Calculating the process period ................ "))
             sys.stdout.flush()
             print_error(_("The period defined in argument {0}-{1} is outside in the\n"
                           "maximum possible period for this station: {2}-{3}.")
-                        .format(args_period_start, args_period_end, common_date[0].year + 1,
-                                common_date[-1].year - 1))
+                        .format(globals_vars.config_run['process_period']['start'],
+                                globals_vars.config_run['process_period']['end'],
+                                common_date[0].year + 1, common_date[-1].year - 1))
 
-        common_date = common_date[common_date.index(date(args_period_start - 1, 1, 1)):
-                                  common_date.index(date(args_period_end + 1, 12, 1)) + 1]
+        common_date = common_date[common_date.index(date(globals_vars.config_run['process_period']['start'] - 1, 1, 1)):
+                                  common_date.index(date(globals_vars.config_run['process_period']['end'] + 1, 12, 1)) + 1]
 
     common_period = []
     # set values matrix for common_period
@@ -2937,6 +2938,21 @@ def main():
     sys.setdefaultencoding("utf-8")
 
     # -------------------------------------------------------------------------
+    # set some statics and globals variables
+
+    # trimester text for print
+    global trim_text
+    trim_text = {-2: _('NDJ'), -1: _('DJF'), 0: _('JFM'), 1: _('FMA'), 2: _('MAM'),
+                 3: _('AMJ'), 4: _('MJJ'), 5: _('JJA'), 6: _('JAS'), 7: _('ASO'),
+                 8: _('SON'), 9: _('OND'), 10: _('NDJ'), 11: _('DJF')}
+
+    # month text for print
+    global month_text
+    month_text = {-2: _('Nov'), -1: _('Dec'), 0: _('Jan'), 1: _('Feb'), 2: _('Mar'),
+                  3: _('Apr'), 4: _('May'), 5: _('Jun'), 6: _('Jul'), 7: _('Aug'),
+                  8: _('Sep'), 9: _('Oct'), 10: _('Nov'), 11: _('Dec')}
+
+    # -------------------------------------------------------------------------
     # reading configuration run, list of grids and stations from runfile
 
     # Parser and check arguments
@@ -2972,6 +2988,11 @@ def main():
         if in_config_run:
             if line_in_run_file[0][0:3] == "## ":
                 continue
+
+            if len(line_in_run_file) <= 1:
+                print_error(_("error read line in \"CONFIGURATION RUN\" in runfile,"
+                              " line {0}:\n{1}, no was defined.")
+                                .format(run_file.line_num, line_in_run_file[0]))
 
             if line_in_run_file[0] in globals_vars.config_run:
                 # in this case, for python 'disable' is None,
@@ -3030,7 +3051,8 @@ def main():
             stations.append(line_in_run_file)
 
     # -------------------------------------------------------------------------
-    # setting language
+    # Setting language
+
     if globals_vars.config_run['language'] and globals_vars.config_run['language'] != "autodetect":
         if globals_vars.config_run['language'] == "en" or globals_vars.config_run['language'] == "EN" or globals_vars.config_run['language'] == "En":
             settings_language = colored.green(globals_vars.config_run['language'])
@@ -3068,25 +3090,8 @@ def main():
             lang.install()
 
     # -------------------------------------------------------------------------
-    # start message
+    # Start message
 
-    # set settings default
-    global settings
-    settings = {"climate_process": _("disabled"),
-                "forecasting_process": _("disabled"),
-                "process_period": "-",
-                "language": settings_language,
-                "consistent_data": _("disabled"),
-                "risk_analysis": _("disabled"),
-                "graphics": _("disabled"),
-                "phen_below_label": "-",
-                "phen_normal_label": "-",
-                "phen_above_label": "-",
-                "maps": _("disabled"),
-                "overlapping": None,
-                "shape_boundary": _("disabled")}
-
-    # console message
     print _("\n########################### JAZIKU ###########################\n"
             "## Jaziku is a software for the implementation of composite ##\n"
             "## analysis metodology between the major indices of climate ##\n"
@@ -3098,13 +3103,47 @@ def main():
             "##############################################################") \
             .format(globals_vars.VERSION, globals_vars.COMPILE_DATE)
 
+    # -------------------------------------------------------------------------
+    # get/set and show settings
+
+    # set settings default
+    global settings
+    settings = {"climate_process": _("disabled"),
+                "forecasting_process": _("disabled"),
+                "process_period": _("disabled"),
+                "language": settings_language,
+                "consistent_data": _("disabled"),
+                "risk_analysis": _("disabled"),
+                "graphics": _("disabled"),
+                "phen_below_label": "-",
+                "phen_normal_label": "-",
+                "phen_above_label": "-",
+                "maps": _("disabled"),
+                "overlapping": None,
+                "shape_boundary": _("disabled")}
+
+    # general options
+    if globals_vars.config_run['climate_process']:
+        settings["climate_process"] = colored.green(_("enabled"))
+    if globals_vars.config_run['forecasting_process']:
+        settings["forecasting_process"] = colored.green(_("enabled"))
+    if globals_vars.config_run['process_period']:
+        settings["process_period"] = colored.green(globals_vars.config_run['process_period'])
+
+    if globals_vars.config_run['risk_analysis']:
+        settings["risk_analysis"] = colored.green(_("enabled"))
+
+    if globals_vars.config_run['consistent_data']:
+        settings["consistent_data"] = colored.green(_("enabled"))
+
     # set period for process if is defined as argument
     if globals_vars.config_run['process_period']:
-        global args_period_start, args_period_end
         try:
             args_period_start = int(globals_vars.config_run['process_period'].split('-')[0])
             args_period_end = int(globals_vars.config_run['process_period'].split('-')[1])
-            settings["period"] = colored.green("{0}-{1}".format(args_period_start, args_period_end))
+            globals_vars.config_run['process_period'] = {'start':args_period_start,
+                                                         'end':args_period_end}
+            settings["process_period"] = colored.green("{0}-{1}".format(args_period_start, args_period_end))
         except Exception, e:
             print_error(_('the period must be: year_start-year_end (ie. 1980-2008)\n\n{0}').format(e))
 
@@ -3112,18 +3151,9 @@ def main():
     global lags
     lags = [0, 1, 2]
 
-    # trimester text for print
-    global trim_text
-    trim_text = {-2: _('NDJ'), -1: _('DJF'), 0: _('JFM'), 1: _('FMA'), 2: _('MAM'),
-                 3: _('AMJ'), 4: _('MJJ'), 5: _('JJA'), 6: _('JAS'), 7: _('ASO'),
-                 8: _('SON'), 9: _('OND'), 10: _('NDJ'), 11: _('DJF')}
-
-    # month text for print
-    global month_text
-    month_text = {-2: _('Nov'), -1: _('Dec'), 0: _('Jan'), 1: _('Feb'), 2: _('Mar'),
-                  3: _('Apr'), 4: _('May'), 5: _('Jun'), 6: _('Jul'), 7: _('Aug'),
-                  8: _('Sep'), 9: _('Oct'), 10: _('Nov'), 11: _('Dec')}
-
+    # maps settings
+    if globals_vars.config_run['graphics']:
+        settings["graphics"] = colored.green(_("enabled"))
     # if phenomenon below is defined inside arguments, else default value
     if globals_vars.config_run['phen_below_label'] and globals_vars.config_run['phen_below_label'] != "default":
         globals_vars.phenomenon_below = unicode(globals_vars.config_run['phen_below_label'], 'utf-8')
@@ -3145,20 +3175,6 @@ def main():
     else:
         globals_vars.phenomenon_above = _('var_I_above')
         settings["phen_above_label"] = globals_vars.phenomenon_above
-
-    # set settings for process
-    if globals_vars.config_run['climate_process']:
-        settings["climate_process"] = colored.green(_("enabled"))
-    if globals_vars.config_run['forecasting_process']:
-        settings["forecasting_process"] = colored.green(_("enabled"))
-    if globals_vars.config_run['process_period']:
-        settings["process_period"] = colored.green(globals_vars.config_run['process_period'])
-
-    if globals_vars.config_run['risk_analysis']:
-        settings["risk_analysis"] = colored.green(_("enabled"))
-
-    if globals_vars.config_run['consistent_data']:
-        settings["consistent_data"] = colored.green(_("enabled"))
 
     # maps settings
     if globals_vars.config_run['maps']:

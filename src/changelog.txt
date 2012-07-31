@@ -1,3 +1,8 @@
+0.4.1
+bugfixes:
+ * fix check and default value for process period in runfile
+ * fix console message for graphics process, enable/disable activation
+
 0.4.0
 features/changes:
  * get configuration run and station list in the same file, delete all arguments
