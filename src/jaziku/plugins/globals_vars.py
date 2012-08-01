@@ -91,6 +91,7 @@ phenomenon_above = None
 config_run = {'climate_process': None,
               'forecasting_process': None,
               'process_period': None,
+              'lags': None,
               'language': None,
               'consistent_data': None,
               'risk_analysis': None,
@@ -101,6 +102,8 @@ config_run = {'climate_process': None,
               'maps': None,
               'overlapping': None,
               "shape_boundary": None}
+
+lags = []
 
 # directory to save all results, this can be absolute or relative path
 # import Jaziku_utils.input_arg as input_arg

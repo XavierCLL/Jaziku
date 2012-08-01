@@ -769,7 +769,7 @@ def calculate_lags(station):
 
     if station.state_of_data in [1, 3]:
 
-        for lag in lags:
+        for lag in globals_vars.lags:
 
             if not os.path.isdir(dir_lag[lag]):
                 os.makedirs(dir_lag[lag])
@@ -822,7 +822,7 @@ def calculate_lags(station):
 
     if station.state_of_data in [2, 4]:
 
-        for lag in lags:
+        for lag in globals_vars.lags:
 
             if not os.path.isdir(dir_lag[lag]):
                 os.makedirs(dir_lag[lag])
@@ -1186,9 +1186,9 @@ def contingency_table(station):
 
     # [lag][month][phenomenon][data(0,1,2)]
     # [lag][month][day][phenomenon][data(0,1,2)]
-    contingencies_tables_percent = []
+    contingencies_tables_percent = {}
 
-    for lag in lags:
+    for lag in globals_vars.lags:
 
         tmp_month_list = []
         # all months in year 1->12
@@ -1213,7 +1213,7 @@ def contingency_table(station):
 
                 tmp_month_list.append(tmp_day_list)
 
-        contingencies_tables_percent.append(tmp_month_list)
+        contingencies_tables_percent[lag] = tmp_month_list
 
     return contingencies_tables_percent
 
@@ -1225,8 +1225,8 @@ def result_table_CA(station):
     different tests.
     '''
 
-    pearson_list = []
-    is_sig_risk_analysis = []
+    pearson_list = {}
+    is_sig_risk_analysis = {}
 
     def result_table_CA_main_process():
         # test:
@@ -1326,7 +1326,7 @@ def result_table_CA(station):
 
         return pearson, is_sig_risk_analysis_list
 
-    for lag in lags:
+    for lag in globals_vars.lags:
 
         # dir and name to save the result table
         csv_name = \
@@ -1423,8 +1423,8 @@ def result_table_CA(station):
         open_file.close()
         #del csv_result_table
 
-        pearson_list.append(pearson_list_month)
-        is_sig_risk_analysis.append(is_sig_risk_analysis_month)
+        pearson_list[lag] = pearson_list_month
+        is_sig_risk_analysis[lag] = is_sig_risk_analysis_month
 
     station.pearson_list = pearson_list
     station.is_sig_risk_analysis = is_sig_risk_analysis
@@ -1541,7 +1541,7 @@ def graphics_climate(station):
         # save dir image for mosaic
         image_open_list.append(img_open(image_dir_save))
 
-    for lag in lags:
+    for lag in globals_vars.lags:
 
         # create dir for lag
         if not os.path.isdir(os.path.join(graphics_dir_ca, _('lag_{0}').format(lag))):
@@ -1636,7 +1636,7 @@ def graphics_forecasting(station):
 
     image_open_list = []
 
-    for lag in lags:
+    for lag in globals_vars.lags:
 
         if station.state_of_data in [1, 3]:
             forecasting_month = station.forecasting_date
@@ -1662,6 +1662,7 @@ def graphics_forecasting(station):
         values_pie = [station.prob_decrease_var_D[lag],
                       station.prob_normal_var_D[lag],
                       station.prob_exceed_var_D[lag]]
+
         explode = (0.03, 0.03, 0.03)
 
         # assing value for piece of pie
@@ -1699,15 +1700,13 @@ def graphics_forecasting(station):
                      .format(station.type_D, lag, filename_date_graphic,
                              station.process_period['start'], station.process_period['end']))
     # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
-    plt.figure(figsize=(11.25, 3.75))  # http://www.classical-webdesigns.co.uk/resources/pixelinchconvert.html
+    plt.figure(figsize=(3.75 * len(globals_vars.lags), 3.75))  # http://www.classical-webdesigns.co.uk/resources/pixelinchconvert.html
     plt.savefig(mosaic_dir_save, dpi=100)
     mosaic = img_open(mosaic_dir_save)
-    mosaic.paste(image_open_list[0], (0, 0))
-    mosaic.paste(image_open_list[1], (image_width, 0))
-    mosaic.paste(image_open_list[2], (image_width * 2, 0))
+    for lag_iter in range(len(globals_vars.lags)):
+        mosaic.paste(image_open_list[lag_iter], (image_width * lag_iter, 0))
     mosaic.save(mosaic_dir_save)
     plt.clf()
-
 
 #==============================================================================
 # PLOTTING MAPS
@@ -1728,10 +1727,10 @@ def maps_data_climate(station):
         phenomenon = {0: globals_vars.phenomenon_below,
                       1: globals_vars.phenomenon_normal,
                       2: globals_vars.phenomenon_above}
-        globals_vars.maps_files_climate[station.analysis_interval] = []  # [lag][month][phenomenon]
+        globals_vars.maps_files_climate[station.analysis_interval] = {}  # [lag][month][phenomenon]
 
         # define maps data files and directories
-        for lag in lags:
+        for lag in globals_vars.lags:
 
             maps_dir = os.path.join(climate_dir, _('maps'))
 
@@ -1808,7 +1807,7 @@ def maps_data_climate(station):
 
                     month_list.append(day_list)
 
-            globals_vars.maps_files_climate[station.analysis_interval].append(month_list)
+            globals_vars.maps_files_climate[station.analysis_interval][lag] = month_list
 
     def calculate_index():
         # select index
@@ -1829,7 +1828,7 @@ def maps_data_climate(station):
             else:
                 return var_above
 
-    for lag in lags:
+    for lag in globals_vars.lags:
 
         # all months in year 1->12
         for month in range(1, 13):
@@ -1899,9 +1898,9 @@ def maps_data_forecasting(station):
     if forecasting_date_formated not in globals_vars.maps_files_forecasting[station.analysis_interval]:
 
         if station.state_of_data in [1, 3]:
-            lags_list = []
+            lags_list = {}
             # define maps data files and directories
-            for lag in lags:
+            for lag in globals_vars.lags:
 
                 maps_dir = os.path.join(forecasting_dir, _('maps'),
                                         station.translate_analysis_interval,
@@ -1926,13 +1925,13 @@ def maps_data_forecasting(station):
                 open_file.close()
                 del csv_file
 
-                lags_list.append(csv_name)
+                lags_list[lag] = csv_name
             globals_vars.maps_files_forecasting[station.analysis_interval][forecasting_date_formated] = lags_list
 
         if station.state_of_data in [2, 4]:
-            lags_list = []
+            lags_list = {}
             # define maps data files and directories
-            for lag in lags:
+            for lag in globals_vars.lags:
 
                 maps_dir = os.path.join(forecasting_dir, _('maps'),
                                         station.translate_analysis_interval,
@@ -1957,7 +1956,7 @@ def maps_data_forecasting(station):
                 open_file.close()
                 del csv_file
 
-                lags_list.append(csv_name)
+                lags_list[lag] = csv_name
             globals_vars.maps_files_forecasting[station.analysis_interval][forecasting_date_formated] = lags_list
 
     def calculate_index():
@@ -1981,7 +1980,7 @@ def maps_data_forecasting(station):
 
         return p_index
 
-    for lag in lags:
+    for lag in globals_vars.lags:
 
         p_index = calculate_index()
 
@@ -2241,10 +2240,11 @@ def forecasting(station):
     if not os.path.isdir(station.forecasting_dir):
         os.makedirs(station.forecasting_dir)
 
-    prob_decrease_var_D = []
-    prob_normal_var_D = []
-    prob_exceed_var_D = []
-    for lag in lags:
+    prob_decrease_var_D = {}
+    prob_normal_var_D = {}
+    prob_exceed_var_D = {}
+
+    for lag in globals_vars.lags:
 
         items_CT = {'a': 0, 'b': 0, 'c': 0, 'd': 0, 'e': 0, 'f': 0, 'g': 0, 'h': 0, 'i': 0}
         order_CT = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
@@ -2269,17 +2269,17 @@ def forecasting(station):
                             station.contingencies_tables_percent[lag][month - 1][day][column][row] / 100.0
                         _iter += 1
 
-        prob_decrease_var_D.append((items_CT['a'] * station.f_var_I_B[lag]) +
-                                   (items_CT['d'] * station.f_var_I_N[lag]) +
-                                   (items_CT['g'] * station.f_var_I_A[lag]))
+        prob_decrease_var_D[lag] = (items_CT['a'] * station.f_var_I_B[lag]) + \
+                                   (items_CT['d'] * station.f_var_I_N[lag]) + \
+                                   (items_CT['g'] * station.f_var_I_A[lag])
 
-        prob_normal_var_D.append((items_CT['b'] * station.f_var_I_B[lag]) +
-                                 (items_CT['e'] * station.f_var_I_N[lag]) +
-                                 (items_CT['h'] * station.f_var_I_A[lag]))
+        prob_normal_var_D[lag] = (items_CT['b'] * station.f_var_I_B[lag]) + \
+                                 (items_CT['e'] * station.f_var_I_N[lag]) + \
+                                 (items_CT['h'] * station.f_var_I_A[lag])
 
-        prob_exceed_var_D.append((items_CT['c'] * station.f_var_I_B[lag]) +
-                                 (items_CT['f'] * station.f_var_I_N[lag]) +
-                                 (items_CT['i'] * station.f_var_I_A[lag]))
+        prob_exceed_var_D[lag] = (items_CT['c'] * station.f_var_I_B[lag]) + \
+                                 (items_CT['f'] * station.f_var_I_N[lag]) + \
+                                 (items_CT['i'] * station.f_var_I_A[lag])
 
     station.prob_decrease_var_D = prob_decrease_var_D
     station.prob_normal_var_D = prob_normal_var_D
@@ -2486,7 +2486,7 @@ def maps(grid):
             sys.stdout.write("                {0}\t....................... ".format(analysis_interval))
         sys.stdout.flush()
 
-        for lag in lags:
+        for lag in globals_vars.lags:
 
             # all months in year 1->12
             for month in range(1, 13):
@@ -2588,7 +2588,7 @@ def maps(grid):
             sys.stdout.write("                {0}\t....................... ".format(analysis_interval))
         sys.stdout.flush()
 
-        for lag in lags:
+        for lag in globals_vars.lags:
 
             # all months in year 1->12
             for month in range(1, 13):
@@ -2700,7 +2700,7 @@ def maps(grid):
 
             for forecasting_date in globals_vars.maps_files_forecasting[analysis_interval]:
 
-                for lag in lags:
+                for lag in globals_vars.lags:
                     # show only once
                     if lag == 0:
                         message_warning = True
@@ -3111,6 +3111,7 @@ def main():
     settings = {"climate_process": _("disabled"),
                 "forecasting_process": _("disabled"),
                 "process_period": _("disabled"),
+                "lags": _("default"),
                 "language": settings_language,
                 "consistent_data": _("disabled"),
                 "risk_analysis": _("disabled"),
@@ -3122,36 +3123,48 @@ def main():
                 "overlapping": None,
                 "shape_boundary": _("disabled")}
 
-    # general options
+    ## general options
+    # climate_process
     if globals_vars.config_run['climate_process']:
         settings["climate_process"] = colored.green(_("enabled"))
+    # forecasting_process
     if globals_vars.config_run['forecasting_process']:
         settings["forecasting_process"] = colored.green(_("enabled"))
-    if globals_vars.config_run['process_period']:
-        settings["process_period"] = colored.green(globals_vars.config_run['process_period'])
-
-    if globals_vars.config_run['risk_analysis']:
-        settings["risk_analysis"] = colored.green(_("enabled"))
-
-    if globals_vars.config_run['consistent_data']:
-        settings["consistent_data"] = colored.green(_("enabled"))
-
-    # set period for process if is defined as argument
+    # process_period
     if globals_vars.config_run['process_period']:
         try:
             args_period_start = int(globals_vars.config_run['process_period'].split('-')[0])
             args_period_end = int(globals_vars.config_run['process_period'].split('-')[1])
-            globals_vars.config_run['process_period'] = {'start':args_period_start,
-                                                         'end':args_period_end}
+            globals_vars.config_run['process_period'] = {'start': args_period_start,
+                                                         'end': args_period_end}
             settings["process_period"] = colored.green("{0}-{1}".format(args_period_start, args_period_end))
         except Exception, e:
             print_error(_('the period must be: year_start-year_end (ie. 1980-2008)\n\n{0}').format(e))
+    # lags
+    if globals_vars.config_run['lags']:
+        if globals_vars.config_run['lags'] == "default":
+            globals_vars.lags = [0, 1, 2]
+            settings["lags"] = ','.join(map(str, globals_vars.lags))
+        else:
+            try:
+                for lag in globals_vars.config_run['lags'].split(","):
+                    lag = int(lag)
+                    if lag not in [0, 1, 2]:
+                        raise
+                    globals_vars.lags.append(lag)
+            except:
+                print_error(_('the lags are 0, 1 and/or 2 comma separated, or default.'))
+            settings["lags"] = colored.green(','.join(map(str, globals_vars.lags)))
 
-    # number of lags
-    global lags
-    lags = [0, 1, 2]
+    ## check options
+    # consistent_data
+    if globals_vars.config_run['consistent_data']:
+        settings["consistent_data"] = colored.green(_("enabled"))
+    # risk_analysis
+    if globals_vars.config_run['risk_analysis']:
+        settings["risk_analysis"] = colored.green(_("enabled"))
 
-    # maps settings
+    ## graphics settings
     if globals_vars.config_run['graphics']:
         settings["graphics"] = colored.green(_("enabled"))
     # if phenomenon below is defined inside arguments, else default value
@@ -3176,10 +3189,9 @@ def main():
         globals_vars.phenomenon_above = _('var_I_above')
         settings["phen_above_label"] = globals_vars.phenomenon_above
 
-    # maps settings
+    ## maps settings
     if globals_vars.config_run['maps']:
         settings["maps"] = colored.green(_("enabled"))
-
     # set the overlapping solution
     if globals_vars.config_run['overlapping'] == "default" or not globals_vars.config_run['overlapping']:
         globals_vars.config_run['overlapping'] = "average"
@@ -3189,7 +3201,7 @@ def main():
     else:
         print_error(_("The overlapping solution is wrong, the options are:\n"
                     "default, average, maximum, minimum or neither"), False)
-
+    # shape_boundary method
     if globals_vars.config_run['shape_boundary'] in ["shape_mask"]:
         settings["shape_boundary"] = colored.green(globals_vars.config_run['shape_boundary'])
     elif globals_vars.config_run['shape_boundary'] in ["default", False]:
@@ -3204,6 +3216,7 @@ def main():
     print "   {0} ------ {1}".format("climate process", settings["climate_process"])
     print "   {0} -- {1}".format("forecasting process", settings["forecasting_process"])
     print "   {0} ------- {1}".format("process period", settings["process_period"])
+    print "   {0} ----------------- {1}".format("lags", settings["lags"])
     print "   {0} ------------- {1}".format("language", settings["language"])
     print colored.cyan("   Check options")
     print "   {0} ------ {1}".format("consistent data", settings["consistent_data"])
