@@ -186,10 +186,44 @@ def read_var_D(station):
     file_D = station.file_D
     reader_csv = csv.reader(file_D, delimiter='\t')
 
-    # validation type_D
-    if station.type_D not in globals_vars.types_var_D:
-        raise Exception(_("{0} is not valid type for dependence variable")
-                        .format(station.type_D))
+    # check and validate if file D is defined as particular file with
+    # particular range validation
+    # below var D
+    if station.range_below_D == "default":
+        # validation type_D
+        if station.type_D not in globals_vars.types_var_D:
+            print_error_line_stations(station,
+                                      _("{0} is not valid type for dependence variable"
+                                        " if you defined LIMIT VAR D BELOW/ABOVE as \"default\".")
+                                      .format(station.type_D))
+    elif station.range_below_D == "none":
+        station.range_below_D = None
+    else:
+        try:
+            station.range_below_D = float(station.range_below_D.replace(',', '.'))
+        except:
+            print_error_line_stations(station,
+                            (_("Problem with particular range validation for "
+                              "dependent\nvariable: {0} this should be "
+                              "a valid number, \"none\" or \"default\".").format(station.range_below_D,)))
+    # above var D
+    if station.range_above_D == "default":
+        # validation type_D
+        if station.type_D not in globals_vars.types_var_D:
+            print_error_line_stations(station,
+                                      _("{0} is not valid type for dependence variable"
+                                        " if you defined LIMIT VAR D BELOW/ABOVE as \"default\".")
+                                      .format(station.type_D))
+    elif station.range_above_D == "none":
+        station.range_above_D = None
+    else:
+        try:
+            station.range_above_D = float(station.range_above_D.replace(',', '.'))
+        except:
+            print_error_line_stations(station,
+                            (_("Problem with particular range validation for "
+                              "dependent\nvariable: {0} this should be "
+                              "a valid number, \"none\" or \"default\".").format(station.range_above_D,)))
 
     # reader_csv = csv.reader(fo, delimiter = '\t')
     # reader_csv.write(data.replace('\x00', ''))
@@ -239,7 +273,9 @@ def read_var_D(station):
                 var_D.append(input_validation.validation_var_D(station.type_D,
                                                                value,
                                                                date_D[-1],
-                                                               station.data_of_var_D))
+                                                               station.data_of_var_D,
+                                                               station.range_below_D,
+                                                               station.range_above_D))
 
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
@@ -308,7 +344,9 @@ def read_var_D(station):
                 var_D.append(input_validation.validation_var_D(station.type_D,
                                                                value,
                                                                date_D[-1],
-                                                               station.data_of_var_D))
+                                                               station.data_of_var_D,
+                                                               station.range_below_D,
+                                                               station.range_above_D))
 
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
@@ -362,24 +400,42 @@ def read_var_I(station):
 
     # check and validate if file I is defined as particular file with
     # particular range validation
-    if station.range_below_I != "none" and station.range_above_I != "none":
+    # below var I
+    if station.range_below_I == "default":
+        # validation type_I
+        if station.type_I not in globals_vars.types_var_I:
+            print_error_line_stations(station,
+                                      _("{0} is not valid type for independence variable"
+                                        " if you defined LIMIT VAR I BELOW/ABOVE as \"default\".")
+                                      .format(station.type_I))
+    elif station.range_below_I == "none":
+        station.range_below_I = None
+    else:
         try:
             station.range_below_I = float(station.range_below_I.replace(',', '.'))
+        except:
+            print_error_line_stations(station,
+                            (_("Problem with particular range validation for "
+                              "dependent\nvariable: {0} this should be "
+                              "a valid number, \"none\" or \"default\".").format(station.range_below_I,)))
+    # above var I
+    if station.range_above_I == "default":
+        # validation type_I
+        if station.type_I not in globals_vars.types_var_I:
+            print_error_line_stations(station,
+                                      _("{0} is not valid type for independence variable"
+                                        " if you defined LIMIT VAR I BELOW/ABOVE as \"default\".")
+                                      .format(station.type_I))
+    elif station.range_above_I == "none":
+        station.range_above_I = None
+    else:
+        try:
             station.range_above_I = float(station.range_above_I.replace(',', '.'))
         except:
             print_error_line_stations(station,
                             (_("Problem with particular range validation for "
-                              "independent\nvariable: {0};{1} this should be "
-                              "a valid number or \"none\".").format(station.range_below_I,
-                                                  station.range_above_I)))
-    else:
-        # validation type_I
-        if station.type_I not in globals_vars.types_var_I:
-            print_error_line_stations(station,
-                                      _("{0} is not valid type for independence variable")
-                                      .format(station.type_I))
-        station.range_below_I = "None"
-        station.range_above_I = "None"
+                              "dependent\nvariable: {0} this should be "
+                              "a valid number, \"none\" or \"default\".").format(station.range_above_I,)))
 
     reader_csv = csv.reader(file_I, delimiter='\t')
     first = True
@@ -3302,17 +3358,23 @@ def main():
             station.type_D = line_station[5]
             globals_vars.type_var_D = station.type_D  # TODO:
 
-            station.file_I = line_station[6]
-            station.type_I = line_station[7]
+            station.range_below_D = line_station[6]
+            station.range_above_D = line_station[7]
+
+            station.threshold_below_var_D = line_station[8].replace(',', '.')
+            station.threshold_above_var_D = line_station[9].replace(',', '.')
+
+            station.file_I = line_station[10]
+            station.type_I = line_station[11]
             globals_vars.type_var_I = station.type_I  # TODO:
 
-            station.range_below_I = line_station[8]
-            station.range_above_I = line_station[9]
+            station.range_below_I = line_station[12]
+            station.range_above_I = line_station[13]
 
-            station.threshold_below_var_I = line_station[10].replace(',', '.')
-            station.threshold_above_var_I = line_station[11].replace(',', '.')
+            station.threshold_below_var_I = line_station[14].replace(',', '.')
+            station.threshold_above_var_I = line_station[15].replace(',', '.')
 
-            station.analysis_interval = line_station[12]
+            station.analysis_interval = line_station[16]
 
             if station.analysis_interval not in options_analysis_interval:
                 raise Exception(_("The analysis interval {0} is invalid,\n"
@@ -3335,21 +3397,21 @@ def main():
                 translate_analysis_interval[options_analysis_interval.index(station.analysis_interval)]
 
             if globals_vars.config_run['forecasting_process']:
-                if len(line_station) < 23:
+                if len(line_station) < 27:
                     raise Exception(_("For forecasting process you need define "
                                       "9 probability\n variables and trimester to "
                                       "process in stations file."))
-                station.f_var_I_B = [float(line_station[13].replace(',', '.')),
-                                     float(line_station[16].replace(',', '.')),
-                                     float(line_station[19].replace(',', '.'))]
-                station.f_var_I_N = [float(line_station[14].replace(',', '.')),
-                                     float(line_station[17].replace(',', '.')),
-                                     float(line_station[20].replace(',', '.'))]
-                station.f_var_I_A = [float(line_station[15].replace(',', '.')),
-                                     float(line_station[18].replace(',', '.')),
-                                     float(line_station[21].replace(',', '.'))]
+                station.f_var_I_B = [float(line_station[17].replace(',', '.')),
+                                     float(line_station[20].replace(',', '.')),
+                                     float(line_station[23].replace(',', '.'))]
+                station.f_var_I_N = [float(line_station[18].replace(',', '.')),
+                                     float(line_station[21].replace(',', '.')),
+                                     float(line_station[24].replace(',', '.'))]
+                station.f_var_I_A = [float(line_station[19].replace(',', '.')),
+                                     float(line_station[22].replace(',', '.')),
+                                     float(line_station[25].replace(',', '.'))]
 
-                station.forecasting_date = line_station[22]
+                station.forecasting_date = line_station[26]
 
         except Exception, e:
             print_error(_("Reading stations from file \"{0}\" in line {1}:\n")
