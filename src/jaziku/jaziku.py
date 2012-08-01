@@ -946,6 +946,103 @@ def calculate_lags(station):
     return station
 
 
+def get_thresholds_var_D(station):
+    '''
+    Calculate and return threshold by below and above
+    of dependent variable, the type of threshold as
+    defined by the user in station file, these may be:
+    "default", "pNN" (percentile NN), "sdN" (standard
+    deviation N) and particular value.
+    '''
+
+    # Calculate percentile "below" and "above"
+    def percentiles(below, above):
+
+        threshold_below_var_D = stats.scoreatpercentile(station.var_D_values, below)
+        threshold_above_var_D = stats.scoreatpercentile(station.var_D_values, above)
+        return threshold_below_var_D, threshold_above_var_D
+
+    # thresholds by below and by above of var D by default
+    def thresholds_by_default():
+
+        return percentiles(33, 66)
+
+    # thresholds by below and by above of var D with standard deviation
+    def thresholds_with_std_deviation(below, above):
+
+        def func_standard_deviation(values):
+            avg = float((sum(values))) / len(values)
+            sums = 0
+            for i in values:
+                sums += (i - avg) ** 2
+            return (sums / (len(values) - 1)) ** 0.5
+
+        if below not in [1, 2, 3] or above not in [1, 2, 3]:
+            print_error(_("thresholds of dependent variable were defined as "
+                          "N standard desviation\n but are outside of range, "
+                          "this values should be 1, 2 or 3:\nsd{0} sd{1}")
+                        .format(below, above))
+        avg = float((sum(station.var_D_values))) / len(station.var_D_values)
+        std_desv = func_standard_deviation(station.var_D_values)
+
+        return avg - below * std_desv, avg + above * std_desv
+
+    # thresholds by below and by above of var D with particular values,
+    # these values validation with type of var D
+    def thresholds_with_particular_values(below, above):
+
+        try:
+            below = float(below)
+            above = float(above)
+        except:
+            print_error(_("threshoulds could not were identified:\n{0} - {1}")
+                        .format(below, above))
+
+        if below > above:
+            print_error(_("threshold below of dependent variable can't be "
+                          "greater than threshold above:\n{0} - {1}")
+                        .format(below, above))
+        try:
+            threshold_below_var_D = input_validation.validation_var_D(station.type_D, below)
+            threshold_above_var_D = input_validation.validation_var_D(station.type_D, above)
+            return threshold_below_var_D, threshold_above_var_D
+        except Exception, e:
+            print_error(_("Problem with thresholds of dependent "
+                          "variable:\n\n{0}").format(e))
+
+    ## now analisys threshold input in arguments
+    # if are define as default
+    if (station.threshold_below_var_D == "default" and
+        station.threshold_above_var_D == "default"):
+        return thresholds_by_default()
+
+    # if are define as percentile
+    if (''.join(list(station.threshold_below_var_D)[0:1]) == "p" and
+       ''.join(list(station.threshold_above_var_D)[0:1]) == "p"):
+        below = float(''.join(list(station.threshold_below_var_D)[1::]))
+        above = float(''.join(list(station.threshold_above_var_D)[1::]))
+        if not (0 <= below <= 100) or not (0 <= above <= 100):
+            print_error(_("thresholds of dependent variable were defined as "
+                          "percentile\nbut are outside of range 0-100:\n{0} - {1}")
+                        .format(below, above))
+        if below > above:
+            print_error(_("threshold below of dependent variable can't be "
+                          "greater than threshold above:\n{0} - {1}")
+                        .format(below, above))
+        return percentiles(below, above)
+
+    # if are define as standard deviation
+    if (''.join(list(station.threshold_below_var_D)[0:2]) == "sd" and
+       ''.join(list(station.threshold_above_var_D)[0:2]) == "sd"):
+        below = int(''.join(list(station.threshold_below_var_D)[2::]))
+        above = int(''.join(list(station.threshold_above_var_D)[2::]))
+        return thresholds_with_std_deviation(below, above)
+
+    # if are define as particular values
+    return thresholds_with_particular_values(station.threshold_below_var_D,
+                                             station.threshold_above_var_D)
+
+
 def get_thresholds_var_I(station):
     '''
     Calculate and return threshold by below and above
@@ -1129,15 +1226,14 @@ def get_contingency_table(station, lag, month, day=None):
         station.var_D_values = get_lag_values(station, 'var_D', lag, month, day)
         station.var_I_values = get_lag_values(station, 'var_I', lag, month, day)
 
-    # the thresholds of dependent variable are: percentile 33 and 66
-    p33_D = stats.scoreatpercentile(station.var_D_values, 33)
-    p66_D = stats.scoreatpercentile(station.var_D_values, 66)
+    # calculate thresholds as defined by the user in station file for var D
+    threshold_below_var_D, threshold_above_var_D = get_thresholds_var_D(station)
 
-    # calculate thresholds as defined by the user in station file
+    # calculate thresholds as defined by the user in station file for var I
     threshold_below_var_I, threshold_above_var_I = get_thresholds_var_I(station)
 
     # this is to print later in contingency table
-    thresholds_var_D_var_I = [print_number(p33_D), print_number(p66_D),
+    thresholds_var_D_var_I = [print_number(threshold_below_var_D), print_number(threshold_above_var_D),
                               print_number(threshold_below_var_I),
                               print_number(threshold_above_var_I)]
 
@@ -1145,25 +1241,25 @@ def get_contingency_table(station, lag, month, day=None):
     contingency_table = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
     for index, var_I in enumerate(station.var_I_values):
         if var_I <= threshold_below_var_I:
-            if station.var_D_values[index] <= p33_D:
+            if station.var_D_values[index] <= threshold_below_var_D:
                 contingency_table[0][0] += 1
-            if p33_D < station.var_D_values[index] < p66_D:
+            if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
                 contingency_table[0][1] += 1
-            if station.var_D_values[index] >= p66_D:
+            if station.var_D_values[index] >= threshold_above_var_D:
                 contingency_table[0][2] += 1
         if threshold_below_var_I < var_I < threshold_above_var_I:
-            if station.var_D_values[index] <= p33_D:
+            if station.var_D_values[index] <= threshold_below_var_D:
                 contingency_table[1][0] += 1
-            if p33_D < station.var_D_values[index] < p66_D:
+            if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
                 contingency_table[1][1] += 1
-            if station.var_D_values[index] >= p66_D:
+            if station.var_D_values[index] >= threshold_above_var_D:
                 contingency_table[1][2] += 1
         if var_I >= threshold_above_var_I:
-            if station.var_D_values[index] <= p33_D:
+            if station.var_D_values[index] <= threshold_below_var_D:
                 contingency_table[2][0] += 1
-            if p33_D < station.var_D_values[index] < p66_D:
+            if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
                 contingency_table[2][1] += 1
-            if station.var_D_values[index] >= p66_D:
+            if station.var_D_values[index] >= threshold_above_var_D:
                 contingency_table[2][2] += 1
 
     ## Calculating contingency table with values in percent
