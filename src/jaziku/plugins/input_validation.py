@@ -22,8 +22,10 @@ from datetime import date
 
 import globals_vars
 
+
 #==============================================================================
 # VALIDATION FOR DEPENDENT AND INDEPENDENT VARIABLE
+
 
 #==============================================================================
 # Validation var_D (dependent variable)
@@ -55,7 +57,7 @@ import globals_vars
 #  Runoff---------------RUNOFF      m^3/s                0 to 3300
 
 
-def validation_var_D(type_var_D, var_D, date_D, data_of_var_D):
+def validation_var_D(type_var_D, var_D, date_D, data_of_var_D, range_below_D, range_above_D):
     '''
     Fuction for validation (dependent variable) depending on the type of
     variable
@@ -68,6 +70,26 @@ def validation_var_D(type_var_D, var_D, date_D, data_of_var_D):
                            "value out of range:\nThe value \"{1}\" is not "
                            "valid for type variable \"{0}\"\n{2}")
                          .format(type_var_D, var_D, e))
+
+    # if defined as particular range
+    if range_below_D != "default" and range_above_D != "default":
+        if range_below_D and range_above_D:
+            if (range_below_D <= var_D <= range_above_D) or int(var_D) in globals_vars.VALID_NULL:
+                return var_D
+            else:
+                returnError(_("{0} not valid").format(type_var_D))
+        elif not range_below_D and range_above_D:
+            if (var_D <= range_above_D) or int(var_D) in globals_vars.VALID_NULL:
+                return var_D
+            else:
+                returnError(_("{0} not valid").format(type_var_D))
+        elif not range_above_D and range_below_D:
+            if (range_below_D <= var_D) or int(var_D) in globals_vars.VALID_NULL:
+                return var_D
+            else:
+                returnError(_("{0} not valid").format(type_var_D))
+        else:
+            return var_D
 
     # validation for precipitation
     def if_var_D_is_PPT():
@@ -170,6 +192,7 @@ def validation_var_D(type_var_D, var_D, date_D, data_of_var_D):
     }
     return validation[type_var_D]()
 
+
 #==============================================================================
 # Validation var_I (independent variable)
 #
@@ -190,6 +213,7 @@ def validation_var_D(type_var_D, var_D, date_D, data_of_var_D):
 # ocean surface area Ocean                Area anomaly scaled
 # region >28.5C----------------AREA_WHWP     by 10e6 km^2        -13 to 14
 
+
 def validation_var_I(type_var_I, var_I, range_below_I, range_above_I):
     '''
     Fuction for validation (independent variable) depending on the type of
@@ -205,11 +229,24 @@ def validation_var_I(type_var_I, var_I, range_below_I, range_above_I):
                          .format(type_var_I, var_I, e))
 
     # if defined as particular range
-    if type(range_below_I) is float and type(range_above_I) is float:
-        if (range_below_I <= var_I <= range_above_I) or int(var_I) in globals_vars.VALID_NULL:
-            return var_I
+    if range_below_I != "default" and range_above_I != "default":
+        if range_below_I and range_above_I:
+            if (range_below_I <= var_I <= range_above_I) or int(var_I) in globals_vars.VALID_NULL:
+                return var_I
+            else:
+                returnError(_("{0} not valid").format(type_var_I))
+        elif not range_below_I and range_above_I:
+            if (var_I <= range_above_I) or int(var_I) in globals_vars.VALID_NULL:
+                return var_I
+            else:
+                returnError(_("{0} not valid").format(type_var_I))
+        elif not range_above_I and range_below_I:
+            if (range_below_I <= var_I) or int(var_I) in globals_vars.VALID_NULL:
+                return var_I
+            else:
+                returnError(_("{0} not valid").format(type_var_I))
         else:
-            returnError(_("{0} not valid").format(type_var_I))
+            return var_I
 
     # validation for Oceanic Nino Index
     def if_var_I_is_ONI():
