@@ -105,6 +105,8 @@ config_run = {'climate_process': None,
 
 lags = []
 
+maps = {'climate': False, 'forecasting': False, 'correlation': False}
+
 # directory to save all results, this can be absolute or relative path
 # import Jaziku_utils.input_arg as input_arg
 # args = input_arg.arguments.parse_args()
