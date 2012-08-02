@@ -2,12 +2,15 @@
 features/changes:
  * new option in runfile for select lags to run, this can be 0, 1 and/or 2, 
    combination of these or default (this is all).
- * now you can use any type for dependent variable and select particular values
-   for limits.
+ * new option in runfile, now you can use any type for dependent variable and 
+   select particular values for limits.
  * limits var D/I in runfile now can be: none (no check), default (internals limits)
    or particular values.
  * new option in runfile for set threshold for dependent variable, this can be:
-   default(this is p33 and p66), pNN, sdNN or particular value. 
+   default (this is p33 and p66), pNN, sdNN or particular value. 
+ * new option for maps in runfile, now you can select what you want to run for
+   maps, maps can be 'climate', 'forecasting', 'correlation' combination of these, 
+   or 'all' .
 bugfixes:
  * fix check and default value for process period in runfile
  * fix console message for graphics process, enable/disable activation

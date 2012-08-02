@@ -2616,82 +2616,47 @@ def maps(grid):
 
         del matrix
 
+    grid.in_process = {}
+
     # -------------------------------------------------------------------------
     # Process maps for CLIMATE
-    grid.in_process = {}
-    grid.in_process["climate"] = True
-    grid.in_process["correlation"] = False
-    grid.in_process["forecasting"] = False
 
-    print _("Processing maps for climate:")
+    if globals_vars.maps['climate']:
 
-    # walking file by file of maps directory and make interpolation and map for each file
-    for analysis_interval in ['5days', '10days', '15days', 'trimester']:
+        grid.in_process["climate"] = True
+        grid.in_process["correlation"] = False
+        grid.in_process["forecasting"] = False
 
-        if globals_vars.maps_files_climate[analysis_interval] is None:
-            continue
+        print _("Processing maps for climate:")
 
-        # console message
-        if analysis_interval == 'trimester':
-            sys.stdout.write("                {0} ..................... ".format(analysis_interval))
-        else:
-            sys.stdout.write("                {0}\t....................... ".format(analysis_interval))
-        sys.stdout.flush()
+        # walking file by file of maps directory and make interpolation and map for each file
+        for analysis_interval in ['5days', '10days', '15days', 'trimester']:
 
-        for lag in globals_vars.lags:
+            if globals_vars.maps_files_climate[analysis_interval] is None:
+                continue
 
-            # all months in year 1->12
-            for month in range(1, 13):
+            # console message
+            if analysis_interval == 'trimester':
+                sys.stdout.write("                {0} ..................... ".format(analysis_interval))
+            else:
+                sys.stdout.write("                {0}\t....................... ".format(analysis_interval))
+            sys.stdout.flush()
 
-                if analysis_interval == 'trimester':
-                    for category in [0, 1, 2]:  # phenomenons var_I
-                        # show only once
-                        if lag == 0 and month == 1 and category == 0:
-                            message_warning = True
-                        else:
-                            message_warning = False
+            for lag in globals_vars.lags:
 
-                        # file where saved points for plot map
-                        file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][category]
+                # all months in year 1->12
+                for month in range(1, 13):
 
-                        # save matrix for interpolation
-                        base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
-
-                        # make dir with the name of grid
-                        if not os.path.isdir(base_path):
-                            os.makedirs(base_path)
-
-                        base_file = _(u'Map_lag_{0}_{1}_{2}').format(lag, trim_text[month - 1], phenomenon[category])
-
-                        grid.date = trim_text[month - 1]
-                        grid.lag = lag
-
-                        # file for interpolation
-                        inc_file = os.path.join(base_path, base_file + ".INC")
-
-                        # save file for NCL
-                        ncl_data = os.path.join(base_path, base_file + ".tsv")
-
-                        process_map()
-
-                else:
-                    # range based on analysis interval
-                    if analysis_interval == '5days':
-                        range_analysis_interval = [1, 6, 11, 16, 21, 26]
-                    if analysis_interval == '10days':
-                        range_analysis_interval = [1, 11, 21]
-                    if analysis_interval == '15days':
-                        range_analysis_interval = [1, 16]
-                    for day in range(len(range_analysis_interval)):
+                    if analysis_interval == 'trimester':
                         for category in [0, 1, 2]:  # phenomenons var_I
                             # show only once
-                            if lag == 0 and month == 1 and category == 0 and day == 0:
+                            if lag == 0 and month == 1 and category == 0:
                                 message_warning = True
                             else:
                                 message_warning = False
 
                             # file where saved points for plot map
-                            file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][day][category]
+                            file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][category]
 
                             # save matrix for interpolation
                             base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
@@ -2700,12 +2665,9 @@ def maps(grid):
                             if not os.path.isdir(base_path):
                                 os.makedirs(base_path)
 
-                            base_file = _(u'Map_lag_{0}_{1}_{2}')\
-                                         .format(lag,
-                                                 month_text[month - 1] + "_" + str(range_analysis_interval[day]),
-                                                 phenomenon[category])
+                            base_file = _(u'Map_lag_{0}_{1}_{2}').format(lag, trim_text[month - 1], phenomenon[category])
 
-                            grid.date = month_text[month - 1] + "_" + str(range_analysis_interval[day])
+                            grid.date = trim_text[month - 1]
                             grid.lag = lag
 
                             # file for interpolation
@@ -2716,88 +2678,89 @@ def maps(grid):
 
                             process_map()
 
-        print colored.green(_("done"))
+                    else:
+                        # range based on analysis interval
+                        if analysis_interval == '5days':
+                            range_analysis_interval = [1, 6, 11, 16, 21, 26]
+                        if analysis_interval == '10days':
+                            range_analysis_interval = [1, 11, 21]
+                        if analysis_interval == '15days':
+                            range_analysis_interval = [1, 16]
+                        for day in range(len(range_analysis_interval)):
+                            for category in [0, 1, 2]:  # phenomenons var_I
+                                # show only once
+                                if lag == 0 and month == 1 and category == 0 and day == 0:
+                                    message_warning = True
+                                else:
+                                    message_warning = False
+
+                                # file where saved points for plot map
+                                file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][day][category]
+
+                                # save matrix for interpolation
+                                base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
+
+                                # make dir with the name of grid
+                                if not os.path.isdir(base_path):
+                                    os.makedirs(base_path)
+
+                                base_file = _(u'Map_lag_{0}_{1}_{2}')\
+                                             .format(lag,
+                                                     month_text[month - 1] + "_" + str(range_analysis_interval[day]),
+                                                     phenomenon[category])
+
+                                grid.date = month_text[month - 1] + "_" + str(range_analysis_interval[day])
+                                grid.lag = lag
+
+                                # file for interpolation
+                                inc_file = os.path.join(base_path, base_file + ".INC")
+
+                                # save file for NCL
+                                ncl_data = os.path.join(base_path, base_file + ".tsv")
+
+                                process_map()
+
+            print colored.green(_("done"))
 
     # -------------------------------------------------------------------------
     # Process maps for CORRELATION
 
-    grid.in_process["climate"] = False
-    grid.in_process["correlation"] = True
-    grid.in_process["forecasting"] = False
+    if globals_vars.maps['correlation']:
 
-    print _("Processing maps for correlation:")
+        grid.in_process["climate"] = False
+        grid.in_process["correlation"] = True
+        grid.in_process["forecasting"] = False
 
-    # walking file by file of maps directory and make interpolation and map for each file
-    for analysis_interval in ['5days', '10days', '15days', 'trimester']:
+        print _("Processing maps for correlation:")
 
-        if globals_vars.maps_files_climate[analysis_interval] is None:
-            continue
+        # walking file by file of maps directory and make interpolation and map for each file
+        for analysis_interval in ['5days', '10days', '15days', 'trimester']:
 
-        # console message
-        if analysis_interval == 'trimester':
-            sys.stdout.write("                {0} ..................... ".format(analysis_interval))
-        else:
-            sys.stdout.write("                {0}\t....................... ".format(analysis_interval))
-        sys.stdout.flush()
+            if globals_vars.maps_files_climate[analysis_interval] is None:
+                continue
 
-        for lag in globals_vars.lags:
+            # console message
+            if analysis_interval == 'trimester':
+                sys.stdout.write("                {0} ..................... ".format(analysis_interval))
+            else:
+                sys.stdout.write("                {0}\t....................... ".format(analysis_interval))
+            sys.stdout.flush()
 
-            # all months in year 1->12
-            for month in range(1, 13):
+            for lag in globals_vars.lags:
 
-                if analysis_interval == 'trimester':
-                    category = 1  # normal
-                    # show only once
-                    if lag == 0 and month == 1:
-                        message_warning = True
-                    else:
-                        message_warning = False
+                # all months in year 1->12
+                for month in range(1, 13):
 
-                    # file where saved points for plot map
-                    file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][category]
-
-                    # save matrix for interpolation
-                    base_path = os.path.join(climate_dir, _('maps'),
-                                             translate_analysis_interval[options_analysis_interval.index(analysis_interval)],
-                                             _('lag_{0}').format(lag),
-                                             _('Correlation'),
-                                             grid.grid_name)
-
-                    # make dir with the name of grid
-                    if not os.path.isdir(base_path):
-                        os.makedirs(base_path)
-
-                    base_file = _(u'Map_correlation_lag_{0}_{1}').format(lag, trim_text[month - 1])
-
-                    grid.date = trim_text[month - 1]
-                    grid.lag = lag
-
-                    # file for interpolation
-                    inc_file = os.path.join(base_path, base_file + ".INC")
-
-                    # save file for NCL
-                    ncl_data = os.path.join(base_path, base_file + ".tsv")
-
-                    process_map()
-
-                else:
-                    # range based on analysis interval
-                    if analysis_interval == '5days':
-                        range_analysis_interval = [1, 6, 11, 16, 21, 26]
-                    if analysis_interval == '10days':
-                        range_analysis_interval = [1, 11, 21]
-                    if analysis_interval == '15days':
-                        range_analysis_interval = [1, 16]
-                    for day in range(len(range_analysis_interval)):
-                        category = 1  # phenomenons var_I
+                    if analysis_interval == 'trimester':
+                        category = 1  # normal
                         # show only once
-                        if lag == 0 and month == 1 and day == 0:
+                        if lag == 0 and month == 1:
                             message_warning = True
                         else:
                             message_warning = False
 
                         # file where saved points for plot map
-                        file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][day][category]
+                        file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][category]
 
                         # save matrix for interpolation
                         base_path = os.path.join(climate_dir, _('maps'),
@@ -2810,10 +2773,9 @@ def maps(grid):
                         if not os.path.isdir(base_path):
                             os.makedirs(base_path)
 
-                        base_file = _(u'Map_correlation_lag_{0}_{1}')\
-                                     .format(lag, month_text[month - 1] + "_" + str(range_analysis_interval[day]))
+                        base_file = _(u'Map_correlation_lag_{0}_{1}').format(lag, trim_text[month - 1])
 
-                        grid.date = month_text[month - 1] + "_" + str(range_analysis_interval[day])
+                        grid.date = trim_text[month - 1]
                         grid.lag = lag
 
                         # file for interpolation
@@ -2824,12 +2786,56 @@ def maps(grid):
 
                         process_map()
 
-        print colored.green(_("done"))
+                    else:
+                        # range based on analysis interval
+                        if analysis_interval == '5days':
+                            range_analysis_interval = [1, 6, 11, 16, 21, 26]
+                        if analysis_interval == '10days':
+                            range_analysis_interval = [1, 11, 21]
+                        if analysis_interval == '15days':
+                            range_analysis_interval = [1, 16]
+                        for day in range(len(range_analysis_interval)):
+                            category = 1  # phenomenons var_I
+                            # show only once
+                            if lag == 0 and month == 1 and day == 0:
+                                message_warning = True
+                            else:
+                                message_warning = False
+
+                            # file where saved points for plot map
+                            file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][day][category]
+
+                            # save matrix for interpolation
+                            base_path = os.path.join(climate_dir, _('maps'),
+                                                     translate_analysis_interval[options_analysis_interval.index(analysis_interval)],
+                                                     _('lag_{0}').format(lag),
+                                                     _('Correlation'),
+                                                     grid.grid_name)
+
+                            # make dir with the name of grid
+                            if not os.path.isdir(base_path):
+                                os.makedirs(base_path)
+
+                            base_file = _(u'Map_correlation_lag_{0}_{1}')\
+                                         .format(lag, month_text[month - 1] + "_" + str(range_analysis_interval[day]))
+
+                            grid.date = month_text[month - 1] + "_" + str(range_analysis_interval[day])
+                            grid.lag = lag
+
+                            # file for interpolation
+                            inc_file = os.path.join(base_path, base_file + ".INC")
+
+                            # save file for NCL
+                            ncl_data = os.path.join(base_path, base_file + ".tsv")
+
+                            process_map()
+
+            print colored.green(_("done"))
 
     # -------------------------------------------------------------------------
     # Process maps for FORECASTING
 
-    if globals_vars.config_run['forecasting_process']:
+    if globals_vars.config_run['forecasting_process'] and  globals_vars.maps['forecasting']:
 
         grid.in_process["climate"] = False
         grid.in_process["correlation"] = False
@@ -3343,7 +3349,20 @@ def main():
 
     ## maps settings
     if globals_vars.config_run['maps']:
-        settings["maps"] = colored.green(_("enabled"))
+        if globals_vars.config_run['maps'] == "all":
+            globals_vars.maps = {'climate': True, 'forecasting': True, 'correlation': True}
+            settings["maps"] = ','.join(map(str, [m for m in globals_vars.maps if globals_vars.maps[m]]))
+        else:
+            try:
+                for map_to_run in globals_vars.config_run['maps'].split(","):
+                    map_to_run = map_to_run.strip()
+                    if map_to_run not in ['climate', 'forecasting', 'correlation']:
+                        raise
+                    globals_vars.maps[map_to_run] = True
+            except:
+                    print_error(_('the maps options are \'climate\', \'forecasting\', '
+                                  '\'correlation\' comma separated, or \'all\'.'))
+            settings["maps"] = colored.green(','.join(map(str, [m for m in globals_vars.maps if globals_vars.maps[m]])))
     # set the overlapping solution
     if globals_vars.config_run['overlapping'] == "default" or not globals_vars.config_run['overlapping']:
         globals_vars.config_run['overlapping'] = "average"
