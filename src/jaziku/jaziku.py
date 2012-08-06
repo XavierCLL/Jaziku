@@ -103,6 +103,7 @@ from scipy import stats  # http://docs.scipy.org/doc/scipy/reference/stats.html
 from Image import open as img_open
 from pylab import *
 import re
+import math
 # color text console  #http://pypi.python.org/pypi/clint/
 from clint.textui import colored
 
@@ -295,7 +296,7 @@ def read_var_D(station):
         fo.write(file_D_fix.replace('\x00', ''))
         fo.close()
 
-        print colored.yellow(_("\n\n   Warning: Repairing file \"{0}\" of NULL"\
+        print colored.yellow(_("\n\n > WARNING: Repairing file \"{0}\" of NULL"\
                                " bytes garbage,\n   saving new file as: {1}")
                                .format(station.file_D.name, name_fix))
 
@@ -382,7 +383,7 @@ def read_var_I(station):
 
             split_internal_var_I = internal_file_I_name.split(".")[0].split("_")
             print colored.yellow(
-                    _("\n   You are using internal files for independent\n"
+                    _("\n > You are using internal files for independent\n"
                       "   variable defined as {0} which has data from\n"
                       "   {1} to {2} and the source of data was\n"
                       "   obtained in {3}.\n"
@@ -502,7 +503,7 @@ def read_var_I(station):
         fo.write(file_I_fix.replace('\x00', ''))
         fo.close()
 
-        print colored.yellow(_("\n\n   Warning: Repairing file \"{0}\" of NULL"\
+        print colored.yellow(_("\n\n > WARNING: Repairing file \"{0}\" of NULL"\
                                " bytes garbage,\n   saving new file as: {1}")
                                .format(station.file_I.name, name_fix))
 
@@ -549,7 +550,9 @@ def read_var_I(station):
                 date_I.append(date(year, month, day))
                 # set values of independent variable
                 var_I.append(input_validation.validation_var_I(station.type_I,
-                                                               value))
+                                                               value,
+                                                               station.range_below_I,
+                                                               station.range_above_I))
 
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
@@ -646,17 +649,17 @@ def mean(values):
     Return the mean from all values, ignoring valid null values.
     '''
 
-    mean = 0
+    sums = 0
     count = 0
     for value in values:
         if int(value) not in globals_vars.VALID_NULL:
-            mean += value
+            sums += value
             count += 1.0
 
     if count == 0:
         return globals_vars.VALID_NULL[1]
 
-    return mean / count
+    return sums / count
 
 
 def daily2monthly(var_daily, date_daily):
@@ -968,13 +971,17 @@ def get_thresholds_var_D(station):
         return percentiles(33, 66)
 
     # thresholds by below and by above of var D with standard deviation
-    def thresholds_with_std_deviation(below, above):
+    def thresholds_with_std_desviation(below, above):
+        values_without_nulls = []
+        for value in station.var_D_values:
+            if int(value) not in globals_vars.VALID_NULL:
+                values_without_nulls.append(value)
 
-        def func_standard_deviation(values):
+        def func_standard_desviation(values):
             avg = float((sum(values))) / len(values)
             sums = 0
-            for i in values:
-                sums += (i - avg) ** 2
+            for value in values:
+                sums += (value - avg) ** 2
             return (sums / (len(values) - 1)) ** 0.5
 
         if below not in [1, 2, 3] or above not in [1, 2, 3]:
@@ -982,10 +989,10 @@ def get_thresholds_var_D(station):
                           "N standard desviation\n but are outside of range, "
                           "this values should be 1, 2 or 3:\nsd{0} sd{1}")
                         .format(below, above))
-        avg = float((sum(station.var_D_values))) / len(station.var_D_values)
-        std_desv = func_standard_deviation(station.var_D_values)
+        p50 = stats.scoreatpercentile(values_without_nulls, 50)
+        std_desv = func_standard_desviation(values_without_nulls)
 
-        return avg - below * std_desv, avg + above * std_desv
+        return p50 - below * std_desv, p50 + above * std_desv
 
     # thresholds by below and by above of var D with particular values,
     # these values validation with type of var D
@@ -1003,8 +1010,18 @@ def get_thresholds_var_D(station):
                           "greater than threshold above:\n{0} - {1}")
                         .format(below, above))
         try:
-            threshold_below_var_D = input_validation.validation_var_D(station.type_D, below)
-            threshold_above_var_D = input_validation.validation_var_D(station.type_D, above)
+            threshold_below_var_D = input_validation.validation_var_D(station.type_D,
+                                                                      below,
+                                                                      None,
+                                                                      station.data_of_var_D,
+                                                                      station.range_below_D,
+                                                                      station.range_above_D)
+            threshold_above_var_D = input_validation.validation_var_D(station.type_D,
+                                                                      above,
+                                                                      None,
+                                                                      station.data_of_var_D,
+                                                                      station.range_below_D,
+                                                                      station.range_above_D)
             return threshold_below_var_D, threshold_above_var_D
         except Exception, e:
             print_error(_("Problem with thresholds of dependent "
@@ -1019,8 +1036,8 @@ def get_thresholds_var_D(station):
     # if are define as percentile
     if (''.join(list(station.threshold_below_var_D)[0:1]) == "p" and
        ''.join(list(station.threshold_above_var_D)[0:1]) == "p"):
-        below = float(''.join(list(station.threshold_below_var_D)[1::]))
-        above = float(''.join(list(station.threshold_above_var_D)[1::]))
+        below = int(''.join(list(station.threshold_below_var_D)[1::]))
+        above = int(''.join(list(station.threshold_above_var_D)[1::]))
         if not (0 <= below <= 100) or not (0 <= above <= 100):
             print_error(_("thresholds of dependent variable were defined as "
                           "percentile\nbut are outside of range 0-100:\n{0} - {1}")
@@ -1036,7 +1053,7 @@ def get_thresholds_var_D(station):
        ''.join(list(station.threshold_above_var_D)[0:2]) == "sd"):
         below = int(''.join(list(station.threshold_below_var_D)[2::]))
         above = int(''.join(list(station.threshold_above_var_D)[2::]))
-        return thresholds_with_std_deviation(below, above)
+        return thresholds_with_std_desviation(below, above)
 
     # if are define as particular values
     return thresholds_with_particular_values(station.threshold_below_var_D,
@@ -1129,13 +1146,17 @@ def get_thresholds_var_I(station):
         return threshold_below_var_I, threshold_above_var_I
 
     # thresholds by below and by above of var I with standard deviation
-    def thresholds_with_std_deviation(below, above):
+    def thresholds_with_std_desviation(below, above):
+        values_without_nulls = []
+        for value in station.var_I_values:
+            if int(value) not in globals_vars.VALID_NULL:
+                values_without_nulls.append(value)
 
-        def func_standard_deviation(values):
+        def func_standard_desviation(values):
             avg = float((sum(values))) / len(values)
             sums = 0
-            for i in values:
-                sums += (i - avg) ** 2
+            for value in values:
+                sums += (value - avg) ** 2
             return (sums / (len(values) - 1)) ** 0.5
 
         if below not in [1, 2, 3] or above not in [1, 2, 3]:
@@ -1143,10 +1164,10 @@ def get_thresholds_var_I(station):
                           "N standard desviation\n but are outside of range, "
                           "this values should be 1, 2 or 3:\nsd{0} sd{1}")
                         .format(below, above))
-        avg = float((sum(station.var_I_values))) / len(station.var_I_values)
-        std_desv = func_standard_deviation(station.var_I_values)
+        p50 = stats.scoreatpercentile(values_without_nulls, 50)
+        std_desv = func_standard_desviation(values_without_nulls)
 
-        return avg - below * std_desv, avg + above * std_desv
+        return p50 - below * std_desv, p50 + above * std_desv
 
     # thresholds by below and by above of var I with particular values,
     # these values validation with type of var I
@@ -1164,8 +1185,14 @@ def get_thresholds_var_I(station):
                           "greater than threshold above:\n{0} - {1}")
                         .format(below, above))
         try:
-            threshold_below_var_I = input_validation.validation_var_I(station.type_I, below)
-            threshold_above_var_I = input_validation.validation_var_I(station.type_I, above)
+            threshold_below_var_I = input_validation.validation_var_I(station.type_I,
+                                                                      below,
+                                                                      station.range_below_I,
+                                                                      station.range_above_I)
+            threshold_above_var_I = input_validation.validation_var_I(station.type_I,
+                                                                      above,
+                                                                      station.range_below_I,
+                                                                      station.range_above_I)
             return threshold_below_var_I, threshold_above_var_I
         except Exception, e:
             print_error(_("Problem with thresholds of independent "
@@ -1197,7 +1224,7 @@ def get_thresholds_var_I(station):
        ''.join(list(station.threshold_above_var_I)[0:2]) == "sd"):
         below = int(''.join(list(station.threshold_below_var_I)[2::]))
         above = int(''.join(list(station.threshold_above_var_I)[2::]))
-        return thresholds_with_std_deviation(below, above)
+        return thresholds_with_std_desviation(below, above)
 
     # if are define as particular values
     return thresholds_with_particular_values(station.threshold_below_var_I,
@@ -1279,10 +1306,11 @@ def get_contingency_table(station, lag, month, day=None):
     # if threshold by below of independent variable is wrong
     if float(sum_per_column_percent[0]) == 0 and not threshold_problem[0]:
         print colored.yellow(
-            _(u'\n\n   Warning:\n   The thresholds selected \"{0}\" and \"{1}\" '
-              u'are not suitable for\n   compound analysis of variable \"{2}\" '
-              u'with relation to \"{3}\"\n   inside category \"{4}\". Therefore,'
-              u' the graphics will not be created.')
+            _(u'\n\n > WARNING: The thresholds selected \"{0}\" and \"{1}\"\n'
+              u'   are not suitable for compound analysis of\n'
+              u'   variable \"{2}\" with relation to \"{3}\" inside\n'
+              u'   category \"{4}\". Therefore, the graphics\n'
+              u'   will not be created.')
               .format(station.threshold_below_var_I, station.threshold_above_var_I,
                       station.type_D, station.type_I, globals_vars.phenomenon_below))
         threshold_problem[0] = True
@@ -1290,10 +1318,11 @@ def get_contingency_table(station, lag, month, day=None):
     # if threshold by below or above calculating normal phenomenon of independent variable is wrong
     if float(sum_per_column_percent[1]) == 0 and not threshold_problem[1]:
         print colored.yellow(
-            _(u'\n\n   Warning:\n   The thresholds selected \"{0}\" and \"{1}\" '
-              u'are not suitable for\n   compound analysis of variable \"{2}\" '
-              u'with relation to \"{3}\"\n   inside category \"{4}\". Therefore,'
-              u' the graphics will not be created.')
+            _(u'\n\n > WARNING: The thresholds selected \"{0}\" and \"{1}\"\n'
+              u'   are not suitable for compound analysis of\n'
+              u'   variable \"{2}\" with relation to \"{3}\" inside\n'
+              u'   category \"{4}\". Therefore, the graphics\n'
+              u'   will not be created.')
               .format(station.threshold_below_var_I, station.threshold_above_var_I,
                       station.type_D, station.type_I, globals_vars.phenomenon_normal))
         threshold_problem[1] = True
@@ -1301,10 +1330,11 @@ def get_contingency_table(station, lag, month, day=None):
     # if threshold by above of independent variable is wrong
     if float(sum_per_column_percent[2]) == 0 and not threshold_problem[2]:
         print colored.yellow(
-            _(u'\n\n   Warning:\n   The thresholds selected \"{0}\" and \"{1}\" '
-              u'are not suitable for\n   compound analysis of variable \"{2}\" '
-              u'with relation to \"{3}\"\n   inside category \"{4}\". Therefore,'
-              u' the graphics will not be created.')
+            _(u'\n\n > WARNING: The thresholds selected \"{0}\" and \"{1}\"\n'
+              u'   are not suitable for compound analysis of\n'
+              u'   variable \"{2}\" with relation to \"{3}\" inside\n'
+              u'   category \"{4}\". Therefore, the graphics\n'
+              u'   will not be created.')
               .format(station.threshold_below_var_I, station.threshold_above_var_I,
                       station.type_D, station.type_I, globals_vars.phenomenon_above))
         threshold_problem[2] = True
@@ -2170,6 +2200,12 @@ def pre_process(station):
     sys.stdout.write(_("Read and check(range validation) var D ........ "))
     sys.stdout.flush()
     station = read_var_D(station)  # <--
+    if not station.range_below_D or not station.range_above_D:
+        print colored.yellow(_("\n > WARNING: you are using one or both limit as\n"
+                               "   \"none\" value, this means that series values\n"
+                               "   will not be checked if they are valids in its\n"
+                               "   limits coherent. This option is not\n"
+                               "   recommended, use it with precaution ........")),
     print colored.green(_("done"))
 
     if station.data_of_var_D == "daily":
@@ -2181,6 +2217,12 @@ def pre_process(station):
     sys.stdout.write(_("Read and check(range validation) var I ........ "))
     sys.stdout.flush()
     station = read_var_I(station)  # <--
+    if not station.range_below_I or not station.range_above_I:
+        print colored.yellow(_("\n > WARNING: you are using one or both limit as\n"
+                               "   \"none\" value, this means that series values\n"
+                               "   will not be checked if they are valids in its\n"
+                               "   limits coherent. This option is not\n"
+                               "   recommended, use it with precaution ........")),
     print colored.green(_("done"))
 
     if station.data_of_var_I == "daily":
@@ -2198,7 +2240,7 @@ def pre_process(station):
     if globals_vars.config_run['consistent_data']:
         # -------------------------------------------------------------------------
         # check if the data are consistent for var D
-        sys.stdout.write(_("Check if var_D are consistent "))
+        sys.stdout.write(_("Check if var D are consistent"))
         sys.stdout.flush()
 
         check_consistent_data(station, "D")
@@ -2207,7 +2249,7 @@ def pre_process(station):
 
         # -------------------------------------------------------------------------
         # check if the data are consistent for var I
-        sys.stdout.write(_("Check if var_I are consistent "))
+        sys.stdout.write(_("Check if var I are consistent"))
         sys.stdout.flush()
 
         check_consistent_data(station, "I")
@@ -2521,30 +2563,30 @@ def maps(grid):
             # set the index value on matrix
             matrix, point_state = grid.set_point_on_grid(matrix, latitude, longitude, index)
 
+            if point_state == "nan" and message_warning:
+                print colored.yellow(\
+                    _("\n > WARNING: The point lat:{lat} lon:{lon}\n" \
+                      "   of the station code: {code} was not added\n" \
+                      "   because the value of index is \"nan\" (nule) .").
+                    format(lat=latitude, lon=longitude, code=line[0])),
             if point_state == "point not added" and message_warning:
                 print colored.yellow(\
-                    _("\n   Warning: The point lat:{lat} lon:{lon}\n" \
+                    _("\n > WARNING: The point lat:{lat} lon:{lon}\n" \
                       "   of the station code: {code} was not added\n" \
-                      "   because the point is outside of the grid.").
-                    format(lat=latitude, lon=longitude, code=line[0]))
-                sys.stdout.write("                                                ")
-                sys.stdout.flush()
+                      "   because the point is outside of the grid .....").
+                    format(lat=latitude, lon=longitude, code=line[0])),
             if point_state in [_("average"), _("maximum"), _("minimum")] and message_warning:
                 print colored.yellow(\
-                    _("\n   Warning: for the point lat:{lat} lon:{lon}\n" \
+                    _("\n > WARNING: for the point lat:{lat} lon:{lon}\n" \
                       "   Jaziku detect overlapping of two values, Jaziku\n" \
-                      "   will put the {state} value.").
-                    format(lat=latitude, lon=longitude, state=point_state))
-                sys.stdout.write("                                                ")
-                sys.stdout.flush()
+                      "   will put the {state} value ...................").
+                    format(lat=latitude, lon=longitude, state=point_state)),
             if point_state == _("neither") and message_warning:
                 print colored.yellow(\
-                    _("\n   Warning: for the point lat:{lat} lon:{lon}\n" \
+                    _("\n > WARNING: for the point lat:{lat} lon:{lon}\n" \
                       "   Jaziku detect overlapping of two values, Jaziku\n" \
-                      "   will not put the {state} values.").
-                    format(lat=latitude, lon=longitude, state=point_state))
-                sys.stdout.write("                                                ")
-                sys.stdout.flush()
+                      "   will not put the {state} values ..............").
+                    format(lat=latitude, lon=longitude, state=point_state)),
 
         open_file.close()
         del csv_file
@@ -2556,7 +2598,7 @@ def maps(grid):
         # convert matrix (column per column) to linear values
         matrix_vector = np.asarray(matrix.T).reshape(-1)
 
-        # save values to file INC
+        # save values to INC file
         for value in matrix_vector:
             if int(value) == globals_vars.VALID_NULL[1]:
                 open_file.write(str(int(value)) + '\n')
@@ -2650,7 +2692,7 @@ def maps(grid):
                     if analysis_interval == 'trimester':
                         for category in [0, 1, 2]:  # phenomenons var_I
                             # show only once
-                            if lag == 0 and month == 1 and category == 0:
+                            if lag == globals_vars.lags[0] and month == 1 and category == 0:
                                 message_warning = True
                             else:
                                 message_warning = False
@@ -2689,7 +2731,7 @@ def maps(grid):
                         for day in range(len(range_analysis_interval)):
                             for category in [0, 1, 2]:  # phenomenons var_I
                                 # show only once
-                                if lag == 0 and month == 1 and category == 0 and day == 0:
+                                if lag == globals_vars.lags[0] and month == 1 and category == 0 and day == 0:
                                     message_warning = True
                                 else:
                                     message_warning = False
@@ -2754,7 +2796,7 @@ def maps(grid):
                     if analysis_interval == 'trimester':
                         category = 1  # normal
                         # show only once
-                        if lag == 0 and month == 1:
+                        if lag == globals_vars.lags[0] and month == 1:
                             message_warning = True
                         else:
                             message_warning = False
@@ -2797,7 +2839,7 @@ def maps(grid):
                         for day in range(len(range_analysis_interval)):
                             category = 1  # phenomenons var_I
                             # show only once
-                            if lag == 0 and month == 1 and day == 0:
+                            if lag == globals_vars.lags[0] and month == 1 and day == 0:
                                 message_warning = True
                             else:
                                 message_warning = False
@@ -2860,7 +2902,7 @@ def maps(grid):
 
                 for lag in globals_vars.lags:
                     # show only once
-                    if lag == 0:
+                    if lag == globals_vars.lags[0]:
                         message_warning = True
                     else:
                         message_warning = False
@@ -3039,6 +3081,11 @@ class Grid:
         # round decimal point to decimal resolution
         lat = round(lat, self.decimal_resolution)
         lon = round(lon, self.decimal_resolution)
+
+        # check if value is "nan", this is when the station has few values
+        # and the thresholds are inadequate
+        if math.isnan(value):
+            return matrix, "nan"
 
         # check if point is outside of the grid
         if lat < min(self.lat_coordinates) or \
@@ -3417,7 +3464,7 @@ def main():
 
         if os.path.isdir(climate_dir):
             print colored.yellow(\
-                _("\n   Warning: the output director for climate process\n" \
+                _("\n > WARNING: the output director for climate process\n" \
                   "   is already exist, Jaziku continue but the results\n" \
                   "   could be mixed or replaced of old output."))
 
@@ -3435,7 +3482,7 @@ def main():
 
         if os.path.isdir(forecasting_dir):
             print colored.yellow(\
-                _("\n   Warning: the output director for forecasting process\n" \
+                _("\n > WARNING: the output director for forecasting process\n" \
                   "   is already exist, Jaziku continue but the results\n" \
                   "   could be mixed or replaced of old output."))
 

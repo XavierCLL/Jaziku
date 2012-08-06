@@ -1,4 +1,5 @@
 0.4.1
+
 features/changes:
  * new option in runfile for select lags to run, this can be 0, 1 and/or 2, 
    combination of these or default (this is all).
@@ -10,12 +11,20 @@ features/changes:
    default (this is p33 and p66), pNN, sdNN or particular value. 
  * new option for maps in runfile, now you can select what you want to run for
    maps, maps can be 'climate', 'forecasting', 'correlation' combination of these, 
-   or 'all' .
+   or 'all'
+   
 bugfixes:
  * fix check and default value for process period in runfile
  * fix console message for graphics process, enable/disable activation
+ * fix warning message when use "none" in limits dependets and independents variable
+ * fix when calculated the thresholds with standard desviation, the values 
+   must be valid values (without nulls values) 
+ * fix cheking index value when is "nan"
+ * fixes typos in messages warnings
+
 
 0.4.0
+
 features/changes:
  * get configuration run and station list in the same file, delete all arguments
    when run Jaziku, now only argument is "-runfile" and this files contains all
@@ -35,7 +44,7 @@ features/changes:
  * Climate/forecasting and correlation palette colors bar for NCL
  * Posibility for run many countries or regions and group based on their names
  * Posibility to delete data outside of shape, the shape mask method consist 
-   in delete all data outside boundaries of shape analyzing all points in mesh
+   in delete all data outside boundaries of shape, analyzing all points in mesh
  
 bugfixes:
  * many fixies and comprobations of all features and changes
@@ -43,6 +52,7 @@ bugfixes:
 
 
 0.3.0
+
 features/changes:
  * now you can run using internal files for independents variables, defining as 
    "default" in "file_I" section inside stations list file.
@@ -81,10 +91,12 @@ bugfixes:
  
 
 0.2.1
+
  * change name function and filename results of Arithmetic Mean Trim to mean_trim
 
 
 0.2.0
+
 features/changes:
  * change numeration version
  * applied some PEP8 rules, fix typos and reorganize code
