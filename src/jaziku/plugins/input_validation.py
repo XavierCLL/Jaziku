@@ -88,7 +88,7 @@ def validation_var_D(type_var_D, var_D, date_D, data_of_var_D, range_below_D, ra
                 return var_D
             else:
                 returnError(_("{0} not valid").format(type_var_D))
-        else:
+        else:  # this is that both are equal to "none"
             return var_D
 
     # validation for precipitation
@@ -111,7 +111,11 @@ def validation_var_D(type_var_D, var_D, date_D, data_of_var_D, range_below_D, ra
                               "data monthly"))
         if data_of_var_D == "monthly":
             try:
-                date(date_D.year, date_D.month, int(var_D))
+                if date_D is None:
+                    if 0 > int(var_D) > 31:
+                        raise
+                else:
+                    date(date_D.year, date_D.month, int(var_D))
                 return var_D
             except Exception, e:
                 if  int(var_D) in globals_vars.VALID_NULL or int(var_D) == 0:
@@ -245,7 +249,7 @@ def validation_var_I(type_var_I, var_I, range_below_I, range_above_I):
                 return var_I
             else:
                 returnError(_("{0} not valid").format(type_var_I))
-        else:
+        else:  # this is that both are equal to "none"
             return var_I
 
     # validation for Oceanic Nino Index
