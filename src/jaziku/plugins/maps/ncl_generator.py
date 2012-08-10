@@ -44,8 +44,9 @@ def make_ncl_file(grid, base_path_file, globals_vars):
         map_properties.lat_size = grid.lat_size
         map_properties.lon_size = grid.lon_size
         map_properties.shape_mask = grid.shape_mask
-        # set title
-        # title = '''"Escenario de afectaci"+oacute+"n de la variable SST~C~bajo condiciones el ni"+ntilde+"o a rez 0 en el JJA"'''
+
+        # set other properties of ncl script for this map
+        map_properties.particular_properties_map = grid.particular_properties_map
 
         if "_" in grid.date:
             map_properties.date = grid.date.replace("_", " ")

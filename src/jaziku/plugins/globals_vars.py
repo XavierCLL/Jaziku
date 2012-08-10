@@ -25,16 +25,26 @@
 PROG_NAME = "jaziku"
 
 # version
-VERSION = "0.4.0"
+VERSION = "0.4.1"
 
 # compilation date
-COMPILE_DATE = "29/06/2012"
+COMPILE_DATE = "07/08/2012"
 
 # valid null value for variables dependent and independent (inside files input)
 VALID_NULL = [99999, -99999]
 
 # accuracy of number decimal places, only for print result
 ACCURACY = 5
+
+# trimester text for print
+trim_text = {-2: _('NDJ'), -1: _('DJF'), 0: _('JFM'), 1: _('FMA'), 2: _('MAM'),
+             3: _('AMJ'), 4: _('MJJ'), 5: _('JJA'), 6: _('JAS'), 7: _('ASO'),
+             8: _('SON'), 9: _('OND'), 10: _('NDJ'), 11: _('DJF')}
+
+# month text for print
+month_text = {-2: _('Nov'), -1: _('Dec'), 0: _('Jan'), 1: _('Feb'), 2: _('Mar'),
+              3: _('Apr'), 4: _('May'), 5: _('Jun'), 6: _('Jul'), 7: _('Aug'),
+              8: _('Sep'), 9: _('Oct'), 10: _('Nov'), 11: _('Dec')}
 
 # Valid input types for dependent variable
 types_var_D = ['PPT', 'NDPPT', 'TMIN', 'TMAX', 'TEMP', 'PATM', 'RH', 'RUNOFF']
@@ -71,7 +81,7 @@ internal_var_I_urls = {"ONI": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.
                         "NAO": "http://goo.gl/1uDjY", # http://www.cpc.ncep.noaa.gov/products/precip/CWlink/pna/nao.shtml
                         "QBO": "http://goo.gl/UO6PX", # http://www.esrl.noaa.gov/psd/data/climateindices/list/
                         "SSTA_CAR": "http://goo.gl/BsAeN", # http://www.esrl.noaa.gov/psd/forecasts/sstlim/forcar.html
-                        "AREA_WHWP": "http://goo.gl/mV4QI" # http://www.esrl.noaa.gov/psd/data/correlation/whwp.data 
+                        "AREA_WHWP": "http://goo.gl/mV4QI"  # http://www.esrl.noaa.gov/psd/data/correlation/whwp.data 
                         }
 
 # maps files for climate:

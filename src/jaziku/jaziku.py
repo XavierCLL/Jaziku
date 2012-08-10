@@ -1566,8 +1566,8 @@ def result_table_CA(station):
                 thresholds_var_D_var_I = get_contingency_table(station, lag, month)
 
                 # for print text date in result table
-                var_D_text = trim_text[month - 1]
-                var_I_text = trim_text[month - 1 - lag]
+                var_D_text = globals_vars.trim_text[month - 1]
+                var_I_text = globals_vars.trim_text[month - 1 - lag]
 
                 pearson, is_sig_risk_analysis_list = result_table_CA_main_process()  # <-
 
@@ -1590,8 +1590,8 @@ def result_table_CA(station):
                     date_now = date(2000, month, day)
 
                     # for print text date in result table
-                    var_D_text = month_text[date_now.month - 1] + " " + str(day)
-                    var_I_text = month_text[(date_now - relativedelta(days=(station.range_analysis_interval[1] - 1) * lag)).month - 1] + \
+                    var_D_text = globals_vars.month_text[date_now.month - 1] + " " + str(day)
+                    var_I_text = globals_vars.month_text[(date_now - relativedelta(days=(station.range_analysis_interval[1] - 1) * lag)).month - 1] + \
                         " " + str(station.range_analysis_interval[station.range_analysis_interval.index(day) - lag])
 
                     pearson, is_sig_risk_analysis_list = result_table_CA_main_process()  # <-
@@ -1740,7 +1740,7 @@ def graphics_climate(station):
                 contingency_table_percent_print, \
                 thresholds_var_D_var_I = get_contingency_table(station, lag, month)
 
-                title_period = _("trim {0} ({1})").format(month, trim_text[month - 1])
+                title_period = _("trim {0} ({1})").format(month, globals_vars.trim_text[month - 1])
                 filename_period = _("trim_{0}").format(month)
                 create_graphic()
 
@@ -1753,8 +1753,8 @@ def graphics_climate(station):
                     contingency_table_percent_print, \
                     thresholds_var_D_var_I = get_contingency_table(station, lag, month, day)
 
-                    title_period = month_text[month - 1] + " " + str(day)
-                    filename_period = month_text[month - 1] + "_" + str(day)
+                    title_period = globals_vars.month_text[month - 1] + " " + str(day)
+                    filename_period = globals_vars.month_text[month - 1] + "_" + str(day)
 
                     create_graphic()
 
@@ -1823,15 +1823,15 @@ def graphics_forecasting(station):
         if station.state_of_data in [1, 3]:
             forecasting_month = station.forecasting_date
             title_date_graphic = _("trim {0} ({1})").format(station.forecasting_date,
-                                                       trim_text[forecasting_month - 1])
+                                                       globals_vars.trim_text[forecasting_month - 1])
             filename_date_graphic = _("trim_{0}").format(forecasting_month)
 
         if station.state_of_data in [2, 4]:
             forecasting_month = station.forecasting_date[0]
             forecasting_day = station.forecasting_date[1]
-            title_date_graphic = "{0} {1}".format(month_text[forecasting_month - 1],
+            title_date_graphic = "{0} {1}".format(globals_vars.month_text[forecasting_month - 1],
                                                      forecasting_day)
-            filename_date_graphic = "{0}_{1}".format(month_text[forecasting_month - 1],
+            filename_date_graphic = "{0}_{1}".format(globals_vars.month_text[forecasting_month - 1],
                                                      forecasting_day)
 
         ## Options for graphics pie
@@ -1968,7 +1968,7 @@ def maps_data_climate(station):
                             csv_name = \
                                 os.path.join(maps_data_phenom, _(u'Map_Data_lag_{0}_{1}_{2}.csv')
                                              .format(lag,
-                                                     month_text[month - 1] + "_" + str(day),
+                                                     globals_vars.month_text[month - 1] + "_" + str(day),
                                                      phenomenon[category]))
 
                             if os.path.isfile(csv_name):
@@ -2071,11 +2071,11 @@ def maps_data_forecasting(station):
 
     # select text for forecasting date
     if station.state_of_data in [1, 3]:
-        forecasting_date_formated = trim_text[station.forecasting_date - 1]
+        forecasting_date_formated = globals_vars.trim_text[station.forecasting_date - 1]
     if station.state_of_data in [2, 4]:
         month = station.forecasting_date[0]
         day = station.forecasting_date[1]
-        forecasting_date_formated = month_text[month - 1] + "_" + str(day)
+        forecasting_date_formated = globals_vars.month_text[month - 1] + "_" + str(day)
 
     if forecasting_date_formated not in globals_vars.maps_files_forecasting[station.analysis_interval]:
 
@@ -2086,14 +2086,14 @@ def maps_data_forecasting(station):
 
                 maps_dir = os.path.join(forecasting_dir, _('maps'),
                                         station.translate_analysis_interval,
-                                        trim_text[station.forecasting_date - 1])
+                                        globals_vars.trim_text[station.forecasting_date - 1])
 
                 if not os.path.isdir(maps_dir):
                     os.makedirs(maps_dir)
 
                 # write the headers in file
                 csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}_{1}.csv')
-                                        .format(lag, trim_text[station.forecasting_date - 1]))
+                                        .format(lag, globals_vars.trim_text[station.forecasting_date - 1]))
 
                 if os.path.isfile(csv_name):
                     os.remove(csv_name)
@@ -2567,25 +2567,25 @@ def maps(grid):
                 print colored.yellow(\
                     _("\n > WARNING: The point lat:{lat} lon:{lon}\n" \
                       "   of the station code: {code} was not added\n" \
-                      "   because the value of index is \"nan\" (nule) .").
+                      "   because the value of index is \"nan\" (null) .").
                     format(lat=latitude, lon=longitude, code=line[0])),
             if point_state == "point not added" and message_warning:
                 print colored.yellow(\
                     _("\n > WARNING: The point lat:{lat} lon:{lon}\n" \
                       "   of the station code: {code} was not added\n" \
-                      "   because the point is outside of the grid .....").
+                      "   because the point is outside of the grid ...").
                     format(lat=latitude, lon=longitude, code=line[0])),
             if point_state in [_("average"), _("maximum"), _("minimum")] and message_warning:
                 print colored.yellow(\
                     _("\n > WARNING: for the point lat:{lat} lon:{lon}\n" \
                       "   Jaziku detect overlapping of two values, Jaziku\n" \
-                      "   will put the {state} value ...................").
+                      "   will put the {state} value .................").
                     format(lat=latitude, lon=longitude, state=point_state)),
             if point_state == _("neither") and message_warning:
                 print colored.yellow(\
                     _("\n > WARNING: for the point lat:{lat} lon:{lon}\n" \
                       "   Jaziku detect overlapping of two values, Jaziku\n" \
-                      "   will not put the {state} values ..............").
+                      "   will not put the {state} values ............").
                     format(lat=latitude, lon=longitude, state=point_state)),
 
         open_file.close()
@@ -2652,9 +2652,9 @@ def maps(grid):
               os.path.join(os.path.abspath(base_path_file) + ".png")], shell=False)
 
         # delete files
-        os.remove(os.path.abspath(base_path_file) + ".INC")
-        os.remove(os.path.abspath(base_path_file) + ".ncl")
-        os.remove(os.path.abspath(base_path_file) + ".tsv")
+        #os.remove(os.path.abspath(base_path_file) + ".INC")
+        #os.remove(os.path.abspath(base_path_file) + ".ncl")
+        #os.remove(os.path.abspath(base_path_file) + ".tsv")
 
         del matrix
 
@@ -2707,9 +2707,9 @@ def maps(grid):
                             if not os.path.isdir(base_path):
                                 os.makedirs(base_path)
 
-                            base_file = _(u'Map_lag_{0}_{1}_{2}').format(lag, trim_text[month - 1], phenomenon[category])
+                            base_file = _(u'Map_lag_{0}_{1}_{2}').format(lag, globals_vars.trim_text[month - 1], phenomenon[category])
 
-                            grid.date = trim_text[month - 1]
+                            grid.date = globals_vars.trim_text[month - 1]
                             grid.lag = lag
 
                             # file for interpolation
@@ -2748,10 +2748,10 @@ def maps(grid):
 
                                 base_file = _(u'Map_lag_{0}_{1}_{2}')\
                                              .format(lag,
-                                                     month_text[month - 1] + "_" + str(range_analysis_interval[day]),
+                                                     globals_vars.month_text[month - 1] + "_" + str(range_analysis_interval[day]),
                                                      phenomenon[category])
 
-                                grid.date = month_text[month - 1] + "_" + str(range_analysis_interval[day])
+                                grid.date = globals_vars.month_text[month - 1] + "_" + str(range_analysis_interval[day])
                                 grid.lag = lag
 
                                 # file for interpolation
@@ -2815,9 +2815,9 @@ def maps(grid):
                         if not os.path.isdir(base_path):
                             os.makedirs(base_path)
 
-                        base_file = _(u'Map_correlation_lag_{0}_{1}').format(lag, trim_text[month - 1])
+                        base_file = _(u'Map_correlation_lag_{0}_{1}').format(lag, globals_vars.trim_text[month - 1])
 
-                        grid.date = trim_text[month - 1]
+                        grid.date = globals_vars.trim_text[month - 1]
                         grid.lag = lag
 
                         # file for interpolation
@@ -2859,9 +2859,9 @@ def maps(grid):
                                 os.makedirs(base_path)
 
                             base_file = _(u'Map_correlation_lag_{0}_{1}')\
-                                         .format(lag, month_text[month - 1] + "_" + str(range_analysis_interval[day]))
+                                         .format(lag, globals_vars.month_text[month - 1] + "_" + str(range_analysis_interval[day]))
 
-                            grid.date = month_text[month - 1] + "_" + str(range_analysis_interval[day])
+                            grid.date = globals_vars.month_text[month - 1] + "_" + str(range_analysis_interval[day])
                             grid.lag = lag
 
                             # file for interpolation
@@ -3136,26 +3136,11 @@ def main():
     # check python version
     if sys.version_info[0] != 2 or sys.version_info[1] < 6:
         print_error(_("You version of python is {0}, please use Jaziku with "
-                      "python v2.6 or v2.7").format(sys.version_info[0:2]))
+                      "python v2.6 or v2.7").format(sys.version_info[0:2]), False)
 
     # set encoding to utf-8
     reload(sys)
     sys.setdefaultencoding("utf-8")
-
-    # -------------------------------------------------------------------------
-    # set some statics and globals variables
-
-    # trimester text for print
-    global trim_text
-    trim_text = {-2: _('NDJ'), -1: _('DJF'), 0: _('JFM'), 1: _('FMA'), 2: _('MAM'),
-                 3: _('AMJ'), 4: _('MJJ'), 5: _('JJA'), 6: _('JAS'), 7: _('ASO'),
-                 8: _('SON'), 9: _('OND'), 10: _('NDJ'), 11: _('DJF')}
-
-    # month text for print
-    global month_text
-    month_text = {-2: _('Nov'), -1: _('Dec'), 0: _('Jan'), 1: _('Feb'), 2: _('Mar'),
-                  3: _('Apr'), 4: _('May'), 5: _('Jun'), 6: _('Jul'), 7: _('Aug'),
-                  8: _('Sep'), 9: _('Oct'), 10: _('Nov'), 11: _('Dec')}
 
     # -------------------------------------------------------------------------
     # reading configuration run, list of grids and stations from runfile
@@ -3197,7 +3182,7 @@ def main():
             if len(line_in_run_file) <= 1:
                 print_error(_("error read line in \"CONFIGURATION RUN\" in runfile,"
                               " line {0}:\n{1}, no was defined.")
-                                .format(run_file.line_num, line_in_run_file[0]))
+                                .format(run_file.line_num, line_in_run_file[0]), False)
 
             if line_in_run_file[0] in globals_vars.config_run:
                 # in this case, for python 'disable' is None,
@@ -3218,7 +3203,7 @@ def main():
                     in_station_list = True
                 else:
                     print_error(_("error read line in \"CONFIGURATION RUN\" in runfile, line {0}:\n{1}")
-                                .format(run_file.line_num, line_in_run_file[0]))
+                                .format(run_file.line_num, line_in_run_file[0]), False)
 
         # read GRIDS LIST
         if in_grids_list:
@@ -3247,7 +3232,7 @@ def main():
                     in_station_list = True
                 else:
                     print_error(_("error read line in \"GRIDS LIST\" in runfile, line {0}:\n{1}")
-                                .format(run_file.line_num, line_in_run_file[0]))
+                                .format(run_file.line_num, line_in_run_file[0]), False)
 
         # read STATIONS LIST
         if in_station_list:
@@ -3316,7 +3301,7 @@ def main():
     settings = {"climate_process": _("disabled"),
                 "forecasting_process": _("disabled"),
                 "process_period": _("disabled"),
-                "lags": _("default"),
+                "lags": None,
                 "language": settings_language,
                 "consistent_data": _("disabled"),
                 "risk_analysis": _("disabled"),
@@ -3598,7 +3583,7 @@ def main():
         # delete instance
         del station
 
-    print colored.green(gettext.ngettext(
+    print colored.green(lang.lngettext(
                         "\n{0} station processed.",
                         "\n{0} stations processed.",
                         Station.stations_processed).format(Station.stations_processed))
@@ -3613,7 +3598,7 @@ def main():
             maps(grid)
             del grid
 
-        print colored.green(gettext.ngettext(
+        print colored.green(lang.lngettext(
                         "\n{0} map processed.",
                         "\n{0} maps processed.",
                         Grid.grids_processed).format(Grid.grids_processed))
