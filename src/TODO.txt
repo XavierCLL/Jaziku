@@ -16,6 +16,8 @@ version 0.6: (start: august 30, release: september 30)
 
 version 0.7:  (pending)
 * Inclusion of spectral analysis
+
+version 0.8: 
 * Inclusion of wavelete analysis
 
 to be analyzed:

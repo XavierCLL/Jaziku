@@ -24,34 +24,38 @@ from clint.textui import colored
 
 
 def search_and_set_internal_grid(grid):
-    try:
-        grid.shape_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                  'shapes', grid.grid_path)
-        dir_to_list = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                   'shapes', grid.country)
+    grid.shape_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                              'shapes', grid.grid_path)
+    dir_to_list = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                               'shapes', grid.country)
 
-        listdir = [name for name in os.listdir(dir_to_list) if os.path.isdir(os.path.join(dir_to_list, name))]
+    listdir = [name for name in os.listdir(dir_to_list) if os.path.isdir(os.path.join(dir_to_list, name))]
 
-        if grid.grid_name in listdir:
-            internal_grid = imp.load_source("internal_grid", os.path.join(grid.shape_path, grid.grid_name + ".py"))
+    if grid.grid_name in listdir:
+        internal_grid = imp.load_source("internal_grid", os.path.join(grid.shape_path, grid.grid_name + ".py"))
 
-            # set extreme lat and lon values from internal grid
-            # but if is defined by user will not reset
-            if not grid.minlat:
-                grid.minlat = internal_grid.minlat
-            if not grid.maxlat:
-                grid.maxlat = internal_grid.maxlat
-            if not grid.minlon:
-                grid.minlon = internal_grid.minlon
-            if not grid.maxlon:
-                grid.maxlon = internal_grid.maxlon
+        # set extreme lat and lon values from internal grid
+        # but if is defined by user will not reset
+        if not grid.minlat:
+            grid.minlat = internal_grid.minlat
+        if not grid.maxlat:
+            grid.maxlat = internal_grid.maxlat
+        if not grid.minlon:
+            grid.minlon = internal_grid.minlon
+        if not grid.maxlon:
+            grid.maxlon = internal_grid.maxlon
 
-            grid.need_particular_ncl_script = internal_grid.need_particular_ncl_script
+        grid.need_particular_ncl_script = internal_grid.need_particular_ncl_script
 
-            return grid
+        try:
+            grid.particular_properties_map = internal_grid.particular_properties_map
+        except:
+            grid.particular_properties_map = {}
 
-    except Exception, e:
-        print colored.red(_("Can't set internal shape, please check grid name\n")) + e
+        return grid
+    else:
+        print colored.red(_("\nCan't set internal shape \"{0}\",\n"
+                            "please check the grid name.\n").format(grid.grid_name))
         exit()
 
 
@@ -71,7 +75,7 @@ def set_particular_grid(grid):
     if os.path.isfile(os.path.join(grid.shape_path, grid.grid_name + ".py")):
         particular_grid = imp.load_source("particular_grid", os.path.join(grid.shape_path, grid.grid_name + ".py"))
         # set extreme lat and lon values from internal grid inside shape file
-            # but if is defined by user will not reset
+        # but if is defined by user will not reset
         if not grid.minlat:
             grid.minlat = particular_grid.minlat
         if not grid.maxlat:
@@ -82,5 +86,10 @@ def set_particular_grid(grid):
             grid.maxlon = particular_grid.maxlon
 
         grid.need_particular_ncl_script = particular_grid.need_particular_ncl_script
+
+        try:
+            grid.particular_properties_map = particular_grid.particular_properties_map
+        except:
+            grid.particular_properties_map = {}
 
     return grid
