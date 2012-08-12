@@ -3019,7 +3019,7 @@ class Grid:
         self.lon_coordinates = [round(item, self.decimal_resolution) for item in lon_coordinates_list]
 
         # interpolation type TODO:
-        self.interpolation_type = "ordinary kriging"
+        self.interpolation_type = _("ordinary kriging")
 
         # set the semivariogram type for interpolation
         #     0 – spherical, 1 – exponential, 2 – gaussian;
@@ -3247,7 +3247,6 @@ def main():
         if globals_vars.config_run['language'] == "en" or globals_vars.config_run['language'] == "EN" or globals_vars.config_run['language'] == "En":
             settings_language = colored.green(globals_vars.config_run['language'])
             lang = gettext.NullTranslations()
-            lang.install()
         else:
             try:
                 lang = gettext.translation(TRANSLATION_DOMAIN, LOCALE_DIR,
@@ -3257,6 +3256,7 @@ def main():
                 print_error(_("\"{0}\" language not available.").format(globals_vars.config_run['language']))
 
         if 'lang' in locals():
+            os.environ["LANG"] = globals_vars.config_run['language']
             lang.install()
             settings_language = colored.green(globals_vars.config_run['language'])
     else:
@@ -3270,13 +3270,17 @@ def main():
                     lang = gettext.translation(TRANSLATION_DOMAIN, LOCALE_DIR,
                                                languages=[locale_languaje],
                                                codeset="utf-8")
+                    os.environ["LANG"] = locale_languaje
+                    lang.install()
             except:
                 settings_language = colored.green("en") + _(" (language \'{0}\' has not was translated yet)").format(locale_languaje)
                 lang = gettext.NullTranslations()
+                os.environ["LANG"] = "en"
                 lang.install()
         except:
             settings_language = colored.green("en") + _(" (other languages were not detected)")
             lang = gettext.NullTranslations()
+            os.environ["LANG"] = "en"
             lang.install()
 
     # -------------------------------------------------------------------------
@@ -3583,7 +3587,7 @@ def main():
         # delete instance
         del station
 
-    print colored.green(lang.lngettext(
+    print colored.green(gettext.ngettext(
                         "\n{0} station processed.",
                         "\n{0} stations processed.",
                         Station.stations_processed).format(Station.stations_processed))
@@ -3598,7 +3602,7 @@ def main():
             maps(grid)
             del grid
 
-        print colored.green(lang.lngettext(
+        print colored.green(gettext.ngettext(
                         "\n{0} map processed.",
                         "\n{0} maps processed.",
                         Grid.grids_processed).format(Grid.grids_processed))
