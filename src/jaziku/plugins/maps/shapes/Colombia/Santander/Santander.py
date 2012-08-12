@@ -1,10 +1,9 @@
 # Santander
 
-# Set the four coordinates points for specify grid for region, area or country
-corner_nw = [8.298,-74.77]
-corner_ne = [8.298,-72.075]
-corner_se = [5.406,-72.075]
-corner_sw = [5.406,-74.77]
-
+# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+maxlat=8.298
+minlat=5.406
+minlon=-74.77
+maxlon=-72.075
 # set True or False if this region need particular ncl script
-need_particular_ncl_sript = False
+need_particular_ncl_script = False

@@ -1,10 +1,14 @@
 # Providencia
 
-# Set the four coordinates points for specify grid for region, area or country
-corner_nw = [13.402,-81.402]
-corner_ne = [13.402,-81.349]
-corner_se = [13.319,-81.349]
-corner_sw = [13.319,-81.402]
-
+# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+maxlat=13.402
+minlat=13.319
+minlon=-81.402
+maxlon=-81.349
 # set True or False if this region need particular ncl script
-need_particular_ncl_sript = False
+need_particular_ncl_script = False
+# set other properties of ncl script for this map
+particular_properties_map = {"tiMainFontHeightF":0.027,  # main font height
+                             "lbTitleFontHeightF":0.018,  # colorbar title font height
+                             "space_label_title":32,  # number of space between label title in colorbar
+                             "lbLabelFontHeightF":0.01}  # colorbar mark font height

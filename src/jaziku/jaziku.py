@@ -103,6 +103,7 @@ from scipy import stats  # http://docs.scipy.org/doc/scipy/reference/stats.html
 from Image import open as img_open
 from pylab import *
 import re
+import math
 # color text console  #http://pypi.python.org/pypi/clint/
 from clint.textui import colored
 
@@ -186,10 +187,44 @@ def read_var_D(station):
     file_D = station.file_D
     reader_csv = csv.reader(file_D, delimiter='\t')
 
-    # validation type_D
-    if station.type_D not in globals_vars.types_var_D:
-        raise Exception(_("{0} is not valid type for dependence variable")
-                        .format(station.type_D))
+    # check and validate if file D is defined as particular file with
+    # particular range validation
+    # below var D
+    if station.range_below_D == "default":
+        # validation type_D
+        if station.type_D not in globals_vars.types_var_D:
+            print_error_line_stations(station,
+                                      _("{0} is not valid type for dependence variable"
+                                        " if you defined LIMIT VAR D BELOW/ABOVE as \"default\".")
+                                      .format(station.type_D))
+    elif station.range_below_D == "none":
+        station.range_below_D = None
+    else:
+        try:
+            station.range_below_D = float(station.range_below_D.replace(',', '.'))
+        except:
+            print_error_line_stations(station,
+                            (_("Problem with particular range validation for "
+                              "dependent\nvariable: {0} this should be "
+                              "a valid number, \"none\" or \"default\".").format(station.range_below_D,)))
+    # above var D
+    if station.range_above_D == "default":
+        # validation type_D
+        if station.type_D not in globals_vars.types_var_D:
+            print_error_line_stations(station,
+                                      _("{0} is not valid type for dependence variable"
+                                        " if you defined LIMIT VAR D BELOW/ABOVE as \"default\".")
+                                      .format(station.type_D))
+    elif station.range_above_D == "none":
+        station.range_above_D = None
+    else:
+        try:
+            station.range_above_D = float(station.range_above_D.replace(',', '.'))
+        except:
+            print_error_line_stations(station,
+                            (_("Problem with particular range validation for "
+                              "dependent\nvariable: {0} this should be "
+                              "a valid number, \"none\" or \"default\".").format(station.range_above_D,)))
 
     # reader_csv = csv.reader(fo, delimiter = '\t')
     # reader_csv.write(data.replace('\x00', ''))
@@ -239,7 +274,9 @@ def read_var_D(station):
                 var_D.append(input_validation.validation_var_D(station.type_D,
                                                                value,
                                                                date_D[-1],
-                                                               station.data_of_var_D))
+                                                               station.data_of_var_D,
+                                                               station.range_below_D,
+                                                               station.range_above_D))
 
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
@@ -259,7 +296,7 @@ def read_var_D(station):
         fo.write(file_D_fix.replace('\x00', ''))
         fo.close()
 
-        print colored.yellow(_("\n\n   Warning: Repairing file \"{0}\" of NULL"\
+        print colored.yellow(_("\n\n > WARNING: Repairing file \"{0}\" of NULL"\
                                " bytes garbage,\n   saving new file as: {1}")
                                .format(station.file_D.name, name_fix))
 
@@ -308,7 +345,9 @@ def read_var_D(station):
                 var_D.append(input_validation.validation_var_D(station.type_D,
                                                                value,
                                                                date_D[-1],
-                                                               station.data_of_var_D))
+                                                               station.data_of_var_D,
+                                                               station.range_below_D,
+                                                               station.range_above_D))
 
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
@@ -344,7 +383,7 @@ def read_var_I(station):
 
             split_internal_var_I = internal_file_I_name.split(".")[0].split("_")
             print colored.yellow(
-                    _("\n   You are using internal files for independent\n"
+                    _("\n > You are using internal files for independent\n"
                       "   variable defined as {0} which has data from\n"
                       "   {1} to {2} and the source of data was\n"
                       "   obtained in {3}.\n"
@@ -362,24 +401,42 @@ def read_var_I(station):
 
     # check and validate if file I is defined as particular file with
     # particular range validation
-    if station.range_below_I != "none" and station.range_above_I != "none":
+    # below var I
+    if station.range_below_I == "default":
+        # validation type_I
+        if station.type_I not in globals_vars.types_var_I:
+            print_error_line_stations(station,
+                                      _("{0} is not valid type for independence variable"
+                                        " if you defined LIMIT VAR I BELOW/ABOVE as \"default\".")
+                                      .format(station.type_I))
+    elif station.range_below_I == "none":
+        station.range_below_I = None
+    else:
         try:
             station.range_below_I = float(station.range_below_I.replace(',', '.'))
+        except:
+            print_error_line_stations(station,
+                            (_("Problem with particular range validation for "
+                              "dependent\nvariable: {0} this should be "
+                              "a valid number, \"none\" or \"default\".").format(station.range_below_I,)))
+    # above var I
+    if station.range_above_I == "default":
+        # validation type_I
+        if station.type_I not in globals_vars.types_var_I:
+            print_error_line_stations(station,
+                                      _("{0} is not valid type for independence variable"
+                                        " if you defined LIMIT VAR I BELOW/ABOVE as \"default\".")
+                                      .format(station.type_I))
+    elif station.range_above_I == "none":
+        station.range_above_I = None
+    else:
+        try:
             station.range_above_I = float(station.range_above_I.replace(',', '.'))
         except:
             print_error_line_stations(station,
                             (_("Problem with particular range validation for "
-                              "independent\nvariable: {0};{1} this should be "
-                              "a valid number or \"none\".").format(station.range_below_I,
-                                                  station.range_above_I)))
-    else:
-        # validation type_I
-        if station.type_I not in globals_vars.types_var_I:
-            print_error_line_stations(station,
-                                      _("{0} is not valid type for independence variable")
-                                      .format(station.type_I))
-        station.range_below_I = "None"
-        station.range_above_I = "None"
+                              "dependent\nvariable: {0} this should be "
+                              "a valid number, \"none\" or \"default\".").format(station.range_above_I,)))
 
     reader_csv = csv.reader(file_I, delimiter='\t')
     first = True
@@ -446,7 +503,7 @@ def read_var_I(station):
         fo.write(file_I_fix.replace('\x00', ''))
         fo.close()
 
-        print colored.yellow(_("\n\n   Warning: Repairing file \"{0}\" of NULL"\
+        print colored.yellow(_("\n\n > WARNING: Repairing file \"{0}\" of NULL"\
                                " bytes garbage,\n   saving new file as: {1}")
                                .format(station.file_I.name, name_fix))
 
@@ -493,7 +550,9 @@ def read_var_I(station):
                 date_I.append(date(year, month, day))
                 # set values of independent variable
                 var_I.append(input_validation.validation_var_I(station.type_I,
-                                                               value))
+                                                               value,
+                                                               station.range_below_I,
+                                                               station.range_above_I))
 
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
@@ -525,17 +584,18 @@ def calculate_common_period(station):
     # initialized variable common_period
     # format list: [[  date ,  var_D ,  var_I ],... ]
     if globals_vars.config_run['process_period']:
-        if (args_period_start < common_date[0].year + 1 or
-            args_period_end > common_date[-1].year - 1):
+        if (globals_vars.config_run['process_period']['start'] < common_date[0].year + 1 or
+            globals_vars.config_run['process_period']['end'] > common_date[-1].year - 1):
             sys.stdout.write(_("Calculating the process period ................ "))
             sys.stdout.flush()
             print_error(_("The period defined in argument {0}-{1} is outside in the\n"
                           "maximum possible period for this station: {2}-{3}.")
-                        .format(args_period_start, args_period_end, common_date[0].year + 1,
-                                common_date[-1].year - 1))
+                        .format(globals_vars.config_run['process_period']['start'],
+                                globals_vars.config_run['process_period']['end'],
+                                common_date[0].year + 1, common_date[-1].year - 1))
 
-        common_date = common_date[common_date.index(date(args_period_start - 1, 1, 1)):
-                                  common_date.index(date(args_period_end + 1, 12, 1)) + 1]
+        common_date = common_date[common_date.index(date(globals_vars.config_run['process_period']['start'] - 1, 1, 1)):
+                                  common_date.index(date(globals_vars.config_run['process_period']['end'] + 1, 12, 1)) + 1]
 
     common_period = []
     # set values matrix for common_period
@@ -589,17 +649,17 @@ def mean(values):
     Return the mean from all values, ignoring valid null values.
     '''
 
-    mean = 0
+    sums = 0
     count = 0
     for value in values:
         if int(value) not in globals_vars.VALID_NULL:
-            mean += value
+            sums += value
             count += 1.0
 
     if count == 0:
         return globals_vars.VALID_NULL[1]
 
-    return mean / count
+    return sums / count
 
 
 def daily2monthly(var_daily, date_daily):
@@ -768,7 +828,7 @@ def calculate_lags(station):
 
     if station.state_of_data in [1, 3]:
 
-        for lag in lags:
+        for lag in globals_vars.lags:
 
             if not os.path.isdir(dir_lag[lag]):
                 os.makedirs(dir_lag[lag])
@@ -821,7 +881,7 @@ def calculate_lags(station):
 
     if station.state_of_data in [2, 4]:
 
-        for lag in lags:
+        for lag in globals_vars.lags:
 
             if not os.path.isdir(dir_lag[lag]):
                 os.makedirs(dir_lag[lag])
@@ -887,6 +947,117 @@ def calculate_lags(station):
     station.Lag_0, station.Lag_1, station.Lag_2 = Lag_0, Lag_1, Lag_2
 
     return station
+
+
+def get_thresholds_var_D(station):
+    '''
+    Calculate and return threshold by below and above
+    of dependent variable, the type of threshold as
+    defined by the user in station file, these may be:
+    "default", "pNN" (percentile NN), "sdN" (standard
+    deviation N) and particular value.
+    '''
+
+    # Calculate percentile "below" and "above"
+    def percentiles(below, above):
+
+        threshold_below_var_D = stats.scoreatpercentile(station.var_D_values, below)
+        threshold_above_var_D = stats.scoreatpercentile(station.var_D_values, above)
+        return threshold_below_var_D, threshold_above_var_D
+
+    # thresholds by below and by above of var D by default
+    def thresholds_by_default():
+
+        return percentiles(33, 66)
+
+    # thresholds by below and by above of var D with standard deviation
+    def thresholds_with_std_desviation(below, above):
+        values_without_nulls = []
+        for value in station.var_D_values:
+            if int(value) not in globals_vars.VALID_NULL:
+                values_without_nulls.append(value)
+
+        def func_standard_desviation(values):
+            avg = float((sum(values))) / len(values)
+            sums = 0
+            for value in values:
+                sums += (value - avg) ** 2
+            return (sums / (len(values) - 1)) ** 0.5
+
+        if below not in [1, 2, 3] or above not in [1, 2, 3]:
+            print_error(_("thresholds of dependent variable were defined as "
+                          "N standard desviation\n but are outside of range, "
+                          "this values should be 1, 2 or 3:\nsd{0} sd{1}")
+                        .format(below, above))
+        p50 = stats.scoreatpercentile(values_without_nulls, 50)
+        std_desv = func_standard_desviation(values_without_nulls)
+
+        return p50 - below * std_desv, p50 + above * std_desv
+
+    # thresholds by below and by above of var D with particular values,
+    # these values validation with type of var D
+    def thresholds_with_particular_values(below, above):
+
+        try:
+            below = float(below)
+            above = float(above)
+        except:
+            print_error(_("threshoulds could not were identified:\n{0} - {1}")
+                        .format(below, above))
+
+        if below > above:
+            print_error(_("threshold below of dependent variable can't be "
+                          "greater than threshold above:\n{0} - {1}")
+                        .format(below, above))
+        try:
+            threshold_below_var_D = input_validation.validation_var_D(station.type_D,
+                                                                      below,
+                                                                      None,
+                                                                      station.data_of_var_D,
+                                                                      station.range_below_D,
+                                                                      station.range_above_D)
+            threshold_above_var_D = input_validation.validation_var_D(station.type_D,
+                                                                      above,
+                                                                      None,
+                                                                      station.data_of_var_D,
+                                                                      station.range_below_D,
+                                                                      station.range_above_D)
+            return threshold_below_var_D, threshold_above_var_D
+        except Exception, e:
+            print_error(_("Problem with thresholds of dependent "
+                          "variable:\n\n{0}").format(e))
+
+    ## now analisys threshold input in arguments
+    # if are define as default
+    if (station.threshold_below_var_D == "default" and
+        station.threshold_above_var_D == "default"):
+        return thresholds_by_default()
+
+    # if are define as percentile
+    if (''.join(list(station.threshold_below_var_D)[0:1]) == "p" and
+       ''.join(list(station.threshold_above_var_D)[0:1]) == "p"):
+        below = int(''.join(list(station.threshold_below_var_D)[1::]))
+        above = int(''.join(list(station.threshold_above_var_D)[1::]))
+        if not (0 <= below <= 100) or not (0 <= above <= 100):
+            print_error(_("thresholds of dependent variable were defined as "
+                          "percentile\nbut are outside of range 0-100:\n{0} - {1}")
+                        .format(below, above))
+        if below > above:
+            print_error(_("threshold below of dependent variable can't be "
+                          "greater than threshold above:\n{0} - {1}")
+                        .format(below, above))
+        return percentiles(below, above)
+
+    # if are define as standard deviation
+    if (''.join(list(station.threshold_below_var_D)[0:2]) == "sd" and
+       ''.join(list(station.threshold_above_var_D)[0:2]) == "sd"):
+        below = int(''.join(list(station.threshold_below_var_D)[2::]))
+        above = int(''.join(list(station.threshold_above_var_D)[2::]))
+        return thresholds_with_std_desviation(below, above)
+
+    # if are define as particular values
+    return thresholds_with_particular_values(station.threshold_below_var_D,
+                                             station.threshold_above_var_D)
 
 
 def get_thresholds_var_I(station):
@@ -975,13 +1146,17 @@ def get_thresholds_var_I(station):
         return threshold_below_var_I, threshold_above_var_I
 
     # thresholds by below and by above of var I with standard deviation
-    def thresholds_with_std_deviation(below, above):
+    def thresholds_with_std_desviation(below, above):
+        values_without_nulls = []
+        for value in station.var_I_values:
+            if int(value) not in globals_vars.VALID_NULL:
+                values_without_nulls.append(value)
 
-        def func_standard_deviation(values):
+        def func_standard_desviation(values):
             avg = float((sum(values))) / len(values)
             sums = 0
-            for i in values:
-                sums += (i - avg) ** 2
+            for value in values:
+                sums += (value - avg) ** 2
             return (sums / (len(values) - 1)) ** 0.5
 
         if below not in [1, 2, 3] or above not in [1, 2, 3]:
@@ -989,10 +1164,10 @@ def get_thresholds_var_I(station):
                           "N standard desviation\n but are outside of range, "
                           "this values should be 1, 2 or 3:\nsd{0} sd{1}")
                         .format(below, above))
-        avg = float((sum(station.var_I_values))) / len(station.var_I_values)
-        std_desv = func_standard_deviation(station.var_I_values)
+        p50 = stats.scoreatpercentile(values_without_nulls, 50)
+        std_desv = func_standard_desviation(values_without_nulls)
 
-        return avg - below * std_desv, avg + above * std_desv
+        return p50 - below * std_desv, p50 + above * std_desv
 
     # thresholds by below and by above of var I with particular values,
     # these values validation with type of var I
@@ -1010,8 +1185,14 @@ def get_thresholds_var_I(station):
                           "greater than threshold above:\n{0} - {1}")
                         .format(below, above))
         try:
-            threshold_below_var_I = input_validation.validation_var_I(station.type_I, below)
-            threshold_above_var_I = input_validation.validation_var_I(station.type_I, above)
+            threshold_below_var_I = input_validation.validation_var_I(station.type_I,
+                                                                      below,
+                                                                      station.range_below_I,
+                                                                      station.range_above_I)
+            threshold_above_var_I = input_validation.validation_var_I(station.type_I,
+                                                                      above,
+                                                                      station.range_below_I,
+                                                                      station.range_above_I)
             return threshold_below_var_I, threshold_above_var_I
         except Exception, e:
             print_error(_("Problem with thresholds of independent "
@@ -1043,7 +1224,7 @@ def get_thresholds_var_I(station):
        ''.join(list(station.threshold_above_var_I)[0:2]) == "sd"):
         below = int(''.join(list(station.threshold_below_var_I)[2::]))
         above = int(''.join(list(station.threshold_above_var_I)[2::]))
-        return thresholds_with_std_deviation(below, above)
+        return thresholds_with_std_desviation(below, above)
 
     # if are define as particular values
     return thresholds_with_particular_values(station.threshold_below_var_I,
@@ -1072,15 +1253,14 @@ def get_contingency_table(station, lag, month, day=None):
         station.var_D_values = get_lag_values(station, 'var_D', lag, month, day)
         station.var_I_values = get_lag_values(station, 'var_I', lag, month, day)
 
-    # the thresholds of dependent variable are: percentile 33 and 66
-    p33_D = stats.scoreatpercentile(station.var_D_values, 33)
-    p66_D = stats.scoreatpercentile(station.var_D_values, 66)
+    # calculate thresholds as defined by the user in station file for var D
+    threshold_below_var_D, threshold_above_var_D = get_thresholds_var_D(station)
 
-    # calculate thresholds as defined by the user in station file
+    # calculate thresholds as defined by the user in station file for var I
     threshold_below_var_I, threshold_above_var_I = get_thresholds_var_I(station)
 
     # this is to print later in contingency table
-    thresholds_var_D_var_I = [print_number(p33_D), print_number(p66_D),
+    thresholds_var_D_var_I = [print_number(threshold_below_var_D), print_number(threshold_above_var_D),
                               print_number(threshold_below_var_I),
                               print_number(threshold_above_var_I)]
 
@@ -1088,25 +1268,25 @@ def get_contingency_table(station, lag, month, day=None):
     contingency_table = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
     for index, var_I in enumerate(station.var_I_values):
         if var_I <= threshold_below_var_I:
-            if station.var_D_values[index] <= p33_D:
+            if station.var_D_values[index] <= threshold_below_var_D:
                 contingency_table[0][0] += 1
-            if p33_D < station.var_D_values[index] < p66_D:
+            if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
                 contingency_table[0][1] += 1
-            if station.var_D_values[index] >= p66_D:
+            if station.var_D_values[index] >= threshold_above_var_D:
                 contingency_table[0][2] += 1
         if threshold_below_var_I < var_I < threshold_above_var_I:
-            if station.var_D_values[index] <= p33_D:
+            if station.var_D_values[index] <= threshold_below_var_D:
                 contingency_table[1][0] += 1
-            if p33_D < station.var_D_values[index] < p66_D:
+            if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
                 contingency_table[1][1] += 1
-            if station.var_D_values[index] >= p66_D:
+            if station.var_D_values[index] >= threshold_above_var_D:
                 contingency_table[1][2] += 1
         if var_I >= threshold_above_var_I:
-            if station.var_D_values[index] <= p33_D:
+            if station.var_D_values[index] <= threshold_below_var_D:
                 contingency_table[2][0] += 1
-            if p33_D < station.var_D_values[index] < p66_D:
+            if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
                 contingency_table[2][1] += 1
-            if station.var_D_values[index] >= p66_D:
+            if station.var_D_values[index] >= threshold_above_var_D:
                 contingency_table[2][2] += 1
 
     ## Calculating contingency table with values in percent
@@ -1126,10 +1306,11 @@ def get_contingency_table(station, lag, month, day=None):
     # if threshold by below of independent variable is wrong
     if float(sum_per_column_percent[0]) == 0 and not threshold_problem[0]:
         print colored.yellow(
-            _(u'\n\n   Warning:\n   The thresholds selected \"{0}\" and \"{1}\" '
-              u'are not suitable for\n   compound analysis of variable \"{2}\" '
-              u'with relation to \"{3}\"\n   inside category \"{4}\". Therefore,'
-              u' the graphics will not be created.')
+            _(u'\n\n > WARNING: The thresholds selected \"{0}\" and \"{1}\"\n'
+              u'   are not suitable for compound analysis of\n'
+              u'   variable \"{2}\" with relation to \"{3}\" inside\n'
+              u'   category \"{4}\". Therefore, the graphics\n'
+              u'   will not be created.')
               .format(station.threshold_below_var_I, station.threshold_above_var_I,
                       station.type_D, station.type_I, globals_vars.phenomenon_below))
         threshold_problem[0] = True
@@ -1137,10 +1318,11 @@ def get_contingency_table(station, lag, month, day=None):
     # if threshold by below or above calculating normal phenomenon of independent variable is wrong
     if float(sum_per_column_percent[1]) == 0 and not threshold_problem[1]:
         print colored.yellow(
-            _(u'\n\n   Warning:\n   The thresholds selected \"{0}\" and \"{1}\" '
-              u'are not suitable for\n   compound analysis of variable \"{2}\" '
-              u'with relation to \"{3}\"\n   inside category \"{4}\". Therefore,'
-              u' the graphics will not be created.')
+            _(u'\n\n > WARNING: The thresholds selected \"{0}\" and \"{1}\"\n'
+              u'   are not suitable for compound analysis of\n'
+              u'   variable \"{2}\" with relation to \"{3}\" inside\n'
+              u'   category \"{4}\". Therefore, the graphics\n'
+              u'   will not be created.')
               .format(station.threshold_below_var_I, station.threshold_above_var_I,
                       station.type_D, station.type_I, globals_vars.phenomenon_normal))
         threshold_problem[1] = True
@@ -1148,10 +1330,11 @@ def get_contingency_table(station, lag, month, day=None):
     # if threshold by above of independent variable is wrong
     if float(sum_per_column_percent[2]) == 0 and not threshold_problem[2]:
         print colored.yellow(
-            _(u'\n\n   Warning:\n   The thresholds selected \"{0}\" and \"{1}\" '
-              u'are not suitable for\n   compound analysis of variable \"{2}\" '
-              u'with relation to \"{3}\"\n   inside category \"{4}\". Therefore,'
-              u' the graphics will not be created.')
+            _(u'\n\n > WARNING: The thresholds selected \"{0}\" and \"{1}\"\n'
+              u'   are not suitable for compound analysis of\n'
+              u'   variable \"{2}\" with relation to \"{3}\" inside\n'
+              u'   category \"{4}\". Therefore, the graphics\n'
+              u'   will not be created.')
               .format(station.threshold_below_var_I, station.threshold_above_var_I,
                       station.type_D, station.type_I, globals_vars.phenomenon_above))
         threshold_problem[2] = True
@@ -1185,9 +1368,9 @@ def contingency_table(station):
 
     # [lag][month][phenomenon][data(0,1,2)]
     # [lag][month][day][phenomenon][data(0,1,2)]
-    contingencies_tables_percent = []
+    contingencies_tables_percent = {}
 
-    for lag in lags:
+    for lag in globals_vars.lags:
 
         tmp_month_list = []
         # all months in year 1->12
@@ -1212,7 +1395,7 @@ def contingency_table(station):
 
                 tmp_month_list.append(tmp_day_list)
 
-        contingencies_tables_percent.append(tmp_month_list)
+        contingencies_tables_percent[lag] = tmp_month_list
 
     return contingencies_tables_percent
 
@@ -1224,8 +1407,8 @@ def result_table_CA(station):
     different tests.
     '''
 
-    pearson_list = []
-    is_sig_risk_analysis = []
+    pearson_list = {}
+    is_sig_risk_analysis = {}
 
     def result_table_CA_main_process():
         # test:
@@ -1325,7 +1508,7 @@ def result_table_CA(station):
 
         return pearson, is_sig_risk_analysis_list
 
-    for lag in lags:
+    for lag in globals_vars.lags:
 
         # dir and name to save the result table
         csv_name = \
@@ -1383,8 +1566,8 @@ def result_table_CA(station):
                 thresholds_var_D_var_I = get_contingency_table(station, lag, month)
 
                 # for print text date in result table
-                var_D_text = trim_text[month - 1]
-                var_I_text = trim_text[month - 1 - lag]
+                var_D_text = globals_vars.trim_text[month - 1]
+                var_I_text = globals_vars.trim_text[month - 1 - lag]
 
                 pearson, is_sig_risk_analysis_list = result_table_CA_main_process()  # <-
 
@@ -1407,8 +1590,8 @@ def result_table_CA(station):
                     date_now = date(2000, month, day)
 
                     # for print text date in result table
-                    var_D_text = month_text[date_now.month - 1] + " " + str(day)
-                    var_I_text = month_text[(date_now - relativedelta(days=(station.range_analysis_interval[1] - 1) * lag)).month - 1] + \
+                    var_D_text = globals_vars.month_text[date_now.month - 1] + " " + str(day)
+                    var_I_text = globals_vars.month_text[(date_now - relativedelta(days=(station.range_analysis_interval[1] - 1) * lag)).month - 1] + \
                         " " + str(station.range_analysis_interval[station.range_analysis_interval.index(day) - lag])
 
                     pearson, is_sig_risk_analysis_list = result_table_CA_main_process()  # <-
@@ -1422,8 +1605,8 @@ def result_table_CA(station):
         open_file.close()
         #del csv_result_table
 
-        pearson_list.append(pearson_list_month)
-        is_sig_risk_analysis.append(is_sig_risk_analysis_month)
+        pearson_list[lag] = pearson_list_month
+        is_sig_risk_analysis[lag] = is_sig_risk_analysis_month
 
     station.pearson_list = pearson_list
     station.is_sig_risk_analysis = is_sig_risk_analysis
@@ -1540,7 +1723,7 @@ def graphics_climate(station):
         # save dir image for mosaic
         image_open_list.append(img_open(image_dir_save))
 
-    for lag in lags:
+    for lag in globals_vars.lags:
 
         # create dir for lag
         if not os.path.isdir(os.path.join(graphics_dir_ca, _('lag_{0}').format(lag))):
@@ -1557,7 +1740,7 @@ def graphics_climate(station):
                 contingency_table_percent_print, \
                 thresholds_var_D_var_I = get_contingency_table(station, lag, month)
 
-                title_period = _("trim {0} ({1})").format(month, trim_text[month - 1])
+                title_period = _("trim {0} ({1})").format(month, globals_vars.trim_text[month - 1])
                 filename_period = _("trim_{0}").format(month)
                 create_graphic()
 
@@ -1570,8 +1753,8 @@ def graphics_climate(station):
                     contingency_table_percent_print, \
                     thresholds_var_D_var_I = get_contingency_table(station, lag, month, day)
 
-                    title_period = month_text[month - 1] + " " + str(day)
-                    filename_period = month_text[month - 1] + "_" + str(day)
+                    title_period = globals_vars.month_text[month - 1] + " " + str(day)
+                    filename_period = globals_vars.month_text[month - 1] + "_" + str(day)
 
                     create_graphic()
 
@@ -1635,20 +1818,20 @@ def graphics_forecasting(station):
 
     image_open_list = []
 
-    for lag in lags:
+    for lag in globals_vars.lags:
 
         if station.state_of_data in [1, 3]:
             forecasting_month = station.forecasting_date
             title_date_graphic = _("trim {0} ({1})").format(station.forecasting_date,
-                                                       trim_text[forecasting_month - 1])
+                                                       globals_vars.trim_text[forecasting_month - 1])
             filename_date_graphic = _("trim_{0}").format(forecasting_month)
 
         if station.state_of_data in [2, 4]:
             forecasting_month = station.forecasting_date[0]
             forecasting_day = station.forecasting_date[1]
-            title_date_graphic = "{0} {1}".format(month_text[forecasting_month - 1],
+            title_date_graphic = "{0} {1}".format(globals_vars.month_text[forecasting_month - 1],
                                                      forecasting_day)
-            filename_date_graphic = "{0}_{1}".format(month_text[forecasting_month - 1],
+            filename_date_graphic = "{0}_{1}".format(globals_vars.month_text[forecasting_month - 1],
                                                      forecasting_day)
 
         ## Options for graphics pie
@@ -1661,6 +1844,7 @@ def graphics_forecasting(station):
         values_pie = [station.prob_decrease_var_D[lag],
                       station.prob_normal_var_D[lag],
                       station.prob_exceed_var_D[lag]]
+
         explode = (0.03, 0.03, 0.03)
 
         # assing value for piece of pie
@@ -1698,15 +1882,13 @@ def graphics_forecasting(station):
                      .format(station.type_D, lag, filename_date_graphic,
                              station.process_period['start'], station.process_period['end']))
     # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
-    plt.figure(figsize=(11.25, 3.75))  # http://www.classical-webdesigns.co.uk/resources/pixelinchconvert.html
+    plt.figure(figsize=(3.75 * len(globals_vars.lags), 3.75))  # http://www.classical-webdesigns.co.uk/resources/pixelinchconvert.html
     plt.savefig(mosaic_dir_save, dpi=100)
     mosaic = img_open(mosaic_dir_save)
-    mosaic.paste(image_open_list[0], (0, 0))
-    mosaic.paste(image_open_list[1], (image_width, 0))
-    mosaic.paste(image_open_list[2], (image_width * 2, 0))
+    for lag_iter in range(len(globals_vars.lags)):
+        mosaic.paste(image_open_list[lag_iter], (image_width * lag_iter, 0))
     mosaic.save(mosaic_dir_save)
     plt.clf()
-
 
 #==============================================================================
 # PLOTTING MAPS
@@ -1727,10 +1909,10 @@ def maps_data_climate(station):
         phenomenon = {0: globals_vars.phenomenon_below,
                       1: globals_vars.phenomenon_normal,
                       2: globals_vars.phenomenon_above}
-        globals_vars.maps_files_climate[station.analysis_interval] = []  # [lag][month][phenomenon]
+        globals_vars.maps_files_climate[station.analysis_interval] = {}  # [lag][month][phenomenon]
 
         # define maps data files and directories
-        for lag in lags:
+        for lag in globals_vars.lags:
 
             maps_dir = os.path.join(climate_dir, _('maps'))
 
@@ -1786,7 +1968,7 @@ def maps_data_climate(station):
                             csv_name = \
                                 os.path.join(maps_data_phenom, _(u'Map_Data_lag_{0}_{1}_{2}.csv')
                                              .format(lag,
-                                                     month_text[month - 1] + "_" + str(day),
+                                                     globals_vars.month_text[month - 1] + "_" + str(day),
                                                      phenomenon[category]))
 
                             if os.path.isfile(csv_name):
@@ -1807,7 +1989,7 @@ def maps_data_climate(station):
 
                     month_list.append(day_list)
 
-            globals_vars.maps_files_climate[station.analysis_interval].append(month_list)
+            globals_vars.maps_files_climate[station.analysis_interval][lag] = month_list
 
     def calculate_index():
         # select index
@@ -1828,7 +2010,7 @@ def maps_data_climate(station):
             else:
                 return var_above
 
-    for lag in lags:
+    for lag in globals_vars.lags:
 
         # all months in year 1->12
         for month in range(1, 13):
@@ -1889,29 +2071,29 @@ def maps_data_forecasting(station):
 
     # select text for forecasting date
     if station.state_of_data in [1, 3]:
-        forecasting_date_formated = trim_text[station.forecasting_date - 1]
+        forecasting_date_formated = globals_vars.trim_text[station.forecasting_date - 1]
     if station.state_of_data in [2, 4]:
         month = station.forecasting_date[0]
         day = station.forecasting_date[1]
-        forecasting_date_formated = month_text[month - 1] + "_" + str(day)
+        forecasting_date_formated = globals_vars.month_text[month - 1] + "_" + str(day)
 
     if forecasting_date_formated not in globals_vars.maps_files_forecasting[station.analysis_interval]:
 
         if station.state_of_data in [1, 3]:
-            lags_list = []
+            lags_list = {}
             # define maps data files and directories
-            for lag in lags:
+            for lag in globals_vars.lags:
 
                 maps_dir = os.path.join(forecasting_dir, _('maps'),
                                         station.translate_analysis_interval,
-                                        trim_text[station.forecasting_date - 1])
+                                        globals_vars.trim_text[station.forecasting_date - 1])
 
                 if not os.path.isdir(maps_dir):
                     os.makedirs(maps_dir)
 
                 # write the headers in file
                 csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}_{1}.csv')
-                                        .format(lag, trim_text[station.forecasting_date - 1]))
+                                        .format(lag, globals_vars.trim_text[station.forecasting_date - 1]))
 
                 if os.path.isfile(csv_name):
                     os.remove(csv_name)
@@ -1925,13 +2107,13 @@ def maps_data_forecasting(station):
                 open_file.close()
                 del csv_file
 
-                lags_list.append(csv_name)
+                lags_list[lag] = csv_name
             globals_vars.maps_files_forecasting[station.analysis_interval][forecasting_date_formated] = lags_list
 
         if station.state_of_data in [2, 4]:
-            lags_list = []
+            lags_list = {}
             # define maps data files and directories
-            for lag in lags:
+            for lag in globals_vars.lags:
 
                 maps_dir = os.path.join(forecasting_dir, _('maps'),
                                         station.translate_analysis_interval,
@@ -1956,7 +2138,7 @@ def maps_data_forecasting(station):
                 open_file.close()
                 del csv_file
 
-                lags_list.append(csv_name)
+                lags_list[lag] = csv_name
             globals_vars.maps_files_forecasting[station.analysis_interval][forecasting_date_formated] = lags_list
 
     def calculate_index():
@@ -1980,7 +2162,7 @@ def maps_data_forecasting(station):
 
         return p_index
 
-    for lag in lags:
+    for lag in globals_vars.lags:
 
         p_index = calculate_index()
 
@@ -2018,6 +2200,12 @@ def pre_process(station):
     sys.stdout.write(_("Read and check(range validation) var D ........ "))
     sys.stdout.flush()
     station = read_var_D(station)  # <--
+    if not station.range_below_D or not station.range_above_D:
+        print colored.yellow(_("\n > WARNING: you are using one or both limit as\n"
+                               "   \"none\" value, this means that series values\n"
+                               "   will not be checked if they are valids in its\n"
+                               "   limits coherent. This option is not\n"
+                               "   recommended, use it with precaution ........")),
     print colored.green(_("done"))
 
     if station.data_of_var_D == "daily":
@@ -2029,6 +2217,12 @@ def pre_process(station):
     sys.stdout.write(_("Read and check(range validation) var I ........ "))
     sys.stdout.flush()
     station = read_var_I(station)  # <--
+    if not station.range_below_I or not station.range_above_I:
+        print colored.yellow(_("\n > WARNING: you are using one or both limit as\n"
+                               "   \"none\" value, this means that series values\n"
+                               "   will not be checked if they are valids in its\n"
+                               "   limits coherent. This option is not\n"
+                               "   recommended, use it with precaution ........")),
     print colored.green(_("done"))
 
     if station.data_of_var_I == "daily":
@@ -2046,7 +2240,7 @@ def pre_process(station):
     if globals_vars.config_run['consistent_data']:
         # -------------------------------------------------------------------------
         # check if the data are consistent for var D
-        sys.stdout.write(_("Check if var_D are consistent "))
+        sys.stdout.write(_("Check if var D are consistent"))
         sys.stdout.flush()
 
         check_consistent_data(station, "D")
@@ -2055,7 +2249,7 @@ def pre_process(station):
 
         # -------------------------------------------------------------------------
         # check if the data are consistent for var I
-        sys.stdout.write(_("Check if var_I are consistent "))
+        sys.stdout.write(_("Check if var I are consistent"))
         sys.stdout.flush()
 
         check_consistent_data(station, "I")
@@ -2240,10 +2434,11 @@ def forecasting(station):
     if not os.path.isdir(station.forecasting_dir):
         os.makedirs(station.forecasting_dir)
 
-    prob_decrease_var_D = []
-    prob_normal_var_D = []
-    prob_exceed_var_D = []
-    for lag in lags:
+    prob_decrease_var_D = {}
+    prob_normal_var_D = {}
+    prob_exceed_var_D = {}
+
+    for lag in globals_vars.lags:
 
         items_CT = {'a': 0, 'b': 0, 'c': 0, 'd': 0, 'e': 0, 'f': 0, 'g': 0, 'h': 0, 'i': 0}
         order_CT = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
@@ -2268,17 +2463,17 @@ def forecasting(station):
                             station.contingencies_tables_percent[lag][month - 1][day][column][row] / 100.0
                         _iter += 1
 
-        prob_decrease_var_D.append((items_CT['a'] * station.f_var_I_B[lag]) +
-                                   (items_CT['d'] * station.f_var_I_N[lag]) +
-                                   (items_CT['g'] * station.f_var_I_A[lag]))
+        prob_decrease_var_D[lag] = (items_CT['a'] * station.f_var_I_B[lag]) + \
+                                   (items_CT['d'] * station.f_var_I_N[lag]) + \
+                                   (items_CT['g'] * station.f_var_I_A[lag])
 
-        prob_normal_var_D.append((items_CT['b'] * station.f_var_I_B[lag]) +
-                                 (items_CT['e'] * station.f_var_I_N[lag]) +
-                                 (items_CT['h'] * station.f_var_I_A[lag]))
+        prob_normal_var_D[lag] = (items_CT['b'] * station.f_var_I_B[lag]) + \
+                                 (items_CT['e'] * station.f_var_I_N[lag]) + \
+                                 (items_CT['h'] * station.f_var_I_A[lag])
 
-        prob_exceed_var_D.append((items_CT['c'] * station.f_var_I_B[lag]) +
-                                 (items_CT['f'] * station.f_var_I_N[lag]) +
-                                 (items_CT['i'] * station.f_var_I_A[lag]))
+        prob_exceed_var_D[lag] = (items_CT['c'] * station.f_var_I_B[lag]) + \
+                                 (items_CT['f'] * station.f_var_I_N[lag]) + \
+                                 (items_CT['i'] * station.f_var_I_A[lag])
 
     station.prob_decrease_var_D = prob_decrease_var_D
     station.prob_normal_var_D = prob_normal_var_D
@@ -2368,30 +2563,30 @@ def maps(grid):
             # set the index value on matrix
             matrix, point_state = grid.set_point_on_grid(matrix, latitude, longitude, index)
 
+            if point_state == "nan" and message_warning:
+                print colored.yellow(\
+                    _("\n > WARNING: The point lat:{lat} lon:{lon}\n" \
+                      "   of the station code: {code} was not added\n" \
+                      "   because the value of index is \"nan\" (null) .").
+                    format(lat=latitude, lon=longitude, code=line[0])),
             if point_state == "point not added" and message_warning:
                 print colored.yellow(\
-                    _("\n   Warning: The point lat:{lat} lon:{lon}\n" \
+                    _("\n > WARNING: The point lat:{lat} lon:{lon}\n" \
                       "   of the station code: {code} was not added\n" \
-                      "   because the point is outside of the grid.").
-                    format(lat=latitude, lon=longitude, code=line[0]))
-                sys.stdout.write("                                                ")
-                sys.stdout.flush()
+                      "   because the point is outside of the grid ...").
+                    format(lat=latitude, lon=longitude, code=line[0])),
             if point_state in [_("average"), _("maximum"), _("minimum")] and message_warning:
                 print colored.yellow(\
-                    _("\n   Warning: for the point lat:{lat} lon:{lon}\n" \
+                    _("\n > WARNING: for the point lat:{lat} lon:{lon}\n" \
                       "   Jaziku detect overlapping of two values, Jaziku\n" \
-                      "   will put the {state} value.").
-                    format(lat=latitude, lon=longitude, state=point_state))
-                sys.stdout.write("                                                ")
-                sys.stdout.flush()
+                      "   will put the {state} value .................").
+                    format(lat=latitude, lon=longitude, state=point_state)),
             if point_state == _("neither") and message_warning:
                 print colored.yellow(\
-                    _("\n   Warning: for the point lat:{lat} lon:{lon}\n" \
+                    _("\n > WARNING: for the point lat:{lat} lon:{lon}\n" \
                       "   Jaziku detect overlapping of two values, Jaziku\n" \
-                      "   will not put the {state} values.").
-                    format(lat=latitude, lon=longitude, state=point_state))
-                sys.stdout.write("                                                ")
-                sys.stdout.flush()
+                      "   will not put the {state} values ............").
+                    format(lat=latitude, lon=longitude, state=point_state)),
 
         open_file.close()
         del csv_file
@@ -2403,7 +2598,7 @@ def maps(grid):
         # convert matrix (column per column) to linear values
         matrix_vector = np.asarray(matrix.T).reshape(-1)
 
-        # save values to file INC
+        # save values to INC file
         for value in matrix_vector:
             if int(value) == globals_vars.VALID_NULL[1]:
                 open_file.write(str(int(value)) + '\n')
@@ -2456,84 +2651,54 @@ def maps(grid):
               "-trim",
               os.path.join(os.path.abspath(base_path_file) + ".png")], shell=False)
 
+        # delete files
+        #os.remove(os.path.abspath(base_path_file) + ".INC")
+        #os.remove(os.path.abspath(base_path_file) + ".ncl")
+        #os.remove(os.path.abspath(base_path_file) + ".tsv")
+
         del matrix
+
+    grid.in_process = {}
 
     # -------------------------------------------------------------------------
     # Process maps for CLIMATE
-    grid.in_process = {}
-    grid.in_process["climate"] = True
-    grid.in_process["correlation"] = False
-    grid.in_process["forecasting"] = False
 
-    print _("Processing maps for climate:")
+    if globals_vars.maps['climate']:
 
-    # walking file by file of maps directory and make interpolation and map for each file
-    for analysis_interval in ['5days', '10days', '15days', 'trimester']:
+        grid.in_process["climate"] = True
+        grid.in_process["correlation"] = False
+        grid.in_process["forecasting"] = False
 
-        if globals_vars.maps_files_climate[analysis_interval] is None:
-            continue
+        print _("Processing maps for climate:")
 
-        # console message
-        if analysis_interval == 'trimester':
-            sys.stdout.write("                {0} ..................... ".format(analysis_interval))
-        else:
-            sys.stdout.write("                {0}\t....................... ".format(analysis_interval))
-        sys.stdout.flush()
+        # walking file by file of maps directory and make interpolation and map for each file
+        for analysis_interval in ['5days', '10days', '15days', 'trimester']:
 
-        for lag in lags:
+            if globals_vars.maps_files_climate[analysis_interval] is None:
+                continue
 
-            # all months in year 1->12
-            for month in range(1, 13):
+            # console message
+            if analysis_interval == 'trimester':
+                sys.stdout.write("                {0} ..................... ".format(analysis_interval))
+            else:
+                sys.stdout.write("                {0}\t....................... ".format(analysis_interval))
+            sys.stdout.flush()
 
-                if analysis_interval == 'trimester':
-                    for category in [0, 1, 2]:  # phenomenons var_I
-                        # show only once
-                        if lag == 0 and month == 1 and category == 0:
-                            message_warning = True
-                        else:
-                            message_warning = False
+            for lag in globals_vars.lags:
 
-                        # file where saved points for plot map
-                        file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][category]
+                # all months in year 1->12
+                for month in range(1, 13):
 
-                        # save matrix for interpolation
-                        base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
-
-                        # make dir with the name of grid
-                        if not os.path.isdir(base_path):
-                            os.makedirs(base_path)
-
-                        base_file = _(u'Map_lag_{0}_{1}_{2}').format(lag, trim_text[month - 1], phenomenon[category])
-
-                        grid.date = trim_text[month - 1]
-                        grid.lag = lag
-
-                        # file for interpolation
-                        inc_file = os.path.join(base_path, base_file + ".INC")
-
-                        # save file for NCL
-                        ncl_data = os.path.join(base_path, base_file + ".tsv")
-
-                        process_map()
-
-                else:
-                    # range based on analysis interval
-                    if analysis_interval == '5days':
-                        range_analysis_interval = [1, 6, 11, 16, 21, 26]
-                    if analysis_interval == '10days':
-                        range_analysis_interval = [1, 11, 21]
-                    if analysis_interval == '15days':
-                        range_analysis_interval = [1, 16]
-                    for day in range(len(range_analysis_interval)):
+                    if analysis_interval == 'trimester':
                         for category in [0, 1, 2]:  # phenomenons var_I
                             # show only once
-                            if lag == 0 and month == 1 and category == 0 and day == 0:
+                            if lag == globals_vars.lags[0] and month == 1 and category == 0:
                                 message_warning = True
                             else:
                                 message_warning = False
 
                             # file where saved points for plot map
-                            file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][day][category]
+                            file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][category]
 
                             # save matrix for interpolation
                             base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
@@ -2542,12 +2707,9 @@ def maps(grid):
                             if not os.path.isdir(base_path):
                                 os.makedirs(base_path)
 
-                            base_file = _(u'Map_lag_{0}_{1}_{2}')\
-                                         .format(lag,
-                                                 month_text[month - 1] + "_" + str(range_analysis_interval[day]),
-                                                 phenomenon[category])
+                            base_file = _(u'Map_lag_{0}_{1}_{2}').format(lag, globals_vars.trim_text[month - 1], phenomenon[category])
 
-                            grid.date = month_text[month - 1] + "_" + str(range_analysis_interval[day])
+                            grid.date = globals_vars.trim_text[month - 1]
                             grid.lag = lag
 
                             # file for interpolation
@@ -2558,88 +2720,89 @@ def maps(grid):
 
                             process_map()
 
-        print colored.green(_("done"))
+                    else:
+                        # range based on analysis interval
+                        if analysis_interval == '5days':
+                            range_analysis_interval = [1, 6, 11, 16, 21, 26]
+                        if analysis_interval == '10days':
+                            range_analysis_interval = [1, 11, 21]
+                        if analysis_interval == '15days':
+                            range_analysis_interval = [1, 16]
+                        for day in range(len(range_analysis_interval)):
+                            for category in [0, 1, 2]:  # phenomenons var_I
+                                # show only once
+                                if lag == globals_vars.lags[0] and month == 1 and category == 0 and day == 0:
+                                    message_warning = True
+                                else:
+                                    message_warning = False
+
+                                # file where saved points for plot map
+                                file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][day][category]
+
+                                # save matrix for interpolation
+                                base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
+
+                                # make dir with the name of grid
+                                if not os.path.isdir(base_path):
+                                    os.makedirs(base_path)
+
+                                base_file = _(u'Map_lag_{0}_{1}_{2}')\
+                                             .format(lag,
+                                                     globals_vars.month_text[month - 1] + "_" + str(range_analysis_interval[day]),
+                                                     phenomenon[category])
+
+                                grid.date = globals_vars.month_text[month - 1] + "_" + str(range_analysis_interval[day])
+                                grid.lag = lag
+
+                                # file for interpolation
+                                inc_file = os.path.join(base_path, base_file + ".INC")
+
+                                # save file for NCL
+                                ncl_data = os.path.join(base_path, base_file + ".tsv")
+
+                                process_map()
+
+            print colored.green(_("done"))
 
     # -------------------------------------------------------------------------
     # Process maps for CORRELATION
 
-    grid.in_process["climate"] = False
-    grid.in_process["correlation"] = True
-    grid.in_process["forecasting"] = False
+    if globals_vars.maps['correlation']:
 
-    print _("Processing maps for correlation:")
+        grid.in_process["climate"] = False
+        grid.in_process["correlation"] = True
+        grid.in_process["forecasting"] = False
 
-    # walking file by file of maps directory and make interpolation and map for each file
-    for analysis_interval in ['5days', '10days', '15days', 'trimester']:
+        print _("Processing maps for correlation:")
 
-        if globals_vars.maps_files_climate[analysis_interval] is None:
-            continue
+        # walking file by file of maps directory and make interpolation and map for each file
+        for analysis_interval in ['5days', '10days', '15days', 'trimester']:
 
-        # console message
-        if analysis_interval == 'trimester':
-            sys.stdout.write("                {0} ..................... ".format(analysis_interval))
-        else:
-            sys.stdout.write("                {0}\t....................... ".format(analysis_interval))
-        sys.stdout.flush()
+            if globals_vars.maps_files_climate[analysis_interval] is None:
+                continue
 
-        for lag in lags:
+            # console message
+            if analysis_interval == 'trimester':
+                sys.stdout.write("                {0} ..................... ".format(analysis_interval))
+            else:
+                sys.stdout.write("                {0}\t....................... ".format(analysis_interval))
+            sys.stdout.flush()
 
-            # all months in year 1->12
-            for month in range(1, 13):
+            for lag in globals_vars.lags:
 
-                if analysis_interval == 'trimester':
-                    category = 1  # normal
-                    # show only once
-                    if lag == 0 and month == 1:
-                        message_warning = True
-                    else:
-                        message_warning = False
+                # all months in year 1->12
+                for month in range(1, 13):
 
-                    # file where saved points for plot map
-                    file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][category]
-
-                    # save matrix for interpolation
-                    base_path = os.path.join(climate_dir, _('maps'),
-                                             translate_analysis_interval[options_analysis_interval.index(analysis_interval)],
-                                             _('lag_{0}').format(lag),
-                                             _('Correlation'),
-                                             grid.grid_name)
-
-                    # make dir with the name of grid
-                    if not os.path.isdir(base_path):
-                        os.makedirs(base_path)
-
-                    base_file = _(u'Map_correlation_lag_{0}_{1}').format(lag, trim_text[month - 1])
-
-                    grid.date = trim_text[month - 1]
-                    grid.lag = lag
-
-                    # file for interpolation
-                    inc_file = os.path.join(base_path, base_file + ".INC")
-
-                    # save file for NCL
-                    ncl_data = os.path.join(base_path, base_file + ".tsv")
-
-                    process_map()
-
-                else:
-                    # range based on analysis interval
-                    if analysis_interval == '5days':
-                        range_analysis_interval = [1, 6, 11, 16, 21, 26]
-                    if analysis_interval == '10days':
-                        range_analysis_interval = [1, 11, 21]
-                    if analysis_interval == '15days':
-                        range_analysis_interval = [1, 16]
-                    for day in range(len(range_analysis_interval)):
-                        category = 1  # phenomenons var_I
+                    if analysis_interval == 'trimester':
+                        category = 1  # normal
                         # show only once
-                        if lag == 0 and month == 1 and day == 0:
+                        if lag == globals_vars.lags[0] and month == 1:
                             message_warning = True
                         else:
                             message_warning = False
 
                         # file where saved points for plot map
-                        file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][day][category]
+                        file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][category]
 
                         # save matrix for interpolation
                         base_path = os.path.join(climate_dir, _('maps'),
@@ -2652,10 +2815,9 @@ def maps(grid):
                         if not os.path.isdir(base_path):
                             os.makedirs(base_path)
 
-                        base_file = _(u'Map_correlation_lag_{0}_{1}')\
-                                     .format(lag, month_text[month - 1] + "_" + str(range_analysis_interval[day]))
+                        base_file = _(u'Map_correlation_lag_{0}_{1}').format(lag, globals_vars.trim_text[month - 1])
 
-                        grid.date = month_text[month - 1] + "_" + str(range_analysis_interval[day])
+                        grid.date = globals_vars.trim_text[month - 1]
                         grid.lag = lag
 
                         # file for interpolation
@@ -2666,12 +2828,56 @@ def maps(grid):
 
                         process_map()
 
-        print colored.green(_("done"))
+                    else:
+                        # range based on analysis interval
+                        if analysis_interval == '5days':
+                            range_analysis_interval = [1, 6, 11, 16, 21, 26]
+                        if analysis_interval == '10days':
+                            range_analysis_interval = [1, 11, 21]
+                        if analysis_interval == '15days':
+                            range_analysis_interval = [1, 16]
+                        for day in range(len(range_analysis_interval)):
+                            category = 1  # phenomenons var_I
+                            # show only once
+                            if lag == globals_vars.lags[0] and month == 1 and day == 0:
+                                message_warning = True
+                            else:
+                                message_warning = False
+
+                            # file where saved points for plot map
+                            file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][day][category]
+
+                            # save matrix for interpolation
+                            base_path = os.path.join(climate_dir, _('maps'),
+                                                     translate_analysis_interval[options_analysis_interval.index(analysis_interval)],
+                                                     _('lag_{0}').format(lag),
+                                                     _('Correlation'),
+                                                     grid.grid_name)
+
+                            # make dir with the name of grid
+                            if not os.path.isdir(base_path):
+                                os.makedirs(base_path)
+
+                            base_file = _(u'Map_correlation_lag_{0}_{1}')\
+                                         .format(lag, globals_vars.month_text[month - 1] + "_" + str(range_analysis_interval[day]))
+
+                            grid.date = globals_vars.month_text[month - 1] + "_" + str(range_analysis_interval[day])
+                            grid.lag = lag
+
+                            # file for interpolation
+                            inc_file = os.path.join(base_path, base_file + ".INC")
+
+                            # save file for NCL
+                            ncl_data = os.path.join(base_path, base_file + ".tsv")
+
+                            process_map()
+
+            print colored.green(_("done"))
 
     # -------------------------------------------------------------------------
     # Process maps for FORECASTING
 
-    if globals_vars.config_run['forecasting_process']:
+    if globals_vars.config_run['forecasting_process'] and  globals_vars.maps['forecasting']:
 
         grid.in_process["climate"] = False
         grid.in_process["correlation"] = False
@@ -2694,9 +2900,9 @@ def maps(grid):
 
             for forecasting_date in globals_vars.maps_files_forecasting[analysis_interval]:
 
-                for lag in lags:
+                for lag in globals_vars.lags:
                     # show only once
-                    if lag == 0:
+                    if lag == globals_vars.lags[0]:
                         message_warning = True
                     else:
                         message_warning = False
@@ -2813,7 +3019,7 @@ class Grid:
         self.lon_coordinates = [round(item, self.decimal_resolution) for item in lon_coordinates_list]
 
         # interpolation type TODO:
-        self.interpolation_type = "ordinary kriging"
+        self.interpolation_type = _("ordinary kriging")
 
         # set the semivariogram type for interpolation
         #     0 – spherical, 1 – exponential, 2 – gaussian;
@@ -2876,6 +3082,11 @@ class Grid:
         lat = round(lat, self.decimal_resolution)
         lon = round(lon, self.decimal_resolution)
 
+        # check if value is "nan", this is when the station has few values
+        # and the thresholds are inadequate
+        if math.isnan(value):
+            return matrix, "nan"
+
         # check if point is outside of the grid
         if lat < min(self.lat_coordinates) or \
            lat > max(self.lat_coordinates) or \
@@ -2925,7 +3136,7 @@ def main():
     # check python version
     if sys.version_info[0] != 2 or sys.version_info[1] < 6:
         print_error(_("You version of python is {0}, please use Jaziku with "
-                      "python v2.6 or v2.7").format(sys.version_info[0:2]))
+                      "python v2.6 or v2.7").format(sys.version_info[0:2]), False)
 
     # set encoding to utf-8
     reload(sys)
@@ -2968,6 +3179,11 @@ def main():
             if line_in_run_file[0][0:3] == "## ":
                 continue
 
+            if len(line_in_run_file) <= 1:
+                print_error(_("error read line in \"CONFIGURATION RUN\" in runfile,"
+                              " line {0}:\n{1}, no was defined.")
+                                .format(run_file.line_num, line_in_run_file[0]), False)
+
             if line_in_run_file[0] in globals_vars.config_run:
                 # in this case, for python 'disable' is None,
                 # then let default value (it is 'None')
@@ -2987,7 +3203,7 @@ def main():
                     in_station_list = True
                 else:
                     print_error(_("error read line in \"CONFIGURATION RUN\" in runfile, line {0}:\n{1}")
-                                .format(run_file.line_num, line_in_run_file[0]))
+                                .format(run_file.line_num, line_in_run_file[0]), False)
 
         # read GRIDS LIST
         if in_grids_list:
@@ -3016,7 +3232,7 @@ def main():
                     in_station_list = True
                 else:
                     print_error(_("error read line in \"GRIDS LIST\" in runfile, line {0}:\n{1}")
-                                .format(run_file.line_num, line_in_run_file[0]))
+                                .format(run_file.line_num, line_in_run_file[0]), False)
 
         # read STATIONS LIST
         if in_station_list:
@@ -3025,12 +3241,12 @@ def main():
             stations.append(line_in_run_file)
 
     # -------------------------------------------------------------------------
-    # setting language
+    # Setting language
+
     if globals_vars.config_run['language'] and globals_vars.config_run['language'] != "autodetect":
         if globals_vars.config_run['language'] == "en" or globals_vars.config_run['language'] == "EN" or globals_vars.config_run['language'] == "En":
             settings_language = colored.green(globals_vars.config_run['language'])
             lang = gettext.NullTranslations()
-            lang.install()
         else:
             try:
                 lang = gettext.translation(TRANSLATION_DOMAIN, LOCALE_DIR,
@@ -3040,6 +3256,7 @@ def main():
                 print_error(_("\"{0}\" language not available.").format(globals_vars.config_run['language']))
 
         if 'lang' in locals():
+            os.environ["LANG"] = globals_vars.config_run['language']
             lang.install()
             settings_language = colored.green(globals_vars.config_run['language'])
     else:
@@ -3053,35 +3270,22 @@ def main():
                     lang = gettext.translation(TRANSLATION_DOMAIN, LOCALE_DIR,
                                                languages=[locale_languaje],
                                                codeset="utf-8")
+                    os.environ["LANG"] = locale_languaje
+                    lang.install()
             except:
                 settings_language = colored.green("en") + _(" (language \'{0}\' has not was translated yet)").format(locale_languaje)
                 lang = gettext.NullTranslations()
+                os.environ["LANG"] = "en"
                 lang.install()
         except:
             settings_language = colored.green("en") + _(" (other languages were not detected)")
             lang = gettext.NullTranslations()
+            os.environ["LANG"] = "en"
             lang.install()
 
     # -------------------------------------------------------------------------
-    # start message
+    # Start message
 
-    # set settings default
-    global settings
-    settings = {"climate_process": _("disabled"),
-                "forecasting_process": _("disabled"),
-                "process_period": "-",
-                "language": settings_language,
-                "consistent_data": _("disabled"),
-                "risk_analysis": _("disabled"),
-                "graphics": _("disabled"),
-                "phen_below_label": "-",
-                "phen_normal_label": "-",
-                "phen_above_label": "-",
-                "maps": _("disabled"),
-                "overlapping": None,
-                "shape_boundary": _("disabled")}
-
-    # console message
     print _("\n########################### JAZIKU ###########################\n"
             "## Jaziku is a software for the implementation of composite ##\n"
             "## analysis metodology between the major indices of climate ##\n"
@@ -3093,32 +3297,70 @@ def main():
             "##############################################################") \
             .format(globals_vars.VERSION, globals_vars.COMPILE_DATE)
 
-    # set period for process if is defined as argument
+    # -------------------------------------------------------------------------
+    # get/set and show settings
+
+    # set settings default
+    global settings
+    settings = {"climate_process": _("disabled"),
+                "forecasting_process": _("disabled"),
+                "process_period": _("disabled"),
+                "lags": None,
+                "language": settings_language,
+                "consistent_data": _("disabled"),
+                "risk_analysis": _("disabled"),
+                "graphics": _("disabled"),
+                "phen_below_label": "-",
+                "phen_normal_label": "-",
+                "phen_above_label": "-",
+                "maps": _("disabled"),
+                "overlapping": None,
+                "shape_boundary": _("disabled")}
+
+    ## general options
+    # climate_process
+    if globals_vars.config_run['climate_process']:
+        settings["climate_process"] = colored.green(_("enabled"))
+    # forecasting_process
+    if globals_vars.config_run['forecasting_process']:
+        settings["forecasting_process"] = colored.green(_("enabled"))
+    # process_period
     if globals_vars.config_run['process_period']:
-        global args_period_start, args_period_end
         try:
             args_period_start = int(globals_vars.config_run['process_period'].split('-')[0])
             args_period_end = int(globals_vars.config_run['process_period'].split('-')[1])
-            settings["period"] = colored.green("{0}-{1}".format(args_period_start, args_period_end))
+            globals_vars.config_run['process_period'] = {'start': args_period_start,
+                                                         'end': args_period_end}
+            settings["process_period"] = colored.green("{0}-{1}".format(args_period_start, args_period_end))
         except Exception, e:
             print_error(_('the period must be: year_start-year_end (ie. 1980-2008)\n\n{0}').format(e))
+    # lags
+    if globals_vars.config_run['lags']:
+        if globals_vars.config_run['lags'] == "default":
+            globals_vars.lags = [0, 1, 2]
+            settings["lags"] = ','.join(map(str, globals_vars.lags))
+        else:
+            try:
+                for lag in globals_vars.config_run['lags'].split(","):
+                    lag = int(lag)
+                    if lag not in [0, 1, 2]:
+                        raise
+                    globals_vars.lags.append(lag)
+            except:
+                print_error(_('the lags are 0, 1 and/or 2 comma separated, or default.'))
+            settings["lags"] = colored.green(','.join(map(str, globals_vars.lags)))
 
-    # number of lags
-    global lags
-    lags = [0, 1, 2]
+    ## check options
+    # consistent_data
+    if globals_vars.config_run['consistent_data']:
+        settings["consistent_data"] = colored.green(_("enabled"))
+    # risk_analysis
+    if globals_vars.config_run['risk_analysis']:
+        settings["risk_analysis"] = colored.green(_("enabled"))
 
-    # trimester text for print
-    global trim_text
-    trim_text = {-2: _('NDJ'), -1: _('DJF'), 0: _('JFM'), 1: _('FMA'), 2: _('MAM'),
-                 3: _('AMJ'), 4: _('MJJ'), 5: _('JJA'), 6: _('JAS'), 7: _('ASO'),
-                 8: _('SON'), 9: _('OND'), 10: _('NDJ'), 11: _('DJF')}
-
-    # month text for print
-    global month_text
-    month_text = {-2: _('Nov'), -1: _('Dec'), 0: _('Jan'), 1: _('Feb'), 2: _('Mar'),
-                  3: _('Apr'), 4: _('May'), 5: _('Jun'), 6: _('Jul'), 7: _('Aug'),
-                  8: _('Sep'), 9: _('Oct'), 10: _('Nov'), 11: _('Dec')}
-
+    ## graphics settings
+    if globals_vars.config_run['graphics']:
+        settings["graphics"] = colored.green(_("enabled"))
     # if phenomenon below is defined inside arguments, else default value
     if globals_vars.config_run['phen_below_label'] and globals_vars.config_run['phen_below_label'] != "default":
         globals_vars.phenomenon_below = unicode(globals_vars.config_run['phen_below_label'], 'utf-8')
@@ -3141,24 +3383,22 @@ def main():
         globals_vars.phenomenon_above = _('var_I_above')
         settings["phen_above_label"] = globals_vars.phenomenon_above
 
-    # set settings for process
-    if globals_vars.config_run['climate_process']:
-        settings["climate_process"] = colored.green(_("enabled"))
-    if globals_vars.config_run['forecasting_process']:
-        settings["forecasting_process"] = colored.green(_("enabled"))
-    if globals_vars.config_run['process_period']:
-        settings["process_period"] = colored.green(globals_vars.config_run['process_period'])
-
-    if globals_vars.config_run['risk_analysis']:
-        settings["risk_analysis"] = colored.green(_("enabled"))
-
-    if globals_vars.config_run['consistent_data']:
-        settings["consistent_data"] = colored.green(_("enabled"))
-
-    # maps settings
+    ## maps settings
     if globals_vars.config_run['maps']:
-        settings["maps"] = colored.green(_("enabled"))
-
+        if globals_vars.config_run['maps'] == "all":
+            globals_vars.maps = {'climate': True, 'forecasting': True, 'correlation': True}
+            settings["maps"] = ','.join(map(str, [m for m in globals_vars.maps if globals_vars.maps[m]]))
+        else:
+            try:
+                for map_to_run in globals_vars.config_run['maps'].split(","):
+                    map_to_run = map_to_run.strip()
+                    if map_to_run not in ['climate', 'forecasting', 'correlation']:
+                        raise
+                    globals_vars.maps[map_to_run] = True
+            except:
+                    print_error(_('the maps options are \'climate\', \'forecasting\', '
+                                  '\'correlation\' comma separated, or \'all\'.'))
+            settings["maps"] = colored.green(','.join(map(str, [m for m in globals_vars.maps if globals_vars.maps[m]])))
     # set the overlapping solution
     if globals_vars.config_run['overlapping'] == "default" or not globals_vars.config_run['overlapping']:
         globals_vars.config_run['overlapping'] = "average"
@@ -3168,7 +3408,7 @@ def main():
     else:
         print_error(_("The overlapping solution is wrong, the options are:\n"
                     "default, average, maximum, minimum or neither"), False)
-
+    # shape_boundary method
     if globals_vars.config_run['shape_boundary'] in ["shape_mask"]:
         settings["shape_boundary"] = colored.green(globals_vars.config_run['shape_boundary'])
     elif globals_vars.config_run['shape_boundary'] in ["default", False]:
@@ -3183,6 +3423,7 @@ def main():
     print "   {0} ------ {1}".format("climate process", settings["climate_process"])
     print "   {0} -- {1}".format("forecasting process", settings["forecasting_process"])
     print "   {0} ------- {1}".format("process period", settings["process_period"])
+    print "   {0} ----------------- {1}".format("lags", settings["lags"])
     print "   {0} ------------- {1}".format("language", settings["language"])
     print colored.cyan("   Check options")
     print "   {0} ------ {1}".format("consistent data", settings["consistent_data"])
@@ -3212,7 +3453,7 @@ def main():
 
         if os.path.isdir(climate_dir):
             print colored.yellow(\
-                _("\n   Warning: the output director for climate process\n" \
+                _("\n > WARNING: the output director for climate process\n" \
                   "   is already exist, Jaziku continue but the results\n" \
                   "   could be mixed or replaced of old output."))
 
@@ -3230,7 +3471,7 @@ def main():
 
         if os.path.isdir(forecasting_dir):
             print colored.yellow(\
-                _("\n   Warning: the output director for forecasting process\n" \
+                _("\n > WARNING: the output director for forecasting process\n" \
                   "   is already exist, Jaziku continue but the results\n" \
                   "   could be mixed or replaced of old output."))
 
@@ -3268,17 +3509,23 @@ def main():
             station.type_D = line_station[5]
             globals_vars.type_var_D = station.type_D  # TODO:
 
-            station.file_I = line_station[6]
-            station.type_I = line_station[7]
+            station.range_below_D = line_station[6]
+            station.range_above_D = line_station[7]
+
+            station.threshold_below_var_D = line_station[8].replace(',', '.')
+            station.threshold_above_var_D = line_station[9].replace(',', '.')
+
+            station.file_I = line_station[10]
+            station.type_I = line_station[11]
             globals_vars.type_var_I = station.type_I  # TODO:
 
-            station.range_below_I = line_station[8]
-            station.range_above_I = line_station[9]
+            station.range_below_I = line_station[12]
+            station.range_above_I = line_station[13]
 
-            station.threshold_below_var_I = line_station[10].replace(',', '.')
-            station.threshold_above_var_I = line_station[11].replace(',', '.')
+            station.threshold_below_var_I = line_station[14].replace(',', '.')
+            station.threshold_above_var_I = line_station[15].replace(',', '.')
 
-            station.analysis_interval = line_station[12]
+            station.analysis_interval = line_station[16]
 
             if station.analysis_interval not in options_analysis_interval:
                 raise Exception(_("The analysis interval {0} is invalid,\n"
@@ -3301,21 +3548,21 @@ def main():
                 translate_analysis_interval[options_analysis_interval.index(station.analysis_interval)]
 
             if globals_vars.config_run['forecasting_process']:
-                if len(line_station) < 23:
+                if len(line_station) < 27:
                     raise Exception(_("For forecasting process you need define "
                                       "9 probability\n variables and trimester to "
                                       "process in stations file."))
-                station.f_var_I_B = [float(line_station[13].replace(',', '.')),
-                                     float(line_station[16].replace(',', '.')),
-                                     float(line_station[19].replace(',', '.'))]
-                station.f_var_I_N = [float(line_station[14].replace(',', '.')),
-                                     float(line_station[17].replace(',', '.')),
-                                     float(line_station[20].replace(',', '.'))]
-                station.f_var_I_A = [float(line_station[15].replace(',', '.')),
-                                     float(line_station[18].replace(',', '.')),
-                                     float(line_station[21].replace(',', '.'))]
+                station.f_var_I_B = [float(line_station[17].replace(',', '.')),
+                                     float(line_station[20].replace(',', '.')),
+                                     float(line_station[23].replace(',', '.'))]
+                station.f_var_I_N = [float(line_station[18].replace(',', '.')),
+                                     float(line_station[21].replace(',', '.')),
+                                     float(line_station[24].replace(',', '.'))]
+                station.f_var_I_A = [float(line_station[19].replace(',', '.')),
+                                     float(line_station[22].replace(',', '.')),
+                                     float(line_station[25].replace(',', '.'))]
 
-                station.forecasting_date = line_station[22]
+                station.forecasting_date = line_station[26]
 
         except Exception, e:
             print_error(_("Reading stations from file \"{0}\" in line {1}:\n")

@@ -18,9 +18,21 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# this ncl code for regions of Colombia
+
 import os
 
+
 def code(map_properties):
+
+    #  if particular_properties_map not defined in {region}.py, these are the default values:
+    if map_properties.particular_properties_map == {}:
+        map_properties.particular_properties_map = {"tiMainFontHeightF": 0.021, # main font height
+                                                    "lbTitleFontHeightF": 0.015, # colorbar title font height
+                                                    "space_label_title": 25, # number of space between label title in colorbar
+                                                    "lbLabelFontHeightF": 0.0095}  # colorbar mark font height
+
     return '''
 
 
@@ -200,7 +212,7 @@ begin
 
   minlat = min(lat)
   maxlat = max(lat)
-  minlon = min(lon)
+  minlon = min(lon)-0.0001
   maxlon = max(lon)+0.0001
 
   f = addfile("{shape}","r")
@@ -217,17 +229,17 @@ begin
   gres@mpPerimOn     = True
   gres@mpOutlineDrawOrder = "PostDraw"
   gres@mpFillOn               = True
-  gres@mpOceanFillColor       = 0
+  gres@mpOceanFillColor       = -1
   gres@mpLandFillColor        = -1
-  gres@mpInlandWaterFillColor = 0
-  gres@mpFillAreaSpecifiers   = (/"Venezuela","Brazil", "Peru","Ecuador","Panama"/)
-  gres@mpSpecifiedFillColors  = (/    0, 0, 0,  0, 0/)
+  gres@mpInlandWaterFillColor = -1
+  ;gres@mpFillAreaSpecifiers   = (/"Venezuela","Brazil", "Peru","Ecuador","Panama"/)
+  ;gres@mpSpecifiedFillColors  = (/    0, 0, 0,  0, 0/)
   gres@mpFillDrawOrder        = "Draw"
   gres@pmTickMarkDisplayMode = "Always"
   gres@mpProjection  = "Mercator"
   gres@mpLimitMode   = "LatLon"
-  gres@tmXBLabelFontHeightF        = 0.009
-  gres@tmYLLabelFontHeightF        = 0.009
+  gres@tmXBLabelFontHeightF        = 0.008
+  gres@tmYLLabelFontHeightF        = 0.008
 
   gres@mpMinLatF     = minlat
   gres@mpMaxLatF     = maxlat
@@ -396,17 +408,17 @@ begin
 
   res@lbBoxLinesOn                = False
   res@tiMainString                = {title}
-  res@tiMainFontHeightF           = 0.022
+  res@tiMainFontHeightF           = {tiMainFontHeightF}
   res@tiMainOffsetYF              = 0.03
   res@lbLabelAutoStride           = True
   res@lbPerimOn                   = False
   res@lbJustification             = "CenterCenter"
   res@lbOrientation               = "vertical"
-  res@lbLabelFontHeightF          = 0.011
+  res@lbLabelFontHeightF          = {lbLabelFontHeightF}
   res@lbTitleOn                   = {color_bar_title_on}
   res@lbTitlePosition             = "Left"
-  res@lbTitleString               = "{below}                                {normal}                                 {above}"
-  res@lbTitleFontHeightF          = 0.015
+  res@lbTitleString               = "{label_title}"
+  res@lbTitleFontHeightF          = {lbTitleFontHeightF}
   res@lbTitleDirection            = "Across"
   res@lbTitleAngleF               = 90
   res@lbLabelAutoStride           =   True
@@ -441,18 +453,19 @@ end
                ncl_data=os.path.abspath(map_properties.base_path_file) + '.tsv',
                save_map=os.path.abspath(map_properties.base_path_file),
                title=map_properties.title,
-               below=_("Below"),
-               normal=_("Normal"),
-               above=_("Above"),
+               label_title=_("Below") + " " * map_properties.particular_properties_map["space_label_title"] + \
+                           _("Normal") + " " * map_properties.particular_properties_map["space_label_title"] + \
+                           _("Above"),
                color_bar_title_on=map_properties.color_bar_title_on,
                color_bar_levels=map_properties.color_bar_levels,
                color_bar_step=map_properties.color_bar_step,
                colormap=map_properties.colormap,
+               tiMainFontHeightF=map_properties.particular_properties_map["tiMainFontHeightF"],
+               lbTitleFontHeightF=map_properties.particular_properties_map["lbTitleFontHeightF"],
+               lbLabelFontHeightF=map_properties.particular_properties_map["lbLabelFontHeightF"],
                lat_size=map_properties.lat_size,
                lon_size=map_properties.lon_size,
                name='''"{0}"'''.format(map_properties.name),
                analysis=map_properties.analysis,
                units=map_properties.units,
                enable_mask=map_properties.shape_mask)
-
-
