@@ -1,4 +1,17 @@
-0.4.1
+0.4.2 (13/08/2012)
+
+features/changes:
+ * new option in runfile: the "analog_year", with this the calcule of thresholds 
+   for only var D are based on percentile(33 and 66) of all raw values in analog
+   year, ignoring null values. For use it, defined analog_year and put "default" 
+   value in  THRESHOLD VAR D BELOW/ABOVE in runfile.
+ * Jaziku now detect and show missing values inside input series of var D and I 
+
+bugfixes:
+ * fix when cheking the numbers of parameters of stations list in runfile
+ * other minor bugfixes
+
+0.4.1 (13/08/2012)
 
 features/changes:
  * new option in runfile for select lags to run, this can be 0, 1 and/or 2, 
