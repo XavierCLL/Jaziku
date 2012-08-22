@@ -82,10 +82,16 @@ def make_ncl_file(grid, base_path_file, globals_vars):
             map_properties.units = '''"%"'''
 
         # get ncl file in raw
-        if grid.need_particular_ncl_script:
-            ncl_script = imp.load_source("ncl_script", os.path.join(grid.shape_path, "ncl.py"))
+        if grid.is_internal:
+            if grid.need_particular_ncl_script:
+                ncl_script = imp.load_source("ncl_script", os.path.join(grid.shape_path, "ncl.py"))
+            else:
+                ncl_script = imp.load_source("ncl_script", os.path.join(os.path.dirname(grid.shape_path), "ncl.py"))
         else:
-            ncl_script = imp.load_source("ncl_script", os.path.join(os.path.dirname(grid.shape_path), "ncl.py"))
+            if grid.need_particular_ncl_script:
+                ncl_script = imp.load_source("ncl_script", os.path.join(grid.shape_path, "ncl.py"))
+            else:
+                ncl_script = imp.load_source("ncl_script", os.path.join(os.path.dirname(os.path.realpath(__file__)), "shapes", "ncl.py"))
 
         ncl_file_raw = ncl_script.code(map_properties)
 

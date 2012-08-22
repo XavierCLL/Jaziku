@@ -15,4 +15,6 @@ syntax: regexp
 syntax: regexp
 ^src/jaziku/plugins/maps/watermarking$
 syntax: regexp
-^src/doc/jaziku04_manual$
+^src/doc/manual$
+syntax: regexp
+^src/doc/examples$
