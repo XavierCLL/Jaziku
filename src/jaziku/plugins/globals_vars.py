@@ -25,10 +25,10 @@
 PROG_NAME = "jaziku"
 
 # version
-VERSION = "0.4.1"
+VERSION = "0.4.2"
 
 # compilation date
-COMPILE_DATE = "12/08/2012"
+COMPILE_DATE = "21/08/2012"
 
 # valid null value for variables dependent and independent (inside files input)
 VALID_NULL = [99999, -99999]
@@ -101,6 +101,7 @@ phenomenon_above = None
 config_run = {'climate_process': None,
               'forecasting_process': None,
               'process_period': None,
+              'analog_year': None,
               'lags': None,
               'language': None,
               'consistent_data': None,
