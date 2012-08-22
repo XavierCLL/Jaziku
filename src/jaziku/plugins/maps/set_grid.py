@@ -29,33 +29,37 @@ def search_and_set_internal_grid(grid):
     dir_to_list = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                'shapes', grid.country)
 
-    listdir = [name for name in os.listdir(dir_to_list) if os.path.isdir(os.path.join(dir_to_list, name))]
+    try:
+        listdir = [name for name in os.listdir(dir_to_list) if os.path.isdir(os.path.join(dir_to_list, name))]
 
-    if grid.grid_name in listdir:
-        internal_grid = imp.load_source("internal_grid", os.path.join(grid.shape_path, grid.grid_name + ".py"))
+        if grid.grid_name in listdir:
+            internal_grid = imp.load_source("internal_grid", os.path.join(grid.shape_path, grid.grid_name + ".py"))
 
-        # set extreme lat and lon values from internal grid
-        # but if is defined by user will not reset
-        if not grid.minlat:
-            grid.minlat = internal_grid.minlat
-        if not grid.maxlat:
-            grid.maxlat = internal_grid.maxlat
-        if not grid.minlon:
-            grid.minlon = internal_grid.minlon
-        if not grid.maxlon:
-            grid.maxlon = internal_grid.maxlon
+            # set extreme lat and lon values from internal grid
+            # but if is defined by user will not reset
+            if not grid.minlat:
+                grid.minlat = internal_grid.minlat
+            if not grid.maxlat:
+                grid.maxlat = internal_grid.maxlat
+            if not grid.minlon:
+                grid.minlon = internal_grid.minlon
+            if not grid.maxlon:
+                grid.maxlon = internal_grid.maxlon
 
-        grid.need_particular_ncl_script = internal_grid.need_particular_ncl_script
+            grid.need_particular_ncl_script = internal_grid.need_particular_ncl_script
 
-        try:
-            grid.particular_properties_map = internal_grid.particular_properties_map
-        except:
-            grid.particular_properties_map = {}
+            try:
+                grid.particular_properties_map = internal_grid.particular_properties_map
+            except:
+                grid.particular_properties_map = {}
 
-        return grid
-    else:
+            return grid
+        else:
+            raise
+    except:
         print colored.red(_("\nCan't set internal shape \"{0}\",\n"
-                            "please check the grid name.\n").format(grid.grid_name))
+                            "please check the grid parameter; area,\n"
+                            "region and/or country name are wrong.\n").format(grid.grid_fullname))
         exit()
 
 
@@ -91,5 +95,8 @@ def set_particular_grid(grid):
             grid.particular_properties_map = particular_grid.particular_properties_map
         except:
             grid.particular_properties_map = {}
+    else:
+            grid.particular_properties_map = {}
+            grid.need_particular_ncl_script = False
 
     return grid

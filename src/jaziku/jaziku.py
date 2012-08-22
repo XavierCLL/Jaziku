@@ -68,14 +68,12 @@ DESCRIPTION:
     11:1812 – 1835, 1998.
 
 SYNOPSIS RUN:
-    jaziku [-h] -stations STATIONS [-p_below P_BELOW] [-p_normal P_NORMAL]
-           [-p_above P_ABOVE] [-c] [-f] [-period PERIOD] [-ra] [-l LANG]
+    jaziku [-h] [-doc] -runfile runfile.scv
+
+    for more information of structure of runfile.csv please see the manual.
 
 EXAMPLE:
-    jaziku -stations station.csv -c -f
-
-    jaziku -stations station.csv -p_below "Debajo" -p_normal "Normal" -p_above
-    "Encima" -c -f -period 1980-2009 -ra -l es
+    jaziku -runfile run_file.csv
 
 Copyright © 2011-2012 IDEAM
 Instituto de Hidrología, Meteorología y Estudios Ambientales
@@ -87,6 +85,7 @@ Bogotá, Colombia
 # IMPORT MODULES
 
 import sys
+import gc
 import os.path
 import argparse  # http://docs.python.org/py3k/library/argparse.html
 import csv
@@ -130,6 +129,7 @@ import plugins.maps.set_grid as set_grid
 #==============================================================================
 # PRINT FUCTIONS
 
+# TODO: separate file as plugins for all prints fuctions
 
 def print_error(text_error, wait_value=True):
     '''
@@ -139,9 +139,13 @@ def print_error(text_error, wait_value=True):
     if wait_value:
         print colored.red(_('fail\n\nERROR:\n{0}\n\n').format(text_error))
     else:
-        print colored.red(_('\nERROR:\n{0}\n\n').format(text_error))
-    print _("For more help run program with argument: -h")
-    exit()
+        print colored.red(_('\nERROR:\n{0}\n').format(text_error))
+    print _("Please check the error and read the manual if is necessary.\n"
+            "If this is an error of Jaziku, please report it with Jaziku developers.\n\n"
+            "Jaziku, version {0} - {1}.\n"
+            "Copyright © 2011-2012 IDEAM - Colombia")\
+            .format(globals_vars.VERSION, globals_vars.COMPILE_DATE)
+    sys.exit()
 
 
 def print_error_line_stations(station, text_error):
@@ -184,8 +188,7 @@ def read_var_D(station):
     date_D = []
     var_D = []
 
-    file_D = station.file_D
-    reader_csv = csv.reader(file_D, delimiter='\t')
+    reader_csv = csv.reader(station.file_D, delimiter='\t')
 
     # check and validate if file D is defined as particular file with
     # particular range validation
@@ -256,16 +259,34 @@ def read_var_D(station):
                     station.data_of_var_D = "daily"
                 else:
                     station.data_of_var_D = "monthly"
-                first = False
 
             try:
                 # delete garbage characters and convert format
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
                 month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
+
                 if station.data_of_var_D == "daily":
                     day = int(re.sub(r'[^\w]', '', row[0].split("-")[2]))
-                else:
+                    # check if the values are continuous
+                    if not first and date(year, month, day) + relativedelta(days= -1) != date_D[-1]:
+                        missing_date = date_D[-1] + relativedelta(days= +1)
+                        print_error(_("Reading var D from file \"{0}\" in line: {1}\n\n"
+                                      "Jaziku detected missing value for date: {2}")
+                                    .format(station.file_D.name,
+                                            reader_csv.line_num,
+                                            missing_date))
+
+                if station.data_of_var_D == "monthly":
                     day = 1
+                    # check if the values are continuous
+                    if not first and date(year, month, day) + relativedelta(months= -1) != date_D[-1]:
+                        missing_date = date_D[-1] + relativedelta(months= +1)
+                        print_error(_("Reading var D from file \"{0}\" in line: {1}\n\n"
+                                      "Jaziku detected missing value for date: {2}-{3}")
+                                    .format(station.file_D.name,
+                                            reader_csv.line_num,
+                                            missing_date.year,
+                                            missing_date.month))
                 value = float(row[1])
                 # set date of dependent variable from file_D, column 1,
                 # format: yyyy-mm-dd
@@ -282,6 +303,9 @@ def read_var_D(station):
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
                              .format(station.file_D.name,
                                      reader_csv.line_num, e))
+            if first:
+                first = False
+
     except csv.Error, e:
         # this except if when this file is created with Microsoft Office
         # in some case Microsoft Office when export put garbage in file,
@@ -289,8 +313,8 @@ def read_var_D(station):
         # this exception in this case read and repair data and write in other
         # file finished with "_FIX" words.
 
-        file_D.seek(0)
-        file_D_fix = file_D.read()
+        station.file_D.seek(0)
+        file_D_fix = station.file_D.read()
         name_fix = station.file_D.name.split('.')[0] + "_FIX.txt"
         fo = open(name_fix, 'wb')
         fo.write(file_D_fix.replace('\x00', ''))
@@ -379,7 +403,7 @@ def read_var_I(station):
             internal_file_I_dir = \
                 os.path.join(os.path.dirname(os.path.realpath(__file__)),
                              "plugins", "var_I", internal_file_I_name)
-            file_I = open(internal_file_I_dir, 'r')
+            station.file_I = open(internal_file_I_dir, 'r')
 
             split_internal_var_I = internal_file_I_name.split(".")[0].split("_")
             print colored.yellow(
@@ -397,7 +421,7 @@ def read_var_I(station):
                          "from internal files but the file for the type of\n"
                          "independent variable \"{0}\" don't exist").format(station.type_I))
     else:
-        file_I = open(station.file_I, 'r')
+        station.file_I = open(station.file_I, 'r')
 
     # check and validate if file I is defined as particular file with
     # particular range validation
@@ -438,7 +462,7 @@ def read_var_I(station):
                               "dependent\nvariable: {0} this should be "
                               "a valid number, \"none\" or \"default\".").format(station.range_above_I,)))
 
-    reader_csv = csv.reader(file_I, delimiter='\t')
+    reader_csv = csv.reader(station.file_I, delimiter='\t')
     first = True
     # Read line to line file_I, validation and save var_I
     try:
@@ -465,16 +489,34 @@ def read_var_I(station):
                     station.data_of_var_I = "daily"
                 else:
                     station.data_of_var_I = "monthly"
-                first = False
 
             try:
                 # delete garbage characters and convert format
                 year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
                 month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
+
                 if station.data_of_var_I == "daily":
                     day = int(re.sub(r'[^\w]', '', row[0].split("-")[2]))
-                else:
+                    # check if the values are continuous
+                    if not first and date(year, month, day) + relativedelta(days= -1) != date_I[-1]:
+                        missing_date = date_I[-1] + relativedelta(days= +1)
+                        print_error(_("Reading var I from file \"{0}\" in line: {1}\n\n"
+                                      "Jaziku detected missing value for date: {2}")
+                                    .format(station.file_I.name,
+                                            reader_csv.line_num,
+                                            missing_date))
+
+                if station.data_of_var_I == "monthly":
                     day = 1
+                    # check if the values are continuous
+                    if not first and date(year, month, day) + relativedelta(months= -1) != date_I[-1]:
+                        missing_date = date_I[-1] + relativedelta(months= +1)
+                        print_error(_("Reading var I from file \"{0}\" in line: {1}\n\n"
+                                      "Jaziku detected missing value for date: {2}-{3}")
+                                    .format(station.file_I.name,
+                                            reader_csv.line_num,
+                                            missing_date.year,
+                                            missing_date.month))
                 value = float(row[1])
                 # set date of independent variable from file_I, column 1,
                 # format: yyyy-mm
@@ -487,7 +529,10 @@ def read_var_I(station):
 
             except Exception, e:
                 print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
-                            .format(file_I.name, reader_csv.line_num, e))
+                            .format(station.file_I.name, reader_csv.line_num, e))
+
+            if first:
+                first = False
 
     except csv.Error, e:
         # this except if when this file is created with Microsoft Office
@@ -496,8 +541,8 @@ def read_var_I(station):
         # this exception in this case read and repair data and write in other
         # file finished with "_FIX" words.
 
-        file_I.seek(0)
-        file_I_fix = file_I.read()
+        station.file_I.seek(0)
+        file_I_fix = station.file_I.read()
         name_fix = station.file_I.name.split('.')[0] + "_FIX.txt"
         fo = open(name_fix, 'wb')
         fo.write(file_I_fix.replace('\x00', ''))
@@ -967,8 +1012,44 @@ def get_thresholds_var_D(station):
 
     # thresholds by below and by above of var D by default
     def thresholds_by_default():
+        # check if analog_year is defined
+        if globals_vars.config_run['analog_year']:
+            # check if analog_year is inside in process period
+            if globals_vars.config_run['analog_year'] >= station.process_period['start'] and \
+               globals_vars.config_run['analog_year'] <= station.process_period['end']:
 
-        return percentiles(33, 66)
+                _iter_date = date(globals_vars.config_run['analog_year'], 1, 1)
+                var_D_values_of_analog_year = []
+                # get all raw values of var D only in analog year, ignoring null values
+                while _iter_date <= date(globals_vars.config_run['analog_year'], 12, 31):
+                    if int(station.var_D[station.date_D.index(_iter_date)]) not in globals_vars.VALID_NULL:
+                        var_D_values_of_analog_year.append(station.var_D[station.date_D.index(_iter_date)])
+                    if station.data_of_var_D == "daily":
+                        _iter_date += relativedelta(days=1)
+                    if station.data_of_var_D == "monthly":
+                        _iter_date += relativedelta(months=1)
+                threshold_below_var_D = stats.scoreatpercentile(var_D_values_of_analog_year, 33)
+                threshold_above_var_D = stats.scoreatpercentile(var_D_values_of_analog_year, 66)
+                # check if thresholds are valid
+                if math.isnan(threshold_below_var_D) or math.isnan(threshold_above_var_D):
+                    return percentiles(33, 66)
+                else:
+                    if station.first_iter:
+                        print colored.cyan(_("\n   Using thresholds with analog year for var_D ")),
+
+                    return threshold_below_var_D, threshold_above_var_D
+            else:
+                if station.first_iter:
+                    print colored.yellow(_("\n > WARNING: The analog year ({0}) for this\n"
+                                           "   station is outside of process period {1} to\n"
+                                           "   {2}. The process continue but using the\n"
+                                           "   default thresholds .........................")
+                                        .format(globals_vars.config_run['analog_year'],
+                                                station.process_period['start'],
+                                                station.process_period['end'])),
+                return percentiles(33, 66)
+        else:
+            return percentiles(33, 66)
 
     # thresholds by below and by above of var D with standard deviation
     def thresholds_with_std_desviation(below, above):
@@ -1032,6 +1113,13 @@ def get_thresholds_var_D(station):
     if (station.threshold_below_var_D == "default" and
         station.threshold_above_var_D == "default"):
         return thresholds_by_default()
+
+    # check if analog_year is defined but thresholds aren't equal to "default"
+    if globals_vars.config_run['analog_year']:
+        if station.first_iter:
+            print colored.yellow(_("\n > WARNING: You have defined the analog year,\n"
+                                   "   but the thresholds of var D should be\n"
+                                   "   \"default\" for use the analog year ..........")),
 
     # if are define as percentile
     if (''.join(list(station.threshold_below_var_D)[0:1]) == "p" and
@@ -1369,13 +1457,15 @@ def contingency_table(station):
     # [lag][month][phenomenon][data(0,1,2)]
     # [lag][month][day][phenomenon][data(0,1,2)]
     contingencies_tables_percent = {}
-
+    # defined if is first iteration
+    station.first_iter = True
     for lag in globals_vars.lags:
 
         tmp_month_list = []
         # all months in year 1->12
         for month in range(1, 13):
             if station.state_of_data in [1, 3]:
+
                 contingency_table, \
                 contingency_table_percent, \
                 contingency_table_percent_print, \
@@ -1383,15 +1473,22 @@ def contingency_table(station):
 
                 tmp_month_list.append(contingency_table_percent)
 
+                if station.first_iter:
+                    station.first_iter = False
+
             if station.state_of_data in [2, 4]:
                 tmp_day_list = []
                 for day in station.range_analysis_interval:
+
                     contingency_table, \
                     contingency_table_percent, \
                     contingency_table_percent_print, \
                     thresholds_var_D_var_I = get_contingency_table(station, lag,
                                                                    month, day)
                     tmp_day_list.append(contingency_table_percent)
+
+                    if station.first_iter:
+                        station.first_iter = False
 
                 tmp_month_list.append(tmp_day_list)
 
@@ -2203,8 +2300,8 @@ def pre_process(station):
     if not station.range_below_D or not station.range_above_D:
         print colored.yellow(_("\n > WARNING: you are using one or both limit as\n"
                                "   \"none\" value, this means that series values\n"
-                               "   will not be checked if they are valids in its\n"
-                               "   limits coherent. This option is not\n"
+                               "   will not be checked if they are valids in\n"
+                               "   its limits coherent. This option is not\n"
                                "   recommended, use it with precaution ........")),
     print colored.green(_("done"))
 
@@ -2220,8 +2317,8 @@ def pre_process(station):
     if not station.range_below_I or not station.range_above_I:
         print colored.yellow(_("\n > WARNING: you are using one or both limit as\n"
                                "   \"none\" value, this means that series values\n"
-                               "   will not be checked if they are valids in its\n"
-                               "   limits coherent. This option is not\n"
+                               "   will not be checked if they are valids in\n"
+                               "   its limits coherent. This option is not\n"
                                "   recommended, use it with precaution ........")),
     print colored.green(_("done"))
 
@@ -2514,9 +2611,11 @@ def maps(grid):
     # check if grid defined path to shape else search and set internal lat and lon of grid
     if not grid.shape_path:
         print colored.yellow(_("   Setting internal grid"))
+        grid.is_internal = True
         grid = set_grid.search_and_set_internal_grid(grid)
     else:
         print colored.yellow(_("   Setting particular shape"))
+        grid.is_internal = False
         grid = set_grid.set_particular_grid(grid)
 
     # check the latitude and longitude
@@ -2652,9 +2751,9 @@ def maps(grid):
               os.path.join(os.path.abspath(base_path_file) + ".png")], shell=False)
 
         # delete files
-        #os.remove(os.path.abspath(base_path_file) + ".INC")
-        #os.remove(os.path.abspath(base_path_file) + ".ncl")
-        #os.remove(os.path.abspath(base_path_file) + ".tsv")
+        os.remove(os.path.abspath(base_path_file) + ".INC")
+        os.remove(os.path.abspath(base_path_file) + ".ncl")
+        os.remove(os.path.abspath(base_path_file) + ".tsv")
 
         del matrix
 
@@ -3049,7 +3148,7 @@ class Grid:
         self.shape_mask = False
         # delete data outside of shape in mesh data
         # if grid_resolution is thin, the shape mask is better
-        if globals_vars.config_run['shape_boundary'] == "shape_mask":
+        if globals_vars.config_run['shape_boundary']:
             self.shape_mask = True
 
     def  print_grid_propieties(self):
@@ -3238,7 +3337,7 @@ def main():
         if in_station_list:
             if line_in_run_file[0][0:2] == "##":
                 continue
-            stations.append(line_in_run_file)
+            stations.append([line_in_run_file, run_file.line_num])
 
     # -------------------------------------------------------------------------
     # Setting language
@@ -3305,6 +3404,7 @@ def main():
     settings = {"climate_process": _("disabled"),
                 "forecasting_process": _("disabled"),
                 "process_period": _("disabled"),
+                "analog_year": _("disabled"),
                 "lags": None,
                 "language": settings_language,
                 "consistent_data": _("disabled"),
@@ -3334,6 +3434,13 @@ def main():
             settings["process_period"] = colored.green("{0}-{1}".format(args_period_start, args_period_end))
         except Exception, e:
             print_error(_('the period must be: year_start-year_end (ie. 1980-2008)\n\n{0}').format(e))
+    # analog_year
+    if globals_vars.config_run['analog_year']:
+        try:
+            globals_vars.config_run['analog_year'] = int(globals_vars.config_run['analog_year'])
+        except:
+            print_error("the analog_year must be a valid year", False)
+        settings["analog_year"] = colored.green(globals_vars.config_run['analog_year'])
     # lags
     if globals_vars.config_run['lags']:
         if globals_vars.config_run['lags'] == "default":
@@ -3347,7 +3454,7 @@ def main():
                         raise
                     globals_vars.lags.append(lag)
             except:
-                print_error(_('the lags are 0, 1 and/or 2 comma separated, or default.'))
+                print_error(_('the lags are 0, 1 and/or 2 comma separated, or default.'), False)
             settings["lags"] = colored.green(','.join(map(str, globals_vars.lags)))
 
     ## check options
@@ -3397,7 +3504,7 @@ def main():
                     globals_vars.maps[map_to_run] = True
             except:
                     print_error(_('the maps options are \'climate\', \'forecasting\', '
-                                  '\'correlation\' comma separated, or \'all\'.'))
+                                  '\'correlation\' comma separated, or \'all\'.'), False)
             settings["maps"] = colored.green(','.join(map(str, [m for m in globals_vars.maps if globals_vars.maps[m]])))
     # set the overlapping solution
     if globals_vars.config_run['overlapping'] == "default" or not globals_vars.config_run['overlapping']:
@@ -3409,13 +3516,14 @@ def main():
         print_error(_("The overlapping solution is wrong, the options are:\n"
                     "default, average, maximum, minimum or neither"), False)
     # shape_boundary method
-    if globals_vars.config_run['shape_boundary'] in ["shape_mask"]:
-        settings["shape_boundary"] = colored.green(globals_vars.config_run['shape_boundary'])
+    # TODO: add more method for cut map interpolation around shape
+    if globals_vars.config_run['shape_boundary'] in ["enable", True]:
+        settings["shape_boundary"] = colored.green(_("enabled"))
     elif globals_vars.config_run['shape_boundary'] in ["default", False]:
         globals_vars.config_run['shape_boundary'] = False
     else:
         print_error(_("The shape_boundary is wrong, the options are:\n"
-                    "disable, default or shape_mask"), False)
+                    "disable, enable or default."), False)
 
     # print settings
     print _("\nConfiguration run:")
@@ -3423,6 +3531,7 @@ def main():
     print "   {0} ------ {1}".format("climate process", settings["climate_process"])
     print "   {0} -- {1}".format("forecasting process", settings["forecasting_process"])
     print "   {0} ------- {1}".format("process period", settings["process_period"])
+    print "   {0} ---------- {1}".format("analog year", settings["analog_year"])
     print "   {0} ----------------- {1}".format("lags", settings["lags"])
     print "   {0} ------------- {1}".format("language", settings["language"])
     print colored.cyan("   Check options")
@@ -3484,7 +3593,7 @@ def main():
     # -------------------------------------------------------------------------
     # process each station from stations list
 
-    for line_station in stations:
+    for line_station, line_num in stations:
 
         # trim all items in line_station
         line_station = [i.strip() for i in line_station]
@@ -3505,48 +3614,55 @@ def main():
             station.lat = line_station[2].replace(',', '.')
             station.lon = line_station[3].replace(',', '.')
 
-            station.file_D = open(line_station[4], 'rb')
-            station.type_D = line_station[5]
-            globals_vars.type_var_D = station.type_D  # TODO:
+            # if climate_process is actived
+            if globals_vars.config_run['climate_process']:
+                if len(line_station) < 17:
+                        raise Exception(_("Problems with the numbers of parameters inside\n"
+                                          "the stations list need for run climate process.\n"))
 
-            station.range_below_D = line_station[6]
-            station.range_above_D = line_station[7]
+                station.file_D = open(line_station[4], 'rb')
+                station.type_D = line_station[5]
+                globals_vars.type_var_D = station.type_D  # TODO:
 
-            station.threshold_below_var_D = line_station[8].replace(',', '.')
-            station.threshold_above_var_D = line_station[9].replace(',', '.')
+                station.range_below_D = line_station[6]
+                station.range_above_D = line_station[7]
 
-            station.file_I = line_station[10]
-            station.type_I = line_station[11]
-            globals_vars.type_var_I = station.type_I  # TODO:
+                station.threshold_below_var_D = line_station[8].replace(',', '.')
+                station.threshold_above_var_D = line_station[9].replace(',', '.')
 
-            station.range_below_I = line_station[12]
-            station.range_above_I = line_station[13]
+                station.file_I = line_station[10]
+                station.type_I = line_station[11]
+                globals_vars.type_var_I = station.type_I  # TODO:
 
-            station.threshold_below_var_I = line_station[14].replace(',', '.')
-            station.threshold_above_var_I = line_station[15].replace(',', '.')
+                station.range_below_I = line_station[12]
+                station.range_above_I = line_station[13]
 
-            station.analysis_interval = line_station[16]
+                station.threshold_below_var_I = line_station[14].replace(',', '.')
+                station.threshold_above_var_I = line_station[15].replace(',', '.')
 
-            if station.analysis_interval not in options_analysis_interval:
-                raise Exception(_("The analysis interval {0} is invalid,\n"
-                                  "should be one of these: {1}")
-                                  .format(station.analysis_interval,
-                                          ', '.join(options_analysis_interval)))
+                station.analysis_interval = line_station[16]
 
-            if station.analysis_interval != "trimester":
-                # detect analysis_interval number from string
-                _count = 0
-                for digit in station.analysis_interval:
-                    try:
-                        int(digit)
-                        _count += 1
-                    except:
-                        pass
-                station.analysis_interval_num_days = int(station.analysis_interval[0:_count])
+                if station.analysis_interval not in options_analysis_interval:
+                    raise Exception(_("The analysis interval {0} is invalid,\n"
+                                      "should be one of these: {1}")
+                                      .format(station.analysis_interval,
+                                              ', '.join(options_analysis_interval)))
 
-            station.translate_analysis_interval = \
-                translate_analysis_interval[options_analysis_interval.index(station.analysis_interval)]
+                if station.analysis_interval != "trimester":
+                    # detect analysis_interval number from string
+                    _count = 0
+                    for digit in station.analysis_interval:
+                        try:
+                            int(digit)
+                            _count += 1
+                        except:
+                            pass
+                    station.analysis_interval_num_days = int(station.analysis_interval[0:_count])
 
+                station.translate_analysis_interval = \
+                    translate_analysis_interval[options_analysis_interval.index(station.analysis_interval)]
+
+            # if forecasting_process is actived
             if globals_vars.config_run['forecasting_process']:
                 if len(line_station) < 27:
                     raise Exception(_("For forecasting process you need define "
@@ -3566,11 +3682,11 @@ def main():
 
         except Exception, e:
             print_error(_("Reading stations from file \"{0}\" in line {1}:\n")
-                        .format(args.runfile.name, run_file.line_num) +
-                        ';'.join(line_station) + "\n\n" + str(e))
+                        .format(args.runfile.name, line_num) +
+                        ';'.join(line_station) + "\n\n" + str(e), False)
 
         station.line_station = line_station
-        station.line_num = run_file.line_num
+        station.line_num = line_num
 
         # console message
         print _("\n################# STATION: {0} ({1})").format(station.name, station.code)
@@ -3586,6 +3702,9 @@ def main():
 
         # delete instance
         del station
+
+        # force run garbage collector memory
+        gc.collect()
 
     print colored.green(gettext.ngettext(
                         "\n{0} station processed.",
@@ -3611,6 +3730,9 @@ def main():
 
     print _("Good bye :)\n")
 
+    # clear all variables and exit
+    sys.modules[__name__].__dict__.clear()
+    sys.exit()
 
 # Run main() when call jaziku.py
 if __name__ == "__main__":
