@@ -1,5 +1,0 @@
-include license.txt
-recursive-include doc *
-recursive-include jaziku/locale *
-recursive-include jaziku/plugins/maps *
-recursive-include jaziku/plugins/var_I *
