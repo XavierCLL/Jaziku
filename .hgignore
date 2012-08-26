@@ -7,14 +7,12 @@ syntax: regexp
 syntax: regexp
 ^\.settings$
 syntax: regexp
-^src/build$
+^build$
 syntax: regexp
-^src/jaziku\.egg-info$
+^dist$
 syntax: regexp
-^src/dist$
+^jaziku/plugins/maps/watermarking$
 syntax: regexp
-^src/jaziku/plugins/maps/watermarking$
+^docs/manual$
 syntax: regexp
-^src/doc/manual$
-syntax: regexp
-^src/doc/examples$
+^docs/examples$
