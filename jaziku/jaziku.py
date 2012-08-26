@@ -44,7 +44,7 @@ DESCRIPTION:
     According to IDEAM’s commitment to promote and guide scientiﬁc research
     about weather forecasting and climate, "Jazikü" is a program designed to
     evaluate teleconnections between meteorological variables with the main
-    indices of climate variability aﬀecting climate in Colombia.
+    indices of climate variability affecting climate in Colombia.
 
     Jaziku, follows the composite methodology analysis proposed by The
     University Corporation for Atmospheric Research (UCAR)), National Oceanic
@@ -87,7 +87,7 @@ Bogotá, Colombia
 import sys
 import gc
 import os.path
-import argparse  # http://docs.python.org/py3k/library/argparse.html
+#import argparse  # http://docs.python.org/py3k/library/argparse.html
 import csv
 from calendar import monthrange
 from datetime import date
@@ -115,7 +115,7 @@ gettext.bindtextdomain(TRANSLATION_DOMAIN, LOCALE_DIR)
 gettext.textdomain(TRANSLATION_DOMAIN)
 gettext.install(TRANSLATION_DOMAIN, LOCALE_DIR)
 
-# import funtions in plugins
+# import local functions in jaziku/plugins
 import plugins.globals_vars as globals_vars
 import plugins.input_validation as input_validation
 import plugins.input_arg as input_arg
@@ -127,15 +127,15 @@ import plugins.maps.set_grid as set_grid
 
 
 #==============================================================================
-# PRINT FUCTIONS
+# PRINT FUNCTIONS
 
-# TODO: separate file as plugins for all prints fuctions
+# TODO: separate file as plugins for all prints functions
 
 def print_error(text_error, wait_value=True):
-    '''
+    """
     Print error generic function, this is called on any error occurred in
     Jaziku
-    '''
+    """
     if wait_value:
         print colored.red(_('fail\n\nERROR:\n{0}\n\n').format(text_error))
     else:
@@ -149,9 +149,9 @@ def print_error(text_error, wait_value=True):
 
 
 def print_error_line_stations(station, text_error):
-    '''
+    """
     Print error generic function occurred in a line from stations file.
-    '''
+    """
 
     print_error(_("Reading stations from file \"{0}\" in line {1}:\n")
                   .format(args.runfile.name, run_file.line_num) +
@@ -159,17 +159,17 @@ def print_error_line_stations(station, text_error):
 
 
 def print_number(num):
-    '''
+    """
     Print number to csv file acording to accuracy and fix decimal character
-    '''
+    """
     return str(round(float(num), globals_vars.ACCURACY)).replace('.', ',')
 
 
 def print_number_accuracy(num, accuracy):
-    '''
+    """
     Print number to csv file acording to define accuracy and fix decimal
     character
-    '''
+    """
     return str(round(float(num), accuracy)).replace('.', ',')
 
 
@@ -179,12 +179,12 @@ def print_number_accuracy(num, accuracy):
 
 
 def read_var_D(station):
-    '''
+    """
     Read dependent variable from file define in station list
     and check and validate value by value.
 
     Return: values[] and dates[]
-    '''
+    """
     date_D = []
     var_D = []
 
@@ -320,7 +320,7 @@ def read_var_D(station):
         fo.write(file_D_fix.replace('\x00', ''))
         fo.close()
 
-        print colored.yellow(_("\n\n > WARNING: Repairing file \"{0}\" of NULL"\
+        print colored.yellow(_("\n\n > WARNING: Repairing file \"{0}\" of NULL"
                                " bytes garbage,\n   saving new file as: {1}")
                                .format(station.file_D.name, name_fix))
 
@@ -385,12 +385,12 @@ def read_var_D(station):
 
 
 def read_var_I(station):
-    '''
+    """
     Read independent variable from file define in station list
     and check and validate value by value.
 
     Return: values[] and dates[]
-    '''
+    """
     date_I = []
     var_I = []
 
@@ -421,6 +421,7 @@ def read_var_I(station):
                          "from internal files but the file for the type of\n"
                          "independent variable \"{0}\" don't exist").format(station.type_I))
     else:
+        #noinspection PyTypeChecker
         station.file_I = open(station.file_I, 'r')
 
     # check and validate if file I is defined as particular file with
@@ -548,7 +549,7 @@ def read_var_I(station):
         fo.write(file_I_fix.replace('\x00', ''))
         fo.close()
 
-        print colored.yellow(_("\n\n > WARNING: Repairing file \"{0}\" of NULL"\
+        print colored.yellow(_("\n\n > WARNING: Repairing file \"{0}\" of NULL"
                                " bytes garbage,\n   saving new file as: {1}")
                                .format(station.file_I.name, name_fix))
 
@@ -611,17 +612,17 @@ def read_var_I(station):
 
 
 #==============================================================================
-# UTILITIES FUCTIONS
+# UTILITIES FUNCTIONS
 
 
 def calculate_common_period(station):
-    '''
+    """
     Calculate common period (interception) in years of dates from
     dependent and independent variable.
 
     Return: common_period[[  date ,  var_D ,  var_I ],... ]
-    '''
-    # interceptions values of date_D and date_I (python set fuctions wuau!!)
+    """
+    # interceptions values of date_D and date_I (python set functions wuau!!)
     common_date = list(set(station.date_D) & set(station.date_I))
     # sort common date
     common_date.sort()
@@ -665,16 +666,16 @@ def calculate_common_period(station):
 
 
 def column(matrix, i):
-    '''Return column i from matrix'''
+    """Return column i from matrix"""
 
     return [row[i] for row in matrix]
 
 
 def get_lag_values(station, var, lag, month, day=None):
-    '''
+    """
     Return all values of var_D, var_I or date
     of specific lag, month and/or day.
-    '''
+    """
 
     var_select = {'date': 0, 'var_D': 1, 'var_I': 2}
     lag_select = {0: station.Lag_0, 1: station.Lag_1, 2: station.Lag_2}
@@ -690,9 +691,9 @@ def get_lag_values(station, var, lag, month, day=None):
 
 
 def mean(values):
-    '''
+    """
     Return the mean from all values, ignoring valid null values.
-    '''
+    """
 
     sums = 0
     count = 0
@@ -727,10 +728,10 @@ def daily2monthly(var_daily, date_daily):
 
 
 def check_consistent_data(station, var):
-    '''
+    """
     Check if the data are consistent, this is that the amount of null value
     not exceed in 15% of the total number of values inside process period
-    '''
+    """
 
     # temporal var initialize start_date = start common_period + 1 year,
     # month=1, day=1
@@ -771,15 +772,15 @@ def check_consistent_data(station, var):
 
 
 def calculate_lags(station):
-    '''
+    """
     Calculate and return lags 0, 1 and 2 of specific stations
     and save csv file of time series for each lag and trimester,
     the lags are calculated based in: +1 year below of start
-    commond period and -1 year above of end commond period.
+    common period and -1 year above of end common period.
 
     Return:
     station with: Lag_0, Lag_1, Lag_2 and range_analysis_interval
-    '''
+    """
 
     # initialized Lag_X
     # format list: [trim, [ date, mean_var_D, mean_var_I ]], ...
@@ -995,13 +996,13 @@ def calculate_lags(station):
 
 
 def get_thresholds_var_D(station):
-    '''
+    """
     Calculate and return threshold by below and above
     of dependent variable, the type of threshold as
     defined by the user in station file, these may be:
     "default", "pNN" (percentile NN), "sdN" (standard
     deviation N) and particular value.
-    '''
+    """
 
     # Calculate percentile "below" and "above"
     def percentiles(below, above):
@@ -1015,8 +1016,7 @@ def get_thresholds_var_D(station):
         # check if analog_year is defined
         if globals_vars.config_run['analog_year']:
             # check if analog_year is inside in process period
-            if globals_vars.config_run['analog_year'] >= station.process_period['start'] and \
-               globals_vars.config_run['analog_year'] <= station.process_period['end']:
+            if station.process_period['start'] <= globals_vars.config_run['analog_year'] <= station.process_period['end']:
 
                 _iter_date = date(globals_vars.config_run['analog_year'], 1, 1)
                 var_D_values_of_analog_year = []
@@ -1052,13 +1052,13 @@ def get_thresholds_var_D(station):
             return percentiles(33, 66)
 
     # thresholds by below and by above of var D with standard deviation
-    def thresholds_with_std_desviation(below, above):
+    def thresholds_with_std_deviation(below, above):
         values_without_nulls = []
         for value in station.var_D_values:
             if int(value) not in globals_vars.VALID_NULL:
                 values_without_nulls.append(value)
 
-        def func_standard_desviation(values):
+        def func_standard_deviation(values):
             avg = float((sum(values))) / len(values)
             sums = 0
             for value in values:
@@ -1067,13 +1067,13 @@ def get_thresholds_var_D(station):
 
         if below not in [1, 2, 3] or above not in [1, 2, 3]:
             print_error(_("thresholds of dependent variable were defined as "
-                          "N standard desviation\n but are outside of range, "
+                          "N standard deviation\n but are outside of range, "
                           "this values should be 1, 2 or 3:\nsd{0} sd{1}")
                         .format(below, above))
         p50 = stats.scoreatpercentile(values_without_nulls, 50)
-        std_desv = func_standard_desviation(values_without_nulls)
+        std_deviation = func_standard_deviation(values_without_nulls)
 
-        return p50 - below * std_desv, p50 + above * std_desv
+        return p50 - below * std_deviation, p50 + above * std_deviation
 
     # thresholds by below and by above of var D with particular values,
     # these values validation with type of var D
@@ -1083,7 +1083,7 @@ def get_thresholds_var_D(station):
             below = float(below)
             above = float(above)
         except:
-            print_error(_("threshoulds could not were identified:\n{0} - {1}")
+            print_error(_("thresholds could not were identified:\n{0} - {1}")
                         .format(below, above))
 
         if below > above:
@@ -1108,7 +1108,7 @@ def get_thresholds_var_D(station):
             print_error(_("Problem with thresholds of dependent "
                           "variable:\n\n{0}").format(e))
 
-    ## now analisys threshold input in arguments
+    ## now analysis threshold input in arguments
     # if are define as default
     if (station.threshold_below_var_D == "default" and
         station.threshold_above_var_D == "default"):
@@ -1141,7 +1141,7 @@ def get_thresholds_var_D(station):
        ''.join(list(station.threshold_above_var_D)[0:2]) == "sd"):
         below = int(''.join(list(station.threshold_below_var_D)[2::]))
         above = int(''.join(list(station.threshold_above_var_D)[2::]))
-        return thresholds_with_std_desviation(below, above)
+        return thresholds_with_std_deviation(below, above)
 
     # if are define as particular values
     return thresholds_with_particular_values(station.threshold_below_var_D,
@@ -1149,13 +1149,13 @@ def get_thresholds_var_D(station):
 
 
 def get_thresholds_var_I(station):
-    '''
+    """
     Calculate and return threshold by below and above
     of independent variable, the type of threshold as
     defined by the user in station file, these may be:
     "default", "pNN" (percentile NN), "sdN" (standard
     deviation N) and particular value.
-    '''
+    """
 
     # Calculate percentile "below" and "above"
     def percentiles(below, above):
@@ -1203,7 +1203,7 @@ def get_thresholds_var_I(station):
         def if_var_I_is_NAO():
             return 0, 0
 
-        # thresholds for Carribbean (CAR) Index
+        # thresholds for Caribbean (CAR) Index
         def if_var_I_is_SSTA_CAR():
             return percentiles(33, 66)
 
@@ -1227,20 +1227,20 @@ def get_thresholds_var_I(station):
         }
 
         if station.type_I not in select_threshold_var_I:
-            print_error("the threshoulds can't be define as \"default\" if the\n"
+            print_error("the thresholds can't be define as \"default\" if the\n"
                         "type of independent variable is a particular value.")
         threshold_below_var_I, \
         threshold_above_var_I = select_threshold_var_I[station.type_I]()
         return threshold_below_var_I, threshold_above_var_I
 
     # thresholds by below and by above of var I with standard deviation
-    def thresholds_with_std_desviation(below, above):
+    def thresholds_with_std_deviation(below, above):
         values_without_nulls = []
         for value in station.var_I_values:
             if int(value) not in globals_vars.VALID_NULL:
                 values_without_nulls.append(value)
 
-        def func_standard_desviation(values):
+        def func_standard_deviation(values):
             avg = float((sum(values))) / len(values)
             sums = 0
             for value in values:
@@ -1249,13 +1249,13 @@ def get_thresholds_var_I(station):
 
         if below not in [1, 2, 3] or above not in [1, 2, 3]:
             print_error(_("thresholds of independent variable were defined as "
-                          "N standard desviation\n but are outside of range, "
+                          "N standard deviation\n but are outside of range, "
                           "this values should be 1, 2 or 3:\nsd{0} sd{1}")
                         .format(below, above))
         p50 = stats.scoreatpercentile(values_without_nulls, 50)
-        std_desv = func_standard_desviation(values_without_nulls)
+        std_deviation = func_standard_deviation(values_without_nulls)
 
-        return p50 - below * std_desv, p50 + above * std_desv
+        return p50 - below * std_deviation, p50 + above * std_deviation
 
     # thresholds by below and by above of var I with particular values,
     # these values validation with type of var I
@@ -1265,7 +1265,7 @@ def get_thresholds_var_I(station):
             below = float(below)
             above = float(above)
         except:
-            print_error(_("threshoulds could not were identified:\n{0} - {1}")
+            print_error(_("thresholds could not were identified:\n{0} - {1}")
                         .format(below, above))
 
         if below > above:
@@ -1286,7 +1286,7 @@ def get_thresholds_var_I(station):
             print_error(_("Problem with thresholds of independent "
                           "variable:\n\n{0}").format(e))
 
-    ## now analisys threshold input in arguments
+    ## now analysis threshold input in arguments
     # if are define as default
     if (station.threshold_below_var_I == "default" and
         station.threshold_above_var_I == "default"):
@@ -1312,7 +1312,7 @@ def get_thresholds_var_I(station):
        ''.join(list(station.threshold_above_var_I)[0:2]) == "sd"):
         below = int(''.join(list(station.threshold_below_var_I)[2::]))
         above = int(''.join(list(station.threshold_above_var_I)[2::]))
-        return thresholds_with_std_desviation(below, above)
+        return thresholds_with_std_deviation(below, above)
 
     # if are define as particular values
     return thresholds_with_particular_values(station.threshold_below_var_I,
@@ -1325,11 +1325,11 @@ def get_thresholds_var_I(station):
 
 
 def get_contingency_table(station, lag, month, day=None):
-    '''
+    """
     Calculate and return the contingency table in absolute values,
     values in percent, values to print and thresholds by below and
     above of dependent and independent variable.
-    '''
+    """
 
     if day is None:
         # get all values of var D and var I based on this lag and month
@@ -1386,7 +1386,7 @@ def get_contingency_table(station, lag, month, day=None):
     # threshold_problem is global variable for detect problem with
     # threshold of independent variable, if a problem is detected
     # show message and print "nan" (this mean null value for
-    # division by cero) in contingency tabla percent in result
+    # division by zero) in contingency tabla percent in result
     # table, jaziku continue but the graphics will not be created
     # because "nan"  character could not be calculate.
     global threshold_problem
@@ -1450,9 +1450,9 @@ def get_contingency_table(station, lag, month, day=None):
 
 
 def contingency_table(station):
-    '''
+    """
     Print the contingency table for each trimester and each lag
-    '''
+    """
 
     # [lag][month][phenomenon][data(0,1,2)]
     # [lag][month][day][phenomenon][data(0,1,2)]
@@ -1498,11 +1498,11 @@ def contingency_table(station):
 
 
 def result_table_CA(station):
-    '''
-    Calculate and print the result table for composite analisys (CA) in csv
-    file, this file contein several variables of previous calculations and
+    """
+    Calculate and print the result table for composite analysis (CA) in csv
+    file, this file contain several variables of previous calculations and
     different tests.
-    '''
+    """
 
     pearson_list = {}
     is_sig_risk_analysis = {}
@@ -1511,7 +1511,6 @@ def result_table_CA(station):
         # test:
         # is significance risk analysis?
 
-        pearson = None
         is_sig_risk_analysis_list = []
 
         contingency_table_matrix = np.matrix(contingency_table)
@@ -1556,7 +1555,7 @@ def result_table_CA(station):
 
         # calculate the correlation of contingency table
         chi_cdf = 1 - p_value
-        corr_CT = ((chi_cdf ** 2) / (station.size_time_series * 2.0)) ** (0.5)
+        corr_CT = ((chi_cdf ** 2) / (station.size_time_series * 2.0)) ** 0.5
 
         # test:
         # Is significant the contingency table?
@@ -1718,17 +1717,17 @@ def result_table_CA(station):
 
 
 def graphics_climate(station):
-    '''
+    """
     Generate bart graphics and mosaic of probability for below, normal and
-    above for independece variable for the composite analisys.
-    '''
+    above for independence variable for the composite analysis.
+    """
 
     # main directory for save graphics
     graphics_dir = _('graphics')
 
-    # directory for save composite analisys graphics
+    # directory for save composite analysis graphics
     graphics_dir_ca = \
-        os.path.join(station.climate_dir, graphics_dir, _('composite_analisys'))
+        os.path.join(station.climate_dir, graphics_dir, _('composite_analysis'))
 
     # create dir
     if not os.path.isdir(graphics_dir_ca):
@@ -1744,7 +1743,7 @@ def graphics_climate(station):
         plt.figure()
 
         # graphics title
-        plt.title(unicode(_('Composite analisys - {0} ({1})\n{2} - {3} - '
+        plt.title(unicode(_('Composite analysis - {0} ({1})\n{2} - {3} - '
                             'lag {6} - {7} - ({4}-{5})')
                             .format(station.name, station.code, station.type_I,
                                     station.type_D, station.process_period['start'],
@@ -1769,23 +1768,23 @@ def graphics_climate(station):
         var_D_above = plt.bar(ind + 2 * width, column(contingency_table_percent, 2),
                               width, color=colours[2])
 
-        # assing value for each bart
-        def autolabel(rects):
+        # assign value for each bart
+        def auto_label(rects):
             # attach some text labels
             temp = []
             for rect in rects:
                 temp.append(rect.get_height())
             temp.sort(reverse=True)
-            max_heigth = temp[0]
+            max_height = temp[0]
 
             for rect in rects:
                 height = rect.get_height()
-                plt.text(rect.get_x() + rect.get_width() / 2.0, 0.015 * max_heigth +
+                plt.text(rect.get_x() + rect.get_width() / 2.0, 0.015 * max_height +
                          height, round(height, 1), ha='center', va='bottom')
 
-        autolabel(var_D_below)
-        autolabel(var_D_normal)
-        autolabel(var_D_above)
+        auto_label(var_D_below)
+        auto_label(var_D_normal)
+        auto_label(var_D_above)
 
         plt.subplots_adjust(bottom=0.15, left=0.22, right=0.97)
         # plt.legend((var_D_below[0], var_D_normal[0], var_D_above[0]),
@@ -1897,17 +1896,17 @@ def graphics_climate(station):
 
 
 def graphics_forecasting(station):
-    '''
+    """
     Generate pie graphics and mosaic of probability for below, normal and
-    above for independece variable for the composite analisys.
-    '''
+    above for independence variable for the composite analysis.
+    """
 
     # main directory for save graphics
     graphics_dir = _('graphics')
 
-    # directory for save composite analisys graphics
+    # directory for save composite analysis graphics
     graphics_dir_corr = \
-        os.path.join(station.climate_dir, graphics_dir, _('composite_analisys'))
+        os.path.join(station.climate_dir, graphics_dir, _('composite_analysis'))
 
     # create dir
     if not os.path.isdir(graphics_dir_corr):
@@ -1944,7 +1943,7 @@ def graphics_forecasting(station):
 
         explode = (0.03, 0.03, 0.03)
 
-        # assing value for piece of pie
+        # assign value for piece of pie
         def autopct_funt(pct):
             total = sum(values_pie)
             val = pct * total / 100.0
@@ -1989,15 +1988,15 @@ def graphics_forecasting(station):
 
 #==============================================================================
 # PLOTTING MAPS
-# create file for ploting
-# TODO: generate maps from previus file, plot all index from all stations
+# create file for plotting
+# TODO: generate maps from previous file, plot all index from all stations
 
 
 def maps_data_climate(station):
-    '''
-    Create maps data csv file for ploting for each trimester, phenomenon and lag,
+    """
+    Create maps data csv file for plotting for each trimester, phenomenon and lag,
     each file contain all stations processed.
-    '''
+    """
 
     # -------------------------------------------------------------------------
     # create maps plots files for climate process, only once
@@ -2159,22 +2158,22 @@ def maps_data_climate(station):
 
 
 def maps_data_forecasting(station):
-    '''
-    Create maps data csv file for ploting for each trimester, phenomenon and
+    """
+    Create maps data csv file for plotting for each trimester, phenomenon and
     lag, each file contain all stations processed.
-    '''
+    """
     # -------------------------------------------------------------------------
     # create maps plots files for forecasting process, only once
 
     # select text for forecasting date
     if station.state_of_data in [1, 3]:
-        forecasting_date_formated = globals_vars.trim_text[station.forecasting_date - 1]
+        forecasting_date_formatted = globals_vars.trim_text[station.forecasting_date - 1]
     if station.state_of_data in [2, 4]:
         month = station.forecasting_date[0]
         day = station.forecasting_date[1]
-        forecasting_date_formated = globals_vars.month_text[month - 1] + "_" + str(day)
+        forecasting_date_formatted = globals_vars.month_text[month - 1] + "_" + str(day)
 
-    if forecasting_date_formated not in globals_vars.maps_files_forecasting[station.analysis_interval]:
+    if forecasting_date_formatted not in globals_vars.maps_files_forecasting[station.analysis_interval]:
 
         if station.state_of_data in [1, 3]:
             lags_list = {}
@@ -2205,7 +2204,7 @@ def maps_data_forecasting(station):
                 del csv_file
 
                 lags_list[lag] = csv_name
-            globals_vars.maps_files_forecasting[station.analysis_interval][forecasting_date_formated] = lags_list
+            globals_vars.maps_files_forecasting[station.analysis_interval][forecasting_date_formatted] = lags_list
 
         if station.state_of_data in [2, 4]:
             lags_list = {}
@@ -2214,14 +2213,14 @@ def maps_data_forecasting(station):
 
                 maps_dir = os.path.join(forecasting_dir, _('maps'),
                                         station.translate_analysis_interval,
-                                        forecasting_date_formated)
+                                        forecasting_date_formatted)
 
                 if not os.path.isdir(maps_dir):
                     os.makedirs(maps_dir)
 
                 # write the headers in file
                 csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}_{1}.csv')
-                                        .format(lag, forecasting_date_formated))
+                                        .format(lag, forecasting_date_formatted))
 
                 if os.path.isfile(csv_name):
                     os.remove(csv_name)
@@ -2236,7 +2235,7 @@ def maps_data_forecasting(station):
                 del csv_file
 
                 lags_list[lag] = csv_name
-            globals_vars.maps_files_forecasting[station.analysis_interval][forecasting_date_formated] = lags_list
+            globals_vars.maps_files_forecasting[station.analysis_interval][forecasting_date_formatted] = lags_list
 
     def calculate_index():
         # select index
@@ -2264,13 +2263,13 @@ def maps_data_forecasting(station):
         p_index = calculate_index()
 
         # write new row in file
-        csv_name = globals_vars.maps_files_forecasting[station.analysis_interval][forecasting_date_formated][lag]
+        csv_name = globals_vars.maps_files_forecasting[station.analysis_interval][forecasting_date_formatted][lag]
         open_file = open(csv_name, 'a')
         csv_file = csv.writer(open_file, delimiter=';')
         csv_file.writerow([station.code,
                        print_number_accuracy(station.lat, 4),
                        print_number_accuracy(station.lon, 4),
-                       forecasting_date_formated,
+                       forecasting_date_formatted,
                        print_number(station.prob_decrease_var_D[lag]),
                        print_number(station.prob_normal_var_D[lag]),
                        print_number(station.prob_exceed_var_D[lag]),
@@ -2286,9 +2285,9 @@ def maps_data_forecasting(station):
 # PRE-PROCESS: READ, VALIDATED AND CHECK DATA
 
 def pre_process(station):
-    '''
+    """
     Read var I and varD from files, validated and check consistent
-    '''
+    """
 
     # -------------------------------------------------------------------------
     # Reading the variables from files and check based on range validation
@@ -2300,7 +2299,7 @@ def pre_process(station):
     if not station.range_below_D or not station.range_above_D:
         print colored.yellow(_("\n > WARNING: you are using one or both limit as\n"
                                "   \"none\" value, this means that series values\n"
-                               "   will not be checked if they are valids in\n"
+                               "   will not be checked if they are valid in\n"
                                "   its limits coherent. This option is not\n"
                                "   recommended, use it with precaution ........")),
     print colored.green(_("done"))
@@ -2317,7 +2316,7 @@ def pre_process(station):
     if not station.range_below_I or not station.range_above_I:
         print colored.yellow(_("\n > WARNING: you are using one or both limit as\n"
                                "   \"none\" value, this means that series values\n"
-                               "   will not be checked if they are valids in\n"
+                               "   will not be checked if they are valid in\n"
                                "   its limits coherent. This option is not\n"
                                "   recommended, use it with precaution ........")),
     print colored.green(_("done"))
@@ -2385,7 +2384,7 @@ def process(station):
         print colored.cyan(_("   Results will be made by trimesters"))
         if station.analysis_interval != "trimester":
             text_error = _("var_D (and or not var_I) has data monthly but you define the\n"
-                           "analisys interval as \"{0}\", this must be, in this\n"
+                           "analysis interval as \"{0}\", this must be, in this\n"
                            "case, as \"trimester\".").format(station.analysis_interval)
             print_error_line_stations(station, text_error)
     if station.state_of_data in [2, 4]:
@@ -2434,9 +2433,9 @@ def process(station):
 
 
 def climate(station):
-    '''
+    """
     Main process for climate
-    '''
+    """
 
     # console message
     sys.stdout.write(_("Processing climate ({0}-{1}) ................ ")
@@ -2475,9 +2474,9 @@ def climate(station):
 
 
 def forecasting(station):
-    '''
+    """
     Main process for forecasting
-    '''
+    """
 
     # console message
     sys.stdout.write(_("Processing forecasting ({0}-{1}) ............ ")
@@ -2626,9 +2625,9 @@ def maps(grid):
         print_error(_("The latitude and/or longitude are wrong,\nthese should be decimal degrees."), False)
 
     # set variables for grid
-    grid.grid_propieties()
+    grid.grid_properties()
 
-    grid.print_grid_propieties()
+    grid.print_grid_properties()
 
     ## Matrix with real data and null value for empty value
     # base_matrix[lat, lon]
@@ -2663,27 +2662,27 @@ def maps(grid):
             matrix, point_state = grid.set_point_on_grid(matrix, latitude, longitude, index)
 
             if point_state == "nan" and message_warning:
-                print colored.yellow(\
-                    _("\n > WARNING: The point lat:{lat} lon:{lon}\n" \
-                      "   of the station code: {code} was not added\n" \
+                print colored.yellow(
+                    _("\n > WARNING: The point lat:{lat} lon:{lon}\n"
+                      "   of the station code: {code} was not added\n"
                       "   because the value of index is \"nan\" (null) .").
                     format(lat=latitude, lon=longitude, code=line[0])),
             if point_state == "point not added" and message_warning:
-                print colored.yellow(\
-                    _("\n > WARNING: The point lat:{lat} lon:{lon}\n" \
-                      "   of the station code: {code} was not added\n" \
+                print colored.yellow(
+                    _("\n > WARNING: The point lat:{lat} lon:{lon}\n"
+                      "   of the station code: {code} was not added\n"
                       "   because the point is outside of the grid ...").
                     format(lat=latitude, lon=longitude, code=line[0])),
             if point_state in [_("average"), _("maximum"), _("minimum")] and message_warning:
-                print colored.yellow(\
-                    _("\n > WARNING: for the point lat:{lat} lon:{lon}\n" \
-                      "   Jaziku detect overlapping of two values, Jaziku\n" \
+                print colored.yellow(
+                    _("\n > WARNING: for the point lat:{lat} lon:{lon}\n"
+                      "   Jaziku detect overlapping of two values, Jaziku\n"
                       "   will put the {state} value .................").
                     format(lat=latitude, lon=longitude, state=point_state)),
             if point_state == _("neither") and message_warning:
-                print colored.yellow(\
-                    _("\n > WARNING: for the point lat:{lat} lon:{lon}\n" \
-                      "   Jaziku detect overlapping of two values, Jaziku\n" \
+                print colored.yellow(
+                    _("\n > WARNING: for the point lat:{lat} lon:{lon}\n"
+                      "   Jaziku detect overlapping of two values, Jaziku\n"
                       "   will not put the {state} values ............").
                     format(lat=latitude, lon=longitude, state=point_state)),
 
@@ -3038,9 +3037,9 @@ def maps(grid):
 
 
 class Station:
-    '''
+    """
     Generic station class
-    '''
+    """
 
     # counter stations processed
     stations_processed = 0
@@ -3054,9 +3053,9 @@ class Station:
 
 
 class Grid:
-    '''
+    """
     Generic grid class
-    '''
+    """
 
     fields = ["grid",
               "minlat",
@@ -3079,14 +3078,14 @@ class Grid:
         self.__class__.all_grids.append(self)
         Grid.grids_processed += 1
 
-    def  grid_propieties(self):
-        '''
+    def  grid_properties(self):
+        """
         Set values and default values for grid variables
-        '''
+        """
 
         # set the radiuses for interpolation
         if self.grid_resolution == "default":
-            # set grid resolution basesd in 70 division of grid for minimun side
+            # set grid resolution based in 70 division of grid for minimum side
             self.grid_resolution = min([abs(self.maxlat - self.minlat),
                                         abs(self.maxlon - self.minlon)]) / 70
 
@@ -3151,7 +3150,7 @@ class Grid:
         if globals_vars.config_run['shape_boundary']:
             self.shape_mask = True
 
-    def  print_grid_propieties(self):
+    def  print_grid_properties(self):
         print colored.cyan(_("   Mesh size: {0}x{1}").format(self.lat_size, self.lon_size))
 
         # interpolation type TODO:
@@ -3228,9 +3227,9 @@ class Grid:
 
 
 def main():
-    '''
+    """
     Main process of Jaziku
-    '''
+    """
 
     # check python version
     if sys.version_info[0] != 2 or sys.version_info[1] < 6:
@@ -3362,17 +3361,17 @@ def main():
         # Setting language based on locale language system,
         # when not defined language in arguments
         try:
-            locale_languaje = locale.getdefaultlocale()[0][0:2]
-            settings_language = colored.green(locale_languaje) + _(" (system language)")
+            locale_language = locale.getdefaultlocale()[0][0:2]
+            settings_language = colored.green(locale_language) + _(" (system language)")
             try:
-                if locale_languaje != "en":
+                if locale_language != "en":
                     lang = gettext.translation(TRANSLATION_DOMAIN, LOCALE_DIR,
-                                               languages=[locale_languaje],
+                                               languages=[locale_language],
                                                codeset="utf-8")
-                    os.environ["LANG"] = locale_languaje
+                    os.environ["LANG"] = locale_language
                     lang.install()
             except:
-                settings_language = colored.green("en") + _(" (language \'{0}\' has not was translated yet)").format(locale_languaje)
+                settings_language = colored.green("en") + _(" (language \'{0}\' has not was translated yet)").format(locale_language)
                 lang = gettext.NullTranslations()
                 os.environ["LANG"] = "en"
                 lang.install()
@@ -3385,15 +3384,15 @@ def main():
     # -------------------------------------------------------------------------
     # Start message
 
-    print _("\n########################### JAZIKU ###########################\n"
-            "## Jaziku is a software for the implementation of composite ##\n"
-            "## analysis metodology between the major indices of climate ##\n"
-            "## variability and major meteorological variables in        ##\n"
-            "## puntual scale.                                           ##\n"
-            "##                                                          ##\n"
-            "## Version {0} - {1}\t                            ##\n"
-            "## Copyright 2011-2012 IDEAM - Colombia                     ##\n"
-            "##############################################################") \
+    print _("\n############################ JAZIKU ############################\n"
+            "## Jaziku is a software for the implementation of composite   ##\n"
+            "## analysis methodology between the major indices of climate  ##\n"
+            "## variability and major meteorological variables in          ##\n"
+            "## punctual scale.                                            ##\n"
+            "##                                                            ##\n"
+            "## Version {0} - {1}\t                              ##\n"
+            "## Copyright 2011-2012 IDEAM - Colombia                       ##\n"
+            "################################################################") \
             .format(globals_vars.VERSION, globals_vars.COMPILE_DATE)
 
     # -------------------------------------------------------------------------
@@ -3561,9 +3560,9 @@ def main():
         print "   " + colored.cyan(climate_dir)
 
         if os.path.isdir(climate_dir):
-            print colored.yellow(\
-                _("\n > WARNING: the output director for climate process\n" \
-                  "   is already exist, Jaziku continue but the results\n" \
+            print colored.yellow(
+                _("\n > WARNING: the output director for climate process\n"
+                  "   is already exist, Jaziku continue but the results\n"
                   "   could be mixed or replaced of old output."))
 
     # -------------------------------------------------------------------------
@@ -3579,9 +3578,9 @@ def main():
         print "   " + colored.cyan(forecasting_dir)
 
         if os.path.isdir(forecasting_dir):
-            print colored.yellow(\
-                _("\n > WARNING: the output director for forecasting process\n" \
-                  "   is already exist, Jaziku continue but the results\n" \
+            print colored.yellow(
+                _("\n > WARNING: the output director for forecasting process\n"
+                  "   is already exist, Jaziku continue but the results\n"
                   "   could be mixed or replaced of old output."))
 
     # analysis_interval
@@ -3614,7 +3613,7 @@ def main():
             station.lat = line_station[2].replace(',', '.')
             station.lon = line_station[3].replace(',', '.')
 
-            # if climate_process is actived
+            # if climate_process is activated
             if globals_vars.config_run['climate_process']:
                 if len(line_station) < 17:
                         raise Exception(_("Problems with the numbers of parameters inside\n"
@@ -3662,7 +3661,7 @@ def main():
                 station.translate_analysis_interval = \
                     translate_analysis_interval[options_analysis_interval.index(station.analysis_interval)]
 
-            # if forecasting_process is actived
+            # if forecasting_process is activated
             if globals_vars.config_run['forecasting_process']:
                 if len(line_station) < 27:
                     raise Exception(_("For forecasting process you need define "
