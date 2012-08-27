@@ -117,6 +117,7 @@ gettext.install(TRANSLATION_DOMAIN, LOCALE_DIR)
 
 # import local functions in jaziku/plugins
 import plugins.globals_vars as globals_vars
+import plugins.console as console
 import plugins.input_validation as input_validation
 import plugins.input_arg as input_arg
 import plugins.contingency_test as ct
@@ -129,48 +130,15 @@ import plugins.maps.set_grid as set_grid
 #==============================================================================
 # PRINT FUNCTIONS
 
-# TODO: separate file as plugins for all prints functions
-
-def print_error(text_error, wait_value=True):
+def format_number(num, accuracy=False):
     """
-    Print error generic function, this is called on any error occurred in
-    Jaziku
+    Return the number after formatted according to accuracy (default or particular)
+    and fix decimal character.
     """
-    if wait_value:
-        print colored.red(_('fail\n\nERROR:\n{0}\n\n').format(text_error))
+    if accuracy:
+        return str(round(float(num), accuracy)).replace('.', ',')
     else:
-        print colored.red(_('\nERROR:\n{0}\n').format(text_error))
-    print _("Please check the error and read the manual if is necessary.\n"
-            "If this is an error of Jaziku, please report it with Jaziku developers.\n\n"
-            "Jaziku, version {0} - {1}.\n"
-            "Copyright © 2011-2012 IDEAM - Colombia")\
-            .format(globals_vars.VERSION, globals_vars.COMPILE_DATE)
-    sys.exit()
-
-
-def print_error_line_stations(station, text_error):
-    """
-    Print error generic function occurred in a line from stations file.
-    """
-
-    print_error(_("Reading stations from file \"{0}\" in line {1}:\n")
-                  .format(args.runfile.name, run_file.line_num) +
-                  ';'.join(station.line_station) + "\n\n" + text_error)
-
-
-def print_number(num):
-    """
-    Print number to csv file acording to accuracy and fix decimal character
-    """
-    return str(round(float(num), globals_vars.ACCURACY)).replace('.', ',')
-
-
-def print_number_accuracy(num, accuracy):
-    """
-    Print number to csv file acording to define accuracy and fix decimal
-    character
-    """
-    return str(round(float(num), accuracy)).replace('.', ',')
+        return str(round(float(num), globals_vars.ACCURACY)).replace('.', ',')
 
 
 #==============================================================================
@@ -196,38 +164,38 @@ def read_var_D(station):
     if station.range_below_D == "default":
         # validation type_D
         if station.type_D not in globals_vars.types_var_D:
-            print_error_line_stations(station,
-                                      _("{0} is not valid type for dependence variable"
-                                        " if you defined LIMIT VAR D BELOW/ABOVE as \"default\".")
-                                      .format(station.type_D))
+            console.msg_error_line_stations(station,
+                _("{0} is not valid type for dependence variable"
+                " if you defined LIMIT VAR D BELOW/ABOVE as \"default\".")
+                .format(station.type_D))
     elif station.range_below_D == "none":
         station.range_below_D = None
     else:
         try:
             station.range_below_D = float(station.range_below_D.replace(',', '.'))
         except:
-            print_error_line_stations(station,
-                            (_("Problem with particular range validation for "
-                              "dependent\nvariable: {0} this should be "
-                              "a valid number, \"none\" or \"default\".").format(station.range_below_D,)))
+            console.msg_error_line_stations(station,
+                (_("Problem with particular range validation for "
+                  "dependent\nvariable: {0} this should be "
+                  "a valid number, \"none\" or \"default\".").format(station.range_below_D,)))
     # above var D
     if station.range_above_D == "default":
         # validation type_D
         if station.type_D not in globals_vars.types_var_D:
-            print_error_line_stations(station,
-                                      _("{0} is not valid type for dependence variable"
-                                        " if you defined LIMIT VAR D BELOW/ABOVE as \"default\".")
-                                      .format(station.type_D))
+            console.msg_error_line_stations(station,
+                _("{0} is not valid type for dependence variable"
+                  " if you defined LIMIT VAR D BELOW/ABOVE as \"default\".")
+                .format(station.type_D))
     elif station.range_above_D == "none":
         station.range_above_D = None
     else:
         try:
             station.range_above_D = float(station.range_above_D.replace(',', '.'))
         except:
-            print_error_line_stations(station,
-                            (_("Problem with particular range validation for "
-                              "dependent\nvariable: {0} this should be "
-                              "a valid number, \"none\" or \"default\".").format(station.range_above_D,)))
+            console.msg_error_line_stations(station,
+                (_("Problem with particular range validation for "
+                  "dependent\nvariable: {0} this should be "
+                  "a valid number, \"none\" or \"default\".").format(station.range_above_D,)))
 
     # reader_csv = csv.reader(fo, delimiter = '\t')
     # reader_csv.write(data.replace('\x00', ''))
@@ -247,11 +215,12 @@ def read_var_D(station):
                 row[1] = row[1].replace(',', '.')
 
             except Exception, e:
-                print_error(_("Reading from file \"{0}\" in line: {1}\n\n"
-                              "this could be caused by wrong line or garbage "
-                              "character,\nplease check manually, fix it and "
-                              "run again.")
-                             .format(station.file_D.name, reader_csv.line_num))
+                console.msg_error(_(
+                    "Reading from file \"{0}\" in line: {1}\n\n"
+                    "this could be caused by wrong line or garbage "
+                    "character,\nplease check manually, fix it and "
+                    "run again.")
+                    .format(station.file_D.name, reader_csv.line_num))
 
             # check if var D is daily or month
             if first:
@@ -270,23 +239,25 @@ def read_var_D(station):
                     # check if the values are continuous
                     if not first and date(year, month, day) + relativedelta(days= -1) != date_D[-1]:
                         missing_date = date_D[-1] + relativedelta(days= +1)
-                        print_error(_("Reading var D from file \"{0}\" in line: {1}\n\n"
-                                      "Jaziku detected missing value for date: {2}")
-                                    .format(station.file_D.name,
-                                            reader_csv.line_num,
-                                            missing_date))
+                        console.msg_error(_(
+                            "Reading var D from file \"{0}\" in line: {1}\n\n"
+                            "Jaziku detected missing value for date: {2}")
+                            .format(station.file_D.name,
+                                    reader_csv.line_num,
+                                    missing_date))
 
                 if station.data_of_var_D == "monthly":
                     day = 1
                     # check if the values are continuous
                     if not first and date(year, month, day) + relativedelta(months= -1) != date_D[-1]:
                         missing_date = date_D[-1] + relativedelta(months= +1)
-                        print_error(_("Reading var D from file \"{0}\" in line: {1}\n\n"
-                                      "Jaziku detected missing value for date: {2}-{3}")
-                                    .format(station.file_D.name,
-                                            reader_csv.line_num,
-                                            missing_date.year,
-                                            missing_date.month))
+                        console.msg_error(_(
+                            "Reading var D from file \"{0}\" in line: {1}\n\n"
+                            "Jaziku detected missing value for date: {2}-{3}")
+                            .format(station.file_D.name,
+                                    reader_csv.line_num,
+                                    missing_date.year,
+                                    missing_date.month))
                 value = float(row[1])
                 # set date of dependent variable from file_D, column 1,
                 # format: yyyy-mm-dd
@@ -300,9 +271,9 @@ def read_var_D(station):
                                                                station.range_above_D))
 
             except Exception, e:
-                print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
-                             .format(station.file_D.name,
-                                     reader_csv.line_num, e))
+                console.msg_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
+                                  .format(station.file_D.name, reader_csv.line_num, e))
+
             if first:
                 first = False
 
@@ -339,7 +310,7 @@ def read_var_D(station):
                 row[1] = row[1].replace(',', '.')
 
             except Exception, e:
-                print_error(_("Reading from file \"{0}\" in line: {1}\n\n"
+                console.msg_error(_("Reading from file \"{0}\" in line: {1}\n\n"
                               "this could be caused by wrong line or garbage "
                               "character,\nplease check manually, fix it and "
                               "run again.")
@@ -374,7 +345,7 @@ def read_var_D(station):
                                                                station.range_above_D))
 
             except Exception, e:
-                print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
+                console.msg_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
                             .format(station.file_D.name,
                                     reader_csv_fix.line_num, e))
 
@@ -417,9 +388,10 @@ def read_var_I(station):
                               globals_vars.internal_var_I_urls[station.type_I])),
 
         else:
-            print_error(_("you defined that Jaziku get data of independent variable\n"
-                         "from internal files but the file for the type of\n"
-                         "independent variable \"{0}\" don't exist").format(station.type_I))
+            console.msg_error(_(
+                "you defined that Jaziku get data of independent variable\n"
+                "from internal files but the file for the type of\n"
+                "independent variable \"{0}\" don't exist").format(station.type_I))
     else:
         #noinspection PyTypeChecker
         station.file_I = open(station.file_I, 'r')
@@ -430,38 +402,38 @@ def read_var_I(station):
     if station.range_below_I == "default":
         # validation type_I
         if station.type_I not in globals_vars.types_var_I:
-            print_error_line_stations(station,
-                                      _("{0} is not valid type for independence variable"
-                                        " if you defined LIMIT VAR I BELOW/ABOVE as \"default\".")
-                                      .format(station.type_I))
+            console.msg_error_line_stations(station,
+                _("{0} is not valid type for independence variable"
+                " if you defined LIMIT VAR I BELOW/ABOVE as \"default\".")
+                .format(station.type_I))
     elif station.range_below_I == "none":
         station.range_below_I = None
     else:
         try:
             station.range_below_I = float(station.range_below_I.replace(',', '.'))
         except:
-            print_error_line_stations(station,
-                            (_("Problem with particular range validation for "
-                              "dependent\nvariable: {0} this should be "
-                              "a valid number, \"none\" or \"default\".").format(station.range_below_I,)))
+            console.msg_error_line_stations(station,
+                (_("Problem with particular range validation for "
+                  "dependent\nvariable: {0} this should be "
+                  "a valid number, \"none\" or \"default\".").format(station.range_below_I,)))
     # above var I
     if station.range_above_I == "default":
         # validation type_I
         if station.type_I not in globals_vars.types_var_I:
-            print_error_line_stations(station,
-                                      _("{0} is not valid type for independence variable"
-                                        " if you defined LIMIT VAR I BELOW/ABOVE as \"default\".")
-                                      .format(station.type_I))
+            console.msg_error_line_stations(station,
+                _("{0} is not valid type for independence variable"
+                " if you defined LIMIT VAR I BELOW/ABOVE as \"default\".")
+                .format(station.type_I))
     elif station.range_above_I == "none":
         station.range_above_I = None
     else:
         try:
             station.range_above_I = float(station.range_above_I.replace(',', '.'))
         except:
-            print_error_line_stations(station,
-                            (_("Problem with particular range validation for "
-                              "dependent\nvariable: {0} this should be "
-                              "a valid number, \"none\" or \"default\".").format(station.range_above_I,)))
+            console.msg_error_line_stations(station,
+                (_("Problem with particular range validation for "
+                  "dependent\nvariable: {0} this should be "
+                  "a valid number, \"none\" or \"default\".").format(station.range_above_I,)))
 
     reader_csv = csv.reader(station.file_I, delimiter='\t')
     first = True
@@ -478,11 +450,12 @@ def read_var_I(station):
                 row[0] = row[0].replace('/', '-')
                 row[1] = row[1].replace(',', '.')
             except Exception, e:
-                print_error(_("Reading from file \"{0}\" in line: {1}\n\n"
-                              "this could be caused by wrong line or garbage "
-                              "character,\nplease check manually, fix it and "
-                              "run again.")
-                             .format(station.file_I.name, reader_csv.line_num))
+                console.msg_error(_(
+                    "Reading from file \"{0}\" in line: {1}\n\n"
+                    "this could be caused by wrong line or garbage "
+                    "character,\nplease check manually, fix it and "
+                    "run again.")
+                    .format(station.file_I.name, reader_csv.line_num))
 
             # check if var I is daily or month
             if first:
@@ -501,23 +474,25 @@ def read_var_I(station):
                     # check if the values are continuous
                     if not first and date(year, month, day) + relativedelta(days= -1) != date_I[-1]:
                         missing_date = date_I[-1] + relativedelta(days= +1)
-                        print_error(_("Reading var I from file \"{0}\" in line: {1}\n\n"
-                                      "Jaziku detected missing value for date: {2}")
-                                    .format(station.file_I.name,
-                                            reader_csv.line_num,
-                                            missing_date))
+                        console.msg_error(_(
+                            "Reading var I from file \"{0}\" in line: {1}\n\n"
+                            "Jaziku detected missing value for date: {2}")
+                            .format(station.file_I.name,
+                                    reader_csv.line_num,
+                                    missing_date))
 
                 if station.data_of_var_I == "monthly":
                     day = 1
                     # check if the values are continuous
                     if not first and date(year, month, day) + relativedelta(months= -1) != date_I[-1]:
                         missing_date = date_I[-1] + relativedelta(months= +1)
-                        print_error(_("Reading var I from file \"{0}\" in line: {1}\n\n"
-                                      "Jaziku detected missing value for date: {2}-{3}")
-                                    .format(station.file_I.name,
-                                            reader_csv.line_num,
-                                            missing_date.year,
-                                            missing_date.month))
+                        console.msg_error(_(
+                            "Reading var I from file \"{0}\" in line: {1}\n\n"
+                            "Jaziku detected missing value for date: {2}-{3}")
+                            .format(station.file_I.name,
+                                    reader_csv.line_num,
+                                    missing_date.year,
+                                    missing_date.month))
                 value = float(row[1])
                 # set date of independent variable from file_I, column 1,
                 # format: yyyy-mm
@@ -529,8 +504,8 @@ def read_var_I(station):
                                                                station.range_above_I))
 
             except Exception, e:
-                print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
-                            .format(station.file_I.name, reader_csv.line_num, e))
+                console.msg_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
+                                    .format(station.file_I.name, reader_csv.line_num, e))
 
             if first:
                 first = False
@@ -568,11 +543,12 @@ def read_var_I(station):
                 row[1] = row[1].replace(',', '.')
 
             except Exception, e:
-                print_error(_("Reading from file \"{0}\" in line: {1}\n\n"
-                              "this could be caused by wrong line or garbage "
-                              "character,\nplease check manually, fix it and "
-                              "run again.")
-                             .format(station.file_I.name, reader_csv.line_num))
+                console.msg_error(_(
+                    "Reading from file \"{0}\" in line: {1}\n\n"
+                    "this could be caused by wrong line or garbage "
+                    "character,\nplease check manually, fix it and "
+                    "run again.")
+                    .format(station.file_I.name, reader_csv.line_num))
 
             # check if var I is daily or month
             if first:
@@ -601,9 +577,9 @@ def read_var_I(station):
                                                                station.range_above_I))
 
             except Exception, e:
-                print_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
-                            .format(station.file_I.name,
-                                    reader_csv_fix.line_num, e))
+                console.msg_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
+                                    .format(station.file_I.name,
+                                            reader_csv_fix.line_num, e))
 
     station.var_I = var_I
     station.date_I = date_I
@@ -634,11 +610,12 @@ def calculate_common_period(station):
             globals_vars.config_run['process_period']['end'] > common_date[-1].year - 1):
             sys.stdout.write(_("Calculating the process period ................ "))
             sys.stdout.flush()
-            print_error(_("The period defined in argument {0}-{1} is outside in the\n"
-                          "maximum possible period for this station: {2}-{3}.")
-                        .format(globals_vars.config_run['process_period']['start'],
-                                globals_vars.config_run['process_period']['end'],
-                                common_date[0].year + 1, common_date[-1].year - 1))
+            console.msg_error(_(
+                "The period defined in argument {0}-{1} is outside in the\n"
+                "maximum possible period for this station: {2}-{3}.")
+                .format(globals_vars.config_run['process_period']['start'],
+                        globals_vars.config_run['process_period']['end'],
+                        common_date[0].year + 1, common_date[-1].year - 1))
 
         common_date = common_date[common_date.index(date(globals_vars.config_run['process_period']['start'] - 1, 1, 1)):
                                   common_date.index(date(globals_vars.config_run['process_period']['end'] + 1, 12, 1)) + 1]
@@ -658,9 +635,9 @@ def calculate_common_period(station):
         sys.stdout.write(_("Calculating the common period ................. "))
         sys.stdout.flush()
 
-        print_error(_("The common period calculated {0}-{1} has not at "
-                      "least 3 years.").format(common_date[0].year,
-                                               common_date[-1].year))
+        console.msg_error(_("The common period calculated {0}-{1} has not at "
+                            "least 3 years.").format(common_date[0].year,
+                                                     common_date[-1].year))
 
     return common_period
 
@@ -765,9 +742,9 @@ def check_consistent_data(station, var):
     sys.stdout.flush()
 
     if  null_counter / float(len(values_in_common_period)) >= 0.15:
-        print_error(_("the number of null values is greater than 15% of total\n"
-                    "of values inside common period, therefore, for Jaziku\n"
-                    "the data are not consistent for process."))
+        console.msg_error(_("the number of null values is greater than 15% of total\n"
+                            "of values inside common period, therefore, for Jaziku\n"
+                            "the data are not consistent for process."))
 #    return len(values_in_common_period), null_counter
 
 
@@ -917,8 +894,8 @@ def calculate_lags(station):
 
                     # add line output file csv_file
                     csv_file.writerow([str(iter_year) + "/" + str(month),
-                                                 print_number(mean_var_D),
-                                                 print_number(mean_var_I)])
+                                                 format_number(mean_var_D),
+                                                 format_number(mean_var_I)])
                     # next year
                     iter_year += 1
 
@@ -981,8 +958,8 @@ def calculate_lags(station):
                         # add line output file csv_file
                         csv_file.writerow([str(iter_year) + "/" + str(month)
                                                      + "/" + str(day),
-                                                     print_number(mean_var_D),
-                                                     print_number(mean_var_I)])
+                                                     format_number(mean_var_D),
+                                                     format_number(mean_var_I)])
                         # next year
                         iter_year += 1
 
@@ -1066,10 +1043,10 @@ def get_thresholds_var_D(station):
             return (sums / (len(values) - 1)) ** 0.5
 
         if below not in [1, 2, 3] or above not in [1, 2, 3]:
-            print_error(_("thresholds of dependent variable were defined as "
-                          "N standard deviation\n but are outside of range, "
-                          "this values should be 1, 2 or 3:\nsd{0} sd{1}")
-                        .format(below, above))
+            console.msg_error(_("thresholds of dependent variable were defined as "
+                                "N standard deviation\n but are outside of range, "
+                                "this values should be 1, 2 or 3:\nsd{0} sd{1}")
+                                .format(below, above))
         p50 = stats.scoreatpercentile(values_without_nulls, 50)
         std_deviation = func_standard_deviation(values_without_nulls)
 
@@ -1083,13 +1060,13 @@ def get_thresholds_var_D(station):
             below = float(below)
             above = float(above)
         except:
-            print_error(_("thresholds could not were identified:\n{0} - {1}")
-                        .format(below, above))
+            console.msg_error(_("thresholds could not were identified:\n{0} - {1}")
+                              .format(below, above))
 
         if below > above:
-            print_error(_("threshold below of dependent variable can't be "
-                          "greater than threshold above:\n{0} - {1}")
-                        .format(below, above))
+            console.msg_error(_("threshold below of dependent variable can't be "
+                                "greater than threshold above:\n{0} - {1}")
+                                .format(below, above))
         try:
             threshold_below_var_D = input_validation.validation_var_D(station.type_D,
                                                                       below,
@@ -1105,8 +1082,8 @@ def get_thresholds_var_D(station):
                                                                       station.range_above_D)
             return threshold_below_var_D, threshold_above_var_D
         except Exception, e:
-            print_error(_("Problem with thresholds of dependent "
-                          "variable:\n\n{0}").format(e))
+            console.msg_error(_("Problem with thresholds of dependent "
+                                "variable:\n\n{0}").format(e))
 
     ## now analysis threshold input in arguments
     # if are define as default
@@ -1127,13 +1104,13 @@ def get_thresholds_var_D(station):
         below = int(''.join(list(station.threshold_below_var_D)[1::]))
         above = int(''.join(list(station.threshold_above_var_D)[1::]))
         if not (0 <= below <= 100) or not (0 <= above <= 100):
-            print_error(_("thresholds of dependent variable were defined as "
-                          "percentile\nbut are outside of range 0-100:\n{0} - {1}")
-                        .format(below, above))
+            console.msg_error(_("thresholds of dependent variable were defined as "
+                                "percentile\nbut are outside of range 0-100:\n{0} - {1}")
+                                .format(below, above))
         if below > above:
-            print_error(_("threshold below of dependent variable can't be "
-                          "greater than threshold above:\n{0} - {1}")
-                        .format(below, above))
+            console.msg_error(_("threshold below of dependent variable can't be "
+                                "greater than threshold above:\n{0} - {1}")
+                                .format(below, above))
         return percentiles(below, above)
 
     # if are define as standard deviation
@@ -1227,14 +1204,15 @@ def get_thresholds_var_I(station):
         }
 
         if station.type_I not in select_threshold_var_I:
-            print_error("the thresholds can't be define as \"default\" if the\n"
-                        "type of independent variable is a particular value.")
+            console.msg_error("the thresholds can't be define as \"default\" if the\n"
+                              "type of independent variable is a particular value.")
         threshold_below_var_I, \
         threshold_above_var_I = select_threshold_var_I[station.type_I]()
         return threshold_below_var_I, threshold_above_var_I
 
     # thresholds by below and by above of var I with standard deviation
     def thresholds_with_std_deviation(below, above):
+
         values_without_nulls = []
         for value in station.var_I_values:
             if int(value) not in globals_vars.VALID_NULL:
@@ -1248,10 +1226,11 @@ def get_thresholds_var_I(station):
             return (sums / (len(values) - 1)) ** 0.5
 
         if below not in [1, 2, 3] or above not in [1, 2, 3]:
-            print_error(_("thresholds of independent variable were defined as "
-                          "N standard deviation\n but are outside of range, "
-                          "this values should be 1, 2 or 3:\nsd{0} sd{1}")
-                        .format(below, above))
+            console.msg_error(_(
+                "thresholds of independent variable were defined as "
+                "N standard deviation\n but are outside of range, "
+                "this values should be 1, 2 or 3:\nsd{0} sd{1}")
+                .format(below, above))
         p50 = stats.scoreatpercentile(values_without_nulls, 50)
         std_deviation = func_standard_deviation(values_without_nulls)
 
@@ -1265,13 +1244,15 @@ def get_thresholds_var_I(station):
             below = float(below)
             above = float(above)
         except:
-            print_error(_("thresholds could not were identified:\n{0} - {1}")
-                        .format(below, above))
+            console.msg_error(_(
+                "thresholds could not were identified:\n{0} - {1}")
+                .format(below, above))
 
         if below > above:
-            print_error(_("threshold below of independent variable can't be "
-                          "greater than threshold above:\n{0} - {1}")
-                        .format(below, above))
+            console.msg_error(_(
+                "threshold below of independent variable can't be "
+                "greater than threshold above:\n{0} - {1}")
+                .format(below, above))
         try:
             threshold_below_var_I = input_validation.validation_var_I(station.type_I,
                                                                       below,
@@ -1283,8 +1264,9 @@ def get_thresholds_var_I(station):
                                                                       station.range_above_I)
             return threshold_below_var_I, threshold_above_var_I
         except Exception, e:
-            print_error(_("Problem with thresholds of independent "
-                          "variable:\n\n{0}").format(e))
+            console.msg_error(_(
+                "Problem with thresholds of independent "
+                "variable:\n\n{0}").format(e))
 
     ## now analysis threshold input in arguments
     # if are define as default
@@ -1298,13 +1280,15 @@ def get_thresholds_var_I(station):
         below = float(''.join(list(station.threshold_below_var_I)[1::]))
         above = float(''.join(list(station.threshold_above_var_I)[1::]))
         if not (0 <= below <= 100) or not (0 <= above <= 100):
-            print_error(_("thresholds of independent variable were defined as "
-                          "percentile\nbut are outside of range 0-100:\n{0} - {1}")
-                        .format(below, above))
+            console.msg_error(_(
+                "thresholds of independent variable were defined as "
+                "percentile\nbut are outside of range 0-100:\n{0} - {1}")
+                .format(below, above))
         if below > above:
-            print_error(_("threshold below of independent variable can't be "
-                          "greater than threshold above:\n{0} - {1}")
-                        .format(below, above))
+            console.msg_error(_(
+                "threshold below of independent variable can't be "
+                "greater than threshold above:\n{0} - {1}")
+                .format(below, above))
         return percentiles(below, above)
 
     # if are define as standard deviation
@@ -1348,9 +1332,9 @@ def get_contingency_table(station, lag, month, day=None):
     threshold_below_var_I, threshold_above_var_I = get_thresholds_var_I(station)
 
     # this is to print later in contingency table
-    thresholds_var_D_var_I = [print_number(threshold_below_var_D), print_number(threshold_above_var_D),
-                              print_number(threshold_below_var_I),
-                              print_number(threshold_above_var_I)]
+    thresholds_var_D_var_I = [format_number(threshold_below_var_D), format_number(threshold_above_var_D),
+                              format_number(threshold_below_var_I),
+                              format_number(threshold_above_var_I)]
 
     ## Calculating contingency table with absolute values
     contingency_table = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
@@ -1441,9 +1425,9 @@ def get_contingency_table(station, lag, month, day=None):
     # Contingency table percent to print in result table and graphics (reduce the number of decimals)
     contingency_table_percent_print = []
     for row in contingency_table_percent:
-        contingency_table_percent_print.append([print_number_accuracy(row[0], 1),
-                                                print_number_accuracy(row[1], 1),
-                                                print_number_accuracy(row[2], 1)])
+        contingency_table_percent_print.append([format_number(row[0], 1),
+                                                format_number(row[1], 1),
+                                                format_number(row[2], 1)])
 
     return contingency_table, contingency_table_percent, \
            contingency_table_percent_print, thresholds_var_D_var_I
@@ -1577,7 +1561,7 @@ def result_table_CA(station):
         # add new line in csv_file_write
         csv_result_table.writerow([
              var_D_text, var_I_text,
-             print_number(pearson), print_number(singr), is_significant_singr,
+             format_number(pearson), format_number(singr), is_significant_singr,
              thresholds_var_D_var_I[0], thresholds_var_D_var_I[1],
              thresholds_var_D_var_I[2], thresholds_var_D_var_I[3],
              contingency_table[0][0], contingency_table[0][1],
@@ -1599,8 +1583,8 @@ def result_table_CA(station):
              is_sig_risk_analysis_list[4], is_sig_risk_analysis_list[5],
              is_sig_risk_analysis_list[6], is_sig_risk_analysis_list[7],
              is_sig_risk_analysis_list[8],
-             print_number(test_stat), print_number(crit_value),
-             is_significant_CT, print_number_accuracy(corr_CT, 4)])
+             format_number(test_stat), format_number(crit_value),
+             is_significant_CT, format_number(corr_CT, 4)])
 
         return pearson, is_sig_risk_analysis_list
 
@@ -2123,11 +2107,11 @@ def maps_data_climate(station):
                     csv_name = globals_vars.maps_files_climate[station.analysis_interval][lag][month - 1][phenomenon]
                     open_file = open(csv_name, 'a')
                     csv_file = csv.writer(open_file, delimiter=';')
-                    csv_file.writerow([station.code, print_number(station.lat), print_number(station.lon),
-                                   print_number(station.pearson_list[lag][month - 1]),
-                                   print_number(var_below), print_number(var_normal),
-                                   print_number(var_above), print_number(p_index),
-                                   print_number(sum([float(var_below),
+                    csv_file.writerow([station.code, format_number(station.lat), format_number(station.lon),
+                                   format_number(station.pearson_list[lag][month - 1]),
+                                   format_number(var_below), format_number(var_normal),
+                                   format_number(var_above), format_number(p_index),
+                                   format_number(sum([float(var_below),
                                                      float(var_normal),
                                                      float(var_above)]))])
                     open_file.close()
@@ -2146,11 +2130,11 @@ def maps_data_climate(station):
                         csv_name = globals_vars.maps_files_climate[station.analysis_interval][lag][month - 1][day][phenomenon]
                         open_file = open(csv_name, 'a')
                         csv_file = csv.writer(open_file, delimiter=';')
-                        csv_file.writerow([station.code, print_number(station.lat), print_number(station.lon),
-                                       print_number(station.pearson_list[lag][month - 1][day]),
-                                       print_number(var_below), print_number(var_normal),
-                                       print_number(var_above), print_number(p_index),
-                                       print_number(sum([float(var_below),
+                        csv_file.writerow([station.code, format_number(station.lat), format_number(station.lon),
+                                       format_number(station.pearson_list[lag][month - 1][day]),
+                                       format_number(var_below), format_number(var_normal),
+                                       format_number(var_above), format_number(p_index),
+                                       format_number(sum([float(var_below),
                                                          float(var_normal),
                                                          float(var_above)]))])
                         open_file.close()
@@ -2267,14 +2251,14 @@ def maps_data_forecasting(station):
         open_file = open(csv_name, 'a')
         csv_file = csv.writer(open_file, delimiter=';')
         csv_file.writerow([station.code,
-                       print_number_accuracy(station.lat, 4),
-                       print_number_accuracy(station.lon, 4),
+                       format_number(station.lat, 4),
+                       format_number(station.lon, 4),
                        forecasting_date_formatted,
-                       print_number(station.prob_decrease_var_D[lag]),
-                       print_number(station.prob_normal_var_D[lag]),
-                       print_number(station.prob_exceed_var_D[lag]),
-                       print_number(p_index),
-                       print_number(sum([station.prob_decrease_var_D[lag],
+                       format_number(station.prob_decrease_var_D[lag]),
+                       format_number(station.prob_normal_var_D[lag]),
+                       format_number(station.prob_exceed_var_D[lag]),
+                       format_number(p_index),
+                       format_number(sum([station.prob_decrease_var_D[lag],
                                          station.prob_normal_var_D[lag],
                                          station.prob_exceed_var_D[lag]]))])
         open_file.close()
@@ -2386,7 +2370,7 @@ def process(station):
             text_error = _("var_D (and or not var_I) has data monthly but you define the\n"
                            "analysis interval as \"{0}\", this must be, in this\n"
                            "case, as \"trimester\".").format(station.analysis_interval)
-            print_error_line_stations(station, text_error)
+            console.msg_error_line_stations(station, text_error)
     if station.state_of_data in [2, 4]:
         # if analysis_interval is defined by trimester but var_I or/and var_D has data
         # daily, first convert in data monthly and continue with results by trimester
@@ -2411,17 +2395,18 @@ def process(station):
 
     # run process (climate, forecasting) from input arguments
     if not globals_vars.config_run['climate_process'] and not globals_vars.config_run['forecasting_process']:
-        print_error(_("Neither process (climate, forecasting) were executed, "
-                      "\nplease enable this process in arguments: \n'-c, "
-                      "--climate' for climate and/or '-f, --forecasting' "
-                      "for forecasting."))
+        console.msg_error(_(
+            "Neither process (climate, forecasting) were executed, "
+            "\nplease enable this process in arguments: \n'-c, "
+            "--climate' for climate and/or '-f, --forecasting' "
+            "for forecasting."))
     if globals_vars.config_run['climate_process']:
         station = climate(station)
 
     if globals_vars.config_run['forecasting_process']:
         # TODO: run forecasting without climate¿?
         if not globals_vars.config_run['climate_process']:
-            print_error(_("sorry, Jaziku can't run forecasting process "
+            console.msg_error(_("sorry, Jaziku can't run forecasting process "
                           "without climate, this issue has not been implemented "
                           "yet, \nplease run again with the option \"-c\""))
         forecasting(station)
@@ -2488,11 +2473,11 @@ def forecasting(station):
         try:
             station.forecasting_date = int(station.forecasting_date)
         except:
-            print_error_line_stations(station,
+            console.msg_error_line_stations(station,
                 _("Trimester forecasting \"{0}\" is invalid, "
                   "should be integer number").format(station.forecasting_date))
         if not (1 <= station.forecasting_date <= 12):
-            print_error_line_stations(station,
+            console.msg_error_line_stations(station,
                 _("Trimester forecasting \"{0}\" is invalid, "
                   "should be a month valid number (1-12)")
                   .format(station.forecasting_date))
@@ -2504,17 +2489,17 @@ def forecasting(station):
             station.forecasting_date[0] = int(station.forecasting_date[0])
             station.forecasting_date[1] = int(station.forecasting_date[1])
         except:
-            print_error_line_stations(station,
+            console.msg_error_line_stations(station,
                 _("Month or day for calculate forecasting \"{0}\" is invalid, \n"
                   "should be month/day or month-day (e.g. 03/11)")
                   .format(forecasting_date_original))
         if not (1 <= station.forecasting_date[0] <= 12):
-            print_error_line_stations(station,
+            console.msg_error_line_stations(station,
                 _("Month for forecasting process \"{0}\" is invalid, \n"
                   "should be a month valid number (1-12)")
                   .format(station.forecasting_date[0]))
         if station.forecasting_date[1] not in station.range_analysis_interval:
-            print_error_line_stations(station,
+            console.msg_error_line_stations(station,
                 _("Start day (month/day) for forecasting process \"{0}\"\nis invalid, "
                   "should be a valid start day based on\nrange analysis "
                   "interval, the valid start days for\n{1} are: {2}")
@@ -2622,7 +2607,7 @@ def maps(grid):
        grid.minlon >= grid.maxlon or \
        - 90 > grid.minlat > 90 or \
        - 180 > grid.minlat > 180:
-        print_error(_("The latitude and/or longitude are wrong,\nthese should be decimal degrees."), False)
+        console.msg_error(_("The latitude and/or longitude are wrong,\nthese should be decimal degrees."), False)
 
     # set variables for grid
     grid.grid_properties()
@@ -3165,8 +3150,8 @@ class Grid:
         elif self.semivariogram_type == 2:
             print colored.cyan(_("   Semivariogram type: gaussian"))
         else:
-            print_error(_("The semivariogram type is wrong, the options are:\n"
-                        "default, spherical, exponential or gaussian"), False)
+            console.msg_error(_("The semivariogram type is wrong, the options are:\n"
+                                "default, spherical, exponential or gaussian"), False)
 
         # print radiuses
         print colored.cyan(_("   Radiuses: {0} {1}").format(self.radiuses[0], self.radiuses[1]))
@@ -3233,7 +3218,7 @@ def main():
 
     # check python version
     if sys.version_info[0] != 2 or sys.version_info[1] < 6:
-        print_error(_("You version of python is {0}, please use Jaziku with "
+        console.msg_error(_("You version of python is {0}, please use Jaziku with "
                       "python v2.6 or v2.7").format(sys.version_info[0:2]), False)
 
     # set encoding to utf-8
@@ -3278,9 +3263,10 @@ def main():
                 continue
 
             if len(line_in_run_file) <= 1:
-                print_error(_("error read line in \"CONFIGURATION RUN\" in runfile,"
-                              " line {0}:\n{1}, no was defined.")
-                                .format(run_file.line_num, line_in_run_file[0]), False)
+                console.msg_error(_(
+                    "error read line in \"CONFIGURATION RUN\" in runfile,"
+                    " line {0}:\n{1}, no was defined.")
+                    .format(run_file.line_num, line_in_run_file[0]), False)
 
             if line_in_run_file[0] in globals_vars.config_run:
                 # in this case, for python 'disable' is None,
@@ -3300,8 +3286,9 @@ def main():
                     in_config_run = False
                     in_station_list = True
                 else:
-                    print_error(_("error read line in \"CONFIGURATION RUN\" in runfile, line {0}:\n{1}")
-                                .format(run_file.line_num, line_in_run_file[0]), False)
+                    console.msg_error(_(
+                        "error read line in \"CONFIGURATION RUN\" in runfile, line {0}:\n{1}")
+                        .format(run_file.line_num, line_in_run_file[0]), False)
 
         # read GRIDS LIST
         if in_grids_list:
@@ -3321,7 +3308,8 @@ def main():
                         setattr(Grid.all_grids[-1], line_in_run_file[0], line_in_run_file[1])
                 if len(line_in_run_file) == 3:
                     try:
-                        setattr(Grid.all_grids[-1], line_in_run_file[0], [float(line_in_run_file[1].replace(',', '.')), float(line_in_run_file[2].replace(',', '.'))])
+                        setattr(Grid.all_grids[-1], line_in_run_file[0], [float(line_in_run_file[1].replace(',', '.')),
+                                                                          float(line_in_run_file[2].replace(',', '.'))])
                     except:
                         setattr(Grid.all_grids[-1], line_in_run_file[0], [line_in_run_file[1], line_in_run_file[2]])
             else:
@@ -3329,7 +3317,7 @@ def main():
                     in_grids_list = False
                     in_station_list = True
                 else:
-                    print_error(_("error read line in \"GRIDS LIST\" in runfile, line {0}:\n{1}")
+                    console.msg_error(_("error read line in \"GRIDS LIST\" in runfile, line {0}:\n{1}")
                                 .format(run_file.line_num, line_in_run_file[0]), False)
 
         # read STATIONS LIST
@@ -3351,7 +3339,7 @@ def main():
                                            languages=[globals_vars.config_run['language']],
                                            codeset="utf-8")
             except:
-                print_error(_("\"{0}\" language not available.").format(globals_vars.config_run['language']))
+                console.msg_error(_("\"{0}\" language not available.").format(globals_vars.config_run['language']))
 
         if 'lang' in locals():
             os.environ["LANG"] = globals_vars.config_run['language']
@@ -3432,13 +3420,13 @@ def main():
                                                          'end': args_period_end}
             settings["process_period"] = colored.green("{0}-{1}".format(args_period_start, args_period_end))
         except Exception, e:
-            print_error(_('the period must be: year_start-year_end (ie. 1980-2008)\n\n{0}').format(e))
+            console.msg_error(_('the period must be: year_start-year_end (ie. 1980-2008)\n\n{0}').format(e))
     # analog_year
     if globals_vars.config_run['analog_year']:
         try:
             globals_vars.config_run['analog_year'] = int(globals_vars.config_run['analog_year'])
         except:
-            print_error("the analog_year must be a valid year", False)
+            console.msg_error("the analog_year must be a valid year", False)
         settings["analog_year"] = colored.green(globals_vars.config_run['analog_year'])
     # lags
     if globals_vars.config_run['lags']:
@@ -3453,7 +3441,7 @@ def main():
                         raise
                     globals_vars.lags.append(lag)
             except:
-                print_error(_('the lags are 0, 1 and/or 2 comma separated, or default.'), False)
+                console.msg_error(_('the lags are 0, 1 and/or 2 comma separated, or default.'), False)
             settings["lags"] = colored.green(','.join(map(str, globals_vars.lags)))
 
     ## check options
@@ -3502,8 +3490,9 @@ def main():
                         raise
                     globals_vars.maps[map_to_run] = True
             except:
-                    print_error(_('the maps options are \'climate\', \'forecasting\', '
-                                  '\'correlation\' comma separated, or \'all\'.'), False)
+                    console.msg_error(_(
+                        "the maps options are \'climate\', \'forecasting\', "
+                        "\'correlation\' comma separated, or \'all\'."), False)
             settings["maps"] = colored.green(','.join(map(str, [m for m in globals_vars.maps if globals_vars.maps[m]])))
     # set the overlapping solution
     if globals_vars.config_run['overlapping'] == "default" or not globals_vars.config_run['overlapping']:
@@ -3512,8 +3501,8 @@ def main():
     elif globals_vars.config_run['overlapping'] in ["average", "maximum", "minimum", "neither"]:
         settings['overlapping'] = colored.green(globals_vars.config_run['overlapping'])
     else:
-        print_error(_("The overlapping solution is wrong, the options are:\n"
-                    "default, average, maximum, minimum or neither"), False)
+        console.msg_error(_("The overlapping solution is wrong, the options are:\n"
+                            "default, average, maximum, minimum or neither"), False)
     # shape_boundary method
     # TODO: add more method for cut map interpolation around shape
     if globals_vars.config_run['shape_boundary'] in ["enable", True]:
@@ -3521,8 +3510,8 @@ def main():
     elif globals_vars.config_run['shape_boundary'] in ["default", False]:
         globals_vars.config_run['shape_boundary'] = False
     else:
-        print_error(_("The shape_boundary is wrong, the options are:\n"
-                    "disable, enable or default."), False)
+        console.msg_error(_("The shape_boundary is wrong, the options are:\n"
+                            "disable, enable or default."), False)
 
     # print settings
     print _("\nConfiguration run:")
@@ -3680,7 +3669,7 @@ def main():
                 station.forecasting_date = line_station[26]
 
         except Exception, e:
-            print_error(_("Reading stations from file \"{0}\" in line {1}:\n")
+            console.msg_error(_("Reading stations from file \"{0}\" in line {1}:\n")
                         .format(args.runfile.name, line_num) +
                         ';'.join(line_station) + "\n\n" + str(e), False)
 
