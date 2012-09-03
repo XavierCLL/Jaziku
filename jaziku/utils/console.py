@@ -21,23 +21,31 @@
 
 #==============================================================================
 # PRINT FUNCTIONS
+# color text console  #http://pypi.python.org/pypi/clint/
 
+import sys
 from clint.textui import colored
 
-def msg(text):
-    print (text)
+import globals_vars
 
-def msg_yellow(text):
-    print colored.yellow(text)
+def msg(text, color=False, newline=True, indentation=0):
 
-def msg_cyan(text):
-    print colored.cyan(text)
+    if not color:
+        print (text)
 
-def msg_green(text):
-    print colored.cyan(text)
+    if color == "yellow":
+        if not newline:
+            print colored.yellow(text),
+        else:
+            print colored.yellow(text)
+    if color == "cyan":
+        print colored.cyan(text)
 
-def msg_red(text):
-    print colored.cyan(text)
+    if color == "green":
+        print colored.green(text)
+
+    if color == "red":
+        print colored.red(text)
 
 
 def msg_error(text_error, wait_value=True):

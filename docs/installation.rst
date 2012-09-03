@@ -12,24 +12,26 @@ for run Jaziku.
 Libraries requires
 ------------------
 
-Is recommended install this libraries from repositories of you Linux 
+Is recommended install these libraries from repositories of you Linux
 distribution.
 
 - python (version 2.6 or 2.7)
 - python-setuptools (or python-distribute)
 - scipy (or python-scipy)
 - argparse (or python-argparse)
-- python-dateutil
 - matplotlib (or python-matplotlib)
 - numpy (or python-numpy)
 - PIL (or python-image)
 - python-dateutil
+- imagemagick
 - `python-clint <http://pypi.python.org/pypi/clint>`_ [1]_
-- `hpgl <http://hpgl.aoizora.org>`_
-- `ncl <http://www.ncl.ucar.edu>`_
+- `hpgl <http://hpgl.aoizora.org>`_ [2]_
+- `ncl <http://www.ncl.ucar.edu>`_ [3]_
 
 .. [1] you can install this using easy install:
        "easy_install clint"
+.. [2] this is need for interpolation for maps
+.. [3] this is for make maps, ignore this and hpgl if you don't need maps
 
 Download Jaziku (egg version)
 -----------------------------

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
-from jaziku.plugins import globals_vars
+from jaziku.utils import globals_vars
 
 name = globals_vars.PROG_NAME
 

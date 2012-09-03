@@ -18,17 +18,19 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
+from ..i18n import i18n
+_ = i18n.language.ugettext
+
 #==============================================================================
 # GLOBAL VARIABLES
 
-# name program
 PROG_NAME = "jaziku"
 
-# version
 VERSION = "0.4.2"
 
-# compilation date
 COMPILE_DATE = "21/08/2012"
+
+ROOT_DIR = None
 
 # valid null value for variables dependent and independent (inside files input)
 VALID_NULL = [99999, -99999]
@@ -91,6 +93,9 @@ maps_files_correlation = {'5days': None, '10days': None, '15days': None, 'trimes
 # maps files for forecasting:
 maps_files_forecasting = {'5days': {}, '10days': {}, '15days': {}, 'trimester': {}}
 
+# analysis_interval
+options_analysis_interval = ["5days", "10days", "15days", "trimester"]
+translate_analysis_interval = [_("5days"), _("10days"), _("15days"), _("trimester")]
 
 # phenomenon based on arguments or not, start with default value
 phenomenon_below = None
@@ -113,12 +118,21 @@ config_run = {'climate_process': None,
               'maps': None,
               'overlapping': None,
               "shape_boundary": None}
-
+# globals variable for defined lags, lags = [ 0, 1 and/or 2 ]
 lags = []
 
+climate_dir = None
+
+forecasting_dir = None
+
+# defined, after read runfile configuration, what run
 maps = {'climate': False, 'forecasting': False, 'correlation': False}
 
-# directory to save all results, this can be absolute or relative path
-# import Jaziku_utils.input_arg as input_arg
-# args = input_arg.arguments.parse_args()
-# DIR_RESULTS = args.file_D.split('.')[0] + args.file_I.split('.')[0]
+# threshold_problem is global variable for detect problem with
+# threshold of independent variable, if a problem is detected
+# show message and print "nan" (this mean null value for
+# division by zero) in contingency tabla percent in result
+# table, jaziku continue but the graphics will not be created
+# because "nan"  character could not be calculate.
+threshold_problem = [False, False, False]
+
