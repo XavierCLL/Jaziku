@@ -20,7 +20,7 @@
 
 from datetime import date
 
-import globals_vars
+from ...utils import globals_vars
 
 
 #==============================================================================

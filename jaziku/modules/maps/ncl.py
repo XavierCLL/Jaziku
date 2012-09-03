@@ -53,7 +53,7 @@ def make_ncl_file(grid, base_path_file, globals_vars):
         else:
             map_properties.date = grid.date
 
-        if grid.in_process["climate"]:
+        if grid.if_running["climate"]:
             map_properties.title = _('''"Scenario of affectation of the variable {typeVarD}~C~    under variations of {typeVarI} to lag {lag} in {date}"''')\
                      .format(typeVarD=globals_vars.type_var_D, typeVarI=globals_vars.type_var_I, lag=grid.lag, date=map_properties.date)
             map_properties.color_bar_levels = "(/{array}/)".format(array=range_color_bar(-100, 100, 2.5))
@@ -62,7 +62,7 @@ def make_ncl_file(grid, base_path_file, globals_vars):
             map_properties.analysis = _('''"Analysis by tertiles"''')
             map_properties.colormap = "Blue-Green-Red"
             map_properties.units = '''"%"'''
-        if grid.in_process["correlation"]:
+        if grid.if_running["correlation"]:
             map_properties.title = _('''"Lineal correlation between the variable {typeVarI}~C~              and {typeVarD} to lag {lag} in {date}"''')\
                      .format(typeVarD=globals_vars.type_var_D, typeVarI=globals_vars.type_var_I, lag=grid.lag, date=map_properties.date)
             map_properties.color_bar_levels = "(/{array}/)".format(array=range_color_bar(-1, 1, 0.025))
@@ -71,7 +71,7 @@ def make_ncl_file(grid, base_path_file, globals_vars):
             map_properties.analysis = '''""'''
             map_properties.colormap = "Green-White-Purple"
             map_properties.units = '''"Pearson"'''
-        if grid.in_process["forecasting"]:
+        if grid.if_running["forecasting"]:
             map_properties.title = _('''"Affectation forecasting of the variable {typeVarD}~C~   under variations of {typeVarI} to lag {lag} in {date}"''')\
                      .format(typeVarD=globals_vars.type_var_D, typeVarI=globals_vars.type_var_I, lag=grid.lag, date=map_properties.date)
             map_properties.color_bar_levels = "(/{array}/)".format(array=range_color_bar(-100, 100, 2.5))
@@ -91,7 +91,7 @@ def make_ncl_file(grid, base_path_file, globals_vars):
             if grid.need_particular_ncl_script:
                 ncl_script = imp.load_source("ncl_script", os.path.join(grid.shape_path, "ncl.py"))
             else:
-                ncl_script = imp.load_source("ncl_script", os.path.join(os.path.dirname(os.path.realpath(__file__)), "shapes", "ncl.py"))
+                ncl_script = imp.load_source("ncl_script", os.path.join(globals_vars.ROOT_DIR, 'data', 'maps', 'shapes', "ncl.py"))
 
         ncl_file_raw = ncl_script.code(map_properties)
 

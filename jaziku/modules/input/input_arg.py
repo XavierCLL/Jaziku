@@ -20,7 +20,8 @@
 
 import sys
 import argparse  # http://docs.python.org/py3k/library/argparse.html
-import globals_vars
+
+from ...utils import globals_vars
 
 #==============================================================================
 # PARSER AND CHECK ARGUMENTS
