@@ -23,8 +23,8 @@ import imp
 import math
 from  numpy import linspace
 
-from ...utils import globals_vars, console, mean
-from ...station import Station
+from jaziku.utils import globals_vars, console, mean
+from jaziku.modules.station import Station
 
 class Grid:
     """

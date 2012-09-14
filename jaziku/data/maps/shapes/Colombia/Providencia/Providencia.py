@@ -1,6 +1,6 @@
 # Providencia
 
-# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+# Set the minimum and maximum latitude and longitude for specify grid for region, area or country
 maxlat=13.402
 minlat=13.319
 minlon=-81.402

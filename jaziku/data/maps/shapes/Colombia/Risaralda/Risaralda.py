@@ -1,6 +1,6 @@
 # Risaralda
 
-# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+# Set the minimum and maximum latitude and longitude for specify grid for region, area or country
 maxlat=5.626
 minlat=4.592
 minlon=-76.29

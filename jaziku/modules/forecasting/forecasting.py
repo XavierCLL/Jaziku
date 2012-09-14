@@ -22,19 +22,20 @@ import sys
 import os
 
 from graphs import forecasting_graphs
-from ..maps.data import forecasting_data_for_maps
-from ...utils import globals_vars
-from ...utils import console
+from jaziku.modules.maps.data import forecasting_data_for_maps
+from jaziku.utils import globals_vars
+from jaziku.utils import console
 
 def forecasting(station):
     """
-    Main process for forecasting
+    In forecasting process the aim is predict the forecast given a phenomenon phase that
+    represents the independent variable, the dependent variable is affected, yielding results in
+    terms of decreased, increased or normal trend in its regime.
     """
 
     # console message
-    sys.stdout.write(_("Processing forecasting ({0}-{1}) ............ ")
-    .format(station.process_period['start'], station.process_period['end']))
-    sys.stdout.flush()
+    console.msg(_("Processing forecasting ({0}-{1}) ............ ")
+        .format(station.process_period['start'], station.process_period['end']), newline=False)
 
     # get and set date for calculate forecasting based on this
     if station.state_of_data in [1, 3]:
@@ -133,8 +134,7 @@ def forecasting(station):
        not globals_vars.threshold_problem[2] and globals_vars.config_run['graphics']:
         forecasting_graphs(station)
     else:
-        sys.stdout.write(_("\ncontinue without make graphics for forecasting  "))
-        sys.stdout.flush()
+        console.msg(_("\ncontinue without make graphics for forecasting  "), newline=False)
 
     forecasting_data_for_maps(station)
 

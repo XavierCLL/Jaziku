@@ -1,6 +1,6 @@
 # Cauca
 
-# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+# Set the minimum and maximum latitude and longitude for specify grid for region, area or country
 maxlat=3.474
 minlat=0.845
 minlon=-78.114

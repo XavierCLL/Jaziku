@@ -27,10 +27,15 @@ from subprocess import call
 import interpolation
 from grid import search_and_set_internal_grid, set_particular_grid
 from ncl import make_ncl_file
-from ...utils import globals_vars, console
+from jaziku.utils import globals_vars, console
 
 
 def maps(grid):
+    """
+    In Maps, jaziku in order to predict variable values in sites not sampled, through Kriging
+    spatial interpolation method displays the general trends and spatial continuity of afectation
+    scenarios results of Climate and Forecast Modules
+    """
     # set name_grid, country and grid_path
     if isinstance(grid.grid, list):
         if len(grid.grid) == 1:
@@ -213,10 +218,9 @@ def maps(grid):
 
             # console message
             if analysis_interval == 'trimester':
-                sys.stdout.write("                {0} ..................... ".format(analysis_interval))
+                console.msg("                {0} ..................... ".format(analysis_interval), newline=False)
             else:
-                sys.stdout.write("                {0}\t....................... ".format(analysis_interval))
-            sys.stdout.flush()
+                console.msg("                {0}\t....................... ".format(analysis_interval), newline=False)
 
             for lag in globals_vars.lags:
 
@@ -318,10 +322,9 @@ def maps(grid):
 
             # console message
             if analysis_interval == 'trimester':
-                sys.stdout.write("                {0} ..................... ".format(analysis_interval))
+                console.msg("                {0} ..................... ".format(analysis_interval), newline=False)
             else:
-                sys.stdout.write("                {0}\t....................... ".format(analysis_interval))
-            sys.stdout.flush()
+                console.msg("                {0}\t....................... ".format(analysis_interval), newline=False)
 
             for lag in globals_vars.lags:
 
@@ -428,10 +431,9 @@ def maps(grid):
 
             # console message
             if analysis_interval == 'trimester':
-                sys.stdout.write("                {0} ..................... ".format(analysis_interval))
+                console.msg("                {0} ..................... ".format(analysis_interval), newline=False)
             else:
-                sys.stdout.write("                {0}\t....................... ".format(analysis_interval))
-            sys.stdout.flush()
+                console.msg("                {0}\t....................... ".format(analysis_interval), newline=False)
 
             for forecasting_date in globals_vars.maps_files_forecasting[analysis_interval]:
 

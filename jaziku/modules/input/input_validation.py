@@ -20,7 +20,7 @@
 
 from datetime import date
 
-from ...utils import globals_vars
+from jaziku.utils import globals_vars
 
 
 #==============================================================================
@@ -48,18 +48,18 @@ from ...utils import globals_vars
 #     Variable        Abbreviation   Units          Range of variation
 #  Precipitation----------PPT         mm             0mm<=Ppt<=200mm
 #  Num. of days
-#   with rain------------NDPPT        -     (0 or num of days valid for month/year)
+#   with rain------------NDPPT        #     (0 or num of days valid for month/year)
 #  Temp. min-------------TMIN        °C             -15°C<=Tmin<=22°C
 #  Temp. max-------------TMAX        °C             -15°C<=Tmin<=34°C
 #  Temp. medium----------TEMP        °C             -15°C<=Tmin<=34°C
 #  Atmosfere pressure----PATM        mb              400mb<=P<=1100mb
-#  % relative humidity----RH          -                0%<=RH<=100%
+#  % relative humidity----RH          %                0%<=RH<=100%
 #  Runoff---------------RUNOFF      m^3/s                0 to 3300
 
 
-def validation_var_D(type_var_D, var_D, date_D, data_of_var_D, range_below_D, range_above_D):
+def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
     '''
-    Fuction for validation (dependent variable) depending on the type of
+    Function for validation (dependent variable) depending on the type of
     variable
     '''
 
@@ -72,19 +72,19 @@ def validation_var_D(type_var_D, var_D, date_D, data_of_var_D, range_below_D, ra
                          .format(type_var_D, var_D, e))
 
     # if defined as particular range
-    if range_below_D != "default" and range_above_D != "default":
-        if range_below_D and range_above_D:
-            if (range_below_D <= var_D <= range_above_D) or int(var_D) in globals_vars.VALID_NULL:
+    if globals_vars.config_run['limit_var_D_below'] != "default" and globals_vars.config_run['limit_var_D_above'] != "default":
+        if globals_vars.config_run['limit_var_D_below'] and globals_vars.config_run['limit_var_D_above']:
+            if (globals_vars.config_run['limit_var_D_below'] <= var_D <= globals_vars.config_run['limit_var_D_above']) or int(var_D) in globals_vars.VALID_NULL:
                 return var_D
             else:
                 returnError(_("{0} not valid").format(type_var_D))
-        elif not range_below_D and range_above_D:
-            if (var_D <= range_above_D) or int(var_D) in globals_vars.VALID_NULL:
+        elif not globals_vars.config_run['limit_var_D_below'] and globals_vars.config_run['limit_var_D_above']:
+            if (var_D <= globals_vars.config_run['limit_var_D_above']) or int(var_D) in globals_vars.VALID_NULL:
                 return var_D
             else:
                 returnError(_("{0} not valid").format(type_var_D))
-        elif not range_above_D and range_below_D:
-            if (range_below_D <= var_D) or int(var_D) in globals_vars.VALID_NULL:
+        elif not globals_vars.config_run['limit_var_D_above'] and globals_vars.config_run['limit_var_D_below']:
+            if (globals_vars.config_run['limit_var_D_below'] <= var_D) or int(var_D) in globals_vars.VALID_NULL:
                 return var_D
             else:
                 returnError(_("{0} not valid").format(type_var_D))
@@ -93,12 +93,12 @@ def validation_var_D(type_var_D, var_D, date_D, data_of_var_D, range_below_D, ra
 
     # validation for precipitation
     def if_var_D_is_PPT():
-        if data_of_var_D == "daily":
+        if frequency_data_of_var_D == "daily":
             if (0 <= var_D <= 200) or int(var_D) in globals_vars.VALID_NULL:
                 return var_D
             else:
                 returnError(_("precipitation not valid"))
-        if data_of_var_D == "monthly":
+        if frequency_data_of_var_D == "monthly":
             if (0 <= var_D <= 3500) or int(var_D) in globals_vars.VALID_NULL:
                 return var_D
             else:
@@ -106,10 +106,10 @@ def validation_var_D(type_var_D, var_D, date_D, data_of_var_D, range_below_D, ra
 
     # validation for number of days with rain
     def if_var_D_is_NDPPT():
-        if data_of_var_D == "daily":
+        if frequency_data_of_var_D == "daily":
             raise Exception(_("validation: (NDPPT) number of days with rain must have\n"
                               "data monthly"))
-        if data_of_var_D == "monthly":
+        if frequency_data_of_var_D == "monthly":
             try:
                 if date_D is None:
                     if 0 > int(var_D) > 31:
@@ -125,38 +125,38 @@ def validation_var_D(type_var_D, var_D, date_D, data_of_var_D, range_below_D, ra
 
     # validation for minimum temperature
     def if_var_D_is_TMIN():
-        if data_of_var_D == "daily":
+        if frequency_data_of_var_D == "daily":
             if (-15 <= var_D <= 22) or int(var_D) in globals_vars.VALID_NULL:
                 return var_D
             else:
                 returnError(_("minimum temperature not valid"))
-        if data_of_var_D == "monthly":
+        if frequency_data_of_var_D == "monthly":
             if (-15 <= var_D <= 50) or int(var_D) in globals_vars.VALID_NULL:
                 return var_D
             else:
                 returnError(_("minimum temperature not valid"))
 
-    # validation for maximun temperature
+    # validation for maximum temperature
     def if_var_D_is_TMAX():
-        if data_of_var_D == "daily":
+        if frequency_data_of_var_D == "daily":
             if (-15 <= var_D <= 34) or int(var_D) in globals_vars.VALID_NULL:
                 return var_D
             else:
-                returnError(_("maximun temperature not valid"))
-        if data_of_var_D == "monthly":
+                returnError(_("maximum temperature not valid"))
+        if frequency_data_of_var_D == "monthly":
             if (-15 <= var_D <= 50) or int(var_D) in globals_vars.VALID_NULL:
                 return var_D
             else:
-                returnError(_("maximun temperature not valid"))
+                returnError(_("maximum temperature not valid"))
 
     # validation for medium temperature
     def if_var_D_is_TEMP():
-        if data_of_var_D == "daily":
+        if frequency_data_of_var_D == "daily":
             if (-15 <= var_D <= 34) or int(var_D) in globals_vars.VALID_NULL:
                 return var_D
             else:
                 returnError(_("medium temperature not valid"))
-        if data_of_var_D == "monthly":
+        if frequency_data_of_var_D == "monthly":
             if (-15 <= var_D <= 50) or int(var_D) in globals_vars.VALID_NULL:
                 return var_D
             else:
@@ -203,22 +203,22 @@ def validation_var_D(type_var_D, var_D, date_D, data_of_var_D, range_below_D, ra
 #     Variable               Abbreviation     Units          Range of variation
 # Oceanic Nino Index-------------ONI         anomaly              -5 to 5
 # Index of the Southern
-# Oscillation NOAA---------------SOI    standarized anomaly       -7 to 7
-# Multivariate ENSO index--------MEI           ---            -4.552 to 6.078
+# Oscillation NOAA---------------SOI    standardized anomaly       -7 to 7
+# Multivariate ENSO index--------MEI            #             -4.552 to 6.078
 # Radiation wavelength
 # Long tropical------------------OLR           W/m2               -6 to 6
-# Index of wind anomaly----------W200   standarized anomaly     -7.5 to 7.5
+# Index of wind anomaly----------W200   standardized anomaly     -7.5 to 7.5
 # Sea surface temperature--------SST            °C               -60 to 60
 # % Amazon relative humidity-----ARH             %              -100 to 100
-# North atlantic oscillation index--NAO        anomaly         -6.36 to 6.08
 # quasibienal oscillation index--QBO            Km/h           -59.1 to 33.24
+# North atlantic oscillation index--NAO        anomaly         -6.36 to 6.08
 # Carribbean (CAR) Index-------SSTA_CAR         °C              -1.3 to 1.3
 # Monthly anomaly of the
 # ocean surface area Ocean                Area anomaly scaled
 # region >28.5C----------------AREA_WHWP     by 10e6 km^2        -13 to 14
 
 
-def validation_var_I(type_var_I, var_I, range_below_I, range_above_I):
+def validation_var_I(type_var_I, var_I):
     '''
     Fuction for validation (independent variable) depending on the type of
     variable
@@ -233,19 +233,19 @@ def validation_var_I(type_var_I, var_I, range_below_I, range_above_I):
                          .format(type_var_I, var_I, e))
 
     # if defined as particular range
-    if range_below_I != "default" and range_above_I != "default":
-        if range_below_I and range_above_I:
-            if (range_below_I <= var_I <= range_above_I) or int(var_I) in globals_vars.VALID_NULL:
+    if globals_vars.config_run['limit_var_I_below'] != "default" and globals_vars.config_run['limit_var_I_above'] != "default":
+        if globals_vars.config_run['limit_var_I_below'] and globals_vars.config_run['limit_var_I_above']:
+            if (globals_vars.config_run['limit_var_I_below'] <= var_I <= globals_vars.config_run['limit_var_I_above']) or int(var_I) in globals_vars.VALID_NULL:
                 return var_I
             else:
                 returnError(_("{0} not valid").format(type_var_I))
-        elif not range_below_I and range_above_I:
-            if (var_I <= range_above_I) or int(var_I) in globals_vars.VALID_NULL:
+        elif not globals_vars.config_run['limit_var_I_below'] and globals_vars.config_run['limit_var_I_above']:
+            if (var_I <= globals_vars.config_run['limit_var_I_above']) or int(var_I) in globals_vars.VALID_NULL:
                 return var_I
             else:
                 returnError(_("{0} not valid").format(type_var_I))
-        elif not range_above_I and range_below_I:
-            if (range_below_I <= var_I) or int(var_I) in globals_vars.VALID_NULL:
+        elif not globals_vars.config_run['limit_var_I_above'] and globals_vars.config_run['limit_var_I_below']:
+            if (globals_vars.config_run['limit_var_I_below'] <= var_I) or int(var_I) in globals_vars.VALID_NULL:
                 return var_I
             else:
                 returnError(_("{0} not valid").format(type_var_I))

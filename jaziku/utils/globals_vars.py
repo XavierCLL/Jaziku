@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-from ..i18n import i18n
+from jaziku.i18n import i18n
 _ = i18n.language.ugettext
 
 #==============================================================================
@@ -26,7 +26,7 @@ _ = i18n.language.ugettext
 
 PROG_NAME = "jaziku"
 
-VERSION = "0.4.2"
+VERSION = "0.5.0"
 
 COMPILE_DATE = "21/08/2012"
 
@@ -37,6 +37,12 @@ VALID_NULL = [99999, -99999]
 
 # accuracy of number decimal places, only for print result
 ACCURACY = 5
+
+# arguments
+args = None
+
+# runfile
+run_file = None
 
 # trimester text for print
 trim_text = {-2: _('NDJ'), -1: _('DJF'), 0: _('JFM'), 1: _('FMA'), 2: _('MAM'),
@@ -50,11 +56,17 @@ month_text = {-2: _('Nov'), -1: _('Dec'), 0: _('Jan'), 1: _('Feb'), 2: _('Mar'),
 
 # Valid input types for dependent variable
 types_var_D = ['PPT', 'NDPPT', 'TMIN', 'TMAX', 'TEMP', 'PATM', 'RH', 'RUNOFF']
-type_var_D = None  # only one type for all stations
+
+# Units for types for dependent variable
+units_of_types_var_D = {'PPT':'mm', 'NDPPT':'#', 'TMIN':'°C', 'TMAX':'°C', 'TEMP':'°C',
+                        'PATM':'mb', 'RH':'%', 'RUNOFF':'m^3/s'}
 
 # Valid input types for independent variable
 types_var_I = ['ONI', 'SOI', 'MEI', 'OLR', 'W200', 'SST', 'ARH', 'QBO', 'NAO', 'SSTA_CAR', 'AREA_WHWP']
-type_var_I = None  # only one type for all stations
+
+# Units for types for dependent variable
+units_of_types_var_I = {'ONI':'anomaly', 'SOI':'standardized anomaly', 'MEI':'#', 'OLR':'W/m2', 'W200':'standardized anomaly',
+                        'SST':'°C', 'ARH':'%', 'QBO':'Km/h', 'NAO':'anomaly', 'SSTA_CAR':'°C', 'AREA_WHWP':'scaled 10e6 km^2'}
 
 # types of internal variable independent
 internal_var_I_types = ["ONI", "SOI", "MEI", "OLR", "W200", "SST", "ARH", "NAO", "QBO", "SSTA_CAR", "AREA_WHWP"]
@@ -86,6 +98,10 @@ internal_var_I_urls = {"ONI": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.
                         "AREA_WHWP": "http://goo.gl/mV4QI"  # http://www.esrl.noaa.gov/psd/data/correlation/whwp.data 
                         }
 
+# analysis_interval
+options_analysis_interval = ["5days", "10days", "15days", "trimester"]
+translate_analysis_interval = [_("5days"), _("10days"), _("15days"), _("trimester")]
+
 # maps files for climate:
 maps_files_climate = {'5days': None, '10days': None, '15days': None, 'trimester': None}
 # maps files for correlation:
@@ -93,22 +109,25 @@ maps_files_correlation = {'5days': None, '10days': None, '15days': None, 'trimes
 # maps files for forecasting:
 maps_files_forecasting = {'5days': {}, '10days': {}, '15days': {}, 'trimester': {}}
 
-# analysis_interval
-options_analysis_interval = ["5days", "10days", "15days", "trimester"]
-translate_analysis_interval = [_("5days"), _("10days"), _("15days"), _("trimester")]
-
 # phenomenon based on arguments or not, start with default value
 phenomenon_below = None
 phenomenon_normal = None
 phenomenon_above = None
 
 # configuration run reade and set from runfile
-config_run = {'climate_process': None,
+config_run = {'data_analysis': None,
+              'climate_process': None,
               'forecasting_process': None,
               'process_period': None,
               'analog_year': None,
               'lags': None,
               'language': None,
+              'type_var_D': None,
+              'limit_var_D_below': None,
+              'limit_var_D_above': None,
+              'type_var_I': None,
+              'limit_var_I_below': None,
+              'limit_var_I_above': None,
               'consistent_data': None,
               'risk_analysis': None,
               'graphics': None,
@@ -124,6 +143,8 @@ lags = []
 climate_dir = None
 
 forecasting_dir = None
+
+data_analysis_dir = None
 
 # defined, after read runfile configuration, what run
 maps = {'climate': False, 'forecasting': False, 'correlation': False}

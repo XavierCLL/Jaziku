@@ -1,6 +1,6 @@
 # Norte_de_Santander
 
-# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+# Set the minimum and maximum latitude and longitude for specify grid for region, area or country
 maxlat=9.407
 minlat=6.711
 minlon=-73.803

@@ -1,6 +1,6 @@
 # Caqueta
 
-# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+# Set the minimum and maximum latitude and longitude for specify grid for region, area or country
 maxlat=3.005
 minlat=-0.834
 minlon=-76.416

@@ -22,11 +22,14 @@ import sys
 import os
 from numpy import matrix
 from scipy import stats
+import math
 from datetime import date
+from dateutil.relativedelta import relativedelta
 
-from ...utils import globals_vars
-from ...utils import format_out
-from ...utils import console
+from jaziku.utils import globals_vars
+from jaziku.utils import format_out
+from jaziku.utils import console
+from jaziku.modules.input import input_validation
 import lags
 
 
@@ -57,16 +60,21 @@ def get_thresholds_var_D(station):
                 var_D_values_of_analog_year = []
                 # get all raw values of var D only in analog year, ignoring null values
                 while _iter_date <= date(globals_vars.config_run['analog_year'], 12, 31):
-                    if int(station.var_D[station.date_D.index(_iter_date)]) not in globals_vars.VALID_NULL:
-                        var_D_values_of_analog_year.append(station.var_D[station.date_D.index(_iter_date)])
-                    if station.data_of_var_D == "daily":
+                    if int(station.var_D.data[station.var_D.date.index(_iter_date)]) not in globals_vars.VALID_NULL:
+                        var_D_values_of_analog_year.append(station.var_D.data[station.var_D.date.index(_iter_date)])
+                    if station.var_D.frequency_data== "daily":
                         _iter_date += relativedelta(days=1)
-                    if station.data_of_var_D == "monthly":
+                    if station.var_D.frequency_data== "monthly":
                         _iter_date += relativedelta(months=1)
                 threshold_below_var_D = stats.scoreatpercentile(var_D_values_of_analog_year, 33)
                 threshold_above_var_D = stats.scoreatpercentile(var_D_values_of_analog_year, 66)
+
                 # check if thresholds are valid
                 if math.isnan(threshold_below_var_D) or math.isnan(threshold_above_var_D):
+                    if station.first_iter:
+                        console.msg(_("\n > WARNING: Thresholds calculated with analog year for var_D are wrong,\n"
+                                      "   using default thresholds instead"), color='yellow'),
+
                     return percentiles(33, 66)
                 else:
                     if station.first_iter:
@@ -129,15 +137,11 @@ def get_thresholds_var_D(station):
             threshold_below_var_D = input_validation.validation_var_D(station.type_D,
                 below,
                 None,
-                station.data_of_var_D,
-                station.range_below_D,
-                station.range_above_D)
+                station.var_D.frequency_data)
             threshold_above_var_D = input_validation.validation_var_D(station.type_D,
                 above,
                 None,
-                station.data_of_var_D,
-                station.range_below_D,
-                station.range_above_D)
+                station.var_D.frequency_data)
             return threshold_below_var_D, threshold_above_var_D
         except Exception, e:
             console.msg_error(_("Problem with thresholds of dependent "
@@ -312,14 +316,8 @@ def get_thresholds_var_I(station):
                 "greater than threshold above:\n{0} - {1}")
             .format(below, above))
         try:
-            threshold_below_var_I = input_validation.validation_var_I(station.type_I,
-                below,
-                station.range_below_I,
-                station.range_above_I)
-            threshold_above_var_I = input_validation.validation_var_I(station.type_I,
-                above,
-                station.range_below_I,
-                station.range_above_I)
+            threshold_below_var_I = input_validation.validation_var_I(station.type_I, below)
+            threshold_above_var_I = input_validation.validation_var_I(station.type_I, above)
             return threshold_below_var_I, threshold_above_var_I
         except Exception, e:
             console.msg_error(_(

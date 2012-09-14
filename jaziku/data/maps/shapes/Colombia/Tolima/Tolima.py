@@ -1,6 +1,6 @@
 # Tolima
 
-# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+# Set the minimum and maximum latitude and longitude for specify grid for region, area or country
 maxlat=5.397
 minlat=2.767
 minlon=-76.237

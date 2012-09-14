@@ -23,7 +23,7 @@ import locale
 import gettext
 from clint.textui import colored
 
-from ..utils import console
+from jaziku.utils import console
 
 # Change this variable to your app name!
 #  The translation files will be under

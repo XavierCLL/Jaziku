@@ -1,6 +1,6 @@
 # Valle_del_Cauca
 
-# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+# Set the minimum and maximum latitude and longitude for specify grid for region, area or country
 maxlat=5.154
 minlat=2.943
 minlon=-77.629

@@ -1,6 +1,6 @@
 # Quindio
 
-# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+# Set the minimum and maximum latitude and longitude for specify grid for region, area or country
 maxlat=4.797
 minlat=4.018
 minlon=-75.969

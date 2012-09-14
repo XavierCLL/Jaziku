@@ -1,6 +1,6 @@
 # Casanare
 
-# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+# Set the minimum and maximum latitude and longitude for specify grid for region, area or country
 maxlat=6.455
 minlat=4.148
 minlon=-73.232

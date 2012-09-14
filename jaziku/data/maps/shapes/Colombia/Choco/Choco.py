@@ -1,6 +1,6 @@
 # Choco
 
-# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+# Set the minimum and maximum latitude and longitude for specify grid for region, area or country
 maxlat=8.763
 minlat=3.845
 minlon=-78.114

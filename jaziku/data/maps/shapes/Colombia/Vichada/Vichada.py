@@ -1,6 +1,6 @@
 # Vaupes
 
-# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+# Set the minimum and maximum latitude and longitude for specify grid for region, area or country
 maxlat=6.469
 minlat=2.6
 minlon=-71.3

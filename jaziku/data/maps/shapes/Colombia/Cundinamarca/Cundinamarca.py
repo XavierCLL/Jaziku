@@ -1,6 +1,6 @@
 # Cundinamarca
 
-# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+# Set the minimum and maximum latitude and longitude for specify grid for region, area or country
 maxlat=5.922
 minlat=3.614
 minlon=-75.03

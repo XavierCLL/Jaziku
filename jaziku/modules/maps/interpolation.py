@@ -26,7 +26,7 @@ import pylab
 import os
 import sys
 
-from ...utils import globals_vars
+from jaziku.utils import globals_vars
 
 
 def redirect_stdout():

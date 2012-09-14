@@ -25,9 +25,9 @@ from scipy import stats
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-import statistic_test
-from ...utils import globals_vars
-from ...utils import format_out
+import statistic_tests
+from jaziku.utils import globals_vars
+from jaziku.utils import format_out
 from contingency_table import get_contingency_table
 from lags import get_lag_values
 
@@ -81,11 +81,11 @@ def composite_analysis(station):
         pearson = stats.pearsonr(var_D_values, var_I_values)[0]
         # significance correlation
         singr, T_test, t_crit \
-            = statistic_test.significance_correlation(rho=0, r=pearson, n=len(station.common_period) + 1, alpha=0.05, side=0)
+            = statistic_tests.significance_correlation(rho=0, r=pearson, n=len(station.common_period) + 1, alpha=0.05, side=0)
 
         # contingency test
         Observed, Expected, test_stat, crit_value, df, p_value, alpha \
-            = statistic_test.contingency_test(contingency_table, None, 0.9, -1)
+            = statistic_tests.contingency_test(contingency_table, None, 0.9, -1)
 
         # calculate the correlation of contingency table
         chi_cdf = 1 - p_value
