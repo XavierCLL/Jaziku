@@ -1,6 +1,6 @@
 # Arauca
 
-# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+# Set the minimum and maximum latitude and longitude for specify grid for region, area or country
 maxlat=7.159
 minlat=5.899
 minlon=-72.441

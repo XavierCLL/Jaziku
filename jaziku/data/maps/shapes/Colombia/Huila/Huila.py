@@ -1,6 +1,6 @@
 # Huila
 
-# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+# Set the minimum and maximum latitude and longitude for specify grid for region, area or country
 maxlat=3.975
 minlat=1.356
 minlon=-76.711

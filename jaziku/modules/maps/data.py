@@ -21,8 +21,8 @@
 import os
 import csv
 
-from ...utils import globals_vars
-from ...utils import format_out
+from jaziku.utils import globals_vars
+from jaziku.utils import format_out
 
 
 def climate_data_for_maps(station):

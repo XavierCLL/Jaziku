@@ -1,6 +1,6 @@
 # Atlantico
 
-# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+# Set the minimum and maximum latitude and longitude for specify grid for region, area or country
 maxlat=11.142
 minlat=10.20
 minlon=-75.35

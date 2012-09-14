@@ -28,7 +28,7 @@ from numpy import array
 from matplotlib import pyplot
 from Image import open as img_open
 
-from ...utils import globals_vars
+from jaziku.utils import globals_vars
 from contingency_table import get_contingency_table
 
 

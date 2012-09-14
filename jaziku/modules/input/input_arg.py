@@ -21,7 +21,7 @@
 import sys
 import argparse  # http://docs.python.org/py3k/library/argparse.html
 
-from ...utils import globals_vars
+from jaziku.utils import globals_vars
 
 #==============================================================================
 # PARSER AND CHECK ARGUMENTS

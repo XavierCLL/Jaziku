@@ -1,6 +1,6 @@
 # San_Andres
 
-# Set the minmun and maximun latitude and longitude for specify grid for region, area or country
+# Set the minimum and maximum latitude and longitude for specify grid for region, area or country
 maxlat=12.6
 minlat=12.48
 minlon=-81.746

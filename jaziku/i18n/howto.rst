@@ -5,7 +5,7 @@ TRANSLATE
 
 1. generar template "messages.po", go into Jaziku directory and run:
 
-    xgettext jaziku.py plugins/contingency_test.py plugins/globals_vars.py plugins/input_arg.py plugins/input_validation.py plugins/interpolation.py plugins/significance_corr.py plugins/maps/ncl_generator.py plugins/maps/set_grid.py plugins/maps/shapes/Colombia/ncl.py plugins/maps/shapes/Colombia/Colombia/ncl.py
+	find . -iname "*.py" | xargs xgettext --from-code=UTF-8
 
 2. move to language (xx) directory: 
 

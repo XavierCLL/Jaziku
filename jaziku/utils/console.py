@@ -31,7 +31,10 @@ import globals_vars
 def msg(text, color=False, newline=True, indentation=0):
 
     if not color:
-        print (text)
+        if not newline:
+            print (text),
+        else:
+            print (text)
 
     if color == "yellow":
         if not newline:
@@ -39,20 +42,29 @@ def msg(text, color=False, newline=True, indentation=0):
         else:
             print colored.yellow(text)
     if color == "cyan":
-        print colored.cyan(text)
+        if not newline:
+            print colored.cyan(text),
+        else:
+            print colored.cyan(text)
 
     if color == "green":
-        print colored.green(text)
+        if not newline:
+            print colored.green(text),
+        else:
+            print colored.green(text)
 
     if color == "red":
-        print colored.red(text)
-
+        if not newline:
+            print colored.red(text),
+        else:
+            print colored.red(text)
 
 def msg_error(text_error, wait_value=True):
     """
     Print error generic function, this is called on any error occurred in
     Jaziku
     """
+
     if wait_value:
         print colored.red(_('fail\n\nERROR:\n{0}\n\n').format(text_error))
     else:
@@ -70,8 +82,8 @@ def msg_error_line_stations(station, text_error):
     Print error generic function occurred in a line from stations file.
     """
 
-    print_error(_("Reading stations from file \"{0}\" in line {1}:\n")
-                .format(args.runfile.name, run_file.line_num) +
-                ';'.join(station.line_station) + "\n\n" + text_error)
+    msg_error(_("Reading stations from file \"{0}\" in line {1}:\n")
+                .format(globals_vars.args.runfile.name, globals_vars.run_file.line_num) +
+                ';'.join(station.line_station) + "\n\n" + str(text_error))
 
 

@@ -24,9 +24,9 @@ from calendar import monthrange
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from ...utils import globals_vars
-from ...utils import format_out
-from ...utils.mean import mean
+from jaziku.utils import globals_vars
+from jaziku.utils import format_out
+from jaziku.utils.mean import mean
 
 
 def get_lag_values(station, var, lag, month, day=None):
@@ -82,32 +82,31 @@ def calculate_lags(station):
 
     def get_var_D_values():
         var_D_values = []
-        if station.data_of_var_D == "daily":
+        if station.var_D.frequency_data== "daily":
             # clone range for add the last day (32) for calculate interval_day_var_D
             rai_plus = list(range_analysis_interval)
             rai_plus.append(32)
             # from day to next iterator based on analysis interval
             # e.g. [0,1,2,3,4] for first iteration for 5 days
-            interval_day_var_D =\
-            range(day - 1, rai_plus[rai_plus.index(day) + 1] - 1)
+            interval_day_var_D = range(day - 1, rai_plus[rai_plus.index(day) + 1] - 1)
 
             for iter_day in interval_day_var_D:
                 now = date(iter_year, month, 1) + relativedelta(days=iter_day)
                 # check if continues with the same month
                 if now.month == month:
-                    index_var_D = station.date_D.index(now)
-                    var_D_values.append(station.var_D[index_var_D])
-        if station.data_of_var_D == "monthly":
+                    index_var_D = station.var_D.date.index(now)
+                    var_D_values.append(station.var_D.data[index_var_D])
+        if station.var_D.frequency_data== "monthly":
             # get the three values for var_D in this month
             for iter_month in range(3):
-                var_D_values.append(station.var_D[station.date_D.index(
+                var_D_values.append(station.var_D.data[station.var_D.date.index(
                     date(iter_year, month, 1) + relativedelta(months=iter_month))])
 
         return var_D_values
 
     def get_var_I_values():
         var_I_values = []
-        if station.data_of_var_I == "daily":
+        if station.var_I.frequency_data == "daily":
             # from day to next iterator based on analysis interval
             start_interval = range_analysis_interval[range_analysis_interval.index(day) - lag]
             try:
@@ -123,20 +122,20 @@ def calculate_lags(station):
             iter_date = start_date
 
             while iter_date.day != end_interval:
-                index_var_I = station.date_I.index(iter_date)
-                var_I_values.append(station.var_I[index_var_I])
+                index_var_I = station.var_I.date.index(iter_date)
+                var_I_values.append(station.var_I.data[index_var_I])
                 iter_date += relativedelta(days=1)
 
-        if station.data_of_var_I == "monthly":
+        if station.var_I.frequency_data == "monthly":
             if station.state_of_data in [1, 3]:
                 # get the three values for var_I in this month
                 for iter_month in range(3):
-                    var_I_values.append(station.var_I[station.date_I.index(
+                    var_I_values.append(station.var_I.data[station.var_I.date.index(
                         date(iter_year, month, 1) + relativedelta(months=iter_month - lag))])
             if station.state_of_data in [2]:
                 # keep constant value for month
                 if station.analysis_interval == "trimester":
-                    var_I_values.append(station.var_I[station.date_I.index(
+                    var_I_values.append(station.var_I.data[station.var_I.date.index(
                         date(iter_year, month, 1) + relativedelta(months= -lag))])
                 else:
                     real_date = date(iter_year, month, day) + relativedelta(days= -station.analysis_interval_num_days * lag)
@@ -144,7 +143,7 @@ def calculate_lags(station):
                     if month - real_date.month > 1:
                         real_date = date(real_date.year, real_date.month + 1, 1)
 
-                    var_I_values.append(station.var_I[station.date_I.index(
+                    var_I_values.append(station.var_I.data[station.var_I.date.index(
                         date(real_date.year, real_date.month, 1))])
 
         return var_I_values
