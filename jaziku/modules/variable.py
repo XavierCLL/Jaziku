@@ -59,7 +59,7 @@ class Variable():
             if self.type == 'I':
                 input_vars.read_var_I(station)
 
-        if messages and not globals_vars.config_run['limit_var_D_below'] or not globals_vars.config_run['limit_var_D_above']:
+        if messages and (not globals_vars.config_run['limit_var_D_below'] or not globals_vars.config_run['limit_var_D_above']):
             console.msg(_("\n > WARNING: you are using one or both limit as\n"
                           "   \"none\" value, this means that series values\n"
                           "   will not be checked if they are valid in\n"
@@ -134,11 +134,14 @@ class Variable():
         # data inside the process period
         self.data_in_process_period = self.data[self.date.index(start_date_var):\
                                                 self.date.index(end_date_var) + 1]
-
+        # date inside the process period
+        self.date_in_process_period = self.date[self.date.index(start_date_var):\
+        self.date.index(end_date_var) + 1]
+        # nulls inside the process period
         self.null_values_in_process_period = count_null_values(self.data_in_process_period)
 
         # delete all valid nulls
-        self.data_filtered_in_process_period = [ value for value in self.data_in_process_period if int(value) not in globals_vars.VALID_NULL ]
+        self.data_filtered_in_process_period = [ value for value in self.data_in_process_period if not globals_vars.is_valid_null(value) ]
 
 
 

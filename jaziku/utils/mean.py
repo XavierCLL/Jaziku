@@ -28,11 +28,11 @@ def mean(values):
     sums = 0
     count = 0
     for value in values:
-        if int(value) not in globals_vars.VALID_NULL:
+        if not globals_vars.is_valid_null(value):
             sums += value
             count += 1.0
 
     if count == 0:
-        return globals_vars.VALID_NULL[1]
+        return float('nan')
 
     return sums / count

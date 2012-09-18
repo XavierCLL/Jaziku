@@ -60,7 +60,7 @@ def get_thresholds_var_D(station):
                 var_D_values_of_analog_year = []
                 # get all raw values of var D only in analog year, ignoring null values
                 while _iter_date <= date(globals_vars.config_run['analog_year'], 12, 31):
-                    if int(station.var_D.data[station.var_D.date.index(_iter_date)]) not in globals_vars.VALID_NULL:
+                    if not globals_vars.is_valid_null(station.var_D.data[station.var_D.date.index(_iter_date)]):
                         var_D_values_of_analog_year.append(station.var_D.data[station.var_D.date.index(_iter_date)])
                     if station.var_D.frequency_data== "daily":
                         _iter_date += relativedelta(days=1)
@@ -98,7 +98,7 @@ def get_thresholds_var_D(station):
     def thresholds_with_std_deviation(below, above):
         values_without_nulls = []
         for value in station.var_D_values:
-            if int(value) not in globals_vars.VALID_NULL:
+            if not globals_vars.is_valid_null(value):
                 values_without_nulls.append(value)
 
         def func_standard_deviation(values):
@@ -277,7 +277,7 @@ def get_thresholds_var_I(station):
 
         values_without_nulls = []
         for value in station.var_I_values:
-            if int(value) not in globals_vars.VALID_NULL:
+            if not globals_vars.is_valid_null(value):
                 values_without_nulls.append(value)
 
         def func_standard_deviation(values):

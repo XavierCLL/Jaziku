@@ -30,7 +30,7 @@ def count_null_values(values):
     """
     null_counter = 0
     for value in values:
-        if value in globals_vars.VALID_NULL:
+        if globals_vars.is_valid_null(value):
             null_counter += 1
 
     return null_counter
