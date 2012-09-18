@@ -18,6 +18,8 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
+import math
+
 from jaziku.i18n import i18n
 _ = i18n.language.ugettext
 
@@ -32,8 +34,19 @@ COMPILE_DATE = "21/08/2012"
 
 ROOT_DIR = None
 
+# valid nulls
+VALID_NULL = [99999, -99999]  # these are deprecate valid null but now used for maps files interpolation
 # valid null value for variables dependent and independent (inside files input)
-VALID_NULL = [99999, -99999]
+def is_valid_null(value):
+    if math.isnan(value):
+        return True
+    else:
+        try:
+            if int(value) in VALID_NULL: # TODO: delete deprecated valid null
+                return True
+        except:
+            return False
+    return False
 
 # accuracy of number decimal places, only for print result
 ACCURACY = 5

@@ -148,6 +148,8 @@ def read_var_D(station):
                         missing_date.year,
                         missing_date.month))
             value = float(row[1])
+            if int(value) in globals_vars.VALID_NULL:  # TODO: deprecated valid null
+                value = float('nan')
             # set date of dependent variable from file_D, column 1,
             # format: yyyy-mm-dd
             date_D.append(date(year, month, day))
@@ -303,6 +305,8 @@ def read_var_I(station):
                         missing_date.year,
                         missing_date.month))
             value = float(row[1])
+            if int(value) in globals_vars.VALID_NULL:  # TODO: deprecated valid null
+                value = float('nan')
             # set date of independent variable from file_I, column 1,
             # format: yyyy-mm
             date_I.append(date(year, month, day))

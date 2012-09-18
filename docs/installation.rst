@@ -18,10 +18,10 @@ distribution.
 - python (version 2.6 or 2.7)
 - python-setuptools (or python-distribute)
 - scipy (or python-scipy)
-- argparse (or python-argparse)
+- argparse (or python-argparse, or if used ubuntu this inside in python package)
 - matplotlib (or python-matplotlib)
 - numpy (or python-numpy)
-- PIL (or python-image)
+- PIL (or python-image or python-imaging)
 - python-dateutil
 - imagemagick
 - `python-clint <http://pypi.python.org/pypi/clint>`_ [1]_
@@ -32,6 +32,8 @@ distribution.
        "easy_install clint"
 .. [2] this is need for interpolation for maps
 .. [3] this is for make maps, ignore this and hpgl if you don't need maps
+
+    Note: Sure that the version of these packages are for python version 2.6 or 2.7
 
 Download Jaziku (egg version)
 -----------------------------

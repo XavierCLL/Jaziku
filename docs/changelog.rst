@@ -10,11 +10,21 @@ Changelog
 news
 ++++
 
-- Hard reformation and reorganization all project.
+- Rewrite, reformation and reorganization all Jaziku project.
+- New: (eda) descriptive statistic, this calculate many statistics for var D
+  make files and graphs contrast to stations and altitude
+- Reformatted runfile adaptation for requirements in eda, these are; new
+  parameter in station list "Alt" (altitude), type and limits for var "D"
+  and "I" now are static and you set these options in "general options"
+  and (of course) delete these parameters in stations list
+- Accept new valid null 'nan' (Not a Number) for input series, now this
+  is the default and recommended valid null.
+- New: (eda) graphs inspection of series for each station and mosaic
+  with inspection of series of var D and var I
 
 fixes
 +++++
-
+- Many Fixed TYPOS and grammatical language error
 
 
 0.4.2 (**2012-08-21**)
@@ -144,10 +154,6 @@ fixes
   
 0.2.1
 ----------------------
-
-news
-++++
-
 
 fixes
 +++++

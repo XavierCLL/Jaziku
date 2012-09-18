@@ -71,20 +71,24 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
                            "valid for type variable \"{0}\"\n{2}")
                          .format(type_var_D, var_D, e))
 
+    # first test if the value is a valid null
+    if globals_vars.is_valid_null(var_D):
+        return var_D
+
     # if defined as particular range
     if globals_vars.config_run['limit_var_D_below'] != "default" and globals_vars.config_run['limit_var_D_above'] != "default":
         if globals_vars.config_run['limit_var_D_below'] and globals_vars.config_run['limit_var_D_above']:
-            if (globals_vars.config_run['limit_var_D_below'] <= var_D <= globals_vars.config_run['limit_var_D_above']) or int(var_D) in globals_vars.VALID_NULL:
+            if (globals_vars.config_run['limit_var_D_below'] <= var_D <= globals_vars.config_run['limit_var_D_above']):
                 return var_D
             else:
                 returnError(_("{0} not valid").format(type_var_D))
         elif not globals_vars.config_run['limit_var_D_below'] and globals_vars.config_run['limit_var_D_above']:
-            if (var_D <= globals_vars.config_run['limit_var_D_above']) or int(var_D) in globals_vars.VALID_NULL:
+            if (var_D <= globals_vars.config_run['limit_var_D_above']):
                 return var_D
             else:
                 returnError(_("{0} not valid").format(type_var_D))
         elif not globals_vars.config_run['limit_var_D_above'] and globals_vars.config_run['limit_var_D_below']:
-            if (globals_vars.config_run['limit_var_D_below'] <= var_D) or int(var_D) in globals_vars.VALID_NULL:
+            if (globals_vars.config_run['limit_var_D_below'] <= var_D):
                 return var_D
             else:
                 returnError(_("{0} not valid").format(type_var_D))
@@ -94,12 +98,12 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
     # validation for precipitation
     def if_var_D_is_PPT():
         if frequency_data_of_var_D == "daily":
-            if (0 <= var_D <= 200) or int(var_D) in globals_vars.VALID_NULL:
+            if (0 <= var_D <= 200):
                 return var_D
             else:
                 returnError(_("precipitation not valid"))
         if frequency_data_of_var_D == "monthly":
-            if (0 <= var_D <= 3500) or int(var_D) in globals_vars.VALID_NULL:
+            if (0 <= var_D <= 3500):
                 return var_D
             else:
                 returnError(_("precipitation not valid"))
@@ -118,7 +122,7 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
                     date(date_D.year, date_D.month, int(var_D))
                 return var_D
             except Exception, e:
-                if  int(var_D) in globals_vars.VALID_NULL or int(var_D) == 0:
+                if globals_vars.is_valid_null(var_D) or int(var_D) == 0:
                     return var_D
                 else:
                     returnError(e)
@@ -126,12 +130,12 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
     # validation for minimum temperature
     def if_var_D_is_TMIN():
         if frequency_data_of_var_D == "daily":
-            if (-15 <= var_D <= 22) or int(var_D) in globals_vars.VALID_NULL:
+            if (-15 <= var_D <= 22):
                 return var_D
             else:
                 returnError(_("minimum temperature not valid"))
         if frequency_data_of_var_D == "monthly":
-            if (-15 <= var_D <= 50) or int(var_D) in globals_vars.VALID_NULL:
+            if (-15 <= var_D <= 50):
                 return var_D
             else:
                 returnError(_("minimum temperature not valid"))
@@ -139,12 +143,12 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
     # validation for maximum temperature
     def if_var_D_is_TMAX():
         if frequency_data_of_var_D == "daily":
-            if (-15 <= var_D <= 34) or int(var_D) in globals_vars.VALID_NULL:
+            if (-15 <= var_D <= 34):
                 return var_D
             else:
                 returnError(_("maximum temperature not valid"))
         if frequency_data_of_var_D == "monthly":
-            if (-15 <= var_D <= 50) or int(var_D) in globals_vars.VALID_NULL:
+            if (-15 <= var_D <= 50):
                 return var_D
             else:
                 returnError(_("maximum temperature not valid"))
@@ -152,33 +156,33 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
     # validation for medium temperature
     def if_var_D_is_TEMP():
         if frequency_data_of_var_D == "daily":
-            if (-15 <= var_D <= 34) or int(var_D) in globals_vars.VALID_NULL:
+            if (-15 <= var_D <= 34):
                 return var_D
             else:
                 returnError(_("medium temperature not valid"))
         if frequency_data_of_var_D == "monthly":
-            if (-15 <= var_D <= 50) or int(var_D) in globals_vars.VALID_NULL:
+            if (-15 <= var_D <= 50):
                 return var_D
             else:
                 returnError(_("medium temperature not valid"))
 
     # validation for atmosfere pressure
     def if_var_D_is_PATM():
-        if (400 <= var_D <= 1100) or int(var_D) in globals_vars.VALID_NULL:
+        if (400 <= var_D <= 1100):
             return var_D
         else:
             returnError(_("atmosfere pressure not valid"))
 
     # validation for % of relative humidity
     def if_var_D_is_RH():
-        if (0 <= var_D <= 100) or int(var_D) in globals_vars.VALID_NULL:
+        if (0 <= var_D <= 100):
             return var_D
         else:
             returnError(_("% of relative humidity not valid"))
 
     # validation for Runoff
     def if_var_D_is_RUNOFF():
-        if (0 <= var_D <= 3300) or int(var_D) in globals_vars.VALID_NULL:
+        if (0 <= var_D <= 3300):
             return var_D
         else:
             returnError(_("Runoff not valid"))
@@ -232,20 +236,24 @@ def validation_var_I(type_var_I, var_I):
                            "valid for type variable \"{0}\"\n{2}")
                          .format(type_var_I, var_I, e))
 
+    # first test if the value is a valid null
+    if globals_vars.is_valid_null(var_I):
+        return var_I
+
     # if defined as particular range
     if globals_vars.config_run['limit_var_I_below'] != "default" and globals_vars.config_run['limit_var_I_above'] != "default":
         if globals_vars.config_run['limit_var_I_below'] and globals_vars.config_run['limit_var_I_above']:
-            if (globals_vars.config_run['limit_var_I_below'] <= var_I <= globals_vars.config_run['limit_var_I_above']) or int(var_I) in globals_vars.VALID_NULL:
+            if (globals_vars.config_run['limit_var_I_below'] <= var_I <= globals_vars.config_run['limit_var_I_above']):
                 return var_I
             else:
                 returnError(_("{0} not valid").format(type_var_I))
         elif not globals_vars.config_run['limit_var_I_below'] and globals_vars.config_run['limit_var_I_above']:
-            if (var_I <= globals_vars.config_run['limit_var_I_above']) or int(var_I) in globals_vars.VALID_NULL:
+            if (var_I <= globals_vars.config_run['limit_var_I_above']):
                 return var_I
             else:
                 returnError(_("{0} not valid").format(type_var_I))
         elif not globals_vars.config_run['limit_var_I_above'] and globals_vars.config_run['limit_var_I_below']:
-            if (globals_vars.config_run['limit_var_I_below'] <= var_I) or int(var_I) in globals_vars.VALID_NULL:
+            if (globals_vars.config_run['limit_var_I_below'] <= var_I):
                 return var_I
             else:
                 returnError(_("{0} not valid").format(type_var_I))
@@ -254,77 +262,77 @@ def validation_var_I(type_var_I, var_I):
 
     # validation for Oceanic Nino Index
     def if_var_I_is_ONI():
-        if (-5 <= var_I <= 5) or int(var_I) in globals_vars.VALID_NULL:
+        if (-5 <= var_I <= 5):
             return var_I
         else:
             returnError(_("Oceanic Nino Index not valid"))
 
     # validation for Index of the Southern Oscillation NOAA
     def if_var_I_is_SOI():
-        if (-7 <= var_I <= 7) or int(var_I) in globals_vars.VALID_NULL:
+        if (-7 <= var_I <= 7):
             return var_I
         else:
             returnError(_("Index of the Southern Oscillation NOAA not valid"))
 
     # validation for Multivariate ENSO index
     def if_var_I_is_MEI():
-        if (-4.552 <= var_I <= 6.078) or int(var_I) in globals_vars.VALID_NULL:
+        if (-4.552 <= var_I <= 6.078):
             return var_I
         else:
             returnError(_("Multivariate ENSO index not valid"))
 
     # validation for Radiation wavelength Long tropical
     def if_var_I_is_OLR():
-        if (-6 <= var_I <= 6) or int(var_I) in globals_vars.VALID_NULL:
+        if (-6 <= var_I <= 6):
             return var_I
         else:
             returnError(_("Radiation wavelength Long tropical not valid"))
 
     # validation for Index of wind anomaly
     def if_var_I_is_W200():
-        if (-7.5 <= var_I <= 7.5) or int(var_I) in globals_vars.VALID_NULL:
+        if (-7.5 <= var_I <= 7.5):
             return var_I
         else:
             returnError(_("Index of wind anomaly not valid"))
 
     # validation for Sea surface temperature
     def if_var_I_is_SST():
-        if (-60 <= var_I <= 60) or int(var_I) in globals_vars.VALID_NULL:
+        if (-60 <= var_I <= 60):
             return var_I
         else:
             returnError(_("Sea surface temperature not valid"))
 
     # validation for % Amazon relative humidity
     def if_var_I_is_ARH():
-        if (-100 <= var_I <= 100) or int(var_I) in globals_vars.VALID_NULL:
+        if (-100 <= var_I <= 100):
             return var_I
         else:
             returnError(_("% Amazon relative humidity not valid"))
 
     # validation for North atlantic oscillation index
     def if_var_I_is_NAO():
-        if (-6.36 <= var_I <= 6.08) or int(var_I) in globals_vars.VALID_NULL:
+        if (-6.36 <= var_I <= 6.08):
             return var_I
         else:
             returnError(_("North Atlantic Oscillation index not valid"))
 
     # validation for quasibienal oscillation index
     def if_var_I_is_QBO():
-        if (-59.1 <= var_I <= 33.24) or int(var_I) in globals_vars.VALID_NULL:
+        if (-59.1 <= var_I <= 33.24):
             return var_I
         else:
             returnError(_("Quasibienal Oscillation Index not valid"))
 
     # validation for Carribbean (CAR) Index
     def if_var_I_is_SSTA_CAR():
-        if (-1.3 <= var_I <= 1.3) or int(var_I) in globals_vars.VALID_NULL:
+        if (-1.3 <= var_I <= 1.3):
             return var_I
         else:
             returnError(_("Carribbean (CAR) Index not valid"))
 
     # validation for Monthly anomaly of the ocean surface area Ocean region
     def if_var_I_is_AREA_WHWP():
-        if (-13 <= var_I <= 14) or int(var_I) in globals_vars.VALID_NULL:
+        if (-13 <= var_I <= 14):
             return var_I
         else:
             returnError(_("Monthly anomaly of the ocean surface area ocean region not valid"))
