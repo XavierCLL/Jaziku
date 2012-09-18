@@ -25,6 +25,8 @@ news
 fixes
 +++++
 - Many Fixed TYPOS and grammatical language error
+- Fix number of line when print runfile error
+- Fix flush console message stream when wait process
 
 
 0.4.2 (**2012-08-21**)

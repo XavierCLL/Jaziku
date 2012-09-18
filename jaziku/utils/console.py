@@ -33,29 +33,34 @@ def msg(text, color=False, newline=True, indentation=0):
     if not color:
         if not newline:
             print (text),
+            sys.stdout.flush()
         else:
             print (text)
 
     if color == "yellow":
         if not newline:
             print colored.yellow(text),
+            sys.stdout.flush()
         else:
             print colored.yellow(text)
     if color == "cyan":
         if not newline:
             print colored.cyan(text),
+            sys.stdout.flush()
         else:
             print colored.cyan(text)
 
     if color == "green":
         if not newline:
             print colored.green(text),
+            sys.stdout.flush()
         else:
             print colored.green(text)
 
     if color == "red":
         if not newline:
             print colored.red(text),
+            sys.stdout.flush()
         else:
             print colored.red(text)
 
@@ -83,7 +88,7 @@ def msg_error_line_stations(station, text_error):
     """
 
     msg_error(_("Reading stations from file \"{0}\" in line {1}:\n")
-                .format(globals_vars.args.runfile.name, globals_vars.run_file.line_num) +
+                .format(globals_vars.args.runfile.name, station.line_num) +
                 ';'.join(station.line_station) + "\n\n" + str(text_error))
 
 
