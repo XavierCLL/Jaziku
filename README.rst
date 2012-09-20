@@ -53,11 +53,12 @@ Synopsis run
 
 - jaziku [-h] -runfile RUNFILE
 
-Developers
+Team
 ----------
-
-- Ines Sánchez Rodriguez <incsanchezro(a)gmail.com>
-- Xavier Corredor Llano <xcorredorl(a)ideam.gov.co>
+**Developer:**
+    Xavier Corredor Llano < xcorredorl (a) ideam.gov.co >
+**Roadmap, technical-theoretical support, tester, doc-user:**
+    Ines Sánchez Rodriguez < incsanchezro (a) gmail.com >
 
 Licence
 -------

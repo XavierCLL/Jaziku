@@ -41,7 +41,7 @@ class Variable():
 
     def read_data_from_file(self, station, process=True, messages=True):
         """
-        Read var I and varD from files, validated and check consistent.
+        Read var I or var D from files, validated and check consistent.
 
         :return by reference:
             VARIABLE.data
@@ -59,7 +59,8 @@ class Variable():
             if self.type == 'I':
                 input_vars.read_var_I(station)
 
-        if messages and (not globals_vars.config_run['limit_var_D_below'] or not globals_vars.config_run['limit_var_D_above']):
+        if messages and (globals_vars.config_run['limit_var_'+self.type+'_below'] is None or
+                         globals_vars.config_run['limit_var_'+self.type+'_above'] is None):
             console.msg(_("\n > WARNING: you are using one or both limit as\n"
                           "   \"none\" value, this means that series values\n"
                           "   will not be checked if they are valid in\n"

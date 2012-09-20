@@ -159,13 +159,13 @@ def read_stations(lines_of_stations):
                                   "the stations list need for run climate process.\n"))
 
             station.file_D = open(line_station[5], 'rb')
-            station.type_D = globals_vars.config_run['type_var_D'] #line_station[5]
+            station.type_D = globals_vars.config_run['type_var_D']
 
             station.threshold_below_var_D = line_station[6].replace(',', '.')
             station.threshold_above_var_D = line_station[7].replace(',', '.')
 
             station.file_I = line_station[8]
-            station.type_I = globals_vars.config_run['type_var_I'] #line_station[11]
+            station.type_I = globals_vars.config_run['type_var_I']
 
             station.threshold_below_var_I = line_station[9].replace(',', '.')
             station.threshold_above_var_I = line_station[10].replace(',', '.')
