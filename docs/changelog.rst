@@ -21,6 +21,8 @@ news
   is the default and recommended valid null.
 - New: (eda) graphs inspection of series for each station and mosaic
   with inspection of series of var D and var I
+- New: now for limits for var D and I can use combination of
+  particular value, none or default.
 
 fixes
 +++++
@@ -28,6 +30,7 @@ fixes
 - Fix number of line when print runfile error
 - Fix flush console message stream when wait process
 - Fix particular limits for var D and I
+- Fixes when check enable/disable for main process in runfile
 
 
 0.4.2 (**2012-08-21**)
