@@ -20,9 +20,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Developers:
-# Ines Sánchez Rodriguez < incsanchezro (a) gmail.com >
-# Xavier Corredor Llano < xcorredorl (a) ideam.gov.co >
+# Team:
+#   Developer:
+#       Xavier Corredor Llano < xcorredorl (a) ideam.gov.co >
+#   Roadmap, technical/theoretical support, tester, doc-user:
+#       Ines Sánchez Rodriguez < incsanchezro (a) gmail.com >
 #==============================================================================
 
 doc = '''
@@ -188,14 +190,23 @@ def main():
 
     ## general options
     # data_analysis
-    if globals_vars.config_run['data_analysis']:
+    if globals_vars.config_run['data_analysis'] == True:
         settings["data_analysis"] = colored.green(_("enabled"))
+    elif not globals_vars.config_run['data_analysis'] == False:
+        console.msg_error(_("'data_analysis' variable in runfile is wrong,\n"
+                            "this should be 'enable' or 'disable'"), False)
     # climate_process
-    if globals_vars.config_run['climate_process']:
+    if globals_vars.config_run['climate_process'] == True:
         settings["climate_process"] = colored.green(_("enabled"))
+    elif not globals_vars.config_run['climate_process'] == False:
+        console.msg_error(_("'climate_process' variable in runfile is wrong,\n"
+                            "this should be 'enable' or 'disable'"), False)
     # forecasting_process
-    if globals_vars.config_run['forecasting_process']:
+    if globals_vars.config_run['forecasting_process'] == True:
         settings["forecasting_process"] = colored.green(_("enabled"))
+    elif not globals_vars.config_run['forecasting_process'] == False:
+        console.msg_error(_("'forecasting_process' variable in runfile is wrong,\n"
+                            "this should be 'enable' or 'disable'"), False)
     # process_period
     if globals_vars.config_run['process_period'] == "maximum":
         settings["process_period"] = "maximum"

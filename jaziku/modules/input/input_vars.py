@@ -58,11 +58,11 @@ def read_var_D(station):
                 _("{0} is not valid type for dependence variable"
                   " if you defined LIMIT VAR D BELOW/ABOVE as \"default\".")
                 .format(station.type_D))
-    elif globals_vars.config_run['limit_var_D_below'] == "none" or not globals_vars.config_run['limit_var_D_below']:
+    elif globals_vars.config_run['limit_var_D_below'] in ["none", None]:
         globals_vars.config_run['limit_var_D_below'] = None
     else:
         try:
-            globals_vars.config_run['limit_var_D_below'] = float(globals_vars.config_run['limit_var_D_below'].replace(',', '.'))
+            globals_vars.config_run['limit_var_D_below'] = float(str(globals_vars.config_run['limit_var_D_below']).replace(',', '.'))
         except:
             console.msg_error_line_stations(station,
                 (_("Problem with particular range validation for "
@@ -76,11 +76,11 @@ def read_var_D(station):
                 _("{0} is not valid type for dependence variable"
                   " if you defined LIMIT VAR D BELOW/ABOVE as \"default\".")
                 .format(station.type_D))
-    elif globals_vars.config_run['limit_var_D_above'] == "none" or not globals_vars.config_run['limit_var_D_above']:
+    elif globals_vars.config_run['limit_var_D_above'] in ["none", None]:
         globals_vars.config_run['limit_var_D_above'] = None
     else:
         try:
-            globals_vars.config_run['limit_var_D_above'] = float(globals_vars.config_run['limit_var_D_above'].replace(',', '.'))
+            globals_vars.config_run['limit_var_D_above'] = float(str(globals_vars.config_run['limit_var_D_above']).replace(',', '.'))
         except:
             console.msg_error_line_stations(station,
                 (_("Problem with particular range validation for "
@@ -218,11 +218,11 @@ def read_var_I(station):
                 _("{0} is not valid type for independence variable"
                   " if you defined LIMIT VAR I BELOW/ABOVE as \"default\".")
                 .format(station.type_I))
-    elif globals_vars.config_run['limit_var_I_below'] == "none" or not globals_vars.config_run['limit_var_I_below']:
+    elif globals_vars.config_run['limit_var_I_below'] in ["none", None]:
         globals_vars.config_run['limit_var_I_below'] = None
     else:
         try:
-            globals_vars.config_run['limit_var_I_below'] = float(globals_vars.config_run['limit_var_I_below'].replace(',', '.'))
+            globals_vars.config_run['limit_var_I_below'] = float(str(globals_vars.config_run['limit_var_I_below']).replace(',', '.'))
         except:
             console.msg_error_line_stations(station,
                 (_("Problem with particular range validation for "
@@ -236,11 +236,11 @@ def read_var_I(station):
                 _("{0} is not valid type for independence variable"
                   " if you defined LIMIT VAR I BELOW/ABOVE as \"default\".")
                 .format(station.type_I))
-    elif globals_vars.config_run['limit_var_I_above'] == "none" or not globals_vars.config_run['limit_var_I_above']:
+    elif globals_vars.config_run['limit_var_I_above'] in ["none", None]:
         globals_vars.config_run['limit_var_I_above'] = None
     else:
         try:
-            globals_vars.config_run['limit_var_I_above'] = float(globals_vars.config_run['limit_var_I_above'].replace(',', '.'))
+            globals_vars.config_run['limit_var_I_above'] = float(str(globals_vars.config_run['limit_var_I_above']).replace(',', '.'))
         except:
             console.msg_error_line_stations(station,
                 (_("Problem with particular range validation for "

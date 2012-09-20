@@ -68,7 +68,7 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
         # generation exception
         raise ValueError(_("exception validation in dependent variable: "
                            "value out of range:\nThe value \"{1}\" is not "
-                           "valid for type variable \"{0}\"\n{2}")
+                           "valid for type variable \"{0}\"\n\n{2}")
                          .format(type_var_D, var_D, e))
 
     # first test if the value is a valid null
@@ -77,21 +77,21 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
 
     # if defined as particular range
     if globals_vars.config_run['limit_var_D_below'] != "default" and globals_vars.config_run['limit_var_D_above'] != "default":
-        if globals_vars.config_run['limit_var_D_below'] and globals_vars.config_run['limit_var_D_above']:
+        if globals_vars.config_run['limit_var_D_below'] is not None and globals_vars.config_run['limit_var_D_above'] is not None:
             if (globals_vars.config_run['limit_var_D_below'] <= var_D <= globals_vars.config_run['limit_var_D_above']):
                 return var_D
             else:
-                returnError(_("{0} not valid").format(type_var_D))
-        elif not globals_vars.config_run['limit_var_D_below'] and globals_vars.config_run['limit_var_D_above']:
+                returnError(_("{0} not valid in particular limits defined in runfile").format(type_var_D))
+        elif globals_vars.config_run['limit_var_D_below'] is None and globals_vars.config_run['limit_var_D_above'] is not None:
             if (var_D <= globals_vars.config_run['limit_var_D_above']):
                 return var_D
             else:
-                returnError(_("{0} not valid").format(type_var_D))
-        elif not globals_vars.config_run['limit_var_D_above'] and globals_vars.config_run['limit_var_D_below']:
+                returnError(_("{0} not valid in particular limits defined in runfile").format(type_var_D))
+        elif globals_vars.config_run['limit_var_D_above'] is None and globals_vars.config_run['limit_var_D_below'] is not None:
             if (globals_vars.config_run['limit_var_D_below'] <= var_D):
                 return var_D
             else:
-                returnError(_("{0} not valid").format(type_var_D))
+                returnError(_("{0} not valid in particular limits defined in runfile").format(type_var_D))
         else:  # this is that both are equal to "none"
             return var_D
 
@@ -233,7 +233,7 @@ def validation_var_I(type_var_I, var_I):
         # generation exception
         raise ValueError(_("exception validation in independent variable: "
                            "value out of range:\nThe value \"{1}\" is not "
-                           "valid for type variable \"{0}\"\n{2}")
+                           "valid for type variable \"{0}\"\n\n{2}")
                          .format(type_var_I, var_I, e))
 
     # first test if the value is a valid null
@@ -242,21 +242,21 @@ def validation_var_I(type_var_I, var_I):
 
     # if defined as particular range
     if globals_vars.config_run['limit_var_I_below'] != "default" and globals_vars.config_run['limit_var_I_above'] != "default":
-        if globals_vars.config_run['limit_var_I_below'] and globals_vars.config_run['limit_var_I_above']:
+        if globals_vars.config_run['limit_var_I_below'] is not None and globals_vars.config_run['limit_var_I_above'] is not None:
             if (globals_vars.config_run['limit_var_I_below'] <= var_I <= globals_vars.config_run['limit_var_I_above']):
                 return var_I
             else:
-                returnError(_("{0} not valid").format(type_var_I))
-        elif not globals_vars.config_run['limit_var_I_below'] and globals_vars.config_run['limit_var_I_above']:
+                returnError(_("{0} not valid in particular limits defined in runfile").format(type_var_I))
+        elif globals_vars.config_run['limit_var_I_below'] is None and globals_vars.config_run['limit_var_I_above'] is not None:
             if (var_I <= globals_vars.config_run['limit_var_I_above']):
                 return var_I
             else:
-                returnError(_("{0} not valid").format(type_var_I))
-        elif not globals_vars.config_run['limit_var_I_above'] and globals_vars.config_run['limit_var_I_below']:
+                returnError(_("{0} not valid in particular limits defined in runfile").format(type_var_I))
+        elif globals_vars.config_run['limit_var_I_above'] is None and globals_vars.config_run['limit_var_I_below'] is not None:
             if (globals_vars.config_run['limit_var_I_below'] <= var_I):
                 return var_I
             else:
-                returnError(_("{0} not valid").format(type_var_I))
+                returnError(_("{0} not valid in particular limits defined in runfile").format(type_var_I))
         else:  # this is that both are equal to "none"
             return var_I
 

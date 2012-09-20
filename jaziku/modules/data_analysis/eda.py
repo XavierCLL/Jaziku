@@ -252,8 +252,12 @@ def descriptive_statistic_graphs(stations):
 
 
 def graphs_inspection_of_series(stations):
+    """
+    Graphs for inspection of series part of EDA
+    """
 
     # directory for save graphs of descriptive statistic
+
     graphs_dir = os.path.join(globals_vars.data_analysis_dir, 'EDA',
         _('Descriptive_Statistic'), _('Graphs_Inspection_of_Series'))
 
