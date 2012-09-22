@@ -230,7 +230,7 @@ def main():
         settings["analog_year"] = colored.green(globals_vars.config_run['analog_year'])
     # lags
     if globals_vars.config_run['lags']:
-        if globals_vars.config_run['lags'] == "default":
+        if globals_vars.config_run['lags'] in ['default', 'all']:
             globals_vars.lags = [0, 1, 2]
             settings["lags"] = ','.join(map(str, globals_vars.lags))
         else:
@@ -241,7 +241,7 @@ def main():
                         raise
                     globals_vars.lags.append(lag)
             except:
-                console.msg_error(_('the lags are 0, 1 and/or 2 comma separated, or default.'), False)
+                console.msg_error(_('the lags are 0, 1 and/or 2 comma separated, all or default.'), False)
             settings["lags"] = colored.green(','.join(map(str, globals_vars.lags)))
 
     ## input options

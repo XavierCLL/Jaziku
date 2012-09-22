@@ -23,6 +23,9 @@ news
   with inspection of series of var D and var I
 - New: now for limits for var D and I can use combination of
   particular value, none or default.
+- When the frequency data are different for var D and var I, Jaziku make
+  special graphs stretched the x-axis to equalize the x-axis from other
+  variable for do the mosaic of inspections of series in EDA
 
 fixes
 +++++
@@ -31,6 +34,8 @@ fixes
 - Fix flush console message stream when wait process
 - Fix particular limits for var D and I
 - Fixes when check enable/disable for main process in runfile
+- Fix graphs in EDA when var D defined as particular type
+
 
 
 0.4.2 (**2012-08-21**)
