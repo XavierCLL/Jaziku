@@ -71,7 +71,7 @@ month_text = {-2: _('Nov'), -1: _('Dec'), 0: _('Jan'), 1: _('Feb'), 2: _('Mar'),
 types_var_D = ['PPT', 'NDPPT', 'TMIN', 'TMAX', 'TEMP', 'PATM', 'RH', 'RUNOFF']
 
 # Units for types for dependent variable
-units_of_types_var_D = {'PPT':'mm', 'NDPPT':'#', 'TMIN':'°C', 'TMAX':'°C', 'TEMP':'°C',
+units_of_types_var_D = {'PPT':'mm', 'NDPPT':'#', 'TMIN':'Celsius', 'TMAX':'Celsius', 'TEMP':'Celsius',
                         'PATM':'mb', 'RH':'%', 'RUNOFF':'m^3/s'}
 
 # Valid input types for independent variable
@@ -79,7 +79,7 @@ types_var_I = ['ONI', 'SOI', 'MEI', 'OLR', 'W200', 'SST', 'ARH', 'QBO', 'NAO', '
 
 # Units for types for dependent variable
 units_of_types_var_I = {'ONI':'anomaly', 'SOI':'standardized anomaly', 'MEI':'#', 'OLR':'W/m2', 'W200':'standardized anomaly',
-                        'SST':'°C', 'ARH':'%', 'QBO':'Km/h', 'NAO':'anomaly', 'SSTA_CAR':'°C', 'AREA_WHWP':'scaled 10e6 km^2'}
+                        'SST':'Celsius', 'ARH':'%', 'QBO':'Km/h', 'NAO':'anomaly', 'SSTA_CAR':'Celsius', 'AREA_WHWP':'scaled 10e6 km^2'}
 
 # types of internal variable independent
 internal_var_I_types = ["ONI", "SOI", "MEI", "OLR", "W200", "SST", "ARH", "NAO", "QBO", "SSTA_CAR", "AREA_WHWP"]

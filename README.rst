@@ -60,6 +60,11 @@ Team
 **Roadmap, technical-theoretical support, tester, doc-user:**
     Ines Sánchez Rodriguez < incsanchezro (a) gmail.com >
 
+How to cite Jaziku
+------------------
+    Jaziku, composite analysis software (version 0.4.2). (2012) IDEAM, Colombia.
+    Jaziku is a free and open source software GPLv3. http://
+
 Licence
 -------
 

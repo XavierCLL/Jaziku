@@ -22,6 +22,7 @@ import os
 import csv
 from datetime import date
 import gc
+from dateutil.relativedelta import relativedelta
 from matplotlib import pyplot
 from pylab import xticks, setp, bar
 import matplotlib.dates as mdates
@@ -120,7 +121,7 @@ def main(stations):
         descriptive_statistic_graphs(stations)
         console.msg(_("done"), color='green')
     else:
-        console.msg("Error\n > WARNING: There is only one station for process\n"
+        console.msg("done\n > WARNING: There is only one station for process\n"
                     "   the graphs for descriptive statistic need more \n"
                     "   of one station.", color="yellow")
 
@@ -128,7 +129,7 @@ def main(stations):
     # -------------------------------------------------------------------------
     # GRAPHS INSPECTION OF SERIES
 
-    console.msg(_("graphs inspection of series (EDA) .............. "), newline=False)
+    console.msg(_("Graphs inspection of series (EDA) .............. "), newline=False)
     graphs_inspection_of_series(stations)
     console.msg(_("done"), color='green')
 
@@ -271,61 +272,98 @@ def graphs_inspection_of_series(stations):
 
     for station in stations:
         image_open_list = []
-        for var, type in [[station.var_D,'D'], [station.var_I,'I']]:
+
+        station_image_path = os.path.join(graphs_dir, station.code +'-'+station.name)
+
+        if not os.path.isdir(station_image_path):
+            os.makedirs(station_image_path)
+
+        list_graphs = [[station.var_D,'D'], [station.var_I,'I']]
+
+        # add special plot for make mosaic when the frequency off var D and var I are different
+        if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "monthly":
+            list_graphs.append([station.var_I, 'special_I'])
+        if station.var_D.frequency_data == "monthly" and station.var_I.frequency_data == "daily":
+            list_graphs.append([station.var_D, 'special_D'])
+
+        for var, type in list_graphs:
             x = var.date_in_process_period
             y = var.data_in_process_period
 
-            type_var = globals_vars.config_run['type_var_'+type]
-            name_graph = _("station_{0}_({1} vs Time)").format(station.code, type_var)
+            if type != 'special_I' and type != 'special_D':
+                type_var = globals_vars.config_run['type_var_'+type]
+                name_graph = _("station_{0}-{1}_({2} vs Time)").format(station.code, station.name, type_var)
+                len_x = len(x)
+            else:
+                type_var = globals_vars.config_run['type_var_'+type[-1::]]
+                name_graph = _("station_{0}-{1}_({2} vs Time)_stretched").format(station.code, station.name, type_var)
+
+                # add point in end of X-axis
+                x.append(x[-1]+relativedelta(months=1))
+                y.append(var.data[var.date.index(x[-1])])
+
+                if type == 'special_I':
+                    len_x = len(station.var_D.date_in_process_period)
+                if type == 'special_D':
+                    len_x = len(station.var_I.date_in_process_period)
             # dynamic with based of number of stations
-            if var.frequency_data == "daily":
-                with_fig = len(x)/20+4
-                if with_fig > 300:
-                    with_fig = 300
             if var.frequency_data == "monthly":
-                with_fig = len(x)/10+4
+                with_fig = len_x/10+4
+            if var.frequency_data == "daily" or type == 'special_I' or type == 'special_D':
+                with_fig = len_x/20+4
+
+            if with_fig > 300:
+                with_fig = 300
+
             fig = pyplot.figure(figsize=(with_fig, 6))
             #fig = pyplot.figure()
             ax = fig.add_subplot(111)
             ax.set_title(name_graph.replace('_',' '))
 
             # default zoom values
-            x_scale_below=-1.0/len(x)
-            x_scale_above=-2.7/len(x)
+            x_scale_below=-1.0/len_x
+            x_scale_above=-2.7/len_x
             y_scale_below=-0.04
             y_scale_above=-0.04
-            if var.frequency_data == "daily":
-                x_scale_below=-3.0/len(x)
-                x_scale_above=-6.0/len(x)
-            if type == 'D':
-                if var.frequency_data == "daily":
+
+            if var.frequency_data == "daily" or type == 'special_I' or type == 'special_D':
+                x_scale_below=-3.0/len_x
+                x_scale_above=-6.0/len_x
+
+            if type == 'D' or type == 'special_D':
+                if var.frequency_data == "daily" or type == 'special_D':
                     if type_var not in types_var_D:
-                        ax.plot(x, y, types_var_D['PPT']['graph'], color=types_var_D['PPT']['color'])
+                        # default for generic type for var D
+                        bar(x, y, width=1, align='center', color='#578ECE')
+                        y_scale_below=0
                     else:
                         if types_var_D[type_var]['graph'] == 'bar':
                             bar(x, y, width=1, align='center', color=types_var_D[type_var]['color'])
                             y_scale_below=0
                         else:
                             ax.plot(x, y, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
-                if var.frequency_data == "monthly":
+                if var.frequency_data == "monthly" and not type == 'special_D':
                     if type_var not in types_var_D:
-                        ax.plot(x, y, types_var_D['PPT']['graph'], color=types_var_D['PPT']['color'])
+                        # default for generic type for var D
+                        bar(x, y, width=20, align='center', color='#578ECE')
+                        y_scale_below=0
                     else:
                         if types_var_D[type_var]['graph'] == 'bar':
                             bar(x, y, width=20, align='center', color=types_var_D[type_var]['color'])
                             y_scale_below=0
                         else:
                             ax.plot(x, y, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
-            if type == 'I':
+
+            if type == 'I' or type == 'special_I':
                 ax.plot(x, y, 'o-', color="#638786")
 
             ## X
             ax.set_xlabel(_('Time'))
-            if var.frequency_data == "daily":
+            if var.frequency_data == "daily" or type == 'special_I' or type == 'special_D':
                 ax.xaxis.set_major_locator(mdates.MonthLocator())  # every month
                 ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
                 #ax.xaxis.set_minor_locator(mdates.MonthLocator())  # every month
-            if var.frequency_data == "monthly":
+            if var.frequency_data == "monthly" and not type == 'special_I' and not type == 'special_D':
                 ax.xaxis.set_major_locator(mdates.YearLocator())  # every year
                 ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
                 ax.xaxis.set_minor_locator(mdates.MonthLocator())  # every month
@@ -347,18 +385,29 @@ def graphs_inspection_of_series(stations):
 
             fig.tight_layout()
 
-            pyplot.savefig(os.path.join(graphs_dir, name_graph + '.png'), dpi=75)
-            image_open_list.append(os.path.join(graphs_dir, name_graph + '.png'))
+            image_path = os.path.join(station_image_path, name_graph + '.png')
+
+            pyplot.savefig(image_path, dpi=75)
+            image_open_list.append(image_path)
 
             pyplot.close('all')
 
+
         ## create mosaic
+        if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "monthly":
+            image_var_D = img_open(image_open_list[0])
+            image_var_I = img_open(image_open_list[2])
+        elif station.var_D.frequency_data == "monthly" and station.var_I.frequency_data == "daily":
+            image_var_D = img_open(image_open_list[2])
+            image_var_I = img_open(image_open_list[1])
+        else:
+            image_var_D = img_open(image_open_list[0])
+            image_var_I = img_open(image_open_list[1])
+
         # definition height and width of individual image
-        image_var_D = img_open(image_open_list[0])
-        image_var_I = img_open(image_open_list[1])
         width, height = image_var_D.size
         mosaic_dir_save\
-            = os.path.join(graphs_dir, _('mosaic_station_{0}.png').format(station.code))
+            = os.path.join(station_image_path, _('mosaic_station_{0}-{1}.png').format(station.code, station.name))
 
         # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
         mosaic_plots = pyplot.figure(figsize=((width) / 75, (height * 2) / 75))
@@ -369,6 +418,10 @@ def graphs_inspection_of_series(stations):
         mosaic.paste(image_var_D, (0, height))
 
         mosaic.save(mosaic_dir_save)
+
+        # delete stretched special image for mosaic
+        if len(image_open_list) == 3:
+            os.remove(image_open_list[2])
 
         pyplot.close('all')
 
