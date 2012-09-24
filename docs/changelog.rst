@@ -26,6 +26,7 @@ news
 - When the frequency data are different for var D and var I, Jaziku make
   special graphs stretched the x-axis to equalize the x-axis from other
   variable for do the mosaic of inspections of series in EDA
+- New: Make the matrix plots of scatter plots of all series of the var D
 
 fixes
 +++++

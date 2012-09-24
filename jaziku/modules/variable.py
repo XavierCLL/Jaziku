@@ -147,6 +147,15 @@ class Variable():
 
 
     def do_some_statistic_of_data(self, station):
+        """
+        Calculate several statistics based on data,
+        this is mainly used in data analysis.
+
+        :return by reference:
+            [VARIABLE.] size_data, maximum, minimum,
+            average, median, std_dev, skew, kurtosis
+            and coef_variation.
+        """
 
         # size data
         self.size_data = len(self.data_filtered_in_process_period)
