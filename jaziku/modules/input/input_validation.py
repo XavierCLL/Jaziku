@@ -329,7 +329,6 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
 # ocean surface area Ocean                Area anomaly scaled
 # region >28.5C----------------AREA_WHWP     by 10e6 km^2        -13 to 14
 
-# TODO: validatin var I for data daily
 
 def validation_var_I(type_var_I, var_I):
     '''

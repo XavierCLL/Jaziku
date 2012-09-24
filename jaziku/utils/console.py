@@ -29,6 +29,10 @@ from clint.textui import colored
 import globals_vars
 
 def msg(text, color=False, newline=True, indentation=0):
+    """
+    Print standard console message, this can print text in color
+    and with the "newline" can print text without newline in end of stream.
+    """
 
     if not color:
         if not newline:

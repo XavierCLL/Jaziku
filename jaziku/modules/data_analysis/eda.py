@@ -34,21 +34,35 @@ from jaziku.utils import globals_vars, console, format_out
 
 def main(stations):
 
-    console.msg(_("Exploratory data analysis (EDA) .............. "), newline=False)
+    # -------------------------------------------------------------------------
+    # EXPLORATORY DATA ANALYSIS
+    # -------------------------------------------------------------------------
+
+    console.msg(_("################# EXPLORATORY DATA ANALYSIS:"))
+
+    global eda_dir
+    eda_dir = os.path.join(globals_vars.data_analysis_dir, 'EDA')
+
+    # -------------------------------------------------------------------------
+    # DESCRIPTIVE STATISTICS
+    # -------------------------------------------------------------------------
+
+    console.msg(_("Descriptive statistics ............................... "), newline=False)
 
     # -------------------------------------------------------------------------
     # FILES OF DESCRIPTIVE STATISTICS
 
-    files_dir = os.path.join(globals_vars.data_analysis_dir, 'EDA', _('Descriptive_Statistic'))
+    global descriptive_statistic_dir
+    descriptive_statistic_dir = os.path.join(eda_dir, _('Descriptive_Statistic'))
 
-    if not os.path.isdir(files_dir):
-        os.makedirs(files_dir)
+    if not os.path.isdir(descriptive_statistic_dir):
+        os.makedirs(descriptive_statistic_dir)
 
     file_descriptive_statistics_var_D \
-        = os.path.join(files_dir, _('Descriptive_Statistics_{0}.csv').format(globals_vars.config_run['type_var_D']))
+        = os.path.join(descriptive_statistic_dir, _('Descriptive_Statistics_{0}.csv').format(globals_vars.config_run['type_var_D']))
 
     file_descriptive_statistics_var_I\
-        = os.path.join(files_dir, _('Descriptive_Statistics_{0}.csv').format(globals_vars.config_run['type_var_I']))
+        = os.path.join(descriptive_statistic_dir, _('Descriptive_Statistics_{0}.csv').format(globals_vars.config_run['type_var_I']))
 
     open_file_D = open(file_descriptive_statistics_var_D, 'w')
     csv_file_D = csv.writer(open_file_D, delimiter=';')
@@ -121,17 +135,41 @@ def main(stations):
         descriptive_statistic_graphs(stations)
         console.msg(_("done"), color='green')
     else:
-        console.msg("done\n > WARNING: There is only one station for process\n"
+        console.msg(_("fail\n > WARNING: There is only one station for process\n"
                     "   the graphs for descriptive statistic need more \n"
-                    "   of one station.", color="yellow")
-
+                    "   of one station."), color="yellow")
 
     # -------------------------------------------------------------------------
     # GRAPHS INSPECTION OF SERIES
 
-    console.msg(_("Graphs inspection of series (EDA) .............. "), newline=False)
-    graphs_inspection_of_series(stations)
+    console.msg(_("Graphs inspection of series .......................... "), newline=False)
+    #graphs_inspection_of_series(stations)   # TODO:
     console.msg(_("done"), color='green')
+
+
+    # -------------------------------------------------------------------------
+    # DISTRIBUTION TEST
+    # -------------------------------------------------------------------------
+
+    global distribution_test_dir
+    distribution_test_dir = os.path.join(eda_dir, _('Distribution_Test'))
+
+    if not os.path.isdir(distribution_test_dir):
+        os.makedirs(distribution_test_dir)
+
+    # -------------------------------------------------------------------------
+    # SCATTER PLOTS OF SERIES
+
+    console.msg(_("Scatter plots of series .............................. "), newline=False)
+
+    if Station.stations_processed > 1:
+        scatter_plots_of_series(stations)
+        console.msg(_("done"), color='green')
+    else:
+        console.msg(_("fail\n > WARNING: There is only one station for process\n"
+                      "   the scatter plots of series, this need more \n"
+                      "   of one station."), color="yellow")
+
 
 def zoom_graph(ax,x_scale_below=0, x_scale_above=0, y_scale_below=0, y_scale_above=0, abs_x=False, abs_y=False):
     """
@@ -172,14 +210,13 @@ def descriptive_statistic_graphs(stations):
                      'std_dev':'dots','skew':'dots', 'kurtosis':'dots', 'coef_variation':'dots'}
 
     # directory for save graphs of descriptive statistic
-    graphs_dir = os.path.join(globals_vars.data_analysis_dir, 'EDA',
-        _('Descriptive_Statistic'), _('Graphs_for_{0}').format(globals_vars.config_run['type_var_D']))
+    graphs_dir = os.path.join(descriptive_statistic_dir, _('Graphs_for_{0}').format(globals_vars.config_run['type_var_D']))
 
     if not os.path.isdir(graphs_dir):
         os.makedirs(graphs_dir)
 
     #for type, var in [[globals_vars.config_run['type_var_D'],'var_D'], [globals_vars.config_run['type_var_I'],'var_I']]:
-    for graph in ['vs_Stations', 'vs_Altitude']:
+    for graph in [_('vs_Stations'), _('vs_Altitude')]:
 
         for enum, statistic in enumerate(statistics_to_graphs):
             x = []
@@ -190,9 +227,9 @@ def descriptive_statistic_graphs(stations):
                                  'median':station.var_D.median, 'std_dev':station.var_D.std_dev,
                                  'skew':station.var_D.skew, 'kurtosis':station.var_D.kurtosis,
                                  'coef_variation':station.var_D.coef_variation}
-                if graph == 'vs_Stations':
+                if graph == _('vs_Stations'):
                     x.append(station.code)
-                if graph == 'vs_Altitude':
+                if graph == _('vs_Altitude'):
                     x.append(float(station.alt))
                 y.append(get_statistic[statistics[enum]])
 
@@ -208,20 +245,20 @@ def descriptive_statistic_graphs(stations):
             ax = fig.add_subplot(111)
             ax.set_title(name_graph.replace('_',' '))
 
-            if graph == 'vs_Stations':
+            if graph == _('vs_Stations'):
                 if graph_options[statistics[enum]] == 'dots':
                     ax.plot(range(1, len(x)+1), y, 'o', color="#638786")
                 if graph_options[statistics[enum]] == 'bars':
                     bar(range(1, len(x)+1), y, width=0.8, align='center', color="#638786")
-            if graph == 'vs_Altitude':
+            if graph == _('vs_Altitude'):
                 ax.plot(x, y, 'o', color="#638786")
 
             ## X
-            if graph == 'vs_Stations':
+            if graph == _('vs_Stations'):
                 ax.set_xlabel(_('Stations'))
                 locs, labels = xticks(range(1, len(x)+1), x)
                 setp(labels, 'rotation', 'vertical')
-            if graph == 'vs_Altitude':
+            if graph == _('vs_Altitude'):
                 ax.set_xlabel(_('Altitude (m)'))
                 #locs, labels = xticks(range(1, len(x)+1), x)
                 #setp(labels, 'rotation', 'vertical')
@@ -237,12 +274,12 @@ def descriptive_statistic_graphs(stations):
             pyplot.subplots_adjust(bottom=0.2)
             ax.grid(True)
             ax.autoscale(tight=True)
-            if graph == 'vs_Stations':
+            if graph == _('vs_Stations'):
                 if graph_options[statistics[enum]] == 'dots':
                     zoom_graph(ax=ax, x_scale_below=-0.3,x_scale_above=-0.3, y_scale_below=-0.1, y_scale_above=-0.1, abs_x=True)
                 if graph_options[statistics[enum]] == 'bars':
                     zoom_graph(ax=ax, x_scale_below=-0.3,x_scale_above=-0.3, y_scale_above=-0.1, abs_x=True)
-            if graph == 'vs_Altitude':
+            if graph == _('vs_Altitude'):
                 zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.08, y_scale_above=-0.08)
 
             fig.tight_layout()
@@ -259,8 +296,7 @@ def graphs_inspection_of_series(stations):
 
     # directory for save graphs of descriptive statistic
 
-    graphs_dir = os.path.join(globals_vars.data_analysis_dir, 'EDA',
-        _('Descriptive_Statistic'), _('Graphs_Inspection_of_Series'))
+    graphs_dir = os.path.join(descriptive_statistic_dir, _('Graphs_Inspection_of_Series'))
 
     if not os.path.isdir(graphs_dir):
         os.makedirs(graphs_dir)
@@ -430,6 +466,80 @@ def graphs_inspection_of_series(stations):
         #h.iso(1,[],{})
 
 
+def global_common_process(stations, var):
+    """
+    calculate the global common period based on all common process of all series
+    """
+
+    if var == 'D':
+        firsts = True
+        for station in stations:
+            if firsts:
+                global_common_date = set(station.var_D.date_in_process_period)
+                firsts = False
+            else:
+                global_common_date = global_common_date & set(station.var_D.date_in_process_period)
+    if var == 'I':
+        firsts = True
+        for station in stations:
+            if firsts:
+                global_common_date = set(station.var_I.date_in_process_period)
+                firsts = False
+            else:
+                global_common_date = global_common_date & set(station.var_I.date_in_process_period)
+
+    global_common_date = list(global_common_date)
+    global_common_date.sort()
+
+    # calculate the process period
+    #return {'start': global_common_date[0].year, 'end': global_common_date[-1].year}
+    return global_common_date
+
+def scatter_plots_of_series(stations):
+
+    # calculate the common period of all common process
+    global_common_date_process_var_D = global_common_process(stations, 'D')
+
+    pyplot.figure(figsize=(4*len(stations)/1.5, 3*len(stations)/1.5))
+
+    name_plot = _("Scatter plots of series - {0} ({1}-{2})").format(globals_vars.config_run['type_var_D'],
+        global_common_date_process_var_D[0].year, global_common_date_process_var_D[-1].year)
+
+    pyplot.suptitle(name_plot, y=0.99, fontsize=14)
+
+    for iter_v, station_v in enumerate(stations):
+        for iter_h, station_h in enumerate(stations):
+            x = station_h.var_D.data[station_h.var_D.date.index(global_common_date_process_var_D[0]):\
+            station_h.var_D.date.index(global_common_date_process_var_D[-1])+1]
+
+            y = station_v.var_D.data[station_v.var_D.date.index(global_common_date_process_var_D[0]):\
+            station_v.var_D.date.index(global_common_date_process_var_D[-1])+1]
+
+            ax = pyplot.subplot2grid((len(stations),len(stations)),(iter_v,iter_h))
+
+            ax.scatter(x,y, marker='o', color="#638786", edgecolors="#3C5250")
+
+            if iter_h == 0:
+                ax.set_ylabel(station_v.code)
+            else:
+                ax.set_yticklabels([])
+            if iter_v == len(stations)-1:
+                ax.set_xlabel(station_h.code)
+            else:
+                ax.set_xticklabels([])
+
+            ax.grid(True)
+            ax.autoscale(tight=True)
+
+            pyplot.tight_layout()
+
+    pyplot.subplots_adjust(top=0.002*len(stations)+0.95)
+
+    image_path = os.path.join(distribution_test_dir, name_plot + '.png')
+
+    pyplot.savefig(image_path, dpi=75)
+
+    pyplot.close('all')
 
 
 

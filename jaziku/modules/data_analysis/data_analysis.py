@@ -32,8 +32,9 @@ def main(stations):
     files folder of time series.
     """
 
-    console.msg(_("\nReading var D and var I of all stations ......... "), newline=False)
+    console.msg(_("\nReading var D and var I of all stations .............. "), newline=False)
 
+    # prepared data before do data analysis process
     for station in stations:
 
         station.var_D.read_data_from_file(station, process=True, messages=False)
@@ -53,6 +54,7 @@ def main(stations):
         "   {0} station readed.",
         "   {0} stations readed.",
         Station.stations_processed).format(Station.stations_processed), color='cyan')
+    console.msg('')
 
     # -------------------------------------------------------------------------
     # Exploratory data analysis process
