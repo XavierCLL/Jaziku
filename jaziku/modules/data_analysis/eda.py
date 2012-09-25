@@ -29,7 +29,9 @@ import matplotlib.dates as mdates
 from Image import open as img_open
 
 from jaziku.modules.station import Station
+from jaziku.modules.variable import Variable
 from jaziku.utils import globals_vars, console, format_out
+from jaziku.utils.mean import mean
 
 
 def main(stations):
@@ -143,9 +145,15 @@ def main(stations):
     # GRAPHS INSPECTION OF SERIES
 
     console.msg(_("Graphs inspection of series .......................... "), newline=False)
-    #graphs_inspection_of_series(stations)   # TODO:
+    #graphs_inspection_of_series(stations) todo
     console.msg(_("done"), color='green')
 
+    # -------------------------------------------------------------------------
+    # CLIMATOLOGY
+
+    console.msg(_("Climatology .......................................... "), newline=False)
+    climatology(stations)
+    console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
     # DISTRIBUTION TEST
@@ -164,6 +172,19 @@ def main(stations):
 
     if Station.stations_processed > 1:
         scatter_plots_of_series(stations)
+        console.msg(_("done"), color='green')
+    else:
+        console.msg(_("fail\n > WARNING: There is only one station for process\n"
+                      "   the scatter plots of series, this need more \n"
+                      "   of one station."), color="yellow")
+
+    # -------------------------------------------------------------------------
+    # FREQUENCY HISTOGRAM
+
+    console.msg(_("Frequency histogram .................................. "), newline=False)
+
+    if Station.stations_processed > 1:
+        frequency_histogram(stations)
         console.msg(_("done"), color='green')
     else:
         console.msg(_("fail\n > WARNING: There is only one station for process\n"
@@ -291,7 +312,7 @@ def descriptive_statistic_graphs(stations):
 
 def graphs_inspection_of_series(stations):
     """
-    Graphs for inspection of series part of EDA
+    Graphs for inspection of series, part of EDA.
     """
 
     # directory for save graphs of descriptive statistic
@@ -465,6 +486,55 @@ def graphs_inspection_of_series(stations):
         #print h.heap()
         #h.iso(1,[],{})
 
+def climatology(stations):
+    """
+    Climatology table and graphs, part of EDA.
+    """
+
+    graphs_dir = os.path.join(descriptive_statistic_dir, _('Graphs_Inspection_of_Series'))
+
+    if not os.path.isdir(graphs_dir):
+        os.makedirs(graphs_dir)
+
+    # climatology table file
+    open_file_climatology_table\
+        = open(os.path.join(graphs_dir, _('Climatology_table_{0}').format(globals_vars.config_run['type_var_D'])+'.csv'), 'w')
+    csv_climatology_table = csv.writer(open_file_climatology_table, delimiter=';')
+
+    # print header
+    header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), globals_vars.month_text[0], globals_vars.month_text[1],
+              globals_vars.month_text[2], globals_vars.month_text[3], globals_vars.month_text[4], globals_vars.month_text[5],
+              globals_vars.month_text[6], globals_vars.month_text[7], globals_vars.month_text[8], globals_vars.month_text[9],
+              globals_vars.month_text[10], globals_vars.month_text[11]]
+
+    csv_climatology_table.writerow(header)
+
+    for station in stations:
+
+        line = [station.code, station.name, station.lat, station.lon, station.alt,
+                '{0}-{1}'.format(station.process_period['start'], station.process_period['end'])]
+
+        var_D = Variable('D')
+        var_D.data = station.var_D.data_in_process_period
+        var_D.date = station.var_D.date_in_process_period
+
+        if station.var_D.frequency_data == "daily":
+            var_D.daily2monthly()
+
+        months = []
+        for m in range(1,13):
+            values = []
+            for iter, value in  enumerate(var_D.data):
+                if var_D.date[iter].month == m:
+                    values.append(value)
+            months.append(mean(values))
+
+        csv_climatology_table.writerow(line + months)
+
+
+    open_file_climatology_table.close()
+    del csv_climatology_table
+
 
 def global_common_process(stations, var):
     """
@@ -542,4 +612,5 @@ def scatter_plots_of_series(stations):
     pyplot.close('all')
 
 
-
+def frequency_histogram(stations):
+    pass
