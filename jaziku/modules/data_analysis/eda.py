@@ -145,7 +145,7 @@ def main(stations):
     # GRAPHS INSPECTION OF SERIES
 
     console.msg(_("Graphs inspection of series .......................... "), newline=False)
-    #graphs_inspection_of_series(stations) todo
+    graphs_inspection_of_series(stations)
     console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
@@ -310,6 +310,12 @@ def descriptive_statistic_graphs(stations):
             pyplot.close('all')
 
 
+# types graphs based on type of var D
+types_var_D = {'PPT':{'graph':'bar','color':'#578ECE'}, 'NDPPT':{'graph':'bar','color':'#578ECE'},
+               'TMIN':{'graph':'o-','color':'#C08A1C'}, 'TMAX':{'graph':'o-','color':'#C08A1C'},
+               'TEMP':{'graph':'o-','color':'#C08A1C'}, 'PATM':{'graph':'*-','color':'#287F2A'},
+               'RH':{'graph':'s-','color':'#833680'}, 'RUNOFF':{'graph':'s-','color':'#833680'}}
+
 def graphs_inspection_of_series(stations):
     """
     Graphs for inspection of series, part of EDA.
@@ -322,10 +328,6 @@ def graphs_inspection_of_series(stations):
     if not os.path.isdir(graphs_dir):
         os.makedirs(graphs_dir)
 
-    types_var_D = {'PPT':{'graph':'bar','color':'#578ECE'}, 'NDPPT':{'graph':'bar','color':'#578ECE'},
-                   'TMIN':{'graph':'o-','color':'#C08A1C'}, 'TMAX':{'graph':'o-','color':'#C08A1C'},
-                   'TEMP':{'graph':'o-','color':'#C08A1C'}, 'PATM':{'graph':'*-','color':'#287F2A'},
-                   'RH':{'graph':'s-','color':'#833680'}, 'RUNOFF':{'graph':'s-','color':'#833680'}}
 
     for station in stations:
         image_open_list = []
@@ -510,7 +512,8 @@ def climatology(stations):
     csv_climatology_table.writerow(header)
 
     for station in stations:
-
+        # -------------------------------------------------------------------------
+        ## for climatology table
         line = [station.code, station.name, station.lat, station.lon, station.alt,
                 '{0}-{1}'.format(station.process_period['start'], station.process_period['end'])]
 
@@ -529,8 +532,60 @@ def climatology(stations):
                     values.append(value)
             months.append(mean(values))
 
-        csv_climatology_table.writerow(line + months)
+        csv_climatology_table.writerow(line + [format_out.number(i) for i in months])
 
+        # -------------------------------------------------------------------------
+        ## for climatology graphs
+        station_image_path = os.path.join(graphs_dir, station.code +'-'+station.name)
+
+        x = range(1, 13)
+        x_labels = [globals_vars.month_text[i] for i in range(12)]
+        y = months
+
+        # do that matplotlib plot zeros in extreme values
+        for value in y:
+            if value == 0:
+                y[y.index(value)] = 0.0001
+
+        name_graph = _("climatology"+"_{0}_{1}_{2}").format(station.code, station.name, globals_vars.config_run['type_var_D'])
+        # dynamic with based of number of stations
+        fig = pyplot.figure()
+        ax = fig.add_subplot(111)
+        ax.set_title(_("Climatology"+" {0} {1} - {2} ({3}-{4})").format(station.code, station.name,
+            globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']))
+
+        type_var = globals_vars.config_run['type_var_D']
+
+        ## X
+        ax.set_xlabel(_('Months'))
+        xticks(x, x_labels)
+
+        ## Y
+        # get units os type of var D or I
+        units = globals_vars.units_of_types_var_D[type_var]
+        ax.set_ylabel('{0} ({1})'.format(type_var, units))
+
+        pyplot.subplots_adjust(bottom=0.2)
+        ax.grid(True)
+        ax.autoscale(tight=True)
+
+        if type_var not in types_var_D:
+            # default for generic type for var D
+            bar(x, y, align='center', color='#578ECE')
+            zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
+        else:
+            if types_var_D[type_var]['graph'] == 'bar':
+                bar(x, y, align='center', color=types_var_D[type_var]['color'])
+                zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
+            else:
+                ax.plot(x, y, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
+                zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
+
+        fig.tight_layout()
+
+        pyplot.savefig(os.path.join(station_image_path, name_graph + '.png'), dpi=75)
+
+        pyplot.close('all')
 
     open_file_climatology_table.close()
     del csv_climatology_table
@@ -572,10 +627,15 @@ def scatter_plots_of_series(stations):
 
     pyplot.figure(figsize=(4*len(stations)/1.5, 3*len(stations)/1.5))
 
-    name_plot = _("Scatter plots of series - {0} ({1}-{2})").format(globals_vars.config_run['type_var_D'],
+    name_plot = _("scatter_plots_of_series_{0}_{2}-{3}").format(globals_vars.config_run['type_var_D'],
+        globals_vars.units_of_types_var_D[globals_vars.config_run['type_var_D']],
         global_common_date_process_var_D[0].year, global_common_date_process_var_D[-1].year)
 
-    pyplot.suptitle(name_plot, y=0.99, fontsize=14)
+    title_plot = _("Scatter plots of series - {0} ({1}) {2}-{3}").format(globals_vars.config_run['type_var_D'],
+        globals_vars.units_of_types_var_D[globals_vars.config_run['type_var_D']],
+        global_common_date_process_var_D[0].year, global_common_date_process_var_D[-1].year)
+
+    pyplot.suptitle(title_plot, y=0.99, fontsize=14)
 
     for iter_v, station_v in enumerate(stations):
         for iter_h, station_h in enumerate(stations):

@@ -124,6 +124,7 @@ class Variable():
         :return by reference:
             VARIABLE.data_in_process_period (list)
             VARIABLE.data_filtered_in_process_period (list)
+            VARIABLE.date_in_process_period (list)
             VARIABLE.null_values_in_process_period (int)
         """
         start_date_var = date(station.process_period['start'], 1, 1)
@@ -137,7 +138,7 @@ class Variable():
                                                 self.date.index(end_date_var) + 1]
         # date inside the process period
         self.date_in_process_period = self.date[self.date.index(start_date_var):\
-        self.date.index(end_date_var) + 1]
+                                      self.date.index(end_date_var) + 1]
         # nulls inside the process period
         self.null_values_in_process_period = count_null_values(self.data_in_process_period)
 
