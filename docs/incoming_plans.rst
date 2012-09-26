@@ -4,43 +4,60 @@
 Incoming / Plans
 ================
 
-0.5 (**2012-08-30**)
+0.5 (**2012-10-05**)
 --------------------
 
-- Time Series analysis consistensy
-- group and divide directory based on type var_I and var_D
+- Descriptive statistics: sample size, maximum and minimum, average, standard deviation,
+  skewness and kurtosis coefficient of variation, median
+- Inspection of the series, linearity and nonlinearity: Graphic Series VarDep and
+  VarIndp vs time, Climatology (multiannual monthly average), Climatology (maximum-minimum
+  monthly multiyear), Climatology (Multiyear: Decade, fifteen and five days)
+- Examination of the distribution: Scatterplots among all series, frequency histogram, Shapiro-Wilks test
+- Outliers by atypical station list and depending on the phases of the phenomenon of VarIndp
 
-0.6 (**2012-09-30**)
+0.6 (**2012-12-2x**)
 --------------------
 
-- Homogenety analysis
-- Calculation of Pearson correlation coefficients as well as quarterly and lags, as phases of the phenomenon
+- Calculation of contingency tables for 4 and 5 categories
+- Nonparametric Tests of contingency table for 4 and 5 categories
+- Risk analysis for contingency tables for 4 and 5 categories
+- Calculations of values of the dependent variable intervals
+- Recalculate the value index files for maps
+- Modification of Figures for 3, 4 and 5 categories
+- Modification of maps for 3, 4 and 5 categories
+- Modification of the linear combination between the contingency table and prognosis
+  by categories of the independent variable.
+- Modification of the option analog years for 4 and 5 categories
 
-0.7 (**2012-XX-XX**)
+0.7 (**2013-xx-xx**)
 --------------------
 
-- Calculo de las tablas de contingencias para las 4 y 5 categorias
-- Pruebas no parametricas de la tabla de contingencia de las 4 y 5
-- Analisis de riesgos para las tablas de contigencias para las las 4 5 
-- Calculos de valores por intervalos de la variable dependiente
-- Recalculo del valor indice de los archivos para mapas
-- Arreglo de las graficas para 3, 4 y 5 categorias
-- Arreglo de las mapas para 3, 4 y 5 categorias
+:Exploratory data analysis consolidation:
 
-0.8 (**2012-XX-XX**)
+- **Correlation:** Autocorrelogram, Cross Correlogram (Var INDP), cross-correlation matrix between all series
+- **Outliers:** Box Plot, Diagram 4-band dispersion, series plot with standard fixed
+  threshold vs time
+- **Missing values for each variable and Test bias:** List of missing values, time series vs time ( with shade for missing values),% pie chart for more missing value repeated,
+  the year with the highest number with missing values, filling series with mean and median (entire series),
+  frequency histogram pre and post after fill each series
+
+0.8 (**2013-xx-xx**)
 --------------------
 
-- Modificacion de la combinacion lineal entre la tabla de contingencia y el pronostico
-  por categorias de la variable independiente.
-- Recalculo del valor indice de los archivos para mapas
-- Arreglo de las graficas para 3, 4 y 5 categorias
-- Arreglo de las mapas para 3, 4 y 5 categorias
+:Homogeneity analysis:
 
-0.9 (**2012-XX-XX**)
+- Stability in mean (Tes-t)
+- Stability in median (Test MWW)
+- Randomness (Test Runs)
+- Changing trend (Fisher test)
+- Mass curve for (Q, HR, PPT)
+
+
+0.9 (**2013-XX-XX**)
 --------------------
 - Inclusion of spectral analysis
 
-1.0 (**2012-XX-XX**)
+1.0 (**2013-XX-XX**)
 --------------------
 
 - Inclusion of wavelete analysis
@@ -50,7 +67,6 @@ To be analyzed
 
 - partial run, if a station has an error continue with other station, alert in final message
 - Add altitude parameter for stations and print in results (maps files)
-- better console message with clint: https://github.com/kennethreitz/clint/blob/develop/examples/colors_indent.py
 
 Arts and promotions
 -------------------
