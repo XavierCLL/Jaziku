@@ -17,17 +17,21 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
+from calendar import monthrange
 
 import os
 import csv
+from math import log, sqrt
 from datetime import date
 import gc
 from dateutil.relativedelta import relativedelta
 from matplotlib import pyplot
+from numpy import histogram
 from pylab import xticks, setp, bar
 import matplotlib.dates as mdates
 from Image import open as img_open
 
+from jaziku.modules.climate.lags import get_range_analysis_interval, get_range_analysis_interval_values
 from jaziku.modules.station import Station
 from jaziku.modules.variable import Variable
 from jaziku.utils import globals_vars, console, format_out
@@ -145,7 +149,7 @@ def main(stations):
     # GRAPHS INSPECTION OF SERIES
 
     console.msg(_("Graphs inspection of series .......................... "), newline=False)
-    graphs_inspection_of_series(stations)
+    #graphs_inspection_of_series(stations) todo
     console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
@@ -171,7 +175,7 @@ def main(stations):
     console.msg(_("Scatter plots of series .............................. "), newline=False)
 
     if Station.stations_processed > 1:
-        scatter_plots_of_series(stations)
+        #scatter_plots_of_series(stations) todo
         console.msg(_("done"), color='green')
     else:
         console.msg(_("fail\n > WARNING: There is only one station for process\n"
@@ -535,8 +539,12 @@ def climatology(stations):
         csv_climatology_table.writerow(line + [format_out.number(i) for i in months])
 
         # -------------------------------------------------------------------------
-        ## for climatology graphs
+        ## for climatology graphs, month by month
+
         station_image_path = os.path.join(graphs_dir, station.code +'-'+station.name)
+
+        if not os.path.isdir(station_image_path):
+            os.makedirs(station_image_path)
 
         x = range(1, 13)
         x_labels = [globals_vars.month_text[i] for i in range(12)]
@@ -548,7 +556,7 @@ def climatology(stations):
                 y[y.index(value)] = 0.0001
 
         name_graph = _("climatology"+"_{0}_{1}_{2}").format(station.code, station.name, globals_vars.config_run['type_var_D'])
-        # dynamic with based of number of stations
+
         fig = pyplot.figure()
         ax = fig.add_subplot(111)
         ax.set_title(_("Climatology"+" {0} {1} - {2} ({3}-{4})").format(station.code, station.name,
@@ -571,7 +579,7 @@ def climatology(stations):
 
         if type_var not in types_var_D:
             # default for generic type for var D
-            bar(x, y, align='center', color='#578ECE')
+            bar(x, y, align='center', color='#638786')
             zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
         else:
             if types_var_D[type_var]['graph'] == 'bar':
@@ -586,6 +594,80 @@ def climatology(stations):
         pyplot.savefig(os.path.join(station_image_path, name_graph + '.png'), dpi=75)
 
         pyplot.close('all')
+
+        # -------------------------------------------------------------------------
+        ## for climatology graphs, every 5, 10 or 15 days based to analysis interval
+
+        if station.var_D.frequency_data == "daily" and not station.analysis_interval == "trimester":
+            y = []
+            range_analysis_interval = get_range_analysis_interval(station)
+            for month in range(1, 13):
+                for day in range_analysis_interval:
+                    iter_year = station.process_period['start']
+                    # iteration for years from first-year +1 to end-year -1 inside
+                    # range common_period
+                    y_value = float('nan')
+                    while iter_year <= station.process_period['end']:
+                        # test if day exist in month and year
+                        if day > monthrange(iter_year, month)[1]:
+                            iter_year += relativedelta(years= +1)
+                            continue
+
+                        y_value = mean([y_value, mean(get_range_analysis_interval_values(station,'D', iter_year, month, day))])
+                        iter_year += 1
+                    y.append(y_value)
+
+            x = range(1, len(y)+1)
+            x_step_label = len(y)/12
+            x_labels = []
+            for i in range(len(y)):
+                if i%x_step_label == 0:
+                    x_labels.append(globals_vars.month_text[i/x_step_label])
+                else:
+                    x_labels.append('')
+
+            name_graph = _("climatology-{0}days_{1}_{2}_{3}").format(station.analysis_interval_num_days,
+                station.code, station.name, globals_vars.config_run['type_var_D'])
+
+            with_fig = 5 + len(y)/7
+            fig = pyplot.figure(figsize=(with_fig, 6))
+            ax = fig.add_subplot(111)
+            ax.set_title(_("Climatology-{0}days {1} {2} - {3} ({4}-{5})").format(station.analysis_interval_num_days,
+                station.code, station.name, globals_vars.config_run['type_var_D'], station.process_period['start'],
+                station.process_period['end']))
+
+            type_var = globals_vars.config_run['type_var_D']
+
+            ## X
+            ax.set_xlabel(_('Months'))
+            xticks(x, x_labels)
+
+            ## Y
+            # get units os type of var D or I
+            units = globals_vars.units_of_types_var_D[type_var]
+            ax.set_ylabel('{0} ({1})'.format(type_var, units))
+
+            pyplot.subplots_adjust(bottom=0.2)
+            ax.grid(True)
+            ax.autoscale(tight=True)
+
+            if type_var not in types_var_D:
+                # default for generic type for var D
+                bar(x, y, align='center', color='#638786')
+                zoom_graph(ax=ax, x_scale_below=-0.02,x_scale_above=-0.02, y_scale_above=-0.03)
+            else:
+                if types_var_D[type_var]['graph'] == 'bar':
+                    bar(x, y, align='center', color=types_var_D[type_var]['color'])
+                    zoom_graph(ax=ax, x_scale_below=-0.02,x_scale_above=-0.02, y_scale_above=-0.03)
+                else:
+                    ax.plot(x, y, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
+                    zoom_graph(ax=ax, x_scale_below=-0.02,x_scale_above=-0.02, y_scale_below=-0.03, y_scale_above=-0.03)
+
+            fig.tight_layout()
+
+            pyplot.savefig(os.path.join(station_image_path, name_graph + '.png'), dpi=75)
+
+            pyplot.close('all')
 
     open_file_climatology_table.close()
     del csv_climatology_table
@@ -663,6 +745,7 @@ def scatter_plots_of_series(stations):
 
             pyplot.tight_layout()
 
+    # adjust title plot
     pyplot.subplots_adjust(top=0.002*len(stations)+0.95)
 
     image_path = os.path.join(distribution_test_dir, name_plot + '.png')
@@ -673,4 +756,48 @@ def scatter_plots_of_series(stations):
 
 
 def frequency_histogram(stations):
-    pass
+
+    frequency_histogram_dir = os.path.join(distribution_test_dir, _('Frequency_histogram'))
+
+    if not os.path.isdir(frequency_histogram_dir):
+        os.makedirs(frequency_histogram_dir)
+
+    for station in stations:
+
+        n = station.var_D.size_data
+        a = station.var_D.kurtosis
+        bins = 1 + log(n) + log(1 + a*sqrt(n/6))
+
+        hist, bin_edges = histogram(station.var_D.data_filtered_in_process_period, bins=bins)
+
+        name_graph = _("frequency_histogram"+"_{0}_{1}_{2}").format(station.code, station.name, globals_vars.config_run['type_var_D'])
+
+        fig = pyplot.figure()
+        ax = fig.add_subplot(111)
+        ax.set_title(_("Frequency histogram"+" {0} {1} - {2} ({3}-{4})").format(station.code, station.name,
+            globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']))
+
+        type_var = globals_vars.config_run['type_var_D']
+
+        ## X
+        units = globals_vars.units_of_types_var_D[type_var]
+        ax.set_xlabel('{0} ({1})'.format(type_var, units))
+
+        ## Y
+        ax.set_ylabel(_('Frequency'))
+
+        width = 0.7 * (bin_edges[1] - bin_edges[0])
+        center = (bin_edges[:-1] + bin_edges[1:]) / 2
+        bar(center,hist,align='center', color='#638786', width=width)
+
+        ax.grid(True)
+        ax.autoscale(tight=True)
+
+        fig.tight_layout()
+
+        pyplot.savefig(os.path.join(frequency_histogram_dir, name_graph + '.png'), dpi=75)
+
+        pyplot.close('all')
+
+
+

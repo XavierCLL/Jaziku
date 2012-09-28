@@ -48,6 +48,99 @@ def get_lag_values(station, var, lag, month, day=None):
     return [row[var_select[var]] for row in temp_list]
 
 
+def get_range_analysis_interval(station):
+    # range based on analysis interval
+
+    if station.analysis_interval != "trimester":
+        if station.analysis_interval_num_days == 5:
+            return [1, 6, 11, 16, 21, 26]
+        if station.analysis_interval_num_days == 10:
+            return [1, 11, 21]
+        if station.analysis_interval_num_days == 15:
+            return [1, 16]
+    else:
+        return None
+
+def get_range_analysis_interval_values(station, type, year, month, day=None, lag=None):
+    """
+    Get all values inside range analysis interval in specific year, month, day or lag.
+    The "type" must be "D" or "I". For trimester the "month" is the start month of
+    trimester, for 5, 10, or 15 days the "day" is a start day in the range analysis
+    interval. The "lag" is only affect for the independent variable and it must
+    be 0, 1 or 2.
+    """
+
+    range_analysis_interval = get_range_analysis_interval(station)
+
+    if type == 'D':
+        var_D_values = []
+        if station.var_D.frequency_data == "daily":
+            # clone range for add the last day (32) for calculate interval_day_var_D
+            rai_plus = list(range_analysis_interval)
+            rai_plus.append(32)
+            # from day to next iterator based on analysis interval
+            # e.g. [0,1,2,3,4] for first iteration for 5 days
+            interval_day_var_D = range(day - 1, rai_plus[rai_plus.index(day) + 1] - 1)
+
+            for iter_day in interval_day_var_D:
+                now = date(year, month, 1) + relativedelta(days=iter_day)
+                # check if continues with the same month
+                if now.month == month:
+                    index_var_D = station.var_D.date.index(now)
+                    var_D_values.append(station.var_D.data[index_var_D])
+        if station.var_D.frequency_data == "monthly":
+            # get the three values for var_D in this month
+            for iter_month in range(3):
+                var_D_values.append(station.var_D.data[station.var_D.date.index(
+                    date(year, month, 1) + relativedelta(months=iter_month))])
+
+        return var_D_values
+
+    if type == 'I':
+        var_I_values = []
+        if station.var_I.frequency_data == "daily":
+            # from day to next iterator based on analysis interval
+            start_interval = range_analysis_interval[range_analysis_interval.index(day) - lag]
+            try:
+                end_interval = range_analysis_interval[range_analysis_interval.index(day) + 1 - lag]
+            except:
+                end_interval = range_analysis_interval[0]
+
+            start_date = date(year, month, start_interval)
+
+            if range_analysis_interval.index(day) - lag < 0:
+                start_date += relativedelta(months= -1)
+
+            iter_date = start_date
+
+            while iter_date.day != end_interval:
+                index_var_I = station.var_I.date.index(iter_date)
+                var_I_values.append(station.var_I.data[index_var_I])
+                iter_date += relativedelta(days=1)
+
+        if station.var_I.frequency_data == "monthly":
+            if station.state_of_data in [1, 3]:
+                # get the three values for var_I in this month
+                for iter_month in range(3):
+                    var_I_values.append(station.var_I.data[station.var_I.date.index(
+                        date(year, month, 1) + relativedelta(months=iter_month - lag))])
+            if station.state_of_data in [2]:
+                # keep constant value for month
+                if station.analysis_interval == "trimester":
+                    var_I_values.append(station.var_I.data[station.var_I.date.index(
+                        date(year, month, 1) + relativedelta(months= -lag))])
+                else:
+                    real_date = date(year, month, day) + relativedelta(days= -station.analysis_interval_num_days * lag)
+                    # e.g if lag 2 in march and calculate to 15days go to february and not january
+                    if month - real_date.month > 1:
+                        real_date = date(real_date.year, real_date.month + 1, 1)
+
+                    var_I_values.append(station.var_I.data[station.var_I.date.index(
+                        date(real_date.year, real_date.month, 1))])
+
+        return var_I_values
+
+
 def calculate_lags(station):
     """
     Calculate and return lags 0, 1 and 2 of specific stations
@@ -70,83 +163,7 @@ def calculate_lags(station):
                os.path.join(station.climate_dir, _('time_series'), _('lag_1')),
                os.path.join(station.climate_dir, _('time_series'), _('lag_2'))]
 
-    # range based on analysis interval
-    range_analysis_interval = None
-    if station.analysis_interval != "trimester":
-        if station.analysis_interval_num_days == 5:
-            range_analysis_interval = [1, 6, 11, 16, 21, 26]
-        if station.analysis_interval_num_days == 10:
-            range_analysis_interval = [1, 11, 21]
-        if station.analysis_interval_num_days == 15:
-            range_analysis_interval = [1, 16]
-
-    def get_var_D_values():
-        var_D_values = []
-        if station.var_D.frequency_data== "daily":
-            # clone range for add the last day (32) for calculate interval_day_var_D
-            rai_plus = list(range_analysis_interval)
-            rai_plus.append(32)
-            # from day to next iterator based on analysis interval
-            # e.g. [0,1,2,3,4] for first iteration for 5 days
-            interval_day_var_D = range(day - 1, rai_plus[rai_plus.index(day) + 1] - 1)
-
-            for iter_day in interval_day_var_D:
-                now = date(iter_year, month, 1) + relativedelta(days=iter_day)
-                # check if continues with the same month
-                if now.month == month:
-                    index_var_D = station.var_D.date.index(now)
-                    var_D_values.append(station.var_D.data[index_var_D])
-        if station.var_D.frequency_data== "monthly":
-            # get the three values for var_D in this month
-            for iter_month in range(3):
-                var_D_values.append(station.var_D.data[station.var_D.date.index(
-                    date(iter_year, month, 1) + relativedelta(months=iter_month))])
-
-        return var_D_values
-
-    def get_var_I_values():
-        var_I_values = []
-        if station.var_I.frequency_data == "daily":
-            # from day to next iterator based on analysis interval
-            start_interval = range_analysis_interval[range_analysis_interval.index(day) - lag]
-            try:
-                end_interval = range_analysis_interval[range_analysis_interval.index(day) + 1 - lag]
-            except:
-                end_interval = range_analysis_interval[0]
-
-            start_date = date(iter_year, month, start_interval)
-
-            if range_analysis_interval.index(day) - lag < 0:
-                start_date += relativedelta(months= -1)
-
-            iter_date = start_date
-
-            while iter_date.day != end_interval:
-                index_var_I = station.var_I.date.index(iter_date)
-                var_I_values.append(station.var_I.data[index_var_I])
-                iter_date += relativedelta(days=1)
-
-        if station.var_I.frequency_data == "monthly":
-            if station.state_of_data in [1, 3]:
-                # get the three values for var_I in this month
-                for iter_month in range(3):
-                    var_I_values.append(station.var_I.data[station.var_I.date.index(
-                        date(iter_year, month, 1) + relativedelta(months=iter_month - lag))])
-            if station.state_of_data in [2]:
-                # keep constant value for month
-                if station.analysis_interval == "trimester":
-                    var_I_values.append(station.var_I.data[station.var_I.date.index(
-                        date(iter_year, month, 1) + relativedelta(months= -lag))])
-                else:
-                    real_date = date(iter_year, month, day) + relativedelta(days= -station.analysis_interval_num_days * lag)
-                    # e.g if lag 2 in march and calculate to 15days go to february and not january
-                    if month - real_date.month > 1:
-                        real_date = date(real_date.year, real_date.month + 1, 1)
-
-                    var_I_values.append(station.var_I.data[station.var_I.date.index(
-                        date(real_date.year, real_date.month, 1))])
-
-        return var_I_values
+    range_analysis_interval = get_range_analysis_interval(station)
 
     if station.state_of_data in [1, 3]:
 
@@ -181,10 +198,10 @@ def calculate_lags(station):
                 while iter_year <= station.process_period['end']:
 
                     # get values and calculate mean_var_D
-                    mean_var_D = mean(get_var_D_values())
+                    mean_var_D = mean(get_range_analysis_interval_values(station,'D', iter_year, month))
 
                     # get values and calculate mean_var_I
-                    mean_var_I = mean(get_var_I_values())
+                    mean_var_I = mean(get_range_analysis_interval_values(station,'I', iter_year, month))
 
                     # add line in list: Lag_X
                     vars()['Lag_' + str(lag)].append([date(iter_year, month, 1),
@@ -244,10 +261,10 @@ def calculate_lags(station):
                             continue
 
                         # get values and calculate mean_var_D
-                        mean_var_D = mean(get_var_D_values())
+                        mean_var_D = mean(get_range_analysis_interval_values(station,'D', iter_year, month, day, lag))
 
                         # get values and calculate mean_var_I
-                        mean_var_I = mean(get_var_I_values())
+                        mean_var_I = mean(get_range_analysis_interval_values(station,'I', iter_year, month, day, lag))
 
                         # add line in list: Lag_X
                         vars()['Lag_' + str(lag)].append([date(iter_year, month, day),
