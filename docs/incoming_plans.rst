@@ -52,7 +52,6 @@ Incoming / Plans
 - Changing trend (Fisher test)
 - Mass curve for (Q, HR, PPT)
 
-
 0.9 (**2013-XX-XX**)
 --------------------
 - Inclusion of spectral analysis
