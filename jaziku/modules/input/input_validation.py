@@ -67,7 +67,7 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
     def returnError(e, limit_below, limit_above):
         # generation exception
         raise ValueError(_("exception validation in dependent variable:\n"
-                           "The value {0} is out of range {1} to {2} for {3}.\n\n{2}")
+                           "The value {0} is out of range {1} to {2} for {3}.\n\n{4}")
                          .format(var_D, limit_below, limit_above, type_var_D, e))
 
     # first test if the value is a valid null
@@ -340,7 +340,7 @@ def validation_var_I(type_var_I, var_I):
     def returnError(e, limit_below, limit_above):
         # generation exception
         raise ValueError(_("exception validation in independent variable:\n"
-                           "The value {0} is out of range {1} to {2} for {3}.\n\n{2}")
+                           "The value {0} is out of range {1} to {2} for {3}.\n\n{4}")
         .format(var_I, limit_below, limit_above, type_var_I, e))
 
     # first test if the value is a valid null

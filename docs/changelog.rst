@@ -28,6 +28,8 @@ news
   variable for do the mosaic of inspections of series in EDA
 - New: Make the matrix plots of scatter plots of all series of the var D
 - New: Climatology table and graphs for var D
+- Now the thresholds for var D an I are global values and unique for all
+  stations, and config it in "var D/I options" sections of runfile
 
 fixes
 +++++

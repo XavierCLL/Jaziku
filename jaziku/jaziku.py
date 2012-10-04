@@ -264,6 +264,15 @@ def main():
             settings["limit_var_D_above"] = colored.green(globals_vars.config_run['limit_var_D_above'])
     else:
         raise
+    # threshold var D
+    if globals_vars.config_run['threshold_below_var_D'] == 'default':
+        settings["threshold_below_var_D"] = _('default')
+    else:
+        settings["threshold_below_var_D"] = colored.green(globals_vars.config_run['threshold_below_var_D'])
+    if globals_vars.config_run['threshold_above_var_D'] == 'default':
+        settings["threshold_above_var_D"] = _('default')
+    else:
+        settings["threshold_above_var_D"] = colored.green(globals_vars.config_run['threshold_above_var_D'])
     # type var I
     if globals_vars.config_run['type_var_I']:
         settings["type_var_I"] = colored.green(globals_vars.config_run['type_var_I'])
@@ -283,6 +292,15 @@ def main():
             settings["limit_var_I_above"] = colored.green(globals_vars.config_run['limit_var_I_above'])
     else:
         raise
+    # threshold var I
+    if globals_vars.config_run['threshold_below_var_I'] == 'default':
+        settings["threshold_below_var_I"] = _('default')
+    else:
+        settings["threshold_below_var_I"] = colored.green(globals_vars.config_run['threshold_below_var_I'])
+    if globals_vars.config_run['threshold_above_var_I'] == 'default':
+        settings["threshold_above_var_I"] = _('default')
+    else:
+        settings["threshold_above_var_I"] = colored.green(globals_vars.config_run['threshold_above_var_I'])
     ## check options
     # consistent_data
     if globals_vars.config_run['consistent_data']:
@@ -363,34 +381,39 @@ def main():
     # PRINT SETTINGS
 
     print _("\nConfiguration run:")
-    console.msg(("   General options"), color='cyan')
-    print "   {0} -------- {1}".format("data analysis", settings["data_analysis"])
-    print "   {0} ------ {1}".format("climate process", settings["climate_process"])
-    print "   {0} -- {1}".format("forecasting process", settings["forecasting_process"])
-    print "   {0} ------- {1}".format("process period", settings["process_period"])
-    print "   {0} ---------- {1}".format("analog year", settings["analog_year"])
-    print "   {0} ----------------- {1}".format("lags", settings["lags"])
-    print "   {0} ------------- {1}".format("language", settings["language"])
-    console.msg(("   Input options"), color='cyan')
-    print "   {0} ----------- {1}".format("type var D", settings["type_var_D"])
-    print "   {0} ---- {1}".format("limit var D below", settings["limit_var_D_below"])
-    print "   {0} ---- {1}".format("limit var D above", settings["limit_var_D_above"])
-    print "   {0} ----------- {1}".format("type var I", settings["type_var_I"])
-    print "   {0} ---- {1}".format("limit var I below", settings["limit_var_I_below"])
-    print "   {0} ---- {1}".format("limit var I above", settings["limit_var_I_above"])
-    console.msg(("   Check options"), color='cyan')
-    print "   {0} ------ {1}".format("consistent data", settings["consistent_data"])
-    print "   {0} -------- {1}".format("risk analysis", settings["risk_analysis"])
-    console.msg(("   Output options"), color='cyan')
-    print "   {0} ------------- {1}".format("graphics", settings["graphics"])
-    print "   {0} ----- {1}".format("phen below label", settings["phen_below_label"])
-    print "   {0} ---- {1}".format("phen normal label", settings["phen_normal_label"])
-    print "   {0} ----- {1}".format("phen above label", settings["phen_above_label"])
-    console.msg(("   Maps options"), color='cyan')
-    print "   {0} ----------------- {1}".format("maps", settings["maps"])
+    console.msg("   General options", color='cyan')
+    print "   {0} --------- {1}".format("data analysis", settings["data_analysis"])
+    print "   {0} ------- {1}".format("climate process", settings["climate_process"])
+    print "   {0} --- {1}".format("forecasting process", settings["forecasting_process"])
+    print "   {0} -------- {1}".format("process period", settings["process_period"])
+    print "   {0} ----------- {1}".format("analog year", settings["analog_year"])
+    print "   {0} ------------------ {1}".format("lags", settings["lags"])
+    print "   {0} -------------- {1}".format("language", settings["language"])
+    console.msg("   Var D options", color='cyan')
+    print "   {0} ------------ {1}".format("type var D", settings["type_var_D"])
+    print "   {0} ----- {1}".format("limit var D below", settings["limit_var_D_below"])
+    print "   {0} ----- {1}".format("limit var D above", settings["limit_var_D_above"])
+    print "   {0} - {1}".format("threshold below var D", settings["threshold_below_var_D"])
+    print "   {0} - {1}".format("threshold above var D", settings["threshold_above_var_D"])
+    console.msg("   Var I options", color='cyan')
+    print "   {0} ------------ {1}".format("type var I", settings["type_var_I"])
+    print "   {0} ----- {1}".format("limit var I below", settings["limit_var_I_below"])
+    print "   {0} ----- {1}".format("limit var I above", settings["limit_var_I_above"])
+    print "   {0} - {1}".format("threshold below var I", settings["threshold_below_var_I"])
+    print "   {0} - {1}".format("threshold above var I", settings["threshold_above_var_I"])
+    console.msg("   Check options", color='cyan')
+    print "   {0} ------- {1}".format("consistent data", settings["consistent_data"])
+    print "   {0} --------- {1}".format("risk analysis", settings["risk_analysis"])
+    console.msg("   Output options", color='cyan')
+    print "   {0} -------------- {1}".format("graphics", settings["graphics"])
+    print "   {0} ------ {1}".format("phen below label", settings["phen_below_label"])
+    print "   {0} ----- {1}".format("phen normal label", settings["phen_normal_label"])
+    print "   {0} ------ {1}".format("phen above label", settings["phen_above_label"])
+    console.msg("   Maps options", color='cyan')
+    print "   {0} ------------------ {1}".format("maps", settings["maps"])
     if globals_vars.config_run['maps']:
-        print "   {0} ---------- {1}".format("overlapping", settings["overlapping"])
-        print "   {0} ------- {1}".format("shape boundary", settings["shape_boundary"])
+        print "   {0} ----------- {1}".format("overlapping", settings["overlapping"])
+        print "   {0} -------- {1}".format("shape boundary", settings["shape_boundary"])
 
 
     # -------------------------------------------------------------------------
