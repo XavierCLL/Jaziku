@@ -66,7 +66,10 @@ def read_runfile():
                 elif line_in_run_file[1] == "enable":
                     globals_vars.config_run[line_in_run_file[0]] = True
                 else:
-                    globals_vars.config_run[line_in_run_file[0]] = line_in_run_file[1]
+                    try:
+                        globals_vars.config_run[line_in_run_file[0]] = float(line_in_run_file[1].replace(',', '.'))
+                    except:
+                        globals_vars.config_run[line_in_run_file[0]] = line_in_run_file[1]
             else:
                 if line_in_run_file[1] == "GRIDS LIST":
                     in_config_run = False
@@ -161,16 +164,10 @@ def read_stations(lines_of_stations):
             station.file_D = open(line_station[5], 'rb')
             station.type_D = globals_vars.config_run['type_var_D']
 
-            station.threshold_below_var_D = line_station[6].replace(',', '.')
-            station.threshold_above_var_D = line_station[7].replace(',', '.')
-
-            station.file_I = line_station[8]
+            station.file_I = line_station[6]
             station.type_I = globals_vars.config_run['type_var_I']
 
-            station.threshold_below_var_I = line_station[9].replace(',', '.')
-            station.threshold_above_var_I = line_station[10].replace(',', '.')
-
-            station.analysis_interval = line_station[11]
+            station.analysis_interval = line_station[7]
 
             if station.analysis_interval not in globals_vars.options_analysis_interval:
                 raise Exception(_("The analysis interval {0} is invalid,\n"
@@ -194,21 +191,21 @@ def read_stations(lines_of_stations):
 
             # if forecasting_process is activated
             if globals_vars.config_run['forecasting_process']:
-                if len(line_station) < 22:
+                if len(line_station) < 18:
                     raise Exception(_("For forecasting process you need define "
                                       "9 probability\n variables and trimester to "
                                       "process in stations file."))
-                station.f_var_I_B = [float(line_station[12].replace(',', '.')),
-                                     float(line_station[15].replace(',', '.')),
-                                     float(line_station[18].replace(',', '.'))]
-                station.f_var_I_N = [float(line_station[13].replace(',', '.')),
-                                     float(line_station[16].replace(',', '.')),
-                                     float(line_station[19].replace(',', '.'))]
-                station.f_var_I_A = [float(line_station[14].replace(',', '.')),
-                                     float(line_station[17].replace(',', '.')),
-                                     float(line_station[20].replace(',', '.'))]
+                station.f_var_I_B = [float(line_station[8].replace(',', '.')),
+                                     float(line_station[11].replace(',', '.')),
+                                     float(line_station[14].replace(',', '.'))]
+                station.f_var_I_N = [float(line_station[9].replace(',', '.')),
+                                     float(line_station[12].replace(',', '.')),
+                                     float(line_station[15].replace(',', '.'))]
+                station.f_var_I_A = [float(line_station[10].replace(',', '.')),
+                                     float(line_station[13].replace(',', '.')),
+                                     float(line_station[16].replace(',', '.'))]
 
-                station.forecasting_date = line_station[21]
+                station.forecasting_date = line_station[17]
 
         except Exception, e:
             console.msg_error_line_stations(station, e)

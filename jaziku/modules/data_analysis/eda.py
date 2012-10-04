@@ -626,13 +626,13 @@ def climatology(stations):
                 else:
                     x_labels.append('')
 
-            name_graph = _("climatology-{0}days_{1}_{2}_{3}").format(station.analysis_interval_num_days,
+            name_graph = _("climatology_({0}days)_{1}_{2}_{3}").format(station.analysis_interval_num_days,
                 station.code, station.name, globals_vars.config_run['type_var_D'])
 
             with_fig = 5 + len(y)/7
             fig = pyplot.figure(figsize=(with_fig, 6))
             ax = fig.add_subplot(111)
-            ax.set_title(_("Climatology-{0}days {1} {2} - {3} ({4}-{5})").format(station.analysis_interval_num_days,
+            ax.set_title(_("Climatology ({0}days) {1} {2} - {3} ({4}-{5})").format(station.analysis_interval_num_days,
                 station.code, station.name, globals_vars.config_run['type_var_D'], station.process_period['start'],
                 station.process_period['end']))
 
