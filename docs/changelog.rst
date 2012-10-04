@@ -39,6 +39,7 @@ fixes
 - Fix particular limits for var D and I
 - Fixes when check enable/disable for main process in runfile
 - Fix graphs in EDA when var D defined as particular type
+- Add and enable the independent variable ARH dipole
 
 
 

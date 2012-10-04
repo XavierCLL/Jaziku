@@ -91,7 +91,7 @@ internal_var_I_files = {"ONI": "ONI_1950_2011_CPC.txt",
                         "OLR": "OLR_1974_2011_CPC_NCEP_NOAA.txt",
                         "W200": "W200_1979_2011_CPC_NCEP_NOAA.txt",
                         "SST": "SST_1950_2011_CPC_NCEP_NOAA.txt",
-                        #"ARH": "????",  #TODO:
+                        "ARH": "ARH_DIPOLE_1979_2009_NCEPNCAR_REAL.txt",  #TODO:
                         "NAO": "NAO_1950_2011_CPC_NCEP_NOAA.txt",
                         "QBO": "QBO_1950_2011_ESRL_NOAA.txt",
                         "SSTA_CAR": "SSTA_CAR_1951_2010_ESRL_NOAA.txt",
@@ -99,17 +99,16 @@ internal_var_I_files = {"ONI": "ONI_1950_2011_CPC.txt",
 
 # urls where get the internal files for independent variable
 internal_var_I_urls = {"ONI": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears.shtml
-                        "SOI": "http://goo.gl/scbO7", # http://www.cpc.ncep.noaa.gov/data/indices/soi
-                        "MEI": "http://goo.gl/dQsdb", # http://www.esrl.noaa.gov/psd/enso/mei/table.html
-                        "OLR": "http://goo.gl/goMpA", # http://www.cpc.ncep.noaa.gov/data/indices/olr
-                        "W200": "http://goo.gl/aliLh", # http://www.cpc.ncep.noaa.gov/data/indices/zwnd200
-                        "SST": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-                        #"ARH": "????",  #TODO:
-                        "NAO": "http://goo.gl/1uDjY", # http://www.cpc.ncep.noaa.gov/products/precip/CWlink/pna/nao.shtml
-                        "QBO": "http://goo.gl/UO6PX", # http://www.esrl.noaa.gov/psd/data/climateindices/list/
-                        "SSTA_CAR": "http://goo.gl/BsAeN", # http://www.esrl.noaa.gov/psd/forecasts/sstlim/forcar.html
-                        "AREA_WHWP": "http://goo.gl/mV4QI"  # http://www.esrl.noaa.gov/psd/data/correlation/whwp.data 
-                        }
+                       "SOI": "http://goo.gl/scbO7", # http://www.cpc.ncep.noaa.gov/data/indices/soi
+                       "MEI": "http://goo.gl/dQsdb", # http://www.esrl.noaa.gov/psd/enso/mei/table.html
+                       "OLR": "http://goo.gl/goMpA", # http://www.cpc.ncep.noaa.gov/data/indices/olr
+                       "W200": "http://goo.gl/aliLh", # http://www.cpc.ncep.noaa.gov/data/indices/zwnd200
+                       "SST": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
+                       "ARH": "http://goo.gl/5oiZJ",  # http://nomad1.ncep.noaa.gov/ncep_data/index.html
+                       "NAO": "http://goo.gl/1uDjY", # http://www.cpc.ncep.noaa.gov/products/precip/CWlink/pna/nao.shtml
+                       "QBO": "http://goo.gl/UO6PX", # http://www.esrl.noaa.gov/psd/data/climateindices/list/
+                       "SSTA_CAR": "http://goo.gl/BsAeN", # http://www.esrl.noaa.gov/psd/forecasts/sstlim/forcar.html
+                       "AREA_WHWP": "http://goo.gl/mV4QI"}  # http://www.esrl.noaa.gov/psd/data/correlation/whwp.data
 
 # analysis_interval
 options_analysis_interval = ["5days", "10days", "15days", "trimester"]
