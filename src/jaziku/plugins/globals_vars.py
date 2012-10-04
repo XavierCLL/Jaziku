@@ -25,10 +25,10 @@
 PROG_NAME = "jaziku"
 
 # version
-VERSION = "0.4.2"
+VERSION = "0.4.2a"
 
 # compilation date
-COMPILE_DATE = "21/08/2012"
+COMPILE_DATE = "04/10/2012"
 
 # valid null value for variables dependent and independent (inside files input)
 VALID_NULL = [99999, -99999]
@@ -64,7 +64,7 @@ internal_var_I_files = {"ONI": "ONI_1950_2011_CPC.txt",
                         "OLR": "OLR_1974_2011_CPC_NCEP_NOAA.txt",
                         "W200": "W200_1979_2011_CPC_NCEP_NOAA.txt",
                         "SST": "SST_1950_2011_CPC_NCEP_NOAA.txt",
-                        #"ARH": "????",  #TODO:
+                        "ARH": "ARH_DIPOLE_1979_2009_NCEPNCAR_REAL.txt",  #TODO:
                         "NAO": "NAO_1950_2011_CPC_NCEP_NOAA.txt",
                         "QBO": "QBO_1950_2011_ESRL_NOAA.txt",
                         "SSTA_CAR": "SSTA_CAR_1951_2010_ESRL_NOAA.txt",
@@ -77,7 +77,7 @@ internal_var_I_urls = {"ONI": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.
                         "OLR": "http://goo.gl/goMpA", # http://www.cpc.ncep.noaa.gov/data/indices/olr
                         "W200": "http://goo.gl/aliLh", # http://www.cpc.ncep.noaa.gov/data/indices/zwnd200
                         "SST": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-                        #"ARH": "????",  #TODO:
+                        "ARH": "http://goo.gl/5oiZJ",  # http://nomad1.ncep.noaa.gov/ncep_data/index.html
                         "NAO": "http://goo.gl/1uDjY", # http://www.cpc.ncep.noaa.gov/products/precip/CWlink/pna/nao.shtml
                         "QBO": "http://goo.gl/UO6PX", # http://www.esrl.noaa.gov/psd/data/climateindices/list/
                         "SSTA_CAR": "http://goo.gl/BsAeN", # http://www.esrl.noaa.gov/psd/forecasts/sstlim/forcar.html
