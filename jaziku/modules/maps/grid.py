@@ -62,6 +62,9 @@ class Grid:
             # set grid resolution based in 70 division of grid for minimum side
             self.grid_resolution = min([abs(self.maxlat - self.minlat),
                                         abs(self.maxlon - self.minlon)]) / 70
+        elif not isinstance(self.grid_resolution, (int, float)):
+            console.msg_error(_("The grid_resolution '{0}' is wrong, the options are:\n"
+                                "default or number.").format(self.grid_resolution), False)
 
         # number of decimal from grid resolution
         self.decimal_resolution = len(str(self.grid_resolution).split('.')[1])
@@ -102,20 +105,28 @@ class Grid:
         elif self.semivariogram_type == "gaussian":
             self.semivariogram_type = 2
         else:
-            self.semivariogram_type = None
+            console.msg_error(_("The semivariogram type '{0}' is wrong, the options are:\n"
+                                "default, spherical, exponential or gaussian").format(self.semivariogram_type), False)
 
         # set the radiuses for interpolation
         if self.radiuses == "default":
             radius = max([self.lat_size, self.lon_size]) * 3
             self.radiuses = [radius, radius]
         else:
-            self.radiuses = [int(self.radiuses[0]), int(self.radiuses[1])]
+            try:
+                self.radiuses = [int(self.radiuses[0]), int(self.radiuses[1])]
+            except:
+                console.msg_error(_("The radiuses '{0}' is wrong, the options are:\n"
+                                    "default or radius1;radius2").format(self.radiuses), False)
 
         # set the max_neighbours
         if self.max_neighbours == "default":
             self.max_neighbours = Station.stations_processed
-        else:
+        elif isinstance(self.max_neighbours, (int, float)):
             self.max_neighbours = int(self.max_neighbours)
+        else:
+            console.msg_error(_("The max_neighbours '{0}' is wrong, the options are:\n"
+                                "default or number").format(self.max_neighbours), False)
 
         ## what do with data outside of boundary shape
         self.shape_mask = False
@@ -134,13 +145,10 @@ class Grid:
         #     0 – spherical, 1 – exponential, 2 – gaussian;
         if self.semivariogram_type == 0:
             console.msg(_("   Semivariogram type: spherical"), color='cyan')
-        elif self.semivariogram_type == 1:
+        if self.semivariogram_type == 1:
             console.msg(_("   Semivariogram type: exponential"), color='cyan')
-        elif self.semivariogram_type == 2:
+        if self.semivariogram_type == 2:
             console.msg(_("   Semivariogram type: gaussian"), color='cyan')
-        else:
-            console.msg_error(_("The semivariogram type is wrong, the options are:\n"
-                                "default, spherical, exponential or gaussian"), False)
 
         # print radiuses
         console.msg(_("   Radiuses: {0} {1}").format(self.radiuses[0], self.radiuses[1]), color='cyan')
