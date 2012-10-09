@@ -43,6 +43,8 @@ fixes
 - Add and enable the independent variable ARH dipole
 - Fix function for redirect standard stream
 - Fix global variable thresholds
+- Fix when read runfile with NULL byte inside it
+- Fixes checking the several valid parameters in runfile
 
 
 
