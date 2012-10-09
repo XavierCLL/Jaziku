@@ -30,6 +30,7 @@ from numpy import histogram
 from pylab import xticks, setp, bar
 import matplotlib.dates as mdates
 from Image import open as img_open
+from scipy.stats import shapiro
 
 from jaziku.modules.climate.lags import get_range_analysis_interval, get_range_analysis_interval_values
 from jaziku.modules.station import Station
@@ -58,17 +59,17 @@ def main(stations):
     # -------------------------------------------------------------------------
     # FILES OF DESCRIPTIVE STATISTICS
 
-    global descriptive_statistic_dir
-    descriptive_statistic_dir = os.path.join(eda_dir, _('Descriptive_Statistic'))
+    global shapiro_wilks_dir
+    shapiro_wilks_dir = os.path.join(eda_dir, _('Descriptive_Statistic'))
 
-    if not os.path.isdir(descriptive_statistic_dir):
-        os.makedirs(descriptive_statistic_dir)
+    if not os.path.isdir(shapiro_wilks_dir):
+        os.makedirs(shapiro_wilks_dir)
 
     file_descriptive_statistics_var_D \
-        = os.path.join(descriptive_statistic_dir, _('Descriptive_Statistics_{0}.csv').format(globals_vars.config_run['type_var_D']))
+        = os.path.join(shapiro_wilks_dir, _('Descriptive_Statistics_{0}.csv').format(globals_vars.config_run['type_var_D']))
 
     file_descriptive_statistics_var_I\
-        = os.path.join(descriptive_statistic_dir, _('Descriptive_Statistics_{0}.csv').format(globals_vars.config_run['type_var_I']))
+        = os.path.join(shapiro_wilks_dir, _('Descriptive_Statistics_{0}.csv').format(globals_vars.config_run['type_var_I']))
 
     open_file_D = open(file_descriptive_statistics_var_D, 'w')
     csv_file_D = csv.writer(open_file_D, delimiter=';')
@@ -195,6 +196,13 @@ def main(stations):
                       "   the scatter plots of series, this need more \n"
                       "   of one station."), color="yellow")
 
+    # -------------------------------------------------------------------------
+    # SHAPIRO WILKS
+
+    console.msg(_("Shapiro Wilks test ................................... "), newline=False)
+
+    shapiro_wilks_test(stations)
+    console.msg(_("done"), color='green')
 
 def zoom_graph(ax,x_scale_below=0, x_scale_above=0, y_scale_below=0, y_scale_above=0, abs_x=False, abs_y=False):
     """
@@ -235,7 +243,7 @@ def descriptive_statistic_graphs(stations):
                      'std_dev':'dots','skew':'dots', 'kurtosis':'dots', 'coef_variation':'dots'}
 
     # directory for save graphs of descriptive statistic
-    graphs_dir = os.path.join(descriptive_statistic_dir, _('Graphs_for_{0}').format(globals_vars.config_run['type_var_D']))
+    graphs_dir = os.path.join(shapiro_wilks_dir, _('Graphs_for_{0}').format(globals_vars.config_run['type_var_D']))
 
     if not os.path.isdir(graphs_dir):
         os.makedirs(graphs_dir)
@@ -327,7 +335,7 @@ def graphs_inspection_of_series(stations):
 
     # directory for save graphs of descriptive statistic
 
-    graphs_dir = os.path.join(descriptive_statistic_dir, _('Graphs_Inspection_of_Series'))
+    graphs_dir = os.path.join(shapiro_wilks_dir, _('Graphs_Inspection_of_Series'))
 
     if not os.path.isdir(graphs_dir):
         os.makedirs(graphs_dir)
@@ -497,7 +505,7 @@ def climatology(stations):
     Climatology table and graphs, part of EDA.
     """
 
-    graphs_dir = os.path.join(descriptive_statistic_dir, _('Graphs_Inspection_of_Series'))
+    graphs_dir = os.path.join(shapiro_wilks_dir, _('Graphs_Inspection_of_Series'))
 
     if not os.path.isdir(graphs_dir):
         os.makedirs(graphs_dir)
@@ -799,5 +807,47 @@ def frequency_histogram(stations):
 
         pyplot.close('all')
 
+
+def shapiro_wilks_test(stations):
+
+
+    shapiro_wilks_dir = os.path.join(distribution_test_dir, _('Shapiro_Wilks_Test'))
+
+    if not os.path.isdir(shapiro_wilks_dir):
+        os.makedirs(shapiro_wilks_dir)
+
+    file_shapiro_wilks_var_D\
+        = os.path.join(shapiro_wilks_dir, _('shapiro_wilks_test_{0}.csv').format(globals_vars.config_run['type_var_D']))
+
+    open_file_D = open(file_shapiro_wilks_var_D, 'w')
+    csv_file_D = csv.writer(open_file_D, delimiter=';')
+
+    # print header
+    header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), 'W', 'P_value']
+
+    csv_file_D.writerow(header)
+
+    for station in stations:
+
+        with console.redirectStdStreams():
+            W, p_value = shapiro(station.var_D.data_filtered_in_process_period)
+
+        # var D
+        eda_var_D = [
+            station.code,
+            station.name,
+            format_out.number(station.lat, 4),
+            format_out.number(station.lon, 4),
+            format_out.number(station.alt, 4),
+            '{0}-{1}'.format(station.process_period['start'], station.process_period['end']),
+            format_out.number(W, 4),
+            format_out.number(p_value, 4)
+        ]
+
+        csv_file_D.writerow(eda_var_D)
+
+
+    open_file_D.close()
+    del csv_file_D
 
 

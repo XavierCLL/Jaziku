@@ -30,6 +30,7 @@ news
 - New: Climatology table and graphs for var D
 - Now the thresholds for var D an I are global values and unique for all
   stations, and config it in "var D/I options" sections of runfile
+- New: Shapiro Wilks Test for EDA
 
 fixes
 +++++
@@ -40,6 +41,8 @@ fixes
 - Fixes when check enable/disable for main process in runfile
 - Fix graphs in EDA when var D defined as particular type
 - Add and enable the independent variable ARH dipole
+- Fix function for redirect standard stream
+- Fix global variable thresholds
 
 
 
