@@ -24,6 +24,15 @@ from jaziku.modules.station import Station
 
 
 def read_runfile():
+    """
+    Read all settings and all stations from runfile
+
+    :return:
+        stations class list
+
+    :global:
+        globals_vars.config_run['*']
+    """
 
     in_config_run = False
     in_station_list = False
@@ -131,6 +140,13 @@ def read_runfile():
 
 
 def read_stations(lines_of_stations):
+    """
+    Read raw line of stations and make a list class stations
+    with all parameters in runfile for each station.
+
+    :return:
+        stations class list
+    """
 
     stations = []
 
