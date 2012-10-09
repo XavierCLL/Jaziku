@@ -143,8 +143,13 @@ def main():
     # READ RUNFILE
     # reading configuration run, list of grids and stations from runfile
 
-    globals_vars.run_file = csv.reader(globals_vars.args.runfile, delimiter=';')
+    # delete all NULL byte inside the runfile.csv
+    runfile = (x.replace('\0', '') for x in globals_vars.args.runfile)
 
+    # open runfile as csv
+    globals_vars.run_file = csv.reader(runfile, delimiter=';')
+
+    # read all settings and all stations from runfile
     stations = input_runfile.read_runfile()
 
     # -------------------------------------------------------------------------
