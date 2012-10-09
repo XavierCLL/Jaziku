@@ -20,44 +20,15 @@
 
 import geo_bsd as hpgl
 from geo_bsd.routines import *
-from matplotlib import *
-from pylab import *
-import pylab
 import os
-import sys
 
-from jaziku.utils import globals_vars
-
-
-def redirect_stdout():
-    sys.stdout.flush()  # <--- important when redirecting to files
-
-    # Duplicate stdout (file descriptor 1)
-    # to a different file descriptor number
-    normal_stdout = os.dup(1)
-
-    # /dev/null is used just to discard what is being printed
-    devnull = os.open(os.devnull, os.O_WRONLY)
-
-    # Duplicate the file descriptor for /dev/null
-    # and overwrite the value for stdout (file descriptor 1)
-    os.dup2(devnull, 1)
-
-    # Close devnull after duplication (no longer needed)
-    os.close(devnull)
-
-    # Use the original stdout to still be able
-    # to print to stdout within python
-    sys.stdout = os.fdopen(normal_stdout, 'w')
-
-    return normal_stdout
+from jaziku.utils import globals_vars, console
 
 
 def ordinary_kriging(base_grid, inc_file):
-    try:
-        # redirect output (HPGL stdout)
-        normal_stdout = redirect_stdout()
 
+    # redirect output (HPGL stdout)
+    with console.redirectStdStreams():
         size = (base_grid.lat_size, base_grid.lon_size, 1)  # (alto, ancho, paso)
         grid = SugarboxGrid(base_grid.lat_size, base_grid.lon_size, 1)
         data = load_cont_property(os.path.abspath(inc_file.encode('utf-8')), globals_vars.VALID_NULL[1], size)
@@ -73,6 +44,11 @@ def ordinary_kriging(base_grid, inc_file):
                                           max_neighbours=base_grid.max_neighbours,
                                           cov_model=semivariogram)
 
+
+        #from matplotlib import *
+        #from pylab import *
+        #import pylab
+
         #write_property(ik_result, os.path.abspath(inc_out), "OK_RESULT", globals_vars.VALID_NULL[1])
 
         #figure()
@@ -85,11 +61,5 @@ def ordinary_kriging(base_grid, inc_file):
         #pylab.savefig(os.path.abspath(inc_file) + "_origin.png")
         #clf()
 
-        # return normal stdout
-        os.dup2(normal_stdout, 1)
-        sys.stdout = sys.__stdout__
+    return ik_result[0][:, :, 0]
 
-        return ik_result[0][:, :, 0]
-
-    except Exception, e:
-        print e

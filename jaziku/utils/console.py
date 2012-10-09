@@ -23,6 +23,7 @@
 # PRINT FUNCTIONS
 # color text console  #http://pypi.python.org/pypi/clint/
 
+import os
 import sys
 from clint.textui import colored
 
@@ -96,3 +97,36 @@ def msg_error_line_stations(station, text_error):
                 ';'.join(station.line_station) + "\n\n" + str(text_error))
 
 
+class redirectStdStreams(object):
+    """
+    Redirect standard out and error to devnull (nothing), with
+     this the functions, libraries or applications not display on
+     console any message (stdout, stderr or warnings).
+
+    :Use:
+        with console.redirectStdStreams():
+            put_here_code
+    """
+
+    normal_stdout = None
+
+    def __init__(self):
+        devnull = open(os.devnull, 'w')
+        self._stdout = devnull
+        self._stderr = devnull
+
+    def __enter__(self):
+        self.old_stdout, self.old_stderr = sys.stdout, sys.stderr
+        self.old_stdout.flush(); self.old_stderr.flush()
+        self.normal_stdout = os.dup(1)
+        devnull = os.open(os.devnull, os.O_WRONLY)
+        os.dup2(devnull, 1)
+        os.close(devnull)
+        sys.stdout, sys.stderr = self._stdout, self._stderr
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        sys.stdout = os.fdopen(self.normal_stdout, 'w')
+        os.dup2(self.normal_stdout, 1)
+        self._stdout.flush(); self._stderr.flush()
+        sys.stdout = self.old_stdout
+        sys.stderr = self.old_stderr
