@@ -45,6 +45,7 @@ fixes
 - Fix global variable thresholds
 - Fix when read runfile with NULL byte inside it
 - Fixes checking the several valid parameters in runfile
+- Fix SST_CAR name and file
 
 
 
@@ -149,7 +150,7 @@ news
   depended if data as daily and how to print result (5,10,15 days) 
 - Now maps files (and maps, in the next release) for climate are ordered and 
   grouped based on analysis interval
-- Added 3 new variables independent (SSTA_CAR and AREA_WHWP) and one variable 
+- Added 3 new variables independent (SST_CAR and AREA_WHWP) and one variable
   dependent (RUNOFF)
 - Updated transform_data_stations script
 - Consistent data analysis for independent and dependent variable, 

@@ -243,7 +243,7 @@ def get_thresholds_var_I(station):
             return 0, 0
 
         # thresholds for Caribbean (CAR) Index
-        def if_var_I_is_SSTA_CAR():
+        def if_var_I_is_SST_CAR():
             return percentiles(33, 66)
 
         # thresholds for Monthly anomaly of the ocean surface area Ocean region
@@ -261,7 +261,7 @@ def get_thresholds_var_I(station):
             "ARH": if_var_I_is_ARH,
             "QBO": if_var_I_is_QBO,
             "NAO": if_var_I_is_NAO,
-            "SSTA_CAR": if_var_I_is_SSTA_CAR,
+            "SST_CAR": if_var_I_is_SST_CAR,
             "AREA_WHWP": if_var_I_is_AREA_WHWP
         }
 

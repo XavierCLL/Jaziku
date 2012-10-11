@@ -21,7 +21,7 @@ from calendar import monthrange
 
 import os
 import csv
-from math import log, sqrt
+from math import log, sqrt, log10
 from datetime import date
 import gc
 from dateutil.relativedelta import relativedelta
@@ -150,7 +150,7 @@ def main(stations):
     # GRAPHS INSPECTION OF SERIES
 
     console.msg(_("Graphs inspection of series .......................... "), newline=False)
-    #graphs_inspection_of_series(stations) todo
+    graphs_inspection_of_series(stations) #todo
     console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
@@ -176,7 +176,7 @@ def main(stations):
     console.msg(_("Scatter plots of series .............................. "), newline=False)
 
     if Station.stations_processed > 1:
-        #scatter_plots_of_series(stations) todo
+        scatter_plots_of_series(stations) #todo
         console.msg(_("done"), color='green')
     else:
         console.msg(_("fail\n > WARNING: There is only one station for process\n"
@@ -299,7 +299,7 @@ def descriptive_statistic_graphs(stations):
             # get units os type of var D or I
             if globals_vars.config_run['type_var_D'] in globals_vars.units_of_types_var_D and\
                statistics[enum] not in ['skew', 'kurtosis', 'coef_variation']:
-                units = globals_vars.units_of_types_var_D[globals_vars.config_run['type_var_D']]
+                units = globals_vars.get_units_of_type_var(globals_vars.config_run['type_var_D'])
             else:
                 units = '--'
             ax.set_ylabel('{0} ({1})'.format(statistic.replace('_',' '),units))
@@ -441,9 +441,9 @@ def graphs_inspection_of_series(stations):
             ## Y
             # get units os type of var D or I
             if type_var in globals_vars.units_of_types_var_D:
-                units = globals_vars.units_of_types_var_D[type_var]
+                units = globals_vars.get_units_of_type_var(type_var)
             elif type_var in globals_vars.units_of_types_var_I:
-                units = globals_vars.units_of_types_var_I[type_var]
+                units = globals_vars.get_units_of_type_var(type_var)
             else:
                 units = '--'
             ax.set_ylabel('{0} ({1})'.format(type_var,units))
@@ -578,7 +578,7 @@ def climatology(stations):
 
         ## Y
         # get units os type of var D or I
-        units = globals_vars.units_of_types_var_D[type_var]
+        units = globals_vars.get_units_of_type_var(type_var)
         ax.set_ylabel('{0} ({1})'.format(type_var, units))
 
         pyplot.subplots_adjust(bottom=0.2)
@@ -652,7 +652,7 @@ def climatology(stations):
 
             ## Y
             # get units os type of var D or I
-            units = globals_vars.units_of_types_var_D[type_var]
+            units = globals_vars.get_units_of_type_var(type_var)
             ax.set_ylabel('{0} ({1})'.format(type_var, units))
 
             pyplot.subplots_adjust(bottom=0.2)
@@ -683,7 +683,15 @@ def climatology(stations):
 
 def global_common_process(stations, var):
     """
-    calculate the global common period based on all common process of all series
+    Calculate the global common period of all stations
+    based on all common process period of all series var D or I
+
+    :arg:
+        stations: list of all stations
+        var: 'D' or 'I'
+    :return:
+        chronological order list of all date (monthly or daily)
+        inside of global common process
     """
 
     if var == 'D':
@@ -718,11 +726,11 @@ def scatter_plots_of_series(stations):
     pyplot.figure(figsize=(4*len(stations)/1.5, 3*len(stations)/1.5))
 
     name_plot = _("scatter_plots_of_series_{0}_{2}-{3}").format(globals_vars.config_run['type_var_D'],
-        globals_vars.units_of_types_var_D[globals_vars.config_run['type_var_D']],
+        globals_vars.get_units_of_type_var(globals_vars.config_run['type_var_D']),
         global_common_date_process_var_D[0].year, global_common_date_process_var_D[-1].year)
 
     title_plot = _("Scatter plots of series - {0} ({1}) {2}-{3}").format(globals_vars.config_run['type_var_D'],
-        globals_vars.units_of_types_var_D[globals_vars.config_run['type_var_D']],
+        globals_vars.get_units_of_type_var(globals_vars.config_run['type_var_D']),
         global_common_date_process_var_D[0].year, global_common_date_process_var_D[-1].year)
 
     pyplot.suptitle(title_plot, y=0.99, fontsize=14)
@@ -773,8 +781,9 @@ def frequency_histogram(stations):
     for station in stations:
 
         n = station.var_D.size_data
-        a = station.var_D.kurtosis
-        bins = 1 + log(n) + log(1 + a*sqrt(n/6))
+
+        # bins based on sturges formula
+        bins = 1 + 3.3*log10(n)
 
         hist, bin_edges = histogram(station.var_D.data_filtered_in_process_period, bins=bins)
 
@@ -788,7 +797,7 @@ def frequency_histogram(stations):
         type_var = globals_vars.config_run['type_var_D']
 
         ## X
-        units = globals_vars.units_of_types_var_D[type_var]
+        units = globals_vars.get_units_of_type_var(type_var)
         ax.set_xlabel('{0} ({1})'.format(type_var, units))
 
         ## Y
@@ -810,14 +819,8 @@ def frequency_histogram(stations):
 
 def shapiro_wilks_test(stations):
 
-
-    shapiro_wilks_dir = os.path.join(distribution_test_dir, _('Shapiro_Wilks_Test'))
-
-    if not os.path.isdir(shapiro_wilks_dir):
-        os.makedirs(shapiro_wilks_dir)
-
     file_shapiro_wilks_var_D\
-        = os.path.join(shapiro_wilks_dir, _('shapiro_wilks_test_{0}.csv').format(globals_vars.config_run['type_var_D']))
+        = os.path.join(distribution_test_dir, _('shapiro_wilks_test_{0}.csv').format(globals_vars.config_run['type_var_D']))
 
     open_file_D = open(file_shapiro_wilks_var_D, 'w')
     csv_file_D = csv.writer(open_file_D, delimiter=';')
@@ -833,7 +836,7 @@ def shapiro_wilks_test(stations):
             W, p_value = shapiro(station.var_D.data_filtered_in_process_period)
 
         # var D
-        eda_var_D = [
+        shapiro_line_station_var_D = [
             station.code,
             station.name,
             format_out.number(station.lat, 4),
@@ -844,10 +847,15 @@ def shapiro_wilks_test(stations):
             format_out.number(p_value, 4)
         ]
 
-        csv_file_D.writerow(eda_var_D)
+        csv_file_D.writerow(shapiro_line_station_var_D)
 
 
     open_file_D.close()
     del csv_file_D
 
 
+
+
+
+# outliers
+#  http://glowingpython.blogspot.com/2012/09/boxplot-with-matplotlib.html

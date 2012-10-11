@@ -324,7 +324,7 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
 # % Amazon relative humidity-----ARH             %              -100 to 100
 # quasibienal oscillation index--QBO            Km/h           -59.1 to 33.24
 # North atlantic oscillation index--NAO        anomaly         -6.36 to 6.08
-# Carribbean (CAR) Index-------SSTA_CAR         °C              -1.3 to 1.3
+# Carribbean (CAR) Index-------SST_CAR         °C              -1.3 to 1.3
 # Monthly anomaly of the
 # ocean surface area Ocean                Area anomaly scaled
 # region >28.5C----------------AREA_WHWP     by 10e6 km^2        -13 to 14
@@ -512,7 +512,7 @@ def validation_var_I(type_var_I, var_I):
             returnError(_("Quasibienal Oscillation Index not valid"), limit_below, limit_above)
 
     # validation for Carribbean (CAR) Index
-    def if_var_I_is_SSTA_CAR():
+    def if_var_I_is_SST_CAR():
         # default values
         limit_below = -1.3
         limit_above = 1.3
@@ -554,7 +554,7 @@ def validation_var_I(type_var_I, var_I):
       "ARH": if_var_I_is_ARH,
       "NAO": if_var_I_is_NAO,
       "QBO": if_var_I_is_QBO,
-      "SSTA_CAR": if_var_I_is_SSTA_CAR,
+      "SST_CAR": if_var_I_is_SST_CAR,
       "AREA_WHWP": if_var_I_is_AREA_WHWP
     }
     return validation[type_var_I]()

@@ -75,14 +75,25 @@ units_of_types_var_D = {'PPT':'mm', 'NDPPT':'#', 'TMIN':'Celsius', 'TMAX':'Celsi
                         'PATM':'mb', 'RH':'%', 'RUNOFF':'m^3/s'}
 
 # Valid input types for independent variable
-types_var_I = ['ONI', 'SOI', 'MEI', 'OLR', 'W200', 'SST', 'ARH', 'QBO', 'NAO', 'SSTA_CAR', 'AREA_WHWP']
+types_var_I = ['ONI', 'SOI', 'MEI', 'OLR', 'W200', 'SST', 'ARH', 'QBO', 'NAO', 'SST_CAR', 'AREA_WHWP']
 
 # Units for types for dependent variable
 units_of_types_var_I = {'ONI':'anomaly', 'SOI':'standardized anomaly', 'MEI':'#', 'OLR':'W/m2', 'W200':'standardized anomaly',
-                        'SST':'Celsius', 'ARH':'%', 'QBO':'Km/h', 'NAO':'anomaly', 'SSTA_CAR':'Celsius', 'AREA_WHWP':'scaled 10e6 km^2'}
+                        'SST':'Celsius', 'ARH':'%', 'QBO':'Km/h', 'NAO':'anomaly', 'SST_CAR':'Celsius', 'AREA_WHWP':'scaled 10e6 km^2'}
+
+def get_units_of_type_var(type):
+    """
+    Return units of type var D or I, if defined as particular
+    variable then return '--'
+    """
+    if type in units_of_types_var_D:
+        return units_of_types_var_D[type]
+    if type in units_of_types_var_I:
+        return units_of_types_var_I[type]
+    return '--'
 
 # types of internal variable independent
-internal_var_I_types = ["ONI", "SOI", "MEI", "OLR", "W200", "SST", "ARH", "NAO", "QBO", "SSTA_CAR", "AREA_WHWP"]
+internal_var_I_types = ["ONI", "SOI", "MEI", "OLR", "W200", "SST", "ARH", "NAO", "QBO", "SST_CAR", "AREA_WHWP"]
 
 # namefiles of internal variable independent
 internal_var_I_files = {"ONI": "ONI_1950_2011_CPC.txt",
@@ -94,7 +105,7 @@ internal_var_I_files = {"ONI": "ONI_1950_2011_CPC.txt",
                         "ARH": "ARH_DIPOLE_1979_2009_NCEPNCAR_REAL.txt",  #TODO:
                         "NAO": "NAO_1950_2011_CPC_NCEP_NOAA.txt",
                         "QBO": "QBO_1950_2011_ESRL_NOAA.txt",
-                        "SSTA_CAR": "SSTA_CAR_1951_2010_ESRL_NOAA.txt",
+                        "SST_CAR": "SST_CAR_1951_2010_ESRL_NOAA.txt",
                         "AREA_WHWP": "AREA_WHWP_1948_2011_ESRL_NOAA.txt"}
 
 # urls where get the internal files for independent variable
@@ -107,7 +118,7 @@ internal_var_I_urls = {"ONI": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.
                        "ARH": "http://goo.gl/5oiZJ",  # http://nomad1.ncep.noaa.gov/ncep_data/index.html
                        "NAO": "http://goo.gl/1uDjY", # http://www.cpc.ncep.noaa.gov/products/precip/CWlink/pna/nao.shtml
                        "QBO": "http://goo.gl/UO6PX", # http://www.esrl.noaa.gov/psd/data/climateindices/list/
-                       "SSTA_CAR": "http://goo.gl/BsAeN", # http://www.esrl.noaa.gov/psd/forecasts/sstlim/forcar.html
+                       "SST_CAR": "http://goo.gl/BsAeN", # http://www.esrl.noaa.gov/psd/forecasts/sstlim/forcar.html
                        "AREA_WHWP": "http://goo.gl/mV4QI"}  # http://www.esrl.noaa.gov/psd/data/correlation/whwp.data
 
 # analysis_interval
