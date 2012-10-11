@@ -46,7 +46,8 @@ fixes
 - Fix when read runfile with NULL byte inside it
 - Fixes checking the several valid parameters in runfile
 - Fix SST_CAR name and file
-
+- Fix getting units for var D or I when type is external
+- Fix when lag equal to 0 Jaziku confused it with None
 
 
 0.4.2 (**2012-08-21**)

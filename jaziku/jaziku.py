@@ -167,7 +167,7 @@ def main():
             "# variability and major meteorological variables in            #\n"
             "# punctual scale.                                              #\n"
             "#                                                              #\n"
-            "# Version {0} - {1}\t                                  #\n"
+            "# Version {0} - {1}\t                               #\n"
             "# Copyright 2011-2012 IDEAM - Colombia                         #\n"
             "################################################################") \
             .format(globals_vars.VERSION, globals_vars.COMPILE_DATE)
@@ -234,20 +234,19 @@ def main():
             console.msg_error("the analog_year must be a valid year", False)
         settings["analog_year"] = colored.green(globals_vars.config_run['analog_year'])
     # lags
-    if globals_vars.config_run['lags']:
-        if globals_vars.config_run['lags'] in ['default', 'all']:
-            globals_vars.lags = [0, 1, 2]
-            settings["lags"] = ','.join(map(str, globals_vars.lags))
-        else:
-            try:
-                for lag in globals_vars.config_run['lags'].split(","):
-                    lag = int(lag)
-                    if lag not in [0, 1, 2]:
-                        raise
-                    globals_vars.lags.append(lag)
-            except:
-                console.msg_error(_('the lags are 0, 1 and/or 2 comma separated, all or default.'), False)
-            settings["lags"] = colored.green(','.join(map(str, globals_vars.lags)))
+    if globals_vars.config_run['lags'] in ['default', 'all']:
+        globals_vars.lags = [0, 1, 2]
+        settings["lags"] = ','.join(map(str, globals_vars.lags))
+    else:
+        try:
+            for lag in str(globals_vars.config_run['lags']).split(","):
+                lag = int(float(lag))
+                if lag not in [0, 1, 2]:
+                    raise
+                globals_vars.lags.append(lag)
+        except:
+            console.msg_error(_('the lags are 0, 1 and/or 2 (comma separated), all or default.'), False)
+        settings["lags"] = colored.green(','.join(map(str, globals_vars.lags)))
 
     ## input options
     # type var D
