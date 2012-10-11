@@ -38,11 +38,11 @@ ROOT_DIR = None
 VALID_NULL = [99999, -99999]  # these are deprecate valid null but now used for maps files interpolation
 # valid null value for variables dependent and independent (inside files input)
 def is_valid_null(value):
-    if math.isnan(value):
+    if math.isnan(value) or value in ['nan', 'NaN', 'NAN']:
         return True
     else:
         try:
-            if int(value) in VALID_NULL: # TODO: delete deprecated valid null
+            if int(float(value)) in VALID_NULL: # TODO: delete deprecated valid null
                 return True
         except:
             return False

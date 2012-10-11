@@ -48,6 +48,7 @@ fixes
 - Fix SST_CAR name and file
 - Fix getting units for var D or I when type is external
 - Fix when lag equal to 0 Jaziku confused it with None
+- Fix when read NaN (standart null) from series
 
 
 0.4.2 (**2012-08-21**)
