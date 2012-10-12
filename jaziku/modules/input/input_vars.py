@@ -46,7 +46,16 @@ def read_var_D(station):
     date_D = []
     var_D = []
 
-    csv_file_D = csv.reader(station.file_D, delimiter='\t')
+    # The series accept two delimiters: spaces (' ') or tabulation ('\t')
+    # this check which delimiter is using this file
+    test_line = station.file_D.readline()
+    if len(test_line.split(' ')) >= 2:
+        delimiter = ' '
+    if len(test_line.split('\t')) >= 2:
+        delimiter = '\t'
+    station.file_D.seek(0)
+
+    csv_file_D = csv.reader(station.file_D, delimiter=delimiter)
 
     # check and validate if file D is defined as particular file with
     # particular range validation
@@ -97,6 +106,9 @@ def read_var_D(station):
         # if row is null o empty, e.g. empty but with tabs or spaces
         if not row or not row[0].strip():
             continue
+
+        # delete empty elements in row
+        row = [e for e in row if e]
 
         # get values
         try:
@@ -247,7 +259,17 @@ def read_var_I(station):
                    "dependent\nvariable: {0} this should be "
                    "a valid number, \"none\" or \"default\".").format(globals_vars.config_run['limit_var_I_above'],)))
 
-    csv_file_I = csv.reader(open_file_I, delimiter='\t')
+
+    # The series accept two delimiters: spaces (' ') or tabulation ('\t')
+    # this check which delimiter is using this file
+    test_line = open_file_I.readline()
+    if len(test_line.split(' ')) >= 2:
+        delimiter = ' '
+    if len(test_line.split('\t')) >= 2:
+        delimiter = '\t'
+    open_file_I.seek(0)
+
+    csv_file_I = csv.reader(open_file_I, delimiter=delimiter)
     first = True
     # Read line to line file_I, validation and save var_I
     for row in csv_file_I:
@@ -255,6 +277,9 @@ def read_var_I(station):
         # if row is null o empty, e.g. empty but with tabs or spaces
         if not row or not row[0].strip():
             continue
+
+        # delete empty elements in row
+        row = [e for e in row if e]
 
         # get values
         try:
