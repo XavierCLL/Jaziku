@@ -31,6 +31,7 @@ news
 - Now the thresholds for var D an I are global values and unique for all
   stations, and config it in "var D/I options" sections of runfile
 - New: Shapiro Wilks Test for EDA
+- Now accept space or tabulation as delimiters in input series of var D or I
 
 fixes
 +++++
