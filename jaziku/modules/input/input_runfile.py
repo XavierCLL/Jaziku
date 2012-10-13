@@ -180,10 +180,10 @@ def read_stations(lines_of_stations):
             station.file_D = open(line_station[5], 'rb')
             station.type_D = globals_vars.config_run['type_var_D']
 
-            station.file_I = line_station[6]
+            station.file_I = globals_vars.config_run['path_to_file_var_I']
             station.type_I = globals_vars.config_run['type_var_I']
 
-            station.analysis_interval = line_station[7]
+            station.analysis_interval = line_station[6]
 
             if station.analysis_interval not in globals_vars.options_analysis_interval:
                 raise Exception(_("The analysis interval {0} is invalid,\n"
@@ -207,21 +207,21 @@ def read_stations(lines_of_stations):
 
             # if forecasting_process is activated
             if globals_vars.config_run['forecasting_process']:
-                if len(line_station) < 18:
+                if len(line_station) < 17:
                     raise Exception(_("For forecasting process you need define "
                                       "9 probability\n variables and trimester to "
                                       "process in stations file."))
-                station.f_var_I_B = [float(line_station[8].replace(',', '.')),
+                station.f_var_I_B = [float(line_station[7].replace(',', '.')),
+                                     float(line_station[10].replace(',', '.')),
+                                     float(line_station[13].replace(',', '.'))]
+                station.f_var_I_N = [float(line_station[8].replace(',', '.')),
                                      float(line_station[11].replace(',', '.')),
                                      float(line_station[14].replace(',', '.'))]
-                station.f_var_I_N = [float(line_station[9].replace(',', '.')),
+                station.f_var_I_A = [float(line_station[9].replace(',', '.')),
                                      float(line_station[12].replace(',', '.')),
                                      float(line_station[15].replace(',', '.'))]
-                station.f_var_I_A = [float(line_station[10].replace(',', '.')),
-                                     float(line_station[13].replace(',', '.')),
-                                     float(line_station[16].replace(',', '.'))]
 
-                station.forecasting_date = line_station[17]
+                station.forecasting_date = line_station[16]
 
         except Exception, e:
             console.msg_error_line_stations(station, e)
