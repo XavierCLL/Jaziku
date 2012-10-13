@@ -176,22 +176,22 @@ def main():
     # GET/SET SETTINGS
 
     # set settings default
-    settings = {"data_analysis": _("disabled"),
-                "climate_process": _("disabled"),
-                "forecasting_process": _("disabled"),
-                "process_period": _("disabled"),
-                "analog_year": _("disabled"),
+    settings = {"data_analysis": colored.red(_("disabled")),
+                "climate_process": colored.red(_("disabled")),
+                "forecasting_process": colored.red(_("disabled")),
+                "process_period": colored.red(_("disabled")),
+                "analog_year": colored.red(_("disabled")),
                 "lags": None,
                 "language": settings_language,
-                "consistent_data": _("disabled"),
-                "risk_analysis": _("disabled"),
-                "graphics": _("disabled"),
+                "consistent_data": colored.red(_("disabled")),
+                "risk_analysis": colored.red(_("disabled")),
+                "graphics": colored.red(_("disabled")),
                 "phen_below_label": "-",
                 "phen_normal_label": "-",
                 "phen_above_label": "-",
-                "maps": _("disabled"),
+                "maps": colored.red(_("disabled")),
                 "overlapping": None,
-                "shape_boundary": _("disabled")}
+                "shape_boundary": colored.red(_("disabled"))}
 
     ## general options
     # data_analysis
@@ -253,21 +253,19 @@ def main():
     if globals_vars.config_run['type_var_D']:
         settings["type_var_D"] = colored.green(globals_vars.config_run['type_var_D'])
     # limit var D below
-    if globals_vars.config_run['limit_var_D_below']:
-        if globals_vars.config_run['limit_var_D_below'] == 'default':
-            settings["limit_var_D_below"] = _('default')
-        else:
-            settings["limit_var_D_below"] = colored.green(globals_vars.config_run['limit_var_D_below'])
+    if globals_vars.config_run['limit_var_D_below'] == 'none':
+        settings["limit_var_D_below"] = colored.red('none')
+    elif globals_vars.config_run['limit_var_D_below'] == 'default':
+        settings["limit_var_D_below"] = _('default')
     else:
-        raise
+        settings["limit_var_D_below"] = colored.green(globals_vars.config_run['limit_var_D_below'])
     # limit var D above
-    if globals_vars.config_run['limit_var_D_above']:
-        if globals_vars.config_run['limit_var_D_above'] == 'default':
-            settings["limit_var_D_above"] = _('default')
-        else:
-            settings["limit_var_D_above"] = colored.green(globals_vars.config_run['limit_var_D_above'])
+    if globals_vars.config_run['limit_var_D_above'] == 'none':
+        settings["limit_var_D_above"] = colored.red('none')
+    elif globals_vars.config_run['limit_var_D_above'] == 'default':
+        settings["limit_var_D_above"] = _('default')
     else:
-        raise
+        settings["limit_var_D_above"] = colored.green(globals_vars.config_run['limit_var_D_above'])
     # threshold var D
     if globals_vars.config_run['threshold_below_var_D'] == 'default':
         settings["threshold_below_var_D"] = _('default')
@@ -281,21 +279,19 @@ def main():
     if globals_vars.config_run['type_var_I']:
         settings["type_var_I"] = colored.green(globals_vars.config_run['type_var_I'])
     # limit var I below
-    if globals_vars.config_run['limit_var_I_below']:
-        if globals_vars.config_run['limit_var_I_below'] == 'default':
-            settings["limit_var_I_below"] = _('default')
-        else:
-            settings["limit_var_I_below"] = colored.green(globals_vars.config_run['limit_var_I_below'])
+    if globals_vars.config_run['limit_var_I_below'] == 'none':
+        settings["limit_var_I_below"] = colored.red('none')
+    elif globals_vars.config_run['limit_var_I_below'] == 'default':
+        settings["limit_var_I_below"] = _('default')
     else:
-        raise
+        settings["limit_var_I_below"] = colored.green(globals_vars.config_run['limit_var_I_below'])
     # limit var I above
-    if globals_vars.config_run['limit_var_I_above']:
-        if globals_vars.config_run['limit_var_I_above'] == 'default':
-            settings["limit_var_I_above"] = _('default')
-        else:
-            settings["limit_var_I_above"] = colored.green(globals_vars.config_run['limit_var_I_above'])
+    if globals_vars.config_run['limit_var_I_above'] == 'none':
+        settings["limit_var_I_above"] = colored.red('none')
+    elif globals_vars.config_run['limit_var_I_above'] == 'default':
+        settings["limit_var_I_above"] = _('default')
     else:
-        raise
+        settings["limit_var_I_above"] = colored.green(globals_vars.config_run['limit_var_I_above'])
     # threshold var I
     if globals_vars.config_run['threshold_below_var_I'] == 'default':
         settings["threshold_below_var_I"] = _('default')
@@ -378,8 +374,8 @@ def main():
     if not globals_vars.config_run['climate_process']:
         console.msg(_("\nClimate process is disable, then forecasting and maps\n"
                       "process will be disabled."), color="yellow")
-        settings["forecasting_process"] = _("disabled")
-        settings["maps"] = _("disabled")
+        settings["forecasting_process"] = colored.red(_("disabled"))
+        settings["maps"] = colored.red(_("disabled"))
 
     # -------------------------------------------------------------------------
     # PRINT SETTINGS

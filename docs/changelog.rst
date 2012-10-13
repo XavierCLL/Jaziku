@@ -4,7 +4,7 @@
 Changelog
 =========
 
-0.5 (**2012-09-XX**)
+0.5 (**2012-10-XX**)
 ----------------------
 
 news
@@ -14,9 +14,9 @@ news
 - New: (eda) descriptive statistic, this calculate many statistics for var D
   make files and graphs contrast to stations and altitude
 - Reformatted runfile adaptation for requirements in eda, these are; new
-  parameter in station list "Alt" (altitude), type and limits for var "D"
-  and "I" now are static and you set these options in "general options"
-  and (of course) delete these parameters in stations list
+  parameter in station list "Alt" (altitude), and the type, limits thresholds
+  and path_to:file_var_I now are static and you set these options in
+  "general options" and (of course) delete these parameters in stations list
 - Accept new valid null 'nan' (Not a Number) for input series, now this
   is the default and recommended valid null.
 - New: (eda) graphs inspection of series for each station and mosaic
@@ -31,7 +31,7 @@ news
 - Now the thresholds for var D an I are global values and unique for all
   stations, and config it in "var D/I options" sections of runfile
 - New: Shapiro Wilks Test for EDA
-- Now accept space or tabulation as delimiters in input series of var D or I
+- Now accept spaces or tabulations as delimiters in input series of var D or I
 
 fixes
 +++++
@@ -50,6 +50,7 @@ fixes
 - Fix getting units for var D or I when type is external
 - Fix when lag equal to 0 Jaziku confused it with None
 - Fix when read NaN (standart null) from series
+- Fixes particular limits when these are 0
 
 
 0.4.2 (**2012-08-21**)
@@ -102,7 +103,7 @@ fixes
 - fixes typos in messages warnings
 - fix translations in some string
 
-0.4.0
+0.4.0 (**2012-06-29**)
 ----------------------
 
 news
@@ -134,7 +135,7 @@ fixes
 - many fixies and comprobations of all features and changes
 - (especifig bug that affect 0.3 version) bug translation in phenomenon label
 
-0.3.0
+0.3.0 (**2012-05-22**)
 ----------------------
 
 news
@@ -177,7 +178,7 @@ fixes
 - fixed calculating pearson for data daily
 - fixed table order for calculate forecasting
   
-0.2.1
+0.2.1 (**2012-03-24**)
 ----------------------
 
 fixes
@@ -186,7 +187,7 @@ fixes
 - change name function and filename results of Arithmetic Mean Trim to mean_trim
 
 
-0.2.0
+0.2.0 (**2012-03-23**)
 ----------------------
 
 news
@@ -210,3 +211,7 @@ fixes
 - fix memory leak using pyplot library   
 - fix several strings messages, correct to translate after install, translation
   works now.
+
+0.1.0 initial version (**2011-11-03**)
+--------------------------------
+- (initial code)
