@@ -17,7 +17,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
-from calendar import monthrange
 
 import os
 import csv
@@ -31,6 +30,7 @@ from pylab import xticks, setp, bar
 import matplotlib.dates as mdates
 from Image import open as img_open
 from scipy.stats import shapiro
+from calendar import monthrange
 
 from jaziku.modules.climate.lags import get_range_analysis_interval, get_range_analysis_interval_values
 from jaziku.modules.station import Station
