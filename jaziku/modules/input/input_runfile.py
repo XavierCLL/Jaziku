@@ -42,7 +42,7 @@ def read_runfile():
     lines_of_stations = []
 
     # read line by line the RUNFILE
-    for line_in_run_file in globals_vars.run_file:
+    for line_in_run_file in globals_vars.runfile:
         # trim all items in line_in_run_file
         line_in_run_file = [i.strip() for i in line_in_run_file if i != '']
 
@@ -65,7 +65,7 @@ def read_runfile():
                 console.msg_error(_(
                     "error read line in \"CONFIGURATION RUN\" in runfile,"
                     " line {0}:\n{1}, no was defined.")
-                .format(globals_vars.run_file.line_num, line_in_run_file[0]), False)
+                .format(globals_vars.runfile.line_num, line_in_run_file[0]), False)
 
             if line_in_run_file[0] in globals_vars.config_run:
                 # in this case, for python 'disable' is None,
@@ -90,7 +90,7 @@ def read_runfile():
                 else:
                     console.msg_error(_(
                         "error read line in \"CONFIGURATION RUN\" in runfile, line {0}:\n{1}")
-                    .format(globals_vars.run_file.line_num, line_in_run_file[0]), False)
+                    .format(globals_vars.runfile.line_num, line_in_run_file[0]), False)
 
         # read GRIDS LIST
         if in_grids_list:
@@ -120,13 +120,13 @@ def read_runfile():
                     in_station_list = True
                 else:
                     console.msg_error(_("error read line in \"GRIDS LIST\" in runfile, line {0}:\n{1}")
-                    .format(globals_vars.run_file.line_num, line_in_run_file[0]), False)
+                    .format(globals_vars.runfile.line_num, line_in_run_file[0]), False)
 
         # read STATIONS LIST
         if in_station_list:
             if line_in_run_file[0][0:2] == "##":
                 continue
-            lines_of_stations.append([line_in_run_file, globals_vars.run_file.line_num])
+            lines_of_stations.append([line_in_run_file, globals_vars.runfile.line_num])
 
 
     # when climate is disable:

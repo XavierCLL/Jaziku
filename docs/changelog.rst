@@ -52,6 +52,7 @@ fixes
 - Fix when lag equal to 0 Jaziku confused it with None
 - Fix when read NaN (standart null) from series
 - Fixes particular limits when these are 0
+- Check if runfile exist before open
 
 
 0.4.2 (**2012-08-21**)

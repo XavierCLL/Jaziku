@@ -55,7 +55,8 @@ ACCURACY = 5
 args = None
 
 # runfile
-run_file = None
+runfile_path = None
+runfile = None
 
 # trimester text for print
 trim_text = {-2: _('NDJ'), -1: _('DJF'), 0: _('JFM'), 1: _('FMA'), 2: _('MAM'),

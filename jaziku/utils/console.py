@@ -92,9 +92,9 @@ def msg_error_line_stations(station, text_error):
     Print error generic function occurred in a line from stations file.
     """
 
-    msg_error(_("Reading stations from file \"{0}\" in line {1}:\n")
-                .format(globals_vars.args.runfile.name, station.line_num) +
-                ';'.join(station.line_station) + "\n\n" + str(text_error))
+    msg_error(_("Reading the stations from the runfile \"{0}\" in line {1}:\n")
+                .format(globals_vars.runfile_path, station.line_num) +
+                ';'.join(station.line_station) + "\n\n" + str(text_error), False)
 
 
 class redirectStdStreams(object):

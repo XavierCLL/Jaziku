@@ -139,15 +139,23 @@ def main():
     # Parser and check arguments
     globals_vars.args = input_arg.arguments.parse_args()
 
+    globals_vars.runfile_path = os.path.join(globals_vars.args.runfile)
+
+    # test if runfile exist
+    if not os.path.isfile(globals_vars.runfile_path):
+        console.msg_error(_("runfile argument: no such file or directory in {0}".format(globals_vars.runfile_path)),False)
+
+    runfile_open = open(globals_vars.runfile_path, 'rb')
+
     # -------------------------------------------------------------------------
     # READ RUNFILE
     # reading configuration run, list of grids and stations from runfile
 
     # delete all NULL byte inside the runfile.csv
-    runfile = (x.replace('\0', '') for x in globals_vars.args.runfile)
+    runfile = (x.replace('\0', '') for x in runfile_open)
 
     # open runfile as csv
-    globals_vars.run_file = csv.reader(runfile, delimiter=';')
+    globals_vars.runfile = csv.reader(runfile, delimiter=';')
 
     # read all settings and all stations from runfile
     stations = input_runfile.read_runfile()
@@ -430,7 +438,7 @@ def main():
 
         # climate dir output result
         globals_vars.data_analysis_dir\
-            = os.path.join(os.path.splitext(globals_vars.args.runfile.name)[0], _('Jaziku_Data_Analysis'))   # 'results'
+            = os.path.join(os.path.splitext(globals_vars.runfile_path)[0], _('Jaziku_Data_Analysis'))   # 'results'
 
         print _("Saving the result for data analysis in:")
         print "   " + colored.cyan(globals_vars.data_analysis_dir)
@@ -464,7 +472,7 @@ def main():
     if globals_vars.config_run['climate_process']:
         # climate dir output result
         globals_vars.climate_dir \
-            = os.path.join(os.path.splitext(globals_vars.args.runfile.name)[0], _('Jaziku_Climate'))   # 'results'
+            = os.path.join(os.path.splitext(globals_vars.runfile_path)[0], _('Jaziku_Climate'))   # 'results'
 
         print _("Saving the result for climate in:")
         print "   " + colored.cyan(globals_vars.climate_dir)
@@ -480,7 +488,7 @@ def main():
     if globals_vars.config_run['forecasting_process']:
         # forecasting dir output result
         globals_vars.forecasting_dir \
-            = os.path.join(os.path.splitext(globals_vars.args.runfile.name)[0], _('Jaziku_Forecasting'))   # 'results'
+            = os.path.join(os.path.splitext(globals_vars.runfile_path)[0], _('Jaziku_Forecasting'))   # 'results'
 
         print _("\nSaving the result for forecasting in:").format(globals_vars.forecasting_dir)
         print "   " + colored.cyan(globals_vars.forecasting_dir)
