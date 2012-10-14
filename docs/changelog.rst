@@ -32,6 +32,7 @@ news
   stations, and config it in "var D/I options" sections of runfile
 - New: Shapiro Wilks Test for EDA
 - Now accept spaces or tabulations as delimiters in input series of var D or I
+- Now the command to run Jaziku is without '-runfile', for example: jaziku runfile.csv
 
 fixes
 +++++

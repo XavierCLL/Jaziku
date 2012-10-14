@@ -39,9 +39,7 @@ arguments = argparse.ArgumentParser(
                           .format(globals_vars.VERSION, globals_vars.COMPILE_DATE),
                           formatter_class=argparse.RawTextHelpFormatter)
 
-### Input arguments for dependent variable
-# Set path toxx configuration run file
-arguments.add_argument('-runfile', type=argparse.FileType('r'),
-                       required=True, default=sys.stdin,
+# Runfile argument
+arguments.add_argument('runfile', type=argparse.FileType('r'), default=sys.stdin,
                        help=_('Path absolute or relative to configuration run file'))
 
