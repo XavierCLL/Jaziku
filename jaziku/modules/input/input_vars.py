@@ -121,7 +121,7 @@ def read_var_D(station):
                 "this could be caused by wrong line or garbage "
                 "character,\nplease check manually, fix it and "
                 "run again.")
-            .format(station.file_D.name, csv_file_D.line_num))
+            .format(station.file_D.name, csv_file_D.line_num), False)
 
         # check if var D is daily or month
         if first:
@@ -173,7 +173,7 @@ def read_var_D(station):
 
         except Exception, e:
             console.msg_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
-            .format(station.file_D.name, csv_file_D.line_num, e))
+            .format(station.file_D.name, csv_file_D.line_num, e), False)
 
         if first:
             first = False
@@ -291,7 +291,7 @@ def read_var_I(station):
                 "this could be caused by wrong line or garbage "
                 "character,\nplease check manually, fix it and "
                 "run again.")
-            .format(open_file_I.name, csv_file_I.line_num))
+            .format(open_file_I.name, csv_file_I.line_num), False)
 
         # check if var I is daily or month
         if first:
@@ -340,7 +340,7 @@ def read_var_I(station):
 
         except Exception, e:
             console.msg_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
-            .format(open_file_I.name, csv_file_I.line_num, e))
+            .format(open_file_I.name, csv_file_I.line_num, e), False)
 
         if first:
             first = False

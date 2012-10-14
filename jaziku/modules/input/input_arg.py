@@ -40,6 +40,6 @@ arguments = argparse.ArgumentParser(
                           formatter_class=argparse.RawTextHelpFormatter)
 
 # Runfile argument
-arguments.add_argument('runfile', type=argparse.FileType('r'), default=sys.stdin,
+arguments.add_argument('runfile', type=str,
                        help=_('Path absolute or relative to configuration run file'))
 
