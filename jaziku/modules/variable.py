@@ -59,29 +59,8 @@ class Variable():
             if self.type == 'I':
                 input_vars.read_var_I(station)
 
-        if messages and (globals_vars.config_run['limit_var_'+self.type+'_below'] is None or
-                         globals_vars.config_run['limit_var_'+self.type+'_above'] is None):
-            console.msg(_("\n > WARNING: you are using one or both limit as\n"
-                          "   \"none\" value, this means that series values\n"
-                          "   will not be checked if they are valid in\n"
-                          "   its limits coherent. This option is not\n"
-                          "   recommended, use it with precaution ........"), color='yellow', newline=False)
-
         if messages:
             console.msg(_("done"), color='green')
-
-            if self.type == "I" and station.file_I == "internal":
-                internal_file_I_name = globals_vars.internal_var_I_files[station.type_I]
-                split_internal_var_I = internal_file_I_name.split(".")[0].split("_")
-                console.msg(
-                    _(" > You are using internal files for independent\n"
-                      "   variable defined as {0} which has data from\n"
-                      "   {1} to {2} and the source of data was\n"
-                      "   obtained in {3}.\n"
-                      "   url: {4}")
-                    .format(split_internal_var_I[0], split_internal_var_I[1],
-                        split_internal_var_I[2], ' '.join(split_internal_var_I[3::]),
-                        globals_vars.internal_var_I_urls[station.type_I]), color='yellow')
 
             if self.frequency_data == "daily":
                 console.msg(_("   the variable {0} has data daily").format(self.type), color='cyan')

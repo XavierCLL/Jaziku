@@ -69,6 +69,11 @@ def msg(text, color=False, newline=True, indentation=0):
         else:
             print colored.red(text)
 
+def msg_footer():
+    print _("\nJaziku, version {0} - {1}.\n"
+            "Copyright © 2011-2012 IDEAM - Colombia")\
+            .format(globals_vars.VERSION, globals_vars.COMPILE_DATE)
+
 def msg_error(text_error, wait_value=True):
     """
     Print error generic function, this is called on any error occurred in
@@ -80,10 +85,8 @@ def msg_error(text_error, wait_value=True):
     else:
         print colored.red(_('\nERROR:\n{0}\n').format(text_error))
     print _("Please check the error and read the manual if is necessary.\n"
-            "If this is an error of Jaziku, please report it with Jaziku developers.\n\n"
-            "Jaziku, version {0} - {1}.\n"
-            "Copyright © 2011-2012 IDEAM - Colombia")\
-    .format(globals_vars.VERSION, globals_vars.COMPILE_DATE)
+            "If this is an error of Jaziku, please report it with Jaziku developers.")
+    msg_footer()
     sys.exit()
 
 
