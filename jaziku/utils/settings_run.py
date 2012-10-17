@@ -48,20 +48,24 @@ def get():
         settings["data_analysis"] = colored.green(_("enabled"))
     elif not globals_vars.config_run['data_analysis'] == False:
         console.msg_error(_("'data_analysis' variable in runfile is wrong,\n"
-                            "this should be 'enable' or 'disable'"), False)
-        # climate_process
+                            "this must be 'enable' or 'disable'"), False)
+    # climate_process
     if globals_vars.config_run['climate_process'] == True:
         settings["climate_process"] = colored.green(_("enabled"))
     elif not globals_vars.config_run['climate_process'] == False:
         console.msg_error(_("'climate_process' variable in runfile is wrong,\n"
-                            "this should be 'enable' or 'disable'"), False)
-        # forecasting_process
+                            "this must be 'enable' or 'disable'"), False)
+    # forecasting_process
     if globals_vars.config_run['forecasting_process'] == True:
         settings["forecasting_process"] = colored.green(_("enabled"))
     elif not globals_vars.config_run['forecasting_process'] == False:
         console.msg_error(_("'forecasting_process' variable in runfile is wrong,\n"
-                            "this should be 'enable' or 'disable'"), False)
-        # process_period
+                            "this must be 'enable' or 'disable'"), False)
+    # analysis_interval
+    if globals_vars.config_run['analysis_interval']:
+        settings["analysis_interval"] = colored.green(globals_vars.config_run['analysis_interval'])
+
+    # process_period
     if globals_vars.config_run['process_period'] == "maximum":
         settings["process_period"] = "maximum"
         globals_vars.config_run['process_period'] = False
@@ -75,14 +79,14 @@ def get():
         except Exception, e:
             console.msg_error(_('the period must be: year_start-year_end (ie. 1980-2008)\n'
                                 'or \"maximum\" for take the process period maximum possible.\n\n{0}').format(e))
-        # analog_year
+    # analog_year
     if globals_vars.config_run['analog_year']:
         try:
             globals_vars.config_run['analog_year'] = int(globals_vars.config_run['analog_year'])
         except:
             console.msg_error("the analog_year must be a valid year", False)
         settings["analog_year"] = colored.green(globals_vars.config_run['analog_year'])
-        # lags
+    # lags
     if globals_vars.config_run['lags'] in ['default', 'all']:
         globals_vars.lags = [0, 1, 2]
         settings["lags"] = ','.join(map(str, globals_vars.lags))
@@ -101,21 +105,21 @@ def get():
     # type var D
     if globals_vars.config_run['type_var_D']:
         settings["type_var_D"] = colored.green(globals_vars.config_run['type_var_D'])
-        # limit var D below
+    # limit var D below
     if globals_vars.config_run['limit_var_D_below'] == 'none':
         settings["limit_var_D_below"] = colored.red('none')
     elif globals_vars.config_run['limit_var_D_below'] == 'default':
         settings["limit_var_D_below"] = _('default')
     else:
         settings["limit_var_D_below"] = colored.green(globals_vars.config_run['limit_var_D_below'])
-        # limit var D above
+    # limit var D above
     if globals_vars.config_run['limit_var_D_above'] == 'none':
         settings["limit_var_D_above"] = colored.red('none')
     elif globals_vars.config_run['limit_var_D_above'] == 'default':
         settings["limit_var_D_above"] = _('default')
     else:
         settings["limit_var_D_above"] = colored.green(globals_vars.config_run['limit_var_D_above'])
-        # threshold var D
+    # threshold var D
     if globals_vars.config_run['threshold_below_var_D'] == 'default':
         settings["threshold_below_var_D"] = _('default')
     else:
@@ -124,24 +128,24 @@ def get():
         settings["threshold_above_var_D"] = _('default')
     else:
         settings["threshold_above_var_D"] = colored.green(globals_vars.config_run['threshold_above_var_D'])
-        # type var I
+    # type var I
     if globals_vars.config_run['type_var_I']:
         settings["type_var_I"] = colored.green(globals_vars.config_run['type_var_I'])
-        # limit var I below
+    # limit var I below
     if globals_vars.config_run['limit_var_I_below'] == 'none':
         settings["limit_var_I_below"] = colored.red('none')
     elif globals_vars.config_run['limit_var_I_below'] == 'default':
         settings["limit_var_I_below"] = _('default')
     else:
         settings["limit_var_I_below"] = colored.green(globals_vars.config_run['limit_var_I_below'])
-        # limit var I above
+    # limit var I above
     if globals_vars.config_run['limit_var_I_above'] == 'none':
         settings["limit_var_I_above"] = colored.red('none')
     elif globals_vars.config_run['limit_var_I_above'] == 'default':
         settings["limit_var_I_above"] = _('default')
     else:
         settings["limit_var_I_above"] = colored.green(globals_vars.config_run['limit_var_I_above'])
-        # threshold var I
+    # threshold var I
     if globals_vars.config_run['threshold_below_var_I'] == 'default':
         settings["threshold_below_var_I"] = _('default')
     else:
@@ -150,32 +154,32 @@ def get():
         settings["threshold_above_var_I"] = _('default')
     else:
         settings["threshold_above_var_I"] = colored.green(globals_vars.config_run['threshold_above_var_I'])
-        ## check options
+    ## check options
     # consistent_data
     if globals_vars.config_run['consistent_data']:
         settings["consistent_data"] = colored.green(_("enabled"))
-        # risk_analysis
+    # risk_analysis
     if globals_vars.config_run['risk_analysis']:
         settings["risk_analysis"] = colored.green(_("enabled"))
 
     ## graphics settings
     if globals_vars.config_run['graphics']:
         settings["graphics"] = colored.green(_("enabled"))
-        # if phenomenon below is defined inside arguments, else default value
+    # if phenomenon below is defined inside arguments, else default value
     if globals_vars.config_run['phen_below_label'] and globals_vars.config_run['phen_below_label'] != "default":
         globals_vars.phenomenon_below = globals_vars.config_run['phen_below_label']
         settings["phen_below_label"] = colored.green(globals_vars.config_run['phen_below_label'])
     else:
         globals_vars.phenomenon_below = _('var_I_below')
         settings["phen_below_label"] = globals_vars.phenomenon_below
-        # if phenomenon normal is defined inside arguments, else default value
+    # if phenomenon normal is defined inside arguments, else default value
     if globals_vars.config_run['phen_normal_label'] and globals_vars.config_run['phen_normal_label'] != "default":
         globals_vars.phenomenon_normal = unicode(globals_vars.config_run['phen_normal_label'], 'utf-8')
         settings["phen_normal_label"] = colored.green(globals_vars.config_run['phen_normal_label'])
     else:
         globals_vars.phenomenon_normal = _('var_I_normal')
         settings["phen_normal_label"] = globals_vars.phenomenon_normal
-        # if phenomenon above is defined inside arguments, else default value
+    # if phenomenon above is defined inside arguments, else default value
     if globals_vars.config_run['phen_above_label'] and globals_vars.config_run['phen_above_label'] != "default":
         globals_vars.phenomenon_above = unicode(globals_vars.config_run['phen_above_label'], 'utf-8')
         settings["phen_above_label"] = colored.green(globals_vars.config_run['phen_above_label'])
@@ -200,7 +204,7 @@ def get():
                     "the maps options are \'climate\', \'forecasting\', "
                     "\'correlation\' comma separated, or \'all\'."), False)
             settings["maps"] = colored.green(','.join(map(str, [m for m in globals_vars.maps if globals_vars.maps[m]])))
-        # set the overlapping solution
+    # set the overlapping solution
     if globals_vars.config_run['overlapping'] == "default" or not globals_vars.config_run['overlapping']:
         globals_vars.config_run['overlapping'] = "average"
         settings['overlapping'] = globals_vars.config_run['overlapping']
@@ -209,7 +213,7 @@ def get():
     else:
         console.msg_error(_("The overlapping solution is wrong, the options are:\n"
                             "default, average, maximum, minimum or neither"), False)
-        # shape_boundary method
+    # shape_boundary method
     # TODO: add more method for cut map interpolation around shape
     if globals_vars.config_run['shape_boundary'] in ["enable", True]:
         settings["shape_boundary"] = colored.green(_("enabled"))
@@ -234,6 +238,7 @@ def show(settings):
     print "   {0} --------- {1}".format("data analysis", settings["data_analysis"])
     print "   {0} ------- {1}".format("climate process", settings["climate_process"])
     print "   {0} --- {1}".format("forecasting process", settings["forecasting_process"])
+    print "   {0} ----- {1}".format("analysis interval", settings["analysis_interval"])
     print "   {0} -------- {1}".format("process period", settings["process_period"])
     print "   {0} ----------- {1}".format("analog year", settings["analog_year"])
     print "   {0} ------------------ {1}".format("lags", settings["lags"])
@@ -258,6 +263,8 @@ def show(settings):
     print "   {0} ------ {1}".format("phen below label", settings["phen_below_label"])
     print "   {0} ----- {1}".format("phen normal label", settings["phen_normal_label"])
     print "   {0} ------ {1}".format("phen above label", settings["phen_above_label"])
+    if globals_vars.config_run['forecasting_process']:
+        console.msg("   Forecasting options", color='cyan')
     console.msg("   Maps options", color='cyan')
     print "   {0} ------------------ {1}".format("maps", settings["maps"])
     if globals_vars.config_run['maps']:

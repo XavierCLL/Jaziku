@@ -41,7 +41,9 @@ def read_runfile():
     grid = None
     lines_of_stations = []
 
+    # -------------------------------------------------------------------------
     # read line by line the RUNFILE
+
     for line_in_run_file in globals_vars.runfile:
         # trim all items in line_in_run_file
         line_in_run_file = [i.strip() for i in line_in_run_file if i != '']
@@ -94,7 +96,7 @@ def read_runfile():
 
         # read GRIDS LIST
         if in_grids_list:
-            if line_in_run_file[0][0:2] == "##" and line_in_run_file[0] != "################":
+            if line_in_run_file[0][0:2] == "##" and line_in_run_file[0] != "####################":
                 if grid:
                     del grid
                 grid = Grid()
@@ -128,13 +130,56 @@ def read_runfile():
                 continue
             lines_of_stations.append([line_in_run_file, globals_vars.runfile.line_num])
 
+    # makes all stations base on all lines of stations list previously read
+    stations = read_stations(lines_of_stations)
+
+    # -------------------------------------------------------------------------
+    # post-process after read the runfile
 
     # when climate is disable:
     if not globals_vars.config_run['climate_process']:
         globals_vars.config_run['forecasting_process'] = False
         globals_vars.config_run['maps'] = False
 
-    stations = read_stations(lines_of_stations)
+    # analysis interval
+    if globals_vars.config_run['analysis_interval'] not in globals_vars.options_analysis_interval:
+        console.msg_error(_("The 'analysis_interval' defined in runfile {0} is invalid,\n"
+                          "must be one of these: {1}")
+                         .format(globals_vars.config_run['analysis_interval'],
+                                 ', '.join(globals_vars.options_analysis_interval)), False)
+
+    if globals_vars.config_run['analysis_interval'] != "trimester":
+        # detect analysis_interval number from string
+        _count = 0
+        for digit in globals_vars.config_run['analysis_interval']:
+            try:
+                int(digit)
+                _count += 1
+            except:
+                pass
+        globals_vars.analysis_interval_num_days = int(globals_vars.config_run['analysis_interval'][0:_count])
+
+    translate_analysis_interval = [_("5days"), _("10days"), _("15days"), _("trimester")]
+    globals_vars.translate_analysis_interval\
+        = translate_analysis_interval[globals_vars.options_analysis_interval.index(globals_vars.config_run['analysis_interval'])]
+
+    # if forecasting_process is activated
+    if globals_vars.config_run['forecasting_process']:
+        try:
+            globals_vars.forecasting_phen_below = [float(str(globals_vars.config_run['lag_0_phen_below']).replace(',', '.')),
+                                                   float(str(globals_vars.config_run['lag_1_phen_below']).replace(',', '.')),
+                                                   float(str(globals_vars.config_run['lag_2_phen_below']).replace(',', '.'))]
+            globals_vars.forecasting_phen_normal = [float(str(globals_vars.config_run['lag_0_phen_normal']).replace(',', '.')),
+                                                    float(str(globals_vars.config_run['lag_1_phen_normal']).replace(',', '.')),
+                                                    float(str(globals_vars.config_run['lag_2_phen_normal']).replace(',', '.'))]
+            globals_vars.forecasting_phen_above = [float(str(globals_vars.config_run['lag_0_phen_above']).replace(',', '.')),
+                                                   float(str(globals_vars.config_run['lag_1_phen_above']).replace(',', '.')),
+                                                   float(str(globals_vars.config_run['lag_2_phen_above']).replace(',', '.'))]
+        except:
+            console.msg_error(_("Problems with the 9 probability values for forecasting process\n"
+                                "defined in runfile, these must be a numbers, please check it."), False)
+
+        globals_vars.forecasting_date = globals_vars.config_run['forecasting_date']
 
     return stations
 
@@ -152,7 +197,6 @@ def read_stations(lines_of_stations):
 
     # process each station from stations list
     for line_station, line_num in lines_of_stations:
-
         # trim all items in line_station
         line_station = [i.strip() for i in line_station]
 
@@ -167,61 +211,21 @@ def read_stations(lines_of_stations):
         station.line_num = line_num
 
         try:
+            if len(line_station) < 6:
+                raise Exception(_("Problems with the numbers of parameters inside\n"
+                                  "the stations list need for run climate process.\n"))
+
             station.code = line_station[0]
             station.name = line_station[1]
             station.lat = line_station[2].replace(',', '.')
             station.lon = line_station[3].replace(',', '.')
             station.alt = line_station[4].replace(',', '.')
 
-            if len(line_station) < 12:
-                raise Exception(_("Problems with the numbers of parameters inside\n"
-                                  "the stations list need for run climate process.\n"))
-
             station.file_D = open(line_station[5], 'rb')
             station.type_D = globals_vars.config_run['type_var_D']
 
             station.file_I = globals_vars.config_run['path_to_file_var_I']
             station.type_I = globals_vars.config_run['type_var_I']
-
-            station.analysis_interval = line_station[6]
-
-            if station.analysis_interval not in globals_vars.options_analysis_interval:
-                raise Exception(_("The analysis interval {0} is invalid,\n"
-                                  "should be one of these: {1}")
-                .format(station.analysis_interval,
-                    ', '.join(globals_vars.options_analysis_interval)))
-
-            if station.analysis_interval != "trimester":
-                # detect analysis_interval number from string
-                _count = 0
-                for digit in station.analysis_interval:
-                    try:
-                        int(digit)
-                        _count += 1
-                    except:
-                        pass
-                station.analysis_interval_num_days = int(station.analysis_interval[0:_count])
-
-            station.translate_analysis_interval\
-                = globals_vars.translate_analysis_interval[globals_vars.options_analysis_interval.index(station.analysis_interval)]
-
-            # if forecasting_process is activated
-            if globals_vars.config_run['forecasting_process']:
-                if len(line_station) < 17:
-                    raise Exception(_("For forecasting process you need define "
-                                      "9 probability\n variables and trimester to "
-                                      "process in stations file."))
-                station.f_var_I_B = [float(line_station[7].replace(',', '.')),
-                                     float(line_station[10].replace(',', '.')),
-                                     float(line_station[13].replace(',', '.'))]
-                station.f_var_I_N = [float(line_station[8].replace(',', '.')),
-                                     float(line_station[11].replace(',', '.')),
-                                     float(line_station[14].replace(',', '.'))]
-                station.f_var_I_A = [float(line_station[9].replace(',', '.')),
-                                     float(line_station[12].replace(',', '.')),
-                                     float(line_station[15].replace(',', '.'))]
-
-                station.forecasting_date = line_station[16]
 
         except Exception, e:
             console.msg_error_line_stations(station, e)

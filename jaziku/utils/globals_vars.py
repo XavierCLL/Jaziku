@@ -124,7 +124,14 @@ internal_var_I_urls = {"ONI": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.
 
 # analysis_interval
 options_analysis_interval = ["5days", "10days", "15days", "trimester"]
-translate_analysis_interval = [_("5days"), _("10days"), _("15days"), _("trimester")]
+analysis_interval_num_days = None
+translate_analysis_interval = None
+
+# forecasting
+forecasting_phen_below = None
+forecasting_phen_normal = None
+forecasting_phen_above = None
+forecasting_date = None
 
 # maps files for climate:
 maps_files_climate = {'5days': None, '10days': None, '15days': None, 'trimester': None}
@@ -142,6 +149,7 @@ phenomenon_above = None
 config_run = {'data_analysis': None,
               'climate_process': None,
               'forecasting_process': None,
+              'analysis_interval': None,
               'process_period': None,
               'analog_year': None,
               'lags': None,
@@ -163,6 +171,16 @@ config_run = {'data_analysis': None,
               'phen_below_label': None,
               'phen_normal_label': None,
               'phen_above_label': None,
+              'lag_0_phen_below': None,
+              'lag_0_phen_normal': None,
+              'lag_0_phen_above': None,
+              'lag_1_phen_below': None,
+              'lag_1_phen_normal': None,
+              'lag_1_phen_above': None,
+              'lag_2_phen_below': None,
+              'lag_2_phen_normal': None,
+              'lag_2_phen_above': None,
+              'forecasting_date': None,
               'maps': None,
               'overlapping': None,
               "shape_boundary": None}

@@ -164,15 +164,15 @@ class Station:
         # define if results will made by trimester or every n days
         if self.state_of_data in [1, 3]:
             console.msg(_("   Results will be made by trimesters"), color='cyan')
-            if self.analysis_interval != "trimester":
+            if globals_vars.config_run['analysis_interval'] != "trimester":
                 text_error = _("var_D (and or not var_I) has data monthly but you define the\n"
                                "analysis interval as \"{0}\", this must be, in this\n"
-                               "case, as \"trimester\".").format(self.analysis_interval)
+                               "case, as \"trimester\".").format(globals_vars.config_run['analysis_interval'])
                 console.msg_error_line_stations(self, text_error)
         if self.state_of_data in [2, 4]:
             # if analysis_interval is defined by trimester but var_I or/and var_D has data
             # daily, first convert in data monthly and continue with results by trimester
-            if self.analysis_interval == "trimester":
+            if globals_vars.config_run['analysis_interval'] == "trimester":
                 console.msg(_("   Results will be made by trimesters"), color='cyan')
                 if self.var_D.frequency_data == "daily":
                     console.msg(_("   Converting all var D to data monthly"), color='cyan')
@@ -184,7 +184,7 @@ class Station:
                     self.var_I.frequency_data = "monthly"
                 self.state_of_data = 1
             else:
-                console.msg(_("   Results will be made every {} days").format(self.analysis_interval_num_days), color='cyan')
+                console.msg(_("   Results will be made every {} days").format(globals_vars.analysis_interval_num_days), color='cyan')
 
         if self.state_of_data == 3:
             console.msg(_("   Converting all var I to data monthly"), color='cyan')

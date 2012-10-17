@@ -111,7 +111,7 @@ def get_thresholds_var_D(station):
         if below not in [1, 2, 3] or above not in [1, 2, 3]:
             console.msg_error(_("thresholds of dependent variable were defined as "
                                 "N standard deviation\n but are outside of range, "
-                                "this values should be 1, 2 or 3:\nsd{0} sd{1}")
+                                "this values must be 1, 2 or 3:\nsd{0} sd{1}")
             .format(below, above))
         p50 = stats.scoreatpercentile(values_without_nulls, 50)
         std_deviation = func_standard_deviation(values_without_nulls)
@@ -157,7 +157,7 @@ def get_thresholds_var_D(station):
     if globals_vars.config_run['analog_year']:
         if station.first_iter:
             console.msg(_("\n > WARNING: You have defined the analog year,\n"
-                           "   but the thresholds of var D should be\n"
+                           "   but the thresholds of var D must be\n"
                            "   \"default\" for use the analog year .........."), color='yellow', newline=False)
 
     # if are define as percentile
@@ -291,7 +291,7 @@ def get_thresholds_var_I(station):
             console.msg_error(_(
                 "thresholds of independent variable were defined as "
                 "N standard deviation\n but are outside of range, "
-                "this values should be 1, 2 or 3:\nsd{0} sd{1}")
+                "this values must be 1, 2 or 3:\nsd{0} sd{1}")
             .format(below, above))
         p50 = stats.scoreatpercentile(values_without_nulls, 50)
         std_deviation = func_standard_deviation(values_without_nulls)

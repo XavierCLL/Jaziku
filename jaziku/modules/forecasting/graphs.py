@@ -40,14 +40,14 @@ def forecasting_graphs(station):
     for lag in globals_vars.lags:
 
         if station.state_of_data in [1, 3]:
-            forecasting_month = station.forecasting_date
-            title_date_graphic = _("trim {0} ({1})").format(station.forecasting_date,
+            forecasting_month = globals_vars.forecasting_date
+            title_date_graphic = _("trim {0} ({1})").format(globals_vars.forecasting_date,
                 globals_vars.trim_text[forecasting_month - 1])
             filename_date_graphic = _("trim_{0}").format(forecasting_month)
 
         if station.state_of_data in [2, 4]:
-            forecasting_month = station.forecasting_date[0]
-            forecasting_day = station.forecasting_date[1]
+            forecasting_month = globals_vars.forecasting_date[0]
+            forecasting_day = globals_vars.forecasting_date[1]
             title_date_graphic = "{0} {1}".format(globals_vars.month_text[forecasting_month - 1], forecasting_day)
             filename_date_graphic = "{0}_{1}".format(globals_vars.month_text[forecasting_month - 1], forecasting_day)
 
