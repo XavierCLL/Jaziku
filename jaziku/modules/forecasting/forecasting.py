@@ -37,42 +37,41 @@ def forecasting(station):
     console.msg(_("Processing forecasting ({0}-{1}) ............ ")
         .format(station.process_period['start'], station.process_period['end']), newline=False)
 
-    # get and set date for calculate forecasting based on this
+    # get and set date for calculate forecasting based on this TODO: forecasting_date now is static
     if station.state_of_data in [1, 3]:
         try:
-            station.forecasting_date = int(station.forecasting_date)
+            globals_vars.forecasting_date = int(globals_vars.config_run['forecasting_date'])
         except:
             console.msg_error_line_stations(station,
                 _("Trimester forecasting \"{0}\" is invalid, "
-                  "should be integer number").format(station.forecasting_date))
-        if not (1 <= station.forecasting_date <= 12):
+                  "must be integer number").format(globals_vars.config_run['forecasting_date']))
+        if not (1 <= globals_vars.forecasting_date <= 12):
             console.msg_error_line_stations(station,
                 _("Trimester forecasting \"{0}\" is invalid, "
-                  "should be a month valid number (1-12)")
-                .format(station.forecasting_date))
+                  "must be a month valid number (1-12)")
+                .format(globals_vars.forecasting_date))
     if station.state_of_data in [2, 4]:
         try:
-            forecasting_date_original = station.forecasting_date
-            station.forecasting_date = station.forecasting_date.replace('-', '/')
-            station.forecasting_date = station.forecasting_date.split('/')
-            station.forecasting_date[0] = int(station.forecasting_date[0])
-            station.forecasting_date[1] = int(station.forecasting_date[1])
+            globals_vars.forecasting_date = globals_vars.config_run['forecasting_date'].replace('-', '/')
+            globals_vars.forecasting_date = globals_vars.forecasting_date.split('/')
+            globals_vars.forecasting_date[0] = int(globals_vars.forecasting_date[0])
+            globals_vars.forecasting_date[1] = int(globals_vars.forecasting_date[1])
         except:
             console.msg_error_line_stations(station,
                 _("Month or day for calculate forecasting \"{0}\" is invalid, \n"
-                  "should be month/day or month-day (e.g. 03/11)")
-                .format(forecasting_date_original))
-        if not (1 <= station.forecasting_date[0] <= 12):
+                  "must be month/day or month-day (e.g. 03/11)")
+                .format(globals_vars.config_run['forecasting_date']))
+        if not (1 <= globals_vars.forecasting_date[0] <= 12):
             console.msg_error_line_stations(station,
                 _("Month for forecasting process \"{0}\" is invalid, \n"
-                  "should be a month valid number (1-12)")
-                .format(station.forecasting_date[0]))
-        if station.forecasting_date[1] not in station.range_analysis_interval:
+                  "must be a month valid number (1-12)")
+                .format(globals_vars.forecasting_date[0]))
+        if globals_vars.forecasting_date[1] not in station.range_analysis_interval:
             console.msg_error_line_stations(station,
                 _("Start day (month/day) for forecasting process \"{0}\"\nis invalid, "
-                  "should be a valid start day based on\nrange analysis "
+                  "must be a valid start day based on\nrange analysis "
                   "interval, the valid start days for\n{1} are: {2}")
-                .format(station.forecasting_date[1], station.translate_analysis_interval,
+                .format(globals_vars.forecasting_date[1], globals_vars.translate_analysis_interval,
                     station.range_analysis_interval))
 
     # create directory for output files
@@ -97,14 +96,14 @@ def forecasting(station):
             for column in range(3):
                 for row in range(3):
                     if not globals_vars.config_run['risk_analysis'] or\
-                       station.is_sig_risk_analysis[lag][station.forecasting_date - 1][_iter] == _('yes'):
+                       station.is_sig_risk_analysis[lag][globals_vars.forecasting_date - 1][_iter] == _('yes'):
                         items_CT[order_CT[_iter]] \
-                            = station.contingencies_tables_percent[lag][station.forecasting_date - 1][column][row] / 100.0
+                            = station.contingencies_tables_percent[lag][globals_vars.forecasting_date - 1][column][row] / 100.0
                         _iter += 1
 
         if station.state_of_data in [2, 4]:
-            month = station.forecasting_date[0]
-            day = station.range_analysis_interval.index(station.forecasting_date[1])
+            month = globals_vars.forecasting_date[0]
+            day = station.range_analysis_interval.index(globals_vars.forecasting_date[1])
             _iter = 0
             for column in range(3):
                 for row in range(3):
@@ -114,17 +113,17 @@ def forecasting(station):
                             = station.contingencies_tables_percent[lag][month - 1][day][column][row] / 100.0
                         _iter += 1
 
-        prob_decrease_var_D[lag] = (items_CT['a'] * station.f_var_I_B[lag]) +\
-                                   (items_CT['d'] * station.f_var_I_N[lag]) +\
-                                   (items_CT['g'] * station.f_var_I_A[lag])
+        prob_decrease_var_D[lag] = (items_CT['a'] * globals_vars.forecasting_phen_below[lag]) +\
+                                   (items_CT['d'] * globals_vars.forecasting_phen_normal[lag]) +\
+                                   (items_CT['g'] * globals_vars.forecasting_phen_above[lag])
 
-        prob_normal_var_D[lag] = (items_CT['b'] * station.f_var_I_B[lag]) +\
-                                 (items_CT['e'] * station.f_var_I_N[lag]) +\
-                                 (items_CT['h'] * station.f_var_I_A[lag])
+        prob_normal_var_D[lag] = (items_CT['b'] * globals_vars.forecasting_phen_below[lag]) +\
+                                 (items_CT['e'] * globals_vars.forecasting_phen_normal[lag]) +\
+                                 (items_CT['h'] * globals_vars.forecasting_phen_above[lag])
 
-        prob_exceed_var_D[lag] = (items_CT['c'] * station.f_var_I_B[lag]) +\
-                                 (items_CT['f'] * station.f_var_I_N[lag]) +\
-                                 (items_CT['i'] * station.f_var_I_A[lag])
+        prob_exceed_var_D[lag] = (items_CT['c'] * globals_vars.forecasting_phen_below[lag]) +\
+                                 (items_CT['f'] * globals_vars.forecasting_phen_normal[lag]) +\
+                                 (items_CT['i'] * globals_vars.forecasting_phen_above[lag])
 
     station.prob_decrease_var_D = prob_decrease_var_D
     station.prob_normal_var_D = prob_normal_var_D

@@ -97,7 +97,7 @@ def msg_error_line_stations(station, text_error):
 
     msg_error(_("Reading the stations from the runfile \"{0}\" in line {1}:\n")
                 .format(globals_vars.runfile_path, station.line_num) +
-                ';'.join(station.line_station) + "\n\n" + str(text_error), False)
+                ';'.join(station.line_station) + "\n\n" + str(text_error))
 
 
 class redirectStdStreams(object):

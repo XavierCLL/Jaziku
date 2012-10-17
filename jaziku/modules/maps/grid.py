@@ -257,7 +257,7 @@ def set_particular_grid(grid):
        not os.path.isfile(os.path.join(grid.shape_path, grid.grid_name + ".sbx")) or \
        not os.path.isfile(os.path.join(grid.shape_path, grid.grid_name + ".shx")):
         console.msg_error(_("Can't set particular shape, please check files in shape path\n"
-                            "this should be contain inside .shp .prj .sbn .sbx .shx"))
+                            "this must be contain inside .shp .prj .sbn .sbx .shx"))
 
     if os.path.isfile(os.path.join(grid.shape_path, grid.grid_name + ".py")):
         particular_grid = imp.load_source("particular_grid", os.path.join(grid.shape_path, grid.grid_name + ".py"))

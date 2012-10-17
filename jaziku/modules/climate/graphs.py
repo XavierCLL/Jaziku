@@ -182,7 +182,7 @@ def climate_graphs(station):
         image_width = 600
         mosaic_dir_save \
             = os.path.join(graphics_dir_ca, _('mosaic_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
-                          .format(lag, station.translate_analysis_interval, station.code, station.name,
+                          .format(lag, globals_vars.translate_analysis_interval, station.code, station.name,
                                   station.type_D, station.type_I, station.process_period['start'],
                                   station.process_period['end']))
 

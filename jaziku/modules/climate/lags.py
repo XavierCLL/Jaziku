@@ -51,12 +51,12 @@ def get_lag_values(station, var, lag, month, day=None):
 def get_range_analysis_interval(station):
     # range based on analysis interval
 
-    if station.analysis_interval != "trimester":
-        if station.analysis_interval_num_days == 5:
+    if globals_vars.config_run['analysis_interval'] != "trimester":
+        if globals_vars.analysis_interval_num_days == 5:
             return [1, 6, 11, 16, 21, 26]
-        if station.analysis_interval_num_days == 10:
+        if globals_vars.analysis_interval_num_days == 10:
             return [1, 11, 21]
-        if station.analysis_interval_num_days == 15:
+        if globals_vars.analysis_interval_num_days == 15:
             return [1, 16]
     else:
         return None
@@ -126,11 +126,11 @@ def get_range_analysis_interval_values(station, type, year, month, day=None, lag
                         date(year, month, 1) + relativedelta(months=iter_month - lag))])
             if station.state_of_data in [2]:
                 # keep constant value for month
-                if station.analysis_interval == "trimester":
+                if globals_vars.config_run['analysis_interval'] == "trimester":
                     var_I_values.append(station.var_I.data[station.var_I.date.index(
                         date(year, month, 1) + relativedelta(months= -lag))])
                 else:
-                    real_date = date(year, month, day) + relativedelta(days= -station.analysis_interval_num_days * lag)
+                    real_date = date(year, month, day) + relativedelta(days= -globals_vars.analysis_interval_num_days * lag)
                     # e.g if lag 2 in march and calculate to 15days go to february and not january
                     if month - real_date.month > 1:
                         real_date = date(real_date.year, real_date.month + 1, 1)
@@ -201,7 +201,7 @@ def calculate_lags(station):
                     mean_var_D = mean(get_range_analysis_interval_values(station,'D', iter_year, month))
 
                     # get values and calculate mean_var_I
-                    mean_var_I = mean(get_range_analysis_interval_values(station,'I', iter_year, month))
+                    mean_var_I = mean(get_range_analysis_interval_values(station,'I', iter_year, month, lag=lag))
 
                     # add line in list: Lag_X
                     vars()['Lag_' + str(lag)].append([date(iter_year, month, 1),
@@ -230,7 +230,7 @@ def calculate_lags(station):
                 csv_name = os.path.join(dir_lag[lag],
                     _('Mean_lag_{0}_{1}days_month_{2}_{3}_'
                       '{4}_{5}_{6}_({7}-{8}).csv')
-                    .format(lag, station.analysis_interval_num_days,
+                    .format(lag, globals_vars.analysis_interval_num_days,
                         month, station.code,
                         station.name, station.type_D,
                         station.type_I,

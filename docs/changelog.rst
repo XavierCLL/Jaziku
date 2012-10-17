@@ -10,13 +10,15 @@ Changelog
 news
 ++++
 
-- Rewrite, reformation and reorganization all Jaziku project.
+- Modularization, rewrite, reformation and reorganization all Jaziku project,
+  based on develop it during of 1 year I know better the perspective to future
 - New: (eda) descriptive statistic, this calculate many statistics for var D
   make files and graphs contrast to stations and altitude
 - Reformatted runfile adaptation for requirements in eda, these are; new
-  parameter in station list "Alt" (altitude), and the type, limits thresholds
-  and path_to:file_var_I now are static and you set these options in
-  "general options" and (of course) delete these parameters in stations list
+  parameter in station list "Alt" (altitude), and the type, limits thresholds,
+  path_to_file_var_I, the analysis interval, the 9 values for forecasting and
+  forecasting date now are static and you set these options in "configuration run"
+  in runfile and (of course) delete these parameters in stations list
 - Accept new valid null 'nan' (Not a Number) for input series, now this
   is the default and recommended valid null.
 - New: (eda) graphs inspection of series for each station and mosaic
@@ -33,6 +35,8 @@ news
 - New: Shapiro Wilks Test for EDA
 - Now accept spaces or tabulations as delimiters in input series of var D or I
 - Now the command to run Jaziku is without '-runfile', for example: jaziku runfile.csv
+- Now show the warning of limits of variables and notify about of interval var I below
+  of configuration run information
 
 fixes
 +++++
@@ -53,6 +57,7 @@ fixes
 - Fix when read NaN (standart null) from series
 - Fixes particular limits when these are 0
 - Check if runfile exist before open
+- Show the footer when finished
 
 
 0.4.2 (**2012-08-21**)

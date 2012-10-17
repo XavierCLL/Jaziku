@@ -65,7 +65,7 @@ def maps(grid):
        - 90 > grid.minlat > 90 or\
        - 180 > grid.minlat > 180:
         console.msg_error(_("The latitude and/or longitude are wrong,\n"
-                            "these should be decimal degrees."), False)
+                            "these must be decimal degrees."), False)
 
     # set variables for grid
     grid.grid_properties()
@@ -152,6 +152,8 @@ def maps(grid):
         # make ordinary kriging interpolation with HPGL
         matrix_interpolation = interpolation.ordinary_kriging(grid, inc_file)
 
+        # TODO: test if interpolation worked
+
         #matrix_interpolation = np.matrix(matrix_interpolation)
 
         #matrix_interpolation_vector = np.asarray(matrix_interpolation.T).reshape(-1)
@@ -184,11 +186,15 @@ def maps(grid):
         # call ncl command for make maps base on ncl_file
         call(["ncl", os.path.abspath(ncl_file)], shell=False, stdout=devnull)
 
+        # TODO: test if ncl worked
+
         ## TRANSFORM IMAGE
         # trim png created
         image_file = os.path.join(os.path.abspath(base_path_file) + ".png").replace(" ", r"\ ")
 
         call(["convert", image_file, "-trim", image_file], shell=False)
+
+        # TODO: test if convert worked
 
         # delete files
         #os.remove(os.path.abspath(base_path_file) + ".INC")

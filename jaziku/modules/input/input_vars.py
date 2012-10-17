@@ -75,7 +75,7 @@ def read_var_D(station):
         except:
             console.msg_error_line_stations(station,
                 (_("Problem with particular range validation for "
-                   "dependent\nvariable: {0} this should be "
+                   "dependent\nvariable: {0} this must be "
                    "a valid number, \"none\" or \"default\".").format(globals_vars.config_run['limit_var_D_below'],)))
         # above var D
     if globals_vars.config_run['limit_var_D_above'] == "default":
@@ -93,7 +93,7 @@ def read_var_D(station):
         except:
             console.msg_error_line_stations(station,
                 (_("Problem with particular range validation for "
-                   "dependent\nvariable: {0} this should be "
+                   "dependent\nvariable: {0} this must be "
                    "a valid number, \"none\" or \"default\".").format(globals_vars.config_run['limit_var_D_above'],)))
 
     # csv_file_D = csv.reader(fo, delimiter = '\t')
@@ -238,7 +238,7 @@ def read_var_I(station):
         except:
             console.msg_error_line_stations(station,
                 (_("Problem with particular range validation for "
-                   "dependent\nvariable: {0} this should be "
+                   "dependent\nvariable: {0} this must be "
                    "a valid number, \"none\" or \"default\".").format(globals_vars.config_run['limit_var_I_below'],)))
         # above var I
     if globals_vars.config_run['limit_var_I_above'] == "default":
@@ -256,7 +256,7 @@ def read_var_I(station):
         except:
             console.msg_error_line_stations(station,
                 (_("Problem with particular range validation for "
-                   "dependent\nvariable: {0} this should be "
+                   "dependent\nvariable: {0} this must be "
                    "a valid number, \"none\" or \"default\".").format(globals_vars.config_run['limit_var_I_above'],)))
 
 
