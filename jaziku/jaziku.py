@@ -188,7 +188,7 @@ def main():
     settings = settings_run.get()
 
     # -------------------------------------------------------------------------
-    # PRINT SETTINGS
+    # PRINT SETTINGS AND CONTINUE
 
     settings_run.show(settings)
 
@@ -216,6 +216,9 @@ def main():
                       "   will not be checked if they are valid in\n"
                       "   its limits coherent. This option is not\n"
                       "   recommended, use it with precaution"), color='yellow')
+
+    settings_run.continue_run()
+
 
     # -------------------------------------------------------------------------
     # DATA ANALYSIS

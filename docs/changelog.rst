@@ -37,6 +37,8 @@ news
 - Now the command to run Jaziku is without '-runfile', for example: jaziku runfile.csv
 - Now show the warning of limits of variables and notify about of interval var I below
   of configuration run information
+- After set all configuration to run, jaziku prompt to user for read the configuration
+  and ask for continue.
 
 fixes
 +++++
