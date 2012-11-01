@@ -307,9 +307,11 @@ def query_yes_no(question, default="yes"):
 
 def continue_run():
 
-    query = query_yes_no(_("\nPlease check the configuration to run, do you want to continue?"))
+    if not globals_vars.args.force:
 
-    if not query:
-        console.msg(_("\nexit."),color='red')
-        console.msg_footer()
-        sys.exit()
+        query = query_yes_no(_("\nPlease check the configuration to run, do you want to continue?"))
+
+        if not query:
+            console.msg(_("\nexit"),color='red')
+            console.msg_footer()
+            sys.exit()

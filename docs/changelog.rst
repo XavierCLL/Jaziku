@@ -39,6 +39,7 @@ news
   of configuration run information
 - After set all configuration to run, jaziku prompt to user for read the configuration
   and ask for continue.
+- Add argument '-f', for force all ask to default answer for continue
 
 fixes
 +++++
