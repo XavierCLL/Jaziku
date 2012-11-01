@@ -18,10 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
+
 import argparse  # http://docs.python.org/py3k/library/argparse.html
 
-from jaziku.utils import globals_vars
+from jaziku.utils import globals_vars, console
 
 #==============================================================================
 # PARSER AND CHECK ARGUMENTS
@@ -30,16 +30,17 @@ from jaziku.utils import globals_vars
 arguments = argparse.ArgumentParser(
                  prog=globals_vars.PROG_NAME,
                  description=_("Jaziku is a software for the implementation "
-                                 "of composite analysis\n metodology between "
+                                 "of composite analysis\nmethodology between "
                                  "the major indices of climate variability "
-                                 "and\n major meteorological variables in "
+                                 "and\nmajor meteorological variables in "
                                  "puntual scale.\n"),
-                 epilog="Jaziku, version {0} - {1}\n" \
-                          "Copyright © 2011-2012 IDEAM - Colombia"
-                          .format(globals_vars.VERSION, globals_vars.COMPILE_DATE),
-                          formatter_class=argparse.RawTextHelpFormatter)
+                 epilog=console.msg_footer(text=True),
+                 formatter_class=argparse.RawTextHelpFormatter)
 
 # Runfile argument
 arguments.add_argument('runfile', type=str,
-                       help=_('Path absolute or relative to configuration run file'))
+                       help=_('path absolute or relative to configuration run file'))
 
+# enable/disable force all ask to default answer for continue
+arguments.add_argument('-f','--force', action='store_true', default=False,
+    help=_('force all ask to default answer for continue'), required=False)

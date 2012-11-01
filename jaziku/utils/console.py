@@ -69,10 +69,15 @@ def msg(text, color=False, newline=True, indentation=0):
         else:
             print colored.red(text)
 
-def msg_footer():
-    print _("\nJaziku, version {0} - {1}.\n"
-            "Copyright © 2011-2012 IDEAM - Colombia")\
-            .format(globals_vars.VERSION, globals_vars.COMPILE_DATE)
+def msg_footer(text=False):
+
+    footer = _(u"\nJaziku, version {0} - {1}.\nCopyright © 2011-2012 IDEAM - Colombia")\
+              .format(globals_vars.VERSION, globals_vars.COMPILE_DATE)
+
+    if text:
+        return footer
+    else:
+        print footer
 
 def msg_error(text_error, wait_value=True):
     """
