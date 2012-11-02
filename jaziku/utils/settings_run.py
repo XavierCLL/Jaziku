@@ -188,6 +188,19 @@ def get():
         globals_vars.phenomenon_above = _('var_I_above')
         settings["phen_above_label"] = globals_vars.phenomenon_above
 
+    ## forecasting settings
+    if globals_vars.config_run['forecasting_process']:
+        settings["lag_0_phen_below"] = globals_vars.config_run['lag_0_phen_below']
+        settings["lag_0_phen_normal"] = globals_vars.config_run['lag_0_phen_normal']
+        settings["lag_0_phen_above"] = globals_vars.config_run['lag_0_phen_above']
+        settings["lag_1_phen_below"] = globals_vars.config_run['lag_1_phen_below']
+        settings["lag_1_phen_normal"] = globals_vars.config_run['lag_1_phen_normal']
+        settings["lag_1_phen_above"] = globals_vars.config_run['lag_1_phen_above']
+        settings["lag_2_phen_below"] = globals_vars.config_run['lag_2_phen_below']
+        settings["lag_2_phen_normal"] = globals_vars.config_run['lag_2_phen_normal']
+        settings["lag_2_phen_above"] = globals_vars.config_run['lag_2_phen_above']
+        settings["forecasting_date"] = colored.green(globals_vars.config_run['forecasting_date'])
+
     ## maps settings
     if globals_vars.config_run['maps']:
         if globals_vars.config_run['maps'] == "all":
@@ -266,6 +279,16 @@ def show(settings):
     print "   {0} ------ {1}".format("phen above label", settings["phen_above_label"])
     if globals_vars.config_run['forecasting_process']:
         console.msg("   Forecasting options", color='cyan')
+        print "   {0} ------ {1}".format("lag 0 phen below", settings["lag_0_phen_below"])
+        print "   {0} ----- {1}".format("lag 0 phen normal", settings["lag_0_phen_normal"])
+        print "   {0} ------ {1}".format("lag 0 phen above", settings["lag_0_phen_above"])
+        print "   {0} ------ {1}".format("lag 1 phen below", settings["lag_1_phen_below"])
+        print "   {0} ----- {1}".format("lag 1 phen normal", settings["lag_1_phen_normal"])
+        print "   {0} ------ {1}".format("lag 1 phen above", settings["lag_1_phen_above"])
+        print "   {0} ------ {1}".format("lag 2 phen below", settings["lag_2_phen_below"])
+        print "   {0} ----- {1}".format("lag 2 phen normal", settings["lag_2_phen_normal"])
+        print "   {0} ------ {1}".format("lag 2 phen above", settings["lag_2_phen_above"])
+        print "   {0} ------ {1}".format("forecasting date", settings["forecasting_date"])
     console.msg("   Maps options", color='cyan')
     print "   {0} ------------------ {1}".format("maps", settings["maps"])
     if globals_vars.config_run['maps']:
