@@ -93,27 +93,20 @@ import csv
 #from pylab import *
 from clint.textui import colored
 
-# internationalization:
+# internationalization and init languages variable "_()"
 import gettext
+from i18n import i18n
 
 # import local functions in jaziku/plugins
 from modules.station import Station
-from i18n import i18n
-from utils import globals_vars
 from utils import console
 from utils import settings_run
+from utils import globals_vars
 from modules.data_analysis import data_analysis
 from modules.input import input_arg
 from modules.input import input_runfile
 from modules.maps import maps
 from modules.maps.grid import Grid
-
-# internationalization:
-TRANSLATION_DOMAIN = "jaziku"
-LOCALE_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "i18n")
-gettext.bindtextdomain(TRANSLATION_DOMAIN, LOCALE_DIR)
-gettext.textdomain(TRANSLATION_DOMAIN)
-gettext.install(TRANSLATION_DOMAIN, LOCALE_DIR)
 
 
 #==============================================================================
