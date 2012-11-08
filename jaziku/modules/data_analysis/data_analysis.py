@@ -17,10 +17,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
+
 import gettext
 
 from jaziku.utils import  console
-from jaziku.modules.input.input_vars import read_var_D, read_var_I
 from jaziku.modules.station import Station
 import eda
 

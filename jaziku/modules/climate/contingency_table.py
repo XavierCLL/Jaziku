@@ -158,7 +158,7 @@ def get_thresholds_var_D(station):
         if station.first_iter:
             console.msg(_("\n > WARNING: You have defined the analog year,\n"
                            "   but the thresholds of var D must be\n"
-                           "   \"default\" for use the analog year .........."), color='yellow', newline=False)
+                           "   'default' for use the analog year .........."), color='yellow', newline=False)
 
     # if are define as percentile
     if (''.join(list(globals_vars.config_run['threshold_below_var_D'])[0:1]) == "p" and
@@ -265,11 +265,7 @@ def get_thresholds_var_I(station):
             "AREA_WHWP": if_var_I_is_AREA_WHWP
         }
 
-        if station.type_I not in select_threshold_var_I:
-            console.msg_error("the thresholds can't be define as \"default\" if the\n"
-                              "type of independent variable is a particular value.")
-        threshold_below_var_I,\
-        threshold_above_var_I = select_threshold_var_I[station.type_I]()
+        threshold_below_var_I, threshold_above_var_I = select_threshold_var_I[station.type_I]()
         return threshold_below_var_I, threshold_above_var_I
 
     # thresholds by below and by above of var I with standard deviation
@@ -427,11 +423,11 @@ def get_contingency_table(station, lag, month, day=None):
     # if threshold by below of independent variable is wrong
     if float(sum_per_column_percent[0]) == 0 and not globals_vars.threshold_problem[0]:
         console.msg(
-            _(u'\n\n > WARNING: The thresholds selected \"{0}\" and \"{1}\"\n'
-              u'   are not suitable for compound analysis of\n'
-              u'   variable \"{2}\" with relation to \"{3}\" inside\n'
-              u'   category \"{4}\". Therefore, the graphics\n'
-              u'   will not be created.')
+            _(u"\n\n > WARNING: The thresholds selected '{0}' and '{1}'\n"
+              u"   are not suitable for compound analysis of\n"
+              u"   variable '{2}' with relation to '{3}' inside\n"
+              u"   category '{4}'. Therefore, the graphics\n"
+              u"   will not be created.")
             .format(globals_vars.config_run['threshold_below_var_I'], globals_vars.config_run['threshold_above_var_I'],
                 station.type_D, station.type_I, globals_vars.phenomenon_below), color='yellow')
         globals_vars.threshold_problem[0] = True
@@ -439,11 +435,11 @@ def get_contingency_table(station, lag, month, day=None):
     # if threshold by below or above calculating normal phenomenon of independent variable is wrong
     if float(sum_per_column_percent[1]) == 0 and not globals_vars.threshold_problem[1]:
         console.msg(
-            _(u'\n\n > WARNING: The thresholds selected \"{0}\" and \"{1}\"\n'
-              u'   are not suitable for compound analysis of\n'
-              u'   variable \"{2}\" with relation to \"{3}\" inside\n'
-              u'   category \"{4}\". Therefore, the graphics\n'
-              u'   will not be created.')
+            _(u"\n\n > WARNING: The thresholds selected '{0}' and '{1}'\n"
+              u"   are not suitable for compound analysis of\n"
+              u"   variable '{2}' with relation to '{3}' inside\n"
+              u"   category '{4}'. Therefore, the graphics\n"
+              u"   will not be created.")
             .format(globals_vars.config_run['threshold_below_var_I'], globals_vars.config_run['threshold_above_var_I'],
                 station.type_D, station.type_I, globals_vars.phenomenon_normal), color='yellow')
         globals_vars.threshold_problem[1] = True
@@ -451,11 +447,11 @@ def get_contingency_table(station, lag, month, day=None):
     # if threshold by above of independent variable is wrong
     if float(sum_per_column_percent[2]) == 0 and not globals_vars.threshold_problem[2]:
         console.msg(
-            _(u'\n\n > WARNING: The thresholds selected \"{0}\" and \"{1}\"\n'
-              u'   are not suitable for compound analysis of\n'
-              u'   variable \"{2}\" with relation to \"{3}\" inside\n'
-              u'   category \"{4}\". Therefore, the graphics\n'
-              u'   will not be created.')
+            _(u"\n\n > WARNING: The thresholds selected '{0}' and '{1}'\n"
+              u"   are not suitable for compound analysis of\n"
+              u"   variable '{2}' with relation to '{3}' inside\n"
+              u"   category '{4}'. Therefore, the graphics\n"
+              u"   will not be created.")
             .format(globals_vars.config_run['threshold_below_var_I'], globals_vars.config_run['threshold_above_var_I'],
                 station.type_D, station.type_I, globals_vars.phenomenon_above), color='yellow')
         globals_vars.threshold_problem[2] = True

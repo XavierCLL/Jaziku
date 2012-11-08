@@ -65,7 +65,7 @@ def read_runfile():
 
             if len(line_in_run_file) <= 1:
                 console.msg_error(_(
-                    "error read line in \"CONFIGURATION RUN\" in runfile,"
+                    "error read line in 'CONFIGURATION RUN' in runfile,"
                     " line {0}:\n{1}, no was defined.")
                 .format(globals_vars.runfile.line_num, line_in_run_file[0]), False)
 
@@ -91,7 +91,7 @@ def read_runfile():
                     in_station_list = True
                 else:
                     console.msg_error(_(
-                        "error read line in \"CONFIGURATION RUN\" in runfile, line {0}:\n{1}")
+                        "error read line in 'CONFIGURATION RUN' in runfile, line {0}:\n{1}")
                     .format(globals_vars.runfile.line_num, line_in_run_file[0]), False)
 
         # read GRIDS LIST
@@ -121,7 +121,7 @@ def read_runfile():
                     in_grids_list = False
                     in_station_list = True
                 else:
-                    console.msg_error(_("error read line in \"GRIDS LIST\" in runfile, line {0}:\n{1}")
+                    console.msg_error(_("error read line in 'GRIDS LIST' in runfile, line {0}:\n{1}")
                     .format(globals_vars.runfile.line_num, line_in_run_file[0]), False)
 
         # read STATIONS LIST
@@ -140,28 +140,6 @@ def read_runfile():
     if not globals_vars.config_run['climate_process']:
         globals_vars.config_run['forecasting_process'] = False
         globals_vars.config_run['maps'] = False
-
-    # analysis interval
-    if globals_vars.config_run['analysis_interval'] not in globals_vars.options_analysis_interval:
-        console.msg_error(_("The 'analysis_interval' defined in runfile {0} is invalid,\n"
-                          "must be one of these: {1}")
-                         .format(globals_vars.config_run['analysis_interval'],
-                                 ', '.join(globals_vars.options_analysis_interval)), False)
-
-    if globals_vars.config_run['analysis_interval'] != "trimester":
-        # detect analysis_interval number from string
-        _count = 0
-        for digit in globals_vars.config_run['analysis_interval']:
-            try:
-                int(digit)
-                _count += 1
-            except:
-                pass
-        globals_vars.analysis_interval_num_days = int(globals_vars.config_run['analysis_interval'][0:_count])
-
-    translate_analysis_interval = [_("5days"), _("10days"), _("15days"), _("trimester")]
-    globals_vars.translate_analysis_interval\
-        = translate_analysis_interval[globals_vars.options_analysis_interval.index(globals_vars.config_run['analysis_interval'])]
 
     # if forecasting_process is activated
     if globals_vars.config_run['forecasting_process']:

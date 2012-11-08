@@ -166,8 +166,8 @@ class Station:
             console.msg(_("   Results will be made by trimesters"), color='cyan')
             if globals_vars.config_run['analysis_interval'] != "trimester":
                 text_error = _("var_D (and or not var_I) has data monthly but you define the\n"
-                               "analysis interval as \"{0}\", this must be, in this\n"
-                               "case, as \"trimester\".").format(globals_vars.config_run['analysis_interval'])
+                               "analysis interval as '{0}', this must be, in this\n"
+                               "case, as 'trimester' or use data daily.").format(globals_vars.config_run['analysis_interval'])
                 console.msg_error_line_stations(self, text_error)
         if self.state_of_data in [2, 4]:
             # if analysis_interval is defined by trimester but var_I or/and var_D has data
@@ -206,7 +206,7 @@ class Station:
             if not globals_vars.config_run['climate_process']:
                 console.msg_error(_("sorry, Jaziku can't run forecasting process "
                                     "without climate, this issue has not been implemented "
-                                    "yet, \nplease run again with the option \"-c\""))
+                                    "yet, \nplease run again with the option '-c'"))
             forecasting.forecasting(self)
 
 

@@ -185,37 +185,14 @@ def main():
     # -------------------------------------------------------------------------
     # GET/SET SETTINGS
 
-    settings = settings_run.get()
+    settings_run.get()
 
     # -------------------------------------------------------------------------
-    # PRINT SETTINGS AND CONTINUE
+    # PRINT AND CHECK SETTINGS, AND CONTINUE
 
-    settings_run.show(settings)
+    settings_run.check()
 
-    # Print some warnings and notifications
-
-    if globals_vars.config_run['path_to_file_var_I'] == 'internal':
-        internal_file_I_name = globals_vars.internal_var_I_files[globals_vars.config_run['type_var_I']]
-        split_internal_var_I = internal_file_I_name.split(".")[0].split("_")
-        console.msg(
-            _("\n > You are using internal files for independent\n"
-              "   variable defined as {0} which has data from\n"
-              "   {1} to {2} and the source of data was\n"
-              "   obtained in {3}.\n"
-              "   url: {4}")
-            .format(split_internal_var_I[0], split_internal_var_I[1],
-                split_internal_var_I[2], ' '.join(split_internal_var_I[3::]),
-                globals_vars.internal_var_I_urls[globals_vars.config_run['type_var_I']]), color='yellow')
-
-    if (globals_vars.config_run['limit_var_D_below'] == 'none' or
-        globals_vars.config_run['limit_var_D_above'] == 'none' or
-        globals_vars.config_run['limit_var_I_below'] == 'none' or
-        globals_vars.config_run['limit_var_I_above'] == 'none'):
-        console.msg(_("\n > WARNING: you are using one or more limits as\n"
-                      "   \"none\" value, this means that series values\n"
-                      "   will not be checked if they are valid in\n"
-                      "   its limits coherent. This option is not\n"
-                      "   recommended, use it with precaution"), color='yellow')
+    settings_run.show()
 
     settings_run.continue_run()
 
@@ -224,11 +201,11 @@ def main():
     # DATA ANALYSIS
 
     if globals_vars.config_run['data_analysis']:
-
         print _("\n\n"
                 "#################### DATA ANALYSIS PROCESS #####################\n"
-                "# Data analysis is ........                                    #\n"
-                "# Data analysis is ........                                    #\n"
+                "# Data analysis module, this report outliers, made the         #\n"
+                "# assessing the homogeneity and several statistical values     #\n"
+                "# of the series.                                               #\n"
                 "################################################################\n")
 
         # data analysis dir output result

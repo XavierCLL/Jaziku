@@ -57,45 +57,6 @@ def read_var_D(station):
 
     csv_file_D = csv.reader(station.file_D, delimiter=delimiter)
 
-    # check and validate if file D is defined as particular file with
-    # particular range validation
-    # below var D
-    if globals_vars.config_run['limit_var_D_below'] == "default":
-        # validation type_D
-        if station.type_D not in globals_vars.types_var_D:
-            console.msg_error_line_stations(station,
-                _("{0} is not valid type for dependence variable"
-                  " if you defined LIMIT VAR D BELOW/ABOVE as \"default\".")
-                .format(station.type_D))
-    elif globals_vars.config_run['limit_var_D_below'] in ["none", None]:
-        globals_vars.config_run['limit_var_D_below'] = None
-    else:
-        try:
-            globals_vars.config_run['limit_var_D_below'] = float(str(globals_vars.config_run['limit_var_D_below']).replace(',', '.'))
-        except:
-            console.msg_error_line_stations(station,
-                (_("Problem with particular range validation for "
-                   "dependent\nvariable: {0} this must be "
-                   "a valid number, \"none\" or \"default\".").format(globals_vars.config_run['limit_var_D_below'],)))
-        # above var D
-    if globals_vars.config_run['limit_var_D_above'] == "default":
-        # validation type_D
-        if station.type_D not in globals_vars.types_var_D:
-            console.msg_error_line_stations(station,
-                _("{0} is not valid type for dependence variable"
-                  " if you defined LIMIT VAR D BELOW/ABOVE as \"default\".")
-                .format(station.type_D))
-    elif globals_vars.config_run['limit_var_D_above'] in ["none", None]:
-        globals_vars.config_run['limit_var_D_above'] = None
-    else:
-        try:
-            globals_vars.config_run['limit_var_D_above'] = float(str(globals_vars.config_run['limit_var_D_above']).replace(',', '.'))
-        except:
-            console.msg_error_line_stations(station,
-                (_("Problem with particular range validation for "
-                   "dependent\nvariable: {0} this must be "
-                   "a valid number, \"none\" or \"default\".").format(globals_vars.config_run['limit_var_D_above'],)))
-
     # csv_file_D = csv.reader(fo, delimiter = '\t')
     # csv_file_D.write(data.replace('\x00', ''))
 
@@ -117,7 +78,7 @@ def read_var_D(station):
 
         except Exception, e:
             console.msg_error(_(
-                "Reading from file \"{0}\" in line: {1}\n\n"
+                "Reading from file '{0}' in line: {1}\n\n"
                 "this could be caused by wrong line or garbage "
                 "character,\nplease check manually, fix it and "
                 "run again.")
@@ -141,7 +102,7 @@ def read_var_D(station):
                 if not first and date(year, month, day) + relativedelta(days= -1) != date_D[-1]:
                     missing_date = date_D[-1] + relativedelta(days= +1)
                     console.msg_error(_(
-                        "Reading var D from file \"{0}\" in line: {1}\n\n"
+                        "Reading var D from file '{0}' in line: {1}\n\n"
                         "Jaziku detected missing value for date: {2}")
                     .format(station.file_D.name,
                         csv_file_D.line_num,
@@ -153,7 +114,7 @@ def read_var_D(station):
                 if not first and date(year, month, day) + relativedelta(months= -1) != date_D[-1]:
                     missing_date = date_D[-1] + relativedelta(months= +1)
                     console.msg_error(_(
-                        "Reading var D from file \"{0}\" in line: {1}\n\n"
+                        "Reading var D from file '{0}' in line: {1}\n\n"
                         "Jaziku detected missing value for date: {2}-{3}")
                     .format(station.file_D.name,
                         csv_file_D.line_num,
@@ -172,7 +133,7 @@ def read_var_D(station):
                 station.var_D.frequency_data))
 
         except Exception, e:
-            console.msg_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
+            console.msg_error(_("Reading from file '{0}' in line: {1}\n\n{2}")
             .format(station.file_D.name, csv_file_D.line_num, e), False)
 
         if first:
@@ -201,64 +162,12 @@ def read_var_I(station):
     # read from internal variable independent files of Jaziku, check
     # and notify if Jaziku are using the independent variable inside
     # located in plugins/var_I/
-    if station.file_I == "internal":
-        if station.type_I in globals_vars.internal_var_I_types:
-            internal_file_I_name = globals_vars.internal_var_I_files[station.type_I]
-            internal_file_I_dir \
-                = os.path.join(globals_vars.ROOT_DIR, 'data', 'var_I', internal_file_I_name)
-            open_file_I = open(internal_file_I_dir, 'r')
-        else:
-            console.msg_error_line_stations(station,
-                _("you defined that Jaziku get data of independent variable\n"
-                "from internal files but the file for the type of\n"
-                "independent variable \"{0}\" don't exist").format(station.type_I))
+    if globals_vars.config_run["path_to_file_var_I"] == "internal":
+        internal_file_I_name = globals_vars.internal_var_I_files[globals_vars.config_run["type_var_I"]]
+        internal_file_I_dir = os.path.join(globals_vars.ROOT_DIR, 'data', 'var_I', internal_file_I_name)
+        open_file_I = open(internal_file_I_dir, 'r')
     else:
-        try:
-            open_file_I = open(station.file_I, 'r')
-        except:
-            console.msg_error_line_stations(station,
-                _("Can't open file '{0}' for var I, \nif you want run var I with internals files of jaziku\n"
-                "you need set 'PATH TO FILE VAR I' as 'internal'").format(station.file_I))
-
-    # check and validate if file I is defined as particular file with
-    # particular range validation
-    # below var I
-    if globals_vars.config_run['limit_var_I_below'] == "default":
-        # validation type_I
-        if station.type_I not in globals_vars.types_var_I:
-            console.msg_error_line_stations(station,
-                _("{0} is not valid type for independence variable"
-                  " if you defined LIMIT VAR I BELOW/ABOVE as \"default\".")
-                .format(station.type_I))
-    elif globals_vars.config_run['limit_var_I_below'] in ["none", None]:
-        globals_vars.config_run['limit_var_I_below'] = None
-    else:
-        try:
-            globals_vars.config_run['limit_var_I_below'] = float(str(globals_vars.config_run['limit_var_I_below']).replace(',', '.'))
-        except:
-            console.msg_error_line_stations(station,
-                (_("Problem with particular range validation for "
-                   "dependent\nvariable: {0} this must be "
-                   "a valid number, \"none\" or \"default\".").format(globals_vars.config_run['limit_var_I_below'],)))
-        # above var I
-    if globals_vars.config_run['limit_var_I_above'] == "default":
-        # validation type_I
-        if station.type_I not in globals_vars.types_var_I:
-            console.msg_error_line_stations(station,
-                _("{0} is not valid type for independence variable"
-                  " if you defined LIMIT VAR I BELOW/ABOVE as \"default\".")
-                .format(station.type_I))
-    elif globals_vars.config_run['limit_var_I_above'] in ["none", None]:
-        globals_vars.config_run['limit_var_I_above'] = None
-    else:
-        try:
-            globals_vars.config_run['limit_var_I_above'] = float(str(globals_vars.config_run['limit_var_I_above']).replace(',', '.'))
-        except:
-            console.msg_error_line_stations(station,
-                (_("Problem with particular range validation for "
-                   "dependent\nvariable: {0} this must be "
-                   "a valid number, \"none\" or \"default\".").format(globals_vars.config_run['limit_var_I_above'],)))
-
+        open_file_I = open(globals_vars.config_run["path_to_file_var_I"], 'r')
 
     # The series accept two delimiters: spaces (' ') or tabulation ('\t')
     # this check which delimiter is using this file
@@ -287,7 +196,7 @@ def read_var_I(station):
             row[1] = row[1].replace(',', '.')
         except Exception, e:
             console.msg_error(_(
-                "Reading from file \"{0}\" in line: {1}\n\n"
+                "Reading from file '{0}' in line: {1}\n\n"
                 "this could be caused by wrong line or garbage "
                 "character,\nplease check manually, fix it and "
                 "run again.")
@@ -311,7 +220,7 @@ def read_var_I(station):
                 if not first and date(year, month, day) + relativedelta(days= -1) != date_I[-1]:
                     missing_date = date_I[-1] + relativedelta(days= +1)
                     console.msg_error(_(
-                        "Reading var I from file \"{0}\" in line: {1}\n\n"
+                        "Reading var I from file '{0}' in line: {1}\n\n"
                         "Jaziku detected missing value for date: {2}")
                     .format(open_file_I.name,
                         csv_file_I.line_num,
@@ -323,7 +232,7 @@ def read_var_I(station):
                 if not first and date(year, month, day) + relativedelta(months= -1) != date_I[-1]:
                     missing_date = date_I[-1] + relativedelta(months= +1)
                     console.msg_error(_(
-                        "Reading var I from file \"{0}\" in line: {1}\n\n"
+                        "Reading var I from file '{0}' in line: {1}\n\n"
                         "Jaziku detected missing value for date: {2}-{3}")
                     .format(open_file_I.name,
                         csv_file_I.line_num,
@@ -339,7 +248,7 @@ def read_var_I(station):
             var_I.append(input_validation.validation_var_I(station.type_I, value))
 
         except Exception, e:
-            console.msg_error(_("Reading from file \"{0}\" in line: {1}\n\n{2}")
+            console.msg_error(_("Reading from file '{0}' in line: {1}\n\n{2}")
             .format(open_file_I.name, csv_file_I.line_num, e), False)
 
         if first:

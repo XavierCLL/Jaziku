@@ -22,6 +22,7 @@
 #==============================================================================
 # PRINT FUNCTIONS
 # color text console  #http://pypi.python.org/pypi/clint/
+import csv
 
 import os
 import sys
@@ -100,10 +101,28 @@ def msg_error_line_stations(station, text_error):
     Print error generic function occurred in a line from stations file.
     """
 
-    msg_error(_("Reading the stations from the runfile \"{0}\" in line {1}:\n")
-                .format(globals_vars.runfile_path, station.line_num) +
-                ';'.join(station.line_station) + "\n\n" + str(text_error))
+    msg_error(_("Reading the stations from the runfile in line {0}:\n")
+                .format(station.line_num) + ' > ' +
+                ' '.join(station.line_station) + "\n\n" + str(text_error))
 
+
+def msg_error_configuration(variable, text_error, show_settings=True):
+    """
+    Print error generic function occurred in configuration run.
+    """
+    if show_settings:
+        from jaziku.utils import settings_run
+        settings_run.show(stop_in=variable)
+
+    runfile_open = open(globals_vars.runfile_path, 'rb')
+    runfile = (x.replace('\0', '') for x in runfile_open)
+    runfile = csv.reader(runfile, delimiter=';')
+
+    for num_line, line_in_run_file in enumerate(runfile):
+        if line_in_run_file[0] == variable:
+            msg_error(_("The Configuration run from the runfile in line {0}:\n")
+                      .format(num_line+1) + ' > ' +
+                      ' '.join(line_in_run_file) + "\n\n" + str(text_error), False)
 
 class redirectStdStreams(object):
     """

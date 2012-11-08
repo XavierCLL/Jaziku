@@ -41,7 +41,7 @@ def column(matrix, i):
 def climate_graphs(station):
     """
     Generate bar charts and mosaics of probability for below, normal and
-    above for independence variable for the composite analysis.
+    above for independent variable for the composite analysis.
     """
 
     # main directory for save graphics
