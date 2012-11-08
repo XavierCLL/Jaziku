@@ -97,7 +97,7 @@ def climate_data_for_maps(station):
                             csv_name \
                                 = os.path.join(maps_data_phenom, _(u'Map_Data_lag_{0}_{1}_{2}.csv')
                                     .format(lag,
-                                            globals_vars.month_text[month - 1] + "_" + str(day),
+                                            globals_vars.get_month_in_text(month - 1) + "_" + str(day),
                                             phenomenon[category]))
 
                             if os.path.isfile(csv_name):
@@ -200,11 +200,11 @@ def forecasting_data_for_maps(station):
 
     # select text for forecasting date
     if station.state_of_data in [1, 3]:
-        forecasting_date_formatted = globals_vars.trim_text[globals_vars.forecasting_date - 1]
+        forecasting_date_formatted = globals_vars.get_trimester_in_text(globals_vars.forecasting_date - 1)
     if station.state_of_data in [2, 4]:
         month = globals_vars.forecasting_date[0]
         day = globals_vars.forecasting_date[1]
-        forecasting_date_formatted = globals_vars.month_text[month - 1] + "_" + str(day)
+        forecasting_date_formatted = globals_vars.get_month_in_text(month - 1) + "_" + str(day)
 
     if forecasting_date_formatted not in globals_vars.maps_files_forecasting[globals_vars.config_run['analysis_interval']]:
 
@@ -215,14 +215,14 @@ def forecasting_data_for_maps(station):
 
                 maps_dir = os.path.join(globals_vars.forecasting_dir, _('maps'),
                     globals_vars.translate_analysis_interval,
-                    globals_vars.trim_text[globals_vars.forecasting_date - 1])
+                    globals_vars.get_trimester_in_text(globals_vars.forecasting_date - 1))
 
                 if not os.path.isdir(maps_dir):
                     os.makedirs(maps_dir)
 
                 # write the headers in file
                 csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}_{1}.csv')
-                .format(lag, globals_vars.trim_text[globals_vars.forecasting_date - 1]))
+                .format(lag, globals_vars.get_trimester_in_text(globals_vars.forecasting_date - 1)))
 
                 if os.path.isfile(csv_name):
                     os.remove(csv_name)

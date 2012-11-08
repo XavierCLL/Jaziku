@@ -18,16 +18,15 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, sys
+import os
 import locale
 import gettext
 from clint.textui import colored
 
-from jaziku.utils import console
-
 # Change this variable to your app name!
 #  The translation files will be under
 #  @LOCALE_DIR@/@LANGUAGE@/LC_MESSAGES/@APP_NAME@.mo
+
 APP_NAME = 'jaziku'
 
 LOCALE_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -37,23 +36,40 @@ LOCALE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 languages = [name for name in os.listdir(LOCALE_DIR) if os.path.isdir(os.path.join(LOCALE_DIR, name))]
 
-DEFAULT_LANGUAGES = ['en']
+#DEFAULT_LANGUAGES = ['en']
 
 # Concat all languages (env + default locale),
 #  and here we have the languages and location of the translations
-languages += DEFAULT_LANGUAGES
+#languages += DEFAULT_LANGUAGES
 
 # Lets tell those details to gettext
 #  (nothing to change here for you)
-gettext.install (True,localedir=None, unicode=1)
 
-gettext.find(APP_NAME, LOCALE_DIR)
+#gettext.install (True,localedir=None, unicode=1)
 
-gettext.textdomain(APP_NAME)
+#gettext.find(APP_NAME, LOCALE_DIR)
 
-gettext.bind_textdomain_codeset(APP_NAME, "UTF-8")
+#gettext.textdomain(APP_NAME)
 
-language = gettext.translation(APP_NAME, LOCALE_DIR, languages = languages, fallback = True)
+#gettext.bind_textdomain_codeset(APP_NAME, "UTF-8")
+
+#language = gettext.translation(APP_NAME, LOCALE_DIR, languages = languages, fallback = True)
+
+
+# init languages
+
+locale_language = locale.getdefaultlocale()[0][0:2]
+try:
+    lang = gettext.translation(APP_NAME, LOCALE_DIR,
+        languages=[locale_language],
+        codeset="utf-8")
+    os.environ["LANG"] = locale_language
+    lang.install()
+except:
+    lang = gettext.NullTranslations()
+    os.environ["LANG"] = "en"
+    lang.install()
+
 
 
 # -------------------------------------------------------------------------
@@ -66,6 +82,8 @@ def set_language(language):
     return to english as default language.
     """
     #_ = language.ugettext
+
+    from jaziku.utils import console
 
     if language and language != "autodetect":
         if language == "en" or language == "EN" or language == "En":
@@ -108,3 +126,4 @@ def set_language(language):
             lang.install()
 
     return settings_language
+

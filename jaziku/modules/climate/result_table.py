@@ -196,8 +196,8 @@ def composite_analysis(station):
                 thresholds_var_D_var_I = get_contingency_table(station, lag, month)
 
                 # for print text date in result table
-                var_D_text = globals_vars.trim_text[month - 1]
-                var_I_text = globals_vars.trim_text[month - 1 - lag]
+                var_D_text = globals_vars.get_trimester_in_text(month - 1)
+                var_I_text = globals_vars.get_trimester_in_text(month - 1 - lag)
 
                 pearson, is_sig_risk_analysis_list = main_process()  # <-
 
@@ -220,8 +220,8 @@ def composite_analysis(station):
                     date_now = date(2000, month, day)
 
                     # for print text date in result table
-                    var_D_text = globals_vars.month_text[date_now.month - 1] + " " + str(day)
-                    var_I_text = globals_vars.month_text[(date_now - relativedelta(days=(station.range_analysis_interval[1] - 1) * lag)).month - 1] +\
+                    var_D_text = globals_vars.get_month_in_text(date_now.month - 1) + " " + str(day)
+                    var_I_text = globals_vars.get_month_in_text((date_now - relativedelta(days=(station.range_analysis_interval[1] - 1) * lag)).month - 1) +\
                                  " " + str(station.range_analysis_interval[station.range_analysis_interval.index(day) - lag])
 
                     pearson, is_sig_risk_analysis_list = main_process()  # <-
