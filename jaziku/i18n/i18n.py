@@ -77,7 +77,7 @@ def set_language(language):
                     languages=[language],
                     codeset="utf-8")
             except:
-                console.msg_error(_("\"{0}\" language not available.").format(language))
+                console.msg_error(_("'{0}' language not available.").format(language), False)
     
         if 'lang' in locals():
             os.environ["LANG"] = language

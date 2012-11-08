@@ -30,8 +30,8 @@ from jaziku.utils.mean import mean
 
 class Variable():
     """
-    Class for save data raw, data dates, date filtered for dependence or
-    independence variable of a station.
+    Class for save data raw, data dates, date filtered for dependent or
+    independent variable of a station.
     """
     def __init__(self, type):
         if type in ['D','I']:

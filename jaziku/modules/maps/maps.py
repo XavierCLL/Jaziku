@@ -19,7 +19,6 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import sys
 import csv
 import numpy
 from subprocess import call
@@ -109,7 +108,7 @@ def maps(grid):
                 console.msg(
                     _("\n > WARNING: The point lat:{lat} lon:{lon}\n"
                       "   of the station code: {code} was not added\n"
-                      "   because the value of index is \"nan\" (null) .").
+                      "   because the value of index is 'nan' (null) .").
                     format(lat=latitude, lon=longitude, code=line[0]), color='yellow', newline=False)
             if point_state == "point not added" and message_warning:
                 console.msg(

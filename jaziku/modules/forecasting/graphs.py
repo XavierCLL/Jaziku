@@ -32,7 +32,7 @@ from jaziku.utils import globals_vars
 def forecasting_graphs(station):
     """
     Generate pie charts and mosaics of probability for below, normal and
-    above for independence variable for the composite analysis.
+    above for independent variable for the composite analysis.
     """
 
     image_open_list = []

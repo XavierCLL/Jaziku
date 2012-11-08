@@ -41,14 +41,14 @@ def forecasting(station):
         try:
             globals_vars.forecasting_date = int(globals_vars.config_run['forecasting_date'])
         except:
-            console.msg_error_line_stations(station,
-                _("Trimester forecasting \"{0}\" is invalid, "
-                  "must be integer number").format(globals_vars.config_run['forecasting_date']))
+            console.msg_error_configuration('forecasting_date',
+                _("Trimester forecasting '{0}' is invalid, "
+                  "must be integer number").format(globals_vars.config_run['forecasting_date']), show_settings=False)
         if not (1 <= globals_vars.forecasting_date <= 12):
-            console.msg_error_line_stations(station,
-                _("Trimester forecasting \"{0}\" is invalid, "
+            console.msg_error_configuration('forecasting_date',
+                _("Trimester forecasting '{0}' is invalid, "
                   "must be a month valid number (1-12)")
-                .format(globals_vars.forecasting_date))
+                .format(globals_vars.forecasting_date), show_settings=False)
     if station.state_of_data in [2, 4]:
         try:
             globals_vars.forecasting_date = globals_vars.config_run['forecasting_date'].replace('-', '/')
@@ -56,22 +56,22 @@ def forecasting(station):
             globals_vars.forecasting_date[0] = int(globals_vars.forecasting_date[0])
             globals_vars.forecasting_date[1] = int(globals_vars.forecasting_date[1])
         except:
-            console.msg_error_line_stations(station,
-                _("Month or day for calculate forecasting \"{0}\" is invalid, \n"
+            console.msg_error_configuration('forecasting_date',
+                _("Month or day for calculate forecasting '{0}' is invalid, \n"
                   "must be month/day or month-day (e.g. 03/11)")
-                .format(globals_vars.config_run['forecasting_date']))
+                .format(globals_vars.config_run['forecasting_date']), show_settings=False)
         if not (1 <= globals_vars.forecasting_date[0] <= 12):
-            console.msg_error_line_stations(station,
-                _("Month for forecasting process \"{0}\" is invalid, \n"
+            console.msg_error_configuration('forecasting_date',
+                _("Month for forecasting process '{0}' is invalid, \n"
                   "must be a month valid number (1-12)")
-                .format(globals_vars.forecasting_date[0]))
+                .format(globals_vars.forecasting_date[0]), show_settings=False)
         if globals_vars.forecasting_date[1] not in station.range_analysis_interval:
-            console.msg_error_line_stations(station,
-                _("Start day (month/day) for forecasting process \"{0}\"\nis invalid, "
+            console.msg_error_configuration('forecasting_date',
+                _("Start day (month/day) for forecasting process '{0}'\nis invalid, "
                   "must be a valid start day based on\nrange analysis "
                   "interval, the valid start days for\n{1} are: {2}")
                 .format(globals_vars.forecasting_date[1], globals_vars.translate_analysis_interval,
-                    station.range_analysis_interval))
+                    station.range_analysis_interval), show_settings=False)
 
     # create directory for output files
     if not os.path.isdir(globals_vars.forecasting_dir):

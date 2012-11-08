@@ -239,9 +239,9 @@ def search_and_set_internal_grid(grid):
         else:
             raise
     except:
-        console.msg_error(_("\nCan't set internal shape \"{0}\",\n"
+        console.msg_error(_("\nCan't set internal shape '{0}',\n"
                             "please check the grid parameter; area,\n"
-                            "region and/or country name are wrong.\n").format(grid.grid_fullname))
+                            "region and/or country name are wrong.\n").format(grid.grid_fullname), False)
 
 
 def set_particular_grid(grid):
