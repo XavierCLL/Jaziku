@@ -119,6 +119,9 @@ def msg_error_configuration(variable, text_error, show_settings=True):
     runfile = csv.reader(runfile, delimiter=';')
 
     for num_line, line_in_run_file in enumerate(runfile):
+        # if line is null o empty, e.g. empty but with tabs or spaces
+        if not line_in_run_file or not line_in_run_file[0].strip() or line_in_run_file == []:
+            continue
         if line_in_run_file[0] == variable:
             msg_error(_("The Configuration run from the runfile in line {0}:\n")
                       .format(num_line+1) + ' > ' +

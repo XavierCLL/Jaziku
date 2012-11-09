@@ -25,26 +25,26 @@ import sys
 
 from jaziku.utils import globals_vars, console
 
-global settings
-# set settings default
-settings = {"data_analysis": colored.red(_("disabled")),
-            "climate_process": colored.red(_("disabled")),
-            "forecasting_process": colored.red(_("disabled")),
-            "process_period": colored.red(_("disabled")),
-            "analog_year": colored.red(_("disabled")),
-            "lags": None,
-            "language": globals_vars.config_run['language'],
-            "consistent_data": colored.red(_("disabled")),
-            "risk_analysis": colored.red(_("disabled")),
-            "graphics": colored.red(_("disabled")),
-            "phen_below_label": "-",
-            "phen_normal_label": "-",
-            "phen_above_label": "-",
-            "maps": colored.red(_("disabled")),
-            "overlapping": None,
-            "shape_boundary": colored.red(_("disabled"))}
 
 def get():
+
+    # set settings default
+    settings = {"data_analysis": colored.red(_("disabled")),
+                "climate_process": colored.red(_("disabled")),
+                "forecasting_process": colored.red(_("disabled")),
+                "process_period": colored.red(_("disabled")),
+                "analog_year": colored.red(_("disabled")),
+                "lags": None,
+                "language": globals_vars.config_run['language'],
+                "consistent_data": colored.red(_("disabled")),
+                "risk_analysis": colored.red(_("disabled")),
+                "graphics": colored.red(_("disabled")),
+                "phen_below_label": "-",
+                "phen_normal_label": "-",
+                "phen_above_label": "-",
+                "maps": colored.red(_("disabled")),
+                "overlapping": None,
+                "shape_boundary": colored.red(_("disabled"))}
 
     ## general options
     # data_analysis
@@ -277,7 +277,12 @@ def get():
         settings["maps"] = colored.red(_("disabled"))
 
 
+    return settings
+
+
 def show(stop_in=None):
+
+    settings = globals_vars.settings
 
     if stop_in != None:
         settings[stop_in] = '?'

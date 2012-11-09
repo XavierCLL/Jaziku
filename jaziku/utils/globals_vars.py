@@ -187,6 +187,9 @@ config_run = {'data_analysis': None,
               'overlapping': None,
               "shape_boundary": None}
 
+# settings run
+settings = {}
+
 # globals variable for defined lags, lags = [ 0, 1 and/or 2 ]
 lags = []
 
