@@ -178,7 +178,7 @@ def main():
     # -------------------------------------------------------------------------
     # GET/SET SETTINGS
 
-    settings_run.get()
+    globals_vars.settings = settings_run.get()
 
     # -------------------------------------------------------------------------
     # PRINT AND CHECK SETTINGS, AND CONTINUE
