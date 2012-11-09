@@ -193,7 +193,7 @@ def main(stations):
         console.msg(_("done"), color='green')
     else:
         console.msg(_("fail\n > WARNING: There is only one station for process\n"
-                      "   the scatter plots of series, this need more \n"
+                      "   the frequency histogram, this need more \n"
                       "   of one station."), color="yellow")
 
     # -------------------------------------------------------------------------
@@ -537,16 +537,16 @@ def climatology(stations):
             var_D.daily2monthly()
 
         months_mean = []
-        months_max = []
-        months_min = []
+        months_max = [] # value to add to mean for max value
+        months_min = [] # value to subtract to mean for min value
         for m in range(1,13):
             values = []
             for iter, value in  enumerate(var_D.data):
                 if var_D.date[iter].month == m:
                     values.append(value)
             months_mean.append(mean(values))
-            months_max.append(max(values))
-            months_min.append(min(values))
+            months_max.append(max(values) - months_mean[-1])
+            months_min.append(months_mean[-1] - min(values))
 
         csv_climatology_table.writerow(line + [format_out.number(i) for i in months_mean])
 
@@ -620,8 +620,8 @@ def climatology(stations):
 
         if station.var_D.frequency_data == "daily" and not globals_vars.config_run['analysis_interval'] == "trimester":
             y_mean = []
-            y_max = []
-            y_min = []
+            y_max = [] # value to add to mean for max value
+            y_min = [] # value to subtract to mean for min value
             range_analysis_interval = get_range_analysis_interval(station)
             for month in range(1, 13):
                 for day in range_analysis_interval:
@@ -632,7 +632,6 @@ def climatology(stations):
                     iter_year = station.process_period['start']
                     # iteration for years from first-year +1 to end-year -1 inside
                     # range common_period
-                    y_values = []
                     while iter_year <= station.process_period['end']:
                         # test if day exist in month and year
                         if day > monthrange(iter_year, month)[1]:
@@ -645,8 +644,8 @@ def climatology(stations):
 
                         iter_year += 1
                     y_mean.append(mean(range_analysis_mean))
-                    y_max.append(mean(range_analysis_max))
-                    y_min.append(mean(range_analysis_min))
+                    y_max.append(mean(range_analysis_max) - y_mean[-1])
+                    y_min.append(y_mean[-1] - mean(range_analysis_min))
 
             x = range(1, len(y_mean)+1)
             x_step_label = len(y_mean)/12
@@ -682,21 +681,23 @@ def climatology(stations):
             ax.grid(True)
             ax.autoscale(tight=True)
 
+            x_scale_value = -0.013 -globals_vars.analysis_interval_num_days/600.0
+
             if type_var not in types_var_D:
                 # default for generic type for var D
                 ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, elinewidth=1.5)
-                zoom_graph(ax=ax, x_scale_below=-0.02,x_scale_above=-0.02, y_scale_below=-0.03, y_scale_above=-0.03)
+                zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_below=-0.04, y_scale_above=-0.04)
                 #bar(x, y, align='center', color='#638786')
             else:
                 if types_var_D[type_var]['graph'] == 'bar':
                     bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
                     ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#3C628E', mew=3, elinewidth=1.5)
-                    zoom_graph(ax=ax, x_scale_below=-0.02,x_scale_above=-0.02, y_scale_above=-0.03)
+                    zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_above=-0.04)
                 else:
                     #ax.plot(x, y, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
-                    ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=types_var_D[type_var]['graph'],
+                    ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-',
                         color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color'], mew=3, elinewidth=1.5)
-                    zoom_graph(ax=ax, x_scale_below=-0.02,x_scale_above=-0.02, y_scale_below=-0.03, y_scale_above=-0.03)
+                    zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_below=-0.04, y_scale_above=-0.04)
 
             # labels on both sides
             ax.tick_params(labeltop=False, labelright=True)
