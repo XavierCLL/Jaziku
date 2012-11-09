@@ -65,11 +65,11 @@ def main(stations):
     if not os.path.isdir(shapiro_wilks_dir):
         os.makedirs(shapiro_wilks_dir)
 
-    file_descriptive_statistics_var_D \
-        = os.path.join(shapiro_wilks_dir, _('Descriptive_Statistics_{0}.csv').format(globals_vars.config_run['type_var_D']))
+    file_descriptive_statistics_var_D\
+    = os.path.join(shapiro_wilks_dir, _('Descriptive_Statistics_{0}.csv').format(globals_vars.config_run['type_var_D']))
 
     file_descriptive_statistics_var_I\
-        = os.path.join(shapiro_wilks_dir, _('Descriptive_Statistics_{0}.csv').format(globals_vars.config_run['type_var_I']))
+    = os.path.join(shapiro_wilks_dir, _('Descriptive_Statistics_{0}.csv').format(globals_vars.config_run['type_var_I']))
 
     open_file_D = open(file_descriptive_statistics_var_D, 'w')
     csv_file_D = csv.writer(open_file_D, delimiter=';')
@@ -143,14 +143,14 @@ def main(stations):
         console.msg(_("done"), color='green')
     else:
         console.msg(_("fail\n > WARNING: There is only one station for process\n"
-                    "   the graphs for descriptive statistic need more \n"
-                    "   of one station."), color="yellow")
+                      "   the graphs for descriptive statistic need more \n"
+                      "   of one station."), color="yellow")
 
     # -------------------------------------------------------------------------
     # GRAPHS INSPECTION OF SERIES
 
     console.msg(_("Graphs inspection of series .......................... "), newline=False)
-    graphs_inspection_of_series(stations) #todo
+    #graphs_inspection_of_series(stations) #todo
     console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
@@ -176,7 +176,7 @@ def main(stations):
     console.msg(_("Scatter plots of series .............................. "), newline=False)
 
     if Station.stations_processed > 1:
-        scatter_plots_of_series(stations) #todo
+        #scatter_plots_of_series(stations) #todo
         console.msg(_("done"), color='green')
     else:
         console.msg(_("fail\n > WARNING: There is only one station for process\n"
@@ -377,7 +377,7 @@ def graphs_inspection_of_series(stations):
                     len_x = len(station.var_D.date_in_process_period)
                 if type == 'special_D':
                     len_x = len(station.var_I.date_in_process_period)
-            # dynamic with based of number of stations
+                # dynamic with based of number of stations
             if var.frequency_data == "monthly":
                 with_fig = len_x/10+4
             if var.frequency_data == "daily" or type == 'special_I' or type == 'special_D':
@@ -438,7 +438,7 @@ def graphs_inspection_of_series(stations):
                 ax.xaxis.set_major_locator(mdates.YearLocator())  # every year
                 ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
                 ax.xaxis.set_minor_locator(mdates.MonthLocator())  # every month
-            ## Y
+                ## Y
             # get units os type of var D or I
             if type_var in globals_vars.units_of_types_var_D:
                 units = globals_vars.get_units_of_type_var(type_var)
@@ -452,7 +452,7 @@ def graphs_inspection_of_series(stations):
             ax.grid(True)
             ax.autoscale(tight=True)
             zoom_graph(ax=ax, x_scale_below=x_scale_below,x_scale_above=x_scale_above,
-                       y_scale_below=y_scale_below, y_scale_above=y_scale_above)
+                y_scale_below=y_scale_below, y_scale_above=y_scale_above)
 
             fig.tight_layout()
 
@@ -478,7 +478,7 @@ def graphs_inspection_of_series(stations):
         # definition height and width of individual image
         width, height = image_var_D.size
         mosaic_dir_save\
-            = os.path.join(station_image_path, _('mosaic_station_{0}-{1}.png').format(station.code, station.name))
+        = os.path.join(station_image_path, _('mosaic_station_{0}-{1}.png').format(station.code, station.name))
 
         # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
         mosaic_plots = pyplot.figure(figsize=((width) / 75, (height * 2) / 75))
@@ -512,14 +512,14 @@ def climatology(stations):
 
     # climatology table file
     open_file_climatology_table\
-        = open(os.path.join(graphs_dir, _('Climatology_table_{0}').format(globals_vars.config_run['type_var_D'])+'.csv'), 'w')
+    = open(os.path.join(graphs_dir, _('Climatology_table_{0}').format(globals_vars.config_run['type_var_D'])+'.csv'), 'w')
     csv_climatology_table = csv.writer(open_file_climatology_table, delimiter=';')
 
     # print header
-    header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), globals_vars.month_text[0], globals_vars.month_text[1],
-              globals_vars.month_text[2], globals_vars.month_text[3], globals_vars.month_text[4], globals_vars.month_text[5],
-              globals_vars.month_text[6], globals_vars.month_text[7], globals_vars.month_text[8], globals_vars.month_text[9],
-              globals_vars.month_text[10], globals_vars.month_text[11]]
+    header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), globals_vars.get_month_in_text(0), globals_vars.get_month_in_text(1),
+              globals_vars.get_month_in_text(2), globals_vars.get_month_in_text(3), globals_vars.get_month_in_text(4), globals_vars.get_month_in_text(5),
+              globals_vars.get_month_in_text(6), globals_vars.get_month_in_text(7), globals_vars.get_month_in_text(8), globals_vars.get_month_in_text(9),
+              globals_vars.get_month_in_text(10), globals_vars.get_month_in_text(11)]
 
     csv_climatology_table.writerow(header)
 
@@ -536,15 +536,19 @@ def climatology(stations):
         if station.var_D.frequency_data == "daily":
             var_D.daily2monthly()
 
-        months = []
+        months_mean = []
+        months_max = []
+        months_min = []
         for m in range(1,13):
             values = []
             for iter, value in  enumerate(var_D.data):
                 if var_D.date[iter].month == m:
                     values.append(value)
-            months.append(mean(values))
+            months_mean.append(mean(values))
+            months_max.append(max(values))
+            months_min.append(min(values))
 
-        csv_climatology_table.writerow(line + [format_out.number(i) for i in months])
+        csv_climatology_table.writerow(line + [format_out.number(i) for i in months_mean])
 
         # -------------------------------------------------------------------------
         ## for climatology graphs, month by month
@@ -555,8 +559,8 @@ def climatology(stations):
             os.makedirs(station_image_path)
 
         x = range(1, 13)
-        x_labels = [globals_vars.month_text[i] for i in range(12)]
-        y = months
+        x_labels = [globals_vars.get_month_in_text(i) for i in range(12)]
+        y = months_mean
 
         # do that matplotlib plot zeros in extreme values
         for value in y:
@@ -567,8 +571,8 @@ def climatology(stations):
 
         fig = pyplot.figure()
         ax = fig.add_subplot(111)
-        ax.set_title(_("Climatology"+" {0} {1} - {2} ({3}-{4})").format(station.code, station.name,
-            globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']))
+        ax.set_title(_("Climatology"+" (monthly)\n{0} {1} - {2} ({3}-{4})").format(station.code, station.name,
+            globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']), multialignment='center')
 
         type_var = globals_vars.config_run['type_var_D']
 
@@ -579,23 +583,31 @@ def climatology(stations):
         ## Y
         # get units os type of var D or I
         units = globals_vars.get_units_of_type_var(type_var)
-        ax.set_ylabel('{0} ({1})'.format(type_var, units))
+        ax.set_ylabel(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, units))
 
-        pyplot.subplots_adjust(bottom=0.2)
+        #pyplot.subplots_adjust(bottom=0.2)
         ax.grid(True)
         ax.autoscale(tight=True)
 
         if type_var not in types_var_D:
             # default for generic type for var D
-            bar(x, y, align='center', color='#638786')
-            zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
+            ax.errorbar(x, y, yerr=[months_min, months_max], fmt='o-', color='#638786', mec='#638786', mew=3, elinewidth=1.5)
+            #bar(x, y, align='center', color='#638786')
+            zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
         else:
             if types_var_D[type_var]['graph'] == 'bar':
                 bar(x, y, align='center', color=types_var_D[type_var]['color'])
+                ax.errorbar(x, y, yerr=[months_min, months_max], fmt=None, ecolor='#3C628E', mew=3, elinewidth=1.5)
                 zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
             else:
-                ax.plot(x, y, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
+                ax.errorbar(x, y, yerr=[months_min, months_max], fmt='o-',
+                    color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color'], mew=3, elinewidth=1.5)
+                #ax.plot(x, y, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
                 zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
+
+
+        # labels on both sides
+        ax.tick_params(labeltop=False, labelright=True)
 
         fig.tight_layout()
 
@@ -607,42 +619,53 @@ def climatology(stations):
         ## for climatology graphs, every 5, 10 or 15 days based to analysis interval
 
         if station.var_D.frequency_data == "daily" and not globals_vars.config_run['analysis_interval'] == "trimester":
-            y = []
+            y_mean = []
+            y_max = []
+            y_min = []
             range_analysis_interval = get_range_analysis_interval(station)
             for month in range(1, 13):
                 for day in range_analysis_interval:
+                    range_analysis_mean = []
+                    range_analysis_max = []
+                    range_analysis_min = []
+
                     iter_year = station.process_period['start']
                     # iteration for years from first-year +1 to end-year -1 inside
                     # range common_period
-                    y_value = float('nan')
+                    y_values = []
                     while iter_year <= station.process_period['end']:
                         # test if day exist in month and year
                         if day > monthrange(iter_year, month)[1]:
                             iter_year += relativedelta(years= +1)
                             continue
 
-                        y_value = mean([y_value, mean(get_range_analysis_interval_values(station,'D', iter_year, month, day))])
-                        iter_year += 1
-                    y.append(y_value)
+                        range_analysis_mean.append(mean(get_range_analysis_interval_values(station,'D', iter_year, month, day)))
+                        range_analysis_max.append(max(get_range_analysis_interval_values(station,'D', iter_year, month, day)))
+                        range_analysis_min.append(min(get_range_analysis_interval_values(station,'D', iter_year, month, day)))
 
-            x = range(1, len(y)+1)
-            x_step_label = len(y)/12
+                        iter_year += 1
+                    y_mean.append(mean(range_analysis_mean))
+                    y_max.append(mean(range_analysis_max))
+                    y_min.append(mean(range_analysis_min))
+
+            x = range(1, len(y_mean)+1)
+            x_step_label = len(y_mean)/12
             x_labels = []
-            for i in range(len(y)):
+            for i in range(len(y_mean)):
                 if i%x_step_label == 0:
-                    x_labels.append(globals_vars.month_text[i/x_step_label])
+                    x_labels.append(globals_vars.get_month_in_text(i/x_step_label))
                 else:
                     x_labels.append('')
 
-            name_graph = _("climatology_({0}days)_{1}_{2}_{3}").format(globals_vars.analysis_interval_num_days,
+            name_graph = _("climatology"+"_({0}days)_{1}_{2}_{3}").format(globals_vars.analysis_interval_num_days,
                 station.code, station.name, globals_vars.config_run['type_var_D'])
 
-            with_fig = 5 + len(y)/7
+            with_fig = 5 + len(y_mean)/7
             fig = pyplot.figure(figsize=(with_fig, 6))
             ax = fig.add_subplot(111)
-            ax.set_title(_("Climatology ({0}days) {1} {2} - {3} ({4}-{5})").format(globals_vars.analysis_interval_num_days,
+            ax.set_title(_("Climatology"+" ({0}days)\n{1} {2} - {3} ({4}-{5})").format(globals_vars.analysis_interval_num_days,
                 station.code, station.name, globals_vars.config_run['type_var_D'], station.process_period['start'],
-                station.process_period['end']))
+                station.process_period['end']), multialignment='center')
 
             type_var = globals_vars.config_run['type_var_D']
 
@@ -653,23 +676,30 @@ def climatology(stations):
             ## Y
             # get units os type of var D or I
             units = globals_vars.get_units_of_type_var(type_var)
-            ax.set_ylabel('{0} ({1})'.format(type_var, units))
+            ax.set_ylabel(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, units))
 
-            pyplot.subplots_adjust(bottom=0.2)
+            #pyplot.subplots_adjust(bottom=0.2)
             ax.grid(True)
             ax.autoscale(tight=True)
 
             if type_var not in types_var_D:
                 # default for generic type for var D
-                bar(x, y, align='center', color='#638786')
-                zoom_graph(ax=ax, x_scale_below=-0.02,x_scale_above=-0.02, y_scale_above=-0.03)
+                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, elinewidth=1.5)
+                zoom_graph(ax=ax, x_scale_below=-0.02,x_scale_above=-0.02, y_scale_below=-0.03, y_scale_above=-0.03)
+                #bar(x, y, align='center', color='#638786')
             else:
                 if types_var_D[type_var]['graph'] == 'bar':
-                    bar(x, y, align='center', color=types_var_D[type_var]['color'])
+                    bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
+                    ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#3C628E', mew=3, elinewidth=1.5)
                     zoom_graph(ax=ax, x_scale_below=-0.02,x_scale_above=-0.02, y_scale_above=-0.03)
                 else:
-                    ax.plot(x, y, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
+                    #ax.plot(x, y, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
+                    ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=types_var_D[type_var]['graph'],
+                        color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color'], mew=3, elinewidth=1.5)
                     zoom_graph(ax=ax, x_scale_below=-0.02,x_scale_above=-0.02, y_scale_below=-0.03, y_scale_above=-0.03)
+
+            # labels on both sides
+            ax.tick_params(labeltop=False, labelright=True)
 
             fig.tight_layout()
 
@@ -820,7 +850,7 @@ def frequency_histogram(stations):
 def shapiro_wilks_test(stations):
 
     file_shapiro_wilks_var_D\
-        = os.path.join(distribution_test_dir, _('shapiro_wilks_test_{0}.csv').format(globals_vars.config_run['type_var_D']))
+    = os.path.join(distribution_test_dir, _('shapiro_wilks_test_{0}.csv').format(globals_vars.config_run['type_var_D']))
 
     open_file_D = open(file_shapiro_wilks_var_D, 'w')
     csv_file_D = csv.writer(open_file_D, delimiter=';')
@@ -857,5 +887,5 @@ def shapiro_wilks_test(stations):
 
 
 
-# outliers
-#  http://glowingpython.blogspot.com/2012/09/boxplot-with-matplotlib.html
+    # outliers
+    #  http://glowingpython.blogspot.com/2012/09/boxplot-with-matplotlib.html
