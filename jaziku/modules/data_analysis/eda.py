@@ -157,7 +157,7 @@ def main(stations):
     # CLIMATOLOGY
 
     console.msg(_("Climatology .......................................... "), newline=False)
-    climatology(stations)
+    #climatology(stations)
     console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
@@ -176,7 +176,7 @@ def main(stations):
     console.msg(_("Scatter plots of series .............................. "), newline=False)
 
     if Station.stations_processed > 1:
-        #scatter_plots_of_series(stations) #todo
+        scatter_plots_of_series(stations) #todo
         console.msg(_("done"), color='green')
     else:
         console.msg(_("fail\n > WARNING: There is only one station for process\n"
@@ -188,13 +188,8 @@ def main(stations):
 
     console.msg(_("Frequency histogram .................................. "), newline=False)
 
-    if Station.stations_processed > 1:
-        frequency_histogram(stations)
-        console.msg(_("done"), color='green')
-    else:
-        console.msg(_("fail\n > WARNING: There is only one station for process\n"
-                      "   the frequency histogram, this need more \n"
-                      "   of one station."), color="yellow")
+    frequency_histogram(stations)
+    console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
     # SHAPIRO WILKS
@@ -591,23 +586,23 @@ def climatology(stations):
 
         if type_var not in types_var_D:
             # default for generic type for var D
-            ax.errorbar(x, y, yerr=[months_min, months_max], fmt='o-', color='#638786', mec='#638786', mew=3, elinewidth=1.5)
+            ax.errorbar(x, y, yerr=[months_min, months_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
             #bar(x, y, align='center', color='#638786')
             zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
         else:
             if types_var_D[type_var]['graph'] == 'bar':
                 bar(x, y, align='center', color=types_var_D[type_var]['color'])
-                ax.errorbar(x, y, yerr=[months_min, months_max], fmt=None, ecolor='#3C628E', mew=3, elinewidth=1.5)
+                ax.errorbar(x, y, yerr=[months_min, months_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
                 zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
             else:
-                ax.errorbar(x, y, yerr=[months_min, months_max], fmt='o-',
-                    color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color'], mew=3, elinewidth=1.5)
+                ax.errorbar(x, y, yerr=[months_min, months_max], fmt='o-', color=types_var_D[type_var]['color'],
+                    mec=types_var_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
                 #ax.plot(x, y, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
                 zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
 
 
         # labels on both sides
-        ax.tick_params(labeltop=False, labelright=True)
+        #ax.tick_params(labeltop=False, labelright=True)
 
         fig.tight_layout()
 
@@ -685,22 +680,22 @@ def climatology(stations):
 
             if type_var not in types_var_D:
                 # default for generic type for var D
-                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, elinewidth=1.5)
+                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
                 zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_below=-0.04, y_scale_above=-0.04)
                 #bar(x, y, align='center', color='#638786')
             else:
                 if types_var_D[type_var]['graph'] == 'bar':
                     bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
-                    ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#3C628E', mew=3, elinewidth=1.5)
+                    ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
                     zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_above=-0.04)
                 else:
                     #ax.plot(x, y, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
-                    ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-',
-                        color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color'], mew=3, elinewidth=1.5)
+                    ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=types_var_D[type_var]['color'],
+                        mec=types_var_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
                     zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_below=-0.04, y_scale_above=-0.04)
 
             # labels on both sides
-            ax.tick_params(labeltop=False, labelright=True)
+            #ax.tick_params(labeltop=False, labelright=True)
 
             fig.tight_layout()
 
@@ -754,17 +749,20 @@ def scatter_plots_of_series(stations):
     # calculate the common period of all common process
     global_common_date_process_var_D = global_common_process(stations, 'D')
 
-    pyplot.figure(figsize=(4*len(stations)/1.5, 3*len(stations)/1.5))
+    fig_height = 3.2*len(stations)/1.5
+    fig_with = 4*len(stations)/1.5
 
-    name_plot = _("scatter_plots_of_series_{0}_{2}-{3}").format(globals_vars.config_run['type_var_D'],
+    pyplot.figure(figsize=(fig_with,fig_height))
+
+    name_plot = _("scatter_plots_of_series") + "_{0}_{2}-{3}".format(globals_vars.config_run['type_var_D'],
         globals_vars.get_units_of_type_var(globals_vars.config_run['type_var_D']),
         global_common_date_process_var_D[0].year, global_common_date_process_var_D[-1].year)
 
-    title_plot = _("Scatter plots of series - {0} ({1}) {2}-{3}").format(globals_vars.config_run['type_var_D'],
+    title_plot = _("Scatter plots of series") + "\n{0} ({1}) {2}-{3}".format(globals_vars.config_run['type_var_D'],
         globals_vars.get_units_of_type_var(globals_vars.config_run['type_var_D']),
         global_common_date_process_var_D[0].year, global_common_date_process_var_D[-1].year)
 
-    pyplot.suptitle(title_plot, y=0.99, fontsize=14)
+    pyplot.suptitle(title_plot, y=(fig_height-0.1)/fig_height, fontsize=14, multialignment='center')
 
     for iter_v, station_v in enumerate(stations):
         for iter_h, station_h in enumerate(stations):
@@ -790,10 +788,10 @@ def scatter_plots_of_series(stations):
             ax.grid(True)
             ax.autoscale(tight=True)
 
-            pyplot.tight_layout()
+            pyplot.tight_layout(pad=0.8)
 
     # adjust title plot
-    pyplot.subplots_adjust(top=0.002*len(stations)+0.95)
+    pyplot.subplots_adjust(top=(fig_height-0.6)/fig_height)
 
     image_path = os.path.join(distribution_test_dir, name_plot + '.png')
 
@@ -822,8 +820,8 @@ def frequency_histogram(stations):
 
         fig = pyplot.figure()
         ax = fig.add_subplot(111)
-        ax.set_title(_("Frequency histogram"+" {0} {1} - {2} ({3}-{4})").format(station.code, station.name,
-            globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']))
+        ax.set_title(_("Frequency histogram"+"\n{0} {1} - {2} ({3}-{4})").format(station.code, station.name,
+            globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']), multialignment='center')
 
         type_var = globals_vars.config_run['type_var_D']
 
