@@ -73,8 +73,8 @@ class Variable():
         Convert the data daily to monthly using the mean
 
         :return by reference:
-            VARIABLE.data (rewrite) (list)
-            VARIABLE.date (rewrite) (list)
+            VARIABLE.data (overwrite) (list)
+            VARIABLE.date (overwrite) (list)
         """
 
         data_monthly = []

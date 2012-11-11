@@ -40,6 +40,8 @@ news
 - After set all configuration to run, jaziku prompt to user for read the configuration
   and ask for continue.
 - Add argument '-f', for force all ask to default answer for continue
+- New: Outliers report in file and Box-Jenkins diagram one by station and all stations
+  in one diagram
 
 fixes
 +++++
