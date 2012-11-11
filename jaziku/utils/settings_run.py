@@ -351,18 +351,21 @@ def show(stop_in=None):
         if stop_in == "lag_0_phen_normal": return
         print "   {0} ------ {1}".format("lag 0 phen above", settings["lag_0_phen_above"])
         if stop_in == "lag_0_phen_above": return
+        if stop_in == "lag_0_phen": return
         print "   {0} ------ {1}".format("lag 1 phen below", settings["lag_1_phen_below"])
         if stop_in == "lag_1_phen_below": return
         print "   {0} ----- {1}".format("lag 1 phen normal", settings["lag_1_phen_normal"])
         if stop_in == "lag_1_phen_normal": return
         print "   {0} ------ {1}".format("lag 1 phen above", settings["lag_1_phen_above"])
         if stop_in == "lag_1_phen_above": return
+        if stop_in == "lag_1_phen": return
         print "   {0} ------ {1}".format("lag 2 phen below", settings["lag_2_phen_below"])
         if stop_in == "lag_2_phen_below": return
         print "   {0} ----- {1}".format("lag 2 phen normal", settings["lag_2_phen_normal"])
         if stop_in == "lag_2_phen_normal": return
         print "   {0} ------ {1}".format("lag 2 phen above", settings["lag_2_phen_above"])
         if stop_in == "lag_2_phen_above": return
+        if stop_in == "lag_2_phen": return
         print "   {0} ------ {1}".format("forecasting date", settings["forecasting_date"])
         if stop_in == "forecasting_date": return
     console.msg("   Maps options", color='cyan')
@@ -527,6 +530,39 @@ def check():
             console.msg_error_configuration('threshold_above_var_I',
                 _("The thresholds can't be define as 'default' if the\n"
                   "type of independent variable not is internal type."))
+
+    # -------------------------------------------------------------------------
+    # check the 9 forecasting values
+
+    # if forecasting_process is activated
+    if globals_vars.config_run['forecasting_process']:
+        # lag 0
+        lag_0 = globals_vars.config_run['lag_0_phen_below'] +\
+                globals_vars.config_run['lag_0_phen_normal'] +\
+                globals_vars.config_run['lag_0_phen_above']
+        if not (99 < lag_0 < 101):
+            console.msg_error_configuration('lag_0_phen',
+                _("The sum for the 3 values of phenomenon for lag 0\n"
+                  "in forecasting options must be equal to 100."))
+
+        # lag 1
+        lag_1 = globals_vars.config_run['lag_1_phen_below'] +\
+                globals_vars.config_run['lag_1_phen_normal'] +\
+                globals_vars.config_run['lag_1_phen_above']
+        if not (99 < lag_1 < 101):
+            console.msg_error_configuration('lag_1_phen',
+                _("The sum for the 3 values of phenomenon for lag 1\n"
+                  "in forecasting options must be equal to 100."))
+
+        # lag 2
+        lag_2 = globals_vars.config_run['lag_2_phen_below'] +\
+                globals_vars.config_run['lag_2_phen_normal'] +\
+                globals_vars.config_run['lag_2_phen_above']
+        if not (99 < lag_2 < 101):
+            console.msg_error_configuration('lag_2_phen',
+                _("The sum for the 3 values of phenomenon for lag 2\n"
+                  "in forecasting options must be equal to 100."))
+
 
 
 def query_yes_no(question, default="yes"):

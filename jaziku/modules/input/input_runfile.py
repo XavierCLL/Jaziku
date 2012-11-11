@@ -80,7 +80,7 @@ def read_runfile():
                     globals_vars.config_run[line_in_run_file[0]] = True
                 else:
                     try:
-                        globals_vars.config_run[line_in_run_file[0]] = float(line_in_run_file[1].replace(',', '.'))
+                        globals_vars.config_run[line_in_run_file[0]] = float(str(line_in_run_file[1].replace(',', '.')).replace(',', '.'))
                     except:
                         globals_vars.config_run[line_in_run_file[0]] = line_in_run_file[1]
             else:
@@ -132,9 +132,6 @@ def read_runfile():
                 continue
             lines_of_stations.append([line_in_run_file, globals_vars.runfile.line_num])
 
-    # makes all stations base on all lines of stations list previously read
-    stations = read_stations(lines_of_stations)
-
     # -------------------------------------------------------------------------
     # post-process after read the runfile
 
@@ -146,6 +143,7 @@ def read_runfile():
     # if forecasting_process is activated
     if globals_vars.config_run['forecasting_process']:
         try:
+
             globals_vars.forecasting_phen_below = [float(str(globals_vars.config_run['lag_0_phen_below']).replace(',', '.')),
                                                    float(str(globals_vars.config_run['lag_1_phen_below']).replace(',', '.')),
                                                    float(str(globals_vars.config_run['lag_2_phen_below']).replace(',', '.'))]
@@ -195,6 +193,10 @@ def read_runfile():
         else:
             globals_vars.units_var_I = '--'
 
+    # -------------------------------------------------------------------------
+    # read stations:
+    # makes all stations base on all lines of stations list previously read
+    stations = read_stations(lines_of_stations)
 
     return stations
 

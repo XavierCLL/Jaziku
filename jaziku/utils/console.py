@@ -127,6 +127,10 @@ def msg_error_configuration(variable, text_error, show_settings=True):
                       .format(num_line+1) + ' > ' +
                       ' '.join(line_in_run_file) + "\n\n" + str(text_error), False)
 
+    # else
+    msg_error(_("Error in configuration run from the runfile:\n")
+              + "\n" + str(text_error), False)
+
 class redirectStdStreams(object):
     """
     Redirect standard out and error to devnull (nothing), with
