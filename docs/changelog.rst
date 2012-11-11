@@ -42,6 +42,8 @@ news
 - Add argument '-f', for force all ask to default answer for continue
 - New: Outliers report in file and Box-Jenkins diagram one by station and all stations
   in one diagram
+- New option in runfile for set particular units for var D or/and I regardless if
+  the variables are o not internal variables
 
 fixes
 +++++

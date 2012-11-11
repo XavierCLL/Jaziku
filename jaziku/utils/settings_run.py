@@ -132,7 +132,7 @@ def get():
     ## input options
     # type var D
     if globals_vars.config_run['type_var_D']:
-        settings["type_var_D"] = colored.green(globals_vars.config_run['type_var_D'])
+        settings["type_var_D"] = colored.green(globals_vars.config_run['type_var_D']) + " ({0})".format(globals_vars.units_var_D)
     # limit var D below
     if globals_vars.config_run['limit_var_D_below'] == 'none':
         settings["limit_var_D_below"] = colored.red('none')
@@ -158,7 +158,7 @@ def get():
         settings["threshold_above_var_D"] = colored.green(globals_vars.config_run['threshold_above_var_D'])
     # type var I
     if globals_vars.config_run['type_var_I']:
-        settings["type_var_I"] = colored.green(globals_vars.config_run['type_var_I'])
+        settings["type_var_I"] = colored.green(globals_vars.config_run['type_var_I']) + " ({0})".format(globals_vars.units_var_I)
     # path_to_file_var_I
     if globals_vars.config_run['path_to_file_var_I'] == 'internal':
         settings["path_to_file_var_I"] = colored.green(globals_vars.config_run['path_to_file_var_I'])

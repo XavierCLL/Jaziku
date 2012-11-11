@@ -21,7 +21,11 @@
 import math
 
 #==============================================================================
-# GLOBAL VARIABLES
+# GLOBAL VARIABLES AND FUNCTIONS
+#==============================================================================
+
+#==============================================================================
+# general
 
 PROG_NAME = "jaziku"
 
@@ -31,7 +35,22 @@ COMPILE_DATE = "21/08/2012"
 
 ROOT_DIR = None
 
+# accuracy of number decimal places, only for print result
+ACCURACY = 5
+
+#==============================================================================
+# arguments and inputs
+
+# arguments
+args = None
+
+# runfile
+runfile_path = None
+runfile = None
+
+#==============================================================================
 # valid nulls
+
 VALID_NULL = [99999, -99999]  # these are deprecate valid null but now used for maps files interpolation
 # valid null value for variables dependent and independent (inside files input)
 def is_valid_null(value):
@@ -45,15 +64,7 @@ def is_valid_null(value):
             return False
     return False
 
-# accuracy of number decimal places, only for print result
-ACCURACY = 5
-
-# arguments
-args = None
-
-# runfile
-runfile_path = None
-runfile = None
+#==============================================================================
 
 # trimester text for print
 def get_trimester_in_text(trimester):
@@ -70,12 +81,20 @@ def get_month_in_text(month):
                   8: _('Sep'), 9: _('Oct'), 10: _('Nov'), 11: _('Dec')}
     return month_text[month]
 
+#==============================================================================
+# types and units - VAR D
+
 # Valid input types for dependent variable
 types_var_D = ['PPT', 'NDPPT', 'TMIN', 'TMAX', 'TEMP', 'PATM', 'RH', 'RUNOFF']
 
 # Units for types for dependent variable
 units_of_types_var_D = {'PPT':'mm', 'NDPPT':'#', 'TMIN':'Celsius', 'TMAX':'Celsius', 'TEMP':'Celsius',
                         'PATM':'mb', 'RH':'%', 'RUNOFF':'m^3/s'}
+
+units_var_D = None
+
+#==============================================================================
+# types and units - VAR I
 
 # Valid input types for independent variable
 types_var_I = ['ONI', 'SOI', 'MEI', 'OLR', 'W200', 'SST', 'ARH', 'QBO', 'NAO', 'SST_CAR', 'AREA_WHWP']
@@ -84,16 +103,10 @@ types_var_I = ['ONI', 'SOI', 'MEI', 'OLR', 'W200', 'SST', 'ARH', 'QBO', 'NAO', '
 units_of_types_var_I = {'ONI':'anomaly', 'SOI':'standardized anomaly', 'MEI':'#', 'OLR':'W/m2', 'W200':'standardized anomaly',
                         'SST':'Celsius', 'ARH':'%', 'QBO':'Km/h', 'NAO':'anomaly', 'SST_CAR':'Celsius', 'AREA_WHWP':'scaled 10e6 km^2'}
 
-def get_units_of_type_var(type):
-    """
-    Return units of type var D or I, if defined as particular
-    variable then return '--'
-    """
-    if type in units_of_types_var_D:
-        return units_of_types_var_D[type]
-    if type in units_of_types_var_I:
-        return units_of_types_var_I[type]
-    return '--'
+units_var_I = None
+
+#==============================================================================
+# VAR I internal
 
 # types of internal variable independent
 internal_var_I_types = ["ONI", "SOI", "MEI", "OLR", "W200", "SST", "ARH", "NAO", "QBO", "SST_CAR", "AREA_WHWP"]
@@ -124,16 +137,21 @@ internal_var_I_urls = {"ONI": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.
                        "SST_CAR": "http://goo.gl/BsAeN", # http://www.esrl.noaa.gov/psd/forecasts/sstlim/forcar.html
                        "AREA_WHWP": "http://goo.gl/mV4QI"}  # http://www.esrl.noaa.gov/psd/data/correlation/whwp.data
 
+#==============================================================================
 # analysis_interval
 options_analysis_interval = ["5days", "10days", "15days", "trimester"]
 analysis_interval_num_days = None
 translate_analysis_interval = None
 
+#==============================================================================
 # forecasting
 forecasting_phen_below = None
 forecasting_phen_normal = None
 forecasting_phen_above = None
 forecasting_date = None
+
+#==============================================================================
+# maps
 
 # maps files for climate:
 maps_files_climate = {'5days': None, '10days': None, '15days': None, 'trimester': None}
@@ -142,12 +160,16 @@ maps_files_correlation = {'5days': None, '10days': None, '15days': None, 'trimes
 # maps files for forecasting:
 maps_files_forecasting = {'5days': {}, '10days': {}, '15days': {}, 'trimester': {}}
 
+#==============================================================================
 # phenomenon based on arguments or not, start with default value
 phenomenon_below = None
 phenomenon_normal = None
 phenomenon_above = None
 
-# configuration run reade and set from runfile
+#==============================================================================
+# configurations and settings
+
+# configuration run read and set from runfile
 config_run = {'data_analysis': None,
               'climate_process': None,
               'forecasting_process': None,

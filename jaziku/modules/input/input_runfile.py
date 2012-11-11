@@ -18,6 +18,8 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
+import re
+
 from jaziku.modules.maps.grid import Grid
 from jaziku.utils import globals_vars, console
 from jaziku.modules.station import Station
@@ -158,6 +160,41 @@ def read_runfile():
                                 "defined in runfile, these must be a numbers, please check it."), False)
 
         globals_vars.forecasting_date = globals_vars.config_run['forecasting_date']
+
+    # Set type and units for variables D and I
+    # var D
+    if '(' and ')' in globals_vars.config_run['type_var_D']:
+        #split line
+        type_and_units = re.split(' |\(|\)', globals_vars.config_run['type_var_D'])
+        # delete empty elements in row
+        type_and_units = [e for e in type_and_units if e]
+        globals_vars.config_run['type_var_D'] = type_and_units[0]
+        if len(type_and_units) > 1:
+            globals_vars.units_var_D = type_and_units[1]
+        else:
+            globals_vars.units_var_I = '--'
+    else:
+        if globals_vars.config_run['type_var_D'] in globals_vars.units_of_types_var_D:
+            globals_vars.units_var_D = globals_vars.units_of_types_var_D[globals_vars.config_run['type_var_D']]
+        else:
+            globals_vars.units_var_D = '--'
+    # var I
+    if '(' and ')' in globals_vars.config_run['type_var_I']:
+        #split line
+        type_and_units = re.split(' |\(|\)', globals_vars.config_run['type_var_I'])
+        # delete empty elements in row
+        type_and_units = [e for e in type_and_units if e]
+        globals_vars.config_run['type_var_I'] = type_and_units[0]
+        if len(type_and_units) > 1:
+            globals_vars.units_var_I = type_and_units[1]
+        else:
+            globals_vars.units_var_I = '--'
+    else:
+        if globals_vars.config_run['type_var_I'] in globals_vars.units_of_types_var_I:
+            globals_vars.units_var_I = globals_vars.units_of_types_var_I[globals_vars.config_run['type_var_I']]
+        else:
+            globals_vars.units_var_I = '--'
+
 
     return stations
 
