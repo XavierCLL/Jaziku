@@ -26,7 +26,7 @@ import gc
 from dateutil.relativedelta import relativedelta
 from matplotlib import pyplot
 from numpy import histogram
-from pylab import xticks, setp, bar
+from pylab import xticks, setp, bar, boxplot
 import matplotlib.dates as mdates
 from Image import open as img_open
 from scipy.stats import shapiro
@@ -176,7 +176,7 @@ def main(stations):
     console.msg(_("Scatter plots of series .............................. "), newline=False)
 
     if Station.stations_processed > 1:
-        scatter_plots_of_series(stations) #todo
+        #scatter_plots_of_series(stations) #todo
         console.msg(_("done"), color='green')
     else:
         console.msg(_("fail\n > WARNING: There is only one station for process\n"
@@ -198,6 +198,22 @@ def main(stations):
 
     shapiro_wilks_test(stations)
     console.msg(_("done"), color='green')
+
+    # -------------------------------------------------------------------------
+    # OUTLIERS
+
+    global outliers_dir
+    outliers_dir = os.path.join(eda_dir, _('Outliers'))
+
+    if not os.path.isdir(outliers_dir):
+        os.makedirs(outliers_dir)
+
+
+    console.msg(_("Outliers ............................................. "), newline=False)
+
+    outliers(stations)
+    console.msg(_("done"), color='green')
+
 
 def zoom_graph(ax,x_scale_below=0, x_scale_above=0, y_scale_below=0, y_scale_above=0, abs_x=False, abs_y=False):
     """
@@ -284,8 +300,7 @@ def descriptive_statistic_graphs(stations):
             ## X
             if graph == _('vs_Stations'):
                 ax.set_xlabel(_('Stations'))
-                locs, labels = xticks(range(1, len(x)+1), x)
-                setp(labels, 'rotation', 'vertical')
+                xticks(range(1, len(x)+1), x, rotation='vertical')
             if graph == _('vs_Altitude'):
                 ax.set_xlabel(_('Altitude (m)'))
                 #locs, labels = xticks(range(1, len(x)+1), x)
@@ -823,9 +838,9 @@ def frequency_histogram(stations):
         ax.set_title(_("Frequency histogram"+"\n{0} {1} - {2} ({3}-{4})").format(station.code, station.name,
             globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']), multialignment='center')
 
-        type_var = globals_vars.config_run['type_var_D']
 
         ## X
+        type_var = globals_vars.config_run['type_var_D']
         units = globals_vars.get_units_of_type_var(type_var)
         ax.set_xlabel('{0} ({1})'.format(type_var, units))
 
@@ -883,8 +898,124 @@ def shapiro_wilks_test(stations):
     del csv_file_D
 
 
+def outliers(stations):
+
+    data_stations = []
+    codes_stations = []
+
+    for station in stations:
+
+        station_dir = os.path.join(outliers_dir, station.code +'-'+station.name)
+
+        if not os.path.isdir(station_dir):
+            os.makedirs(station_dir)
+
+        # -------------------------------------------------------------------------
+        ## Outliers graph
+
+        name_graph = _("Outliers")+"_{0}_{1}_{2}_({3}-{4})".format(station.code, station.name,
+        globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end'])
+
+        fig = pyplot.figure(figsize=(3,6))
+        ax = fig.add_subplot(111)
+        ax.set_title(_("Outliers")+"\n{0} ({1}-{2})".format(globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']), multialignment='center')
+
+        ## X
+        x_labels = [station.code]
+        xticks([1], x_labels)
+
+        ## Y
+        type_var = globals_vars.config_run['type_var_D']
+        units = globals_vars.get_units_of_type_var(type_var)
+        ax.set_ylabel('{0} ({1})'.format(type_var, units))
+        #ax.set_ylabel(_('Frequency'))
+
+        boxplot_station = boxplot(station.var_D.data_filtered_in_process_period)
+
+        #pyplot.setp(boxplot_station['boxes'], color='black')
+        #pyplot.setp(boxplot_station['whiskers'], color='black', linestyle='-')
+        pyplot.setp(boxplot_station['fliers'], color='red', marker='+')
+        #pyplot.setp(boxplot_station['fliers'], markersize=3.0)
+
+        #ax.grid(True)
+        ax.autoscale(tight=True)
+
+        zoom_graph(ax=ax, x_scale_below=-2.5,x_scale_above=-2.5, y_scale_below=-0.04, y_scale_above=-0.04)
+
+        fig.tight_layout()
+
+        pyplot.savefig(os.path.join(station_dir, name_graph + '.png'), dpi=75)
+
+        pyplot.close('all')
+
+        # variables for mosaic
+        data_stations.append(station.var_D.data_filtered_in_process_period)
+        codes_stations.append(station.code)
+
+        # -------------------------------------------------------------------------
+        ## Outliers file
+
+        file_outliers_var_D\
+            = os.path.join(station_dir, _("Outliers")+"_{0}_{1}_{2}_({3}-{4}).csv".format(station.code, station.name,
+            globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']))
+
+        open_file_D = open(file_outliers_var_D, 'w')
+        csv_file_D = csv.writer(open_file_D, delimiter=';')
+
+        # print header
+        header = [_('DATE'), _('VALUE')]
+
+        csv_file_D.writerow(header)
+
+        whisker_below = boxplot_station['whiskers'][0].get_data()[1][1]
+        whisker_above = boxplot_station['whiskers'][1].get_data()[1][1]
+
+        for index, value in enumerate(station.var_D.data_in_process_period):
+
+            if (value < whisker_below or value > whisker_above) and not globals_vars.is_valid_null(value):
+                # var D
+                line_of_data_outlier = [station.var_D.date_in_process_period[index], format_out.number(value, 4)]
+                csv_file_D.writerow(line_of_data_outlier)
+
+        open_file_D.close()
+        del csv_file_D
 
 
+    # -------------------------------------------------------------------------
+    ## Outliers graph
 
-    # outliers
-    #  http://glowingpython.blogspot.com/2012/09/boxplot-with-matplotlib.html
+    name_graph = _("Outliers")+"_{0}_({1}-{2})".format(
+        globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end'])
+
+    fig = pyplot.figure(figsize=(2.5+len(codes_stations)/2.5,6))
+    ax = fig.add_subplot(111)
+    ax.set_title(_("Outliers")+"\n{0} ({1}-{2})".format(globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']), multialignment='center')
+
+    ## X
+    xticks(range(len(codes_stations)), codes_stations, rotation='vertical')
+    ax.set_xlabel(_('Stations'))
+
+    ## Y
+    type_var = globals_vars.config_run['type_var_D']
+    units = globals_vars.get_units_of_type_var(type_var)
+    ax.set_ylabel('{0} ({1})'.format(type_var, units))
+    #ax.set_ylabel(_('Frequency'))
+
+    boxplot_station = boxplot(data_stations)
+
+    #pyplot.setp(boxplot_station['boxes'], color='black')
+    #pyplot.setp(boxplot_station['whiskers'], color='black', linestyle='-')
+    pyplot.setp(boxplot_station['fliers'], color='red', marker='+')
+    #pyplot.setp(boxplot_station['fliers'], markersize=3.0)
+
+    #ax.grid(True)
+    ax.autoscale(tight=True)
+    #pyplot.subplots_adjust(bottom=) #(len(max(codes_stations))/30.0))
+
+    zoom_graph(ax=ax, x_scale_below=-0.2,x_scale_above=-0.2, y_scale_below=-0.04, y_scale_above=-0.04, abs_x=True)
+
+    fig.tight_layout()
+
+    pyplot.savefig(os.path.join(outliers_dir, name_graph + '.png'), dpi=75)
+
+    pyplot.close('all')
