@@ -157,7 +157,7 @@ def main(stations):
     # CLIMATOLOGY
 
     console.msg(_("Climatology .......................................... "), newline=False)
-    #climatology(stations)
+    climatology(stations)
     console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
@@ -541,20 +541,35 @@ def climatology(stations):
         var_D.data = station.var_D.data_in_process_period
         var_D.date = station.var_D.date_in_process_period
 
-        if station.var_D.frequency_data == "daily":
-            var_D.daily2monthly()
-
         months_mean = []
         months_max = [] # value to add to mean for max value
         months_min = [] # value to subtract to mean for min value
-        for m in range(1,13):
-            values = []
-            for iter, value in  enumerate(var_D.data):
-                if var_D.date[iter].month == m:
-                    values.append(value)
-            months_mean.append(mean(values))
-            months_max.append(max(values) - months_mean[-1])
-            months_min.append(months_mean[-1] - min(values))
+        if station.var_D.frequency_data == "monthly":
+            for month in range(1,13):
+                values = []
+                for iter, value in  enumerate(var_D.data):
+                    if var_D.date[iter].month == month:
+                        values.append(value)
+                months_mean.append(mean(values))
+                months_max.append(max(values) - months_mean[-1])
+                months_min.append(months_mean[-1] - min(values))
+
+        if station.var_D.frequency_data == "daily":
+            for month in range(1,13):
+                years_values_mean = []
+                years_values_max = []
+                years_values_min = []
+                for year in range(station.process_period['start'], station.process_period['end']+1):
+                    month_values = []
+                    for iter, value in  enumerate(var_D.data):
+                        if var_D.date[iter].year == year and var_D.date[iter].month == month:
+                            month_values.append(value)
+                    years_values_mean.append(mean(month_values))
+                    years_values_max.append(max(month_values))
+                    years_values_min.append(min(month_values))
+                months_mean.append(mean(years_values_mean))
+                months_max.append(mean(years_values_max) - months_mean[-1])
+                months_min.append(months_mean[-1] - mean(years_values_min))
 
         csv_climatology_table.writerow(line + [format_out.number(i) for i in months_mean])
 
@@ -900,10 +915,10 @@ def outliers(stations):
 
     for station in stations:
 
-        station_dir = os.path.join(outliers_dir, station.code +'-'+station.name)
+        outliers_per_stations_dir = os.path.join(outliers_dir, _("Outliers_per_station"))
 
-        if not os.path.isdir(station_dir):
-            os.makedirs(station_dir)
+        if not os.path.isdir(outliers_per_stations_dir):
+            os.makedirs(outliers_per_stations_dir)
 
         # -------------------------------------------------------------------------
         ## Outliers graph
@@ -938,7 +953,7 @@ def outliers(stations):
 
         fig.tight_layout()
 
-        pyplot.savefig(os.path.join(station_dir, name_graph + '.png'), dpi=75)
+        pyplot.savefig(os.path.join(outliers_per_stations_dir, name_graph + '.png'), dpi=75)
 
         pyplot.close('all')
 
@@ -950,7 +965,7 @@ def outliers(stations):
         ## Outliers file
 
         file_outliers_var_D\
-            = os.path.join(station_dir, _("Outliers")+"_{0}_{1}_{2}_({3}-{4}).csv".format(station.code, station.name,
+            = os.path.join(outliers_per_stations_dir, _("Outliers")+"_{0}_{1}_{2}_({3}-{4}).csv".format(station.code, station.name,
             globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']))
 
         open_file_D = open(file_outliers_var_D, 'w')
