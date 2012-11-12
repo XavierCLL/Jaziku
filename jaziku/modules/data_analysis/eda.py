@@ -541,18 +541,18 @@ def climatology(stations):
         var_D.data = station.var_D.data_in_process_period
         var_D.date = station.var_D.date_in_process_period
 
-        months_mean = []
-        months_max = [] # value to add to mean for max value
-        months_min = [] # value to subtract to mean for min value
+        y_mean = []
+        y_max = [] # value to add to mean for max value
+        y_min = [] # value to subtract to mean for min value
         if station.var_D.frequency_data == "monthly":
             for month in range(1,13):
                 values = []
                 for iter, value in  enumerate(var_D.data):
                     if var_D.date[iter].month == month:
                         values.append(value)
-                months_mean.append(mean(values))
-                months_max.append(max(values) - months_mean[-1])
-                months_min.append(months_mean[-1] - min(values))
+                y_mean.append(mean(values))
+                y_max.append(max(values) - y_mean[-1])
+                y_min.append(y_mean[-1] - min(values))
 
         if station.var_D.frequency_data == "daily":
             for month in range(1,13):
@@ -567,14 +567,14 @@ def climatology(stations):
                     years_values_mean.append(mean(month_values))
                     years_values_max.append(max(month_values))
                     years_values_min.append(min(month_values))
-                months_mean.append(mean(years_values_mean))
-                months_max.append(mean(years_values_max) - months_mean[-1])
-                months_min.append(months_mean[-1] - mean(years_values_min))
+                y_mean.append(mean(years_values_mean))
+                y_max.append(mean(years_values_max) - y_mean[-1])
+                y_min.append(y_mean[-1] - mean(years_values_min))
 
-        csv_climatology_table.writerow(line + [format_out.number(i) for i in months_mean])
+        csv_climatology_table.writerow(line + [format_out.number(i) for i in y_mean])
 
         # -------------------------------------------------------------------------
-        ## for climatology graphs, month by month
+        # for climatology graphs, month by month (base)
 
         station_image_path = os.path.join(graphs_dir, station.code +'-'+station.name)
 
@@ -583,19 +583,74 @@ def climatology(stations):
 
         x = range(1, 13)
         x_labels = [globals_vars.get_month_in_text(i) for i in range(12)]
-        y = months_mean
 
         # do that matplotlib plot zeros in extreme values
-        for value in y:
+        for value in y_mean:
             if value == 0:
-                y[y.index(value)] = 0.0001
+                y_mean[y_mean.index(value)] = 0.0001
 
-        name_graph = _("climatology"+"_{0}_{1}_{2}").format(station.code, station.name, globals_vars.config_run['type_var_D'])
+        title=_("Multiyear climatology (monthly)\n{0} {1} - {2} ({3}-{4})").format(station.code, station.name,
+                globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end'])
+
+        # -------------------------------------------------------------------------
+        # climatology monthly without whiskers
+
+        name_graph = _("Multiyear_climatology_(monthly)_{0}_{1}_{2}").format(station.code, station.name, globals_vars.config_run['type_var_D'])
 
         fig = pyplot.figure()
         ax = fig.add_subplot(111)
-        ax.set_title(_("Climatology"+" (monthly)\n{0} {1} - {2} ({3}-{4})").format(station.code, station.name,
-            globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']), multialignment='center')
+
+        ax.set_title(title, multialignment='center')
+
+        type_var = globals_vars.config_run['type_var_D']
+
+        ## X
+        ax.set_xlabel(_('Months'))
+        xticks(x, x_labels)
+
+        ## Y
+        # get units os type of var D or I
+        ax.set_ylabel('{0} ({1}) - '.format(type_var, globals_vars.units_var_D) + _('[mean]'))
+
+        #pyplot.subplots_adjust(bottom=0.2)
+        ax.grid(True)
+        ax.autoscale(tight=True)
+
+        if type_var not in types_var_D:
+            # default for generic type for var D
+            #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
+            ax.plot(x, y_mean, '-o', color='#638786', mec='#638786', linewidth=2.5, markersize=8)
+            zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
+        else:
+            if types_var_D[type_var]['graph'] == 'bar':
+                bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
+                #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
+                zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
+            else:
+                #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=types_var_D[type_var]['color'],
+                #    mec=types_var_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
+                ax.plot(x, y_mean, '-o', color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color'], linewidth=2.5, markersize=8)
+                zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
+
+
+        # labels on both sides
+        #ax.tick_params(labeltop=False, labelright=True)
+
+        fig.tight_layout()
+
+        pyplot.savefig(os.path.join(station_image_path, name_graph + '.png'), dpi=75)
+
+        pyplot.close('all')
+
+        # -------------------------------------------------------------------------
+        # climatology monthly with whiskers
+
+        name_graph = _("Multiyear_climatology_(monthly+whiskers)_{0}_{1}_{2}").format(station.code, station.name, globals_vars.config_run['type_var_D'])
+
+        fig = pyplot.figure()
+        ax = fig.add_subplot(111)
+
+        ax.set_title(title, multialignment='center')
 
         type_var = globals_vars.config_run['type_var_D']
 
@@ -613,18 +668,18 @@ def climatology(stations):
 
         if type_var not in types_var_D:
             # default for generic type for var D
-            ax.errorbar(x, y, yerr=[months_min, months_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
-            #bar(x, y, align='center', color='#638786')
+            ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
+            #bar(x, y_mean, align='center', color='#638786')
             zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
         else:
             if types_var_D[type_var]['graph'] == 'bar':
-                bar(x, y, align='center', color=types_var_D[type_var]['color'])
-                ax.errorbar(x, y, yerr=[months_min, months_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
+                bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
+                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
                 zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
             else:
-                ax.errorbar(x, y, yerr=[months_min, months_max], fmt='o-', color=types_var_D[type_var]['color'],
+                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=types_var_D[type_var]['color'],
                     mec=types_var_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
-                #ax.plot(x, y, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
+                #ax.plot(x, y_mean, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
                 zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
 
 
@@ -678,15 +733,72 @@ def climatology(stations):
                 else:
                     x_labels.append('')
 
-            name_graph = _("climatology"+"_({0}days)_{1}_{2}_{3}").format(globals_vars.analysis_interval_num_days,
+            title = _("Multiyear climatology (each {0} days)\n{1} {2} - {3} ({4}-{5})").format(globals_vars.analysis_interval_num_days,
+                station.code, station.name, globals_vars.config_run['type_var_D'], station.process_period['start'],
+                station.process_period['end'])
+
+            # -------------------------------------------------------------------------
+            # climatology N days without whiskers
+
+            name_graph = _("Multiyear_climatology_({0}days)_{1}_{2}_{3}").format(globals_vars.analysis_interval_num_days,
                 station.code, station.name, globals_vars.config_run['type_var_D'])
 
             with_fig = 5 + len(y_mean)/7
             fig = pyplot.figure(figsize=(with_fig, 6))
             ax = fig.add_subplot(111)
-            ax.set_title(_("Climatology"+" ({0}days)\n{1} {2} - {3} ({4}-{5})").format(globals_vars.analysis_interval_num_days,
-                station.code, station.name, globals_vars.config_run['type_var_D'], station.process_period['start'],
-                station.process_period['end']), multialignment='center')
+            ax.set_title(title, multialignment='center')
+
+            type_var = globals_vars.config_run['type_var_D']
+
+            ## X
+            ax.set_xlabel(_('Months'))
+            xticks(x, x_labels)
+
+            ## Y
+            # get units os type of var D or I
+            ax.set_ylabel('{0} ({1}) - '.format(type_var, globals_vars.units_var_D) + _('[mean]'))
+
+            #pyplot.subplots_adjust(bottom=0.2)
+            ax.grid(True)
+            ax.autoscale(tight=True)
+
+            x_scale_value = -0.013 -globals_vars.analysis_interval_num_days/600.0
+
+            if type_var not in types_var_D:
+                # default for generic type for var D
+                #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
+                ax.plot(x, y_mean, '-o', color='#638786', mec='#638786', linewidth=2.5, markersize=8)
+                zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_below=-0.04, y_scale_above=-0.04)
+            else:
+                if types_var_D[type_var]['graph'] == 'bar':
+                    bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
+                    #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
+                    zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_above=-0.04)
+                else:
+                    ax.plot(x, y_mean, '-o', color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color'], linewidth=2.5, markersize=8)
+                    #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=types_var_D[type_var]['color'],
+                    #    mec=types_var_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
+                    zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_below=-0.04, y_scale_above=-0.04)
+
+            # labels on both sides
+            #ax.tick_params(labeltop=False, labelright=True)
+
+            fig.tight_layout()
+
+            pyplot.savefig(os.path.join(station_image_path, name_graph + '.png'), dpi=75)
+
+            pyplot.close('all')
+
+            # -------------------------------------------------------------------------
+            # climatology N days with whiskers
+
+            name_graph = _("Multiyear_climatology_({0}days+whiskers)_{1}_{2}_{3}").format(globals_vars.analysis_interval_num_days,
+                station.code, station.name, globals_vars.config_run['type_var_D'])
+
+            with_fig = 5 + len(y_mean)/7
+            fig = pyplot.figure(figsize=(with_fig, 6))
+            ax = fig.add_subplot(111)
+            ax.set_title(title, multialignment='center')
 
             type_var = globals_vars.config_run['type_var_D']
 
@@ -708,14 +820,14 @@ def climatology(stations):
                 # default for generic type for var D
                 ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
                 zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_below=-0.04, y_scale_above=-0.04)
-                #bar(x, y, align='center', color='#638786')
+                #bar(x, y_mean, align='center', color='#638786')
             else:
                 if types_var_D[type_var]['graph'] == 'bar':
                     bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
                     ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
                     zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_above=-0.04)
                 else:
-                    #ax.plot(x, y, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
+                    #ax.plot(x, y_mean, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
                     ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=types_var_D[type_var]['color'],
                         mec=types_var_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
                     zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_below=-0.04, y_scale_above=-0.04)
@@ -728,6 +840,7 @@ def climatology(stations):
             pyplot.savefig(os.path.join(station_image_path, name_graph + '.png'), dpi=75)
 
             pyplot.close('all')
+
 
     open_file_climatology_table.close()
     del csv_climatology_table
