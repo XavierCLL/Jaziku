@@ -240,7 +240,7 @@ def get_thresholds_var_I(station):
 
         # thresholds for North atlantic oscillation index
         def if_var_I_is_NAO():
-            return 0, 0
+            return -1, 1
 
         # thresholds for Caribbean (CAR) Index
         def if_var_I_is_SST_CAR():

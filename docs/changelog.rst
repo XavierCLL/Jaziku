@@ -68,6 +68,7 @@ fixes
 - Show the footer when finished
 - Fixes translation in some variables in globals_vars
 - Correction in function for extract type and units
+- Fix threshold for NAO!: -1 to 1
 
 
 0.4.2 (**2012-08-21**)
