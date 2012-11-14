@@ -18,7 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 from datetime import date
 from numpy import median, average
 from scipy.stats.stats import tstd, variation, skew, kurtosis
@@ -27,6 +26,7 @@ from jaziku.modules.input import input_vars
 from jaziku.modules.input.input_check import count_null_values
 from jaziku.utils import console, globals_vars
 from jaziku.utils.mean import mean
+
 
 class Variable():
     """
@@ -66,7 +66,6 @@ class Variable():
                 console.msg(_("   the variable {0} has data daily").format(self.type), color='cyan')
             if self.frequency_data== "monthly":
                 console.msg(_("   the variable {0} has data monthly").format(self.type), color='cyan')
-
 
     def daily2monthly(self):
         """
@@ -123,8 +122,6 @@ class Variable():
 
         # delete all valid nulls
         self.data_filtered_in_process_period = [ value for value in self.data_in_process_period if not globals_vars.is_valid_null(value) ]
-
-
 
     def do_some_statistic_of_data(self, station):
         """
