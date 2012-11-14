@@ -154,14 +154,14 @@ def main(stations):
     # GRAPHS INSPECTION OF SERIES
 
     console.msg(_("Graphs inspection of series .......................... "), newline=False)
-    #graphs_inspection_of_series(stations) #todo
+    graphs_inspection_of_series(stations) #todo
     console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
     # CLIMATOLOGY
 
     console.msg(_("Climatology .......................................... "), newline=False)
-    #climatology(stations)
+    climatology(stations)
     console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
@@ -297,7 +297,7 @@ def descriptive_statistic_graphs(stations):
             with_fig = Station.stations_processed/5+4
             fig = pyplot.figure(figsize=(with_fig, 6), dpi=100)
             ax = fig.add_subplot(111)
-            ax.set_title(name_graph.replace('_',' '))
+            ax.set_title(name_graph.replace('_',' '), globals_vars.graphs_title_properties())
 
             if graph == _('vs_Stations'):
                 if graph_options[statistics[enum]] == 'dots':
@@ -309,10 +309,10 @@ def descriptive_statistic_graphs(stations):
 
             ## X
             if graph == _('vs_Stations'):
-                ax.set_xlabel(_('Stations'))
+                ax.set_xlabel(_('Stations'), globals_vars.graphs_axis_properties())
                 xticks(range(1, len(x)+1), x, rotation='vertical')
             if graph == _('vs_Altitude'):
-                ax.set_xlabel(_('Altitude (m)'))
+                ax.set_xlabel(_('Altitude (m)'), globals_vars.graphs_axis_properties())
                 #locs, labels = xticks(range(1, len(x)+1), x)
                 #setp(labels, 'rotation', 'vertical')
             ## Y
@@ -321,7 +321,7 @@ def descriptive_statistic_graphs(stations):
                 units = globals_vars.units_var_D
             else:
                 units = '--'
-            ax.set_ylabel('{0} ({1})'.format(statistic.replace('_',' '),units))
+            ax.set_ylabel('{0} ({1})'.format(statistic.replace('_',' '),units), globals_vars.graphs_axis_properties())
 
             pyplot.subplots_adjust(bottom=0.2)
             ax.grid(True)
@@ -408,7 +408,7 @@ def graphs_inspection_of_series(stations):
             fig = pyplot.figure(figsize=(with_fig, 6))
             #fig = pyplot.figure()
             ax = fig.add_subplot(111)
-            ax.set_title(name_graph.replace('_',' '))
+            ax.set_title(name_graph.replace('_',' '), globals_vars.graphs_title_properties())
 
             # default zoom values
             x_scale_below=-1.0/len_x
@@ -448,7 +448,7 @@ def graphs_inspection_of_series(stations):
                 ax.plot(x, y, 'o-', color="#638786")
 
             ## X
-            ax.set_xlabel(_('Time'))
+            ax.set_xlabel(_('Time'), globals_vars.graphs_axis_properties())
             if var.frequency_data == "daily" or type == 'special_I' or type == 'special_D':
                 ax.xaxis.set_major_locator(mdates.MonthLocator())  # every month
                 ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
@@ -464,7 +464,7 @@ def graphs_inspection_of_series(stations):
             if type in ['special_I', 'I']:
                 units = globals_vars.units_var_I
 
-            ax.set_ylabel('{0} ({1})'.format(type_var,units))
+            ax.set_ylabel('{0} ({1})'.format(type_var,units), globals_vars.graphs_axis_properties())
 
             pyplot.subplots_adjust(bottom=0.2)
             ax.grid(True)
@@ -610,17 +610,17 @@ def climatology(stations):
         fig = pyplot.figure()
         ax = fig.add_subplot(111)
 
-        ax.set_title(title, multialignment='center')
+        ax.set_title(title, globals_vars.graphs_title_properties())
 
         type_var = globals_vars.config_run['type_var_D']
 
         ## X
-        ax.set_xlabel(_('Months'))
+        ax.set_xlabel(_('Months'), globals_vars.graphs_axis_properties())
         xticks(x, x_labels)
 
         ## Y
         # get units os type of var D or I
-        ax.set_ylabel('{0} ({1}) - '.format(type_var, globals_vars.units_var_D) + _('[mean]'))
+        ax.set_ylabel('{0} ({1}) - '.format(type_var, globals_vars.units_var_D) + _('[mean]'), globals_vars.graphs_axis_properties())
 
         #pyplot.subplots_adjust(bottom=0.2)
         ax.grid(True)
@@ -660,17 +660,17 @@ def climatology(stations):
         fig = pyplot.figure()
         ax = fig.add_subplot(111)
 
-        ax.set_title(title, multialignment='center')
+        ax.set_title(title, globals_vars.graphs_title_properties())
 
         type_var = globals_vars.config_run['type_var_D']
 
         ## X
-        ax.set_xlabel(_('Months'))
+        ax.set_xlabel(_('Months'), globals_vars.graphs_axis_properties())
         xticks(x, x_labels)
 
         ## Y
         # get units os type of var D or I
-        ax.set_ylabel(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, globals_vars.units_var_D))
+        ax.set_ylabel(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, globals_vars.units_var_D), globals_vars.graphs_axis_properties())
 
         #pyplot.subplots_adjust(bottom=0.2)
         ax.grid(True)
@@ -756,17 +756,17 @@ def climatology(stations):
             with_fig = 5 + len(y_mean)/7
             fig = pyplot.figure(figsize=(with_fig, 6))
             ax = fig.add_subplot(111)
-            ax.set_title(title, multialignment='center')
+            ax.set_title(title, globals_vars.graphs_title_properties())
 
             type_var = globals_vars.config_run['type_var_D']
 
             ## X
-            ax.set_xlabel(_('Months'))
+            ax.set_xlabel(_('Months'), globals_vars.graphs_axis_properties())
             xticks(x, x_labels)
 
             ## Y
             # get units os type of var D or I
-            ax.set_ylabel('{0} ({1}) - '.format(type_var, globals_vars.units_var_D) + _('[mean]'))
+            ax.set_ylabel('{0} ({1}) - '.format(type_var, globals_vars.units_var_D) + _('[mean]'), globals_vars.graphs_axis_properties())
 
             #pyplot.subplots_adjust(bottom=0.2)
             ax.grid(True)
@@ -808,17 +808,17 @@ def climatology(stations):
             with_fig = 5 + len(y_mean)/7
             fig = pyplot.figure(figsize=(with_fig, 6))
             ax = fig.add_subplot(111)
-            ax.set_title(title, multialignment='center')
+            ax.set_title(title, globals_vars.graphs_title_properties())
 
             type_var = globals_vars.config_run['type_var_D']
 
             ## X
-            ax.set_xlabel(_('Months'))
+            ax.set_xlabel(_('Months'), globals_vars.graphs_axis_properties())
             xticks(x, x_labels)
 
             ## Y
             # get units os type of var D or I
-            ax.set_ylabel(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, globals_vars.units_var_D))
+            ax.set_ylabel(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, globals_vars.units_var_D), globals_vars.graphs_axis_properties())
 
             #pyplot.subplots_adjust(bottom=0.2)
             ax.grid(True)
@@ -911,7 +911,7 @@ def scatter_plots_of_series(stations):
         globals_vars.units_var_D,
         global_common_date_process_var_D[0].year, global_common_date_process_var_D[-1].year)
 
-    pyplot.suptitle(title_plot, y=(fig_height-0.1)/fig_height, fontsize=14, multialignment='center')
+    pyplot.suptitle(title_plot, y=(fig_height-0.1)/fig_height, fontsize=14)
 
     for iter_v, station_v in enumerate(stations):
         for iter_h, station_h in enumerate(stations):
@@ -926,11 +926,11 @@ def scatter_plots_of_series(stations):
             ax.scatter(x,y, marker='o', color="#638786", edgecolors="#3C5250")
 
             if iter_h == 0:
-                ax.set_ylabel(station_v.code)
+                ax.set_ylabel(station_v.code, globals_vars.graphs_axis_properties())
             else:
                 ax.set_yticklabels([])
             if iter_v == len(stations)-1:
-                ax.set_xlabel(station_h.code)
+                ax.set_xlabel(station_h.code, globals_vars.graphs_axis_properties())
             else:
                 ax.set_xticklabels([])
 
@@ -970,15 +970,15 @@ def frequency_histogram(stations):
         fig = pyplot.figure()
         ax = fig.add_subplot(111)
         ax.set_title(_("Frequency histogram"+"\n{0} {1} - {2} ({3}-{4})").format(station.code, station.name,
-            globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']), multialignment='center')
+            globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']), globals_vars.graphs_title_properties())
 
 
         ## X
         type_var = globals_vars.config_run['type_var_D']
-        ax.set_xlabel('{0} ({1})'.format(type_var, globals_vars.units_var_D))
+        ax.set_xlabel('{0} ({1})'.format(type_var, globals_vars.units_var_D), globals_vars.graphs_axis_properties())
 
         ## Y
-        ax.set_ylabel(_('Frequency'))
+        ax.set_ylabel(_('Frequency'), globals_vars.graphs_axis_properties())
 
         width = 0.7 * (bin_edges[1] - bin_edges[0])
         center = (bin_edges[:-1] + bin_edges[1:]) / 2
@@ -1053,15 +1053,17 @@ def outliers(stations):
 
         fig = pyplot.figure(figsize=(3,6))
         ax = fig.add_subplot(111)
-        ax.set_title(_("Outliers")+"\n{0} ({1}-{2})".format(globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']), multialignment='center')
+        ax.set_title(_("Outliers")+"\n{0} ({1}-{2})".format(globals_vars.config_run['type_var_D'],
+            station.process_period['start'], station.process_period['end']), globals_vars.graphs_title_properties())
 
         ## X
         x_labels = [station.code]
         xticks([1], x_labels)
+        ax.set_xlabel(_('Station'), globals_vars.graphs_axis_properties())
 
         ## Y
         type_var = globals_vars.config_run['type_var_D']
-        ax.set_ylabel('{0} ({1})'.format(type_var, globals_vars.units_var_D))
+        ax.set_ylabel('{0} ({1})'.format(type_var, globals_vars.units_var_D), globals_vars.graphs_axis_properties())
         #ax.set_ylabel(_('Frequency'))
 
         boxplot_station = boxplot(station.var_D.data_filtered_in_process_period)
@@ -1168,18 +1170,18 @@ def outliers(stations):
         fig = pyplot.figure(figsize=(2.5+len(stations)/2.5,6))
         ax = fig.add_subplot(111)
         if globals_vars.config_run['process_period']:
-            ax.set_title(_("Outliers")+"\n{0} ({1}-{2})".format(globals_vars.config_run['type_var_D'],
-                globals_vars.config_run['process_period']['start'], globals_vars.config_run['process_period']['end']), multialignment='center')
+            ax.set_title(_("Outliers")+" - {0} ({1}-{2})".format(globals_vars.config_run['type_var_D'],
+                globals_vars.config_run['process_period']['start'], globals_vars.config_run['process_period']['end']), globals_vars.graphs_title_properties())
         else:
-            ax.set_title(_("Outliers")+"\n{0}".format(globals_vars.config_run['type_var_D']), multialignment='center')
+            ax.set_title(_("Outliers")+" - {0}".format(globals_vars.config_run['type_var_D']), globals_vars.graphs_title_properties())
 
         ## X
         xticks(range(len(stations)), codes_stations, rotation='vertical')
-        ax.set_xlabel(_('Stations'))
+        ax.set_xlabel(_('Stations'), globals_vars.graphs_axis_properties())
 
         ## Y
         type_var = globals_vars.config_run['type_var_D']
-        ax.set_ylabel('{0} ({1})'.format(type_var, globals_vars.units_var_D))
+        ax.set_ylabel('{0} ({1})'.format(type_var, globals_vars.units_var_D), globals_vars.graphs_axis_properties())
         #ax.set_ylabel(_('Frequency'))
 
         boxplot_station = boxplot(data_stations)

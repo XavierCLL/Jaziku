@@ -167,6 +167,22 @@ phenomenon_normal = None
 phenomenon_above = None
 
 #==============================================================================
+# graphics properties
+
+def graphs_axis_properties(afs=14, ma='center'):
+    axis_properties = {}
+    axis_properties["fontsize"]=afs
+    axis_properties["multialignment"]=ma
+    return axis_properties
+
+def graphs_title_properties(tfs=17, ma='center'):
+    title_properties = {}
+    title_properties["fontsize"]=tfs
+    title_properties["multialignment"]=ma
+    return title_properties
+
+
+#==============================================================================
 # configurations and settings
 
 # configuration run read and set from runfile

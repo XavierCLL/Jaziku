@@ -45,6 +45,7 @@ news
 - New option in runfile for set particular units for var D or/and I regardless if
   the variables are o not internal variables
 - Now Jaziku check the 9 values for forecasting process
+- Setting global properties for all graphs of EDA
 
 fixes
 +++++
