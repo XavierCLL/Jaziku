@@ -179,13 +179,20 @@ def main(stations):
 
     console.msg(_("Scatter plots of series .............................. "), newline=False)
 
-    if Station.stations_processed > 1:
-        #scatter_plots_of_series(stations) #todo
+    if 1 < Station.stations_processed <= 10:
+        scatter_plots_of_series(stations) #todo
         console.msg(_("done"), color='green')
     else:
-        console.msg(_("fail\n > WARNING: There is only one station for process\n"
-                      "   the scatter plots of series, this need more \n"
-                      "   of one station."), color="yellow")
+        if Station.stations_processed == 1:
+            console.msg(_("fail\n > WARNING: There is only one station for process\n"
+                          "   the scatter plots of series, this need more \n"
+                          "   of one station."), color="yellow")
+        else:
+            console.msg(_("fail\n > WARNING: The maximum limit for make the scatter plots\n"
+                          "   of series are 10 stations, if you want this diagram,\n"
+                          "   please divide the stations in regions into different\n"
+                          "   runfiles with maximum 10 stations per runfile, and\n"
+                          "   rerun each runfile."), color="yellow")
 
     # -------------------------------------------------------------------------
     # FREQUENCY HISTOGRAM
@@ -211,7 +218,6 @@ def main(stations):
 
     if not os.path.isdir(outliers_dir):
         os.makedirs(outliers_dir)
-
 
     console.msg(_("Outliers ............................................. "), newline=False)
 
@@ -1151,7 +1157,7 @@ def outliers(stations):
     # -------------------------------------------------------------------------
     ## Outliers graph all in one
 
-    if len(stations) > 1:
+    if 1 < Station.stations_processed <= 50:
         if globals_vars.config_run['process_period']:
             name_graph = _("Outliers")+"_{0}_({1}-{2})".format(
                 globals_vars.config_run['type_var_D'], globals_vars.config_run['process_period']['start'],
@@ -1195,6 +1201,13 @@ def outliers(stations):
 
         pyplot.close('all')
 
+    elif Station.stations_processed > 50:
+        console.msg(_("\n > WARNING: The maximum limit for make the box-plot of\n"
+                      "   outliers of all stations are 50 stations, if you want\n"
+                      "   this box-plot, please divide the stations in regions\n"
+                      "   into different runfiles with maximum 50 stations per\n"
+                      "   runfile, and rerun each runfile ................... "), color="yellow", newline=False)
+
     # -------------------------------------------------------------------------
     ## Report all Outliers of all stations in file
 
@@ -1220,7 +1233,7 @@ def outliers(stations):
     header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), _('WHISKERS BELOW'),
               _('WHISKERS ABOVE'), _('# OUTLIERS'),'']
 
-    header_outliers = [_('DATE'), _('VALUE'), _('PHEN_CATE')]
+    header_outliers = [_('DATE'), _('VALUE'), _('PHEN_CAT')]
 
     header = header + header_outliers*num_max_outliers
 
