@@ -70,6 +70,8 @@ fixes
 - Correction in function for extract type and units
 - Fix thresholds for NAO!: -1 to 1
 - Avoid same name in variable and function in state_of_data
+- Limits of 10 and 50 stations for to do the scatter_plots_of_series
+  and box-plot of outliers all stations, respectively.
 
 
 0.4.2 (**2012-08-21**)
