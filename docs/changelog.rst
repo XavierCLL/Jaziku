@@ -40,11 +40,11 @@ news
 - After set all configuration to run, jaziku prompt to user for read the configuration
   and ask for continue.
 - Add argument '-f', for force all ask to default answer for continue
-- New: Outliers report in file and Box-Jenkins diagram one by station and all stations
-  in one diagram
+- New: Report all outliers of all stations in file and make Box-Jenkins diagram one by station and all
+  in one diagram of outliers
 - New option in runfile for set particular units for var D or/and I regardless if
   the variables are o not internal variables
-- Now Jaziku check the 9 values for forecasting proces
+- Now Jaziku check the 9 values for forecasting process
 
 fixes
 +++++
@@ -62,13 +62,14 @@ fixes
 - Fix SST_CAR name and file
 - Fix getting units for var D or I when type is external
 - Fix when lag equal to 0 Jaziku confused it with None
-- Fix when read NaN (standart null) from series
+- Fix when read NaN (standard null) from series
 - Fixes particular limits when these are 0
 - Check if runfile exist before open
 - Show the footer when finished
 - Fixes translation in some variables in globals_vars
 - Correction in function for extract type and units
-- Fix threshold for NAO!: -1 to 1
+- Fix thresholds for NAO!: -1 to 1
+- Avoid same name in variable and function in state_of_data
 
 
 0.4.2 (**2012-08-21**)
@@ -77,7 +78,7 @@ fixes
 news
 ++++
  
-- new option in runfile: the "analog_year", with this the calcule of thresholds 
+- new option in runfile: the "analog_year", with this the calculate of thresholds
   for only var D are based on percentile(33 and 66) of all raw values in analog
   year, ignoring null values. For use it, defined analog_year and put "default" 
   value in  THRESHOLD VAR D BELOW/ABOVE in runfile.
