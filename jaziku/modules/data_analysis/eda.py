@@ -1080,7 +1080,6 @@ def outliers(stations):
         data_stations.append(station.var_D.data_filtered_in_process_period)
         codes_stations.append(station.code)
 
-
         # -------------------------------------------------------------------------
         ## Prepare variables for report all outliers of all stations
 
@@ -1145,22 +1144,9 @@ def outliers(stations):
 
                 outliers_list.append([outlier_date, value, phenomenon_category])
 
-                print station.var_I_values
-                print outlier_date
-                print value_var_I
-                print threshold_below_var_I
-                print threshold_above_var_I
-                print phenomenon_category
-
-
         outliers_station['outliers'] = outliers_list
 
         outliers_all_stations.append(outliers_station)
-
-
-
-
-
 
     # -------------------------------------------------------------------------
     ## Outliers graph all in one
@@ -1236,7 +1222,7 @@ def outliers(stations):
 
     header_outliers = [_('DATE'), _('VALUE'), _('PHEN_CATE')]
 
-    header = header + header_outliers*(num_max_outliers+1)
+    header = header + header_outliers*num_max_outliers
 
     csv_file_D.writerow(header)
 
@@ -1259,30 +1245,12 @@ def outliers(stations):
         # sort the outliers list base on outlier value
         outliers_station['outliers'] = sorted(outliers_station['outliers'], key=itemgetter(1))
 
-        print outliers_station['outliers']
-
-        print_threshold = True
-
         for outlier in outliers_station['outliers']:
-
-            # print thresholds of whiskers
-            if outlier[1] > outliers_station['whiskers_above'] and print_threshold:
-                outliers_station_line.append(' [--('+format_out.number(outliers_station['whiskers_below'],2)+') ')
-                outliers_station_line.append('-------')
-                outliers_station_line.append(' ('+format_out.number(outliers_station['whiskers_above'], 2)+')--] ')
-                print_threshold = False
 
             outliers_station_line.append('{0}-{1}-{2}'.format(outlier[0].year,outlier[0].month,outlier[0].day))
             outliers_station_line.append(format_out.number(outlier[1]))
             outliers_station_line.append(outlier[2])
             #outliers_station_line.append('|')
-
-            # print thresholds of whiskers if is the last outlier
-            if outlier == outliers_station['outliers'][-1] and print_threshold:
-                outliers_station_line.append(' [--('+format_out.number(outliers_station['whiskers_below'],2)+') ')
-                outliers_station_line.append('-------')
-                outliers_station_line.append(' ('+format_out.number(outliers_station['whiskers_above'], 2)+')--] ')
-                print_threshold = False
 
         csv_file_D.writerow(outliers_station_line)
 
