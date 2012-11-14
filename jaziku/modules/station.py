@@ -103,7 +103,7 @@ class Station:
                                'end': self.common_period[-1][0].year - 1}
 
 
-    def state_of_data(self):
+    def get_state_of_data(self):
         """
         Calculate and write output based on type of data (daily or monthly)
         of dependent and independent variable.
@@ -159,7 +159,7 @@ class Station:
         Run climate and forecasting process for this station.
         """
 
-        self.state_of_data()
+        self.get_state_of_data()
 
         # define if results will made by trimester or every n days
         if self.state_of_data in [1, 3]:

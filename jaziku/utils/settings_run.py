@@ -46,6 +46,8 @@ def get():
                 "overlapping": None,
                 "shape_boundary": colored.red(_("disabled"))}
 
+    globals_vars.settings = settings
+
     ## general options
     # data_analysis
     if globals_vars.config_run['data_analysis'] == True:
