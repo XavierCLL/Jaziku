@@ -20,19 +20,23 @@
 
 import os
 import csv
-from math import log, sqrt, log10
+import copy
+import matplotlib.dates as mdates
+from math import log10
+from operator import itemgetter
 from datetime import date
-import gc
 from dateutil.relativedelta import relativedelta
 from matplotlib import pyplot
 from numpy import histogram
 from pylab import xticks, setp, bar, boxplot
-import matplotlib.dates as mdates
 from Image import open as img_open
 from scipy.stats import shapiro
 from calendar import monthrange
 
-from jaziku.modules.climate.lags import get_range_analysis_interval, get_range_analysis_interval_values
+from jaziku.modules.analysis_interval import get_values_in_range_analysis_interval, locate_day_in_analysis_interval, get_range_analysis_interval
+from jaziku.modules.climate import lags
+from jaziku.modules.climate.contingency_table import get_thresholds_var_I
+from jaziku.modules.climate.lags import  calculate_lags
 from jaziku.modules.station import Station
 from jaziku.modules.variable import Variable
 from jaziku.utils import globals_vars, console, format_out
@@ -157,7 +161,7 @@ def main(stations):
     # CLIMATOLOGY
 
     console.msg(_("Climatology .......................................... "), newline=False)
-    climatology(stations)
+    #climatology(stations)
     console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
@@ -715,9 +719,9 @@ def climatology(stations):
                             iter_year += relativedelta(years= +1)
                             continue
 
-                        range_analysis_mean.append(mean(get_range_analysis_interval_values(station,'D', iter_year, month, day)))
-                        range_analysis_max.append(max(get_range_analysis_interval_values(station,'D', iter_year, month, day)))
-                        range_analysis_min.append(min(get_range_analysis_interval_values(station,'D', iter_year, month, day)))
+                        range_analysis_mean.append(mean(get_values_in_range_analysis_interval(station,'D', iter_year, month, day)))
+                        range_analysis_max.append(max(get_values_in_range_analysis_interval(station,'D', iter_year, month, day)))
+                        range_analysis_min.append(min(get_values_in_range_analysis_interval(station,'D', iter_year, month, day)))
 
                         iter_year += 1
                     y_mean.append(mean(range_analysis_mean))
@@ -1026,6 +1030,8 @@ def outliers(stations):
     data_stations = []
     codes_stations = []
 
+    outliers_all_stations = []
+
     for station in stations:
 
         outliers_per_stations_dir = os.path.join(outliers_dir, _("Outliers_per_station"))
@@ -1034,7 +1040,7 @@ def outliers(stations):
             os.makedirs(outliers_per_stations_dir)
 
         # -------------------------------------------------------------------------
-        ## Outliers graph
+        ## Outliers graph per station
 
         name_graph = _("Outliers")+"_{0}_{1}_{2}_({3}-{4})".format(station.code, station.name,
         globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end'])
@@ -1074,69 +1080,211 @@ def outliers(stations):
         data_stations.append(station.var_D.data_filtered_in_process_period)
         codes_stations.append(station.code)
 
+
         # -------------------------------------------------------------------------
-        ## Outliers file
+        ## Prepare variables for report all outliers of all stations
 
-        file_outliers_var_D\
-            = os.path.join(outliers_per_stations_dir, _("Outliers")+"_{0}_{1}_{2}_({3}-{4}).csv".format(station.code, station.name,
-            globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']))
+        outliers_station = {}
 
-        open_file_D = open(file_outliers_var_D, 'w')
-        csv_file_D = csv.writer(open_file_D, delimiter=';')
+        outliers_station['station'] = station
 
-        # print header
-        header = [_('DATE'), _('VALUE')]
+        outliers_station['whiskers_below'] = boxplot_station['whiskers'][0].get_data()[1][1]
+        outliers_station['whiskers_above'] = boxplot_station['whiskers'][1].get_data()[1][1]
 
-        csv_file_D.writerow(header)
+        # prepare data if:
+        if station.var_D.frequency_data == "monthly" and station.var_I.frequency_data == "daily":
+            station = copy.deepcopy(station)
+            station.var_I.daily2monthly()
+            station.var_I.frequency_data = "monthly"
+            station.var_I.data_and_null_in_process_period(station)
 
-        whisker_below = boxplot_station['whiskers'][0].get_data()[1][1]
-        whisker_above = boxplot_station['whiskers'][1].get_data()[1][1]
+        station.get_state_of_data()
+        calculate_lags(station, makes_files=False)
+
+        outliers_list = []
 
         for index, value in enumerate(station.var_D.data_in_process_period):
 
-            if (value < whisker_below or value > whisker_above) and not globals_vars.is_valid_null(value):
-                # var D
-                line_of_data_outlier = [station.var_D.date_in_process_period[index], format_out.number(value, 4)]
-                csv_file_D.writerow(line_of_data_outlier)
+            if (value < outliers_station['whiskers_below'] or
+                value > outliers_station['whiskers_above']) and \
+                not globals_vars.is_valid_null(value):
+                # date of outlier
+                outlier_date = station.var_D.date_in_process_period[index]
 
-        open_file_D.close()
-        del csv_file_D
+                if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "daily":
+                    # get the corresponding start day of analysis interval
+                    day = locate_day_in_analysis_interval(station, outlier_date.day)
+                    # get I values for outliers date
+                    station.var_I_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month, day)
+                    # get the corresponding index of var I in the period of outlier
+                    index_date_var_I = station.var_I.date_in_process_period.index(outlier_date)
+                if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "monthly":
+                    # get the corresponding start day of analysis interval
+                    day = locate_day_in_analysis_interval(station, outlier_date.day)
+                    # get I values for outliers date
+                    station.var_I_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month, day)
+                    # get the corresponding index of var I in the period of outlier
+                    index_date_var_I = station.var_I.date_in_process_period.index(date(outlier_date.year,outlier_date.month,1))
+                if station.var_D.frequency_data == "monthly" and station.var_I.frequency_data == "monthly":
+                    # get I values for outliers date
+                    station.var_I_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month)
+                    # get the corresponding index of var I in the period of outlier
+                    index_date_var_I = station.var_I.date_in_process_period.index(outlier_date)
+
+                # get the corresponding value of var I in the period of outlier
+                value_var_I = station.var_I.data_in_process_period[index_date_var_I]
+                # get thresholds of var I in the period of outlier
+                threshold_below_var_I, threshold_above_var_I = get_thresholds_var_I(station)
+                # categorize the value of var I and get the phenomenon_category based in the label phenomenon
+                if value_var_I < threshold_below_var_I:
+                    phenomenon_category = globals_vars.phenomenon_below
+                elif value_var_I > threshold_above_var_I:
+                    phenomenon_category = globals_vars.phenomenon_above
+                else:
+                    phenomenon_category = globals_vars.phenomenon_normal
+
+                outliers_list.append([outlier_date, value, phenomenon_category])
+
+                print station.var_I_values
+                print outlier_date
+                print value_var_I
+                print threshold_below_var_I
+                print threshold_above_var_I
+                print phenomenon_category
+
+
+        outliers_station['outliers'] = outliers_list
+
+        outliers_all_stations.append(outliers_station)
+
+
+
+
 
 
     # -------------------------------------------------------------------------
-    ## Outliers graph
+    ## Outliers graph all in one
 
-    name_graph = _("Outliers")+"_{0}_({1}-{2})".format(
-        globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end'])
+    if len(stations) > 1:
+        if globals_vars.config_run['process_period']:
+            name_graph = _("Outliers")+"_{0}_({1}-{2})".format(
+                globals_vars.config_run['type_var_D'], globals_vars.config_run['process_period']['start'],
+                globals_vars.config_run['process_period']['end'])
+        else:
+            name_graph = _("Outliers")+"_{0}".format(globals_vars.config_run['type_var_D'])
 
-    fig = pyplot.figure(figsize=(2.5+len(codes_stations)/2.5,6))
-    ax = fig.add_subplot(111)
-    ax.set_title(_("Outliers")+"\n{0} ({1}-{2})".format(globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']), multialignment='center')
+        fig = pyplot.figure(figsize=(2.5+len(stations)/2.5,6))
+        ax = fig.add_subplot(111)
+        if globals_vars.config_run['process_period']:
+            ax.set_title(_("Outliers")+"\n{0} ({1}-{2})".format(globals_vars.config_run['type_var_D'],
+                globals_vars.config_run['process_period']['start'], globals_vars.config_run['process_period']['end']), multialignment='center')
+        else:
+            ax.set_title(_("Outliers")+"\n{0}".format(globals_vars.config_run['type_var_D']), multialignment='center')
 
-    ## X
-    xticks(range(len(codes_stations)), codes_stations, rotation='vertical')
-    ax.set_xlabel(_('Stations'))
+        ## X
+        xticks(range(len(stations)), codes_stations, rotation='vertical')
+        ax.set_xlabel(_('Stations'))
 
-    ## Y
-    type_var = globals_vars.config_run['type_var_D']
-    ax.set_ylabel('{0} ({1})'.format(type_var, globals_vars.units_var_D))
-    #ax.set_ylabel(_('Frequency'))
+        ## Y
+        type_var = globals_vars.config_run['type_var_D']
+        ax.set_ylabel('{0} ({1})'.format(type_var, globals_vars.units_var_D))
+        #ax.set_ylabel(_('Frequency'))
 
-    boxplot_station = boxplot(data_stations)
+        boxplot_station = boxplot(data_stations)
 
-    #pyplot.setp(boxplot_station['boxes'], color='black')
-    #pyplot.setp(boxplot_station['whiskers'], color='black', linestyle='-')
-    pyplot.setp(boxplot_station['fliers'], color='red', marker='+')
-    #pyplot.setp(boxplot_station['fliers'], markersize=3.0)
+        #pyplot.setp(boxplot_station['boxes'], color='black')
+        #pyplot.setp(boxplot_station['whiskers'], color='black', linestyle='-')
+        pyplot.setp(boxplot_station['fliers'], color='red', marker='+')
+        #pyplot.setp(boxplot_station['fliers'], markersize=3.0)
 
-    #ax.grid(True)
-    ax.autoscale(tight=True)
-    #pyplot.subplots_adjust(bottom=) #(len(max(codes_stations))/30.0))
+        #ax.grid(True)
+        ax.autoscale(tight=True)
+        #pyplot.subplots_adjust(bottom=) #(len(max(codes_stations))/30.0))
 
-    zoom_graph(ax=ax, x_scale_below=-0.2,x_scale_above=-0.2, y_scale_below=-0.04, y_scale_above=-0.04, abs_x=True)
+        zoom_graph(ax=ax, x_scale_below=-0.2,x_scale_above=-0.2, y_scale_below=-0.04, y_scale_above=-0.04, abs_x=True)
 
-    fig.tight_layout()
+        fig.tight_layout()
 
-    pyplot.savefig(os.path.join(outliers_dir, name_graph + '.png'), dpi=75)
+        pyplot.savefig(os.path.join(outliers_dir, name_graph + '.png'), dpi=75)
 
-    pyplot.close('all')
+        pyplot.close('all')
+
+    # -------------------------------------------------------------------------
+    ## Report all Outliers of all stations in file
+
+    if globals_vars.config_run['process_period']:
+        file_outliers_var_D\
+        = os.path.join(outliers_dir, _("Outliers")+"_{0}_{1}_{2}_({3}-{4}).csv".format(station.code, station.name,
+            globals_vars.config_run['type_var_D'], globals_vars.config_run['process_period']['start'],
+            globals_vars.config_run['process_period']['end']))
+    else:
+        file_outliers_var_D\
+        = os.path.join(outliers_dir, _("Outliers")+"_{0}_{1}_{2}.csv".format(station.code, station.name,
+            globals_vars.config_run['type_var_D']))
+
+    open_file_D = open(file_outliers_var_D, 'w')
+    csv_file_D = csv.writer(open_file_D, delimiter=';')
+
+    num_max_outliers = 0
+    for outliers_station in outliers_all_stations:
+        if len(outliers_station['outliers']) > num_max_outliers:
+            num_max_outliers = len(outliers_station['outliers'])
+
+    # print header
+    header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), _('WHISKERS BELOW'),
+              _('WHISKERS ABOVE'), _('# OUTLIERS'),'']
+
+    header_outliers = [_('DATE'), _('VALUE'), _('PHEN_CATE')]
+
+    header = header + header_outliers*(num_max_outliers+1)
+
+    csv_file_D.writerow(header)
+
+    for outliers_station in outliers_all_stations:
+
+        num_outliers = len(outliers_station['outliers'])
+
+        outliers_station_line = [
+            outliers_station['station'].code,
+            outliers_station['station'].name,
+            format_out.number(outliers_station['station'].lat),
+            format_out.number(outliers_station['station'].lon),
+            format_out.number(outliers_station['station'].alt),
+            '{0}-{1}'.format(outliers_station['station'].process_period['start'], outliers_station['station'].process_period['end']),
+            format_out.number(outliers_station['whiskers_below']),
+            format_out.number(outliers_station['whiskers_above']),
+            num_outliers,  _('OUTLIERS LIST:')
+        ]
+
+        # sort the outliers list base on outlier value
+        outliers_station['outliers'] = sorted(outliers_station['outliers'], key=itemgetter(1))
+
+        print outliers_station['outliers']
+
+        print_threshold = True
+
+        for outlier in outliers_station['outliers']:
+
+            # print thresholds of whiskers
+            if outlier[1] > outliers_station['whiskers_above'] and print_threshold:
+                outliers_station_line.append(' [--('+format_out.number(outliers_station['whiskers_below'],2)+') ')
+                outliers_station_line.append('-------')
+                outliers_station_line.append(' ('+format_out.number(outliers_station['whiskers_above'], 2)+')--] ')
+                print_threshold = False
+
+            outliers_station_line.append('{0}-{1}-{2}'.format(outlier[0].year,outlier[0].month,outlier[0].day))
+            outliers_station_line.append(format_out.number(outlier[1]))
+            outliers_station_line.append(outlier[2])
+            #outliers_station_line.append('|')
+
+            # print thresholds of whiskers if is the last outlier
+            if outlier == outliers_station['outliers'][-1] and print_threshold:
+                outliers_station_line.append(' [--('+format_out.number(outliers_station['whiskers_below'],2)+') ')
+                outliers_station_line.append('-------')
+                outliers_station_line.append(' ('+format_out.number(outliers_station['whiskers_above'], 2)+')--] ')
+                print_threshold = False
+
+        csv_file_D.writerow(outliers_station_line)
+
+    open_file_D.close()
+    del csv_file_D
