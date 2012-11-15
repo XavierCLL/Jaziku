@@ -46,6 +46,7 @@ news
   the variables are o not internal variables
 - Now Jaziku check the 9 values for forecasting process
 - Setting global properties for all graphs of EDA
+- now before run the data analysis, check analysis interval and state of data
 
 fixes
 +++++

@@ -158,17 +158,15 @@ class Station:
         """
         Run climate and forecasting process for this station.
         """
-
         self.get_state_of_data()
 
         # define if results will made by trimester or every n days
         if self.state_of_data in [1, 3]:
             console.msg(_("   Results will be made by trimesters"), color='cyan')
             if globals_vars.config_run['analysis_interval'] != "trimester":
-                text_error = _("var_D (and or not var_I) has data monthly but you define the\n"
-                               "analysis interval as '{0}', this must be, in this\n"
-                               "case, as 'trimester' or use data daily.").format(globals_vars.config_run['analysis_interval'])
-                console.msg_error_line_stations(self, text_error)
+                console.msg_error(_("The var_D of stations have data monthly, but you define\n"
+                                    "in runfile the analysis interval as '{0}', this must be,\n"
+                                    "in this case, as 'trimester' or use data daily.").format(globals_vars.config_run['analysis_interval']))
         if self.state_of_data in [2, 4]:
             # if analysis_interval is defined by trimester but var_I or/and var_D has data
             # daily, first convert in data monthly and continue with results by trimester

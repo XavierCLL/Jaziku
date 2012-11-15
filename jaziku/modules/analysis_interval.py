@@ -21,7 +21,7 @@
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from jaziku.utils import globals_vars
+from jaziku.utils import globals_vars, console
 
 
 def get_range_analysis_interval(station):
@@ -48,6 +48,28 @@ def locate_day_in_analysis_interval(station, day_for_locate):
     for range_item in range_analysis_interval:
         if day_for_locate >= range_item:
             return range_item
+
+
+def check_analysis_interval_and_state_of_data(stations):
+
+    global_state_of_data = None
+
+    for station in stations:
+
+        if global_state_of_data is None:
+            global_state_of_data = station.state_of_data
+            global_frequency_data = station.var_D.frequency_data
+            continue
+        if global_state_of_data != station.state_of_data:
+            console.msg_error(_("The station with code '{0}' and name '{1}'\n"
+                                "have data {2} but other stations has data {3}. Jaziku\n"
+                                "requires that all stations have identical frequency data.").format(
+                station.code, station.name, station.var_D.frequency_data, global_frequency_data))
+
+    if global_state_of_data in [1, 3] and globals_vars.config_run['analysis_interval'] != "trimester":
+        console.msg_error(_("The var_D of stations have data monthly, but you define\n"
+                       "in runfile the analysis interval as '{0}', this must be,\n"
+                       "in this case, as 'trimester' or use data daily.").format(globals_vars.config_run['analysis_interval']))
 
 
 def get_values_in_range_analysis_interval(station, type, year, month, day=None, lag=None):
