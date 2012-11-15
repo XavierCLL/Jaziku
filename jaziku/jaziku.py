@@ -187,6 +187,8 @@ def main():
 
     settings_run.show()
 
+    settings_run.check_station_list(stations)
+
     settings_run.continue_run()
 
 
