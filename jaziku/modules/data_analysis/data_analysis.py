@@ -22,6 +22,7 @@ import gettext
 
 from jaziku.utils import  console
 from jaziku.modules.station import Station
+from jaziku.modules.analysis_interval import check_analysis_interval_and_state_of_data
 import eda
 
 def main(stations):
@@ -40,6 +41,8 @@ def main(stations):
         station.var_D.read_data_from_file(station, process=True, messages=False)
         station.var_I.read_data_from_file(station, process=True, messages=False)
 
+        station.get_state_of_data()
+
         station.calculate_common_and_process_period()
 
         station.var_D.data_and_null_in_process_period(station)
@@ -48,6 +51,7 @@ def main(stations):
         station.var_D.do_some_statistic_of_data(station)
         station.var_I.do_some_statistic_of_data(station)
 
+    check_analysis_interval_and_state_of_data(stations)
 
     console.msg(_("done"), color='green')
     console.msg(gettext.ngettext(
