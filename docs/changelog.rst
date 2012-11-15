@@ -73,6 +73,8 @@ fixes
 - Avoid same name in variable and function in state_of_data
 - Limits of 10 and 50 stations for to do the scatter_plots_of_series
   and box-plot of outliers all stations, respectively.
+- Fixes when jaziku categorized the outliers with analysis interval equal
+  to trimester and var D is daily.
 
 
 0.4.2 (**2012-08-21**)

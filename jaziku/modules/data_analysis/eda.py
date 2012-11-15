@@ -1105,8 +1105,32 @@ def outliers(stations):
             station.var_I.frequency_data = "monthly"
             station.var_I.data_and_null_in_process_period(station)
 
-        station.get_state_of_data()
-        calculate_lags(station, makes_files=False)
+        # special cases with analysis_interval equal to trimester
+        if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "daily" and \
+           globals_vars.config_run['analysis_interval'] == "trimester":
+                station_copy = copy.deepcopy(station)
+                station_copy.var_D.daily2monthly()
+                station_copy.var_D.frequency_data = "monthly"
+                station_copy.var_D.data_and_null_in_process_period(station)
+
+                station_copy.var_I.daily2monthly()
+                station_copy.var_I.frequency_data = "monthly"
+                station_copy.var_I.data_and_null_in_process_period(station)
+
+                station_copy.get_state_of_data()
+                calculate_lags(station_copy, makes_files=False)
+        elif station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "monthly" and\
+           globals_vars.config_run['analysis_interval'] == "trimester":
+            station_copy = copy.deepcopy(station)
+            station_copy.var_D.daily2monthly()
+            station_copy.var_D.frequency_data = "monthly"
+            station_copy.var_D.data_and_null_in_process_period(station)
+
+            station_copy.get_state_of_data()
+            calculate_lags(station_copy, makes_files=False)
+        else:
+            station.get_state_of_data()
+            calculate_lags(station, makes_files=False)
 
         outliers_list = []
 
@@ -1119,19 +1143,31 @@ def outliers(stations):
                 outlier_date = station.var_D.date_in_process_period[index]
 
                 if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "daily":
-                    # get the corresponding start day of analysis interval
-                    day = locate_day_in_analysis_interval(station, outlier_date.day)
-                    # get I values for outliers date
-                    station.var_I_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month, day)
-                    # get the corresponding index of var I in the period of outlier
-                    index_date_var_I = station.var_I.date_in_process_period.index(outlier_date)
+                    if globals_vars.config_run['analysis_interval'] == "trimester":
+                        # get I values for outliers date
+                        station.var_I_values = lags.get_lag_values(station_copy, 'var_I', 0, outlier_date.month)
+                        # get the corresponding index of var I in the period of outlier
+                        index_date_var_I = station.var_I.date_in_process_period.index(outlier_date)
+                    else:
+                        # get the corresponding start day of analysis interval
+                        day = locate_day_in_analysis_interval(station, outlier_date.day)
+                        # get I values for outliers date
+                        station.var_I_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month, day)
+                        # get the corresponding index of var I in the period of outlier
+                        index_date_var_I = station.var_I.date_in_process_period.index(outlier_date)
                 if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "monthly":
-                    # get the corresponding start day of analysis interval
-                    day = locate_day_in_analysis_interval(station, outlier_date.day)
-                    # get I values for outliers date
-                    station.var_I_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month, day)
-                    # get the corresponding index of var I in the period of outlier
-                    index_date_var_I = station.var_I.date_in_process_period.index(date(outlier_date.year,outlier_date.month,1))
+                    if globals_vars.config_run['analysis_interval'] == "trimester":
+                        # get I values for outliers date
+                        station.var_I_values = lags.get_lag_values(station_copy, 'var_I', 0, outlier_date.month)
+                        # get the corresponding index of var I in the period of outlier
+                        index_date_var_I = station.var_I.date_in_process_period.index(date(outlier_date.year,outlier_date.month,1))
+                    else:
+                        # get the corresponding start day of analysis interval
+                        day = locate_day_in_analysis_interval(station, outlier_date.day)
+                        # get I values for outliers date
+                        station.var_I_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month, day)
+                        # get the corresponding index of var I in the period of outlier
+                        index_date_var_I = station.var_I.date_in_process_period.index(date(outlier_date.year,outlier_date.month,1))
                 if station.var_D.frequency_data == "monthly" and station.var_I.frequency_data == "monthly":
                     # get I values for outliers date
                     station.var_I_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month)
