@@ -566,6 +566,50 @@ def check():
                   "in forecasting options must be equal to 100."))
 
 
+def check_station_list(stations):
+
+    console.msg(_("\nChecking the stations list:"), newline=False)
+
+    # -------------------------------------------------------------------------
+    # check the code and/or name of stations don't repeat, exit or show warning
+    # depending on the case.
+
+    # first check error
+    list_codes = []
+    list_names = []
+    for station in stations:
+        if station.code in list_codes and station.name in list_names:
+            console.msg_error_line_stations(station, _("The combination of the code and name of the station can't repeat,\n"
+                                                       "many result will be replaced with the same code-name of station." ))
+        else:
+            list_codes.append(station.code)
+            list_names.append(station.name)
+
+    # check warnings, show and return with the first warning
+    list_codes = []
+    list_names = []
+    for station in stations:
+        if station.code in list_codes and not station.name in list_names:
+            console.msg(_("WARNING:"), color='yellow')
+            console.msg(_("   The code {0} of the station {1} is repeat\n"
+                          "   with other stations, is recommend that the code and name\n"
+                          "   of stations be different. This is only a recommendation,\n"
+                          "   you can continue.").format(station.code, station.name), color='yellow')
+            return
+        elif not station.code in list_codes and station.name in list_names:
+            console.msg(_("WARNING:"), color='yellow')
+            console.msg(_("   The name {0} of the station with code {1} is repeat\n"
+                          "   with other stations, is recommend that the code and name\n"
+                          "   of stations be different. This is only a recommendation,\n"
+                          "   you can continue.").format(station.name, station.code), color='yellow')
+            return
+        else:
+            list_codes.append(station.code)
+            list_names.append(station.name)
+
+    # finish, check all good
+    console.msg(_("done"), color='green')
+
 
 def query_yes_no(question, default="yes"):
     """

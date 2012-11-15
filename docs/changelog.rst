@@ -46,7 +46,9 @@ news
   the variables are o not internal variables
 - Now Jaziku check the 9 values for forecasting process
 - Setting global properties for all graphs of EDA
-- now before run the data analysis, check analysis interval and state of data
+- Now before run the data analysis, check analysis interval and state of data
+- New: check the code and/or name of stations don't repeat, exit or show warning
+  depending on the case.
 
 fixes
 +++++
