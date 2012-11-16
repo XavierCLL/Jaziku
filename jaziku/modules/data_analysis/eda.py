@@ -604,7 +604,7 @@ def climatology(stations):
 
         name_graph = _("Multiyear_climatology_(monthly)_{0}_{1}_{2}").format(station.code, station.name, globals_vars.config_run['type_var_D'])
 
-        fig = pyplot.figure()
+        fig = pyplot.figure(figsize=(8, 5.5))
         ax = fig.add_subplot(111)
 
         ax.set_title(title, globals_vars.graphs_title_properties())
@@ -654,7 +654,7 @@ def climatology(stations):
 
         name_graph = _("Multiyear_climatology_(monthly+whiskers)_{0}_{1}_{2}").format(station.code, station.name, globals_vars.config_run['type_var_D'])
 
-        fig = pyplot.figure()
+        fig = pyplot.figure(figsize=(8, 5.5))
         ax = fig.add_subplot(111)
 
         ax.set_title(title, globals_vars.graphs_title_properties())
@@ -750,8 +750,8 @@ def climatology(stations):
             name_graph = _("Multiyear_climatology_({0}days)_{1}_{2}_{3}").format(globals_vars.analysis_interval_num_days,
                 station.code, station.name, globals_vars.config_run['type_var_D'])
 
-            with_fig = 5 + len(y_mean)/7
-            fig = pyplot.figure(figsize=(with_fig, 6))
+            with_fig = 5 + len(y_mean)/9
+            fig = pyplot.figure(figsize=(with_fig, 5.5))
             ax = fig.add_subplot(111)
             ax.set_title(title, globals_vars.graphs_title_properties())
 
@@ -802,8 +802,8 @@ def climatology(stations):
             name_graph = _("Multiyear_climatology_({0}days+whiskers)_{1}_{2}_{3}").format(globals_vars.analysis_interval_num_days,
                 station.code, station.name, globals_vars.config_run['type_var_D'])
 
-            with_fig = 5 + len(y_mean)/7
-            fig = pyplot.figure(figsize=(with_fig, 6))
+            with_fig = 5 + len(y_mean)/9
+            fig = pyplot.figure(figsize=(with_fig, 5.5))
             ax = fig.add_subplot(111)
             ax.set_title(title, globals_vars.graphs_title_properties())
 
