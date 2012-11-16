@@ -380,13 +380,16 @@ def graphs_inspection_of_series(stations):
             x = var.date_in_process_period
             y = var.data_in_process_period
 
+            # number of year for process
+            num_years = station.process_period['end'] - station.process_period['start']
+
             if type != 'special_I' and type != 'special_D':
                 type_var = globals_vars.config_run['type_var_'+type]
-                name_graph = _("station_{0}-{1}_({2} vs Time)").format(station.code, station.name, type_var)
+                name_graph = _("Station_{0}-{1}_({2} vs Time)").format(station.code, station.name, type_var)
                 len_x = len(x)
             else:
                 type_var = globals_vars.config_run['type_var_'+type[-1::]]
-                name_graph = _("station_{0}-{1}_({2} vs Time)_stretched").format(station.code, station.name, type_var)
+                name_graph = _("Station_{0}-{1}_({2} vs Time)_stretched").format(station.code, station.name, type_var)
 
                 # add point in end of X-axis
                 x.append(x[-1]+relativedelta(months=1))
@@ -398,14 +401,12 @@ def graphs_inspection_of_series(stations):
                     len_x = len(station.var_I.date_in_process_period)
                 # dynamic with based of number of stations
             if var.frequency_data == "monthly":
-                with_fig = len_x/10+4
+                with_fig = 8 + len_x/150
             if var.frequency_data == "daily" or type == 'special_I' or type == 'special_D':
-                with_fig = len_x/20+4
+                #with_fig = len_x/20+4
+                with_fig = 12
 
-            if with_fig > 300:
-                with_fig = 300
-
-            fig = pyplot.figure(figsize=(with_fig, 6))
+            fig = pyplot.figure(figsize=(with_fig, 5))
             #fig = pyplot.figure()
             ax = fig.add_subplot(111)
             ax.set_title(name_graph.replace('_',' '), globals_vars.graphs_title_properties())
@@ -424,40 +425,37 @@ def graphs_inspection_of_series(stations):
                 if var.frequency_data == "daily" or type == 'special_D':
                     if type_var not in types_var_D:
                         # default for generic type for var D
-                        bar(x, y, width=1, align='center', color='#578ECE')
-                        y_scale_below=0
+                        ax.plot(x, y, '-', color="#638786")
                     else:
                         if types_var_D[type_var]['graph'] == 'bar':
-                            bar(x, y, width=1, align='center', color=types_var_D[type_var]['color'])
+                            bar(x, y, align='center', color=types_var_D[type_var]['color'], width=1+num_years/5, edgecolor='none')
                             y_scale_below=0
                         else:
-                            ax.plot(x, y, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
+                            #ax.plot(x, y, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
+                            ax.plot(x, y, '-', color=types_var_D[type_var]['color'])
                 if var.frequency_data == "monthly" and not type == 'special_D':
                     if type_var not in types_var_D:
                         # default for generic type for var D
-                        bar(x, y, width=20, align='center', color='#578ECE')
-                        y_scale_below=0
+                        ax.plot(x, y, '-', color="#638786")
                     else:
                         if types_var_D[type_var]['graph'] == 'bar':
-                            bar(x, y, width=20, align='center', color=types_var_D[type_var]['color'])
+                            bar(x, y, align='center', color=types_var_D[type_var]['color'], width=20+num_years/5, edgecolor='none')
                             y_scale_below=0
                         else:
-                            ax.plot(x, y, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
+                            ax.plot(x, y, '-', color=types_var_D[type_var]['color'])
 
             if type == 'I' or type == 'special_I':
-                ax.plot(x, y, 'o-', color="#638786")
+                ax.plot(x, y, '-', color="#638786")
 
             ## X
             ax.set_xlabel(_('Time'), globals_vars.graphs_axis_properties())
-            if var.frequency_data == "daily" or type == 'special_I' or type == 'special_D':
-                ax.xaxis.set_major_locator(mdates.MonthLocator())  # every month
-                ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
-                #ax.xaxis.set_minor_locator(mdates.MonthLocator())  # every month
-            if var.frequency_data == "monthly" and not type == 'special_I' and not type == 'special_D':
-                ax.xaxis.set_major_locator(mdates.YearLocator())  # every year
-                ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+            ax.xaxis.set_major_locator(mdates.YearLocator())  # every year
+            ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+            if num_years < 20:
                 ax.xaxis.set_minor_locator(mdates.MonthLocator())  # every month
-                ## Y
+            xticks(rotation='vertical')
+
+            ## Y
             # set units type of var D or I
             if type in ['special_D', 'D']:
                 units = globals_vars.units_var_D
@@ -495,8 +493,7 @@ def graphs_inspection_of_series(stations):
 
         # definition height and width of individual image
         width, height = image_var_D.size
-        mosaic_dir_save\
-        = os.path.join(station_image_path, _('mosaic_station_{0}-{1}.png').format(station.code, station.name))
+        mosaic_dir_save = os.path.join(station_image_path, _('mosaic_station_{0}-{1}.png').format(station.code, station.name))
 
         # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
         mosaic_plots = pyplot.figure(figsize=((width) / 75, (height * 2) / 75))
@@ -530,7 +527,7 @@ def climatology(stations):
 
     # climatology table file
     open_file_climatology_table\
-    = open(os.path.join(graphs_dir, _('Climatology_table_{0}').format(globals_vars.config_run['type_var_D'])+'.csv'), 'w')
+        = open(os.path.join(graphs_dir, _('Climatology_table_{0}').format(globals_vars.config_run['type_var_D'])+'.csv'), 'w')
     csv_climatology_table = csv.writer(open_file_climatology_table, delimiter=';')
 
     # print header
@@ -586,10 +583,10 @@ def climatology(stations):
         # -------------------------------------------------------------------------
         # for climatology graphs, month by month (base)
 
-        station_image_path = os.path.join(graphs_dir, station.code +'-'+station.name)
+        station_climatology_path = os.path.join(graphs_dir, station.code +'-'+station.name, _('Climatology'))
 
-        if not os.path.isdir(station_image_path):
-            os.makedirs(station_image_path)
+        if not os.path.isdir(station_climatology_path):
+            os.makedirs(station_climatology_path)
 
         x = range(1, 13)
         x_labels = [globals_vars.get_month_in_text(i) for i in range(12)]
@@ -648,7 +645,7 @@ def climatology(stations):
 
         fig.tight_layout()
 
-        pyplot.savefig(os.path.join(station_image_path, name_graph + '.png'), dpi=75)
+        pyplot.savefig(os.path.join(station_climatology_path, name_graph + '.png'), dpi=75)
 
         pyplot.close('all')
 
@@ -698,7 +695,7 @@ def climatology(stations):
 
         fig.tight_layout()
 
-        pyplot.savefig(os.path.join(station_image_path, name_graph + '.png'), dpi=75)
+        pyplot.savefig(os.path.join(station_climatology_path, name_graph + '.png'), dpi=75)
 
         pyplot.close('all')
 
@@ -795,7 +792,7 @@ def climatology(stations):
 
             fig.tight_layout()
 
-            pyplot.savefig(os.path.join(station_image_path, name_graph + '.png'), dpi=75)
+            pyplot.savefig(os.path.join(station_climatology_path, name_graph + '.png'), dpi=75)
 
             pyplot.close('all')
 
@@ -847,7 +844,7 @@ def climatology(stations):
 
             fig.tight_layout()
 
-            pyplot.savefig(os.path.join(station_image_path, name_graph + '.png'), dpi=75)
+            pyplot.savefig(os.path.join(station_climatology_path, name_graph + '.png'), dpi=75)
 
             pyplot.close('all')
 
