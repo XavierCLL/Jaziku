@@ -1193,36 +1193,37 @@ def outliers(stations):
                     if globals_vars.config_run['analysis_interval'] == "trimester":
                         # get I values for outliers date
                         station.var_I_values = lags.get_lag_values(station_copy, 'var_I', 0, outlier_date.month)
-                        # get the corresponding index of var I in the period of outlier
-                        index_date_var_I = station.var_I.date_in_process_period.index(outlier_date)
+                        # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
+                        values_var_I = get_values_in_range_analysis_interval(station_copy, 'I', outlier_date.year, outlier_date.month, None, 0)
                     else:
                         # get the corresponding start day of analysis interval
                         day = locate_day_in_analysis_interval(station, outlier_date.day)
                         # get I values for outliers date
                         station.var_I_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month, day)
-                        # get the corresponding index of var I in the period of outlier
-                        index_date_var_I = station.var_I.date_in_process_period.index(outlier_date)
+                        # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
+                        values_var_I = get_values_in_range_analysis_interval(station, 'I', outlier_date.year, outlier_date.month, day, 0)
                 if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "monthly":
                     if globals_vars.config_run['analysis_interval'] == "trimester":
                         # get I values for outliers date
                         station.var_I_values = lags.get_lag_values(station_copy, 'var_I', 0, outlier_date.month)
-                        # get the corresponding index of var I in the period of outlier
-                        index_date_var_I = station.var_I.date_in_process_period.index(date(outlier_date.year,outlier_date.month,1))
+                        # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
+                        values_var_I = get_values_in_range_analysis_interval(station_copy, 'I', outlier_date.year, outlier_date.month, None, 0)
                     else:
                         # get the corresponding start day of analysis interval
                         day = locate_day_in_analysis_interval(station, outlier_date.day)
                         # get I values for outliers date
                         station.var_I_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month, day)
-                        # get the corresponding index of var I in the period of outlier
-                        index_date_var_I = station.var_I.date_in_process_period.index(date(outlier_date.year,outlier_date.month,1))
+                        # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
+                        values_var_I = get_values_in_range_analysis_interval(station, 'I', outlier_date.year, outlier_date.month, day, 0)
                 if station.var_D.frequency_data == "monthly" and station.var_I.frequency_data == "monthly":
                     # get I values for outliers date
                     station.var_I_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month)
-                    # get the corresponding index of var I in the period of outlier
-                    index_date_var_I = station.var_I.date_in_process_period.index(outlier_date)
+                    # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
+                    values_var_I = get_values_in_range_analysis_interval(station, 'I', outlier_date.year, outlier_date.month, None, 0)
 
-                # get the corresponding value of var I in the period of outlier
-                value_var_I = station.var_I.data_in_process_period[index_date_var_I]
+                # get the mean of all values of var I in analysis interval in the corresponding period of outlier (var_D)
+                value_var_I = mean(values_var_I)
+
                 # get thresholds of var I in the period of outlier
                 threshold_below_var_I, threshold_above_var_I = get_thresholds_var_I(station)
                 # categorize the value of var I and get the phenomenon_category based in the label phenomenon
