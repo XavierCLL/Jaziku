@@ -19,7 +19,7 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import date
-from numpy import median, average
+from numpy import median, average, var
 from scipy.stats.stats import tstd, variation, skew, kurtosis
 
 from jaziku.modules.input import input_vars
@@ -130,8 +130,8 @@ class Variable():
 
         :return by reference:
             [VARIABLE.] size_data, maximum, minimum,
-            average, median, std_dev, skew, kurtosis
-            and coef_variation.
+            average, median, std_dev, skewness, variance,
+            kurtosis and coef_variation.
         """
 
         # size data
@@ -147,7 +147,9 @@ class Variable():
         # std deviation
         self.std_dev = tstd(self.data_filtered_in_process_period)
         # skewness
-        self.skew = skew(self.data_filtered_in_process_period, bias=False)
+        self.skewness = skew(self.data_filtered_in_process_period, bias=False)
+        # variance
+        self.variance = var(self.data_filtered_in_process_period)
         # kurtosis
         self.kurtosis = kurtosis(self.data_filtered_in_process_period, bias=False)
         # c-variation
