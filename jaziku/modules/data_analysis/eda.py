@@ -1014,6 +1014,8 @@ def frequency_histogram(stations):
         ax.grid(True)
         ax.autoscale(tight=True)
 
+        zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
+
         fig.tight_layout()
 
         pyplot.savefig(os.path.join(frequency_histogram_dir, name_graph + '.png'), dpi=75)
