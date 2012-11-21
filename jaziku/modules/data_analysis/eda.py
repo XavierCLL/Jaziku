@@ -324,15 +324,22 @@ def descriptive_statistic_graphs(stations):
             with_fig = Station.stations_processed/5+4
             fig = pyplot.figure(figsize=(with_fig, 6), dpi=100)
             ax = fig.add_subplot(111)
-            ax.set_title(name_graph.replace('_',' '), globals_vars.graphs_title_properties())
+            #tfs = 18.5 - 10/(Station.stations_processed)
+
+            if Station.stations_processed <= 5:
+                title = _("{0} ({1})\n{2}").format(statistic.replace('_',' '), globals_vars.config_run['type_var_D'], graph.replace('_',' '))
+            else:
+                title = name_graph.replace('_',' ')
+
+            ax.set_title(title, globals_vars.graphs_title_properties())
 
             if graph == _('vs_Stations'):
                 if graph_options[statistics[enum]] == 'dots':
-                    ax.plot(range(1, len(x)+1), y, 'o', color="#638786")
+                    ax.plot(range(1, len(x)+1), y, 'o', color="#638786", markersize=8.5)
                 if graph_options[statistics[enum]] == 'bars':
                     bar(range(1, len(x)+1), y, width=0.8, align='center', color="#638786")
             if graph == _('vs_Altitude'):
-                ax.plot(x, y, 'o', color="#638786")
+                ax.plot(x, y, 'o', color="#638786", markersize=8.5)
 
             ## X
             if graph == _('vs_Stations'):
@@ -359,7 +366,7 @@ def descriptive_statistic_graphs(stations):
                 if graph_options[statistics[enum]] == 'bars':
                     zoom_graph(ax=ax, x_scale_below=-0.3,x_scale_above=-0.3, y_scale_above=-0.1, abs_x=True)
             if graph == _('vs_Altitude'):
-                zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.08, y_scale_above=-0.08)
+                zoom_graph(ax=ax, x_scale_below=-0.07,x_scale_above=-0.07, y_scale_below=-0.08, y_scale_above=-0.08)
 
             fig.tight_layout()
 
