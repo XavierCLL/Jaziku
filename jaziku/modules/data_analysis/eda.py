@@ -28,7 +28,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from matplotlib import pyplot
 from numpy import histogram
-from pylab import xticks, setp, bar, boxplot
+from pylab import xticks, bar, boxplot
 from Image import open as img_open
 from scipy.stats import shapiro
 from calendar import monthrange
@@ -83,7 +83,7 @@ def main(stations):
 
     # print header
     header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), _('SIZE DATA'), _('MAXIMUM'),
-              _('MINIMUM'), _('AVERAGE'), _('MEDIAN'), _('STD DEVIATION'), _('SLANT'), _('CURTOSIS'), _('C-VARIATION')]
+              _('MINIMUM'), _('AVERAGE'), _('MEDIAN'), _('STD DEVIATION'), _('SKEWNESS'), _('VARIANCE'), _('KURTOSIS'), _('C-VARIATION')]
 
     csv_file_D.writerow(header)
     csv_file_I.writerow(header)
@@ -104,7 +104,8 @@ def main(stations):
             format_out.number(station.var_D.average, 4),
             format_out.number(station.var_D.median, 4),
             format_out.number(station.var_D.std_dev, 4),
-            format_out.number(station.var_D.skew, 4),
+            format_out.number(station.var_D.skewness, 4),
+            format_out.number(station.var_D.variance, 4),
             format_out.number(station.var_D.kurtosis, 4),
             format_out.number(station.var_D.coef_variation, 4)
         ]
@@ -125,7 +126,8 @@ def main(stations):
             format_out.number(station.var_I.average, 4),
             format_out.number(station.var_I.median, 4),
             format_out.number(station.var_I.std_dev, 4),
-            format_out.number(station.var_I.skew, 4),
+            format_out.number(station.var_I.skewness, 4),
+            format_out.number(station.var_I.variance, 4),
             format_out.number(station.var_I.kurtosis, 4),
             format_out.number(station.var_I.coef_variation, 4)
         ]
@@ -143,7 +145,8 @@ def main(stations):
 
     # only make graphs if there are more of one station
     if Station.stations_processed > 1:
-        descriptive_statistic_graphs(stations)
+        with console.redirectStdStreams():
+            descriptive_statistic_graphs(stations)
         console.msg(_("done"), color='green')
     else:
         console.msg(_("fail\n > WARNING: There is only one station for process\n"
@@ -154,14 +157,16 @@ def main(stations):
     # GRAPHS INSPECTION OF SERIES
 
     console.msg(_("Graphs inspection of series .......................... "), newline=False)
-    graphs_inspection_of_series(stations) #todo
+    with console.redirectStdStreams():
+        graphs_inspection_of_series(stations) #todo
     console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
     # CLIMATOLOGY
 
     console.msg(_("Climatology .......................................... "), newline=False)
-    climatology(stations)
+    with console.redirectStdStreams():
+        climatology(stations)
     console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
@@ -180,7 +185,8 @@ def main(stations):
     console.msg(_("Scatter plots of series .............................. "), newline=False)
 
     if 1 < Station.stations_processed <= 10:
-        scatter_plots_of_series(stations) #todo
+        with console.redirectStdStreams():
+            scatter_plots_of_series(stations) #todo
         console.msg(_("done"), color='green')
     else:
         if Station.stations_processed == 1:
@@ -198,8 +204,8 @@ def main(stations):
     # FREQUENCY HISTOGRAM
 
     console.msg(_("Frequency histogram .................................. "), newline=False)
-
-    frequency_histogram(stations)
+    with console.redirectStdStreams():
+        frequency_histogram(stations)
     console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
@@ -220,9 +226,17 @@ def main(stations):
         os.makedirs(outliers_dir)
 
     console.msg(_("Outliers ............................................. "), newline=False)
+    with console.redirectStdStreams():
+        outliers(stations)
 
-    outliers(stations)
-    console.msg(_("done"), color='green')
+    if Station.stations_processed > 50:
+        console.msg(_("partial\n > WARNING: The maximum limit for make the box-plot of\n"
+                      "   outliers of all stations are 50 stations, if you want\n"
+                      "   this box-plot, please divide the stations in regions\n"
+                      "   into different runfiles with maximum 50 stations per\n"
+                      "   runfile, and rerun each runfile."), color="yellow")
+    else:
+        console.msg(_("done"), color='green')
 
 
 def zoom_graph(ax,x_scale_below=0, x_scale_above=0, y_scale_below=0, y_scale_above=0, abs_x=False, abs_y=False):
@@ -257,11 +271,11 @@ def descriptive_statistic_graphs(stations):
     """
     Graphs statistics vs stations and statistics vs altitude for var D
     """
-    statistics = ['size_data', 'maximum', 'minimum', 'average', 'median', 'std_dev','skew', 'kurtosis', 'coef_variation']
+    statistics = ['size_data', 'maximum', 'minimum', 'average', 'median', 'std_dev','skewness', 'kurtosis', 'coef_variation']
     statistics_to_graphs = [_('Sizes_data'), _('Maximums'), _('Minimums'), _('Averages'), _('Medians'),
-                            _('Std_deviations'), _('Skews'), _('Kurtosis'), _('Coef_variations')]
+                            _('Std_deviations'), _('skewness'), _('Kurtosis'), _('Coef_variations')]
     graph_options = {'size_data':'bars', 'maximum':'bars', 'minimum':'bars', 'average':'bars', 'median':'bars',
-                     'std_dev':'dots','skew':'dots', 'kurtosis':'dots', 'coef_variation':'dots'}
+                     'std_dev':'dots','skewness':'dots', 'kurtosis':'dots', 'coef_variation':'dots'}
 
     # directory for save graphs of descriptive statistic
     graphs_dir = os.path.join(shapiro_wilks_dir, _('Graphs_for_{0}').format(globals_vars.config_run['type_var_D']))
@@ -279,7 +293,7 @@ def descriptive_statistic_graphs(stations):
                 get_statistic = {'size_data':station.var_D.size_data, 'maximum':station.var_D.maximum,
                                  'minimum':station.var_D.minimum, 'average':station.var_D.average,
                                  'median':station.var_D.median, 'std_dev':station.var_D.std_dev,
-                                 'skew':station.var_D.skew, 'kurtosis':station.var_D.kurtosis,
+                                 'skewness':station.var_D.skewness, 'kurtosis':station.var_D.kurtosis,
                                  'coef_variation':station.var_D.coef_variation}
                 if graph == _('vs_Stations'):
                     x.append(station.code)
@@ -317,7 +331,7 @@ def descriptive_statistic_graphs(stations):
                 #setp(labels, 'rotation', 'vertical')
             ## Y
             # get units os type of var D or I
-            if statistics[enum] not in ['skew', 'kurtosis', 'coef_variation']:
+            if statistics[enum] not in ['skewness', 'kurtosis', 'coef_variation']:
                 units = globals_vars.units_var_D
             else:
                 units = '--'
@@ -1000,7 +1014,7 @@ def shapiro_wilks_test(stations):
     csv_file_D = csv.writer(open_file_D, delimiter=';')
 
     # print header
-    header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), 'W', 'P_value']
+    header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), 'W', 'P_value', 'Ho?']
 
     csv_file_D.writerow(header)
 
@@ -1008,6 +1022,12 @@ def shapiro_wilks_test(stations):
 
         with console.redirectStdStreams():
             W, p_value = shapiro(station.var_D.data_filtered_in_process_period)
+
+        # Ho?
+        if p_value < 0.5:
+            Ho = _('reject')
+        else:
+            Ho = _('accept')
 
         # var D
         shapiro_line_station_var_D = [
@@ -1018,7 +1038,8 @@ def shapiro_wilks_test(stations):
             format_out.number(station.alt, 4),
             '{0}-{1}'.format(station.process_period['start'], station.process_period['end']),
             format_out.number(W, 4),
-            format_out.number(p_value, 4)
+            format_out.number(p_value, 4),
+            Ho
         ]
 
         csv_file_D.writerow(shapiro_line_station_var_D)
@@ -1236,12 +1257,6 @@ def outliers(stations):
 
         pyplot.close('all')
 
-    elif Station.stations_processed > 50:
-        console.msg(_("\n > WARNING: The maximum limit for make the box-plot of\n"
-                      "   outliers of all stations are 50 stations, if you want\n"
-                      "   this box-plot, please divide the stations in regions\n"
-                      "   into different runfiles with maximum 50 stations per\n"
-                      "   runfile, and rerun each runfile ................... "), color="yellow", newline=False)
 
     # -------------------------------------------------------------------------
     ## Report all Outliers of all stations in file
