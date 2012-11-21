@@ -51,6 +51,11 @@ def main(stations):
 
     console.msg(_("################# EXPLORATORY DATA ANALYSIS:"))
 
+    if not globals_vars.config_run['graphics']:
+        console.msg(_("\n > WARNING: The 'graphics' in 'output options' is disabled,\n"
+                      "   all graphics for EDA module will not be created. The graphics\n"
+                      "   in EDA module represents the vast majority of the results.\n"), color='yellow')
+
     global eda_dir
     eda_dir = os.path.join(globals_vars.data_analysis_dir, 'EDA')
 
@@ -144,22 +149,27 @@ def main(stations):
     # GRAPHS OF DESCRIPTIVE STATISTICS
 
     # only make graphs if there are more of one station
-    if Station.stations_processed > 1:
-        with console.redirectStdStreams():
-            descriptive_statistic_graphs(stations)
-        console.msg(_("done"), color='green')
+    if globals_vars.config_run['graphics']:
+        if Station.stations_processed > 1:
+            with console.redirectStdStreams():
+                descriptive_statistic_graphs(stations)
+            console.msg(_("done"), color='green')
+        else:
+            console.msg(_("fail\n > WARNING: There is only one station for process\n"
+                          "   the graphs for descriptive statistic need more \n"
+                          "   of one station."), color="yellow")
     else:
-        console.msg(_("fail\n > WARNING: There is only one station for process\n"
-                      "   the graphs for descriptive statistic need more \n"
-                      "   of one station."), color="yellow")
+        console.msg(_("done"), color='green')
+
 
     # -------------------------------------------------------------------------
     # GRAPHS INSPECTION OF SERIES
 
-    console.msg(_("Graphs inspection of series .......................... "), newline=False)
-    with console.redirectStdStreams():
-        graphs_inspection_of_series(stations) #todo
-    console.msg(_("done"), color='green')
+    if globals_vars.config_run['graphics']:
+        console.msg(_("Graphs inspection of series .......................... "), newline=False)
+        with console.redirectStdStreams():
+            graphs_inspection_of_series(stations) #todo
+        console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
     # CLIMATOLOGY
@@ -182,31 +192,34 @@ def main(stations):
     # -------------------------------------------------------------------------
     # SCATTER PLOTS OF SERIES
 
-    console.msg(_("Scatter plots of series .............................. "), newline=False)
+    if globals_vars.config_run['graphics']:
 
-    if 1 < Station.stations_processed <= 10:
-        with console.redirectStdStreams():
-            scatter_plots_of_series(stations) #todo
-        console.msg(_("done"), color='green')
-    else:
-        if Station.stations_processed == 1:
-            console.msg(_("fail\n > WARNING: There is only one station for process\n"
-                          "   the scatter plots of series, this need more \n"
-                          "   of one station."), color="yellow")
+        console.msg(_("Scatter plots of series .............................. "), newline=False)
+
+        if 1 < Station.stations_processed <= 10:
+            with console.redirectStdStreams():
+                scatter_plots_of_series(stations) #todo
+            console.msg(_("done"), color='green')
         else:
-            console.msg(_("fail\n > WARNING: The maximum limit for make the scatter plots\n"
-                          "   of series are 10 stations, if you want this diagram,\n"
-                          "   please divide the stations in regions into different\n"
-                          "   runfiles with maximum 10 stations per runfile, and\n"
-                          "   rerun each runfile."), color="yellow")
+            if Station.stations_processed == 1:
+                console.msg(_("fail\n > WARNING: There is only one station for process\n"
+                              "   the scatter plots of series, this need more \n"
+                              "   of one station."), color="yellow")
+            else:
+                console.msg(_("fail\n > WARNING: The maximum limit for make the scatter plots\n"
+                              "   of series are 10 stations, if you want this diagram,\n"
+                              "   please divide the stations in regions into different\n"
+                              "   runfiles with maximum 10 stations per runfile, and\n"
+                              "   rerun each runfile."), color="yellow")
 
     # -------------------------------------------------------------------------
     # FREQUENCY HISTOGRAM
 
-    console.msg(_("Frequency histogram .................................. "), newline=False)
-    with console.redirectStdStreams():
-        frequency_histogram(stations)
-    console.msg(_("done"), color='green')
+    if globals_vars.config_run['graphics']:
+        console.msg(_("Frequency histogram .................................. "), newline=False)
+        with console.redirectStdStreams():
+            frequency_histogram(stations)
+        console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
     # SHAPIRO WILKS
@@ -593,6 +606,9 @@ def climatology(stations):
                 y_min.append(y_mean[-1] - mean(years_values_min))
 
         csv_climatology_table.writerow(line + [format_out.number(i) for i in y_mean])
+
+        if not globals_vars.config_run['graphics']:
+            continue
 
         # -------------------------------------------------------------------------
         # for climatology graphs, month by month (base)
@@ -1058,53 +1074,57 @@ def outliers(stations):
 
     for station in stations:
 
-        outliers_per_stations_dir = os.path.join(outliers_dir, _("Outliers_per_station"))
-
-        if not os.path.isdir(outliers_per_stations_dir):
-            os.makedirs(outliers_per_stations_dir)
-
         # -------------------------------------------------------------------------
         ## Outliers graph per station
 
-        name_graph = _("Outliers")+"_{0}_{1}_{2}_({3}-{4})".format(station.code, station.name,
-        globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end'])
+        if globals_vars.config_run['graphics']:
 
-        fig = pyplot.figure(figsize=(3,6))
-        ax = fig.add_subplot(111)
-        ax.set_title(_("Outliers")+"\n{0} ({1}-{2})".format(globals_vars.config_run['type_var_D'],
-            station.process_period['start'], station.process_period['end']), globals_vars.graphs_title_properties())
+            outliers_per_stations_dir = os.path.join(outliers_dir, _("Outliers_per_station"))
 
-        ## X
-        x_labels = [station.code]
-        xticks([1], x_labels)
-        ax.set_xlabel(_('Station'), globals_vars.graphs_axis_properties())
+            if not os.path.isdir(outliers_per_stations_dir):
+                os.makedirs(outliers_per_stations_dir)
 
-        ## Y
-        type_var = globals_vars.config_run['type_var_D']
-        ax.set_ylabel('{0} ({1})'.format(type_var, globals_vars.units_var_D), globals_vars.graphs_axis_properties())
-        #ax.set_ylabel(_('Frequency'))
+            name_graph = _("Outliers")+"_{0}_{1}_{2}_({3}-{4})".format(station.code, station.name,
+            globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end'])
 
-        boxplot_station = boxplot(station.var_D.data_filtered_in_process_period)
+            fig = pyplot.figure(figsize=(3,6))
+            ax = fig.add_subplot(111)
+            ax.set_title(_("Outliers")+"\n{0} ({1}-{2})".format(globals_vars.config_run['type_var_D'],
+                station.process_period['start'], station.process_period['end']), globals_vars.graphs_title_properties())
 
-        #pyplot.setp(boxplot_station['boxes'], color='black')
-        #pyplot.setp(boxplot_station['whiskers'], color='black', linestyle='-')
-        pyplot.setp(boxplot_station['fliers'], color='red', marker='+')
-        #pyplot.setp(boxplot_station['fliers'], markersize=3.0)
+            ## X
+            x_labels = [station.code]
+            xticks([1], x_labels)
+            ax.set_xlabel(_('Station'), globals_vars.graphs_axis_properties())
 
-        #ax.grid(True)
-        ax.autoscale(tight=True)
+            ## Y
+            type_var = globals_vars.config_run['type_var_D']
+            ax.set_ylabel('{0} ({1})'.format(type_var, globals_vars.units_var_D), globals_vars.graphs_axis_properties())
+            #ax.set_ylabel(_('Frequency'))
 
-        zoom_graph(ax=ax, x_scale_below=-2.5,x_scale_above=-2.5, y_scale_below=-0.04, y_scale_above=-0.04)
+            boxplot_station = boxplot(station.var_D.data_filtered_in_process_period)
 
-        fig.tight_layout()
+            #pyplot.setp(boxplot_station['boxes'], color='black')
+            #pyplot.setp(boxplot_station['whiskers'], color='black', linestyle='-')
+            pyplot.setp(boxplot_station['fliers'], color='red', marker='+')
+            #pyplot.setp(boxplot_station['fliers'], markersize=3.0)
 
-        pyplot.savefig(os.path.join(outliers_per_stations_dir, name_graph + '.png'), dpi=75)
+            #ax.grid(True)
+            ax.autoscale(tight=True)
 
-        pyplot.close('all')
+            zoom_graph(ax=ax, x_scale_below=-2.5,x_scale_above=-2.5, y_scale_below=-0.04, y_scale_above=-0.04)
 
-        # variables for mosaic
-        data_stations.append(station.var_D.data_filtered_in_process_period)
-        codes_stations.append(station.code)
+            fig.tight_layout()
+
+            pyplot.savefig(os.path.join(outliers_per_stations_dir, name_graph + '.png'), dpi=75)
+
+            pyplot.close('all')
+
+            # variables for mosaic
+            data_stations.append(station.var_D.data_filtered_in_process_period)
+            codes_stations.append(station.code)
+        else:
+            boxplot_station = boxplot(station.var_D.data_filtered_in_process_period)
 
         # -------------------------------------------------------------------------
         ## Prepare variables for report all outliers of all stations
@@ -1213,7 +1233,7 @@ def outliers(stations):
     # -------------------------------------------------------------------------
     ## Outliers graph all in one
 
-    if 1 < Station.stations_processed <= 50:
+    if globals_vars.config_run['graphics'] and ( 1 < Station.stations_processed <= 50 ):
         if globals_vars.config_run['process_period']:
             name_graph = _("Outliers")+"_{0}_({1}-{2})".format(
                 globals_vars.config_run['type_var_D'], globals_vars.config_run['process_period']['start'],

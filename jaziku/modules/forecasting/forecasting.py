@@ -40,15 +40,12 @@ def forecasting(station):
     if station.state_of_data in [1, 3]:
         try:
             globals_vars.forecasting_date = int(globals_vars.config_run['forecasting_date'])
-        except:
-            console.msg_error_configuration('forecasting_date',
-                _("Trimester forecasting '{0}' is invalid, "
-                  "must be integer number").format(globals_vars.config_run['forecasting_date']), show_settings=False)
-        if not (1 <= globals_vars.forecasting_date <= 12):
-            console.msg_error_configuration('forecasting_date',
-                _("Trimester forecasting '{0}' is invalid, "
-                  "must be a month valid number (1-12)")
-                .format(globals_vars.forecasting_date), show_settings=False)
+        finally:
+            if not (1 <= globals_vars.forecasting_date <= 12):
+                console.msg_error_configuration('forecasting_date',
+                    _("Trimester forecasting '{0}' is invalid, "
+                      "must be a month valid number (1-12)")
+                    .format(globals_vars.forecasting_date), show_settings=False)
     if station.state_of_data in [2, 4]:
         try:
             globals_vars.forecasting_date = globals_vars.config_run['forecasting_date'].replace('-', '/')
@@ -130,7 +127,8 @@ def forecasting(station):
 
     if not globals_vars.threshold_problem[0] and not globals_vars.threshold_problem[1] and\
        not globals_vars.threshold_problem[2] and globals_vars.config_run['graphics']:
-        forecasting_graphs(station)
+        with console.redirectStdStreams():
+            forecasting_graphs(station)
     else:
         console.msg(_("\ncontinue without make graphics for forecasting  "), newline=False)
 
