@@ -9,12 +9,12 @@ name = globals_vars.PROG_NAME
 setup(name=globals_vars.PROG_NAME,
       version=globals_vars.VERSION,
       license="GNU General Public License (GPL) v3",
-      description="Jaziku is a software for the implementation of composite analysis "\
-                     "metodology between the major indices of climate variability and major "\
-                     "meteorological variables in puntual scale.",
+      description="""Jaziku is a software for the implementation of composite analysis
+                  methodology between the major indices of climate variability and major
+                  meteorological variables in puntual scale.""",
       long_description="""
         Jaziku is a software for the implementation of composite analysis
-        metodology between the major indices of climate variability and major
+        methodology between the major indices of climate variability and major
         meteorological variables in puntual scale.
 
         According to IDEAM’s commitment to promote and guide scientiﬁc research
@@ -50,7 +50,4 @@ setup(name=globals_vars.PROG_NAME,
       scripts=["bin/jaziku"],
       packages=find_packages(),
       include_package_data=True,
-      package_data={
-                    '': ['data'],
-                    },
 )

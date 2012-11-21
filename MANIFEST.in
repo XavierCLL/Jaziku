@@ -1,5 +1,4 @@
-include license.txt
-recursive-include doc *
-recursive-include jaziku/locale *
-recursive-include jaziku/plugins/maps *
-recursive-include jaziku/plugins/var_I *
+include COPYING README.rst
+include docs/installation.rst docs/changelog.rst
+recursive-include jaziku/i18n *
+recursive-include jaziku/data *
