@@ -49,6 +49,7 @@ news
 - Now before run the data analysis, check analysis interval and state of data
 - New: check the code and/or name of stations don't repeat, exit or show warning
   depending on the case.
+- Not make graphics in EDA module if graphics option in runfile is disabled
 
 fixes
 +++++
