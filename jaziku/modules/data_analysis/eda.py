@@ -419,11 +419,11 @@ def graphs_inspection_of_series(stations):
 
             if type != 'special_I' and type != 'special_D':
                 type_var = globals_vars.config_run['type_var_'+type]
-                name_graph = _("Station_{0}-{1}_({2} vs Time)").format(station.code, station.name, type_var)
+                name_graph = _("Station_{0}-{1}_({2}_vs_Time)").format(station.code, station.name, type_var)
                 len_x = len(x)
             else:
                 type_var = globals_vars.config_run['type_var_'+type[-1::]]
-                name_graph = _("Station_{0}-{1}_({2} vs Time)_stretched").format(station.code, station.name, type_var)
+                name_graph = _("_Station_{0}-{1}_({2}_vs_Time)_").format(station.code, station.name, type_var)
 
                 # add point in end of X-axis
                 x.append(x[-1]+relativedelta(months=1))

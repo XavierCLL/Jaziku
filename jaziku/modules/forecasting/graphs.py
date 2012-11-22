@@ -91,22 +91,24 @@ def forecasting_graphs(station):
         image_open_list.append(img_open(image_dir_save))
 
     ## Create mosaic
-    # definition height and width of individual image
-    # image_height = 375
-    image_width = 375
-    mosaic_dir_save \
-        = os.path.join(station.forecasting_dir, _('mosaic_prob_of_{0}_{1}_({3}-{4}).png')
-            .format(station.type_D, lag, filename_date_graphic,
-                    station.process_period['start'], station.process_period['end']))
-    # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
-    # http://www.classical-webdesigns.co.uk/resources/pixelinchconvert.html
-    pyplot.figure(figsize=(3.75 * len(globals_vars.lags), 3.75))
-    pyplot.savefig(mosaic_dir_save, dpi=100)
-    mosaic = img_open(mosaic_dir_save)
-    for lag_iter in range(len(globals_vars.lags)):
-        mosaic.paste(image_open_list[lag_iter], (image_width * lag_iter, 0))
-    mosaic.save(mosaic_dir_save)
-    pyplot.clf()
 
-    # clear and delete all instances of graphs created by pyplot
-    pyplot.close('all')
+    if len(globals_vars.lags) != 1:
+        # definition height and width of individual image
+        # image_height = 375
+        image_width = 375
+        mosaic_dir_save \
+            = os.path.join(station.forecasting_dir, _('mosaic_prob_of_{0}_{1}_({3}-{4}).png')
+                .format(station.type_D, lag, filename_date_graphic,
+                        station.process_period['start'], station.process_period['end']))
+        # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
+        # http://www.classical-webdesigns.co.uk/resources/pixelinchconvert.html
+        pyplot.figure(figsize=(3.75 * len(globals_vars.lags), 3.75))
+        pyplot.savefig(mosaic_dir_save, dpi=100)
+        mosaic = img_open(mosaic_dir_save)
+        for lag_iter in range(len(globals_vars.lags)):
+            mosaic.paste(image_open_list[lag_iter], (image_width * lag_iter, 0))
+        mosaic.save(mosaic_dir_save)
+        pyplot.clf()
+
+        # clear and delete all instances of graphs created by pyplot
+        pyplot.close('all')

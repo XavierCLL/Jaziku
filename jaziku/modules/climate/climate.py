@@ -51,7 +51,7 @@ def climate(station):
         os.makedirs(globals_vars.climate_dir)
 
     station.climate_dir \
-        = os.path.join(globals_vars.climate_dir, station.code + '_' + station.name)   # 'results'
+        = os.path.join(globals_vars.climate_dir, _('stations'), station.code + '_' + station.name)   # 'results'
     if not os.path.isdir(station.climate_dir):
         os.makedirs(station.climate_dir)
 
