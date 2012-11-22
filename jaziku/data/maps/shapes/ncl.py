@@ -36,9 +36,9 @@ def code(map_properties):
     return '''
 
 
-load "/usr/lib/ncarg/nclscripts/csm/gsn_code.ncl"
-load "/usr/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
-load "/usr/lib/ncarg/nclscripts/csm/contributed.ncl"
+load "{ncarg_root}/lib/ncarg/nclscripts/csm/gsn_code.ncl"
+load "{ncarg_root}/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
+load "{ncarg_root}/lib/ncarg/nclscripts/csm/contributed.ncl"
 
 ;################## accent table
 
@@ -449,7 +449,8 @@ begin
 
 end
 
-    '''.format(shape=map_properties.shape,
+    '''.format(ncarg_root=os.environ.get('NCARG_ROOT'),
+               shape=map_properties.shape,
                ncl_data=os.path.abspath(map_properties.base_path_file) + '.tsv',
                save_map=os.path.abspath(map_properties.base_path_file),
                title=map_properties.title,

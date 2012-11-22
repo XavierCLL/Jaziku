@@ -29,12 +29,52 @@ from ncl import make_ncl_file
 from jaziku.utils import globals_vars, console
 
 
+def check_basic_requirements_for_maps():
+
+    console.msg(_("\nChecking basic requirements for maps:"), newline=False)
+
+    ## NCL
+
+    # test if ncl exists
+    if not console.which('ncl'):
+        console.msg_error(_("Jaziku can't execute the 'ncl' command for make maps,\n"
+                            "please check that ncl is include into PATH variable in your\n"
+                            "system. For more information read: http://goo.gl/4dAeH"))
+
+    # first check if NCARG_ROOT is defined into operation system
+    if not os.environ.get('NCARG_ROOT'):
+        console.msg_error(_('The NCARG_ROOT variable is not defined in your system,\n'
+                            'please defined NCARG_ROOT where you have installed NCL.\n'
+                            'For more information read: http://goo.gl/4dAeH'))
+
+    # second check if NCARG_ROOT is right
+    if not os.path.isdir(os.environ.get('NCARG_ROOT')) or\
+       not os.path.isfile(os.path.join(os.environ.get('NCARG_ROOT'),'/lib/ncarg/nclscripts/csm/gsn_code.ncl')) or\
+       not os.path.isfile(os.path.join(os.environ.get('NCARG_ROOT'),'/lib/ncarg/nclscripts/csm/gsn_csm.ncl')) or\
+       not os.path.isfile(os.path.join(os.environ.get('NCARG_ROOT'),'/lib/ncarg/nclscripts/csm/contributed.ncl')):
+        console.msg_error(_('The NCARG_ROOT variable is defined in your system,\n'
+                            'but there are problems for found nclscripts files,\n'
+                            'please check the NCARG_ROOT variable in your system.\n'
+                            'For more information read: http://goo.gl/4dAeH'))
+
+    ## test if 'convert' command exists
+    if not console.which('convert'):
+        console.msg_error(_("Jaziku can't execute the 'convert' command for transform image,\n"
+                            "please check that 'imagemagick' is installed in your system.\n"
+                            "For more information read Jaziku install instructions."))
+
+    console.msg(_("done"), color='green')
+
+
 def maps(grid):
     """
     In Maps, jaziku in order to predict variable values in sites not sampled, through Kriging
     spatial interpolation method displays the general trends and spatial continuity of afectation
     scenarios results of Climate and Forecast Modules
     """
+    # first check requirements
+    check_basic_requirements_for_maps()
+
     # set name_grid, country and grid_path
     if isinstance(grid.grid, list):
         if len(grid.grid) == 1:
@@ -196,9 +236,9 @@ def maps(grid):
         # TODO: test if convert worked
 
         # delete files
-        #os.remove(os.path.abspath(base_path_file) + ".INC")
-        #os.remove(os.path.abspath(base_path_file) + ".ncl")
-        #os.remove(os.path.abspath(base_path_file) + ".tsv")
+        os.remove(os.path.abspath(base_path_file) + ".INC")
+        os.remove(os.path.abspath(base_path_file) + ".ncl")
+        os.remove(os.path.abspath(base_path_file) + ".tsv")
 
         del matrix
 

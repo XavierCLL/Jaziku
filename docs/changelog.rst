@@ -50,6 +50,8 @@ news
 - New: check the code and/or name of stations don't repeat, exit or show warning
   depending on the case.
 - Not make graphics in EDA module if graphics option in runfile is disabled
+- Now use NCARG_ROOT variable defined into system for locate the ncarg libraries
+- Now check the basic requirements for maps (ncl, convert, and others)
 
 fixes
 +++++
