@@ -74,7 +74,7 @@ def forecasting(station):
     if not os.path.isdir(globals_vars.forecasting_dir):
         os.makedirs(globals_vars.forecasting_dir)
 
-    station.forecasting_dir = os.path.join(globals_vars.forecasting_dir, station.code + '_' + station.name)   # 'results'
+    station.forecasting_dir = os.path.join(globals_vars.forecasting_dir, _('stations'), station.code + '_' + station.name)   # 'results'
     if not os.path.isdir(station.forecasting_dir):
         os.makedirs(station.forecasting_dir)
 

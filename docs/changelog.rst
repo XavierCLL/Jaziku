@@ -52,6 +52,7 @@ news
 - Not make graphics in EDA module if graphics option in runfile is disabled
 - Now use NCARG_ROOT variable defined into system for locate the ncarg libraries
 - Now check the basic requirements for maps (ncl, convert, and others)
+- Reorganize stations results for climate and forecasting
 
 fixes
 +++++
