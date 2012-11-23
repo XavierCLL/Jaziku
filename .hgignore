@@ -11,6 +11,8 @@ syntax: regexp
 syntax: regexp
 ^dist$
 syntax: regexp
+^jaziku.egg-info$
+syntax: regexp
 ^jaziku/data/watermarking$
 syntax: regexp
 ^docs/manual$
