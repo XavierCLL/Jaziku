@@ -165,15 +165,13 @@ def main():
 
     print _("\n"
             "############################ JAZIKU ############################\n"
-            "# Jaziku is a software for the implementation of composite     #\n"
-            "# analysis methodology between the major indices of climate    #\n"
-            "# variability and major meteorological variables in            #\n"
-            "# punctual scale.                                              #\n"
+            "#           Jaziku is statistical inference software           #\n"
+            "#               for the teleconnections analysis.              #\n"
             "#                                                              #\n"
-            "# Version {0} - {1}\t                               #\n"
-            "# Copyright 2011-2012 IDEAM - Colombia                         #\n"
-            "################################################################") \
-            .format(globals_vars.VERSION, globals_vars.COMPILE_DATE)
+            "#                 Version {0} - {1}\t               #\n"
+            "#           Copyright (C) 2011-2012 IDEAM - Colombia           #\n"
+            "################################################################")\
+    .format(globals_vars.VERSION, globals_vars.COMPILE_DATE)
 
     # -------------------------------------------------------------------------
     # GET/SET SETTINGS
@@ -198,9 +196,8 @@ def main():
     if globals_vars.config_run['data_analysis']:
         print _("\n\n"
                 "#################### DATA ANALYSIS PROCESS #####################\n"
-                "# Data analysis module, this report outliers, made the         #\n"
-                "# assessing the homogeneity and several statistical values     #\n"
-                "# of the series.                                               #\n"
+                "# Data analysis module, here is verified linearity, outliers   #\n"
+                "# are reported and the primary statistical time series.        #\n"
                 "################################################################\n")
 
         # data analysis dir output result
@@ -227,8 +224,12 @@ def main():
 
         print _("\n\n"
                 "############### CLIMATE AND FORECASTING PROCESS ################\n"
-                "# Data analysis is ........                                    #\n"
-                "# Data analysis is ........                                    #\n"
+                "# Climate Module, here are calculated contingency tables,      #\n"
+                "# correlations and parametric tests of interest.               #\n"
+                "#                                                              #\n"
+                "# Modulo forecasts, predictions are calculated here associated #\n"
+                "# with the dependent variable as a function of contingency     #\n"
+                "# tables and the probability of the independent variable.      #\n"
                 "################################################################\n")
 
     # climate
@@ -278,8 +279,8 @@ def main():
             station.process()
 
         console.msg(gettext.ngettext(
-                    "\n{0} station processed.",
-                    "\n{0} stations processed.",
+                    _("\n{0} station processed."),
+                    _("\n{0} stations processed."),
                     Station.stations_processed).format(Station.stations_processed), color='green')
 
     # delete instance of stations for clean memory
@@ -296,8 +297,10 @@ def main():
 
         print _("\n\n"
                 "######################### MAPS PROCESS #########################\n"
-                "# Data analysis is ........                                    #\n"
-                "# Data analysis is ........                                    #\n"
+                "# Map Process, here is made the Kriging interpolation on the   #\n"
+                "# results of historical scenarios and forecasts most probable  #\n"
+                "# of the dependent variable, also interpolation of linear      #\n"
+                "# correlations.                                                #\n"
                 "################################################################")
 
         for grid in Grid.all_grids:
@@ -305,8 +308,8 @@ def main():
             del grid
 
         console.msg(gettext.ngettext(
-                    "\n{0} map processed.",
-                    "\n{0} maps processed.",
+                    _("\n{0} map processed."),
+                    _("\n{0} maps processed."),
                     Grid.grids_processed).format(Grid.grids_processed), color='green')
 
     console.msg(_("\nProcess completed!"), color='green')

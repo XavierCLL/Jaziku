@@ -55,8 +55,8 @@ def main(stations):
 
     console.msg(_("done"), color='green')
     console.msg(gettext.ngettext(
-        "   {0} station readed.",
-        "   {0} stations readed.",
+        _("   {0} station readed."),
+        _("   {0} stations readed."),
         Station.stations_processed).format(Station.stations_processed), color='cyan')
     console.msg('')
 

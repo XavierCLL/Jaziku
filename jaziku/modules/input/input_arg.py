@@ -29,11 +29,7 @@ from jaziku.utils import globals_vars, console
 # Create parser arguments
 arguments = argparse.ArgumentParser(
                  prog=globals_vars.PROG_NAME,
-                 description=_("Jaziku is a software for the implementation "
-                                 "of composite analysis\nmethodology between "
-                                 "the major indices of climate variability "
-                                 "and\nmajor meteorological variables in "
-                                 "puntual scale.\n"),
+                 description=_("Jaziku is statistical inference software for the\nteleconnections analysis"),
                  epilog=console.msg_footer(text=True),
                  formatter_class=argparse.RawTextHelpFormatter)
 

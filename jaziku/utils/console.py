@@ -19,16 +19,17 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#==============================================================================
-# PRINT FUNCTIONS
-# color text console  #http://pypi.python.org/pypi/clint/
-import csv
 
+import csv
 import os
 import sys
 from clint.textui import colored
 
 import globals_vars
+
+#==============================================================================
+# PRINT FUNCTIONS
+# color text console  #http://pypi.python.org/pypi/clint/
 
 def msg(text, color=False, newline=True, indentation=0):
     """
@@ -101,7 +102,7 @@ def msg_error_line_stations(station, text_error):
     Print error generic function occurred in a line from stations file.
     """
 
-    msg_error(_("Reading the stations from the runfile in line {0}:\n")
+    msg_error(_("Reading the station from the runfile in line {0}:\n")
                 .format(station.line_num) + ' > ' +
                 ' '.join(station.line_station) + "\n\n" + str(text_error))
 
@@ -130,6 +131,9 @@ def msg_error_configuration(variable, text_error, show_settings=True):
     # else
     msg_error(_("Error in configuration run from the runfile:\n")
               + "\n" + str(text_error), False)
+
+#==============================================================================
+# OTHERS
 
 class redirectStdStreams(object):
     """
