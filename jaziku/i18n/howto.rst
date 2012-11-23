@@ -9,7 +9,7 @@ TRANSLATE
 
 2. move to language (xx) directory: 
 
-    mv messages.po locale/xx/LC_MESSAGES/
+    mv messages.po i18n/xx/LC_MESSAGES/
 
 3. updated and merge with old if exist (updated olf file based on new file)
 
