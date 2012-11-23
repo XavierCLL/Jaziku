@@ -40,13 +40,13 @@ powerful tool for decision making by the national meteorological services
 Source code
 -----------
 
-The lates sources can be obtained from official Jaziku instance
+The latest sources can be obtained from official Jaziku repository:
 http://hg.ideam.gov.co:8000/meteorologia/jaziku/summary
     
 Install
 -------
 
-Please read the instruction install in `this <http://hg.ideam.gov.co:8000/meteorologia/jaziku/files/tip/docs/installation.rst>`_ file
+Please read the `instruction install <https://dl.dropbox.com/u/3383807/installation.html>`_ or `this <http://hg.ideam.gov.co:8000/meteorologia/jaziku/files/tip/docs/installation.rst>`_ file.
 
 Synopsis run
 ------------
@@ -62,8 +62,8 @@ Team
 
 How to cite Jaziku
 ------------------
-    Jaziku, composite analysis software (version 0.x.x). (2012) IDEAM, Colombia.
-    Jaziku is a free and open source software GPLv3. http://
+    Jaziku is statistical inference software for the teleconnections analysis, (version 0.5.0).
+    (2012) IDEAM, Colombia. Jaziku is a free and open source software GPLv3. http://hg.ideam.gov.co:8000/meteorologia/jaziku/summary
 
 Licence
 -------

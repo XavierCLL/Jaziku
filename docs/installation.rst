@@ -55,9 +55,9 @@ Install Jaziku (egg version)
 
     check the version in the end of message.
 
-- For update new version of jaziku (using egg)
+- If you have installed old version, for update to new version use (using egg):
 
-    easy_install -U jaziku-x.x.egg
+    easy_install -U jaziku-0.5.0-py2.7.egg
 
 Windows and Mac
 ---------------

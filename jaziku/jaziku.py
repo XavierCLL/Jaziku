@@ -69,14 +69,6 @@ DESCRIPTION:
     and Central and Eastern North American Precipitation. Journal of Climate,
     11:1812 – 1835, 1998.
 
-SYNOPSIS RUN:
-    jaziku [-h] [-doc] -runfile runfile.scv
-
-    for more information of structure of runfile.csv please see the manual.
-
-EXAMPLE:
-    jaziku -runfile run_file.csv
-
 Copyright © 2011-2012 IDEAM
 Instituto de Hidrología, Meteorología y Estudios Ambientales
 Carrera 10 No. 20-30
