@@ -5,16 +5,16 @@ syntax: regexp
 syntax: regexp
 ^\.pydevproject$
 syntax: regexp
-^\.settings$
+^.idea$
 syntax: regexp
-^src/build$
+^build$
 syntax: regexp
-^src/jaziku\.egg-info$
+^dist$
 syntax: regexp
-^src/dist$
+^jaziku/data/watermarking$
 syntax: regexp
-^src/jaziku/plugins/maps/watermarking$
+^docs/manual$
 syntax: regexp
-^src/doc/manual$
+^docs/examples$
 syntax: regexp
-^src/doc/examples$
+^test$

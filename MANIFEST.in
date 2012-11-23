@@ -1,0 +1,4 @@
+include COPYING README.rst
+include docs/installation.rst docs/changelog.rst
+recursive-include jaziku/i18n *
+recursive-include jaziku/data *
