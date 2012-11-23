@@ -527,11 +527,11 @@ def check():
         if globals_vars.config_run["threshold_below_var_I"] == "default":
             console.msg_error_configuration('threshold_below_var_I',
                 _("The thresholds can't be define as 'default' if the\n"
-                  "type of independent variable not is internal type."))
+                  "type of independent variable not is valid internal type."))
         if globals_vars.config_run["threshold_above_var_I"] == "default":
             console.msg_error_configuration('threshold_above_var_I',
                 _("The thresholds can't be define as 'default' if the\n"
-                  "type of independent variable not is internal type."))
+                  "type of independent variable not is valid internal type."))
 
     # -------------------------------------------------------------------------
     # check the 9 forecasting values
@@ -545,7 +545,7 @@ def check():
         if not (99 < lag_0 < 101):
             console.msg_error_configuration('lag_0_phen',
                 _("The sum for the 3 values of phenomenon for lag 0\n"
-                  "in forecasting options must be equal to 100."))
+                  "in 'forecasting options' in runfile must be\nequal to 100."))
 
         # lag 1
         lag_1 = globals_vars.config_run['lag_1_phen_below'] +\
@@ -554,7 +554,7 @@ def check():
         if not (99 < lag_1 < 101):
             console.msg_error_configuration('lag_1_phen',
                 _("The sum for the 3 values of phenomenon for lag 1\n"
-                  "in forecasting options must be equal to 100."))
+                  "in 'forecasting options' in runfile must be\nequal to 100."))
 
         # lag 2
         lag_2 = globals_vars.config_run['lag_2_phen_below'] +\
@@ -563,7 +563,7 @@ def check():
         if not (99 < lag_2 < 101):
             console.msg_error_configuration('lag_2_phen',
                 _("The sum for the 3 values of phenomenon for lag 2\n"
-                  "in forecasting options must be equal to 100."))
+                  "in 'forecasting options' in runfile must be\nequal to 100."))
 
 
 def check_station_list(stations):
@@ -647,7 +647,7 @@ def continue_run():
 
     if not globals_vars.args.force:
 
-        query = query_yes_no(_("\nPlease check the configuration to run, do you want to continue?"))
+        query = query_yes_no(_("\nPlease check the configuration to run, continue?"))
 
         if not query:
             console.msg(_("\nexit"),color='red')

@@ -84,6 +84,7 @@ fixes
   to trimester and var D is daily.
 - Constrict and adjust the graphs inspection of series
 - Correction the categorized the outliers
+- Fixes unicode streams for EDA
 
 
 0.4.2 (**2012-08-21**)

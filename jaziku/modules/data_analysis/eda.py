@@ -24,7 +24,6 @@ import copy
 import matplotlib.dates as mdates
 from math import log10
 from operator import itemgetter
-from datetime import date
 from dateutil.relativedelta import relativedelta
 from matplotlib import pyplot
 from numpy import histogram
@@ -88,7 +87,7 @@ def main(stations):
 
     # print header
     header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), _('SIZE DATA'), _('MAXIMUM'),
-              _('MINIMUM'), _('AVERAGE'), _('MEDIAN'), _('STD DEVIATION'), _('SKEWNESS'), _('VARIANCE'), _('KURTOSIS'), _('C-VARIATION')]
+              _('MINIMUM'), _('AVERAGE'), _('MEDIAN'), _('STD DEVIATION'), _('SKEWNESS'), _('VARIANCE'), _('KURTOSIS'), _('COEFF VARIATION')]
 
     csv_file_D.writerow(header)
     csv_file_I.writerow(header)
@@ -168,7 +167,7 @@ def main(stations):
     if globals_vars.config_run['graphics']:
         console.msg(_("Graphs inspection of series .......................... "), newline=False)
         with console.redirectStdStreams():
-            graphs_inspection_of_series(stations) #todo
+            graphs_inspection_of_series(stations)
         console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
@@ -198,7 +197,7 @@ def main(stations):
 
         if 1 < Station.stations_processed <= 10:
             with console.redirectStdStreams():
-                scatter_plots_of_series(stations) #todo
+                scatter_plots_of_series(stations)
             console.msg(_("done"), color='green')
         else:
             if Station.stations_processed == 1:
@@ -286,7 +285,7 @@ def descriptive_statistic_graphs(stations):
     """
     statistics = ['size_data', 'maximum', 'minimum', 'average', 'median', 'std_dev','skewness', 'kurtosis', 'coef_variation']
     statistics_to_graphs = [_('Sizes_data'), _('Maximums'), _('Minimums'), _('Averages'), _('Medians'),
-                            _('Std_deviations'), _('skewness'), _('Kurtosis'), _('Coef_variations')]
+                            _('Std_deviations'), _('skewness'), _('Kurtosis'), _('Coeff_variations')]
     graph_options = {'size_data':'bars', 'maximum':'bars', 'minimum':'bars', 'average':'bars', 'median':'bars',
                      'std_dev':'dots','skewness':'dots', 'kurtosis':'dots', 'coef_variation':'dots'}
 
@@ -331,7 +330,7 @@ def descriptive_statistic_graphs(stations):
             else:
                 title = name_graph.replace('_',' ')
 
-            ax.set_title(title, globals_vars.graphs_title_properties())
+            ax.set_title(unicode(title, 'utf-8'), globals_vars.graphs_title_properties())
 
             if graph == _('vs_Stations'):
                 if graph_options[statistics[enum]] == 'dots':
@@ -343,7 +342,7 @@ def descriptive_statistic_graphs(stations):
 
             ## X
             if graph == _('vs_Stations'):
-                ax.set_xlabel(_('Stations'), globals_vars.graphs_axis_properties())
+                ax.set_xlabel(unicode(_('Stations'), 'utf-8'), globals_vars.graphs_axis_properties())
                 xticks(range(1, len(x)+1), x, rotation='vertical')
             if graph == _('vs_Altitude'):
                 ax.set_xlabel(_('Altitude (m)'), globals_vars.graphs_axis_properties())
@@ -355,7 +354,7 @@ def descriptive_statistic_graphs(stations):
                 units = globals_vars.units_var_D
             else:
                 units = '--'
-            ax.set_ylabel('{0} ({1})'.format(statistic.replace('_',' '),units), globals_vars.graphs_axis_properties())
+            ax.set_ylabel(unicode('{0} ({1})'.format(statistic.replace('_',' '),units), 'utf-8'), globals_vars.graphs_axis_properties())
 
             pyplot.subplots_adjust(bottom=0.2)
             ax.grid(True)
@@ -443,7 +442,7 @@ def graphs_inspection_of_series(stations):
             fig = pyplot.figure(figsize=(with_fig, 5))
             #fig = pyplot.figure()
             ax = fig.add_subplot(111)
-            ax.set_title(name_graph.replace('_',' '), globals_vars.graphs_title_properties())
+            ax.set_title(unicode(name_graph.replace('_',' '), 'utf-8'), globals_vars.graphs_title_properties())
 
             # default zoom values
             x_scale_below=-1.0/len_x
@@ -496,7 +495,7 @@ def graphs_inspection_of_series(stations):
             if type in ['special_I', 'I']:
                 units = globals_vars.units_var_I
 
-            ax.set_ylabel('{0} ({1})'.format(type_var,units), globals_vars.graphs_axis_properties())
+            ax.set_ylabel(unicode('{0} ({1})'.format(type_var,units), 'utf-8'), globals_vars.graphs_axis_properties())
 
             pyplot.subplots_adjust(bottom=0.2)
             ax.grid(True)
@@ -644,7 +643,7 @@ def climatology(stations):
         fig = pyplot.figure(figsize=(8, 5.5))
         ax = fig.add_subplot(111)
 
-        ax.set_title(title, globals_vars.graphs_title_properties())
+        ax.set_title(unicode(title, 'utf-8'), globals_vars.graphs_title_properties())
 
         type_var = globals_vars.config_run['type_var_D']
 
@@ -654,7 +653,7 @@ def climatology(stations):
 
         ## Y
         # get units os type of var D or I
-        ax.set_ylabel('{0} ({1}) - '.format(type_var, globals_vars.units_var_D) + _('[mean]'), globals_vars.graphs_axis_properties())
+        ax.set_ylabel(unicode('{0} ({1}) - '.format(type_var, globals_vars.units_var_D) + _('[mean]'), 'utf-8'), globals_vars.graphs_axis_properties())
 
         #pyplot.subplots_adjust(bottom=0.2)
         ax.grid(True)
@@ -694,7 +693,7 @@ def climatology(stations):
         fig = pyplot.figure(figsize=(8, 5.5))
         ax = fig.add_subplot(111)
 
-        ax.set_title(title, globals_vars.graphs_title_properties())
+        ax.set_title(unicode(title, 'utf-8'), globals_vars.graphs_title_properties())
 
         type_var = globals_vars.config_run['type_var_D']
 
@@ -704,7 +703,7 @@ def climatology(stations):
 
         ## Y
         # get units os type of var D or I
-        ax.set_ylabel(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, globals_vars.units_var_D), globals_vars.graphs_axis_properties())
+        ax.set_ylabel(unicode(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, globals_vars.units_var_D), 'utf-8'), globals_vars.graphs_axis_properties())
 
         #pyplot.subplots_adjust(bottom=0.2)
         ax.grid(True)
@@ -790,7 +789,7 @@ def climatology(stations):
             with_fig = 5 + len(y_mean)/9
             fig = pyplot.figure(figsize=(with_fig, 5.5))
             ax = fig.add_subplot(111)
-            ax.set_title(title, globals_vars.graphs_title_properties())
+            ax.set_title(unicode(title, 'utf-8'), globals_vars.graphs_title_properties())
 
             type_var = globals_vars.config_run['type_var_D']
 
@@ -800,7 +799,7 @@ def climatology(stations):
 
             ## Y
             # get units os type of var D or I
-            ax.set_ylabel('{0} ({1}) - '.format(type_var, globals_vars.units_var_D) + _('[mean]'), globals_vars.graphs_axis_properties())
+            ax.set_ylabel(unicode('{0} ({1}) - '.format(type_var, globals_vars.units_var_D) + _('[mean]'), 'utf-8'), globals_vars.graphs_axis_properties())
 
             #pyplot.subplots_adjust(bottom=0.2)
             ax.grid(True)
@@ -842,7 +841,7 @@ def climatology(stations):
             with_fig = 5 + len(y_mean)/9
             fig = pyplot.figure(figsize=(with_fig, 5.5))
             ax = fig.add_subplot(111)
-            ax.set_title(title, globals_vars.graphs_title_properties())
+            ax.set_title(unicode(title, 'utf-8'), globals_vars.graphs_title_properties())
 
             type_var = globals_vars.config_run['type_var_D']
 
@@ -852,7 +851,7 @@ def climatology(stations):
 
             ## Y
             # get units os type of var D or I
-            ax.set_ylabel(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, globals_vars.units_var_D), globals_vars.graphs_axis_properties())
+            ax.set_ylabel(unicode(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, globals_vars.units_var_D), 'utf-8'), globals_vars.graphs_axis_properties())
 
             #pyplot.subplots_adjust(bottom=0.2)
             ax.grid(True)
@@ -945,7 +944,7 @@ def scatter_plots_of_series(stations):
         globals_vars.units_var_D,
         global_common_date_process_var_D[0].year, global_common_date_process_var_D[-1].year)
 
-    pyplot.suptitle(title_plot, y=(fig_height-0.1)/fig_height, fontsize=14)
+    pyplot.suptitle(unicode(title_plot, 'utf-8'), y=(fig_height-0.1)/fig_height, fontsize=14)
 
     for iter_v, station_v in enumerate(stations):
         for iter_h, station_h in enumerate(stations):
@@ -964,7 +963,7 @@ def scatter_plots_of_series(stations):
             else:
                 ax.set_yticklabels([])
             if iter_v == len(stations)-1:
-                ax.set_xlabel(station_h.code, globals_vars.graphs_axis_properties())
+                ax.set_xlabel(unicode(station_h.code, 'utf-8'), globals_vars.graphs_axis_properties())
             else:
                 ax.set_xticklabels([])
 
@@ -999,17 +998,17 @@ def frequency_histogram(stations):
 
         hist, bin_edges = histogram(station.var_D.data_filtered_in_process_period, bins=bins)
 
-        name_graph = _("frequency_histogram"+"_{0}_{1}_{2}").format(station.code, station.name, globals_vars.config_run['type_var_D'])
+        name_graph = _("frequency_histogram_{0}_{1}_{2}").format(station.code, station.name, globals_vars.config_run['type_var_D'])
 
         fig = pyplot.figure()
         ax = fig.add_subplot(111)
-        ax.set_title(_("Frequency histogram"+"\n{0} {1} - {2} ({3}-{4})").format(station.code, station.name,
-            globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']), globals_vars.graphs_title_properties())
+        ax.set_title(unicode(_("Frequency histogram\n{0} {1} - {2} ({3}-{4})").format(station.code, station.name,
+            globals_vars.config_run['type_var_D'], station.process_period['start'], station.process_period['end']), 'utf-8'), globals_vars.graphs_title_properties())
 
 
         ## X
         type_var = globals_vars.config_run['type_var_D']
-        ax.set_xlabel('{0} ({1})'.format(type_var, globals_vars.units_var_D), globals_vars.graphs_axis_properties())
+        ax.set_xlabel(unicode('{0} ({1})'.format(type_var, globals_vars.units_var_D), 'utf-8'), globals_vars.graphs_axis_properties())
 
         ## Y
         ax.set_ylabel(_('Frequency'), globals_vars.graphs_axis_properties())
@@ -1050,9 +1049,9 @@ def shapiro_wilks_test(stations):
 
         # Ho?
         if p_value < 0.5:
-            Ho = _('reject')
+            Ho = _('rejected')
         else:
-            Ho = _('accept')
+            Ho = _('accepted')
 
         # var D
         shapiro_line_station_var_D = [
@@ -1098,17 +1097,17 @@ def outliers(stations):
 
             fig = pyplot.figure(figsize=(3,6))
             ax = fig.add_subplot(111)
-            ax.set_title(_("Outliers")+"\n{0} ({1}-{2})".format(globals_vars.config_run['type_var_D'],
-                station.process_period['start'], station.process_period['end']), globals_vars.graphs_title_properties())
+            ax.set_title(unicode(_("Outliers")+"\n{0} ({1}-{2})".format(globals_vars.config_run['type_var_D'],
+                station.process_period['start'], station.process_period['end']), 'utf-8'), globals_vars.graphs_title_properties())
 
             ## X
             x_labels = [station.code]
             xticks([1], x_labels)
-            ax.set_xlabel(_('Station'), globals_vars.graphs_axis_properties())
+            ax.set_xlabel(unicode(_('Station'), 'utf-8'), globals_vars.graphs_axis_properties())
 
             ## Y
             type_var = globals_vars.config_run['type_var_D']
-            ax.set_ylabel('{0} ({1})'.format(type_var, globals_vars.units_var_D), globals_vars.graphs_axis_properties())
+            ax.set_ylabel(unicode('{0} ({1})'.format(type_var, globals_vars.units_var_D), 'utf-8'), globals_vars.graphs_axis_properties())
             #ax.set_ylabel(_('Frequency'))
 
             boxplot_station = boxplot(station.var_D.data_filtered_in_process_period)
@@ -1254,18 +1253,18 @@ def outliers(stations):
         fig = pyplot.figure(figsize=(2.5+len(stations)/2.5,6))
         ax = fig.add_subplot(111)
         if globals_vars.config_run['process_period']:
-            ax.set_title(_("Outliers")+" - {0} ({1}-{2})".format(globals_vars.config_run['type_var_D'],
-                globals_vars.config_run['process_period']['start'], globals_vars.config_run['process_period']['end']), globals_vars.graphs_title_properties())
+            ax.set_title(unicode(_("Outliers")+" - {0} ({1}-{2})".format(globals_vars.config_run['type_var_D'],
+                globals_vars.config_run['process_period']['start'], globals_vars.config_run['process_period']['end']), 'utf-8'), globals_vars.graphs_title_properties())
         else:
-            ax.set_title(_("Outliers")+" - {0}".format(globals_vars.config_run['type_var_D']), globals_vars.graphs_title_properties())
+            ax.set_title(unicode(_("Outliers")+" - {0}".format(globals_vars.config_run['type_var_D']), 'utf-8'), globals_vars.graphs_title_properties())
 
         ## X
         xticks(range(len(stations)), codes_stations, rotation='vertical')
-        ax.set_xlabel(_('Stations'), globals_vars.graphs_axis_properties())
+        ax.set_xlabel(unicode(_('Stations'), 'utf-8'), globals_vars.graphs_axis_properties())
 
         ## Y
         type_var = globals_vars.config_run['type_var_D']
-        ax.set_ylabel('{0} ({1})'.format(type_var, globals_vars.units_var_D), globals_vars.graphs_axis_properties())
+        ax.set_ylabel(unicode('{0} ({1})'.format(type_var, globals_vars.units_var_D), 'utf-8'), globals_vars.graphs_axis_properties())
         #ax.set_ylabel(_('Frequency'))
 
         boxplot_station = boxplot(data_stations)

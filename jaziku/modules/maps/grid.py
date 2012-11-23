@@ -64,7 +64,7 @@ class Grid:
                                         abs(self.maxlon - self.minlon)]) / 70
         elif not isinstance(self.grid_resolution, (int, float)):
             console.msg_error(_("The grid_resolution '{0}' is wrong, the options are:\n"
-                                "default or number.").format(self.grid_resolution), False)
+                                "'default' or valid number.").format(self.grid_resolution), False)
 
         # number of decimal from grid resolution
         self.decimal_resolution = len(str(self.grid_resolution).split('.')[1])
@@ -117,7 +117,7 @@ class Grid:
                 self.radiuses = [int(self.radiuses[0]), int(self.radiuses[1])]
             except:
                 console.msg_error(_("The radiuses '{0}' is wrong, the options are:\n"
-                                    "default or radius1;radius2").format(self.radiuses), False)
+                                    "'default' or radius1;radius2").format(self.radiuses), False)
 
         # set the max_neighbours
         if self.max_neighbours == "default":
@@ -126,7 +126,7 @@ class Grid:
             self.max_neighbours = int(self.max_neighbours)
         else:
             console.msg_error(_("The max_neighbours '{0}' is wrong, the options are:\n"
-                                "default or number").format(self.max_neighbours), False)
+                                "'default' or valid number").format(self.max_neighbours), False)
 
         ## what do with data outside of boundary shape
         self.shape_mask = False

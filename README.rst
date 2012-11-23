@@ -51,7 +51,7 @@ Please read the instruction install in `this <http://hg.ideam.gov.co:8000/meteor
 Synopsis run
 ------------
 
-- jaziku [-h] -runfile RUNFILE
+- jaziku [-h] [-f] runfile
 
 Team
 ----------
@@ -62,7 +62,7 @@ Team
 
 How to cite Jaziku
 ------------------
-    Jaziku, composite analysis software (version 0.4.2). (2012) IDEAM, Colombia.
+    Jaziku, composite analysis software (version 0.x.x). (2012) IDEAM, Colombia.
     Jaziku is a free and open source software GPLv3. http://
 
 Licence
