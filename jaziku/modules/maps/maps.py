@@ -26,7 +26,7 @@ from subprocess import call
 import interpolation
 from grid import search_and_set_internal_grid, set_particular_grid
 from ncl import make_ncl_file
-from jaziku.utils import globals_vars, console
+from jaziku.utils import globals_vars, console, watermarking
 
 
 def check_basic_requirements_for_maps():
@@ -232,6 +232,9 @@ def maps(grid):
         image_file = os.path.join(os.path.abspath(base_path_file) + ".png").replace(" ", r"\ ")
 
         call(["convert", image_file, "-trim", image_file], shell=False)
+
+        # stamp logo
+        watermarking.logo(os.path.abspath(base_path_file) + ".png")
 
         # TODO: test if convert worked
 

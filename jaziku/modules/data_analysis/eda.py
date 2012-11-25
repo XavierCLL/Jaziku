@@ -38,7 +38,7 @@ from jaziku.modules.climate.contingency_table import get_thresholds_var_I
 from jaziku.modules.climate.lags import  calculate_lags
 from jaziku.modules.station import Station
 from jaziku.modules.variable import Variable
-from jaziku.utils import globals_vars, console, format_out
+from jaziku.utils import globals_vars, console, format_out, watermarking
 from jaziku.utils.mean import mean
 
 
@@ -369,7 +369,12 @@ def descriptive_statistic_graphs(stations):
 
             fig.tight_layout()
 
-            pyplot.savefig(os.path.join(graphs_dir, name_graph + '.png'), dpi=75)
+            # save image
+            image = os.path.join(graphs_dir, name_graph + '.png')
+            pyplot.savefig(image, dpi=75)
+
+            # stamp logo
+            watermarking.logo(image)
 
             pyplot.close('all')
 
@@ -394,7 +399,7 @@ def graphs_inspection_of_series(stations):
 
 
     for station in stations:
-        image_open_list = []
+        image_list = []
 
         station_image_path = os.path.join(graphs_dir, station.code +'-'+station.name)
 
@@ -507,22 +512,24 @@ def graphs_inspection_of_series(stations):
 
             image_path = os.path.join(station_image_path, name_graph + '.png')
 
+            # save image
             pyplot.savefig(image_path, dpi=75)
-            image_open_list.append(image_path)
+
+            image_list.append(image_path)
 
             pyplot.close('all')
 
 
         ## create mosaic
         if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "monthly":
-            image_var_D = img_open(image_open_list[0])
-            image_var_I = img_open(image_open_list[2])
+            image_var_D = img_open(image_list[0])
+            image_var_I = img_open(image_list[2])
         elif station.var_D.frequency_data == "monthly" and station.var_I.frequency_data == "daily":
-            image_var_D = img_open(image_open_list[2])
-            image_var_I = img_open(image_open_list[1])
+            image_var_D = img_open(image_list[2])
+            image_var_I = img_open(image_list[1])
         else:
-            image_var_D = img_open(image_open_list[0])
-            image_var_I = img_open(image_open_list[1])
+            image_var_D = img_open(image_list[0])
+            image_var_I = img_open(image_list[1])
 
         # definition height and width of individual image
         width, height = image_var_D.size
@@ -538,9 +545,17 @@ def graphs_inspection_of_series(stations):
 
         mosaic.save(mosaic_dir_save)
 
+        # stamp logo
+        watermarking.logo(mosaic_dir_save)
+
         # delete stretched special image for mosaic
-        if len(image_open_list) == 3:
-            os.remove(image_open_list[2])
+        if len(image_list) == 3:
+            os.remove(image_list[2])
+            del image_list[2]
+
+        # stamp logo
+        for image in image_list:
+            watermarking.logo(image)
 
         pyplot.close('all')
 
@@ -681,7 +696,12 @@ def climatology(stations):
 
         fig.tight_layout()
 
-        pyplot.savefig(os.path.join(station_climatology_path, name_graph + '.png'), dpi=75)
+        # save image
+        image = os.path.join(station_climatology_path, name_graph + '.png')
+        pyplot.savefig(image, dpi=75)
+
+        # stamp logo
+        watermarking.logo(image)
 
         pyplot.close('all')
 
@@ -730,8 +750,12 @@ def climatology(stations):
         #ax.tick_params(labeltop=False, labelright=True)
 
         fig.tight_layout()
+        # save image
+        image = os.path.join(station_climatology_path, name_graph + '.png')
+        pyplot.savefig(image, dpi=75)
 
-        pyplot.savefig(os.path.join(station_climatology_path, name_graph + '.png'), dpi=75)
+        # stamp logo
+        watermarking.logo(image)
 
         pyplot.close('all')
 
@@ -828,7 +852,12 @@ def climatology(stations):
 
             fig.tight_layout()
 
-            pyplot.savefig(os.path.join(station_climatology_path, name_graph + '.png'), dpi=75)
+            # save image
+            image = os.path.join(station_climatology_path, name_graph + '.png')
+            pyplot.savefig(image, dpi=75)
+
+            # stamp logo
+            watermarking.logo(image)
 
             pyplot.close('all')
 
@@ -880,7 +909,12 @@ def climatology(stations):
 
             fig.tight_layout()
 
-            pyplot.savefig(os.path.join(station_climatology_path, name_graph + '.png'), dpi=75)
+            # save image
+            image = os.path.join(station_climatology_path, name_graph + '.png')
+            pyplot.savefig(image, dpi=75)
+
+            # stamp logo
+            watermarking.logo(image)
 
             pyplot.close('all')
 
@@ -977,7 +1011,11 @@ def scatter_plots_of_series(stations):
 
     image_path = os.path.join(distribution_test_dir, name_plot + '.png')
 
+    # save image
     pyplot.savefig(image_path, dpi=75)
+
+    # stamp logo
+    watermarking.logo(image_path)
 
     pyplot.close('all')
 
@@ -1024,7 +1062,12 @@ def frequency_histogram(stations):
 
         fig.tight_layout()
 
-        pyplot.savefig(os.path.join(frequency_histogram_dir, name_graph + '.png'), dpi=75)
+        # save image
+        image = os.path.join(frequency_histogram_dir, name_graph + '.png')
+        pyplot.savefig(image, dpi=75)
+
+        # stamp logo
+        watermarking.logo(image)
 
         pyplot.close('all')
 
@@ -1124,7 +1167,12 @@ def outliers(stations):
 
             fig.tight_layout()
 
-            pyplot.savefig(os.path.join(outliers_per_stations_dir, name_graph + '.png'), dpi=75)
+            # save image
+            image = os.path.join(outliers_per_stations_dir, name_graph + '.png')
+            pyplot.savefig(image, dpi=75)
+
+            # stamp logo
+            watermarking.logo(image)
 
             pyplot.close('all')
 
@@ -1282,7 +1330,12 @@ def outliers(stations):
 
         fig.tight_layout()
 
+        # save image
+        image = os.path.join(outliers_dir, name_graph + '.png')
         pyplot.savefig(os.path.join(outliers_dir, name_graph + '.png'), dpi=75)
+
+        # stamp logo
+        watermarking.logo(image)
 
         pyplot.close('all')
 

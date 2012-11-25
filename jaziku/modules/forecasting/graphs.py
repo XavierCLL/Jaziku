@@ -27,7 +27,7 @@ import os
 from matplotlib import pyplot
 from Image import open as img_open
 
-from jaziku.utils import globals_vars
+from jaziku.utils import globals_vars, watermarking
 
 def forecasting_graphs(station):
     """
@@ -84,11 +84,14 @@ def forecasting_graphs(station):
             = os.path.join(station.forecasting_dir, _('prob_of_{0}_lag_{1}_{2}_({3}-{4}).png')
                 .format(station.type_D, lag, filename_date_graphic,
                         station.process_period['start'], station.process_period['end']))
+
+        # save image
         pyplot.savefig(image_dir_save, dpi=75)
+
         pyplot.clf()
 
         # save dir image for mosaic
-        image_open_list.append(img_open(image_dir_save))
+        image_open_list.append(image_dir_save)
 
     ## Create mosaic
 
@@ -106,9 +109,17 @@ def forecasting_graphs(station):
         pyplot.savefig(mosaic_dir_save, dpi=100)
         mosaic = img_open(mosaic_dir_save)
         for lag_iter in range(len(globals_vars.lags)):
-            mosaic.paste(image_open_list[lag_iter], (image_width * lag_iter, 0))
+            mosaic.paste(img_open(image_open_list[lag_iter]), (image_width * lag_iter, 0))
+        # save
         mosaic.save(mosaic_dir_save)
+        # stamp logo
+        watermarking.logo(mosaic_dir_save)
+
         pyplot.clf()
 
         # clear and delete all instances of graphs created by pyplot
         pyplot.close('all')
+
+    # apply stamp logo
+    for image in image_open_list:
+        watermarking.logo(image)

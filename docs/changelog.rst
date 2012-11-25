@@ -4,7 +4,16 @@
 Changelog
 =========
 
-0.5 (**2012-10-XX**)
+0.5.1 (**2012-12-XX**)
+----------------------
+
+news
+++++
+
+- Apply stamp (watermarking) for all graphics of Jaziku logo
+
+
+0.5.0 (**2012-11-22**)
 ----------------------
 
 news
