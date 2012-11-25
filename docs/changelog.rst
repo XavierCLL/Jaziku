@@ -12,6 +12,11 @@ news
 
 - Apply stamp (watermarking) for all graphics of Jaziku logo
 
+fixes
++++++
+
+- Adjust latitude and longitude of Colombia maps
+
 
 0.5.0 (**2012-11-22**)
 ----------------------
@@ -65,6 +70,7 @@ news
 
 fixes
 +++++
+
 - Many Fixed TYPOS and grammatical language error
 - Fix number of line when print runfile error
 - Fix flush console message stream when wait process
