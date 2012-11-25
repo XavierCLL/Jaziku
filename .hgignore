@@ -13,8 +13,6 @@ syntax: regexp
 syntax: regexp
 ^jaziku.egg-info$
 syntax: regexp
-^jaziku/data/watermarking$
-syntax: regexp
 ^docs/manual$
 syntax: regexp
 ^docs/examples$

@@ -28,7 +28,7 @@ from numpy import array
 from matplotlib import pyplot
 from Image import open as img_open
 
-from jaziku.utils import globals_vars
+from jaziku.utils import globals_vars, watermarking
 from contingency_table import get_contingency_table
 
 
@@ -135,11 +135,12 @@ def climate_graphs(station):
                           .format(lag, filename_period, station.code, station.name, station.type_D,
                                   station.type_I, station.process_period['start'], station.process_period['end']))
 
+        # save image
         pyplot.savefig(image_dir_save, dpi=75)
         pyplot.clf()
 
         # save dir image for mosaic
-        image_open_list.append(img_open(image_dir_save))
+        image_open_list.append(image_dir_save)
 
     for lag in globals_vars.lags:
 
@@ -195,7 +196,7 @@ def climate_graphs(station):
             # add image in mosaic based on trimester, vertical(v) and horizontal(h)
             for v in range(4):
                 for h in range(3):
-                    mosaic.paste(image_open_list[i], (image_width * h, image_height * v))
+                    mosaic.paste(img_open(image_open_list[i]), (image_width * h, image_height * v))
                     i += 1
 
         if station.state_of_data in [2, 4]:
@@ -208,13 +209,22 @@ def climate_graphs(station):
             # add image in mosaic based on months(m) and days(d)
             for m in range(12):
                 for d in range(len(station.range_analysis_interval)):
-                    mosaic.paste(image_open_list[i], (image_width * d, image_height * m))
+                    mosaic.paste(img_open(image_open_list[i]), (image_width * d, image_height * m))
                     i += 1
 
         mosaic.save(mosaic_dir_save)
+
+        # stamp logo
+        watermarking.logo(mosaic_dir_save)
+
+        # apply stamp logo for all image in this lag
+        for image in image_open_list:
+            watermarking.logo(image)
+
         del mosaic
-        pyplot.clf()
         #del image_open_list
+        pyplot.clf()
+        pyplot.close('all')
 
     # clear and delete all instances of graphs created by pyplot
     pyplot.close('all')
