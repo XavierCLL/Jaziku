@@ -129,6 +129,7 @@ def maps(grid):
         open_file = open(file_map_points, 'rb')
         csv_file = csv.reader(open_file, delimiter=';')
         first_line = True
+        marks_stations = []
         for line in csv_file:
             if first_line:
                 first_line = False
@@ -143,6 +144,8 @@ def maps(grid):
                 # set the index value on matrix
 
             matrix, point_state = grid.set_point_on_grid(matrix, latitude, longitude, index)
+
+            marks_stations.append([latitude, longitude, index])
 
             if point_state == "nan" and message_warning:
                 console.msg(
@@ -179,7 +182,7 @@ def maps(grid):
         # convert matrix (column per column) to linear values
         matrix_vector = numpy.asarray(matrix.T).reshape(-1)
 
-        # save values to INC file
+        # save values to .INC file
         for value in matrix_vector:
             if int(value) == globals_vars.VALID_NULL[1]:
                 open_file.write(str(int(value)) + '\n')
@@ -197,16 +200,27 @@ def maps(grid):
 
         #matrix_interpolation_vector = np.asarray(matrix_interpolation.T).reshape(-1)
 
-        # save file for NCL
-        open_ncl_file = open(ncl_data, 'wb')
-        tsv_file = csv.writer(open_ncl_file, delimiter='\t')
+        # save .TSV interpolation file for NCL
+        interpolation_file = open(tsv_interpolation_file, 'wb')
+        tsv_file = csv.writer(interpolation_file, delimiter='\t')
         tsv_file.writerow([_('lat'), _('lon'), _('value')])
 
         for lon_index, lon_value in enumerate(grid.lon_coordinates):
             for lat_index, lat_value in enumerate(grid.lat_coordinates):
                 tsv_file.writerow([lat_value, lon_value, matrix_interpolation[lat_index][lon_index]])
 
-        open_ncl_file.close()
+        interpolation_file.close()
+        del tsv_file
+
+        # save .TSV stations file for NCL (marks_stations)
+        stations_file = open(tsv_stations_file, 'wb')
+        tsv_file = csv.writer(stations_file, delimiter='\t')
+        tsv_file.writerow([_('lat'), _('lon'), _('value')])
+
+        for mark_station in marks_stations:
+            tsv_file.writerow(mark_station)
+
+        stations_file.close()
         del tsv_file
 
         # make ncl file for map
@@ -239,9 +253,10 @@ def maps(grid):
         # TODO: test if convert worked
 
         # delete files
-        os.remove(os.path.abspath(base_path_file) + ".INC")
-        os.remove(os.path.abspath(base_path_file) + ".ncl")
-        os.remove(os.path.abspath(base_path_file) + ".tsv")
+        #os.remove(os.path.abspath(base_path_file) + ".INC")
+        #os.remove(os.path.abspath(base_path_file) + ".ncl")
+        #os.remove(os.path.abspath(base_path_file) + ".tsv")
+        #os.remove(os.path.abspath(base_path_file) + "_stations.tsv")
 
         del matrix
 
@@ -303,7 +318,8 @@ def maps(grid):
                             inc_file = os.path.join(base_path, base_file + ".INC")
 
                             # save file for NCL
-                            ncl_data = os.path.join(base_path, base_file + ".tsv")
+                            tsv_interpolation_file = os.path.join(base_path, base_file + ".tsv")
+                            tsv_stations_file = os.path.join(base_path, base_file + "_stations.tsv")
 
                             process_map()
 
@@ -345,7 +361,8 @@ def maps(grid):
                                 inc_file = os.path.join(base_path, base_file + ".INC")
 
                                 # save file for NCL
-                                ncl_data = os.path.join(base_path, base_file + ".tsv")
+                                tsv_interpolation_file = os.path.join(base_path, base_file + ".tsv")
+                                tsv_stations_file = os.path.join(base_path, base_file + "_stations.tsv")
 
                                 process_map()
 
@@ -410,7 +427,8 @@ def maps(grid):
                         inc_file = os.path.join(base_path, base_file + ".INC")
 
                         # save file for NCL
-                        ncl_data = os.path.join(base_path, base_file + ".tsv")
+                        tsv_interpolation_file = os.path.join(base_path, base_file + ".tsv")
+                        tsv_stations_file = os.path.join(base_path, base_file + "_stations.tsv")
 
                         process_map()
 
@@ -454,7 +472,8 @@ def maps(grid):
                             inc_file = os.path.join(base_path, base_file + ".INC")
 
                             # save file for NCL
-                            ncl_data = os.path.join(base_path, base_file + ".tsv")
+                            tsv_interpolation_file = os.path.join(base_path, base_file + ".tsv")
+                            tsv_stations_file = os.path.join(base_path, base_file + "_stations.tsv")
 
                             process_map()
 
@@ -510,7 +529,8 @@ def maps(grid):
                     inc_file = os.path.join(base_path, base_file + ".INC")
 
                     # save file for NCL
-                    ncl_data = os.path.join(base_path, base_file + ".tsv")
+                    tsv_interpolation_file = os.path.join(base_path, base_file + ".tsv")
+                    tsv_stations_file = os.path.join(base_path, base_file + "_stations.tsv")
 
                     process_map()
 

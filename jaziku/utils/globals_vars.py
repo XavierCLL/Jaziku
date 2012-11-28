@@ -222,6 +222,7 @@ config_run = {'data_analysis': None,
               'lag_2_phen_above': None,
               'forecasting_date': None,
               'maps': None,
+              'marks_stations': None,
               'overlapping': None,
               "shape_boundary": None}
 
