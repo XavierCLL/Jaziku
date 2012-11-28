@@ -16,6 +16,7 @@ fixes
 +++++
 
 - Adjust latitude and longitude of Colombia maps
+- restore threshold problem values when run each station
 
 
 0.5.0 (**2012-11-22**)
