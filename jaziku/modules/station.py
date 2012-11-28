@@ -158,6 +158,10 @@ class Station:
         """
         Run climate and forecasting process for this station.
         """
+
+        # restore threshold problem values
+        globals_vars.threshold_problem = [False, False, False]
+
         self.get_state_of_data()
 
         # define if results will made by trimester or every n days
