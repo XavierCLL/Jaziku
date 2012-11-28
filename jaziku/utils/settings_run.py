@@ -43,6 +43,7 @@ def get():
                 "phen_normal_label": "-",
                 "phen_above_label": "-",
                 "maps": colored.red(_("disabled")),
+                "marks_stations": colored.green(_("enabled")),
                 "overlapping": None,
                 "shape_boundary": colored.red(_("disabled"))}
 
@@ -252,6 +253,15 @@ def get():
                     "'correlation' (comma separated), or 'all'."))
             settings["maps"] = colored.green(','.join(map(str, [m for m in globals_vars.maps if globals_vars.maps[m]])))
 
+        # marks_stations
+        if globals_vars.config_run['marks_stations'] in ["enable", "default", True]:
+            settings["marks_stations"] = colored.green(_("enabled"))
+            globals_vars.config_run['marks_stations'] = True
+        elif globals_vars.config_run['marks_stations'] in ["disable", False]:
+            globals_vars.config_run['marks_stations'] = False
+        else:
+            console.msg_error_configuration('marks_stations', _("The marks_stations is wrong, the options are:\n"
+                                                                "disable, enable or default."))
         # set the overlapping solution
         if globals_vars.config_run['overlapping'] == "default" or not globals_vars.config_run['overlapping']:
             globals_vars.config_run['overlapping'] = "average"
@@ -374,6 +384,8 @@ def show(stop_in=None):
     print "   {0} ------------------ {1}".format("maps", settings["maps"])
     if stop_in == "maps": return
     if globals_vars.config_run['maps']:
+        print "   {0} -------- {1}".format("marks_stations", settings["marks_stations"])
+        if stop_in == "marks_stations": return
         print "   {0} ----------- {1}".format("overlapping", settings["overlapping"])
         if stop_in == "overlapping": return
         print "   {0} -------- {1}".format("shape boundary", settings["shape_boundary"])
