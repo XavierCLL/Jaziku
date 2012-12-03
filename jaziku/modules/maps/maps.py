@@ -409,7 +409,7 @@ def maps(grid):
 
                         # save matrix for interpolation
                         base_path = os.path.join(globals_vars.climate_dir, _('maps'),
-                            globals_vars.translate_analysis_interval[globals_vars.options_analysis_interval.index(analysis_interval)],
+                            globals_vars.translate_analysis_interval,
                             _('lag_{0}').format(lag),
                             _('Correlation'),
                             grid.grid_name)
@@ -453,7 +453,7 @@ def maps(grid):
 
                             # save matrix for interpolation
                             base_path = os.path.join(globals_vars.climate_dir, _('maps'),
-                                globals_vars.translate_analysis_interval[globals_vars.options_analysis_interval.index(analysis_interval)],
+                                globals_vars.translate_analysis_interval,
                                 _('lag_{0}').format(lag),
                                 _('Correlation'),
                                 grid.grid_name)
