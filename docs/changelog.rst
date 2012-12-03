@@ -11,6 +11,9 @@ news
 ++++
 
 - Apply stamp (watermarking) for all graphics of Jaziku logo
+- New option in runfile for enable or disable the marks of stations
+- Plotting marks of stations in maps
+- When marks_stations is enable, plotting the legend referent of marks of stations
 
 fixes
 +++++

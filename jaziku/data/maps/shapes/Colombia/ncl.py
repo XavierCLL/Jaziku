@@ -18,89 +18,61 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+from jaziku.utils import globals_vars
 
 # this ncl code for regions of Colombia
 
-import os
-
-
 def code(map_properties):
 
-    #  if particular_properties_map not defined in {region}.py, these are the default values:
+#  if particular_properties_map not defined in {region}.py, these are the default values:
     if map_properties.particular_properties_map == {}:
         map_properties.particular_properties_map = {"tiMainFontHeightF": 0.021, # main font height
                                                     "lbTitleFontHeightF": 0.015, # colorbar title font height
                                                     "space_label_title": 25, # number of space between label title in colorbar
                                                     "lbLabelFontHeightF": 0.0095}  # colorbar mark font height
 
+    map_properties_vars = {
+        'ncarg_root': os.environ.get('NCARG_ROOT'),
+        'jaziku_ncl_plugins': os.path.abspath(os.path.join(globals_vars.ROOT_DIR,'data','maps','ncl_plugins')),
+        'shape': map_properties.shape,
+        'interpolation_file': os.path.abspath(map_properties.base_path_file) + '.tsv',
+        'stations_file': os.path.abspath(map_properties.base_path_file) + '_stations.tsv',
+        'marks_stations': globals_vars.config_run['marks_stations'],
+        'label_marks_stations': _('Stations'),
+        'save_map': os.path.abspath(map_properties.base_path_file),
+        'title': map_properties.title,
+        'label_title': _("Below") + " " * map_properties.particular_properties_map["space_label_title"] +\
+                       _("Normal") + " " * map_properties.particular_properties_map["space_label_title"] +\
+                       _("Above"),
+        'tiMainFontHeightF': map_properties.particular_properties_map["tiMainFontHeightF"],
+        'lbTitleFontHeightF': map_properties.particular_properties_map["lbTitleFontHeightF"],
+        'lbLabelFontHeightF': map_properties.particular_properties_map["lbLabelFontHeightF"],
+        'color_bar_title_on': map_properties.color_bar_title_on,
+        'color_bar_levels': map_properties.color_bar_levels,
+        'color_bar_step': map_properties.color_bar_step,
+        'colormap': map_properties.colormap,
+        'lat_size': map_properties.lat_size,
+        'lon_size': map_properties.lon_size,
+        'name': '''"{0}"'''.format(map_properties.name),
+        'analysis': map_properties.analysis,
+        'units': map_properties.units,
+        'enable_mask': map_properties.shape_mask
+    }
+
     return '''
-
-
 load "{ncarg_root}/lib/ncarg/nclscripts/csm/gsn_code.ncl"
 load "{ncarg_root}/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
 load "{ncarg_root}/lib/ncarg/nclscripts/csm/contributed.ncl"
 
-;################## accent table
+;load particular ncl scripts of Jaziku
+load "{jaziku_ncl_plugins}/accent_table.ncl"
 
-Agrave = "A~H-15V6F35~A~FV-6H3~" ; À
-agrave = "a~H-13V2F35~A~FV-2H3~" ; à
-Aacute = "A~H-15V6F35~B~FV-6H3~" ; Á
-aacute = "a~H-13V2F35~B~FV-2H3~" ; á
-Acirc = "A~H-15V6F35~C~FV-6H3~" ; Â
-acirc = "a~H-13V2F35~C~FV-2H3~" ; â
-Atilde = "A~H-15V6F35~D~FV-6H3~" ; Ã
-atilde = "a~H-13V2F35~D~FV-2H3~" ; ã
-Auml = "A~H-15V6F35~H~FV-6H3~" ; Ä
-auml = "a~H-13V2F35~H~FV-2H3~" ; ä
-
-Egrave = "E~H-15V6F35~A~FV-6H3~" ; È
-egrave = "e~H-13V2F35~A~FV-2H3~" ; è
-Eacute = "E~H-15V6F35~B~FV-6H3~" ; É
-eacute = "e~H-13V2F35~B~FV-2H3~" ; é
-Ecirc = "E~H-15V6F35~C~FV-6H3~" ; Ê
-ecirc = "e~H-13V2F35~C~FV-2H3~" ; ê
-Euml = "E~H-15V6F35~H~FV-6H3~" ; Ë
-euml = "e~H-13V2F35~H~FV-2H3~" ; ë
-
-Igrave = "I~H-10V6F35~A~FV-6H3~" ; Ì
-igrave = "i~H-10V2F35~A~FV-2H3~" ; ì
-Iacute = "I~H-08V6F35~B~FV-6H3~" ; Í
-iacute = "i~H-08V2F35~B~FV-2~" ; í
-Icirc = "I~H-09V6F35~C~FV-6H3~" ; Î
-icirc = "i~H-09V2F35~C~FV-2H3~" ; î
-Iuml = "I~H-09V6F35~H~FV-6H3~" ; Ï
-iuml = "i~H-09V2F35~H~FV-2H3~" ; ï
-
-Ograve = "O~H-15V6F35~A~FV-6H3~" ; Ò
-ograve = "o~H-13V2F35~A~FV-2H3~" ; ò
-Oacute = "O~H-15V6F35~B~FV-6H3~" ; Ó
-oacute = "o~H-13V2F35~B~FV-2H3~" ; ó
-Ocirc = "O~H-16V6F35~C~FV-6H3~" ; Ô
-ocirc = "o~H-14V2F35~C~FV-2H3~" ; ô
-Otilde = "O~H-15V6F35~D~FV-6H3~" ; Õ
-otilde = "o~H-13V2F35~D~FV-2H3~" ; õ
-Ouml = "O~H-16V6F35~H~FV-6H3~" ; Ä
-ouml = "o~H-14V2F35~H~FV-2H3~" ; ä
-
-Ugrave = "U~H-15V6F35~A~FV-6H3~" ; Ù
-ugrave = "u~H-13V2F35~A~FV-2H3~" ; ù
-Uacute = "U~H-13V6F35~B~FV-6H3~" ; Ú
-uacute = "u~H-13V2F35~B~FV-2H3~" ; ú
-Ucirc = "U~H-15V6F35~C~FV-6H3~" ; Û
-ucirc = "u~H-13V2F35~C~FV-2H3~" ; û
-Uuml = "U~H-15V6F35~H~FV-6H3~" ; Ü
-uuml = "u~H-13V2F35~H~FV-2H3~" ; ü
-
-Cedil = "C~H-15F35~K~FH2~" ; Ç
-cedil = "c~H-13F35~K~FH2~" ; ç
-
-Ntilde = "N~H-15V6F35~D~FV-6H3~" ; Ñ
-ntilde = "n~H-13V2F35~D~FV-2H3~" ; ñ
-
+;*****************************************
 ;################## subtitles
+;*****************************************
 
-procedure subtitles(wks:graphic,plot:graphic,lstr:string,cstr:string, \
-                    rstr:string,tres)
+procedure subtitles(wks:graphic,plot:graphic,lstr:string,cstr:string, rstr:string,tres)
 local txres, font_height, amres
 begin
   if(tres) then
@@ -161,7 +133,9 @@ begin
   end if
 end
 
+;*****************************************
 ;################## function draw_outlines
+;*****************************************
 
 undef("draw_outlines")
 function draw_outlines(wks,map,fname)
@@ -186,7 +160,7 @@ begin
 
   lnres                  = True
   lnres@gsLineThicknessF = 1
-  lnres@gsLineColor      = "black"
+  lnres@gsLineColor      = (/"(/0.00, 0.00, 0.00/)"/)
 
   do i=0,numFeatures-1
      startSegment = geometry(i, geom_segIndex)
@@ -196,14 +170,16 @@ begin
         endPT   = startPT + segments(seg, segs_numPnts) - 1
 
         dumstr = unique_string("primitive")
-        map@$dumstr$ = gsn_add_polyline(wks, map, lon1(startPT:endPT),                                          lat1(startPT:endPT), lnres)
+        map@$dumstr$ = gsn_add_polyline(wks, map, lon1(startPT:endPT), lat1(startPT:endPT), lnres)
      end do
   end do
 
   return(map)
 end
 
+;*****************************************
 ;################## function create_map
+;*****************************************
 
 undef("create_map")
 function create_map(wks,lat,lon)
@@ -251,7 +227,9 @@ begin
   return(map)
 end
 
+;*****************************************
 ;################## function shape mask
+;*****************************************
 
 undef("shape_mask")
 function shape_mask(lat,lon,idx)
@@ -344,9 +322,12 @@ begin
   return(data_mask)
 end
 
+;*****************************************
 ;################## MAIN
+;*****************************************
 
 begin
+
   USE_RASTER = False
   ENABLE_MASK = {enable_mask}
 
@@ -364,7 +345,7 @@ begin
   gsn_define_colormap(wks,"{colormap}")
   gsn_reverse_colormap(wks)
 
-  fname = "{ncl_data}"
+  fname = "{interpolation_file}"
   lines = asciiread(fname,-1,"string")
 
   delim = str_get_tab()
@@ -391,7 +372,7 @@ begin
 
   ;colors bar
   res@pmLabelBarOrthogonalPosF    = 0.02
-  res@pmLabelBarWidthF              = 0.05
+  res@pmLabelBarWidthF            = 0.05
 
   res@cnLineLabelPlacementMode    = "Constant"
   res@cnLineDashSegLenF           = 0.00003
@@ -424,49 +405,93 @@ begin
   res@lbLabelAutoStride           =   True
   ;res@cnLabelBarEndStyle          = "IncludeMinMaxLabels"
 
+  res@sfXArray                    = lon
+  res@sfYArray                    = lat
 
-  if(ENABLE_MASK) then
-    data_mask = shape_mask(lat, lon, idx)
-    contour = gsn_csm_contour(wks,data_mask,res)
-  else
-    res@sfXArray                    = lon
-    res@sfYArray                    = lat
-    contour = gsn_csm_contour(wks,idx,res)
+  contour = gsn_csm_contour(wks,idx,res)
+  overlay(map,contour)
+  map = draw_outlines(wks, map, "{shape}")
+
+  ;*****************************************
+  ; plotting marks of stations
+
+  if({marks_stations}) then
+    fname = "{stations_file}"
+    lines_stations = asciiread(fname,-1,"string")
+
+    delim = str_get_tab()
+    lat_stations = stringtofloat(str_get_field(lines_stations(1:),1,delim))
+    lon_stations = stringtofloat(str_get_field(lines_stations(1:),2,delim))
+    ;idx_stations = stringtofloat(str_get_field(lines_stations(1:),3,delim))
+
+    lat_stations@long_name = "latitude"
+    lat_stations!0="lat"
+    lat_stations&lat=lat_stations
+    nlat_stations=dimsizes(lat_stations)
+
+    lon_stations@long_name = "longitude"
+    lon_stations!0="lon"
+    lon_stations&lon=lon_stations
+    nlon_stations=dimsizes(lon_stations)
+
+    polyres               = True          ; poly marker mods desired
+    polyres@gsMarkerIndex = 4            ; choose circle as polymarker
+    polyres@gsMarkerSizeF = 0.0035          ; select size to avoid streaking
+    polyres@gsMarkerColor = (/"(/0.00, 0.00, 0.00/)"/)   ; choose color
+    polyres@gsMarkerThicknessF = 0.8
+    dum1 = gsn_add_polymarker(wks,contour,lon_stations,lat_stations,polyres)  ; draw polymarkers
+
+    ;*****************************************
+    ; plotting legend of 'stations'
+
+    ; Set up some legend resources.
+    lgres                    = True
+    lgres@lgAutoManage       = True
+    lgres@lgItemType = "Markers"
+    lgres@lgMarkerIndexes = 4            ; choose circle as polymarker
+    lgres@lgMonoMarkerIndex = False
+    lgres@lgMarkerSizeF = 0.0035          ; select size to avoid streaking
+    lgres@lgMarkerThicknessF = 0.8
+    lgres@lgLabelFontHeightF = .015            ; set the legend label font thickness
+    lgres@vpWidthF           = 0.075           ; width of legend (NDC)
+    lgres@vpHeightF          = 0.018            ; height of legend (NDC)
+    lgres@lgRightMarginF = 0.25
+    lgres@lgLeftMarginF = 0.2
+    lgres@lgTopMarginF = 0.02
+    lgres@lgBottomMarginF = 0.02
+    lgres@lgBoxMinorExtentF = 0.25
+    lgres@lgMonoDashIndex    = False
+    lgres@lgPerimThicknessF = 0.8            ; thicken the box perimeter
+    lgres@lgLabelAutoStride = True
+    lgres@lgPerimFill = "Solid"
+    lgres@lgPerimFillColor = (/"(/1.00, 1.00, 1.00/)"/)
+    labels = (/"{label_marks_stations}"/)
+
+    ; Create the legend.
+    lbid   = gsn_create_legend(wks,1,labels,lgres)         ; create legend
+
+    ; Set up resources to attach legend to map.
+    amres = True
+    amres@amJust = "BottomRight"
+    amres@amParallelPosF   =  0.5 	         ; positive move legend to the right
+    amres@amOrthogonalPosF = 0.5                 ; positive move the legend down
+    annoid1 = gsn_add_annotation(map,lbid,amres)   ; attach legend to plot
+
   end if
 
-  overlay(map,contour)
+  ;*****************************************
 
-  ;## subtitles
+  ;## add subtitles
   txres             = True                         ; Text resources desired
-  txres@txFontColor = "black"
+  txres@txFontColor = (/"(/0.00, 0.00, 0.00/)"/)
   txres@txFontHeightF = 0.011
   subtitles(wks,contour,{name},{analysis},{units},txres)
-
-  map = draw_outlines(wks, map, "{shape}")
 
   pres = True
   maximize_output(wks,pres)
 
 end
 
-    '''.format(ncarg_root=os.environ.get('NCARG_ROOT'),
-               shape=map_properties.shape,
-               ncl_data=os.path.abspath(map_properties.base_path_file) + '.tsv',
-               save_map=os.path.abspath(map_properties.base_path_file),
-               title=map_properties.title,
-               label_title=_("Below") + " " * map_properties.particular_properties_map["space_label_title"] + \
-                           _("Normal") + " " * map_properties.particular_properties_map["space_label_title"] + \
-                           _("Above"),
-               color_bar_title_on=map_properties.color_bar_title_on,
-               color_bar_levels=map_properties.color_bar_levels,
-               color_bar_step=map_properties.color_bar_step,
-               colormap=map_properties.colormap,
-               tiMainFontHeightF=map_properties.particular_properties_map["tiMainFontHeightF"],
-               lbTitleFontHeightF=map_properties.particular_properties_map["lbTitleFontHeightF"],
-               lbLabelFontHeightF=map_properties.particular_properties_map["lbLabelFontHeightF"],
-               lat_size=map_properties.lat_size,
-               lon_size=map_properties.lon_size,
-               name='''"{0}"'''.format(map_properties.name),
-               analysis=map_properties.analysis,
-               units=map_properties.units,
-               enable_mask=map_properties.shape_mask)
+    '''.format(**map_properties_vars)
+
+
