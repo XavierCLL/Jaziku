@@ -766,7 +766,7 @@ def climatology(stations):
             y_mean = []
             y_max = [] # value to add to mean for max value
             y_min = [] # value to subtract to mean for min value
-            range_analysis_interval = get_range_analysis_interval(station)
+            range_analysis_interval = get_range_analysis_interval()
             for month in range(1, 13):
                 for day in range_analysis_interval:
                     range_analysis_mean = []
@@ -1244,7 +1244,7 @@ def outliers(stations):
                         values_var_I = get_values_in_range_analysis_interval(station_copy, 'I', outlier_date.year, outlier_date.month, None, 0)
                     else:
                         # get the corresponding start day of analysis interval
-                        day = locate_day_in_analysis_interval(station, outlier_date.day)
+                        day = locate_day_in_analysis_interval(outlier_date.day)
                         # get I values for outliers date
                         station.var_I_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month, day)
                         # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
@@ -1257,7 +1257,7 @@ def outliers(stations):
                         values_var_I = get_values_in_range_analysis_interval(station_copy, 'I', outlier_date.year, outlier_date.month, None, 0)
                     else:
                         # get the corresponding start day of analysis interval
-                        day = locate_day_in_analysis_interval(station, outlier_date.day)
+                        day = locate_day_in_analysis_interval(outlier_date.day)
                         # get I values for outliers date
                         station.var_I_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month, day)
                         # get all values of var I in analysis interval in the corresponding period of outlier (var_D)

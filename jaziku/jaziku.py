@@ -89,11 +89,11 @@ from clint.textui import colored
 import gettext
 from i18n import i18n
 
-# import local functions in jaziku/plugins
-from modules.station import Station
+# local import
 from utils import console
 from utils import settings_run
 from utils import globals_vars
+from modules.station import Station
 from modules.data_analysis import data_analysis
 from modules.input import input_arg
 from modules.input import input_runfile

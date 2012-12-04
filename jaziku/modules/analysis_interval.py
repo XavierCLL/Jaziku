@@ -24,7 +24,7 @@ from dateutil.relativedelta import relativedelta
 from jaziku.utils import globals_vars, console
 
 
-def get_range_analysis_interval(station):
+def get_range_analysis_interval():
     # range based on analysis interval
 
     if globals_vars.config_run['analysis_interval'] != "trimester":
@@ -38,12 +38,12 @@ def get_range_analysis_interval(station):
         return None
 
 
-def locate_day_in_analysis_interval(station, day_for_locate):
+def locate_day_in_analysis_interval(day_for_locate):
     """
     Return corresponding start day of analysis interval where
     the day_for_locate is inside.
     """
-    range_analysis_interval = get_range_analysis_interval(station)
+    range_analysis_interval = get_range_analysis_interval()
     range_analysis_interval.reverse()
     for range_item in range_analysis_interval:
         if day_for_locate >= range_item:
@@ -81,12 +81,12 @@ def get_values_in_range_analysis_interval(station, type, year, month, day=None, 
     be 0, 1 or 2.
     """
 
-    range_analysis_interval = get_range_analysis_interval(station)
+    range_analysis_interval = get_range_analysis_interval()
 
     # first fix if day not is a valid start day in analysis interval
     if day and  range_analysis_interval:
         if day not in range_analysis_interval:
-            day = locate_day_in_analysis_interval(station, day)
+            day = locate_day_in_analysis_interval(day)
 
     if type == 'D':
         var_D_values = []

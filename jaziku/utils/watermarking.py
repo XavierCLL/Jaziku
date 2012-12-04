@@ -24,7 +24,7 @@ from subprocess import call
 from jaziku.utils import console, globals_vars
 
 
-def logo(image, gravity='southeast', dissolve=60):
+def logo(image, gravity='southeast', dissolve=65):
     """
     stamp logo of Jaziku
     """

@@ -72,7 +72,7 @@ def calculate_lags(station, makes_files=True):
                    os.path.join(station.climate_dir, _('time_series'), _('lag_1')),
                    os.path.join(station.climate_dir, _('time_series'), _('lag_2'))]
 
-    range_analysis_interval = get_range_analysis_interval(station)
+    range_analysis_interval = get_range_analysis_interval()
 
     if station.state_of_data in [1, 3]:
 
