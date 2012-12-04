@@ -27,6 +27,7 @@ import interpolation
 from grid import search_and_set_internal_grid, set_particular_grid
 from ncl import make_ncl_file
 from jaziku.utils import globals_vars, console, watermarking
+from jaziku.modules.maps.grid import Grid
 
 
 def check_basic_requirements_for_maps():
@@ -72,8 +73,9 @@ def maps(grid):
     spatial interpolation method displays the general trends and spatial continuity of afectation
     scenarios results of Climate and Forecast Modules
     """
-    # first check requirements
-    check_basic_requirements_for_maps()
+
+    # restart counter
+    Grid.maps_created_in_grid = 0
 
     # set name_grid, country and grid_path
     if isinstance(grid.grid, list):
@@ -123,6 +125,8 @@ def maps(grid):
                   2: globals_vars.phenomenon_above}
 
     def process_map():
+        # add counter of maps created in this grid
+        Grid.maps_created_in_grid += 1
         # copy matrix from base_matrix
         matrix = base_matrix.copy()
         # read values from saved file and set points on matrix

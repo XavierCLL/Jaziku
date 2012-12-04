@@ -46,6 +46,9 @@ class Grid:
     # all instances of grid class
     all_grids = []
 
+    # all maps created in this grid
+    maps_created_in_grid = 0
+
     # counter grids processed
     grids_processed = 0
 
@@ -62,7 +65,7 @@ class Grid:
         if self.grid_resolution == "default":
             # set grid resolution based in 70 division of grid for minimum side
             self.grid_resolution = min([abs(self.maxlat - self.minlat),
-                                        abs(self.maxlon - self.minlon)]) / 70
+                                        abs(self.maxlon - self.minlon)]) / 80
         elif not isinstance(self.grid_resolution, (int, float)):
             console.msg_error(_("The grid_resolution '{0}' is wrong, the options are:\n"
                                 "'default' or valid number.").format(self.grid_resolution), False)

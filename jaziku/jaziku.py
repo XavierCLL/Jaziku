@@ -99,6 +99,7 @@ from modules.input import input_arg
 from modules.input import input_runfile
 from modules.maps import maps
 from modules.maps.grid import Grid
+from modules.maps.maps import check_basic_requirements_for_maps
 
 
 #==============================================================================
@@ -295,14 +296,18 @@ def main():
                 "# correlations.                                                #\n"
                 "################################################################")
 
-        for grid in Grid.all_grids:
-            maps.maps(grid)
-            del grid
+        # first check requirements
+        check_basic_requirements_for_maps()
 
-        console.msg(gettext.ngettext(
-                    _("\n{0} map processed."),
-                    _("\n{0} maps processed."),
-                    Grid.grids_processed).format(Grid.grids_processed), color='green')
+        for grid in Grid.all_grids:
+            # process all maps for this grid
+            maps.maps(grid)
+
+        for grid in Grid.all_grids:
+            console.msg(gettext.ngettext(
+                        "\n{0} map created for {1}",
+                        "\n{0} maps created for {1}",
+                        Grid.maps_created_in_grid).format(Grid.maps_created_in_grid, grid.grid_fullname), color='green')
 
     console.msg(_("\nProcess completed!"), color='green')
 
