@@ -198,6 +198,14 @@ def maps(grid):
         # make ordinary kriging interpolation with HPGL
         matrix_interpolation = interpolation.ordinary_kriging(grid, inc_file)
 
+        # if all values are identical, change the last value for that ncl plot the color of value
+        def are_all_values_identical_2d(L):
+            return all(len(set(i)) <= 1 for i in L)
+
+        if are_all_values_identical_2d(matrix_interpolation):
+            #matrix_interpolation[0][0] -= matrix_interpolation[0][0]/1000
+            matrix_interpolation[-1][-1] -= 5
+
         # TODO: test if interpolation worked
 
         #matrix_interpolation = np.matrix(matrix_interpolation)

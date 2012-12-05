@@ -14,6 +14,7 @@ news
 - New option in runfile for enable or disable the marks of stations
 - Plotting marks of stations in maps
 - When marks_stations is enable, plotting the legend referent of marks of stations
+- Plot the color of value in maps when all values are identical
 
 fixes
 +++++
