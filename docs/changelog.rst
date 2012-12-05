@@ -26,6 +26,7 @@ fixes
 - Clean some functions
 - Many small adjustments
 - Fix message number of maps process in each grid
+- Fixes max and min whiskers in climatology graphs when the values contain nulls
 
 
 0.5.0 (**2012-11-22**)

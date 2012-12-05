@@ -23,8 +23,7 @@ import imp
 import math
 from  numpy import linspace
 
-from jaziku.utils import globals_vars, console
-from jaziku.utils.mean import mean
+from jaziku.utils import globals_vars, console, array
 from jaziku.modules.station import Station
 
 class Grid:
@@ -193,7 +192,7 @@ class Grid:
         # first check if already exist value in this point on matrix (overlapping)
         if int(matrix[lat_location, lon_location]) != globals_vars.VALID_NULL[1]:
             if globals_vars.config_run['overlapping'] == "average":
-                matrix[lat_location, lon_location] = mean([matrix[lat_location, lon_location], value])
+                matrix[lat_location, lon_location] = array.mean([matrix[lat_location, lon_location], value])
                 return matrix, _("average")
             if globals_vars.config_run['overlapping'] == "maximum":
                 matrix[lat_location, lon_location] = max([matrix[lat_location, lon_location], value])

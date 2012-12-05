@@ -38,8 +38,7 @@ from jaziku.modules.climate.contingency_table import get_thresholds_var_I
 from jaziku.modules.climate.lags import  calculate_lags
 from jaziku.modules.station import Station
 from jaziku.modules.variable import Variable
-from jaziku.utils import globals_vars, console, format_out, watermarking
-from jaziku.utils.mean import mean
+from jaziku.utils import globals_vars, console, format_out, watermarking, array
 
 
 def main(stations):
@@ -605,7 +604,8 @@ def climatology(stations):
                 for iter, value in  enumerate(var_D.data):
                     if var_D.date[iter].month == month:
                         values.append(value)
-                y_mean.append(mean(values))
+                values = array.clean(values)
+                y_mean.append(array.mean(values))
                 y_max.append(max(values) - y_mean[-1])
                 y_min.append(y_mean[-1] - min(values))
 
@@ -619,12 +619,13 @@ def climatology(stations):
                     for iter, value in  enumerate(var_D.data):
                         if var_D.date[iter].year == year and var_D.date[iter].month == month:
                             month_values.append(value)
-                    years_values_mean.append(mean(month_values))
+                    month_values = array.clean(month_values)
+                    years_values_mean.append(array.mean(month_values))
                     years_values_max.append(max(month_values))
                     years_values_min.append(min(month_values))
-                y_mean.append(mean(years_values_mean))
-                y_max.append(mean(years_values_max) - y_mean[-1])
-                y_min.append(y_mean[-1] - mean(years_values_min))
+                y_mean.append(array.mean(years_values_mean))
+                y_max.append(array.mean(years_values_max) - y_mean[-1])
+                y_min.append(y_mean[-1] - array.mean(years_values_min))
 
         csv_climatology_table.writerow(line + [format_out.number(i) for i in y_mean])
 
@@ -782,14 +783,16 @@ def climatology(stations):
                             iter_year += relativedelta(years= +1)
                             continue
 
-                        range_analysis_mean.append(mean(get_values_in_range_analysis_interval(station,'D', iter_year, month, day)))
-                        range_analysis_max.append(max(get_values_in_range_analysis_interval(station,'D', iter_year, month, day)))
-                        range_analysis_min.append(min(get_values_in_range_analysis_interval(station,'D', iter_year, month, day)))
+                        values = get_values_in_range_analysis_interval(station,'D', iter_year, month, day)
+                        values = array.clean(values)
+                        range_analysis_mean.append(array.mean(values))
+                        range_analysis_max.append(max(values))
+                        range_analysis_min.append(min(values))
 
                         iter_year += 1
-                    y_mean.append(mean(range_analysis_mean))
-                    y_max.append(mean(range_analysis_max) - y_mean[-1])
-                    y_min.append(y_mean[-1] - mean(range_analysis_min))
+                    y_mean.append(array.mean(range_analysis_mean))
+                    y_max.append(array.mean(range_analysis_max) - y_mean[-1])
+                    y_min.append(y_mean[-1] - array.mean(range_analysis_min))
 
             x = range(1, len(y_mean)+1)
             x_step_label = len(y_mean)/12
@@ -1269,7 +1272,7 @@ def outliers(stations):
                     values_var_I = get_values_in_range_analysis_interval(station, 'I', outlier_date.year, outlier_date.month, None, 0)
 
                 # get the mean of all values of var I in analysis interval in the corresponding period of outlier (var_D)
-                value_var_I = mean(values_var_I)
+                value_var_I = array.mean(values_var_I)
 
                 # get thresholds of var I in the period of outlier
                 threshold_below_var_I, threshold_above_var_I = get_thresholds_var_I(station)
