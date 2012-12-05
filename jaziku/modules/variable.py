@@ -24,8 +24,7 @@ from scipy.stats.stats import tstd, variation, skew, kurtosis
 
 from jaziku.modules.input import input_vars
 from jaziku.modules.input.input_check import count_null_values
-from jaziku.utils import console, globals_vars
-from jaziku.utils.mean import mean
+from jaziku.utils import console, array
 
 
 class Variable():
@@ -88,7 +87,7 @@ class Variable():
                     _iter += 1
                     if _iter > self.date.index(self.date[-1]):
                         break
-                data_monthly.append(mean(var_month_list))
+                data_monthly.append(array.mean(var_month_list))
                 date_monthly.append(date(year, month, 1))
 
         self.data = data_monthly
@@ -120,8 +119,8 @@ class Variable():
         # nulls inside the process period
         self.null_values_in_process_period = count_null_values(self.data_in_process_period)
 
-        # delete all valid nulls
-        self.data_filtered_in_process_period = [ value for value in self.data_in_process_period if not globals_vars.is_valid_null(value) ]
+        # delete all valid nulls and clean
+        self.data_filtered_in_process_period = array.clean(self.data_in_process_period)
 
     def do_some_statistic_of_data(self, station):
         """

@@ -25,9 +25,8 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from jaziku.modules.analysis_interval import get_values_in_range_analysis_interval, get_range_analysis_interval
-from jaziku.utils import globals_vars
+from jaziku.utils import globals_vars, array
 from jaziku.utils import format_out
-from jaziku.utils.mean import mean
 
 
 def get_lag_values(station, var, lag, month, day=None):
@@ -109,10 +108,10 @@ def calculate_lags(station, makes_files=True):
                 while iter_year <= station.process_period['end']:
 
                     # get values and calculate mean_var_D
-                    mean_var_D = mean(get_values_in_range_analysis_interval(station,'D', iter_year, month))
+                    mean_var_D = array.mean(get_values_in_range_analysis_interval(station,'D', iter_year, month))
 
                     # get values and calculate mean_var_I
-                    mean_var_I = mean(get_values_in_range_analysis_interval(station,'I', iter_year, month, lag=lag))
+                    mean_var_I = array.mean(get_values_in_range_analysis_interval(station,'I', iter_year, month, lag=lag))
 
                     # add line in list: Lag_X
                     vars()['Lag_' + str(lag)].append([date(iter_year, month, 1),
@@ -175,10 +174,10 @@ def calculate_lags(station, makes_files=True):
                             continue
 
                         # get values and calculate mean_var_D
-                        mean_var_D = mean(get_values_in_range_analysis_interval(station,'D', iter_year, month, day, lag))
+                        mean_var_D = array.mean(get_values_in_range_analysis_interval(station,'D', iter_year, month, day, lag))
 
                         # get values and calculate mean_var_I
-                        mean_var_I = mean(get_values_in_range_analysis_interval(station,'I', iter_year, month, day, lag))
+                        mean_var_I = array.mean(get_values_in_range_analysis_interval(station,'I', iter_year, month, day, lag))
 
                         # add line in list: Lag_X
                         vars()['Lag_' + str(lag)].append([date(iter_year, month, day),

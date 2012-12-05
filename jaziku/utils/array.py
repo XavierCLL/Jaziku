@@ -36,3 +36,17 @@ def mean(values):
         return float('nan')
 
     return sums / count
+
+
+def clean(values):
+    """
+    Clean the list of empty elements and valid nulls
+    """
+
+    # delete empty elements in row
+    values = [e for e in values if e]
+
+    # delete all valid nulls
+    values = [ value for value in values if not globals_vars.is_valid_null(value) ]
+
+    return values

@@ -203,7 +203,6 @@ def maps(grid):
             return all(len(set(i)) <= 1 for i in L)
 
         if are_all_values_identical_2d(matrix_interpolation):
-            #matrix_interpolation[0][0] -= matrix_interpolation[0][0]/1000
             matrix_interpolation[-1][-1] -= 5
 
         # TODO: test if interpolation worked
