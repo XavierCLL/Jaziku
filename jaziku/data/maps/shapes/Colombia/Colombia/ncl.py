@@ -41,7 +41,7 @@ def code(map_properties):
         'color_bar_step': map_properties.color_bar_step,
         'colormap': map_properties.colormap,
         'name': '''"{0}"'''.format(map_properties.name),
-        'analysis': map_properties.analysis,
+        'subtitle': map_properties.subtitle,
         'units': map_properties.units
     }
 
@@ -374,7 +374,7 @@ begin
   txres             = True                         ; Text resources desired
   txres@txFontColor = (/"(/0.00, 0.00, 0.00/)"/)
   txres@txFontHeightF = 0.011
-  subtitles(wks,contour,{name},{analysis},{units},txres)
+  subtitles(wks,contour,{name},{subtitle},{units},txres)
 
   pres = True
   maximize_output(wks,pres)

@@ -138,6 +138,12 @@ class Grid:
         if globals_vars.config_run['shape_boundary']:
             self.shape_mask = True
 
+        ## set subtitle on maps
+        if globals_vars.config_run['analog_year']:
+            self.subtitle = _("\"Analysis with analog year - {0}\"").format(globals_vars.config_run['analog_year'])
+        else:
+            self.subtitle = "\"\""
+
     def  print_grid_properties(self):
         console.msg(_("   Mesh size: {0}x{1}").format(self.lat_size, self.lon_size), color='cyan')
 

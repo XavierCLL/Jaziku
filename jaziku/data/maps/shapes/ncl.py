@@ -55,7 +55,7 @@ def code(map_properties):
         'lat_size': map_properties.lat_size,
         'lon_size': map_properties.lon_size,
         'name': '''"{0}"'''.format(map_properties.name),
-        'analysis': map_properties.analysis,
+        'subtitle': map_properties.subtitle,
         'units': map_properties.units,
         'enable_mask': map_properties.shape_mask
     }
@@ -485,7 +485,7 @@ begin
   txres             = True                         ; Text resources desired
   txres@txFontColor = (/"(/0.00, 0.00, 0.00/)"/)
   txres@txFontHeightF = 0.011
-  subtitles(wks,contour,{name},{analysis},{units},txres)
+  subtitles(wks,contour,{name},{subtitle},{units},txres)
 
   pres = True
   maximize_output(wks,pres)

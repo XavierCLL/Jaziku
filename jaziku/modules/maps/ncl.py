@@ -44,6 +44,7 @@ def make_ncl_file(grid, base_path_file, globals_vars):
         map_properties.lat_size = grid.lat_size
         map_properties.lon_size = grid.lon_size
         map_properties.shape_mask = grid.shape_mask
+        map_properties.subtitle = grid.subtitle
 
         # set other properties of ncl script for this map
         map_properties.particular_properties_map = grid.particular_properties_map
@@ -59,7 +60,6 @@ def make_ncl_file(grid, base_path_file, globals_vars):
             map_properties.color_bar_levels = "(/{array}/)".format(array=range_color_bar(-100, 100, 2.5))
             map_properties.color_bar_step = 2.5
             map_properties.color_bar_title_on = "True"
-            map_properties.analysis = _('''"Analysis by tertiles"''')
             map_properties.colormap = "Blue-Green-Red"
             map_properties.units = '''"%"'''
         if grid.if_running["correlation"]:
@@ -68,7 +68,6 @@ def make_ncl_file(grid, base_path_file, globals_vars):
             map_properties.color_bar_levels = "(/{array}/)".format(array=range_color_bar(-1, 1, 0.025))
             map_properties.color_bar_step = 0.025
             map_properties.color_bar_title_on = "False"
-            map_properties.analysis = '''""'''
             map_properties.colormap = "Green-White-Purple"
             map_properties.units = '''"Pearson"'''
         if grid.if_running["forecasting"]:
@@ -77,7 +76,6 @@ def make_ncl_file(grid, base_path_file, globals_vars):
             map_properties.color_bar_levels = "(/{array}/)".format(array=range_color_bar(-100, 100, 2.5))
             map_properties.color_bar_step = 2.5
             map_properties.color_bar_title_on = "True"
-            map_properties.analysis = _('''"Analysis by tertiles"''')
             map_properties.colormap = "Blue-Green-Red"
             map_properties.units = '''"%"'''
 
