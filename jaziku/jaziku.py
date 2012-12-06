@@ -305,8 +305,8 @@ def main():
 
         for grid in Grid.all_grids:
             console.msg(gettext.ngettext(
-                        "\n{0} map created for {1}",
-                        "\n{0} maps created for {1}",
+                        _("\n{0} map created for {1}"),
+                        _("\n{0} maps created for {1}"),
                         Grid.maps_created_in_grid).format(Grid.maps_created_in_grid, grid.grid_fullname), color='green')
 
     console.msg(_("\nProcess completed!"), color='green')

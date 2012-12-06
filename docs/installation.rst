@@ -38,7 +38,7 @@ distribution.
 Download Jaziku (egg version)
 -----------------------------
 
-- `jaziku 0.5.0 <https://dl.dropbox.com/u/3383807/jaziku-0.5.0-py2.7.egg>`_
+- `jaziku 0.5.1 <https://dl.dropbox.com/u/3383807/jaziku-0.5.1-py2.7.egg>`_
 
 
 Install Jaziku (egg version)
@@ -47,7 +47,7 @@ Install Jaziku (egg version)
 - Go into downloaded file an run this command to install
   (as root or use sudo):
 
-    easy_install jaziku-0.5.0-py2.7.egg
+    easy_install jaziku-0.5.1-py2.7.egg
 
 - Test if jaziku has installed correctly running:
 
@@ -57,7 +57,7 @@ Install Jaziku (egg version)
 
 - If you have installed old version, for update to new version use (using egg):
 
-    easy_install -U jaziku-0.5.0-py2.7.egg
+    easy_install -U jaziku-0.5.1-py2.7.egg
 
 Windows and Mac
 ---------------

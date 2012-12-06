@@ -29,9 +29,9 @@ import math
 
 PROG_NAME = "jaziku"
 
-VERSION = "0.5.0"
+VERSION = "0.5.1"
 
-COMPILE_DATE = "22/11/2012"
+COMPILE_DATE = "05/12/2012"
 
 ROOT_DIR = None
 
