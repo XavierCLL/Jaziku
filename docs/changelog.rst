@@ -27,6 +27,7 @@ fixes
 - Many small adjustments
 - Fix message number of maps process in each grid
 - Fixes max and min whiskers in climatology graphs when the values contain nulls
+- Fixes subtitles of maps based on analog_year
 
 
 0.5.0 (**2012-11-22**)
