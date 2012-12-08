@@ -606,8 +606,8 @@ def climatology(stations):
                         values.append(value)
                 values = array.clean(values)
                 y_mean.append(array.mean(values))
-                y_max.append(max(values) - y_mean[-1])
-                y_min.append(y_mean[-1] - min(values))
+                y_max.append(array.maximum(values) - y_mean[-1])
+                y_min.append(y_mean[-1] - array.minimum(values))
 
         if station.var_D.frequency_data == "daily":
             for month in range(1,13):
@@ -621,8 +621,8 @@ def climatology(stations):
                             month_values.append(value)
                     month_values = array.clean(month_values)
                     years_values_mean.append(array.mean(month_values))
-                    years_values_max.append(max(month_values))
-                    years_values_min.append(min(month_values))
+                    years_values_max.append(array.maximum(month_values))
+                    years_values_min.append(array.minimum(month_values))
                 y_mean.append(array.mean(years_values_mean))
                 y_max.append(array.mean(years_values_max) - y_mean[-1])
                 y_min.append(y_mean[-1] - array.mean(years_values_min))
@@ -786,8 +786,8 @@ def climatology(stations):
                         values = get_values_in_range_analysis_interval(station,'D', iter_year, month, day)
                         values = array.clean(values)
                         range_analysis_mean.append(array.mean(values))
-                        range_analysis_max.append(max(values))
-                        range_analysis_min.append(min(values))
+                        range_analysis_max.append(array.maximum(values))
+                        range_analysis_min.append(array.minimum(values))
 
                         iter_year += 1
                     y_mean.append(array.mean(range_analysis_mean))
@@ -1327,7 +1327,7 @@ def outliers(stations):
 
         #ax.grid(True)
         ax.autoscale(tight=True)
-        #pyplot.subplots_adjust(bottom=) #(len(max(codes_stations))/30.0))
+        #pyplot.subplots_adjust(bottom=) #(len(array.max(codes_stations))/30.0))
 
         zoom_graph(ax=ax, x_scale_below=-0.2,x_scale_above=-0.2, y_scale_below=-0.04, y_scale_above=-0.04, abs_x=True)
 

@@ -136,9 +136,9 @@ class Variable():
         # size data
         self.size_data = len(self.data_filtered_in_process_period)
         # maximum
-        self.maximum = max(self.data_filtered_in_process_period)
+        self.maximum = array.maximum(self.data_filtered_in_process_period)
         # minimum
-        self.minimum = min(self.data_filtered_in_process_period)
+        self.minimum = array.minimum(self.data_filtered_in_process_period)
         # average
         self.average = average(self.data_filtered_in_process_period)
         # median

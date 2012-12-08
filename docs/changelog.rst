@@ -4,6 +4,17 @@
 Changelog
 =========
 
+0.5.2 (**2012-12-05**)
+----------------------
+
+news
+++++
+
+fixes
++++++
+
+- Fixes max and min functions when data has many null values
+
 0.5.1 (**2012-12-05**)
 ----------------------
 
