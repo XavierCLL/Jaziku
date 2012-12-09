@@ -1348,12 +1348,12 @@ def outliers(stations):
 
     if globals_vars.config_run['process_period']:
         file_outliers_var_D\
-        = os.path.join(outliers_dir, _("Outliers")+"_{0}_{1}_{2}_({3}-{4}).csv".format(station.code, station.name,
+        = os.path.join(outliers_dir, _("Outliers_table")+"_{0}_({1}-{2}).csv".format(
             globals_vars.config_run['type_var_D'], globals_vars.config_run['process_period']['start'],
             globals_vars.config_run['process_period']['end']))
     else:
         file_outliers_var_D\
-        = os.path.join(outliers_dir, _("Outliers")+"_{0}_{1}_{2}.csv".format(station.code, station.name,
+        = os.path.join(outliers_dir, _("Outliers_table")+"_{0}.csv".format(
             globals_vars.config_run['type_var_D']))
 
     open_file_D = open(file_outliers_var_D, 'w')

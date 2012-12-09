@@ -21,6 +21,7 @@ fixes
 +++++
 
 - Fixes max and min functions when data has many null values
+- Fixed the outliers table filename
 
 0.5.1 (**2012-12-05**)
 ----------------------
