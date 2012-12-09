@@ -4,11 +4,16 @@
 Changelog
 =========
 
-0.5.2 (**2012-12-05**)
+0.5.2 (**2012-12-xx**)
 ----------------------
 
 news
 ++++
+
+- Now check is the series (var D/I) are complete in the last year,
+  else Jaziku fill with null values for complete the year,
+  but Jaziku required at least January and February with data
+  due the lags 1 and 2 required this values.
 
 fixes
 +++++
