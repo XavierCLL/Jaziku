@@ -93,7 +93,7 @@ class Variable():
             end_date_required = date(last_year, 3, 1) + relativedelta(days=-1) # last day of february
 
             # if the variable don't have the minimum data required for the last year,
-            # this is complete data in january and february
+            # this is, full data in january and february for the last year
             if last_date < end_date_required:
                 if self.type == 'D':
                     console.msg_error(_(
@@ -131,7 +131,7 @@ class Variable():
             end_date_required = date(last_year, 2, 1)
 
             # if the variable don't have the minimum data required for the last year,
-            # this is complete data in january and february
+            # this is, full data in january and february for the last year
             if last_date < end_date_required:
                 if self.type == 'D':
                     console.msg_error(_(

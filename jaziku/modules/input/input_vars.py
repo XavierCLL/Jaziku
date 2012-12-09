@@ -46,13 +46,15 @@ def read_var_D(station):
     date_D = []
     var_D = []
 
-    # The series accept two delimiters: spaces (' ') or tabulation ('\t')
+    # The series accept three delimiters: spaces (' '), tabulation ('\t') or semi-colon (';')
     # this check which delimiter is using this file
     test_line = station.file_D.readline()
     if len(test_line.split(' ')) >= 2:
         delimiter = ' '
     if len(test_line.split('\t')) >= 2:
         delimiter = '\t'
+    if len(test_line.split(';')) >= 2:
+        delimiter = ';'
     station.file_D.seek(0)
 
     csv_file_D = csv.reader(station.file_D, delimiter=delimiter)
@@ -169,13 +171,15 @@ def read_var_I(station):
     else:
         open_file_I = open(globals_vars.config_run["path_to_file_var_I"], 'r')
 
-    # The series accept two delimiters: spaces (' ') or tabulation ('\t')
+    # The series accept three delimiters: spaces (' '), tabulation ('\t') or semi-colon (';')
     # this check which delimiter is using this file
     test_line = open_file_I.readline()
     if len(test_line.split(' ')) >= 2:
         delimiter = ' '
     if len(test_line.split('\t')) >= 2:
         delimiter = '\t'
+    if len(test_line.split(';')) >= 2:
+        delimiter = ';'
     open_file_I.seek(0)
 
     csv_file_I = csv.reader(open_file_I, delimiter=delimiter)

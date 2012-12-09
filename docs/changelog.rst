@@ -14,6 +14,8 @@ news
   else Jaziku fill with null values for complete the year,
   but Jaziku required at least January and February with data
   due the lags 1 and 2 required this values.
+- The series (var D o I) accept three delimiters: spaces (' '),
+  tabulation ('\t') or semi-colon (';')
 
 fixes
 +++++
