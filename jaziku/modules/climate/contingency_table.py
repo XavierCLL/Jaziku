@@ -222,8 +222,12 @@ def get_thresholds_var_I(station):
         def if_var_I_is_OLR():
             return -1.1, 0.9
 
-        # thresholds for Index of wind anomaly
+        # thresholds for Index of wind anomaly to 200 hpa
         def if_var_I_is_W200():
+            return percentiles(33, 66)
+
+        # thresholds for Index of wind anomaly to 850 hpa
+        def if_var_I_is_W850():
             return percentiles(33, 66)
 
         # thresholds for Sea surface temperature
@@ -257,6 +261,7 @@ def get_thresholds_var_I(station):
             "MEI": if_var_I_is_MEI,
             "OLR": if_var_I_is_OLR,
             "W200": if_var_I_is_W200,
+            "W850": if_var_I_is_W850,
             "SST": if_var_I_is_SST,
             "ARH": if_var_I_is_ARH,
             "QBO": if_var_I_is_QBO,

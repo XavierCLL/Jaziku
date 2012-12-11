@@ -319,7 +319,8 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
 # Multivariate ENSO index--------MEI            #             -4.552 to 6.078
 # Radiation wavelength
 # Long tropical------------------OLR           W/m2               -6 to 6
-# Index of wind anomaly----------W200   standardized anomaly     -7.5 to 7.5
+# Index of wind anomaly 200hpa---W200   standardized anomaly     -7.5 to 7.5
+# Index of wind anomaly 850hpa---W850   standardized anomaly     -7.5 to 7.5
 # Sea surface temperature--------SST            °C               -60 to 60
 # % Amazon relative humidity-----ARH             %              -100 to 100
 # quasibienal oscillation index--QBO            Km/h           -59.1 to 33.24
@@ -431,8 +432,8 @@ def validation_var_I(type_var_I, var_I):
         else:
             returnError(_("Radiation wavelength Long tropical not valid"), limit_below, limit_above)
 
-    # validation for Index of wind anomaly
-    def if_var_I_is_W200():
+    # validation for Index of wind anomaly to 200 and 850 hpa
+    def if_var_I_is_W200_or_W850():
         # default values
         limit_below = -7.5
         limit_above = 7.5
@@ -549,7 +550,8 @@ def validation_var_I(type_var_I, var_I):
       "SOI": if_var_I_is_SOI,
       "MEI": if_var_I_is_MEI,
       "OLR": if_var_I_is_OLR,
-      "W200": if_var_I_is_W200,
+      "W200": if_var_I_is_W200_or_W850,
+      "W850": if_var_I_is_W200_or_W850,
       "SST": if_var_I_is_SST,
       "ARH": if_var_I_is_ARH,
       "NAO": if_var_I_is_NAO,

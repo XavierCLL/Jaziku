@@ -97,11 +97,12 @@ units_var_D = None
 # types and units - VAR I
 
 # Valid input types for independent variable
-types_var_I = ['ONI', 'SOI', 'MEI', 'OLR', 'W200', 'SST', 'ARH', 'QBO', 'NAO', 'SST_CAR', 'AREA_WHWP']
+types_var_I = ['ONI', 'SOI', 'MEI', 'OLR', 'W200', 'W850', 'SST', 'ARH', 'QBO', 'NAO', 'SST_CAR', 'AREA_WHWP']
 
 # Units for types for dependent variable
-units_of_types_var_I = {'ONI':'anomaly', 'SOI':'standardized anomaly', 'MEI':'#', 'OLR':'W/m2', 'W200':'standardized anomaly',
-                        'SST':'Celsius', 'ARH':'%', 'QBO':'Km/h', 'NAO':'anomaly', 'SST_CAR':'Celsius', 'AREA_WHWP':'scaled 10e6 km^2'}
+units_of_types_var_I = {'ONI':'anomaly', 'SOI':'standardized anomaly', 'MEI':'#', 'OLR':'W/m2',
+                        'W200':'standardized anomaly', 'W850':'standardized anomaly', 'SST':'Celsius',
+                        'ARH':'%', 'QBO':'Km/h', 'NAO':'anomaly', 'SST_CAR':'Celsius', 'AREA_WHWP':'scaled 10e6 km^2'}
 
 units_var_I = None
 
@@ -109,7 +110,7 @@ units_var_I = None
 # VAR I internal
 
 # types of internal variable independent
-internal_var_I_types = ["ONI", "SOI", "MEI", "OLR", "W200", "SST", "ARH", "NAO", "QBO", "SST_CAR", "AREA_WHWP"]
+internal_var_I_types = ["ONI", "SOI", "MEI", "OLR", "W200", "W850", "SST", "ARH", "NAO", "QBO", "SST_CAR", "AREA_WHWP"]
 
 # namefiles of internal variable independent
 internal_var_I_files = {"ONI": "ONI_1950_2011_CPC.txt",
@@ -117,6 +118,7 @@ internal_var_I_files = {"ONI": "ONI_1950_2011_CPC.txt",
                         "MEI": "MEI_1950_2011_ESRL_NOAA.txt",
                         "OLR": "OLR_1974_2011_CPC_NCEP_NOAA.txt",
                         "W200": "W200_1979_2011_CPC_NCEP_NOAA.txt",
+                        "W850": "W850_1979_2011_CPC_NCEP_NOAA.txt",
                         "SST": "SST_1950_2011_CPC_NCEP_NOAA.txt",
                         "ARH": "ARH_DIPOLE_1979_2009_NCEPNCAR_REAL.txt",  #TODO:
                         "NAO": "NAO_1950_2011_CPC_NCEP_NOAA.txt",
@@ -130,6 +132,7 @@ internal_var_I_urls = {"ONI": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.
                        "MEI": "http://goo.gl/dQsdb", # http://www.esrl.noaa.gov/psd/enso/mei/table.html
                        "OLR": "http://goo.gl/goMpA", # http://www.cpc.ncep.noaa.gov/data/indices/olr
                        "W200": "http://goo.gl/aliLh", # http://www.cpc.ncep.noaa.gov/data/indices/zwnd200
+                       "W850": "http://goo.gl/w4yiO", # http://www.cpc.ncep.noaa.gov/data/indices/wpac850
                        "SST": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
                        "ARH": "http://goo.gl/5oiZJ",  # http://nomad1.ncep.noaa.gov/ncep_data/index.html
                        "NAO": "http://goo.gl/1uDjY", # http://www.cpc.ncep.noaa.gov/products/precip/CWlink/pna/nao.shtml

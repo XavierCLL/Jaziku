@@ -16,12 +16,14 @@ news
   due the lags 1 and 2 required this values.
 - The series (var D o I) accept three delimiters: spaces (' '),
   tabulation ('\t') or semi-colon (';')
+- Added new W850 independent variable and updated OLR and ONI series
 
 fixes
 +++++
 
 - Fixes max and min functions when data has many null values
 - Fixed the outliers table filename
+
 
 0.5.1 (**2012-12-05**)
 ----------------------
