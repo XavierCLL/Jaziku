@@ -18,7 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 from datetime import date
 
 from jaziku.utils import globals_vars, console
