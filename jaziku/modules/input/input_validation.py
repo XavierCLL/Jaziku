@@ -315,12 +315,12 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
 #     Variable               Abbreviation     Units          Range of variation
 # Oceanic Nino Index-------------ONI         anomaly              -5 to 5
 # Index of the Southern
-# Oscillation NOAA---------------SOI    standardized anomaly       -7 to 7
+# Oscillation NOAA---------------SOI        std anomaly           -7 to 7
 # Multivariate ENSO index--------MEI            #             -4.552 to 6.078
 # Radiation wavelength
 # Long tropical------------------OLR           W/m2               -6 to 6
-# Index of wind anomaly 200hpa---W200   standardized anomaly     -7.5 to 7.5
-# Index of wind anomaly 850hpa---W850   standardized anomaly     -7.5 to 7.5
+# Index of wind anomaly 200hpa---W200       std anomaly         -7.5 to 7.5
+# Index of wind anomaly 850hpa---W850       std anomaly         -7.5 to 7.5
 # Sea surface temperature--------SST            °C               -60 to 60
 # % Amazon relative humidity-----ARH             %              -100 to 100
 # quasibienal oscillation index--QBO            Km/h           -59.1 to 33.24
@@ -432,8 +432,8 @@ def validation_var_I(type_var_I, var_I):
         else:
             returnError(_("Radiation wavelength Long tropical not valid"), limit_below, limit_above)
 
-    # validation for Index of wind anomaly to 200 and 850 hpa
-    def if_var_I_is_W200_or_W850():
+    # validation for Index of wind anomaly to 200 hpa
+    def if_var_I_is_W200():
         # default values
         limit_below = -7.5
         limit_above = 7.5
@@ -446,7 +446,23 @@ def validation_var_I(type_var_I, var_I):
         if (limit_below <= var_I <= limit_above):
             return var_I
         else:
-            returnError(_("Index of wind anomaly not valid"), limit_below, limit_above)
+            returnError(_("Anomaly index of wind to 200 hpa not valid"), limit_below, limit_above)
+
+    # validation for Index of wind anomaly to 850 hpa
+    def if_var_I_is_W850():
+        # default values
+        limit_below = -7.5
+        limit_above = 7.5
+        # if one of limits was defined as particular range
+        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
+            limit_below = globals_vars.config_run['limit_var_I_below']
+        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
+            limit_above = globals_vars.config_run['limit_var_I_above']
+
+        if (limit_below <= var_I <= limit_above):
+            return var_I
+        else:
+            returnError(_("Anomaly index of wind to 850 hpa not valid"), limit_below, limit_above)
 
     # validation for Sea surface temperature
     def if_var_I_is_SST():
@@ -550,8 +566,8 @@ def validation_var_I(type_var_I, var_I):
       "SOI": if_var_I_is_SOI,
       "MEI": if_var_I_is_MEI,
       "OLR": if_var_I_is_OLR,
-      "W200": if_var_I_is_W200_or_W850,
-      "W850": if_var_I_is_W200_or_W850,
+      "W200": if_var_I_is_W200,
+      "W850": if_var_I_is_W850,
       "SST": if_var_I_is_SST,
       "ARH": if_var_I_is_ARH,
       "NAO": if_var_I_is_NAO,

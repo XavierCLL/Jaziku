@@ -100,8 +100,8 @@ units_var_D = None
 types_var_I = ['ONI', 'SOI', 'MEI', 'OLR', 'W200', 'W850', 'SST', 'ARH', 'QBO', 'NAO', 'SST_CAR', 'AREA_WHWP']
 
 # Units for types for dependent variable
-units_of_types_var_I = {'ONI':'anomaly', 'SOI':'standardized anomaly', 'MEI':'#', 'OLR':'W/m2',
-                        'W200':'standardized anomaly', 'W850':'standardized anomaly', 'SST':'Celsius',
+units_of_types_var_I = {'ONI':'anomaly', 'SOI':'std anomaly', 'MEI':'#', 'OLR':'W/m2',
+                        'W200':'std anomaly', 'W850':'std anomaly', 'SST':'Celsius',
                         'ARH':'%', 'QBO':'Km/h', 'NAO':'anomaly', 'SST_CAR':'Celsius', 'AREA_WHWP':'scaled 10e6 km^2'}
 
 units_var_I = None
@@ -109,10 +109,10 @@ units_var_I = None
 #==============================================================================
 # VAR I internal
 
-# types of internal variable independent
+# types of internal independent variables
 internal_var_I_types = ["ONI", "SOI", "MEI", "OLR", "W200", "W850", "SST", "ARH", "NAO", "QBO", "SST_CAR", "AREA_WHWP"]
 
-# namefiles of internal variable independent
+# namefiles of internal independent variables
 internal_var_I_files = {"ONI": "ONI_1950_2011_CPC.txt",
                         "SOI": "SOI_1951_2011_CPC_NOAA.txt",
                         "MEI": "MEI_1950_2011_ESRL_NOAA.txt",
@@ -126,7 +126,7 @@ internal_var_I_files = {"ONI": "ONI_1950_2011_CPC.txt",
                         "SST_CAR": "SST_CAR_1951_2010_ESRL_NOAA.txt",
                         "AREA_WHWP": "AREA_WHWP_1948_2011_ESRL_NOAA.txt"}
 
-# urls where get the internal files for independent variable
+# urls where get the internal files for independent variables
 internal_var_I_urls = {"ONI": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears.shtml
                        "SOI": "http://goo.gl/scbO7", # http://www.cpc.ncep.noaa.gov/data/indices/soi
                        "MEI": "http://goo.gl/dQsdb", # http://www.esrl.noaa.gov/psd/enso/mei/table.html
