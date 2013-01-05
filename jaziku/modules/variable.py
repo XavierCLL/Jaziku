@@ -71,90 +71,179 @@ class Variable():
 
     def fill_variable(self, station):
         """
-        Complete and fill variable with null values if the last year if is not complete
+        Complete and fill variable with null values if the last and/or start year
+        is not completed.
 
-        This function check is the series (var D/I) are complete in the last year,
-        else Jaziku fill with null values for complete the year,
-        but Jaziku required at least January and February with data
-        due the lags 1 and 2 required this values.
+        This function check is the series (var D/I) are complete in the last year
+        and start year, else Jaziku fill with null values for complete the year,
+        but Jaziku required at least January and February for the last year and
+        november and december for the start year, due the lags required these
+        values.
         """
 
         if self.frequency_data == "daily":
 
-            last_year = self.date[-1].year
-            last_month = self.date[-1].month
-            last_day = self.date[-1].day
-            last_date = date(last_year, last_month, last_day)
+            def below():
+                first_year = self.date[0].year
+                first_month = self.date[0].month
+                first_day = self.date[0].day
+                first_date = date(first_year, first_month, first_day)
 
-            # if the variable have complete data in the last year
-            if last_month == 12 and last_day == 31:
-                return
+                # if the variable have complete data in the first year
+                if first_month == 1 and first_day == 1:
+                    return
 
-            end_date_required = date(last_year, 3, 1) + relativedelta(days=-1) # last day of february
+                start_date_required = date(first_year, 11, 1)
 
-            # if the variable don't have the minimum data required for the last year,
-            # this is, full data in january and february for the last year
-            if last_date < end_date_required:
-                if self.type == 'D':
-                    console.msg_error(_(
-                        "Reading var D from file '{0}':\n"
-                        "don't have the minimum data required (january and february)\n"
-                        "for the last year ({1}) of the series.")
-                    .format(station.file_D.name, last_year))
-                if self.type == 'I':
-                    console.msg_error(_(
-                        "Reading var D from file '{0}':\n"
-                        "don't have the minimum data required (january and february)\n"
-                        "for the last year ({1}) of the series.")
-                    .format(station.file_D.name, last_year))
+                # if the variable don't have the minimum data required for the first year,
+                # this is, full data in november and december for the first year
+                if first_date > start_date_required:
+                    if self.type == 'D':
+                        console.msg_error(_(
+                            "Reading var D from file '{0}':\n"
+                            "don't have the minimum data required (november and december)\n"
+                            "for the first year ({1}) of the series.")
+                        .format(station.file_D.name, first_year))
+                    if self.type == 'I':
+                        console.msg_error(_(
+                            "Reading var I from file '{0}':\n"
+                            "don't have the minimum data required (november and december)\n"
+                            "for the first year ({1}) of the series.")
+                        .format(station.file_I.name, first_year))
 
-            iter_date = last_date
+                iter_date = first_date
 
-            iter_date += relativedelta(days=1)
+                iter_date += relativedelta(days=-1)
 
-            # fill variable for date and data for whole the last year
-            while last_year == iter_date.year:
-                self.date.append(iter_date)
-                self.data.append(float('nan'))
+                # fill variable for date and data for whole the first year
+                while first_year == iter_date.year:
+                    self.date.insert(0, iter_date)
+                    self.data.insert(0, float('nan'))
+                    iter_date += relativedelta(days=-1)
+
+            def above():
+                last_year = self.date[-1].year
+                last_month = self.date[-1].month
+                last_day = self.date[-1].day
+                last_date = date(last_year, last_month, last_day)
+
+                # if the variable have complete data in the last year
+                if last_month == 12 and last_day == 31:
+                    return
+
+                end_date_required = date(last_year, 3, 1) + relativedelta(days=-1) # last day of february
+
+                # if the variable don't have the minimum data required for the last year,
+                # this is, full data in january and february for the last year
+                if last_date < end_date_required:
+                    if self.type == 'D':
+                        console.msg_error(_(
+                            "Reading var D from file '{0}':\n"
+                            "don't have the minimum data required (january and february)\n"
+                            "for the last year ({1}) of the series.")
+                        .format(station.file_D.name, last_year))
+                    if self.type == 'I':
+                        console.msg_error(_(
+                            "Reading var I from file '{0}':\n"
+                            "don't have the minimum data required (january and february)\n"
+                            "for the last year ({1}) of the series.")
+                        .format(station.file_I.name, last_year))
+
+                iter_date = last_date
+
                 iter_date += relativedelta(days=1)
+
+                # fill variable for date and data for whole the last year
+                while last_year == iter_date.year:
+                    self.date.append(iter_date)
+                    self.data.append(float('nan'))
+                    iter_date += relativedelta(days=1)
+
+            # fill data below
+            below()
+            # fill data above
+            above()
 
         if self.frequency_data== "monthly":
 
-            last_year = self.date[-1].year
-            last_month = self.date[-1].month
-            last_date = date(last_year, last_month, 1)
+            def below():
+                first_year = self.date[0].year
+                first_month = self.date[0].month
+                first_date = date(first_year, first_month, 1)
 
-            # if the variable have complete data in the last year
-            if last_month == 12:
-                return
+                # if the variable have complete data in the first year
+                if first_month == 1:
+                    return
 
-            end_date_required = date(last_year, 2, 1)
+                start_date_required = date(first_year, 11, 1)
 
-            # if the variable don't have the minimum data required for the last year,
-            # this is, full data in january and february for the last year
-            if last_date < end_date_required:
-                if self.type == 'D':
-                    console.msg_error(_(
-                        "Reading var D from file '{0}':\n"
-                        "don't have the minimum data required (january and february)\n"
-                        "for the last year ({1}) of the series.")
-                    .format(station.file_D.name, last_year))
-                if self.type == 'I':
-                    console.msg_error(_(
-                        "Reading var D from file '{0}':\n"
-                        "don't have the minimum data required (january and february)\n"
-                        "for the last year ({1}) of the series.")
-                    .format(station.file_D.name, last_year))
+                # if the variable don't have the minimum data required for the first year,
+                # this is, full data in november and december for the first year
+                if first_date > start_date_required:
+                    if self.type == 'D':
+                        console.msg_error(_(
+                            "Reading var D from file '{0}':\n"
+                            "don't have the minimum data required (november and december)\n"
+                            "for the first year ({1}) of the series.")
+                        .format(station.file_D.name, first_year))
+                    if self.type == 'I':
+                        console.msg_error(_(
+                            "Reading var I from file '{0}':\n"
+                            "don't have the minimum data required (november and december)\n"
+                            "for the first year ({1}) of the series.")
+                        .format(station.file_I.name, first_year))
 
-            iter_date = last_date
+                iter_date = first_date
 
-            iter_date += relativedelta(months=1)
+                iter_date += relativedelta(months=-1)
 
-            # fill variable for date and data for whole the last year
-            while last_year == iter_date.year:
-                self.date.append(iter_date)
-                self.data.append(float('nan'))
+                # fill variable for date and data for whole the first year
+                while first_year == iter_date.year:
+                    self.date.insert(0, iter_date)
+                    self.data.insert(0, float('nan'))
+                    iter_date += relativedelta(months=-1)
+
+            def above():
+                last_year = self.date[-1].year
+                last_month = self.date[-1].month
+                last_date = date(last_year, last_month, 1)
+
+                # if the variable have complete data in the last year
+                if last_month == 12:
+                    return
+
+                end_date_required = date(last_year, 2, 1)
+
+                # if the variable don't have the minimum data required for the last year,
+                # this is, full data in january and february for the last year
+                if last_date < end_date_required:
+                    if self.type == 'D':
+                        console.msg_error(_(
+                            "Reading var D from file '{0}':\n"
+                            "don't have the minimum data required (january and february)\n"
+                            "for the last year ({1}) of the series.")
+                        .format(station.file_D.name, last_year))
+                    if self.type == 'I':
+                        console.msg_error(_(
+                            "Reading var I from file '{0}':\n"
+                            "don't have the minimum data required (january and february)\n"
+                            "for the last year ({1}) of the series.")
+                        .format(station.file_I.name, last_year))
+
+                iter_date = last_date
+
                 iter_date += relativedelta(months=1)
+
+                # fill variable for date and data for whole the last year
+                while last_year == iter_date.year:
+                    self.date.append(iter_date)
+                    self.data.append(float('nan'))
+                    iter_date += relativedelta(months=1)
+
+            # fill data below
+            below()
+            # fill data above
+            above()
 
     def daily2monthly(self):
         """
