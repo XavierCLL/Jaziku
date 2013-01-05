@@ -24,6 +24,8 @@ fixes
 
 - Fixes max and min functions when data has many null values
 - Fixed the outliers table filename
+- Some adjusts of console text
+- Clean/delete some old code needless
 
 
 0.5.1 (**2012-12-05**)
