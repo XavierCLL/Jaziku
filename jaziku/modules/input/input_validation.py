@@ -333,7 +333,7 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
 
 def validation_var_I(type_var_I, var_I):
     '''
-    Fuction for validation (independent variable) depending on the type of
+    Function for validation (independent variable) depending on the type of
     variable
     '''
 

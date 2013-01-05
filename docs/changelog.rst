@@ -4,16 +4,17 @@
 Changelog
 =========
 
-0.5.2 (**2012-12-xx**)
+0.5.2 (**2013-01-xx**)
 ----------------------
 
 news
 ++++
 
-- Now check is the series (var D/I) are complete in the last year,
-  else Jaziku fill with null values for complete the year,
-  but Jaziku required at least January and February with data
-  due the lags 1 and 2 required this values.
+- Now Jaziku check is the series (var D/I) are complete in the last and/or
+  start year, else Jaziku fill with null values for complete the year,
+  but Jaziku required at least January and February for the last year and
+  november and december for the start year, due the lags required these
+  values.
 - The series (var D o I) accept three delimiters: spaces (' '),
   tabulation ('\t') or semi-colon (';')
 - Added new W850 independent variable and updated OLR and ONI series
@@ -34,7 +35,8 @@ news
 - Apply stamp (watermarking) for all graphics of Jaziku logo
 - New option in runfile for enable or disable the marks of stations
 - Plotting marks of stations in maps
-- When marks_stations is enable, plotting the legend referent of marks of stations
+- When marks_stations is enable, plotting the legend referent of marks of
+  stations
 - Plot the color of value in maps when all values are identical
 
 fixes
@@ -47,7 +49,8 @@ fixes
 - Clean some functions
 - Many small adjustments
 - Fix message number of maps process in each grid
-- Fixes max and min whiskers in climatology graphs when the values contain nulls
+- Fixes max and min whiskers in climatology graphs when the values contain
+  nulls
 - Fixes subtitles of maps based on analog_year
 
 
@@ -87,8 +90,8 @@ news
 - After set all configuration to run, jaziku prompt to user for read the configuration
   and ask for continue.
 - Add argument '-f', for force all ask to default answer for continue
-- New: Report all outliers of all stations in file and make Box-Jenkins diagram one by station and all
-  in one diagram of outliers
+- New: Report all outliers of all stations in file and make Box-Jenkins diagram one
+  by station and all in one diagram of outliers
 - New option in runfile for set particular units for var D or/and I regardless if
   the variables are o not internal variables
 - Now Jaziku check the 9 values for forecasting process
