@@ -143,7 +143,7 @@ def main():
     runfile = (x.replace('\0', '') for x in runfile_open)
 
     # open runfile as csv
-    globals_vars.runfile = csv.reader(runfile, delimiter=';')
+    globals_vars.runfile = csv.reader(runfile, delimiter=globals_vars.INPUT_CSV_DELIMITER)
 
     # read all settings and all stations from runfile
     stations = input_runfile.read_runfile()

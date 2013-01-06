@@ -117,7 +117,7 @@ def msg_error_configuration(variable, text_error, show_settings=True):
 
     runfile_open = open(globals_vars.runfile_path, 'rb')
     runfile = (x.replace('\0', '') for x in runfile_open)
-    runfile = csv.reader(runfile, delimiter=';')
+    runfile = csv.reader(runfile, delimiter=globals_vars.INPUT_CSV_DELIMITER)
 
     for num_line, line_in_run_file in enumerate(runfile):
         # if line is null o empty, e.g. empty but with tabs or spaces

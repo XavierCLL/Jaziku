@@ -99,7 +99,7 @@ def calculate_lags(station, makes_files=True):
                     # output write file:
                     # [[ yyyy/month, Mean_Lag_X_var_D, Mean_Lag_X_var_I ],... ]
                     open_file = open(csv_name, 'w')
-                    csv_file = csv.writer(open_file, delimiter=';')
+                    csv_file = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
 
                 iter_year = station.process_period['start']
 
@@ -156,7 +156,7 @@ def calculate_lags(station, makes_files=True):
                     # output write file:
                     # [[ yyyy/month, Mean_Lag_X_var_D, Mean_Lag_X_var_I ],... ]
                     open_file = open(csv_name, 'w')
-                    csv_file = csv.writer(open_file, delimiter=';')
+                    csv_file = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
 
                 #days_for_this_month = monthrange(iter_year, month)[1]
 

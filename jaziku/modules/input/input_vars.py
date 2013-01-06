@@ -49,6 +49,8 @@ def read_var_D(station):
     # The series accept three delimiters: spaces (' '), tabulation ('\t') or semi-colon (';')
     # this check which delimiter is using this file
     test_line = station.file_D.readline()
+    if len(test_line.split(globals_vars.INPUT_CSV_DELIMITER)) >= 2:
+        delimiter = globals_vars.INPUT_CSV_DELIMITER
     if len(test_line.split(' ')) >= 2:
         delimiter = ' '
     if len(test_line.split('\t')) >= 2:
