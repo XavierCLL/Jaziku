@@ -79,10 +79,10 @@ def main(stations):
     = os.path.join(shapiro_wilks_dir, _('Descriptive_Statistics_{0}.csv').format(globals_vars.config_run['type_var_I']))
 
     open_file_D = open(file_descriptive_statistics_var_D, 'w')
-    csv_file_D = csv.writer(open_file_D, delimiter=';')
+    csv_file_D = csv.writer(open_file_D, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
 
     open_file_I = open(file_descriptive_statistics_var_I, 'w')
-    csv_file_I = csv.writer(open_file_I, delimiter=';')
+    csv_file_I = csv.writer(open_file_I, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
 
     # print header
     header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), _('SIZE DATA'), _('MAXIMUM'),
@@ -575,7 +575,7 @@ def climatology(stations):
     # climatology table file
     open_file_climatology_table\
         = open(os.path.join(graphs_dir, _('Climatology_table_{0}').format(globals_vars.config_run['type_var_D'])+'.csv'), 'w')
-    csv_climatology_table = csv.writer(open_file_climatology_table, delimiter=';')
+    csv_climatology_table = csv.writer(open_file_climatology_table, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
 
     # print header
     header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), globals_vars.get_month_in_text(0), globals_vars.get_month_in_text(1),
@@ -1081,7 +1081,7 @@ def shapiro_wilks_test(stations):
     = os.path.join(distribution_test_dir, _('shapiro_wilks_test_{0}.csv').format(globals_vars.config_run['type_var_D']))
 
     open_file_D = open(file_shapiro_wilks_var_D, 'w')
-    csv_file_D = csv.writer(open_file_D, delimiter=';')
+    csv_file_D = csv.writer(open_file_D, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
 
     # print header
     header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), 'W', 'P_value', 'Ho?']
@@ -1357,7 +1357,7 @@ def outliers(stations):
             globals_vars.config_run['type_var_D']))
 
     open_file_D = open(file_outliers_var_D, 'w')
-    csv_file_D = csv.writer(open_file_D, delimiter=';')
+    csv_file_D = csv.writer(open_file_D, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
 
     num_max_outliers = 0
     for outliers_station in outliers_all_stations:

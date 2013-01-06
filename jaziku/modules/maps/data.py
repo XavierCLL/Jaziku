@@ -73,7 +73,7 @@ def climate_data_for_maps(station):
 
                         # write new row in file
                         open_file = open(csv_name, 'w')
-                        csv_file = csv.writer(open_file, delimiter=';')
+                        csv_file = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
                         csv_file.writerow([_('code'), _('lat'), _('lon'), _('pearson'),
                                            _('var_below'), _('var_normal'), _('var_above'),
                                            _('p_index'), _('sum')])
@@ -105,7 +105,7 @@ def climate_data_for_maps(station):
 
                             # write new row in file
                             open_file = open(csv_name, 'w')
-                            csv_file = csv.writer(open_file, delimiter=';')
+                            csv_file = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
                             csv_file.writerow([_('code'), _('lat'), _('lon'), _('pearson'),
                                                _('var_below'), _('var_normal'), _('var_above'),
                                                _('p_index'), _('sum')])
@@ -155,7 +155,7 @@ def climate_data_for_maps(station):
                     # write new row in file
                     csv_name = globals_vars.maps_files_climate[globals_vars.config_run['analysis_interval']][lag][month - 1][phenomenon]
                     open_file = open(csv_name, 'a')
-                    csv_file = csv.writer(open_file, delimiter=';')
+                    csv_file = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
                     csv_file.writerow([station.code, format_out.number(station.lat), format_out.number(station.lon),
                                        format_out.number(station.pearson_list[lag][month - 1]),
                                        format_out.number(var_below), format_out.number(var_normal),
@@ -178,7 +178,7 @@ def climate_data_for_maps(station):
                         # write new row in file
                         csv_name = globals_vars.maps_files_climate[globals_vars.config_run['analysis_interval']][lag][month - 1][day][phenomenon]
                         open_file = open(csv_name, 'a')
-                        csv_file = csv.writer(open_file, delimiter=';')
+                        csv_file = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
                         csv_file.writerow([station.code, format_out.number(station.lat), format_out.number(station.lon),
                                            format_out.number(station.pearson_list[lag][month - 1][day]),
                                            format_out.number(var_below), format_out.number(var_normal),
@@ -228,7 +228,7 @@ def forecasting_data_for_maps(station):
                     os.remove(csv_name)
 
                 open_file = open(csv_name, 'w')
-                csv_file = csv.writer(open_file, delimiter=';')
+                csv_file = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
                 csv_file.writerow([_('code'), _('lat'), _('lon'),
                                    _('forecasting_date'), _('prob_decrease_var_D'),
                                    _('prob_normal_var_D'), _('prob_exceed_var_D'),
@@ -259,7 +259,7 @@ def forecasting_data_for_maps(station):
                     os.remove(csv_name)
 
                 open_file = open(csv_name, 'w')
-                csv_file = csv.writer(open_file, delimiter=';')
+                csv_file = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
                 csv_file.writerow([_('code'), _('lat'), _('lon'),
                                    _('forecasting_date'), _('prob_decrease_var_D'),
                                    _('prob_normal_var_D'), _('prob_exceed_var_D'),
@@ -298,7 +298,7 @@ def forecasting_data_for_maps(station):
         # write new row in file
         csv_name = globals_vars.maps_files_forecasting[globals_vars.config_run['analysis_interval']][forecasting_date_formatted][lag]
         open_file = open(csv_name, 'a')
-        csv_file = csv.writer(open_file, delimiter=';')
+        csv_file = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
         csv_file.writerow([station.code,
                            format_out.number(station.lat, 4),
                            format_out.number(station.lon, 4),

@@ -150,7 +150,7 @@ def composite_analysis(station):
             os.remove(csv_name)
 
         open_file = open(csv_name, 'w')
-        csv_result_table = csv.writer(open_file, delimiter=';')
+        csv_result_table = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
 
         # print headers in result table
         csv_result_table.writerow([

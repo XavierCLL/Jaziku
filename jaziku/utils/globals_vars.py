@@ -29,9 +29,9 @@ import math
 
 PROG_NAME = "jaziku"
 
-VERSION = "0.5.1"
+VERSION = "0.5.2"
 
-COMPILE_DATE = "05/12/2012"
+COMPILE_DATE = "05/01/2013"
 
 ROOT_DIR = None
 
@@ -40,6 +40,10 @@ ACCURACY = 5
 
 #==============================================================================
 # arguments and inputs
+
+# delimiter for inputs and outputs
+INPUT_CSV_DELIMITER = ";"
+OUTPUT_CSV_DELIMITER = ";"
 
 # arguments
 args = None
@@ -52,8 +56,14 @@ runfile = None
 # valid nulls
 
 VALID_NULL = [99999, -99999]  # these are deprecate valid null but now used for maps files interpolation
-# valid null value for variables dependent and independent (inside files input)
+
 def is_valid_null(value):
+    """
+    Check if value is a valid null value for variables dependent and independent (inside files input)
+
+    return True if value is: 'nan', 'NaN', 'NAN', float('nan'), (deprecate: 99999, -99999)
+    else return False
+    """
     if math.isnan(value) or value in ['nan', 'NaN', 'NAN']:
         return True
     else:
