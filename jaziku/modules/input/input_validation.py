@@ -604,8 +604,8 @@ def validation_var_I(type_var_I, var_I):
     # validation for anomaly sea surface temperature
     def if_var_I_is_ASST34():
         # default values
-        limit_below = -10
-        limit_above = 10
+        limit_below = -5.6
+        limit_above = 5.6
         # if one of limits was defined as particular range
         if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
             limit_below = globals_vars.config_run['limit_var_I_below']
@@ -709,7 +709,6 @@ def validation_var_I(type_var_I, var_I):
       "W850w": if_var_I_is_W850w,
       "W850c": if_var_I_is_W850c,
       "W850e": if_var_I_is_W850e,
-      "SST": if_var_I_is_SST,
       "SST12": if_var_I_is_SST,
       "SST3": if_var_I_is_SST,
       "SST4": if_var_I_is_SST,

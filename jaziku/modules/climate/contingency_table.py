@@ -286,7 +286,6 @@ def get_thresholds_var_I(station):
             "W850w": if_var_I_is_W850w,
             "W850c": if_var_I_is_W850c,
             "W850e": if_var_I_is_W850e,
-            "SST": if_var_I_is_SST,
             "SST12": if_var_I_is_SST,
             "SST3": if_var_I_is_SST,
             "SST4": if_var_I_is_SST,

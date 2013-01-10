@@ -107,15 +107,15 @@ units_var_D = None
 # types and units - VAR I
 
 # Valid input types for independent variable
-types_var_I = ['ONI1', 'ONI2', 'SOI', 'SOI_TROUP', 'MEI', 'OLR', 'W200', 'W850w', 'W850c', 'W850e', 'SST', 'SST12',
+types_var_I = ['ONI1', 'ONI2', 'SOI', 'SOI_TROUP', 'MEI', 'OLR', 'W200', 'W850w', 'W850c', 'W850e', 'SST12',
                'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34', 'ARH', 'QBO', 'NAO', 'SST_CAR', 'AREA_WHWP']
 
 # Units for types for dependent variable
-units_of_types_var_I = {'ONI1':'anomaly', 'ONI2':'anomaly', 'SOI':'std anomaly', 'SOI_TROUP':'std anomaly', 'MEI':'#', 'OLR':'W/m2',
-                        'W200':'std anomaly', 'W850w':'std anomaly', 'W850c':'std anomaly', 'W850e':'std anomaly', 'SST':'Celsius',
-                        'SST12':'Celsius', 'SST3':'Celsius', 'SST4':'Celsius', 'SST34':'Celsius', 'ASST12':'std anomaly',
-                        'ASST3':'std anomaly', 'ASST4':'std anomaly', 'ASST34':'std anomaly', 'ARH':'%', 'QBO':'Km/h',
-                        'NAO':'anomaly', 'SST_CAR':'Celsius', 'AREA_WHWP':'scaled 10e6 km^2'}
+units_of_types_var_I = {'ONI1':'anomaly', 'ONI2':'anomaly', 'SOI':'Std anomaly', 'SOI_TROUP':'Std anomaly', 'MEI':'#', 'OLR':'W/m2',
+                        'W200':'Std anomaly', 'W850w':'anomaly', 'W850c':'anomaly', 'W850e':'anomaly',
+                        'SST12':'Celsius', 'SST3':'Celsius', 'SST4':'Celsius', 'SST34':'Celsius', 'ASST12':'anomaly',
+                        'ASST3':'anomaly', 'ASST4':'anomaly', 'ASST34':'anomaly', 'ARH':'%', 'QBO':'Km/h',
+                        'NAO':'anomaly', 'SST_CAR':'Celsius', 'AREA_WHWP':'anomaly scaled 10e6 km^2'}
 
 units_var_I = None
 
@@ -123,7 +123,7 @@ units_var_I = None
 # VAR I internal
 
 # types of internal independent variables
-internal_var_I_types = ['ONI1', 'ONI2', 'SOI', 'SOI_TROUP', 'MEI', 'OLR', 'W200', 'W850w', 'W850c', 'W850e', 'SST', 'SST12',
+internal_var_I_types = ['ONI1', 'ONI2', 'SOI', 'SOI_TROUP', 'MEI', 'OLR', 'W200', 'W850w', 'W850c', 'W850e', 'SST12',
                         'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34', 'ARH', 'QBO', 'NAO', 'SST_CAR', 'AREA_WHWP']
 
 # namefiles of internal independent variables
@@ -137,7 +137,6 @@ internal_var_I_files = {"ONI1": "ONI1_1949_2011_CPC.txt",
                         "W850w": "W850w_1979_2011_CPC_NCEP_NOAA.txt",
                         "W850c": "W850c_1979_2011_CPC_NCEP_NOAA.txt",
                         "W850e": "W850e_1979_2011_CPC_NCEP_NOAA.txt",
-                        "SST": "SST_1950_2011_CPC_NCEP_NOAA.txt",
                         "SST12": "SST12_1982_2012_CPC_NCEP_NOAA.txt",
                         "SST3": "SST3_1982_2012_CPC_NCEP_NOAA.txt",
                         "SST4": "SST4_1982_2012_CPC_NCEP_NOAA.txt",
@@ -163,7 +162,6 @@ internal_var_I_urls = {"ONI1": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa
                        "W850w": "http://goo.gl/w4yiO", # http://www.cpc.ncep.noaa.gov/data/indices/wpac850
                        "W850c": "http://goo.gl/gks7x", # http://www.cpc.ncep.noaa.gov/data/indices/cpac850
                        "W850e": "http://goo.gl/N7cQ5", # http://www.cpc.ncep.noaa.gov/data/indices/epac850
-                       "SST": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
                        "SST12": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
                        "SST3": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
                        "SST4": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
