@@ -19,7 +19,8 @@ news
   tabulation ('\t') or semi-colon (';')
 - Added new independent variables: ONI1, ONI2, SOI_TROUP, W850w, W850c,
   W850e, SST12, SST3, SST4, SST34, ASST12, ASST3, ASST4, ASST34 and
-  updated OLR and ONI series
+  updated the remaining series
+- (Temporally until version 0.7) disable MEI series
 
 fixes
 +++++

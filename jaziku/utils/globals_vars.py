@@ -107,11 +107,11 @@ units_var_D = None
 # types and units - VAR I
 
 # Valid input types for independent variable
-types_var_I = ['ONI1', 'ONI2', 'SOI', 'SOI_TROUP', 'MEI', 'OLR', 'W200', 'W850w', 'W850c', 'W850e', 'SST12',
+types_var_I = ['ONI1', 'ONI2', 'SOI', 'SOI_TROUPy donde estuve en el ', 'OLR', 'W200', 'W850w', 'W850c', 'W850e', 'SST12',
                'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34', 'ARH', 'QBO', 'NAO', 'SST_CAR', 'AREA_WHWP']
 
 # Units for types for dependent variable
-units_of_types_var_I = {'ONI1':'anomaly', 'ONI2':'anomaly', 'SOI':'Std anomaly', 'SOI_TROUP':'Std anomaly', 'MEI':'#', 'OLR':'W/m2',
+units_of_types_var_I = {'ONI1':'anomaly', 'ONI2':'anomaly', 'SOI':'Std anomaly', 'SOI_TROUP':'Std anomaly', 'OLR':'W/m2',
                         'W200':'Std anomaly', 'W850w':'anomaly', 'W850c':'anomaly', 'W850e':'anomaly',
                         'SST12':'Celsius', 'SST3':'Celsius', 'SST4':'Celsius', 'SST34':'Celsius', 'ASST12':'anomaly',
                         'ASST3':'anomaly', 'ASST4':'anomaly', 'ASST34':'anomaly', 'ARH':'%', 'QBO':'Km/h',
@@ -123,20 +123,20 @@ units_var_I = None
 # VAR I internal
 
 # types of internal independent variables
-internal_var_I_types = ['ONI1', 'ONI2', 'SOI', 'SOI_TROUP', 'MEI', 'OLR', 'W200', 'W850w', 'W850c', 'W850e', 'SST12',
+internal_var_I_types = ['ONI1', 'ONI2', 'SOI', 'SOI_TROUP', 'OLR', 'W200', 'W850w', 'W850c', 'W850e', 'SST12',
                         'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34', 'ARH', 'QBO', 'NAO', 'SST_CAR', 'AREA_WHWP']
 
 # namefiles of internal independent variables
-internal_var_I_files = {"ONI1": "ONI1_1949_2011_CPC.txt",
-                        "ONI2": "ONI2_1949_2011_CPC_corr2012.txt",
+internal_var_I_files = {"ONI1": "ONI1_1949_2012_CPC.txt",
+                        "ONI2": "ONI2_1949_2012_CPC_corr2012.txt",
                         "SOI": "SOI_1951_2011_CPC_NOAA.txt",
                         "SOI_TROUP": "SOI_TROUP_1876_2012_AustralinaBureau.txt",
-                        "MEI": "MEI_1950_2011_ESRL_NOAA.txt",
-                        "OLR": "OLR_1974_2011_CPC_NCEP_NOAA.txt",
-                        "W200": "W200_1979_2011_CPC_NCEP_NOAA.txt",
-                        "W850w": "W850w_1979_2011_CPC_NCEP_NOAA.txt",
-                        "W850c": "W850c_1979_2011_CPC_NCEP_NOAA.txt",
-                        "W850e": "W850e_1979_2011_CPC_NCEP_NOAA.txt",
+                        #"MEI": "MEI_1950_2011_ESRL_NOAA.txt",
+                        "OLR": "OLR_1974_2012_CPC_NCEP_NOAA.txt",
+                        "W200": "W200_1979_2012_CPC_NCEP_NOAA.txt",
+                        "W850w": "W850w_1979_2012_CPC_NCEP_NOAA.txt",
+                        "W850c": "W850c_1979_2012_CPC_NCEP_NOAA.txt",
+                        "W850e": "W850e_1979_2012_CPC_NCEP_NOAA.txt",
                         "SST12": "SST12_1982_2012_CPC_NCEP_NOAA.txt",
                         "SST3": "SST3_1982_2012_CPC_NCEP_NOAA.txt",
                         "SST4": "SST4_1982_2012_CPC_NCEP_NOAA.txt",
@@ -146,17 +146,17 @@ internal_var_I_files = {"ONI1": "ONI1_1949_2011_CPC.txt",
                         "ASST4": "ASST4_1982_2012_CPC_NCEP_NOAA.txt",
                         "ASST34": "ASST34_1982_2012_CPC_NCEP_NOAA.txt",
                         "ARH": "ARH_DIPOLE_1979_2009_NCEPNCAR_REAL.txt",  #TODO:
-                        "NAO": "NAO_1950_2011_CPC_NCEP_NOAA.txt",
-                        "QBO": "QBO_1950_2011_ESRL_NOAA.txt",
+                        "NAO": "NAO_1950_2012_CPC_NCEP_NOAA.txt",
+                        "QBO": "QBO_1950_2012_ESRL_NOAA.txt",
                         "SST_CAR": "SST_CAR_1951_2010_ESRL_NOAA.txt",
-                        "AREA_WHWP": "AREA_WHWP_1948_2011_ESRL_NOAA.txt"}
+                        "AREA_WHWP": "AREA_WHWP_1948_2012_ESRL_NOAA.txt"}
 
 # urls where get the internal files for independent variables
 internal_var_I_urls = {"ONI1": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears.shtml
                        "ONI2": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears.shtml
                        "SOI": "http://goo.gl/scbO7", # http://www.cpc.ncep.noaa.gov/data/indices/soi
                        "SOI_TROUP": "http://goo.gl/2hDk8", # http://www.bom.gov.au/climate/current/soihtm1.shtml
-                       "MEI": "http://goo.gl/dQsdb", # http://www.esrl.noaa.gov/psd/enso/mei/table.html
+                       #"MEI": "http://goo.gl/dQsdb", # http://www.esrl.noaa.gov/psd/enso/mei/table.html
                        "OLR": "http://goo.gl/goMpA", # http://www.cpc.ncep.noaa.gov/data/indices/olr
                        "W200": "http://goo.gl/aliLh", # http://www.cpc.ncep.noaa.gov/data/indices/zwnd200
                        "W850w": "http://goo.gl/w4yiO", # http://www.cpc.ncep.noaa.gov/data/indices/wpac850

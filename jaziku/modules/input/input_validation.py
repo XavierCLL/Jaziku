@@ -322,14 +322,14 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
 # Radiation wavelength
 # Long tropical---------------------- OLR           W/m2               -6 to 6
 # Index of wind anomaly 200hpa--------W200       std anomaly         -7.5 to 7.5
-# Index of wind anomaly 850hpa-------W850w       std anomaly         -7.5 to 7.5
-# Index of wind anomaly 850hpa-------W850c       std anomaly          -21 to 21
-# Index of wind anomaly 850hpa-------W850e       std anomaly        -15.1 to 15.1
+# Index of wind anomaly 850hpa-------W850w         anomaly         -7.5 to 7.5
+# Index of wind anomaly 850hpa-------W850c         anomaly          -21 to 21
+# Index of wind anomaly 850hpa-------W850e         anomaly        -15.1 to 15.1
 # Sea surface temperature-------------SST           °C                -60 to 60
-# Anomaly sea surface temperature----ASST12      std anomaly          -10 to 10
-# Anomaly sea surface temperature----ASST3       std anomaly           -7 to 7
-# Anomaly sea surface temperature----ASST4       std anomaly           -3 to 3
-# Anomaly sea surface temperature----ASST34      std anomaly          -10 to 10
+# Anomaly sea surface temperature----ASST12        anomaly          -10 to 10
+# Anomaly sea surface temperature----ASST3         anomaly           -7 to 7
+# Anomaly sea surface temperature----ASST4         anomaly           -3 to 3
+# Anomaly sea surface temperature----ASST34        anomaly          -10 to 10
 # % Amazon relative humidity----------ARH             %              -100 to 100
 # quasibienal oscillation index-------QBO           Km/h            -59.1 to 33.24
 # North atlantic oscillation index----NAO         anomaly           -6.36 to 6.08
@@ -703,7 +703,7 @@ def validation_var_I(type_var_I, var_I):
       "ONI2": if_var_I_is_ONI2,
       "SOI": if_var_I_is_SOI,
       "SOI_TROUP": if_var_I_is_SOI_TROUP,
-      "MEI": if_var_I_is_MEI,
+      #"MEI": if_var_I_is_MEI,
       "OLR": if_var_I_is_OLR,
       "W200": if_var_I_is_W200,
       "W850w": if_var_I_is_W850w,
