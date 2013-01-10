@@ -30,7 +30,7 @@ from jaziku.utils import globals_vars
 from jaziku.utils import format_out
 from jaziku.utils import console
 from jaziku.modules.input import input_validation
-import lags
+from jaziku.modules.climate import lags
 
 
 def get_thresholds_var_D(station):
@@ -207,12 +207,20 @@ def get_thresholds_var_I(station):
     def thresholds_by_default():
 
         # thresholds for Oceanic Nino Index
-        def if_var_I_is_ONI():
+        def if_var_I_is_ONI1():
+            return -0.5, 0.5
+
+        # thresholds for Oceanic Nino Index
+        def if_var_I_is_ONI2():
             return -0.5, 0.5
 
         # thresholds for Index of the Southern Oscillation NOAA
         def if_var_I_is_SOI():
             return -1.2, 0.9
+
+        # thresholds for Index of the Southern Oscillation calculated between Tahití and Darwin
+        def if_var_I_is_SOI_TROUP():
+            return -8, 8
 
         # thresholds for Multivariate ENSO index
         def if_var_I_is_MEI():
@@ -226,12 +234,24 @@ def get_thresholds_var_I(station):
         def if_var_I_is_W200():
             return percentiles(33, 66)
 
-        # thresholds for Index of wind anomaly to 850 hpa
-        def if_var_I_is_W850():
+        # thresholds for Index of wind anomaly to 850 hpa west
+        def if_var_I_is_W850w():
+            return percentiles(33, 66)
+
+        # thresholds for Index of wind anomaly to 850 hpa center
+        def if_var_I_is_W850c():
+            return percentiles(33, 66)
+
+        # thresholds for Index of wind anomaly to 850 hpa east
+        def if_var_I_is_W850e():
             return percentiles(33, 66)
 
         # thresholds for Sea surface temperature
         def if_var_I_is_SST():
+            return percentiles(33, 66)
+
+        # thresholds for Anomaly Sea surface temperature
+        def if_var_I_is_ASST():
             return percentiles(33, 66)
 
         # thresholds for % Amazon relative humidity
@@ -256,13 +276,25 @@ def get_thresholds_var_I(station):
 
         # switch validation
         select_threshold_var_I = {
-            "ONI": if_var_I_is_ONI,
+            "ONI1": if_var_I_is_ONI1,
+            "ONI2": if_var_I_is_ONI2,
             "SOI": if_var_I_is_SOI,
+            "SOI_TROUP": if_var_I_is_SOI_TROUP,
             "MEI": if_var_I_is_MEI,
             "OLR": if_var_I_is_OLR,
             "W200": if_var_I_is_W200,
-            "W850": if_var_I_is_W850,
+            "W850w": if_var_I_is_W850w,
+            "W850c": if_var_I_is_W850c,
+            "W850e": if_var_I_is_W850e,
             "SST": if_var_I_is_SST,
+            "SST12": if_var_I_is_SST,
+            "SST3": if_var_I_is_SST,
+            "SST4": if_var_I_is_SST,
+            "SST34": if_var_I_is_SST,
+            "ASST12": if_var_I_is_ASST,
+            "ASST3": if_var_I_is_ASST,
+            "ASST4": if_var_I_is_ASST,
+            "ASST34": if_var_I_is_ASST,
             "ARH": if_var_I_is_ARH,
             "QBO": if_var_I_is_QBO,
             "NAO": if_var_I_is_NAO,
