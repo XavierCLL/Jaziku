@@ -280,7 +280,7 @@ def get_thresholds_var_I(station):
             "ONI2": if_var_I_is_ONI2,
             "SOI": if_var_I_is_SOI,
             "SOI_TROUP": if_var_I_is_SOI_TROUP,
-            "MEI": if_var_I_is_MEI,
+            #"MEI": if_var_I_is_MEI,
             "OLR": if_var_I_is_OLR,
             "W200": if_var_I_is_W200,
             "W850w": if_var_I_is_W850w,
