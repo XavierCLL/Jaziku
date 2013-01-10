@@ -17,7 +17,9 @@ news
   values.
 - The series (var D o I) accept three delimiters: spaces (' '),
   tabulation ('\t') or semi-colon (';')
-- Added new W850 independent variable and updated OLR and ONI series
+- Added new independent variables: ONI1, ONI2, SOI_TROUP, W850w, W850c,
+  W850e, SST12, SST3, SST4, SST34, ASST12, ASST3, ASST4, ASST34 and
+  updated OLR and ONI series
 
 fixes
 +++++
