@@ -29,7 +29,7 @@ fixes
 - Fixed the outliers table filename
 - Some adjusts of console text
 - Clean/delete some old code needless
-
+- Fix check thresholds as default for internal_var_I_types
 
 0.5.1 (**2012-12-05**)
 ----------------------

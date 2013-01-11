@@ -535,7 +535,8 @@ def check():
     # -------------------------------------------------------------------------
     # thresholds var_I
 
-    if not globals_vars.config_run["path_to_file_var_I"] == "internal":
+    if not globals_vars.config_run["path_to_file_var_I"] == "internal" and \
+       globals_vars.config_run["type_var_I"] not in globals_vars.internal_var_I_types:
         if globals_vars.config_run["threshold_below_var_I"] == "default":
             console.msg_error_configuration('threshold_below_var_I',
                 _("The thresholds can't be define as 'default' if the\n"
