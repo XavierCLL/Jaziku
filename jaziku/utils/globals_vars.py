@@ -107,7 +107,7 @@ units_var_D = None
 # types and units - VAR I
 
 # Valid input types for independent variable
-types_var_I = ['ONI1', 'ONI2', 'SOI', 'SOI_TROUPy donde estuve en el ', 'OLR', 'W200', 'W850w', 'W850c', 'W850e', 'SST12',
+types_var_I = ['ONI1', 'ONI2', 'SOI', 'SOI_TROUP', 'OLR', 'W200', 'W850w', 'W850c', 'W850e', 'SST12',
                'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34', 'ARH', 'QBO', 'NAO', 'SST_CAR', 'AREA_WHWP']
 
 # Units for types for dependent variable
