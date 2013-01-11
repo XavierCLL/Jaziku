@@ -110,8 +110,14 @@ def calculate_lags(station, makes_files=True):
                     # get values and calculate mean_var_D
                     mean_var_D = array.mean(get_values_in_range_analysis_interval(station,'D', iter_year, month))
 
-                    # get values and calculate mean_var_I
-                    mean_var_I = array.mean(get_values_in_range_analysis_interval(station,'I', iter_year, month, lag=lag))
+                    # special case when var_I is ONI1 or ONI2, don't calculate trimesters because the ONI series
+                    # was calculated by trimesters from original source
+                    if station.var_I.type_series in ['ONI1', 'ONI2']:
+                        mean_var_I = station.var_I.data[station.var_I.date.index(date(iter_year, month, 1) +
+                                                                                 relativedelta(months=-lag))]
+                    else:
+                        # get values and calculate mean_var_I
+                        mean_var_I = array.mean(get_values_in_range_analysis_interval(station,'I', iter_year, month, lag=lag))
 
                     # add line in list: Lag_X
                     vars()['Lag_' + str(lag)].append([date(iter_year, month, 1), mean_var_D, mean_var_I])
