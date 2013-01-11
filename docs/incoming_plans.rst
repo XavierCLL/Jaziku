@@ -1,8 +1,8 @@
 .. _incoming_plans:
 
-================
-Incoming / Plans
-================
+=====================
+Incoming Plans / TODO
+=====================
 
 0.6 (**2013-02-xx**)
 --------------------
@@ -15,10 +15,12 @@ Incoming / Plans
 - Modification of maps for 3, 4 and 5 categories
 - Modification of the linear combination between the contingency table and forecasted by categories of the independent variable.
 - Modification of the option analog years for 4 and 5 categories
+- Standardized variables graphic option (Dependent variable transformation to the same format of Independent Variable)
 
 0.7 (**2013-04-xx**)
 --------------------
 - Add month and two-months to analysis resolution
+- Include MEI index for bimonthly analysis
 
 0.8 (**2013-05-xx**)
 --------------------
@@ -51,12 +53,27 @@ Incoming / Plans
 --------------------
 - Inclusion of wavelete analysis
 
+===========
+Others TODO
+===========
+
+To be included
+--------------
+- save log
+- print console standard method
+- settings class
+- more interpolations
+
 To be analyzed
 --------------
 - partial run, if a station has an error continue with other station, alert in final message
 - Add altitude parameter for stations and print in results (maps files)
+- ncl scripts port to pyngl
 
 Arts and promotions
 -------------------
 - logo
 - webpage
+- ISBN
+- mail jaziku@ideam.gov.co
+- usability poll
