@@ -134,11 +134,11 @@ def get_thresholds_var_D(station):
                                 "greater than threshold above:\n{0} - {1}")
             .format(below, above))
         try:
-            threshold_below_var_D = input_validation.validation_var_D(station.type_D,
+            threshold_below_var_D = input_validation.validation_var_D(station.var_D.type_series,
                 below,
                 None,
                 station.var_D.frequency_data)
-            threshold_above_var_D = input_validation.validation_var_D(station.type_D,
+            threshold_above_var_D = input_validation.validation_var_D(station.var_D.type_series,
                 above,
                 None,
                 station.var_D.frequency_data)
@@ -301,7 +301,7 @@ def get_thresholds_var_I(station):
             "AREA_WHWP": if_var_I_is_AREA_WHWP
         }
 
-        threshold_below_var_I, threshold_above_var_I = select_threshold_var_I[station.type_I]()
+        threshold_below_var_I, threshold_above_var_I = select_threshold_var_I[station.var_I.type_series]()
         return threshold_below_var_I, threshold_above_var_I
 
     # thresholds by below and by above of var I with standard deviation
@@ -348,8 +348,8 @@ def get_thresholds_var_I(station):
                 "greater than threshold above:\n{0} - {1}")
             .format(below, above))
         try:
-            threshold_below_var_I = input_validation.validation_var_I(station.type_I, below)
-            threshold_above_var_I = input_validation.validation_var_I(station.type_I, above)
+            threshold_below_var_I = input_validation.validation_var_I(station.var_I.type_series, below)
+            threshold_above_var_I = input_validation.validation_var_I(station.var_I.type_series, above)
             return threshold_below_var_I, threshold_above_var_I
         except Exception, e:
             console.msg_error(_(
@@ -465,7 +465,7 @@ def get_contingency_table(station, lag, month, day=None):
               u"   category '{4}'. Therefore, the graphics\n"
               u"   will not be created.")
             .format(globals_vars.config_run['threshold_below_var_I'], globals_vars.config_run['threshold_above_var_I'],
-                station.type_D, station.type_I, globals_vars.phenomenon_below), color='yellow')
+                station.var_D.type_series, station.var_I.type_series, globals_vars.phenomenon_below), color='yellow')
         globals_vars.threshold_problem[0] = True
 
     # if threshold by below or above calculating normal phenomenon of independent variable is wrong
@@ -477,7 +477,7 @@ def get_contingency_table(station, lag, month, day=None):
               u"   category '{4}'. Therefore, the graphics\n"
               u"   will not be created.")
             .format(globals_vars.config_run['threshold_below_var_I'], globals_vars.config_run['threshold_above_var_I'],
-                station.type_D, station.type_I, globals_vars.phenomenon_normal), color='yellow')
+                station.var_D.type_series, station.var_I.type_series, globals_vars.phenomenon_normal), color='yellow')
         globals_vars.threshold_problem[1] = True
 
     # if threshold by above of independent variable is wrong
@@ -489,7 +489,7 @@ def get_contingency_table(station, lag, month, day=None):
               u"   category '{4}'. Therefore, the graphics\n"
               u"   will not be created.")
             .format(globals_vars.config_run['threshold_below_var_I'], globals_vars.config_run['threshold_above_var_I'],
-                station.type_D, station.type_I, globals_vars.phenomenon_above), color='yellow')
+                station.var_D.type_series, station.var_I.type_series, globals_vars.phenomenon_above), color='yellow')
         globals_vars.threshold_problem[2] = True
 
     try:

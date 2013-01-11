@@ -18,6 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from numpy import median, average, var
@@ -25,19 +26,51 @@ from scipy.stats.stats import tstd, variation, skew, kurtosis
 
 from jaziku.modules.input import input_vars
 from jaziku.modules.input.input_check import count_null_values
-from jaziku.utils import console, array
+from jaziku.utils import console, array, globals_vars
 
 
 class Variable():
     """
     Class for save data raw, data dates, date filtered for dependent or
     independent variable of a station.
+
+    :attributes:
+        VARIABLE.type: type of variable 'D' (dependent) or 'I' (independent)
+        VARIABLE.type_series: type of series (D or I), e.g. 'SOI'
+        VARIABLE.frequency_data: frequency of data series
+        VARIABLE.file_name: the name of file of series
+        VARIABLE.file_path: the absolute path where save the file of series
+        VARIABLE.data: complete data of series
+        VARIABLE.date: complete date of series
+        plus attributes return of methods:
+            data_and_null_in_process_period()
+            do_some_statistic_of_data()
     """
+
     def __init__(self, type):
         if type in ['D','I']:
             self.type = type
         else:
             raise
+
+    def set_file(self, file):
+
+        if self.type == 'D':
+            self.file_name = os.path.basename(file)
+            self.file_path = os.path.abspath(file)
+
+        if self.type == 'I':
+
+            # read from internal variable independent files of Jaziku, check
+            # and notify if Jaziku are using the independent variable inside
+            # located in plugins/var_I/
+            if file == "internal":
+                self.file_name = globals_vars.internal_var_I_files[self.type_series]
+                self.file_path = os.path.join(globals_vars.ROOT_DIR, 'data', 'var_I', self.file_name)
+            else:
+                self.file_name = os.path.basename(file)
+                self.file_path = os.path.abspath(file)
+
 
     def read_data_from_file(self, station, process=True, messages=True):
         """
@@ -98,18 +131,11 @@ class Variable():
                 # if the variable don't have the minimum data required for the first year,
                 # this is, full data in november and december for the first year
                 if first_date > start_date_required:
-                    if self.type == 'D':
-                        console.msg_error(_(
-                            "Reading var D from file '{0}':\n"
-                            "don't have the minimum data required (november and december)\n"
-                            "for the first year ({1}) of the series.")
-                        .format(station.file_D.name, first_year))
-                    if self.type == 'I':
-                        console.msg_error(_(
-                            "Reading var I from file '{0}':\n"
-                            "don't have the minimum data required (november and december)\n"
-                            "for the first year ({1}) of the series.")
-                        .format(station.file_I.name, first_year))
+                    console.msg_error(_(
+                        "Reading var {0} from file '{1}':\n"
+                        "don't have the minimum data required (november and december)\n"
+                        "for the first year ({2}) of the series.")
+                    .format(self.type, self.file_name, first_year))
 
                 iter_date = first_date
 
@@ -136,18 +162,11 @@ class Variable():
                 # if the variable don't have the minimum data required for the last year,
                 # this is, full data in january and february for the last year
                 if last_date < end_date_required:
-                    if self.type == 'D':
-                        console.msg_error(_(
-                            "Reading var D from file '{0}':\n"
-                            "don't have the minimum data required (january and february)\n"
-                            "for the last year ({1}) of the series.")
-                        .format(station.file_D.name, last_year))
-                    if self.type == 'I':
-                        console.msg_error(_(
-                            "Reading var I from file '{0}':\n"
-                            "don't have the minimum data required (january and february)\n"
-                            "for the last year ({1}) of the series.")
-                        .format(station.file_I.name, last_year))
+                    console.msg_error(_(
+                        "Reading var {0} from file '{1}':\n"
+                        "don't have the minimum data required (january and february)\n"
+                        "for the last year ({2}) of the series.")
+                    .format(self.type, self.file_name, last_year))
 
                 iter_date = last_date
 
@@ -180,18 +199,11 @@ class Variable():
                 # if the variable don't have the minimum data required for the first year,
                 # this is, full data in november and december for the first year
                 if first_date > start_date_required:
-                    if self.type == 'D':
-                        console.msg_error(_(
-                            "Reading var D from file '{0}':\n"
-                            "don't have the minimum data required (november and december)\n"
-                            "for the first year ({1}) of the series.")
-                        .format(station.file_D.name, first_year))
-                    if self.type == 'I':
-                        console.msg_error(_(
-                            "Reading var I from file '{0}':\n"
-                            "don't have the minimum data required (november and december)\n"
-                            "for the first year ({1}) of the series.")
-                        .format(station.file_I.name, first_year))
+                    console.msg_error(_(
+                        "Reading var {0} from file '{1}':\n"
+                        "don't have the minimum data required (november and december)\n"
+                        "for the first year ({2}) of the series.")
+                    .format(self.type, self.file_name, first_year))
 
                 iter_date = first_date
 
@@ -217,18 +229,11 @@ class Variable():
                 # if the variable don't have the minimum data required for the last year,
                 # this is, full data in january and february for the last year
                 if last_date < end_date_required:
-                    if self.type == 'D':
-                        console.msg_error(_(
-                            "Reading var D from file '{0}':\n"
-                            "don't have the minimum data required (january and february)\n"
-                            "for the last year ({1}) of the series.")
-                        .format(station.file_D.name, last_year))
-                    if self.type == 'I':
-                        console.msg_error(_(
-                            "Reading var I from file '{0}':\n"
-                            "don't have the minimum data required (january and february)\n"
-                            "for the last year ({1}) of the series.")
-                        .format(station.file_I.name, last_year))
+                    console.msg_error(_(
+                        "Reading var {0} from file '{1}':\n"
+                        "don't have the minimum data required (january and february)\n"
+                        "for the last year ({2}) of the series.")
+                    .format(self.type, self.file_name, last_year))
 
                 iter_date = last_date
 
@@ -301,10 +306,10 @@ class Variable():
         # delete all valid nulls and clean
         self.data_filtered_in_process_period = array.clean(self.data_in_process_period)
 
-    def do_some_statistic_of_data(self, station):
+    def do_some_statistic_of_data(self):
         """
-        Calculate several statistics based on data,
-        this is mainly used in data analysis.
+        Calculate several statistics based on data series,
+        this is mainly used in data analysis module.
 
         :return by reference:
             [VARIABLE.] size_data, maximum, minimum,
