@@ -127,8 +127,8 @@ internal_var_I_types = ['ONI1', 'ONI2', 'SOI', 'SOI_TROUP', 'OLR', 'W200', 'W850
                         'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34', 'ARH', 'QBO', 'NAO', 'SST_CAR', 'AREA_WHWP']
 
 # namefiles of internal independent variables
-internal_var_I_files = {"ONI1": "ONI1_1949_2012_CPC.txt",
-                        "ONI2": "ONI2_1949_2012_CPC_corr2012.txt",
+internal_var_I_files = {"ONI1": "ONI1_1950_2012_CPC.txt",
+                        "ONI2": "ONI2_1950_2012_CPC_corr2012.txt",
                         "SOI": "SOI_1951_2011_CPC_NOAA.txt",
                         "SOI_TROUP": "SOI_TROUP_1876_2012_AustralinaBureau.txt",
                         #"MEI": "MEI_1950_2011_ESRL_NOAA.txt",
