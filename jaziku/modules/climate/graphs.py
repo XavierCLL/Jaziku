@@ -67,8 +67,8 @@ def climate_graphs(station):
         # graphics title
         pyplot.title(unicode(_('Composite analysis - {0} ({1})\n{2} - {3} - '
                             'lag {6} - {7} - ({4}-{5})')
-        .format(station.name, station.code, station.type_I,
-            station.type_D, station.process_period['start'],
+        .format(station.name, station.code, station.var_I.type_series,
+            station.var_D.type_series, station.process_period['start'],
             station.process_period['end'], lag,
             title_period), 'utf-8'))
 
@@ -132,8 +132,8 @@ def climate_graphs(station):
         image_dir_save \
             = os.path.join(graphics_dir_ca, _('lag_{0}').format(lag),
                            _('ca_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
-                          .format(lag, filename_period, station.code, station.name, station.type_D,
-                                  station.type_I, station.process_period['start'], station.process_period['end']))
+                          .format(lag, filename_period, station.code, station.name, station.var_D.type_series,
+                                  station.var_I.type_series, station.process_period['start'], station.process_period['end']))
 
         # save image
         pyplot.savefig(image_dir_save, dpi=75)
@@ -184,7 +184,7 @@ def climate_graphs(station):
         mosaic_dir_save \
             = os.path.join(graphics_dir_ca, _('mosaic_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
                           .format(lag, globals_vars.translate_analysis_interval, station.code, station.name,
-                                  station.type_D, station.type_I, station.process_period['start'],
+                                  station.var_D.type_series, station.var_I.type_series, station.process_period['start'],
                                   station.process_period['end']))
 
         if station.state_of_data in [1, 3]:

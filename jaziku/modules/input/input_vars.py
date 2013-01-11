@@ -46,9 +46,11 @@ def read_var_D(station):
     date_D = []
     var_D = []
 
+    open_file_D = open(station.var_D.file_path, 'r')
+
     # The series accept three delimiters: spaces (' '), tabulation ('\t') or semi-colon (';')
     # this check which delimiter is using this file
-    test_line = station.file_D.readline()
+    test_line = open_file_D.readline()
     if len(test_line.split(globals_vars.INPUT_CSV_DELIMITER)) >= 2:
         delimiter = globals_vars.INPUT_CSV_DELIMITER
     if len(test_line.split(' ')) >= 2:
@@ -57,9 +59,9 @@ def read_var_D(station):
         delimiter = '\t'
     if len(test_line.split(';')) >= 2:
         delimiter = ';'
-    station.file_D.seek(0)
+    open_file_D.seek(0)
 
-    csv_file_D = csv.reader(station.file_D, delimiter=delimiter)
+    csv_file_D = csv.reader(open_file_D, delimiter=delimiter)
 
     # csv_file_D = csv.reader(fo, delimiter = '\t')
     # csv_file_D.write(data.replace('\x00', ''))
@@ -86,7 +88,7 @@ def read_var_D(station):
                 "this could be caused by wrong line or garbage "
                 "character,\nplease check manually, fix it and "
                 "run again.")
-            .format(station.file_D.name, csv_file_D.line_num), False)
+            .format(station.var_D.file_name, csv_file_D.line_num), False)
 
         # check if var D is daily or month
         if first:
@@ -108,7 +110,7 @@ def read_var_D(station):
                     console.msg_error(_(
                         "Reading var D from file '{0}' in line: {1}\n\n"
                         "Jaziku detected missing value for date: {2}")
-                    .format(station.file_D.name,
+                    .format(station.var_D.file_name,
                         csv_file_D.line_num,
                         missing_date))
 
@@ -120,7 +122,7 @@ def read_var_D(station):
                     console.msg_error(_(
                         "Reading var D from file '{0}' in line: {1}\n\n"
                         "Jaziku detected missing value for date: {2}-{3}")
-                    .format(station.file_D.name,
+                    .format(station.var_D.file_name,
                         csv_file_D.line_num,
                         missing_date.year,
                         missing_date.month))
@@ -131,18 +133,19 @@ def read_var_D(station):
             # format: yyyy-mm-dd
             date_D.append(date(year, month, day))
             # set values of dependent variable
-            var_D.append(input_validation.validation_var_D(station.type_D,
+            var_D.append(input_validation.validation_var_D(station.var_D.type_series,
                 value,
                 date_D[-1],
                 station.var_D.frequency_data))
 
         except Exception, e:
             console.msg_error(_("Reading from file '{0}' in line: {1}\n\n{2}")
-            .format(station.file_D.name, csv_file_D.line_num, e), False)
+            .format(station.var_D.file_name, csv_file_D.line_num, e), False)
 
         if first:
             first = False
 
+    open_file_D.close()
     del csv_file_D
 
     station.var_D.data = var_D
@@ -163,15 +166,7 @@ def read_var_I(station):
     date_I = []
     var_I = []
 
-    # read from internal variable independent files of Jaziku, check
-    # and notify if Jaziku are using the independent variable inside
-    # located in plugins/var_I/
-    if globals_vars.config_run["path_to_file_var_I"] == "internal":
-        internal_file_I_name = globals_vars.internal_var_I_files[globals_vars.config_run["type_var_I"]]
-        internal_file_I_dir = os.path.join(globals_vars.ROOT_DIR, 'data', 'var_I', internal_file_I_name)
-        open_file_I = open(internal_file_I_dir, 'r')
-    else:
-        open_file_I = open(globals_vars.config_run["path_to_file_var_I"], 'r')
+    open_file_I = open(station.var_I.file_path, 'r')
 
     # The series accept three delimiters: spaces (' '), tabulation ('\t') or semi-colon (';')
     # this check which delimiter is using this file
@@ -206,7 +201,7 @@ def read_var_I(station):
                 "this could be caused by wrong line or garbage "
                 "character,\nplease check manually, fix it and "
                 "run again.")
-            .format(open_file_I.name, csv_file_I.line_num), False)
+            .format(station.var_I.file_name, csv_file_I.line_num), False)
 
         # check if var I is daily or month
         if first:
@@ -228,7 +223,7 @@ def read_var_I(station):
                     console.msg_error(_(
                         "Reading var I from file '{0}' in line: {1}\n\n"
                         "Jaziku detected missing value for date: {2}")
-                    .format(open_file_I.name,
+                    .format(station.var_I.file_name,
                         csv_file_I.line_num,
                         missing_date))
 
@@ -240,7 +235,7 @@ def read_var_I(station):
                     console.msg_error(_(
                         "Reading var I from file '{0}' in line: {1}\n\n"
                         "Jaziku detected missing value for date: {2}-{3}")
-                    .format(open_file_I.name,
+                    .format(station.var_I.file_name,
                         csv_file_I.line_num,
                         missing_date.year,
                         missing_date.month))
@@ -251,11 +246,11 @@ def read_var_I(station):
             # format: yyyy-mm
             date_I.append(date(year, month, day))
             # set values of independent variable
-            var_I.append(input_validation.validation_var_I(station.type_I, value))
+            var_I.append(input_validation.validation_var_I(station.var_I.type_series, value))
 
         except Exception, e:
             console.msg_error(_("Reading from file '{0}' in line: {1}\n\n{2}")
-            .format(open_file_I.name, csv_file_I.line_num, e), False)
+            .format(station.var_I.file_name, csv_file_I.line_num, e), False)
 
         if first:
             first = False
