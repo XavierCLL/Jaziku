@@ -153,7 +153,7 @@ def main(stations):
                 descriptive_statistic_graphs(stations)
             console.msg(_("done"), color='green')
         else:
-            console.msg(_("fail\n > WARNING: There is only one station for process\n"
+            console.msg(_("partial\n > WARNING: There is only one station for process\n"
                           "   the graphs for descriptive statistic need more \n"
                           "   of one station."), color="yellow")
     else:
@@ -200,11 +200,11 @@ def main(stations):
             console.msg(_("done"), color='green')
         else:
             if Station.stations_processed == 1:
-                console.msg(_("fail\n > WARNING: There is only one station for process\n"
+                console.msg(_("partial\n > WARNING: There is only one station for process\n"
                               "   the scatter plots of series, this need more \n"
                               "   of one station."), color="yellow")
             else:
-                console.msg(_("fail\n > WARNING: The maximum limit for make the scatter plots\n"
+                console.msg(_("partial\n > WARNING: The maximum limit for make the scatter plots\n"
                               "   of series are 10 stations, if you want this diagram,\n"
                               "   please divide the stations in regions into different\n"
                               "   runfiles with maximum 10 stations per runfile, and\n"
@@ -761,6 +761,29 @@ def climatology(stations):
         pyplot.close('all')
 
         # -------------------------------------------------------------------------
+        # climatology monthly table (csv)
+
+        name_csv_table = _("Multiyear_climatology_table_{0}_{1}_{2}.csv").format(station.code, station.name, globals_vars.config_run['type_var_D'])
+        open_file = open(os.path.join(station_climatology_path,name_csv_table), 'w')
+        csv_table = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
+
+        # print header
+        header = [''] + x_labels
+        csv_table.writerow(header)
+
+        # max values
+        csv_table.writerow( [_('max')] + [ format_out.number(x + y_max[i]) for i,x in enumerate(y_mean) ] )
+
+        # mean values
+        csv_table.writerow( [_('mean')] + [ format_out.number(x) for x in y_mean ] )
+
+        # min values
+        csv_table.writerow( [_('min')] + [ format_out.number(x - y_min[i]) for i,x in enumerate(y_mean) ] )
+
+        open_file.close()
+        del csv_table
+
+        # -------------------------------------------------------------------------
         ## for climatology graphs, every 5, 10 or 15 days based to analysis interval
 
         if station.var_D.frequency_data == "daily" and not globals_vars.config_run['analysis_interval'] == "trimester":
@@ -921,6 +944,32 @@ def climatology(stations):
 
             pyplot.close('all')
 
+            # -------------------------------------------------------------------------
+            # climatology N days table (csv)
+
+            name_csv_table = _("Multiyear_climatology_table_{0}days_{1}_{2}_{3}.csv").format(globals_vars.analysis_interval_num_days, station.code, station.name, globals_vars.config_run['type_var_D'])
+            open_file = open(os.path.join(station_climatology_path,name_csv_table), 'w')
+            csv_table = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
+
+            # print header
+            header = ['']
+            for month in range(1, 13):
+                for day in get_range_analysis_interval():
+                    header.append(globals_vars.get_month_in_text(month-1) +' '+str(day))
+
+            csv_table.writerow(header)
+
+            # max values
+            csv_table.writerow( [_('max')] + [ format_out.number(x + y_max[i]) for i,x in enumerate(y_mean) ] )
+
+            # mean values
+            csv_table.writerow( [_('mean')] + [ format_out.number(x) for x in y_mean ] )
+
+            # min values
+            csv_table.writerow( [_('min')] + [ format_out.number(x - y_min[i]) for i,x in enumerate(y_mean) ] )
+
+            open_file.close()
+            del csv_table
 
     open_file_climatology_table.close()
     del csv_climatology_table

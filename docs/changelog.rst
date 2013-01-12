@@ -23,6 +23,7 @@ news
 - (Temporally until version 0.7) disable MEI series
 - Special case when var_I is ONI1 or ONI2, don't calculate trimesters because
   the ONI series was calculated by trimesters from original source
+- New multiyears climatology tables for monthly and/or N days
 
 fixes
 +++++
