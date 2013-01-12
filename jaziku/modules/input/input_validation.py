@@ -312,27 +312,36 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
 #==============================================================================
 # Validation var_I (independent variable)
 #
-#     Variable               Abbreviation     Units          Range of variation
-# Oceanic Nino Index-------------ONI         anomaly              -5 to 5
+#     Variable                     Abbreviation     Units          Range of variation
+# Oceanic Nino Index--------------ONI1 and ONI2    anomaly             -5 to 5
 # Index of the Southern
-# Oscillation NOAA---------------SOI    standardized anomaly       -7 to 7
-# Multivariate ENSO index--------MEI            #             -4.552 to 6.078
+# Oscillation NOAA--------------------SOI        std anomaly           -7 to 7
+# Index of the Southern
+# Oscillation (TROUP)--------------SOI_TROUP     std anomaly          -35 to 35
+# Multivariate ENSO index------------ MEI            #             -4.552 to 6.078
 # Radiation wavelength
-# Long tropical------------------OLR           W/m2               -6 to 6
-# Index of wind anomaly----------W200   standardized anomaly     -7.5 to 7.5
-# Sea surface temperature--------SST            °C               -60 to 60
-# % Amazon relative humidity-----ARH             %              -100 to 100
-# quasibienal oscillation index--QBO            Km/h           -59.1 to 33.24
-# North atlantic oscillation index--NAO        anomaly         -6.36 to 6.08
-# Carribbean (CAR) Index-------SST_CAR         °C              -1.3 to 1.3
+# Long tropical---------------------- OLR           W/m2               -6 to 6
+# Index of wind anomaly 200hpa--------W200       std anomaly         -7.5 to 7.5
+# Index of wind anomaly 850hpa-------W850w         anomaly         -7.5 to 7.5
+# Index of wind anomaly 850hpa-------W850c         anomaly          -21 to 21
+# Index of wind anomaly 850hpa-------W850e         anomaly        -15.1 to 15.1
+# Sea surface temperature-------------SST           °C                -60 to 60
+# Anomaly sea surface temperature----ASST12        anomaly          -10 to 10
+# Anomaly sea surface temperature----ASST3         anomaly           -7 to 7
+# Anomaly sea surface temperature----ASST4         anomaly           -3 to 3
+# Anomaly sea surface temperature----ASST34        anomaly          -10 to 10
+# % Amazon relative humidity----------ARH             %              -100 to 100
+# quasibienal oscillation index-------QBO           Km/h            -59.1 to 33.24
+# North atlantic oscillation index----NAO         anomaly           -6.36 to 6.08
+# Carribbean (CAR) Index------------SST_CAR         °C               -1.3 to 1.3
 # Monthly anomaly of the
-# ocean surface area Ocean                Area anomaly scaled
-# region >28.5C----------------AREA_WHWP     by 10e6 km^2        -13 to 14
+# ocean surface area Ocean                    Area anomaly scaled
+# region >28.5C--------------------AREA_WHWP     by 10e6 km^2         -13 to 14
 
 
 def validation_var_I(type_var_I, var_I):
     '''
-    Fuction for validation (independent variable) depending on the type of
+    Function for validation (independent variable) depending on the type of
     variable
     '''
 
@@ -368,7 +377,23 @@ def validation_var_I(type_var_I, var_I):
             return var_I
 
     # validation for Oceanic Nino Index
-    def if_var_I_is_ONI():
+    def if_var_I_is_ONI1():
+        # default values
+        limit_below = -5
+        limit_above = 5
+        # if one of limits was defined as particular range
+        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
+            limit_below = globals_vars.config_run['limit_var_I_below']
+        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
+            limit_above = globals_vars.config_run['limit_var_I_above']
+
+        if (limit_below <= var_I <= limit_above):
+            return var_I
+        else:
+            returnError(_("Oceanic Nino Index not valid"), limit_below, limit_above)
+
+    # validation for Oceanic Nino Index
+    def if_var_I_is_ONI2():
         # default values
         limit_below = -5
         limit_above = 5
@@ -398,6 +423,22 @@ def validation_var_I(type_var_I, var_I):
             return var_I
         else:
             returnError(_("Index of the Southern Oscillation NOAA not valid"), limit_below, limit_above)
+
+    # validation for Index of the Southern Oscillation calculated between Tahití and Darwin
+    def if_var_I_is_SOI_TROUP():
+        # default values
+        limit_below = -35
+        limit_above = 35
+        # if one of limits was defined as particular range
+        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
+            limit_below = globals_vars.config_run['limit_var_I_below']
+        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
+            limit_above = globals_vars.config_run['limit_var_I_above']
+
+        if (limit_below <= var_I <= limit_above):
+            return var_I
+        else:
+            returnError(_("Index of the Southern Oscillation TROUP not valid"), limit_below, limit_above)
 
     # validation for Multivariate ENSO index
     def if_var_I_is_MEI():
@@ -431,7 +472,7 @@ def validation_var_I(type_var_I, var_I):
         else:
             returnError(_("Radiation wavelength Long tropical not valid"), limit_below, limit_above)
 
-    # validation for Index of wind anomaly
+    # validation for Index of wind anomaly to 200 hpa
     def if_var_I_is_W200():
         # default values
         limit_below = -7.5
@@ -445,7 +486,56 @@ def validation_var_I(type_var_I, var_I):
         if (limit_below <= var_I <= limit_above):
             return var_I
         else:
-            returnError(_("Index of wind anomaly not valid"), limit_below, limit_above)
+            returnError(_("Anomaly index of wind to 200 hpa not valid"), limit_below, limit_above)
+
+    # validation for Index of wind anomaly to 850 hpa west
+    def if_var_I_is_W850w():
+        # default values
+        limit_below = -7.5
+        limit_above = 7.5
+        # if one of limits was defined as particular range
+        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
+            limit_below = globals_vars.config_run['limit_var_I_below']
+        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
+            limit_above = globals_vars.config_run['limit_var_I_above']
+
+        if (limit_below <= var_I <= limit_above):
+            return var_I
+        else:
+            returnError(_("Anomaly index of wind to 850 hpa west not valid"), limit_below, limit_above)
+
+
+    # validation for Index of wind anomaly to 850 hpa center
+    def if_var_I_is_W850c():
+        # default values
+        limit_below = -21
+        limit_above = 21
+        # if one of limits was defined as particular range
+        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
+            limit_below = globals_vars.config_run['limit_var_I_below']
+        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
+            limit_above = globals_vars.config_run['limit_var_I_above']
+
+        if (limit_below <= var_I <= limit_above):
+            return var_I
+        else:
+            returnError(_("Anomaly index of wind to 850 hpa center not valid"), limit_below, limit_above)
+
+    # validation for Index of wind anomaly to 850 hpa east
+    def if_var_I_is_W850e():
+        # default values
+        limit_below = -15.1
+        limit_above = 15.1
+        # if one of limits was defined as particular range
+        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
+            limit_below = globals_vars.config_run['limit_var_I_below']
+        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
+            limit_above = globals_vars.config_run['limit_var_I_above']
+
+        if (limit_below <= var_I <= limit_above):
+            return var_I
+        else:
+            returnError(_("Anomaly index of wind to 850 hpa east not valid"), limit_below, limit_above)
 
     # validation for Sea surface temperature
     def if_var_I_is_SST():
@@ -462,6 +552,70 @@ def validation_var_I(type_var_I, var_I):
             return var_I
         else:
             returnError(_("Sea surface temperature not valid"), limit_below, limit_above)
+
+    # validation for anomaly sea surface temperature
+    def if_var_I_is_ASST12():
+        # default values
+        limit_below = -10
+        limit_above = 10
+        # if one of limits was defined as particular range
+        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
+            limit_below = globals_vars.config_run['limit_var_I_below']
+        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
+            limit_above = globals_vars.config_run['limit_var_I_above']
+
+        if (limit_below <= var_I <= limit_above):
+            return var_I
+        else:
+            returnError(_("Anomaly sea surface temperature not valid"), limit_below, limit_above)
+
+    # validation for anomaly sea surface temperature
+    def if_var_I_is_ASST3():
+        # default values
+        limit_below = -7
+        limit_above = 7
+        # if one of limits was defined as particular range
+        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
+            limit_below = globals_vars.config_run['limit_var_I_below']
+        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
+            limit_above = globals_vars.config_run['limit_var_I_above']
+
+        if (limit_below <= var_I <= limit_above):
+            return var_I
+        else:
+            returnError(_("Anomaly sea surface temperature not valid"), limit_below, limit_above)
+
+    # validation for anomaly sea surface temperature
+    def if_var_I_is_ASST4():
+        # default values
+        limit_below = -3
+        limit_above = 3
+        # if one of limits was defined as particular range
+        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
+            limit_below = globals_vars.config_run['limit_var_I_below']
+        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
+            limit_above = globals_vars.config_run['limit_var_I_above']
+
+        if (limit_below <= var_I <= limit_above):
+            return var_I
+        else:
+            returnError(_("Anomaly sea surface temperature not valid"), limit_below, limit_above)
+
+    # validation for anomaly sea surface temperature
+    def if_var_I_is_ASST34():
+        # default values
+        limit_below = -5.6
+        limit_above = 5.6
+        # if one of limits was defined as particular range
+        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
+            limit_below = globals_vars.config_run['limit_var_I_below']
+        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
+            limit_above = globals_vars.config_run['limit_var_I_above']
+
+        if (limit_below <= var_I <= limit_above):
+            return var_I
+        else:
+            returnError(_("Anomaly sea surface temperature not valid"), limit_below, limit_above)
 
     # validation for % Amazon relative humidity
     def if_var_I_is_ARH():
@@ -545,12 +699,24 @@ def validation_var_I(type_var_I, var_I):
 
     # switch validation
     validation = {
-      "ONI": if_var_I_is_ONI,
+      "ONI1": if_var_I_is_ONI1,
+      "ONI2": if_var_I_is_ONI2,
       "SOI": if_var_I_is_SOI,
-      "MEI": if_var_I_is_MEI,
+      "SOI_TROUP": if_var_I_is_SOI_TROUP,
+      #"MEI": if_var_I_is_MEI,
       "OLR": if_var_I_is_OLR,
       "W200": if_var_I_is_W200,
-      "SST": if_var_I_is_SST,
+      "W850w": if_var_I_is_W850w,
+      "W850c": if_var_I_is_W850c,
+      "W850e": if_var_I_is_W850e,
+      "SST12": if_var_I_is_SST,
+      "SST3": if_var_I_is_SST,
+      "SST4": if_var_I_is_SST,
+      "SST34": if_var_I_is_SST,
+      "ASST12": if_var_I_is_ASST12,
+      "ASST3": if_var_I_is_ASST3,
+      "ASST4": if_var_I_is_ASST4,
+      "ASST34": if_var_I_is_ASST34,
       "ARH": if_var_I_is_ARH,
       "NAO": if_var_I_is_NAO,
       "QBO": if_var_I_is_QBO,

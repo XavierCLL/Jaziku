@@ -30,7 +30,7 @@ from jaziku.utils import globals_vars
 from jaziku.utils import format_out
 from jaziku.utils import console
 from jaziku.modules.input import input_validation
-import lags
+from jaziku.modules.climate import lags
 
 
 def get_thresholds_var_D(station):
@@ -134,11 +134,11 @@ def get_thresholds_var_D(station):
                                 "greater than threshold above:\n{0} - {1}")
             .format(below, above))
         try:
-            threshold_below_var_D = input_validation.validation_var_D(station.type_D,
+            threshold_below_var_D = input_validation.validation_var_D(station.var_D.type_series,
                 below,
                 None,
                 station.var_D.frequency_data)
-            threshold_above_var_D = input_validation.validation_var_D(station.type_D,
+            threshold_above_var_D = input_validation.validation_var_D(station.var_D.type_series,
                 above,
                 None,
                 station.var_D.frequency_data)
@@ -207,12 +207,20 @@ def get_thresholds_var_I(station):
     def thresholds_by_default():
 
         # thresholds for Oceanic Nino Index
-        def if_var_I_is_ONI():
+        def if_var_I_is_ONI1():
+            return -0.5, 0.5
+
+        # thresholds for Oceanic Nino Index
+        def if_var_I_is_ONI2():
             return -0.5, 0.5
 
         # thresholds for Index of the Southern Oscillation NOAA
         def if_var_I_is_SOI():
             return -1.2, 0.9
+
+        # thresholds for Index of the Southern Oscillation calculated between Tahití and Darwin
+        def if_var_I_is_SOI_TROUP():
+            return -8, 8
 
         # thresholds for Multivariate ENSO index
         def if_var_I_is_MEI():
@@ -222,12 +230,28 @@ def get_thresholds_var_I(station):
         def if_var_I_is_OLR():
             return -1.1, 0.9
 
-        # thresholds for Index of wind anomaly
+        # thresholds for Index of wind anomaly to 200 hpa
         def if_var_I_is_W200():
+            return percentiles(33, 66)
+
+        # thresholds for Index of wind anomaly to 850 hpa west
+        def if_var_I_is_W850w():
+            return percentiles(33, 66)
+
+        # thresholds for Index of wind anomaly to 850 hpa center
+        def if_var_I_is_W850c():
+            return percentiles(33, 66)
+
+        # thresholds for Index of wind anomaly to 850 hpa east
+        def if_var_I_is_W850e():
             return percentiles(33, 66)
 
         # thresholds for Sea surface temperature
         def if_var_I_is_SST():
+            return percentiles(33, 66)
+
+        # thresholds for Anomaly Sea surface temperature
+        def if_var_I_is_ASST():
             return percentiles(33, 66)
 
         # thresholds for % Amazon relative humidity
@@ -252,12 +276,24 @@ def get_thresholds_var_I(station):
 
         # switch validation
         select_threshold_var_I = {
-            "ONI": if_var_I_is_ONI,
+            "ONI1": if_var_I_is_ONI1,
+            "ONI2": if_var_I_is_ONI2,
             "SOI": if_var_I_is_SOI,
-            "MEI": if_var_I_is_MEI,
+            "SOI_TROUP": if_var_I_is_SOI_TROUP,
+            #"MEI": if_var_I_is_MEI,
             "OLR": if_var_I_is_OLR,
             "W200": if_var_I_is_W200,
-            "SST": if_var_I_is_SST,
+            "W850w": if_var_I_is_W850w,
+            "W850c": if_var_I_is_W850c,
+            "W850e": if_var_I_is_W850e,
+            "SST12": if_var_I_is_SST,
+            "SST3": if_var_I_is_SST,
+            "SST4": if_var_I_is_SST,
+            "SST34": if_var_I_is_SST,
+            "ASST12": if_var_I_is_ASST,
+            "ASST3": if_var_I_is_ASST,
+            "ASST4": if_var_I_is_ASST,
+            "ASST34": if_var_I_is_ASST,
             "ARH": if_var_I_is_ARH,
             "QBO": if_var_I_is_QBO,
             "NAO": if_var_I_is_NAO,
@@ -265,7 +301,7 @@ def get_thresholds_var_I(station):
             "AREA_WHWP": if_var_I_is_AREA_WHWP
         }
 
-        threshold_below_var_I, threshold_above_var_I = select_threshold_var_I[station.type_I]()
+        threshold_below_var_I, threshold_above_var_I = select_threshold_var_I[station.var_I.type_series]()
         return threshold_below_var_I, threshold_above_var_I
 
     # thresholds by below and by above of var I with standard deviation
@@ -312,8 +348,8 @@ def get_thresholds_var_I(station):
                 "greater than threshold above:\n{0} - {1}")
             .format(below, above))
         try:
-            threshold_below_var_I = input_validation.validation_var_I(station.type_I, below)
-            threshold_above_var_I = input_validation.validation_var_I(station.type_I, above)
+            threshold_below_var_I = input_validation.validation_var_I(station.var_I.type_series, below)
+            threshold_above_var_I = input_validation.validation_var_I(station.var_I.type_series, above)
             return threshold_below_var_I, threshold_above_var_I
         except Exception, e:
             console.msg_error(_(
@@ -429,7 +465,7 @@ def get_contingency_table(station, lag, month, day=None):
               u"   category '{4}'. Therefore, the graphics\n"
               u"   will not be created.")
             .format(globals_vars.config_run['threshold_below_var_I'], globals_vars.config_run['threshold_above_var_I'],
-                station.type_D, station.type_I, globals_vars.phenomenon_below), color='yellow')
+                station.var_D.type_series, station.var_I.type_series, globals_vars.phenomenon_below), color='yellow')
         globals_vars.threshold_problem[0] = True
 
     # if threshold by below or above calculating normal phenomenon of independent variable is wrong
@@ -441,7 +477,7 @@ def get_contingency_table(station, lag, month, day=None):
               u"   category '{4}'. Therefore, the graphics\n"
               u"   will not be created.")
             .format(globals_vars.config_run['threshold_below_var_I'], globals_vars.config_run['threshold_above_var_I'],
-                station.type_D, station.type_I, globals_vars.phenomenon_normal), color='yellow')
+                station.var_D.type_series, station.var_I.type_series, globals_vars.phenomenon_normal), color='yellow')
         globals_vars.threshold_problem[1] = True
 
     # if threshold by above of independent variable is wrong
@@ -453,7 +489,7 @@ def get_contingency_table(station, lag, month, day=None):
               u"   category '{4}'. Therefore, the graphics\n"
               u"   will not be created.")
             .format(globals_vars.config_run['threshold_below_var_I'], globals_vars.config_run['threshold_above_var_I'],
-                station.type_D, station.type_I, globals_vars.phenomenon_above), color='yellow')
+                station.var_D.type_series, station.var_I.type_series, globals_vars.phenomenon_above), color='yellow')
         globals_vars.threshold_problem[2] = True
 
     try:

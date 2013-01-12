@@ -48,8 +48,8 @@ def main(stations):
         station.var_D.data_and_null_in_process_period(station)
         station.var_I.data_and_null_in_process_period(station)
 
-        station.var_D.do_some_statistic_of_data(station)
-        station.var_I.do_some_statistic_of_data(station)
+        station.var_D.do_some_statistic_of_data()
+        station.var_I.do_some_statistic_of_data()
 
     check_analysis_interval_and_state_of_data(stations)
 

@@ -43,8 +43,7 @@ def climate(station):
     """
 
     # console message
-    console.msg(_("Processing climate ({0}-{1}) ................ ")
-        .format(station.process_period['start'], station.process_period['end']), newline=False)
+    console.msg(_("Processing climate ............................ "), newline=False)
 
     # create directory for output files
     if not os.path.isdir(globals_vars.climate_dir):
@@ -67,7 +66,7 @@ def climate(station):
        not globals_vars.threshold_problem[2] and globals_vars.config_run['graphics']:
         climate_graphs(station)
     else:
-        console.msg(_("\ncontinue without make graphics for climate .... "), newline=False)
+        console.msg(_("\n   continue without make graphics ............. "), color='cyan', newline=False)
 
     climate_data_for_maps(station)
 

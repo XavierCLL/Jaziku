@@ -143,7 +143,7 @@ def main():
     runfile = (x.replace('\0', '') for x in runfile_open)
 
     # open runfile as csv
-    globals_vars.runfile = csv.reader(runfile, delimiter=';')
+    globals_vars.runfile = csv.reader(runfile, delimiter=globals_vars.INPUT_CSV_DELIMITER)
 
     # read all settings and all stations from runfile
     stations = input_runfile.read_runfile()
@@ -213,6 +213,7 @@ def main():
     # -------------------------------------------------------------------------
     # CLIMATE AND FORECASTING PRE-PROCESS
 
+    # climate
     if globals_vars.config_run['climate_process']:
 
         print _("\n\n"
@@ -225,8 +226,6 @@ def main():
                 "# tables and the probability of the independent variable.      #\n"
                 "################################################################\n")
 
-    # climate
-    if globals_vars.config_run['climate_process']:
         # climate dir output result
         globals_vars.climate_dir \
             = os.path.join(os.path.splitext(globals_vars.runfile_path)[0], _('Jaziku_Climate'))   # 'results'

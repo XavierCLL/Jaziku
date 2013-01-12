@@ -131,7 +131,7 @@ def maps(grid):
         matrix = base_matrix.copy()
         # read values from saved file and set points on matrix
         open_file = open(file_map_points, 'rb')
-        csv_file = csv.reader(open_file, delimiter=';')
+        csv_file = csv.reader(open_file, delimiter=globals_vars.INPUT_CSV_DELIMITER)
         first_line = True
         marks_stations = []
         for line in csv_file:

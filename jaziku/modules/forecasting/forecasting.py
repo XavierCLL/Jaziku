@@ -33,8 +33,7 @@ def forecasting(station):
     """
 
     # console message
-    console.msg(_("Processing forecasting ({0}-{1}) ............ ")
-        .format(station.process_period['start'], station.process_period['end']), newline=False)
+    console.msg(_("Processing forecasting ........................ "), newline=False)
 
     # get and set date for calculate forecasting based on this TODO: forecasting_date now is static
     if station.state_of_data in [1, 3]:
@@ -130,7 +129,7 @@ def forecasting(station):
         with console.redirectStdStreams():
             forecasting_graphs(station)
     else:
-        console.msg(_("\ncontinue without make graphics for forecasting  "), newline=False)
+        console.msg(_("\n   continue without make graphics ............. "), color='cyan', newline=False)
 
     forecasting_data_for_maps(station)
 

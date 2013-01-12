@@ -62,4 +62,4 @@ Install Jaziku (egg version)
 Windows and Mac
 ---------------
 
-Jaziku only test work in Linux, but in theory also work in Mac and Windows.
+Jaziku only test work and very recommend run in Linux, but in theory also work in Mac and Windows.
