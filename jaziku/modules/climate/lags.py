@@ -88,8 +88,8 @@ def calculate_lags(station, makes_files=True):
                         _('Mean_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_'
                           '({6}-{7}).csv')
                         .format(lag, month, station.code,
-                            station.name, station.type_D,
-                            station.type_I,
+                            station.name, station.var_D.type_series,
+                            station.var_I.type_series,
                             station.process_period['start'],
                             station.process_period['end']))
 
@@ -99,7 +99,7 @@ def calculate_lags(station, makes_files=True):
                     # output write file:
                     # [[ yyyy/month, Mean_Lag_X_var_D, Mean_Lag_X_var_I ],... ]
                     open_file = open(csv_name, 'w')
-                    csv_file = csv.writer(open_file, delimiter=';')
+                    csv_file = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
 
                 iter_year = station.process_period['start']
 
@@ -110,13 +110,17 @@ def calculate_lags(station, makes_files=True):
                     # get values and calculate mean_var_D
                     mean_var_D = array.mean(get_values_in_range_analysis_interval(station,'D', iter_year, month))
 
-                    # get values and calculate mean_var_I
-                    mean_var_I = array.mean(get_values_in_range_analysis_interval(station,'I', iter_year, month, lag=lag))
+                    # special case when var_I is ONI1 or ONI2, don't calculate trimesters because the ONI series
+                    # was calculated by trimesters from original source
+                    if station.var_I.type_series in ['ONI1', 'ONI2']:
+                        mean_var_I = station.var_I.data[station.var_I.date.index(date(iter_year, month, 1) +
+                                                                                 relativedelta(months=-lag))]
+                    else:
+                        # get values and calculate mean_var_I
+                        mean_var_I = array.mean(get_values_in_range_analysis_interval(station,'I', iter_year, month, lag=lag))
 
                     # add line in list: Lag_X
-                    vars()['Lag_' + str(lag)].append([date(iter_year, month, 1),
-                                                      mean_var_D,
-                                                      mean_var_I])
+                    vars()['Lag_' + str(lag)].append([date(iter_year, month, 1), mean_var_D, mean_var_I])
 
                     # add line output file csv_file
                     if makes_files:
@@ -145,8 +149,8 @@ def calculate_lags(station, makes_files=True):
                           '{4}_{5}_{6}_({7}-{8}).csv')
                         .format(lag, globals_vars.analysis_interval_num_days,
                             month, station.code,
-                            station.name, station.type_D,
-                            station.type_I,
+                            station.name, station.var_D.type_series,
+                            station.var_I.type_series,
                             station.process_period['start'],
                             station.process_period['end']))
 
@@ -156,7 +160,7 @@ def calculate_lags(station, makes_files=True):
                     # output write file:
                     # [[ yyyy/month, Mean_Lag_X_var_D, Mean_Lag_X_var_I ],... ]
                     open_file = open(csv_name, 'w')
-                    csv_file = csv.writer(open_file, delimiter=';')
+                    csv_file = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
 
                 #days_for_this_month = monthrange(iter_year, month)[1]
 
@@ -180,9 +184,7 @@ def calculate_lags(station, makes_files=True):
                         mean_var_I = array.mean(get_values_in_range_analysis_interval(station,'I', iter_year, month, day, lag))
 
                         # add line in list: Lag_X
-                        vars()['Lag_' + str(lag)].append([date(iter_year, month, day),
-                                                          mean_var_D,
-                                                          mean_var_I])
+                        vars()['Lag_' + str(lag)].append([date(iter_year, month, day), mean_var_D, mean_var_I])
 
                         # add line output file csv_file
                         if makes_files:

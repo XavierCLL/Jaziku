@@ -4,6 +4,36 @@
 Changelog
 =========
 
+0.5.2 (**2013-01-xx**)
+----------------------
+
+news
+++++
+
+- Now Jaziku check is the series (var D/I) are complete in the last and/or
+  start year, else Jaziku fill with null values for complete the year,
+  but Jaziku required at least January and February for the last year and
+  november and december for the start year, due the lags required these
+  values.
+- The series (var D o I) accept three delimiters: spaces (' '),
+  tabulation ('\t') or semi-colon (';')
+- Added new independent variables: ONI1, ONI2, SOI_TROUP, W850w, W850c,
+  W850e, SST12, SST3, SST4, SST34, ASST12, ASST3, ASST4, ASST34 and
+  updated the remaining series
+- (Temporally until version 0.7) disable MEI series
+- Special case when var_I is ONI1 or ONI2, don't calculate trimesters because
+  the ONI series was calculated by trimesters from original source
+- New multiyears climatology tables for monthly and/or N days
+
+fixes
++++++
+
+- Fixes max and min functions when data has many null values
+- Fixed the outliers table filename
+- Some adjusts of console text
+- Clean/delete some old code needless
+- Fix check thresholds as default for internal_var_I_types
+
 0.5.1 (**2012-12-05**)
 ----------------------
 
@@ -13,7 +43,8 @@ news
 - Apply stamp (watermarking) for all graphics of Jaziku logo
 - New option in runfile for enable or disable the marks of stations
 - Plotting marks of stations in maps
-- When marks_stations is enable, plotting the legend referent of marks of stations
+- When marks_stations is enable, plotting the legend referent of marks of
+  stations
 - Plot the color of value in maps when all values are identical
 
 fixes
@@ -26,7 +57,8 @@ fixes
 - Clean some functions
 - Many small adjustments
 - Fix message number of maps process in each grid
-- Fixes max and min whiskers in climatology graphs when the values contain nulls
+- Fixes max and min whiskers in climatology graphs when the values contain
+  nulls
 - Fixes subtitles of maps based on analog_year
 
 
@@ -66,8 +98,8 @@ news
 - After set all configuration to run, jaziku prompt to user for read the configuration
   and ask for continue.
 - Add argument '-f', for force all ask to default answer for continue
-- New: Report all outliers of all stations in file and make Box-Jenkins diagram one by station and all
-  in one diagram of outliers
+- New: Report all outliers of all stations in file and make Box-Jenkins diagram one
+  by station and all in one diagram of outliers
 - New option in runfile for set particular units for var D or/and I regardless if
   the variables are o not internal variables
 - Now Jaziku check the 9 values for forecasting process

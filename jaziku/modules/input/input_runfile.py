@@ -228,11 +228,13 @@ def read_stations(lines_of_stations):
             station.lon = line_station[3].replace(',', '.')
             station.alt = line_station[4].replace(',', '.')
 
-            station.file_D = open(line_station[5], 'rb')
-            station.type_D = globals_vars.config_run['type_var_D']
+            station.var_D.type_series = globals_vars.config_run['type_var_D']
+            #station.file_D = open(line_station[5], 'rb')
+            station.var_D.set_file(line_station[5])
 
-            station.file_I = globals_vars.config_run['path_to_file_var_I']
-            station.type_I = globals_vars.config_run['type_var_I']
+            station.var_I.type_series = globals_vars.config_run['type_var_I']
+            #station.file_I = globals_vars.config_run['path_to_file_var_I']
+            station.var_I.set_file(globals_vars.config_run['path_to_file_var_I'])
 
         except Exception, e:
             console.msg_error_line_stations(station, e)

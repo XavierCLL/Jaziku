@@ -74,7 +74,7 @@ def forecasting_graphs(station):
             autopct='%1.1f%%', shadow=True)  # '%1.1f%%'
 
         pyplot.title(unicode(_('Probability forecasted of {0} - {1}\n{2} - lag {3} - {4} - ({5}-{6})')
-            .format(station.type_D, station.name, station.type_I, lag, title_date_graphic,
+            .format(station.var_D.type_series, station.name, station.var_I.type_series, lag, title_date_graphic,
                     station.process_period['start'], station.process_period['end']),
                     'utf-8'), fontsize=13)
 
@@ -82,7 +82,7 @@ def forecasting_graphs(station):
         # pyplot.subplot(111)
         image_dir_save \
             = os.path.join(station.forecasting_dir, _('prob_of_{0}_lag_{1}_{2}_({3}-{4}).png')
-                .format(station.type_D, lag, filename_date_graphic,
+                .format(station.var_D.type_series, lag, filename_date_graphic,
                         station.process_period['start'], station.process_period['end']))
 
         # save image
@@ -101,7 +101,7 @@ def forecasting_graphs(station):
         image_width = 375
         mosaic_dir_save \
             = os.path.join(station.forecasting_dir, _('mosaic_prob_of_{0}_{1}_({3}-{4}).png')
-                .format(station.type_D, lag, filename_date_graphic,
+                .format(station.var_D.type_series, lag, filename_date_graphic,
                         station.process_period['start'], station.process_period['end']))
         # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
         # http://www.classical-webdesigns.co.uk/resources/pixelinchconvert.html

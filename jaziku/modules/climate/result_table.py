@@ -143,14 +143,14 @@ def composite_analysis(station):
         # dir and name to save the result table
         csv_name \
             = os.path.join(station.climate_dir, _('Result_Table_CA_lag_{0}_{1}_{2}_{3}_{4}_({5}-{6}).csv')
-                .format(lag, station.name, station.code, station.type_D, station.type_I,
+                .format(lag, station.name, station.code, station.var_D.type_series, station.var_I.type_series,
                         station.process_period['start'], station.process_period['end']))
 
         if os.path.isfile(csv_name):
             os.remove(csv_name)
 
         open_file = open(csv_name, 'w')
-        csv_result_table = csv.writer(open_file, delimiter=';')
+        csv_result_table = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
 
         # print headers in result table
         csv_result_table.writerow([

@@ -79,10 +79,10 @@ def main(stations):
     = os.path.join(shapiro_wilks_dir, _('Descriptive_Statistics_{0}.csv').format(globals_vars.config_run['type_var_I']))
 
     open_file_D = open(file_descriptive_statistics_var_D, 'w')
-    csv_file_D = csv.writer(open_file_D, delimiter=';')
+    csv_file_D = csv.writer(open_file_D, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
 
     open_file_I = open(file_descriptive_statistics_var_I, 'w')
-    csv_file_I = csv.writer(open_file_I, delimiter=';')
+    csv_file_I = csv.writer(open_file_I, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
 
     # print header
     header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), _('SIZE DATA'), _('MAXIMUM'),
@@ -153,7 +153,7 @@ def main(stations):
                 descriptive_statistic_graphs(stations)
             console.msg(_("done"), color='green')
         else:
-            console.msg(_("fail\n > WARNING: There is only one station for process\n"
+            console.msg(_("partial\n > WARNING: There is only one station for process\n"
                           "   the graphs for descriptive statistic need more \n"
                           "   of one station."), color="yellow")
     else:
@@ -200,11 +200,11 @@ def main(stations):
             console.msg(_("done"), color='green')
         else:
             if Station.stations_processed == 1:
-                console.msg(_("fail\n > WARNING: There is only one station for process\n"
+                console.msg(_("partial\n > WARNING: There is only one station for process\n"
                               "   the scatter plots of series, this need more \n"
                               "   of one station."), color="yellow")
             else:
-                console.msg(_("fail\n > WARNING: The maximum limit for make the scatter plots\n"
+                console.msg(_("partial\n > WARNING: The maximum limit for make the scatter plots\n"
                               "   of series are 10 stations, if you want this diagram,\n"
                               "   please divide the stations in regions into different\n"
                               "   runfiles with maximum 10 stations per runfile, and\n"
@@ -575,7 +575,7 @@ def climatology(stations):
     # climatology table file
     open_file_climatology_table\
         = open(os.path.join(graphs_dir, _('Climatology_table_{0}').format(globals_vars.config_run['type_var_D'])+'.csv'), 'w')
-    csv_climatology_table = csv.writer(open_file_climatology_table, delimiter=';')
+    csv_climatology_table = csv.writer(open_file_climatology_table, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
 
     # print header
     header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), globals_vars.get_month_in_text(0), globals_vars.get_month_in_text(1),
@@ -606,8 +606,8 @@ def climatology(stations):
                         values.append(value)
                 values = array.clean(values)
                 y_mean.append(array.mean(values))
-                y_max.append(max(values) - y_mean[-1])
-                y_min.append(y_mean[-1] - min(values))
+                y_max.append(array.maximum(values) - y_mean[-1])
+                y_min.append(y_mean[-1] - array.minimum(values))
 
         if station.var_D.frequency_data == "daily":
             for month in range(1,13):
@@ -621,8 +621,8 @@ def climatology(stations):
                             month_values.append(value)
                     month_values = array.clean(month_values)
                     years_values_mean.append(array.mean(month_values))
-                    years_values_max.append(max(month_values))
-                    years_values_min.append(min(month_values))
+                    years_values_max.append(array.maximum(month_values))
+                    years_values_min.append(array.minimum(month_values))
                 y_mean.append(array.mean(years_values_mean))
                 y_max.append(array.mean(years_values_max) - y_mean[-1])
                 y_min.append(y_mean[-1] - array.mean(years_values_min))
@@ -761,6 +761,29 @@ def climatology(stations):
         pyplot.close('all')
 
         # -------------------------------------------------------------------------
+        # climatology monthly table (csv)
+
+        name_csv_table = _("Multiyear_climatology_table_{0}_{1}_{2}.csv").format(station.code, station.name, globals_vars.config_run['type_var_D'])
+        open_file = open(os.path.join(station_climatology_path,name_csv_table), 'w')
+        csv_table = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
+
+        # print header
+        header = [''] + x_labels
+        csv_table.writerow(header)
+
+        # max values
+        csv_table.writerow( [_('max')] + [ format_out.number(x + y_max[i]) for i,x in enumerate(y_mean) ] )
+
+        # mean values
+        csv_table.writerow( [_('mean')] + [ format_out.number(x) for x in y_mean ] )
+
+        # min values
+        csv_table.writerow( [_('min')] + [ format_out.number(x - y_min[i]) for i,x in enumerate(y_mean) ] )
+
+        open_file.close()
+        del csv_table
+
+        # -------------------------------------------------------------------------
         ## for climatology graphs, every 5, 10 or 15 days based to analysis interval
 
         if station.var_D.frequency_data == "daily" and not globals_vars.config_run['analysis_interval'] == "trimester":
@@ -786,8 +809,8 @@ def climatology(stations):
                         values = get_values_in_range_analysis_interval(station,'D', iter_year, month, day)
                         values = array.clean(values)
                         range_analysis_mean.append(array.mean(values))
-                        range_analysis_max.append(max(values))
-                        range_analysis_min.append(min(values))
+                        range_analysis_max.append(array.maximum(values))
+                        range_analysis_min.append(array.minimum(values))
 
                         iter_year += 1
                     y_mean.append(array.mean(range_analysis_mean))
@@ -921,6 +944,32 @@ def climatology(stations):
 
             pyplot.close('all')
 
+            # -------------------------------------------------------------------------
+            # climatology N days table (csv)
+
+            name_csv_table = _("Multiyear_climatology_table_{0}days_{1}_{2}_{3}.csv").format(globals_vars.analysis_interval_num_days, station.code, station.name, globals_vars.config_run['type_var_D'])
+            open_file = open(os.path.join(station_climatology_path,name_csv_table), 'w')
+            csv_table = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
+
+            # print header
+            header = ['']
+            for month in range(1, 13):
+                for day in get_range_analysis_interval():
+                    header.append(globals_vars.get_month_in_text(month-1) +' '+str(day))
+
+            csv_table.writerow(header)
+
+            # max values
+            csv_table.writerow( [_('max')] + [ format_out.number(x + y_max[i]) for i,x in enumerate(y_mean) ] )
+
+            # mean values
+            csv_table.writerow( [_('mean')] + [ format_out.number(x) for x in y_mean ] )
+
+            # min values
+            csv_table.writerow( [_('min')] + [ format_out.number(x - y_min[i]) for i,x in enumerate(y_mean) ] )
+
+            open_file.close()
+            del csv_table
 
     open_file_climatology_table.close()
     del csv_climatology_table
@@ -1081,7 +1130,7 @@ def shapiro_wilks_test(stations):
     = os.path.join(distribution_test_dir, _('shapiro_wilks_test_{0}.csv').format(globals_vars.config_run['type_var_D']))
 
     open_file_D = open(file_shapiro_wilks_var_D, 'w')
-    csv_file_D = csv.writer(open_file_D, delimiter=';')
+    csv_file_D = csv.writer(open_file_D, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
 
     # print header
     header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), 'W', 'P_value', 'Ho?']
@@ -1327,7 +1376,7 @@ def outliers(stations):
 
         #ax.grid(True)
         ax.autoscale(tight=True)
-        #pyplot.subplots_adjust(bottom=) #(len(max(codes_stations))/30.0))
+        #pyplot.subplots_adjust(bottom=) #(len(array.max(codes_stations))/30.0))
 
         zoom_graph(ax=ax, x_scale_below=-0.2,x_scale_above=-0.2, y_scale_below=-0.04, y_scale_above=-0.04, abs_x=True)
 
@@ -1348,16 +1397,16 @@ def outliers(stations):
 
     if globals_vars.config_run['process_period']:
         file_outliers_var_D\
-        = os.path.join(outliers_dir, _("Outliers")+"_{0}_{1}_{2}_({3}-{4}).csv".format(station.code, station.name,
+        = os.path.join(outliers_dir, _("Outliers_table")+"_{0}_({1}-{2}).csv".format(
             globals_vars.config_run['type_var_D'], globals_vars.config_run['process_period']['start'],
             globals_vars.config_run['process_period']['end']))
     else:
         file_outliers_var_D\
-        = os.path.join(outliers_dir, _("Outliers")+"_{0}_{1}_{2}.csv".format(station.code, station.name,
+        = os.path.join(outliers_dir, _("Outliers_table")+"_{0}.csv".format(
             globals_vars.config_run['type_var_D']))
 
     open_file_D = open(file_outliers_var_D, 'w')
-    csv_file_D = csv.writer(open_file_D, delimiter=';')
+    csv_file_D = csv.writer(open_file_D, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
 
     num_max_outliers = 0
     for outliers_station in outliers_all_stations:

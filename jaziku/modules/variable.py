@@ -18,25 +18,59 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 from datetime import date
+from dateutil.relativedelta import relativedelta
 from numpy import median, average, var
 from scipy.stats.stats import tstd, variation, skew, kurtosis
 
 from jaziku.modules.input import input_vars
 from jaziku.modules.input.input_check import count_null_values
-from jaziku.utils import console, array
+from jaziku.utils import console, array, globals_vars
 
 
 class Variable():
     """
     Class for save data raw, data dates, date filtered for dependent or
     independent variable of a station.
+
+    :attributes:
+        VARIABLE.type: type of variable 'D' (dependent) or 'I' (independent)
+        VARIABLE.type_series: type of series (D or I), e.g. 'SOI'
+        VARIABLE.frequency_data: frequency of data series
+        VARIABLE.file_name: the name of file of series
+        VARIABLE.file_path: the absolute path where save the file of series
+        VARIABLE.data: complete data of series
+        VARIABLE.date: complete date of series
+        plus attributes return of methods:
+            data_and_null_in_process_period()
+            do_some_statistic_of_data()
     """
+
     def __init__(self, type):
         if type in ['D','I']:
             self.type = type
         else:
             raise
+
+    def set_file(self, file):
+
+        if self.type == 'D':
+            self.file_name = os.path.basename(file)
+            self.file_path = os.path.abspath(file)
+
+        if self.type == 'I':
+
+            # read from internal variable independent files of Jaziku, check
+            # and notify if Jaziku are using the independent variable inside
+            # located in plugins/var_I/
+            if file == "internal":
+                self.file_name = globals_vars.internal_var_I_files[self.type_series]
+                self.file_path = os.path.join(globals_vars.ROOT_DIR, 'data', 'var_I', self.file_name)
+            else:
+                self.file_name = os.path.basename(file)
+                self.file_path = os.path.abspath(file)
+
 
     def read_data_from_file(self, station, process=True, messages=True):
         """
@@ -55,8 +89,10 @@ class Variable():
         if process:
             if self.type == 'D':
                 input_vars.read_var_D(station)
+                self.fill_variable(station)
             if self.type == 'I':
                 input_vars.read_var_I(station)
+                self.fill_variable(station)
 
         if messages:
             console.msg(_("done"), color='green')
@@ -65,6 +101,154 @@ class Variable():
                 console.msg(_("   the variable {0} has data daily").format(self.type), color='cyan')
             if self.frequency_data== "monthly":
                 console.msg(_("   the variable {0} has data monthly").format(self.type), color='cyan')
+
+    def fill_variable(self, station):
+        """
+        Complete and fill variable with null values if the last and/or start year
+        is not completed.
+
+        This function check is the series (var D/I) are complete in the last year
+        and start year, else Jaziku fill with null values for complete the year,
+        but Jaziku required at least January and February for the last year and
+        november and december for the start year, due the lags required these
+        values.
+        """
+
+        if self.frequency_data == "daily":
+
+            def below():
+                first_year = self.date[0].year
+                first_month = self.date[0].month
+                first_day = self.date[0].day
+                first_date = date(first_year, first_month, first_day)
+
+                # if the variable have complete data in the first year
+                if first_month == 1 and first_day == 1:
+                    return
+
+                start_date_required = date(first_year, 11, 1)
+
+                # if the variable don't have the minimum data required for the first year,
+                # this is, full data in november and december for the first year
+                if first_date > start_date_required:
+                    console.msg_error(_(
+                        "Reading var {0} from file '{1}':\n"
+                        "don't have the minimum data required (november and december)\n"
+                        "for the first year ({2}) of the series.")
+                    .format(self.type, self.file_name, first_year))
+
+                iter_date = first_date
+
+                iter_date += relativedelta(days=-1)
+
+                # fill variable for date and data for whole the first year
+                while first_year == iter_date.year:
+                    self.date.insert(0, iter_date)
+                    self.data.insert(0, float('nan'))
+                    iter_date += relativedelta(days=-1)
+
+            def above():
+                last_year = self.date[-1].year
+                last_month = self.date[-1].month
+                last_day = self.date[-1].day
+                last_date = date(last_year, last_month, last_day)
+
+                # if the variable have complete data in the last year
+                if last_month == 12 and last_day == 31:
+                    return
+
+                end_date_required = date(last_year, 3, 1) + relativedelta(days=-1) # last day of february
+
+                # if the variable don't have the minimum data required for the last year,
+                # this is, full data in january and february for the last year
+                if last_date < end_date_required:
+                    console.msg_error(_(
+                        "Reading var {0} from file '{1}':\n"
+                        "don't have the minimum data required (january and february)\n"
+                        "for the last year ({2}) of the series.")
+                    .format(self.type, self.file_name, last_year))
+
+                iter_date = last_date
+
+                iter_date += relativedelta(days=1)
+
+                # fill variable for date and data for whole the last year
+                while last_year == iter_date.year:
+                    self.date.append(iter_date)
+                    self.data.append(float('nan'))
+                    iter_date += relativedelta(days=1)
+
+            # fill data below
+            below()
+            # fill data above
+            above()
+
+        if self.frequency_data== "monthly":
+
+            def below():
+                first_year = self.date[0].year
+                first_month = self.date[0].month
+                first_date = date(first_year, first_month, 1)
+
+                # if the variable have complete data in the first year
+                if first_month == 1:
+                    return
+
+                start_date_required = date(first_year, 11, 1)
+
+                # if the variable don't have the minimum data required for the first year,
+                # this is, full data in november and december for the first year
+                if first_date > start_date_required:
+                    console.msg_error(_(
+                        "Reading var {0} from file '{1}':\n"
+                        "don't have the minimum data required (november and december)\n"
+                        "for the first year ({2}) of the series.")
+                    .format(self.type, self.file_name, first_year))
+
+                iter_date = first_date
+
+                iter_date += relativedelta(months=-1)
+
+                # fill variable for date and data for whole the first year
+                while first_year == iter_date.year:
+                    self.date.insert(0, iter_date)
+                    self.data.insert(0, float('nan'))
+                    iter_date += relativedelta(months=-1)
+
+            def above():
+                last_year = self.date[-1].year
+                last_month = self.date[-1].month
+                last_date = date(last_year, last_month, 1)
+
+                # if the variable have complete data in the last year
+                if last_month == 12:
+                    return
+
+                end_date_required = date(last_year, 2, 1)
+
+                # if the variable don't have the minimum data required for the last year,
+                # this is, full data in january and february for the last year
+                if last_date < end_date_required:
+                    console.msg_error(_(
+                        "Reading var {0} from file '{1}':\n"
+                        "don't have the minimum data required (january and february)\n"
+                        "for the last year ({2}) of the series.")
+                    .format(self.type, self.file_name, last_year))
+
+                iter_date = last_date
+
+                iter_date += relativedelta(months=1)
+
+                # fill variable for date and data for whole the last year
+                while last_year == iter_date.year:
+                    self.date.append(iter_date)
+                    self.data.append(float('nan'))
+                    iter_date += relativedelta(months=1)
+
+            # fill data below
+            below()
+            # fill data above
+            above()
 
     def daily2monthly(self):
         """
@@ -122,10 +306,10 @@ class Variable():
         # delete all valid nulls and clean
         self.data_filtered_in_process_period = array.clean(self.data_in_process_period)
 
-    def do_some_statistic_of_data(self, station):
+    def do_some_statistic_of_data(self):
         """
-        Calculate several statistics based on data,
-        this is mainly used in data analysis.
+        Calculate several statistics based on data series,
+        this is mainly used in data analysis module.
 
         :return by reference:
             [VARIABLE.] size_data, maximum, minimum,
@@ -136,9 +320,9 @@ class Variable():
         # size data
         self.size_data = len(self.data_filtered_in_process_period)
         # maximum
-        self.maximum = max(self.data_filtered_in_process_period)
+        self.maximum = array.maximum(self.data_filtered_in_process_period)
         # minimum
-        self.minimum = min(self.data_filtered_in_process_period)
+        self.minimum = array.minimum(self.data_filtered_in_process_period)
         # average
         self.average = average(self.data_filtered_in_process_period)
         # median
