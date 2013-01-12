@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #==============================================================================
-# Copyright © 2011-2012 IDEAM
+# Copyright © 2011-2013 IDEAM
 # Instituto de Hidrología, Meteorología y Estudios Ambientales
 # Carrera 10 No. 20-30
 # Bogotá, Colombia
@@ -69,7 +69,7 @@ DESCRIPTION:
     and Central and Eastern North American Precipitation. Journal of Climate,
     11:1812 – 1835, 1998.
 
-Copyright © 2011-2012 IDEAM
+Copyright © 2011-2013 IDEAM
 Instituto de Hidrología, Meteorología y Estudios Ambientales
 Carrera 10 No. 20-30
 Bogotá, Colombia
@@ -162,7 +162,7 @@ def main():
             "#               for the teleconnections analysis.              #\n"
             "#                                                              #\n"
             "#                 Version {0} - {1}\t               #\n"
-            "#           Copyright (C) 2011-2012 IDEAM - Colombia           #\n"
+            "#           Copyright (C) 2011-2013 IDEAM - Colombia           #\n"
             "################################################################")\
     .format(globals_vars.VERSION, globals_vars.COMPILE_DATE)
 
