@@ -31,7 +31,7 @@ PROG_NAME = "jaziku"
 
 VERSION = "0.5.2"
 
-COMPILE_DATE = "05/01/2013"
+COMPILE_DATE = "12/01/2013"
 
 ROOT_DIR = None
 
