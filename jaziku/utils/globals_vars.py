@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright © 2011-2012 IDEAM
+# Copyright © 2011-2013 IDEAM
 #
 # This file is part of Jaziku.
 #
@@ -29,9 +29,9 @@ import math
 
 PROG_NAME = "jaziku"
 
-VERSION = "0.5.2"
+VERSION = "0.6.0"
 
-COMPILE_DATE = "05/01/2013"
+COMPILE_DATE = "12/01/2013"
 
 ROOT_DIR = None
 
@@ -145,7 +145,7 @@ internal_var_I_files = {"ONI1": "ONI1_1950_2012_CPC.txt",
                         "ASST3": "ASST3_1982_2012_CPC_NCEP_NOAA.txt",
                         "ASST4": "ASST4_1982_2012_CPC_NCEP_NOAA.txt",
                         "ASST34": "ASST34_1982_2012_CPC_NCEP_NOAA.txt",
-                        "ARH": "ARH_DIPOLE_1979_2009_NCEPNCAR_REAL.txt",  #TODO:
+                        "ARH": "ARH_DIPOLE_1979_2009_NCEPNCAR_REAL.txt", #TODO:
                         "NAO": "NAO_1950_2012_CPC_NCEP_NOAA.txt",
                         "QBO": "QBO_1950_2012_ESRL_NOAA.txt",
                         "SST_CAR": "SST_CAR_1951_2010_ESRL_NOAA.txt",
@@ -170,7 +170,7 @@ internal_var_I_urls = {"ONI1": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa
                        "ASST3": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
                        "ASST4": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
                        "ASST34": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-                       "ARH": "http://goo.gl/5oiZJ",  # http://nomad1.ncep.noaa.gov/ncep_data/index.html
+                       "ARH": "http://goo.gl/5oiZJ", # http://nomad1.ncep.noaa.gov/ncep_data/index.html
                        "NAO": "http://goo.gl/1uDjY", # http://www.cpc.ncep.noaa.gov/products/precip/CWlink/pna/nao.shtml
                        "QBO": "http://goo.gl/UO6PX", # http://www.esrl.noaa.gov/psd/data/climateindices/list/
                        "SST_CAR": "http://goo.gl/BsAeN", # http://www.esrl.noaa.gov/psd/forecasts/sstlim/forcar.html
@@ -210,14 +210,14 @@ phenomenon_above = None
 
 def graphs_axis_properties(afs=15, ma='center'):
     axis_properties = {}
-    axis_properties["fontsize"]=afs
-    axis_properties["multialignment"]=ma
+    axis_properties["fontsize"] = afs
+    axis_properties["multialignment"] = ma
     return axis_properties
 
 def graphs_title_properties(tfs=18, ma='center'):
     title_properties = {}
-    title_properties["fontsize"]=tfs
-    title_properties["multialignment"]=ma
+    title_properties["fontsize"] = tfs
+    title_properties["multialignment"] = ma
     return title_properties
 
 

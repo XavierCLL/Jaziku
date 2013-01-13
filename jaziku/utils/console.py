@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright © 2011-2012 IDEAM
+# Copyright © 2011-2013 IDEAM
 #
 # This file is part of Jaziku.
 #
@@ -73,7 +73,7 @@ def msg(text, color=False, newline=True, indentation=0):
 
 def msg_footer(text=False):
 
-    footer = _("\nJaziku, version {0} - {1}.\nCopyright (C) 2011-2012 IDEAM - Colombia")\
+    footer = _("\nJaziku, version {0} - {1}.\nCopyright (C) 2011-2013 IDEAM - Colombia")\
               .format(globals_vars.VERSION, globals_vars.COMPILE_DATE)
 
     if text:
