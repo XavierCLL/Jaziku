@@ -529,8 +529,8 @@ def check():
     else:
         if not os.path.isfile(globals_vars.config_run["path_to_file_var_I"]):
             console.msg_error_configuration('path_to_file_var_I',
-                _("Can't open file '{0}' for var I, \nplease check filename and check path relative (to runfile) or\n"
-                  "absolute to var I. If you want run var I with internals files\n"
+                _("Can't open file '{0}' for var I, \nplease check filename and check that its path is relative (to runfile) or\n"
+                  "absolute. If you want run var I with internals files\n"
                   "of jaziku you need set 'PATH TO FILE VAR I' as 'internal'").format(globals_vars.config_run["path_to_file_var_I"]))
 
     # -------------------------------------------------------------------------

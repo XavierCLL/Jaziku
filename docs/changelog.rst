@@ -37,6 +37,7 @@ fixes
   paths to absolute base in runfile directory, this problem present when
   run jaziku in anywhere directory with absolute path to runfile (now it is
   possible)
+- Check if var D exist
 
 0.5.1 (**2012-12-05**)
 ----------------------
