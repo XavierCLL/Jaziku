@@ -7,6 +7,6 @@ sphinx-apidoc2 -o docs/apidoc .
 cd docs/apidoc
 
 rm -rf jaziku.data*
-rm -rd html
+rm -rf html
 
 sphinx-build2 . html
