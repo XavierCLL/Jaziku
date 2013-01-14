@@ -18,8 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-
-
 import csv
 import os
 import sys
@@ -74,7 +72,7 @@ def msg(text, color=False, newline=True, indentation=0):
 def msg_footer(text=False):
 
     footer = _("\nJaziku, version {0} - {1}.\nCopyright (C) 2011-2013 IDEAM - Colombia")\
-              .format(globals_vars.VERSION, globals_vars.COMPILE_DATE)
+              .format(globals_vars.VERSION, globals_vars.VERSION_DATE)
 
     if text:
         return footer
@@ -115,7 +113,7 @@ def msg_error_configuration(variable, text_error, show_settings=True):
         from jaziku.utils import settings_run
         settings_run.show(stop_in=variable)
 
-    runfile_open = open(globals_vars.runfile_path, 'rb')
+    runfile_open = open(globals_vars.ARGS.runfile, 'rb')
     runfile = (x.replace('\0', '') for x in runfile_open)
     runfile = csv.reader(runfile, delimiter=globals_vars.INPUT_CSV_DELIMITER)
 
@@ -131,6 +129,9 @@ def msg_error_configuration(variable, text_error, show_settings=True):
     # else
     msg_error(_("Error in configuration run from the runfile:\n")
               + "\n" + str(text_error), False)
+
+    runfile_open.close()
+    del runfile
 
 #==============================================================================
 # OTHERS

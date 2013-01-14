@@ -242,7 +242,7 @@ def maps(grid):
 
         ## COLORMAP
         # setting path to colormap
-        path_to_colormap = os.path.join(globals_vars.ROOT_DIR, 'data', 'maps', 'colormaps')
+        path_to_colormap = os.path.join(globals_vars.JAZIKU_DIR, 'data', 'maps', 'colormaps')
         # set colormap ncl variable into variables system
         os.environ["NCARG_COLORMAPS"] = path_to_colormap
 

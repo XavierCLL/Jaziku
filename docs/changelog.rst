@@ -33,6 +33,10 @@ fixes
 - Some adjusts of console text
 - Clean/delete some old code needless
 - Fix check thresholds as default for internal_var_I_types
+- Check if the paths for var D and I is absolute else jaziku convert
+  paths to absolute base in runfile directory, this problem present when
+  run jaziku in anywhere directory with absolute path to runfile (now it is
+  possible)
 
 0.5.1 (**2012-12-05**)
 ----------------------
