@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-12 13:11-0500\n"
-"PO-Revision-Date: 2013-01-12 13:09-0500\n"
+"POT-Creation-Date: 2013-01-13 19:50-0500\n"
+"PO-Revision-Date: 2013-01-13 19:51-0500\n"
 "Last-Translator: Xavier Corredor Llano <xavier.corredor.llano@gmail.com>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -58,7 +58,7 @@ msgstr " (idioma '{0}' no se ha traducido aún)"
 msgid " (other languages were not detected)"
 msgstr " (otros idiomas no se detectaron)"
 
-#: jaziku/utils/console.py:76
+#: jaziku/utils/console.py:74
 msgid ""
 "\n"
 "Jaziku, version {0} - {1}.\n"
@@ -68,7 +68,7 @@ msgstr ""
 "Jaziku, versión {0} - {1}.\n"
 "Copyright (C) 2011-2013 IDEAM - Colombia"
 
-#: jaziku/utils/console.py:91
+#: jaziku/utils/console.py:89
 msgid ""
 "fail\n"
 "\n"
@@ -82,7 +82,7 @@ msgstr ""
 "{0}\n"
 "\n"
 
-#: jaziku/utils/console.py:93
+#: jaziku/utils/console.py:91
 msgid ""
 "\n"
 "ERROR:\n"
@@ -92,7 +92,7 @@ msgstr ""
 "ERROR:\n"
 "{0}\n"
 
-#: jaziku/utils/console.py:94
+#: jaziku/utils/console.py:92
 msgid ""
 "Please check the error and read the manual if is necessary.\n"
 "If this is an error of Jaziku, please report it with Jaziku developers."
@@ -100,15 +100,15 @@ msgstr ""
 "Por favor revisar el error o leer el manual si es necesario.\n"
 "Si esto es un error de Jaziku, por favor reportarlo con los desarrolladores."
 
-#: jaziku/utils/console.py:105
+#: jaziku/utils/console.py:103
 msgid "Reading the station from the runfile in line {0}:\n"
 msgstr "Leyendo la estación desde el runfile en la linea {0}:\n"
 
-#: jaziku/utils/console.py:127
+#: jaziku/utils/console.py:125
 msgid "The Configuration run from the runfile in line {0}:\n"
 msgstr "La configuración de corrida desde el runfile en la linea {0}:\n"
 
-#: jaziku/utils/console.py:132
+#: jaziku/utils/console.py:130
 msgid "Error in configuration run from the runfile:\n"
 msgstr "Error en la configuración de corrida desde el runfile:\n"
 
@@ -351,14 +351,17 @@ msgstr ""
 #: jaziku/utils/settings_run.py:532
 msgid ""
 "Can't open file '{0}' for var I, \n"
-"if you want run var I with internals files of jaziku\n"
-"you need set 'PATH TO FILE VAR I' as 'internal'"
+"please check filename and check that its path is relative (to runfile) or\n"
+"absolute. If you want run var I with internals files\n"
+"of jaziku you need set 'PATH TO FILE VAR I' as 'internal'"
 msgstr ""
 "No se puede abrir el archivo '{0}' para la var I, \n"
-"si quiere correr var I con archivos internos de jaziku\n"
+"por favor comprobar el nombre del archivo y verificar\n"
+"que su ruta sea relativa (al runfile) o absoluta.\n"
+"Si quiere correr var I con archivos internos de jaziku\n"
 "necesita de asignar a 'PATH TO FILE VAR I' como 'internal'"
 
-#: jaziku/utils/settings_run.py:542 jaziku/utils/settings_run.py:546
+#: jaziku/utils/settings_run.py:543 jaziku/utils/settings_run.py:547
 msgid ""
 "The thresholds can't be define as 'default' if the\n"
 "type of independent variable not is valid internal type."
@@ -367,7 +370,7 @@ msgstr ""
 "si el tipo de la variable independiente no es un tipo\n"
 "interno valido."
 
-#: jaziku/utils/settings_run.py:560
+#: jaziku/utils/settings_run.py:561
 msgid ""
 "The sum for the 3 values of phenomenon for lag 0\n"
 "in 'forecasting options' in runfile must be\n"
@@ -377,7 +380,7 @@ msgstr ""
 "rezago 0 en 'forecasting options' en el runfile\n"
 "deben ser iguales a 100"
 
-#: jaziku/utils/settings_run.py:569
+#: jaziku/utils/settings_run.py:570
 msgid ""
 "The sum for the 3 values of phenomenon for lag 1\n"
 "in 'forecasting options' in runfile must be\n"
@@ -387,7 +390,7 @@ msgstr ""
 "rezago 1 en 'forecasting options' en el runfile\n"
 "deben ser iguales a 100"
 
-#: jaziku/utils/settings_run.py:578
+#: jaziku/utils/settings_run.py:579
 msgid ""
 "The sum for the 3 values of phenomenon for lag 2\n"
 "in 'forecasting options' in runfile must be\n"
@@ -397,7 +400,7 @@ msgstr ""
 "rezago 2 en 'forecasting options' en el runfile\n"
 "deben ser iguales a 100"
 
-#: jaziku/utils/settings_run.py:584
+#: jaziku/utils/settings_run.py:585
 msgid ""
 "\n"
 "Checking the stations list:"
@@ -405,7 +408,7 @@ msgstr ""
 "\n"
 "Comprobando la lista de estaciones:"
 
-#: jaziku/utils/settings_run.py:595
+#: jaziku/utils/settings_run.py:596
 msgid ""
 "The combination of the code and name of the station can't repeat,\n"
 "many result will be replaced with the same code-name of station."
@@ -414,11 +417,11 @@ msgstr ""
 "no se pueden repetir, muchos resultados podrían ser\n"
 "reemplazados con el mismo código-nombre de la estación."
 
-#: jaziku/utils/settings_run.py:606 jaziku/utils/settings_run.py:613
+#: jaziku/utils/settings_run.py:607 jaziku/utils/settings_run.py:614
 msgid "WARNING:"
 msgstr "ADVERTENCIA:"
 
-#: jaziku/utils/settings_run.py:607
+#: jaziku/utils/settings_run.py:608
 msgid ""
 "   The code {0} of the station {1} is repeat\n"
 "   with other stations, is recommend that the code and name\n"
@@ -430,7 +433,7 @@ msgstr ""
 "   y el nombre de la estaciones sean diferentes. Solo\n"
 "   es una recomendación, puede continuar."
 
-#: jaziku/utils/settings_run.py:614
+#: jaziku/utils/settings_run.py:615
 msgid ""
 "   The name {0} of the station with code {1} is repeat\n"
 "   with other stations, is recommend that the code and name\n"
@@ -442,11 +445,11 @@ msgstr ""
 "   el código y el nombre de la estaciones sean diferentes.\n"
 "   Solo es una recomendación, puede continuar."
 
-#: jaziku/utils/settings_run.py:624 jaziku/modules/input/input_check.py:83
+#: jaziku/utils/settings_run.py:625 jaziku/modules/input/input_check.py:83
 #: jaziku/modules/forecasting/forecasting.py:136
 #: jaziku/modules/climate/climate.py:73 jaziku/modules/maps/maps.py:67
 #: jaziku/modules/maps/maps.py:380 jaziku/modules/maps/maps.py:491
-#: jaziku/modules/maps/maps.py:548 jaziku/modules/variable.py:98
+#: jaziku/modules/maps/maps.py:548 jaziku/modules/variable.py:106
 #: jaziku/modules/data_analysis/data_analysis.py:56
 #: jaziku/modules/data_analysis/eda.py:154
 #: jaziku/modules/data_analysis/eda.py:160
@@ -459,11 +462,11 @@ msgstr ""
 msgid "done"
 msgstr "hecho"
 
-#: jaziku/utils/settings_run.py:657
+#: jaziku/utils/settings_run.py:658
 msgid "Please respond with 'y' or 'n'.\n"
 msgstr "Por favor responder con 'y' o 'n'.\n"
 
-#: jaziku/utils/settings_run.py:663
+#: jaziku/utils/settings_run.py:664
 msgid ""
 "\n"
 "Please check the configuration to run, continue?"
@@ -471,7 +474,7 @@ msgstr ""
 "\n"
 "Por favor revise la configuración de corrida, ¿desea continuar? "
 
-#: jaziku/utils/settings_run.py:666
+#: jaziku/utils/settings_run.py:667
 msgid ""
 "\n"
 "exit"
@@ -479,99 +482,99 @@ msgstr ""
 "\n"
 "saliendo"
 
-#: jaziku/utils/globals_vars.py:81 jaziku/utils/globals_vars.py:83
+#: jaziku/utils/globals_vars.py:85 jaziku/utils/globals_vars.py:87
 msgid "NDJ"
 msgstr "NDE"
 
-#: jaziku/utils/globals_vars.py:81 jaziku/utils/globals_vars.py:83
+#: jaziku/utils/globals_vars.py:85 jaziku/utils/globals_vars.py:87
 msgid "DJF"
 msgstr "DEF"
 
-#: jaziku/utils/globals_vars.py:81
+#: jaziku/utils/globals_vars.py:85
 msgid "JFM"
 msgstr "EFM"
 
-#: jaziku/utils/globals_vars.py:81
+#: jaziku/utils/globals_vars.py:85
 msgid "FMA"
 msgstr "FMA"
 
-#: jaziku/utils/globals_vars.py:81
+#: jaziku/utils/globals_vars.py:85
 msgid "MAM"
 msgstr "MAM"
 
-#: jaziku/utils/globals_vars.py:82
+#: jaziku/utils/globals_vars.py:86
 msgid "AMJ"
 msgstr "AMJ"
 
-#: jaziku/utils/globals_vars.py:82
+#: jaziku/utils/globals_vars.py:86
 msgid "MJJ"
 msgstr "MJJ"
 
-#: jaziku/utils/globals_vars.py:82
+#: jaziku/utils/globals_vars.py:86
 msgid "JJA"
 msgstr "JJA"
 
-#: jaziku/utils/globals_vars.py:82
+#: jaziku/utils/globals_vars.py:86
 msgid "JAS"
 msgstr "JAS"
 
-#: jaziku/utils/globals_vars.py:82
+#: jaziku/utils/globals_vars.py:86
 msgid "ASO"
 msgstr "ASO"
 
-#: jaziku/utils/globals_vars.py:83
+#: jaziku/utils/globals_vars.py:87
 msgid "SON"
 msgstr "SON"
 
-#: jaziku/utils/globals_vars.py:83
+#: jaziku/utils/globals_vars.py:87
 msgid "OND"
 msgstr "OND"
 
-#: jaziku/utils/globals_vars.py:89 jaziku/utils/globals_vars.py:91
+#: jaziku/utils/globals_vars.py:93 jaziku/utils/globals_vars.py:95
 msgid "Nov"
 msgstr "Nov"
 
-#: jaziku/utils/globals_vars.py:89 jaziku/utils/globals_vars.py:91
+#: jaziku/utils/globals_vars.py:93 jaziku/utils/globals_vars.py:95
 msgid "Dec"
 msgstr "Dec"
 
-#: jaziku/utils/globals_vars.py:89
+#: jaziku/utils/globals_vars.py:93
 msgid "Jan"
 msgstr "Ene"
 
-#: jaziku/utils/globals_vars.py:89
+#: jaziku/utils/globals_vars.py:93
 msgid "Feb"
 msgstr "Feb"
 
-#: jaziku/utils/globals_vars.py:89
+#: jaziku/utils/globals_vars.py:93
 msgid "Mar"
 msgstr "Mar"
 
-#: jaziku/utils/globals_vars.py:90
+#: jaziku/utils/globals_vars.py:94
 msgid "Apr"
 msgstr "Abr"
 
-#: jaziku/utils/globals_vars.py:90
+#: jaziku/utils/globals_vars.py:94
 msgid "May"
 msgstr "May"
 
-#: jaziku/utils/globals_vars.py:90
+#: jaziku/utils/globals_vars.py:94
 msgid "Jun"
 msgstr "Jun"
 
-#: jaziku/utils/globals_vars.py:90
+#: jaziku/utils/globals_vars.py:94
 msgid "Jul"
 msgstr "Jul"
 
-#: jaziku/utils/globals_vars.py:90
+#: jaziku/utils/globals_vars.py:94
 msgid "Aug"
 msgstr "Ago"
 
-#: jaziku/utils/globals_vars.py:91
+#: jaziku/utils/globals_vars.py:95
 msgid "Sep"
 msgstr "Sep"
 
-#: jaziku/utils/globals_vars.py:91
+#: jaziku/utils/globals_vars.py:95
 msgid "Oct"
 msgstr "Oct"
 
@@ -737,7 +740,7 @@ msgstr ""
 "de valores dentro del periodo común, por consiguiente, para\n"
 "Jaziku los datos no son consistentes para ser procesados."
 
-#: jaziku/modules/input/input_runfile.py:68
+#: jaziku/modules/input/input_runfile.py:79
 msgid ""
 "error read line in 'CONFIGURATION RUN' in runfile, line {0}:\n"
 "{1}, no was defined."
@@ -745,7 +748,7 @@ msgstr ""
 "error de lectura en 'CONFIGURATION RUN' en el runfile, linea {0}:\n"
 "{1}, no se ha definido."
 
-#: jaziku/modules/input/input_runfile.py:94
+#: jaziku/modules/input/input_runfile.py:105
 msgid ""
 "error read line in 'CONFIGURATION RUN' in runfile, line {0}:\n"
 "{1}"
@@ -753,7 +756,7 @@ msgstr ""
 "error de lectura en 'CONFIGURATION RUN' en el runfile, linea {0}:\n"
 "{1}"
 
-#: jaziku/modules/input/input_runfile.py:124
+#: jaziku/modules/input/input_runfile.py:135
 msgid ""
 "error read line in 'GRIDS LIST' in runfile, line {0}:\n"
 "{1}"
@@ -761,7 +764,7 @@ msgstr ""
 "error de lectura en 'GRIDS LIST' ' en el runfile, linea {0}:\n"
 "{1}"
 
-#: jaziku/modules/input/input_runfile.py:155
+#: jaziku/modules/input/input_runfile.py:169
 msgid ""
 "Problems with the 9 probability values for forecasting process\n"
 "defined in runfile, these must be a numbers, please check it."
@@ -770,7 +773,7 @@ msgstr ""
 "de pronostico definido en el runfile, éstos deben de ser números,\n"
 "por favor verifiquelos."
 
-#: jaziku/modules/input/input_runfile.py:222
+#: jaziku/modules/input/input_runfile.py:242
 msgid ""
 "Problems with the numbers of parameters inside\n"
 "the stations list need for run climate process.\n"
@@ -795,8 +798,20 @@ msgid "force all ask to default answer for continue"
 msgstr ""
 "forzar todas las preguntas con una respuesta por default para continuar"
 
-#: jaziku/modules/input/input_vars.py:87
-#: jaziku/modules/input/input_vars.py:200
+#: jaziku/modules/input/input_vars.py:52
+msgid ""
+"Reading the station: {0} - {1}\n"
+"Can't open file '{2}' for var D, \n"
+"please check filename and check that its path is relative\n"
+"(to runfile) or absolute."
+msgstr ""
+"Leyendo la estación: {0} - {1}\n"
+"No se puede abrir el archivo '{2}' para la var D, \n"
+"por favor comprobar el nombre del archivo y verificar\n"
+"que su ruta sea relativa (al runfile) o absoluta."
+
+#: jaziku/modules/input/input_vars.py:94
+#: jaziku/modules/input/input_vars.py:207
 msgid ""
 "Reading from file '{0}' in line: {1}\n"
 "\n"
@@ -809,7 +824,7 @@ msgstr ""
 "desconocidos, por favor revisa manualmente esa linea, reparelo \n"
 "y ejecute de nuevo."
 
-#: jaziku/modules/input/input_vars.py:111
+#: jaziku/modules/input/input_vars.py:118
 msgid ""
 "Reading var D from file '{0}' in line: {1}\n"
 "\n"
@@ -819,7 +834,7 @@ msgstr ""
 "\n"
 "Jaziku detectó un valor perdido para la fecha: {2}"
 
-#: jaziku/modules/input/input_vars.py:123
+#: jaziku/modules/input/input_vars.py:130
 msgid ""
 "Reading var D from file '{0}' in line: {1}\n"
 "\n"
@@ -829,8 +844,8 @@ msgstr ""
 "\n"
 "Jaziku detectó un valor perdido para la fecha: {2}-{3}"
 
-#: jaziku/modules/input/input_vars.py:142
-#: jaziku/modules/input/input_vars.py:252
+#: jaziku/modules/input/input_vars.py:149
+#: jaziku/modules/input/input_vars.py:259
 msgid ""
 "Reading from file '{0}' in line: {1}\n"
 "\n"
@@ -840,7 +855,7 @@ msgstr ""
 "\n"
 "{2}"
 
-#: jaziku/modules/input/input_vars.py:224
+#: jaziku/modules/input/input_vars.py:231
 msgid ""
 "Reading var I from file '{0}' in line: {1}\n"
 "\n"
@@ -850,7 +865,7 @@ msgstr ""
 "\n"
 "Jaziku detectó un valor perdido para la fecha: {2}"
 
-#: jaziku/modules/input/input_vars.py:236
+#: jaziku/modules/input/input_vars.py:243
 msgid ""
 "Reading var I from file '{0}' in line: {1}\n"
 "\n"
@@ -1638,19 +1653,19 @@ msgstr "Procesando mapas para pronóstico:"
 msgid "Map_lag_{0}_{1}"
 msgstr "Mapa_rez_{0}_{1}"
 
-#: jaziku/modules/variable.py:87
+#: jaziku/modules/variable.py:95
 msgid "Read and check (range validation) for var {0} ... "
 msgstr "Lectura y comprobación(rango de validación) var {0} ..... "
 
-#: jaziku/modules/variable.py:101
+#: jaziku/modules/variable.py:109
 msgid "   the variable {0} has data daily"
 msgstr "   La variable {0} tiene datos diarios"
 
-#: jaziku/modules/variable.py:103
+#: jaziku/modules/variable.py:111
 msgid "   the variable {0} has data monthly"
 msgstr "   La variable {0} tiene datos mensuales"
 
-#: jaziku/modules/variable.py:135 jaziku/modules/variable.py:203
+#: jaziku/modules/variable.py:143 jaziku/modules/variable.py:211
 msgid ""
 "Reading var {0} from file '{1}':\n"
 "don't have the minimum data required (november and december)\n"
@@ -1660,7 +1675,7 @@ msgstr ""
 "no tiene los datos mínimos requeridos (noviembre y diciembre)\n"
 "para el primer año ({2}) de la serie."
 
-#: jaziku/modules/variable.py:166 jaziku/modules/variable.py:233
+#: jaziku/modules/variable.py:174 jaziku/modules/variable.py:241
 msgid ""
 "Reading var {0} from file '{1}':\n"
 "don't have the minimum data required (january and february)\n"
@@ -2218,11 +2233,11 @@ msgstr ""
 "La version de python que tienes es {0}, por favor usa Jaziku con python v2.6 "
 "o v2.7"
 
-#: jaziku/jaziku.py:138
+#: jaziku/jaziku.py:139
 msgid "[runfile] no such file or directory: {0}"
 msgstr "[runfile] no existe el archivo o directorio: {0}"
 
-#: jaziku/jaziku.py:159
+#: jaziku/jaziku.py:152
 msgid ""
 "\n"
 "############################ JAZIKU ############################\n"
@@ -2242,7 +2257,7 @@ msgstr ""
 "#           Copyright (C) 2011-2013 IDEAM - Colombia           #\n"
 "################################################################"
 
-#: jaziku/jaziku.py:190
+#: jaziku/jaziku.py:183
 msgid ""
 "\n"
 "\n"
@@ -2259,15 +2274,15 @@ msgstr ""
 "# estadística preliminar de las series de tiempo.              #\n"
 "################################################################\n"
 
-#: jaziku/jaziku.py:198
+#: jaziku/jaziku.py:191
 msgid "Jaziku_Data_Analysis"
 msgstr "Jaziku_Análisis_de_Datos"
 
-#: jaziku/jaziku.py:200
+#: jaziku/jaziku.py:193
 msgid "Saving the result for data analysis in:"
-msgstr "Guardando los resultados para el clima en:"
+msgstr "Guardando los resultados para el análisis de datos en:"
 
-#: jaziku/jaziku.py:205
+#: jaziku/jaziku.py:198
 msgid ""
 "\n"
 " > WARNING: the output directory for data analysis process\n"
@@ -2279,7 +2294,7 @@ msgstr ""
 "   ya existe, Jaziku continua pero el resultado puede mezclarse\n"
 "   o sobrescribir la corrida anterior."
 
-#: jaziku/jaziku.py:219
+#: jaziku/jaziku.py:212
 msgid ""
 "\n"
 "\n"
@@ -2305,15 +2320,15 @@ msgstr ""
 "# variable independiente                                       #\n"
 "################################################################\n"
 
-#: jaziku/jaziku.py:231
+#: jaziku/jaziku.py:224
 msgid "Jaziku_Climate"
 msgstr "Jaziku_Clima"
 
-#: jaziku/jaziku.py:233
+#: jaziku/jaziku.py:226
 msgid "Saving the result for climate in:"
 msgstr "Guardando los resultados para el clima en:"
 
-#: jaziku/jaziku.py:238
+#: jaziku/jaziku.py:231
 msgid ""
 "\n"
 " > WARNING: the output directory for climate process\n"
@@ -2325,11 +2340,11 @@ msgstr ""
 "   ya existe, Jaziku continua pero el resultado puede mezclarse\n"
 "   o sobrescribir la corrida anterior."
 
-#: jaziku/jaziku.py:246
+#: jaziku/jaziku.py:239
 msgid "Jaziku_Forecasting"
 msgstr "Jaziku_Pronostico"
 
-#: jaziku/jaziku.py:248
+#: jaziku/jaziku.py:241
 msgid ""
 "\n"
 "Saving the result for forecasting in:"
@@ -2337,7 +2352,7 @@ msgstr ""
 "\n"
 "Guardando los resultados para el pronóstico en:"
 
-#: jaziku/jaziku.py:253
+#: jaziku/jaziku.py:246
 msgid ""
 "\n"
 " > WARNING: the output directory for forecasting process\n"
@@ -2349,7 +2364,7 @@ msgstr ""
 "   ya existe, Jaziku continua pero el resultado puede mezclarse\n"
 "   o sobrescribir la corrida anterior."
 
-#: jaziku/jaziku.py:265
+#: jaziku/jaziku.py:258
 msgid ""
 "\n"
 "################# STATION: {0} ({1})"
@@ -2357,7 +2372,7 @@ msgstr ""
 "\n"
 "################# ESTACIÓN: {0} ({1})"
 
-#: jaziku/jaziku.py:274
+#: jaziku/jaziku.py:267
 msgid ""
 "\n"
 "{0} station processed."
@@ -2365,7 +2380,7 @@ msgstr ""
 "\n"
 "{0} estación procesada."
 
-#: jaziku/jaziku.py:275
+#: jaziku/jaziku.py:268
 msgid ""
 "\n"
 "{0} stations processed."
@@ -2373,7 +2388,7 @@ msgstr ""
 "\n"
 "{0} estaciónes procesadas."
 
-#: jaziku/jaziku.py:290
+#: jaziku/jaziku.py:283
 msgid ""
 "\n"
 "\n"
@@ -2394,7 +2409,7 @@ msgstr ""
 "# lineal.                                                      #\n"
 "################################################################"
 
-#: jaziku/jaziku.py:307
+#: jaziku/jaziku.py:300
 msgid ""
 "\n"
 "{0} map created for {1}"
@@ -2402,7 +2417,7 @@ msgstr ""
 "\n"
 "{0} mapa creado para {1}"
 
-#: jaziku/jaziku.py:308
+#: jaziku/jaziku.py:301
 msgid ""
 "\n"
 "{0} maps created for {1}"
@@ -2410,7 +2425,7 @@ msgstr ""
 "\n"
 "{0} mapas creados para {1}"
 
-#: jaziku/jaziku.py:311
+#: jaziku/jaziku.py:304
 msgid ""
 "\n"
 "Process completed!"
@@ -2418,7 +2433,7 @@ msgstr ""
 "\n"
 "Proceso completado!"
 
-#: jaziku/jaziku.py:313
+#: jaziku/jaziku.py:306
 msgid "Good bye :)"
 msgstr "Adiós :)"
 
