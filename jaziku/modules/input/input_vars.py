@@ -46,6 +46,13 @@ def read_var_D(station):
     date_D = []
     var_D = []
 
+    # check first if file exist
+    if not os.path.isfile(station.var_D.file_path):
+        console.msg_error(
+            _("Reading the station: {0} - {1}\n"
+              "Can't open file '{2}' for var D, \nplease check filename and check that its path is relative\n"
+              "(to runfile) or absolute.").format(station.code, station.name, station.var_D.file_path))
+
     open_file_D = open(station.var_D.file_path, 'r')
 
     # The series accept three delimiters: spaces (' '), tabulation ('\t') or semi-colon (';')

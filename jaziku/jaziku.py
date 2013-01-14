@@ -121,29 +121,22 @@ def main():
     sys.setdefaultencoding("utf-8")
 
     #set the root directory where jaziku was installed
-    globals_vars.ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
+    globals_vars.JAZIKU_DIR = os.path.dirname(os.path.realpath(__file__))
 
     # Parser and check arguments
-    globals_vars.args = input_arg.arguments.parse_args()
+    globals_vars.ARGS = input_arg.arguments.parse_args()
 
     # -------------------------------------------------------------------------
     # READ RUNFILE
     # reading configuration run, list of grids and stations from runfile
 
-    # path to runfile
-    globals_vars.runfile_path = os.path.join(globals_vars.args.runfile)
+    # absolute directory to save all result,
+    # this is absolute directory where is the runfile + filename of runfile
+    globals_vars.WORK_DIR = os.path.abspath(os.path.splitext(globals_vars.ARGS.runfile)[0])
 
     # test if runfile exist
-    if not os.path.isfile(globals_vars.runfile_path):
-        console.msg_error(_("[runfile] no such file or directory: {0}".format(globals_vars.runfile_path)),False)
-
-    runfile_open = open(globals_vars.runfile_path, 'rb')
-
-    # delete all NULL byte inside the runfile.csv
-    runfile = (x.replace('\0', '') for x in runfile_open)
-
-    # open runfile as csv
-    globals_vars.runfile = csv.reader(runfile, delimiter=globals_vars.INPUT_CSV_DELIMITER)
+    if not os.path.isfile(globals_vars.ARGS.runfile):
+        console.msg_error(_("[runfile] no such file or directory: {0}".format(globals_vars.ARGS.runfile)),False)
 
     # read all settings and all stations from runfile
     stations = input_runfile.read_runfile()
@@ -164,7 +157,7 @@ def main():
             "#                 Version {0} - {1}\t               #\n"
             "#           Copyright (C) 2011-2013 IDEAM - Colombia           #\n"
             "################################################################")\
-    .format(globals_vars.VERSION, globals_vars.COMPILE_DATE)
+    .format(globals_vars.VERSION, globals_vars.VERSION_DATE)
 
     # -------------------------------------------------------------------------
     # GET/SET SETTINGS
@@ -195,7 +188,7 @@ def main():
 
         # data analysis dir output result
         globals_vars.data_analysis_dir\
-            = os.path.join(os.path.splitext(globals_vars.runfile_path)[0], _('Jaziku_Data_Analysis'))   # 'results'
+            = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Data_Analysis'))   # 'results'
 
         print _("Saving the result for data analysis in:")
         print "   " + colored.cyan(globals_vars.data_analysis_dir)
@@ -228,7 +221,7 @@ def main():
 
         # climate dir output result
         globals_vars.climate_dir \
-            = os.path.join(os.path.splitext(globals_vars.runfile_path)[0], _('Jaziku_Climate'))   # 'results'
+            = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Climate'))   # 'results'
 
         print _("Saving the result for climate in:")
         print "   " + colored.cyan(globals_vars.climate_dir)
@@ -243,7 +236,7 @@ def main():
     if globals_vars.config_run['forecasting_process']:
         # forecasting dir output result
         globals_vars.forecasting_dir \
-            = os.path.join(os.path.splitext(globals_vars.runfile_path)[0], _('Jaziku_Forecasting'))   # 'results'
+            = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Forecasting'))   # 'results'
 
         print _("\nSaving the result for forecasting in:").format(globals_vars.forecasting_dir)
         print "   " + colored.cyan(globals_vars.forecasting_dir)

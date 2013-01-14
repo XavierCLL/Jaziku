@@ -33,7 +33,7 @@ def logo(image, gravity='southeast', dissolve=65):
     if not console.which('composite'):
         return 1
 
-    watermarking_logo = os.path.abspath(os.path.join(globals_vars.ROOT_DIR, 'data', 'watermarking', 'logo.png'))
+    watermarking_logo = os.path.abspath(os.path.join(globals_vars.JAZIKU_DIR, 'data', 'watermarking', 'logo.png'))
 
     image_dir = os.path.abspath(image)
 
