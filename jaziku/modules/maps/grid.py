@@ -219,8 +219,8 @@ def search_and_set_internal_grid(grid):
     console.msg(_("   Setting internal grid"), color='yellow')
     grid.is_internal = True
 
-    grid.shape_path = os.path.join(globals_vars.ROOT_DIR, 'data', 'maps', 'shapes', grid.grid_path)
-    dir_to_list = os.path.join(globals_vars.ROOT_DIR, 'data', 'maps', 'shapes', grid.country)
+    grid.shape_path = os.path.join(globals_vars.JAZIKU_DIR, 'data', 'maps', 'shapes', grid.grid_path)
+    dir_to_list = os.path.join(globals_vars.JAZIKU_DIR, 'data', 'maps', 'shapes', grid.country)
 
     try:
         listdir = [name for name in os.listdir(dir_to_list) if os.path.isdir(os.path.join(dir_to_list, name))]

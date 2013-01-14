@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-import math
+from math import isnan
 
 #==============================================================================
 # GLOBAL VARIABLES AND FUNCTIONS
@@ -31,12 +31,14 @@ PROG_NAME = "jaziku"
 
 VERSION = "0.6.0"
 
-COMPILE_DATE = "12/01/2013"
+VERSION_DATE = "12/01/2013"
 
-ROOT_DIR = None
+# absolute directory where is installed Jaziku in your system,
+# this variable is set in jaziku.py
+JAZIKU_DIR = None
 
 # accuracy of number decimal places, only for print result
-ACCURACY = 5
+ACCURACY = 4
 
 #==============================================================================
 # arguments and inputs
@@ -45,12 +47,13 @@ ACCURACY = 5
 INPUT_CSV_DELIMITER = ";"
 OUTPUT_CSV_DELIMITER = ";"
 
-# arguments
-args = None
+# run arguments
+ARGS = None
 
-# runfile
-runfile_path = None
-runfile = None
+# absolute directory to save all result,
+# this is absolute directory where is the runfile + filename of runfile,
+# this variable is set in jaziku.py
+WORK_DIR = None
 
 #==============================================================================
 # valid nulls
@@ -64,7 +67,8 @@ def is_valid_null(value):
     return True if value is: 'nan', 'NaN', 'NAN', float('nan'), (deprecate: 99999, -99999)
     else return False
     """
-    if math.isnan(value) or value in ['nan', 'NaN', 'NAN']:
+
+    if isnan(value) or value in ['nan', 'NaN', 'NAN']:
         return True
     else:
         try:
@@ -78,18 +82,18 @@ def is_valid_null(value):
 
 # trimester text for print
 def get_trimester_in_text(trimester):
-    trim_text = {-2: _('NDJ'), -1: _('DJF'), 0: _('JFM'), 1: _('FMA'), 2: _('MAM'),
+    _trim_text = {-2: _('NDJ'), -1: _('DJF'), 0: _('JFM'), 1: _('FMA'), 2: _('MAM'),
                  3: _('AMJ'), 4: _('MJJ'), 5: _('JJA'), 6: _('JAS'), 7: _('ASO'),
                  8: _('SON'), 9: _('OND'), 10: _('NDJ'), 11: _('DJF')}
-    return trim_text[trimester]
+    return _trim_text[trimester]
 
 
 # month text for print
 def get_month_in_text(month):
-    month_text = {-2: _('Nov'), -1: _('Dec'), 0: _('Jan'), 1: _('Feb'), 2: _('Mar'),
+    _month_text = {-2: _('Nov'), -1: _('Dec'), 0: _('Jan'), 1: _('Feb'), 2: _('Mar'),
                   3: _('Apr'), 4: _('May'), 5: _('Jun'), 6: _('Jul'), 7: _('Aug'),
                   8: _('Sep'), 9: _('Oct'), 10: _('Nov'), 11: _('Dec')}
-    return month_text[month]
+    return _month_text[month]
 
 #==============================================================================
 # types and units - VAR D

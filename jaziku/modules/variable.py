@@ -57,7 +57,11 @@ class Variable():
 
         if self.type == 'D':
             self.file_name = os.path.basename(file)
-            self.file_path = os.path.abspath(file)
+            # if path to file is relative convert to absolute
+            if not os.path.isabs(file):
+                self.file_path = os.path.abspath(os.path.join(os.path.dirname(globals_vars.ARGS.runfile),file))
+            else:
+                self.file_path = os.path.abspath(file)
 
         if self.type == 'I':
 
@@ -66,10 +70,14 @@ class Variable():
             # located in plugins/var_I/
             if file == "internal":
                 self.file_name = globals_vars.internal_var_I_files[self.type_series]
-                self.file_path = os.path.join(globals_vars.ROOT_DIR, 'data', 'var_I', self.file_name)
+                self.file_path = os.path.join(globals_vars.JAZIKU_DIR, 'data', 'var_I', self.file_name)
             else:
                 self.file_name = os.path.basename(file)
-                self.file_path = os.path.abspath(file)
+                # if path to file is relative convert to absolute
+                if not os.path.isabs(file):
+                    self.file_path = os.path.abspath(os.path.join(os.path.dirname(globals_vars.ARGS.runfile),file))
+                else:
+                    self.file_path = os.path.abspath(file)
 
 
     def read_data_from_file(self, station, process=True, messages=True):
