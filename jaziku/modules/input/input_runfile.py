@@ -18,6 +18,9 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
+import csv
+import os
+
 from jaziku.modules.maps.grid import Grid
 from jaziku.utils import globals_vars, console
 from jaziku.modules.station import Station
@@ -41,10 +44,18 @@ def read_runfile():
     grid = None
     lines_of_stations = []
 
+    runfile_open = open(globals_vars.ARGS.runfile, 'rb')
+
+    # delete all NULL byte inside the runfile.csv
+    runfile = (x.replace('\0', '') for x in runfile_open)
+
+    # open runfile as csv
+    runfile = csv.reader(runfile, delimiter=globals_vars.INPUT_CSV_DELIMITER)
+
     # -------------------------------------------------------------------------
     # read line by line the RUNFILE
 
-    for line_in_run_file in globals_vars.runfile:
+    for line_in_run_file in runfile:
         # trim all items in line_in_run_file
         line_in_run_file = [i.strip() for i in line_in_run_file if i != '']
 
@@ -67,7 +78,7 @@ def read_runfile():
                 console.msg_error(_(
                     "error read line in 'CONFIGURATION RUN' in runfile,"
                     " line {0}:\n{1}, no was defined.")
-                .format(globals_vars.runfile.line_num, line_in_run_file[0]), False)
+                .format(runfile.line_num, line_in_run_file[0]), False)
 
             if line_in_run_file[0] in globals_vars.config_run:
                 # in this case, for python 'disable' is None,
@@ -92,7 +103,7 @@ def read_runfile():
                 else:
                     console.msg_error(_(
                         "error read line in 'CONFIGURATION RUN' in runfile, line {0}:\n{1}")
-                    .format(globals_vars.runfile.line_num, line_in_run_file[0]), False)
+                    .format(runfile.line_num, line_in_run_file[0]), False)
 
         # read GRIDS LIST
         if in_grids_list:
@@ -122,13 +133,16 @@ def read_runfile():
                     in_station_list = True
                 else:
                     console.msg_error(_("error read line in 'GRIDS LIST' in runfile, line {0}:\n{1}")
-                    .format(globals_vars.runfile.line_num, line_in_run_file[0]), False)
+                    .format(runfile.line_num, line_in_run_file[0]), False)
 
         # read STATIONS LIST
         if in_station_list:
             if line_in_run_file[0][0:2] == "##":
                 continue
-            lines_of_stations.append([line_in_run_file, globals_vars.runfile.line_num])
+            lines_of_stations.append([line_in_run_file, runfile.line_num])
+
+    runfile_open.close()
+    del runfile
 
     # -------------------------------------------------------------------------
     # post-process after read the runfile
@@ -156,6 +170,12 @@ def read_runfile():
                                 "defined in runfile, these must be a numbers, please check it."), False)
 
         globals_vars.forecasting_date = globals_vars.config_run['forecasting_date']
+
+    # if path_to_file_var_I is relative convert to absolute
+    if not os.path.isabs(globals_vars.config_run["path_to_file_var_I"]):
+        globals_vars.config_run["path_to_file_var_I"] \
+            = os.path.abspath(os.path.join(os.path.dirname(globals_vars.ARGS.runfile),
+                                           globals_vars.config_run["path_to_file_var_I"]))
 
     # Set type and units for variables D and I
     # var D

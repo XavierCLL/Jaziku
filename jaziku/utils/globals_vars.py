@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-import math
+from math import isnan
 
 #==============================================================================
 # GLOBAL VARIABLES AND FUNCTIONS
@@ -29,14 +29,16 @@ import math
 
 PROG_NAME = "jaziku"
 
-VERSION = "0.5.2"
+VERSION = "0.6.0"
 
-COMPILE_DATE = "12/01/2013"
+VERSION_DATE = "12/01/2013"
 
-ROOT_DIR = None
+# absolute directory where is installed Jaziku in your system,
+# this variable is set in jaziku.py
+JAZIKU_DIR = None
 
 # accuracy of number decimal places, only for print result
-ACCURACY = 5
+ACCURACY = 4
 
 #==============================================================================
 # arguments and inputs
@@ -45,12 +47,13 @@ ACCURACY = 5
 INPUT_CSV_DELIMITER = ";"
 OUTPUT_CSV_DELIMITER = ";"
 
-# arguments
-args = None
+# run arguments
+ARGS = None
 
-# runfile
-runfile_path = None
-runfile = None
+# absolute directory to save all result,
+# this is absolute directory where is the runfile + filename of runfile,
+# this variable is set in jaziku.py
+WORK_DIR = None
 
 #==============================================================================
 # valid nulls
@@ -64,7 +67,8 @@ def is_valid_null(value):
     return True if value is: 'nan', 'NaN', 'NAN', float('nan'), (deprecate: 99999, -99999)
     else return False
     """
-    if math.isnan(value) or value in ['nan', 'NaN', 'NAN']:
+
+    if isnan(value) or value in ['nan', 'NaN', 'NAN']:
         return True
     else:
         try:
@@ -78,18 +82,18 @@ def is_valid_null(value):
 
 # trimester text for print
 def get_trimester_in_text(trimester):
-    trim_text = {-2: _('NDJ'), -1: _('DJF'), 0: _('JFM'), 1: _('FMA'), 2: _('MAM'),
+    _trim_text = {-2: _('NDJ'), -1: _('DJF'), 0: _('JFM'), 1: _('FMA'), 2: _('MAM'),
                  3: _('AMJ'), 4: _('MJJ'), 5: _('JJA'), 6: _('JAS'), 7: _('ASO'),
                  8: _('SON'), 9: _('OND'), 10: _('NDJ'), 11: _('DJF')}
-    return trim_text[trimester]
+    return _trim_text[trimester]
 
 
 # month text for print
 def get_month_in_text(month):
-    month_text = {-2: _('Nov'), -1: _('Dec'), 0: _('Jan'), 1: _('Feb'), 2: _('Mar'),
+    _month_text = {-2: _('Nov'), -1: _('Dec'), 0: _('Jan'), 1: _('Feb'), 2: _('Mar'),
                   3: _('Apr'), 4: _('May'), 5: _('Jun'), 6: _('Jul'), 7: _('Aug'),
                   8: _('Sep'), 9: _('Oct'), 10: _('Nov'), 11: _('Dec')}
-    return month_text[month]
+    return _month_text[month]
 
 #==============================================================================
 # types and units - VAR D
@@ -145,7 +149,7 @@ internal_var_I_files = {"ONI1": "ONI1_1950_2012_CPC.txt",
                         "ASST3": "ASST3_1982_2012_CPC_NCEP_NOAA.txt",
                         "ASST4": "ASST4_1982_2012_CPC_NCEP_NOAA.txt",
                         "ASST34": "ASST34_1982_2012_CPC_NCEP_NOAA.txt",
-                        "ARH": "ARH_DIPOLE_1979_2009_NCEPNCAR_REAL.txt",  #TODO:
+                        "ARH": "ARH_DIPOLE_1979_2009_NCEPNCAR_REAL.txt", #TODO:
                         "NAO": "NAO_1950_2012_CPC_NCEP_NOAA.txt",
                         "QBO": "QBO_1950_2012_ESRL_NOAA.txt",
                         "SST_CAR": "SST_CAR_1951_2010_ESRL_NOAA.txt",
@@ -170,7 +174,7 @@ internal_var_I_urls = {"ONI1": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa
                        "ASST3": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
                        "ASST4": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
                        "ASST34": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-                       "ARH": "http://goo.gl/5oiZJ",  # http://nomad1.ncep.noaa.gov/ncep_data/index.html
+                       "ARH": "http://goo.gl/5oiZJ", # http://nomad1.ncep.noaa.gov/ncep_data/index.html
                        "NAO": "http://goo.gl/1uDjY", # http://www.cpc.ncep.noaa.gov/products/precip/CWlink/pna/nao.shtml
                        "QBO": "http://goo.gl/UO6PX", # http://www.esrl.noaa.gov/psd/data/climateindices/list/
                        "SST_CAR": "http://goo.gl/BsAeN", # http://www.esrl.noaa.gov/psd/forecasts/sstlim/forcar.html
@@ -210,14 +214,14 @@ phenomenon_above = None
 
 def graphs_axis_properties(afs=15, ma='center'):
     axis_properties = {}
-    axis_properties["fontsize"]=afs
-    axis_properties["multialignment"]=ma
+    axis_properties["fontsize"] = afs
+    axis_properties["multialignment"] = ma
     return axis_properties
 
 def graphs_title_properties(tfs=18, ma='center'):
     title_properties = {}
-    title_properties["fontsize"]=tfs
-    title_properties["multialignment"]=ma
+    title_properties["fontsize"] = tfs
+    title_properties["multialignment"] = ma
     return title_properties
 
 
