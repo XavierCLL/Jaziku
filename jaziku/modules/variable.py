@@ -24,9 +24,10 @@ from dateutil.relativedelta import relativedelta
 from numpy import median, average, var
 from scipy.stats.stats import tstd, variation, skew, kurtosis
 
+from jaziku.env import globals_vars
 from jaziku.modules.input import input_vars
 from jaziku.modules.input.input_check import count_null_values
-from jaziku.utils import console, array, globals_vars
+from jaziku.utils import console, array
 
 
 class Variable():
@@ -69,7 +70,7 @@ class Variable():
             # and notify if Jaziku are using the independent variable inside
             # located in plugins/var_I/
             if file == "internal":
-                self.file_name = globals_vars.internal_var_I_files[self.type_series]
+                self.file_name = globals_vars.FILES_FOR_INTERNAL_VAR_I[self.type_series]
                 self.file_path = os.path.join(globals_vars.JAZIKU_DIR, 'data', 'var_I', self.file_name)
             else:
                 self.file_name = os.path.basename(file)

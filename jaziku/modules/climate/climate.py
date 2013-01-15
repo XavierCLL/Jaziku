@@ -19,14 +19,13 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import sys
 
-import result_table
-from lags import calculate_lags
-from contingency_table import contingency_table
-from graphs import climate_graphs
+from jaziku.env import globals_vars
+from jaziku.modules.climate import result_table
+from jaziku.modules.climate.lags import calculate_lags
+from jaziku.modules.climate.contingency_table import contingency_table
+from jaziku.modules.climate.graphs import climate_graphs
 from jaziku.modules.maps.data import climate_data_for_maps
-from jaziku.utils import globals_vars
 from jaziku.utils import console
 
 def climate(station):
@@ -46,11 +45,11 @@ def climate(station):
     console.msg(_("Processing climate ............................ "), newline=False)
 
     # create directory for output files
-    if not os.path.isdir(globals_vars.climate_dir):
-        os.makedirs(globals_vars.climate_dir)
+    if not os.path.isdir(globals_vars.CLIMATE_DIR):
+        os.makedirs(globals_vars.CLIMATE_DIR)
 
     station.climate_dir \
-        = os.path.join(globals_vars.climate_dir, _('stations'), station.code + '_' + station.name)   # 'results'
+        = os.path.join(globals_vars.CLIMATE_DIR, _('stations'), station.code + '_' + station.name)   # 'results'
     if not os.path.isdir(station.climate_dir):
         os.makedirs(station.climate_dir)
 

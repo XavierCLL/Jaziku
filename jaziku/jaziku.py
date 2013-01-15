@@ -81,18 +81,16 @@ Bogotá, Colombia
 import sys
 import gc
 import os.path
-import csv
-#from pylab import *
 from clint.textui import colored
 
 # internationalization and init languages variable "_()"
 import gettext
 from i18n import i18n
 
-# local import
+# jaziku import
+from env import globals_vars
 from utils import console
 from utils import settings_run
-from utils import globals_vars
 from modules.station import Station
 from modules.data_analysis import data_analysis
 from modules.input import input_arg
@@ -187,13 +185,13 @@ def main():
                 "################################################################\n")
 
         # data analysis dir output result
-        globals_vars.data_analysis_dir\
+        globals_vars.DATA_ANALYSIS_DIR\
             = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Data_Analysis'))   # 'results'
 
         print _("Saving the result for data analysis in:")
-        print "   " + colored.cyan(globals_vars.data_analysis_dir)
+        print "   " + colored.cyan(globals_vars.DATA_ANALYSIS_DIR)
 
-        if os.path.isdir(globals_vars.data_analysis_dir):
+        if os.path.isdir(globals_vars.DATA_ANALYSIS_DIR):
             console.msg(
                 _("\n > WARNING: the output directory for data analysis process\n"
                   "   is already exist, Jaziku continue but the results\n"
@@ -220,13 +218,13 @@ def main():
                 "################################################################\n")
 
         # climate dir output result
-        globals_vars.climate_dir \
+        globals_vars.CLIMATE_DIR \
             = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Climate'))   # 'results'
 
         print _("Saving the result for climate in:")
-        print "   " + colored.cyan(globals_vars.climate_dir)
+        print "   " + colored.cyan(globals_vars.CLIMATE_DIR)
 
-        if os.path.isdir(globals_vars.climate_dir):
+        if os.path.isdir(globals_vars.CLIMATE_DIR):
             console.msg(
                 _("\n > WARNING: the output directory for climate process\n"
                   "   is already exist, Jaziku continue but the results\n"
@@ -235,13 +233,13 @@ def main():
     # forecasting
     if globals_vars.config_run['forecasting_process']:
         # forecasting dir output result
-        globals_vars.forecasting_dir \
+        globals_vars.FORECASTING_DIR \
             = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Forecasting'))   # 'results'
 
-        print _("\nSaving the result for forecasting in:").format(globals_vars.forecasting_dir)
-        print "   " + colored.cyan(globals_vars.forecasting_dir)
+        print _("\nSaving the result for forecasting in:").format(globals_vars.FORECASTING_DIR)
+        print "   " + colored.cyan(globals_vars.FORECASTING_DIR)
 
-        if os.path.isdir(globals_vars.forecasting_dir):
+        if os.path.isdir(globals_vars.FORECASTING_DIR):
             console.msg(
                 _("\n > WARNING: the output directory for forecasting process\n"
                   "   is already exist, Jaziku continue but the results\n"

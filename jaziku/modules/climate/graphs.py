@@ -28,8 +28,9 @@ from numpy import array
 from matplotlib import pyplot
 from Image import open as img_open
 
-from jaziku.utils import globals_vars, watermarking
-from contingency_table import get_contingency_table
+from jaziku.env import globals_vars
+from jaziku.utils import  watermarking
+from jaziku.modules.climate.contingency_table import get_contingency_table
 
 
 def column(matrix, i):
@@ -142,7 +143,7 @@ def climate_graphs(station):
         # save dir image for mosaic
         image_open_list.append(image_dir_save)
 
-    for lag in globals_vars.lags:
+    for lag in globals_vars.LAGS:
 
         # create dir for lag
         if not os.path.isdir(os.path.join(graphics_dir_ca, _('lag_{0}').format(lag))):
@@ -183,7 +184,7 @@ def climate_graphs(station):
         image_width = 600
         mosaic_dir_save \
             = os.path.join(graphics_dir_ca, _('mosaic_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
-                          .format(lag, globals_vars.translate_analysis_interval, station.code, station.name,
+                          .format(lag, globals_vars.analysis_interval_i18n, station.code, station.name,
                                   station.var_D.type_series, station.var_I.type_series, station.process_period['start'],
                                   station.process_period['end']))
 

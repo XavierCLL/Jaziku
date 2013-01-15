@@ -18,10 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-
 import argparse  # http://docs.python.org/py3k/library/argparse.html
 
-from jaziku.utils import globals_vars, console
+from jaziku.env import globals_vars
+from jaziku.utils import  console
 
 #==============================================================================
 # PARSER AND CHECK ARGUMENTS

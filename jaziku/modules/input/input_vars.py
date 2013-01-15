@@ -25,7 +25,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from pylab import size
 
-from jaziku.utils import globals_vars
+from jaziku.env import globals_vars
 from jaziku.utils import  console
 from jaziku.modules.input import input_validation
 

@@ -27,7 +27,8 @@ import os
 from matplotlib import pyplot
 from Image import open as img_open
 
-from jaziku.utils import globals_vars, watermarking
+from jaziku.env import globals_vars
+from jaziku.utils import  watermarking
 
 def forecasting_graphs(station):
     """
@@ -37,7 +38,7 @@ def forecasting_graphs(station):
 
     image_open_list = []
 
-    for lag in globals_vars.lags:
+    for lag in globals_vars.LAGS:
 
         if station.state_of_data in [1, 3]:
             forecasting_month = globals_vars.forecasting_date
@@ -95,7 +96,7 @@ def forecasting_graphs(station):
 
     ## Create mosaic
 
-    if len(globals_vars.lags) != 1:
+    if len(globals_vars.LAGS) != 1:
         # definition height and width of individual image
         # image_height = 375
         image_width = 375
@@ -105,10 +106,10 @@ def forecasting_graphs(station):
                         station.process_period['start'], station.process_period['end']))
         # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
         # http://www.classical-webdesigns.co.uk/resources/pixelinchconvert.html
-        pyplot.figure(figsize=(3.75 * len(globals_vars.lags), 3.75))
+        pyplot.figure(figsize=(3.75 * len(globals_vars.LAGS), 3.75))
         pyplot.savefig(mosaic_dir_save, dpi=100)
         mosaic = img_open(mosaic_dir_save)
-        for lag_iter in range(len(globals_vars.lags)):
+        for lag_iter in range(len(globals_vars.LAGS)):
             mosaic.paste(img_open(image_open_list[lag_iter]), (image_width * lag_iter, 0))
         # save
         mosaic.save(mosaic_dir_save)

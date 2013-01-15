@@ -20,13 +20,13 @@
 
 import sys
 import os
+import math
 from numpy import matrix
 from scipy import stats
-import math
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from jaziku.utils import globals_vars
+from jaziku.env import globals_vars
 from jaziku.utils import format_out
 from jaziku.utils import console
 from jaziku.modules.input import input_validation
@@ -524,7 +524,7 @@ def contingency_table(station):
     contingencies_tables_percent = {}
     # defined if is first iteration
     station.first_iter = True
-    for lag in globals_vars.lags:
+    for lag in globals_vars.LAGS:
 
         tmp_month_list = []
         # all months in year 1->12

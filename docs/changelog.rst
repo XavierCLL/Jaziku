@@ -4,6 +4,18 @@
 Changelog
 =========
 
+0.6.0 (**2013-02-xx**)
+----------------------
+
+news
+++++
+
+- [code] Refactoring globals_vars in new environment dir
+
+fixes
++++++
+
+
 0.5.2 (**2013-01-xx**)
 ----------------------
 

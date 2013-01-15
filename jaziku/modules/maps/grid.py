@@ -23,7 +23,8 @@ import imp
 import math
 from  numpy import linspace
 
-from jaziku.utils import globals_vars, console, array
+from jaziku.env import globals_vars
+from jaziku.utils import  console, array
 from jaziku.modules.station import Station
 
 class Grid:

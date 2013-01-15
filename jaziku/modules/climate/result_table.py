@@ -25,11 +25,11 @@ from scipy import stats
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-import statistic_tests
-from jaziku.utils import globals_vars
+from jaziku.env import globals_vars
 from jaziku.utils import format_out
-from contingency_table import get_contingency_table
-from lags import get_lag_values
+from jaziku.modules.climate import statistic_tests
+from jaziku.modules.climate.contingency_table import get_contingency_table
+from jaziku.modules.climate.lags import get_lag_values
 
 
 def composite_analysis(station):
@@ -138,7 +138,7 @@ def composite_analysis(station):
 
         return pearson, is_sig_risk_analysis_list
 
-    for lag in globals_vars.lags:
+    for lag in globals_vars.LAGS:
 
         # dir and name to save the result table
         csv_name \

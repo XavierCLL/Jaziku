@@ -21,14 +21,14 @@
 import os
 from subprocess import call
 
-from jaziku.utils import console, globals_vars
+from jaziku.env import globals_vars
+from jaziku.utils import console
 
 
 def logo(image, gravity='southeast', dissolve=65):
     """
     stamp logo of Jaziku
     """
-
 
     if not console.which('composite'):
         return 1

@@ -23,9 +23,9 @@ import csv
 import numpy
 from subprocess import call
 
-import interpolation
-from grid import search_and_set_internal_grid, set_particular_grid
-from ncl import make_ncl_file
+from jaziku.modules.maps import interpolation
+from jaziku.modules.maps.grid import search_and_set_internal_grid, set_particular_grid
+from jaziku.modules.maps.ncl import make_ncl_file
 from jaziku.utils import globals_vars, console, watermarking
 from jaziku.modules.maps.grid import Grid
 
@@ -285,7 +285,7 @@ def maps(grid):
         print _("Processing maps for climate:")
 
         # walking file by file of maps directory and make interpolation and map for each file
-        for analysis_interval in globals_vars.options_analysis_interval:
+        for analysis_interval in globals_vars.ALL_ANALYSIS_INTERVALS:
 
             if globals_vars.maps_files_climate[analysis_interval] is None:
                 continue
@@ -296,7 +296,7 @@ def maps(grid):
             else:
                 console.msg("                {0}\t....................... ".format(analysis_interval), newline=False)
 
-            for lag in globals_vars.lags:
+            for lag in globals_vars.LAGS:
 
                 # all months in year 1->12
                 for month in range(1, 13):
@@ -304,7 +304,7 @@ def maps(grid):
                     if analysis_interval == 'trimester':
                         for category in [0, 1, 2]:  # phenomenons var_I
                             # show only once
-                            if lag == globals_vars.lags[0] and month == 1 and category == 0:
+                            if lag == globals_vars.LAGS[0] and month == 1 and category == 0:
                                 message_warning = True
                             else:
                                 message_warning = False
@@ -345,7 +345,7 @@ def maps(grid):
                         for day in range(len(range_analysis_interval)):
                             for category in [0, 1, 2]:  # phenomenons var_I
                                 # show only once
-                                if lag == globals_vars.lags[0] and month == 1 and category == 0 and day == 0:
+                                if lag == globals_vars.LAGS[0] and month == 1 and category == 0 and day == 0:
                                     message_warning = True
                                 else:
                                     message_warning = False
@@ -391,7 +391,7 @@ def maps(grid):
         print _("Processing maps for correlation:")
 
         # walking file by file of maps directory and make interpolation and map for each file
-        for analysis_interval in globals_vars.options_analysis_interval:
+        for analysis_interval in globals_vars.ALL_ANALYSIS_INTERVALS:
 
             if globals_vars.maps_files_climate[analysis_interval] is None:
                 continue
@@ -402,7 +402,7 @@ def maps(grid):
             else:
                 console.msg("                {0}\t....................... ".format(analysis_interval), newline=False)
 
-            for lag in globals_vars.lags:
+            for lag in globals_vars.LAGS:
 
                 # all months in year 1->12
                 for month in range(1, 13):
@@ -410,7 +410,7 @@ def maps(grid):
                     if analysis_interval == 'trimester':
                         category = 1  # normal
                         # show only once
-                        if lag == globals_vars.lags[0] and month == 1:
+                        if lag == globals_vars.LAGS[0] and month == 1:
                             message_warning = True
                         else:
                             message_warning = False
@@ -419,8 +419,8 @@ def maps(grid):
                         file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][category]
 
                         # save matrix for interpolation
-                        base_path = os.path.join(globals_vars.climate_dir, _('maps'),
-                            globals_vars.translate_analysis_interval,
+                        base_path = os.path.join(globals_vars.CLIMATE_DIR, _('maps'),
+                            globals_vars.analysis_interval_i18n,
                             _('lag_{0}').format(lag),
                             _('Correlation'),
                             grid.grid_name)
@@ -454,7 +454,7 @@ def maps(grid):
                         for day in range(len(range_analysis_interval)):
                             category = 1  # phenomenons var_I
                             # show only once
-                            if lag == globals_vars.lags[0] and month == 1 and day == 0:
+                            if lag == globals_vars.LAGS[0] and month == 1 and day == 0:
                                 message_warning = True
                             else:
                                 message_warning = False
@@ -463,8 +463,8 @@ def maps(grid):
                             file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][day][category]
 
                             # save matrix for interpolation
-                            base_path = os.path.join(globals_vars.climate_dir, _('maps'),
-                                globals_vars.translate_analysis_interval,
+                            base_path = os.path.join(globals_vars.CLIMATE_DIR, _('maps'),
+                                globals_vars.analysis_interval_i18n,
                                 _('lag_{0}').format(lag),
                                 _('Correlation'),
                                 grid.grid_name)
@@ -515,9 +515,9 @@ def maps(grid):
 
             for forecasting_date in globals_vars.maps_files_forecasting[analysis_interval]:
 
-                for lag in globals_vars.lags:
+                for lag in globals_vars.LAGS:
                     # show only once
-                    if lag == globals_vars.lags[0]:
+                    if lag == globals_vars.LAGS[0]:
                         message_warning = True
                     else:
                         message_warning = False

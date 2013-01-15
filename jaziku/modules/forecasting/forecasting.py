@@ -20,9 +20,9 @@
 
 import os
 
-from graphs import forecasting_graphs
+from jaziku.env import globals_vars
+from jaziku.modules.forecasting.graphs import forecasting_graphs
 from jaziku.modules.maps.data import forecasting_data_for_maps
-from jaziku.utils import globals_vars
 from jaziku.utils import console
 
 def forecasting(station):
@@ -66,14 +66,14 @@ def forecasting(station):
                 _("Start day (month/day) for forecasting process '{0}'\nis invalid, "
                   "must be a valid start day based on\nrange analysis "
                   "interval, the valid start days for\n{1} are: {2}")
-                .format(globals_vars.forecasting_date[1], globals_vars.translate_analysis_interval,
+                .format(globals_vars.forecasting_date[1], globals_vars.analysis_interval_i18n,
                     station.range_analysis_interval), show_settings=False)
 
     # create directory for output files
-    if not os.path.isdir(globals_vars.forecasting_dir):
-        os.makedirs(globals_vars.forecasting_dir)
+    if not os.path.isdir(globals_vars.FORECASTING_DIR):
+        os.makedirs(globals_vars.FORECASTING_DIR)
 
-    station.forecasting_dir = os.path.join(globals_vars.forecasting_dir, _('stations'), station.code + '_' + station.name)   # 'results'
+    station.forecasting_dir = os.path.join(globals_vars.FORECASTING_DIR, _('stations'), station.code + '_' + station.name)   # 'results'
     if not os.path.isdir(station.forecasting_dir):
         os.makedirs(station.forecasting_dir)
 
@@ -81,7 +81,7 @@ def forecasting(station):
     prob_normal_var_D = {}
     prob_exceed_var_D = {}
 
-    for lag in globals_vars.lags:
+    for lag in globals_vars.LAGS:
 
         items_CT = {'a': 0, 'b': 0, 'c': 0, 'd': 0, 'e': 0, 'f': 0, 'g': 0, 'h': 0, 'i': 0}
         order_CT = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']

@@ -18,8 +18,9 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-import globals_vars
 from math import isnan
+
+from jaziku.env import globals_vars
 
 def mean(values):
     """

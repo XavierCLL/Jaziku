@@ -21,7 +21,7 @@
 import os
 import csv
 
-from jaziku.utils import globals_vars
+from jaziku.env import globals_vars
 from jaziku.utils import format_out
 
 
@@ -41,12 +41,12 @@ def climate_data_for_maps(station):
         globals_vars.maps_files_climate[globals_vars.config_run['analysis_interval']] = {}  # [lag][month][phenomenon]
 
         # define maps data files and directories
-        for lag in globals_vars.lags:
+        for lag in globals_vars.LAGS:
 
-            maps_dir = os.path.join(globals_vars.climate_dir, _('maps'))
+            maps_dir = os.path.join(globals_vars.CLIMATE_DIR, _('maps'))
 
             maps_data_lag = os.path.join(maps_dir,
-                globals_vars.translate_analysis_interval,
+                globals_vars.analysis_interval_i18n,
                 _('lag_{0}').format(lag))
 
             if not os.path.isdir(maps_data_lag):
@@ -139,7 +139,7 @@ def climate_data_for_maps(station):
             else:
                 return var_above
 
-    for lag in globals_vars.lags:
+    for lag in globals_vars.LAGS:
 
         # all months in year 1->12
         for month in range(1, 13):
@@ -211,10 +211,10 @@ def forecasting_data_for_maps(station):
         if station.state_of_data in [1, 3]:
             lags_list = {}
             # define maps data files and directories
-            for lag in globals_vars.lags:
+            for lag in globals_vars.LAGS:
 
-                maps_dir = os.path.join(globals_vars.forecasting_dir, _('maps'),
-                    globals_vars.translate_analysis_interval,
+                maps_dir = os.path.join(globals_vars.FORECASTING_DIR, _('maps'),
+                    globals_vars.analysis_interval_i18n,
                     globals_vars.get_trimester_in_text(globals_vars.forecasting_date - 1))
 
                 if not os.path.isdir(maps_dir):
@@ -242,10 +242,10 @@ def forecasting_data_for_maps(station):
         if station.state_of_data in [2, 4]:
             lags_list = {}
             # define maps data files and directories
-            for lag in globals_vars.lags:
+            for lag in globals_vars.LAGS:
 
-                maps_dir = os.path.join(globals_vars.forecasting_dir, _('maps'),
-                    globals_vars.translate_analysis_interval,
+                maps_dir = os.path.join(globals_vars.FORECASTING_DIR, _('maps'),
+                    globals_vars.analysis_interval_i18n,
                     forecasting_date_formatted)
 
                 if not os.path.isdir(maps_dir):
@@ -291,7 +291,7 @@ def forecasting_data_for_maps(station):
 
         return p_index
 
-    for lag in globals_vars.lags:
+    for lag in globals_vars.LAGS:
 
         p_index = calculate_index()
 

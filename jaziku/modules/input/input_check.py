@@ -18,7 +18,8 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-from jaziku.utils import globals_vars, console
+from jaziku.env import globals_vars
+from jaziku.utils import  console
 
 
 def count_null_values(values):
@@ -59,7 +60,7 @@ def check_consistent_data(variable):
 #                        monthrange(station.process_period['end'] + 1, 2)[1]
 #            date_minus = 61
 #        else:
-#            date_plus = date_minus = globals_vars.analysis_interval_num_days * 2
+#            date_plus = date_minus = globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL * 2
 #    else:
 #        end_date = date(station.process_period['end'], 12, 1)
 #        date_plus = date_minus = 2

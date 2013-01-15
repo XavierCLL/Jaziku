@@ -21,18 +21,19 @@
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from jaziku.utils import globals_vars, console
+from jaziku.env import globals_vars
+from jaziku.utils import  console
 
 
 def get_range_analysis_interval():
     # range based on analysis interval
 
     if globals_vars.config_run['analysis_interval'] != "trimester":
-        if globals_vars.analysis_interval_num_days == 5:
+        if globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL == 5:
             return [1, 6, 11, 16, 21, 26]
-        if globals_vars.analysis_interval_num_days == 10:
+        if globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL == 10:
             return [1, 11, 21]
-        if globals_vars.analysis_interval_num_days == 15:
+        if globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL == 15:
             return [1, 16]
     else:
         return None
@@ -69,7 +70,8 @@ def check_analysis_interval_and_state_of_data(stations):
     if global_state_of_data in [1, 3] and globals_vars.config_run['analysis_interval'] != "trimester":
         console.msg_error(_("The var_D of stations have data monthly, but you define\n"
                        "in runfile the analysis interval as '{0}', this must be,\n"
-                       "in this case, as 'trimester' or use data daily.").format(globals_vars.config_run['analysis_interval']))
+                       "in this case, as 'trimester' or use data daily.").format(
+            globals_vars.config_run['analysis_interval']))
 
 
 def get_values_in_range_analysis_interval(station, type, year, month, day=None, lag=None):
@@ -146,7 +148,7 @@ def get_values_in_range_analysis_interval(station, type, year, month, day=None, 
                     var_I_values.append(station.var_I.data[station.var_I.date.index(
                         date(year, month, 1) + relativedelta(months= -lag))])
                 else:
-                    real_date = date(year, month, day) + relativedelta(days= -globals_vars.analysis_interval_num_days * lag)
+                    real_date = date(year, month, day) + relativedelta(days= -globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL * lag)
                     # e.g if lag 2 in march and calculate to 15days go to february and not january
                     if month - real_date.month > 1:
                         real_date = date(real_date.year, real_date.month + 1, 1)

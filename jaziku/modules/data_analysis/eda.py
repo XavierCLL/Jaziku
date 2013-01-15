@@ -32,13 +32,14 @@ from Image import open as img_open
 from scipy.stats import shapiro
 from calendar import monthrange
 
+from jaziku.env import globals_vars
 from jaziku.modules.analysis_interval import get_values_in_range_analysis_interval, locate_day_in_analysis_interval, get_range_analysis_interval
 from jaziku.modules.climate import lags
 from jaziku.modules.climate.contingency_table import get_thresholds_var_I
 from jaziku.modules.climate.lags import  calculate_lags
 from jaziku.modules.station import Station
 from jaziku.modules.variable import Variable
-from jaziku.utils import globals_vars, console, format_out, watermarking, array
+from jaziku.utils import  console, format_out, watermarking, array
 
 
 def main(stations):
@@ -55,7 +56,7 @@ def main(stations):
                       "   in EDA module represents the vast majority of the results.\n"), color='yellow')
 
     global eda_dir
-    eda_dir = os.path.join(globals_vars.data_analysis_dir, 'EDA')
+    eda_dir = os.path.join(globals_vars.DATA_ANALYSIS_DIR, 'EDA')
 
     # -------------------------------------------------------------------------
     # DESCRIPTIVE STATISTICS
@@ -468,7 +469,7 @@ def graphs_inspection_of_series(stations):
                             bar(x, y, align='center', color=types_var_D[type_var]['color'], width=1+num_years/5, edgecolor='none')
                             y_scale_below=0
                         else:
-                            #ax.plot(x, y, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
+                            #ax.plot(x, y, TYPES_VAR_D[type_var]['graph'], color=TYPES_VAR_D[type_var]['color'])
                             ax.plot(x, y, '-', color=types_var_D[type_var]['color'])
                 if var.frequency_data == "monthly" and not type == 'special_D':
                     if type_var not in types_var_D:
@@ -686,8 +687,8 @@ def climatology(stations):
                 #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
                 zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
             else:
-                #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=types_var_D[type_var]['color'],
-                #    mec=types_var_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
+                #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=TYPES_VAR_D[type_var]['color'],
+                #    mec=TYPES_VAR_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
                 ax.plot(x, y_mean, '-o', color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color'], linewidth=2.5, markersize=8)
                 zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
 
@@ -743,7 +744,7 @@ def climatology(stations):
             else:
                 ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=types_var_D[type_var]['color'],
                     mec=types_var_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
-                #ax.plot(x, y_mean, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
+                #ax.plot(x, y_mean, TYPES_VAR_D[type_var]['graph'], color=TYPES_VAR_D[type_var]['color'])
                 zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
 
 
@@ -826,14 +827,14 @@ def climatology(stations):
                 else:
                     x_labels.append('')
 
-            title = _("Multiyear climatology (each {0} days)\n{1} {2} - {3} ({4}-{5})").format(globals_vars.analysis_interval_num_days,
+            title = _("Multiyear climatology (each {0} days)\n{1} {2} - {3} ({4}-{5})").format(globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL,
                 station.code, station.name, globals_vars.config_run['type_var_D'], station.process_period['start'],
                 station.process_period['end'])
 
             # -------------------------------------------------------------------------
             # climatology N days without whiskers
 
-            name_graph = _("Multiyear_climatology_({0}days)_{1}_{2}_{3}").format(globals_vars.analysis_interval_num_days,
+            name_graph = _("Multiyear_climatology_({0}days)_{1}_{2}_{3}").format(globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL,
                 station.code, station.name, globals_vars.config_run['type_var_D'])
 
             with_fig = 5 + len(y_mean)/9
@@ -855,7 +856,7 @@ def climatology(stations):
             ax.grid(True)
             ax.autoscale(tight=True)
 
-            x_scale_value = -0.013 -globals_vars.analysis_interval_num_days/600.0
+            x_scale_value = -0.013 - globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL/600.0
 
             if type_var not in types_var_D:
                 # default for generic type for var D
@@ -869,8 +870,8 @@ def climatology(stations):
                     zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_above=-0.04)
                 else:
                     ax.plot(x, y_mean, '-o', color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color'], linewidth=2.5, markersize=8)
-                    #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=types_var_D[type_var]['color'],
-                    #    mec=types_var_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
+                    #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=TYPES_VAR_D[type_var]['color'],
+                    #    mec=TYPES_VAR_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
                     zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_below=-0.04, y_scale_above=-0.04)
 
             # labels on both sides
@@ -890,7 +891,7 @@ def climatology(stations):
             # -------------------------------------------------------------------------
             # climatology N days with whiskers
 
-            name_graph = _("Multiyear_climatology_({0}days+whiskers)_{1}_{2}_{3}").format(globals_vars.analysis_interval_num_days,
+            name_graph = _("Multiyear_climatology_({0}days+whiskers)_{1}_{2}_{3}").format(globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL,
                 station.code, station.name, globals_vars.config_run['type_var_D'])
 
             with_fig = 5 + len(y_mean)/9
@@ -912,7 +913,7 @@ def climatology(stations):
             ax.grid(True)
             ax.autoscale(tight=True)
 
-            x_scale_value = -0.013 -globals_vars.analysis_interval_num_days/600.0
+            x_scale_value = -0.013 - globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL/600.0
 
             if type_var not in types_var_D:
                 # default for generic type for var D
@@ -925,7 +926,7 @@ def climatology(stations):
                     ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
                     zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_above=-0.04)
                 else:
-                    #ax.plot(x, y_mean, types_var_D[type_var]['graph'], color=types_var_D[type_var]['color'])
+                    #ax.plot(x, y_mean, TYPES_VAR_D[type_var]['graph'], color=TYPES_VAR_D[type_var]['color'])
                     ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=types_var_D[type_var]['color'],
                         mec=types_var_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
                     zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_below=-0.04, y_scale_above=-0.04)
@@ -947,7 +948,7 @@ def climatology(stations):
             # -------------------------------------------------------------------------
             # climatology N days table (csv)
 
-            name_csv_table = _("Multiyear_climatology_table_{0}days_{1}_{2}_{3}.csv").format(globals_vars.analysis_interval_num_days, station.code, station.name, globals_vars.config_run['type_var_D'])
+            name_csv_table = _("Multiyear_climatology_table_{0}days_{1}_{2}_{3}.csv").format(globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL, station.code, station.name, globals_vars.config_run['type_var_D'])
             open_file = open(os.path.join(station_climatology_path,name_csv_table), 'w')
             csv_table = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
 

@@ -98,93 +98,101 @@ def get_month_in_text(month):
 #==============================================================================
 # types and units - VAR D
 
-# Valid input types for dependent variable
-types_var_D = ['PPT', 'NDPPT', 'TMIN', 'TMAX', 'TEMP', 'PATM', 'RH', 'RUNOFF']
+# Valid input types for dependent variable, known for jaziku
+TYPES_VAR_D = ['PPT', 'NDPPT', 'TMIN', 'TMAX', 'TEMP', 'PATM', 'RH', 'RUNOFF']
 
-# Units for types for dependent variable
-units_of_types_var_D = {'PPT':'mm', 'NDPPT':'#', 'TMIN':'Celsius', 'TMAX':'Celsius', 'TEMP':'Celsius',
+# Units for types of dependent variable, known for jaziku
+UNITS_FOR_TYPES_VAR_D = {'PPT':'mm', 'NDPPT':'#', 'TMIN':'Celsius', 'TMAX':'Celsius', 'TEMP':'Celsius',
                         'PATM':'mb', 'RH':'%', 'RUNOFF':'m^3/s'}
 
+# variable use for set units for var D, known and unknown for jaziku
+# for particular units set it in runfile, please read jaziku's manual
 units_var_D = None
 
 #==============================================================================
 # types and units - VAR I
 
-# Valid input types for independent variable
-types_var_I = ['ONI1', 'ONI2', 'SOI', 'SOI_TROUP', 'OLR', 'W200', 'W850w', 'W850c', 'W850e', 'SST12',
+# Valid input types for independent variable, known and internal for jaziku
+TYPES_VAR_I = ['ONI1', 'ONI2', 'SOI', 'SOI_TROUP', 'OLR', 'W200', 'W850w', 'W850c', 'W850e', 'SST12',
                'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34', 'ARH', 'QBO', 'NAO', 'SST_CAR', 'AREA_WHWP']
 
-# Units for types for dependent variable
-units_of_types_var_I = {'ONI1':'anomaly', 'ONI2':'anomaly', 'SOI':'Std anomaly', 'SOI_TROUP':'Std anomaly', 'OLR':'W/m2',
+# Units for types for independent variable, known and internal for jaziku
+UNITS_FOR_TYPES_VAR_I = {'ONI1':'anomaly', 'ONI2':'anomaly', 'SOI':'Std anomaly', 'SOI_TROUP':'Std anomaly', 'OLR':'W/m2',
                         'W200':'Std anomaly', 'W850w':'anomaly', 'W850c':'anomaly', 'W850e':'anomaly',
                         'SST12':'Celsius', 'SST3':'Celsius', 'SST4':'Celsius', 'SST34':'Celsius', 'ASST12':'anomaly',
                         'ASST3':'anomaly', 'ASST4':'anomaly', 'ASST34':'anomaly', 'ARH':'%', 'QBO':'Km/h',
                         'NAO':'anomaly', 'SST_CAR':'Celsius', 'AREA_WHWP':'anomaly scaled 10e6 km^2'}
 
+# variable use for set units for var I, known and unknown for jaziku
+# for particular units set it in runfile, please read jaziku's manual
 units_var_I = None
 
 #==============================================================================
 # VAR I internal
 
-# types of internal independent variables
-internal_var_I_types = ['ONI1', 'ONI2', 'SOI', 'SOI_TROUP', 'OLR', 'W200', 'W850w', 'W850c', 'W850e', 'SST12',
+# types of internal independent variables (only internal variables for jaziku)
+TYPES_OF_INTERNAL_VAR_I = ['ONI1', 'ONI2', 'SOI', 'SOI_TROUP', 'OLR', 'W200', 'W850w', 'W850c', 'W850e', 'SST12',
                         'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34', 'ARH', 'QBO', 'NAO', 'SST_CAR', 'AREA_WHWP']
 
-# namefiles of internal independent variables
-internal_var_I_files = {"ONI1": "ONI1_1950_2012_CPC.txt",
-                        "ONI2": "ONI2_1950_2012_CPC_corr2012.txt",
-                        "SOI": "SOI_1951_2011_CPC_NOAA.txt",
-                        "SOI_TROUP": "SOI_TROUP_1876_2012_AustralinaBureau.txt",
-                        #"MEI": "MEI_1950_2011_ESRL_NOAA.txt",
-                        "OLR": "OLR_1974_2012_CPC_NCEP_NOAA.txt",
-                        "W200": "W200_1979_2012_CPC_NCEP_NOAA.txt",
-                        "W850w": "W850w_1979_2012_CPC_NCEP_NOAA.txt",
-                        "W850c": "W850c_1979_2012_CPC_NCEP_NOAA.txt",
-                        "W850e": "W850e_1979_2012_CPC_NCEP_NOAA.txt",
-                        "SST12": "SST12_1982_2012_CPC_NCEP_NOAA.txt",
-                        "SST3": "SST3_1982_2012_CPC_NCEP_NOAA.txt",
-                        "SST4": "SST4_1982_2012_CPC_NCEP_NOAA.txt",
-                        "SST34": "SST34_1982_2012_CPC_NCEP_NOAA.txt",
-                        "ASST12": "ASST12_1982_2012_CPC_NCEP_NOAA.txt",
-                        "ASST3": "ASST3_1982_2012_CPC_NCEP_NOAA.txt",
-                        "ASST4": "ASST4_1982_2012_CPC_NCEP_NOAA.txt",
-                        "ASST34": "ASST34_1982_2012_CPC_NCEP_NOAA.txt",
-                        "ARH": "ARH_DIPOLE_1979_2009_NCEPNCAR_REAL.txt", #TODO:
-                        "NAO": "NAO_1950_2012_CPC_NCEP_NOAA.txt",
-                        "QBO": "QBO_1950_2012_ESRL_NOAA.txt",
-                        "SST_CAR": "SST_CAR_1951_2010_ESRL_NOAA.txt",
-                        "AREA_WHWP": "AREA_WHWP_1948_2012_ESRL_NOAA.txt"}
+# namefiles of internal independent variables for each type
+FILES_FOR_INTERNAL_VAR_I = {
+    "ONI1": "ONI1_1950_2012_CPC.txt",
+    "ONI2": "ONI2_1950_2012_CPC_corr2012.txt",
+    "SOI": "SOI_1951_2011_CPC_NOAA.txt",
+    "SOI_TROUP": "SOI_TROUP_1876_2012_AustralinaBureau.txt",
+    #"MEI": "MEI_1950_2011_ESRL_NOAA.txt",
+    "OLR": "OLR_1974_2012_CPC_NCEP_NOAA.txt",
+    "W200": "W200_1979_2012_CPC_NCEP_NOAA.txt",
+    "W850w": "W850w_1979_2012_CPC_NCEP_NOAA.txt",
+    "W850c": "W850c_1979_2012_CPC_NCEP_NOAA.txt",
+    "W850e": "W850e_1979_2012_CPC_NCEP_NOAA.txt",
+    "SST12": "SST12_1982_2012_CPC_NCEP_NOAA.txt",
+    "SST3": "SST3_1982_2012_CPC_NCEP_NOAA.txt",
+    "SST4": "SST4_1982_2012_CPC_NCEP_NOAA.txt",
+    "SST34": "SST34_1982_2012_CPC_NCEP_NOAA.txt",
+    "ASST12": "ASST12_1982_2012_CPC_NCEP_NOAA.txt",
+    "ASST3": "ASST3_1982_2012_CPC_NCEP_NOAA.txt",
+    "ASST4": "ASST4_1982_2012_CPC_NCEP_NOAA.txt",
+    "ASST34": "ASST34_1982_2012_CPC_NCEP_NOAA.txt",
+    "ARH": "ARH_DIPOLE_1979_2009_NCEPNCAR_REAL.txt", #TODO: update series
+    "NAO": "NAO_1950_2012_CPC_NCEP_NOAA.txt",
+    "QBO": "QBO_1950_2012_ESRL_NOAA.txt",
+    "SST_CAR": "SST_CAR_1951_2010_ESRL_NOAA.txt",
+    "AREA_WHWP": "AREA_WHWP_1948_2012_ESRL_NOAA.txt"
+}
 
-# urls where get the internal files for independent variables
-internal_var_I_urls = {"ONI1": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears.shtml
-                       "ONI2": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears.shtml
-                       "SOI": "http://goo.gl/scbO7", # http://www.cpc.ncep.noaa.gov/data/indices/soi
-                       "SOI_TROUP": "http://goo.gl/2hDk8", # http://www.bom.gov.au/climate/current/soihtm1.shtml
-                       #"MEI": "http://goo.gl/dQsdb", # http://www.esrl.noaa.gov/psd/enso/mei/table.html
-                       "OLR": "http://goo.gl/goMpA", # http://www.cpc.ncep.noaa.gov/data/indices/olr
-                       "W200": "http://goo.gl/aliLh", # http://www.cpc.ncep.noaa.gov/data/indices/zwnd200
-                       "W850w": "http://goo.gl/w4yiO", # http://www.cpc.ncep.noaa.gov/data/indices/wpac850
-                       "W850c": "http://goo.gl/gks7x", # http://www.cpc.ncep.noaa.gov/data/indices/cpac850
-                       "W850e": "http://goo.gl/N7cQ5", # http://www.cpc.ncep.noaa.gov/data/indices/epac850
-                       "SST12": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-                       "SST3": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-                       "SST4": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-                       "SST34": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-                       "ASST12": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-                       "ASST3": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-                       "ASST4": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-                       "ASST34": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-                       "ARH": "http://goo.gl/5oiZJ", # http://nomad1.ncep.noaa.gov/ncep_data/index.html
-                       "NAO": "http://goo.gl/1uDjY", # http://www.cpc.ncep.noaa.gov/products/precip/CWlink/pna/nao.shtml
-                       "QBO": "http://goo.gl/UO6PX", # http://www.esrl.noaa.gov/psd/data/climateindices/list/
-                       "SST_CAR": "http://goo.gl/BsAeN", # http://www.esrl.noaa.gov/psd/forecasts/sstlim/forcar.html
-                       "AREA_WHWP": "http://goo.gl/mV4QI"}  # http://www.esrl.noaa.gov/psd/data/correlation/whwp.data
+# urls where get the internal files for independent variables for each type
+URLS_FOR_INTERNAL_VAR_I = {
+    "ONI1": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears.shtml
+    "ONI2": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears.shtml
+    "SOI": "http://goo.gl/scbO7", # http://www.cpc.ncep.noaa.gov/data/indices/soi
+    "SOI_TROUP": "http://goo.gl/2hDk8", # http://www.bom.gov.au/climate/current/soihtm1.shtml
+    #"MEI": "http://goo.gl/dQsdb", # http://www.esrl.noaa.gov/psd/enso/mei/table.html
+    "OLR": "http://goo.gl/goMpA", # http://www.cpc.ncep.noaa.gov/data/indices/olr
+    "W200": "http://goo.gl/aliLh", # http://www.cpc.ncep.noaa.gov/data/indices/zwnd200
+    "W850w": "http://goo.gl/w4yiO", # http://www.cpc.ncep.noaa.gov/data/indices/wpac850
+    "W850c": "http://goo.gl/gks7x", # http://www.cpc.ncep.noaa.gov/data/indices/cpac850
+    "W850e": "http://goo.gl/N7cQ5", # http://www.cpc.ncep.noaa.gov/data/indices/epac850
+    "SST12": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
+    "SST3": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
+    "SST4": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
+    "SST34": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
+    "ASST12": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
+    "ASST3": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
+    "ASST4": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
+    "ASST34": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
+    "ARH": "http://goo.gl/5oiZJ", # http://nomad1.ncep.noaa.gov/ncep_data/index.html
+    "NAO": "http://goo.gl/1uDjY", # http://www.cpc.ncep.noaa.gov/products/precip/CWlink/pna/nao.shtml
+    "QBO": "http://goo.gl/UO6PX", # http://www.esrl.noaa.gov/psd/data/climateindices/list/
+    "SST_CAR": "http://goo.gl/BsAeN", # http://www.esrl.noaa.gov/psd/forecasts/sstlim/forcar.html
+    "AREA_WHWP": "http://goo.gl/mV4QI"  # http://www.esrl.noaa.gov/psd/data/correlation/whwp.data
+}
 
 #==============================================================================
 # analysis_interval
-options_analysis_interval = ["5days", "10days", "15days", "trimester"]
-analysis_interval_num_days = None
-translate_analysis_interval = None
+ALL_ANALYSIS_INTERVALS = ["5days", "10days", "15days", "trimester"]
+NUM_DAYS_OF_ANALYSIS_INTERVAL = None
+analysis_interval_i18n = None # TODO: to settings
 
 #==============================================================================
 # forecasting
@@ -273,13 +281,13 @@ config_run = {'data_analysis': None,
 settings = {}
 
 # globals variable for defined lags, lags = [ 0, 1 and/or 2 ]
-lags = []
+LAGS = []
 
-climate_dir = None
+CLIMATE_DIR = None
 
-forecasting_dir = None
+FORECASTING_DIR = None
 
-data_analysis_dir = None
+DATA_ANALYSIS_DIR = None
 
 # defined, after read runfile configuration, what run
 maps = {'climate': False, 'forecasting': False, 'correlation': False}
