@@ -11,6 +11,7 @@ news
 ++++
 
 - [code] Refactoring globals_vars in new environment dir
+- [code] Api documentation
 
 fixes
 +++++
