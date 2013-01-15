@@ -18,11 +18,12 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import geo_bsd as hpgl
 from geo_bsd.routines import *
-import os
 
-from jaziku.utils import globals_vars, console
+from jaziku.env import globals_vars
+from jaziku.utils import  console
 
 
 def ordinary_kriging(base_grid, inc_file):

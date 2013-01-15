@@ -19,7 +19,7 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 from setuptools import setup, find_packages
-from jaziku.utils import globals_vars
+from jaziku.env import globals_vars
 
 name = globals_vars.PROG_NAME
 

@@ -20,7 +20,7 @@
 
 from datetime import date
 
-from jaziku.utils import globals_vars
+from jaziku.env import globals_vars
 
 
 #==============================================================================

@@ -19,7 +19,7 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from jaziku.utils import globals_vars
+from jaziku.env import globals_vars
 
 def code(map_properties):
 

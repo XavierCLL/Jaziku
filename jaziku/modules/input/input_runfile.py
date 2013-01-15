@@ -18,11 +18,12 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-import csv
 import os
+import csv
 
+from jaziku.env import globals_vars
 from jaziku.modules.maps.grid import Grid
-from jaziku.utils import globals_vars, console
+from jaziku.utils import  console
 from jaziku.modules.station import Station
 
 
@@ -186,8 +187,8 @@ def read_runfile():
         # get units
         globals_vars.units_var_D = string[string.index('(')+1:string.index(')')].strip()
     else:
-        if globals_vars.config_run['type_var_D'] in globals_vars.units_of_types_var_D:
-            globals_vars.units_var_D = globals_vars.units_of_types_var_D[globals_vars.config_run['type_var_D']]
+        if globals_vars.config_run['type_var_D'] in globals_vars.UNITS_FOR_TYPES_VAR_D:
+            globals_vars.units_var_D = globals_vars.UNITS_FOR_TYPES_VAR_D[globals_vars.config_run['type_var_D']]
         else:
             globals_vars.units_var_D = '--'
     # var I
@@ -198,8 +199,8 @@ def read_runfile():
         # get units
         globals_vars.units_var_I = string[string.index('(')+1:string.index(')')].strip()
     else:
-        if globals_vars.config_run['type_var_I'] in globals_vars.units_of_types_var_I:
-            globals_vars.units_var_I = globals_vars.units_of_types_var_I[globals_vars.config_run['type_var_I']]
+        if globals_vars.config_run['type_var_I'] in globals_vars.UNITS_FOR_TYPES_VAR_I:
+            globals_vars.units_var_I = globals_vars.UNITS_FOR_TYPES_VAR_I[globals_vars.config_run['type_var_I']]
         else:
             globals_vars.units_var_I = '--'
 

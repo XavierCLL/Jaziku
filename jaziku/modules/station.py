@@ -20,9 +20,9 @@
 
 from datetime import date
 
-from jaziku.utils import globals_vars, console
+from jaziku.env import globals_vars
+from jaziku.utils import  console
 from jaziku.modules.input.input_check import check_consistent_data
-from jaziku.modules.input import input_vars
 from jaziku.modules.climate import climate
 from jaziku.modules.forecasting import forecasting
 from jaziku.modules.variable import Variable
@@ -169,7 +169,8 @@ class Station:
             if globals_vars.config_run['analysis_interval'] != "trimester":
                 console.msg_error(_("The var_D of stations have data monthly, but you define\n"
                                     "in runfile the analysis interval as '{0}', this must be,\n"
-                                    "in this case, as 'trimester' or use data daily.").format(globals_vars.config_run['analysis_interval']))
+                                    "in this case, as 'trimester' or use data daily.").format(
+                    globals_vars.config_run['analysis_interval']))
         if self.state_of_data in [2, 4]:
             # if analysis_interval is defined by trimester but var_I or/and var_D has data
             # daily, first convert in data monthly and continue with results by trimester
@@ -185,7 +186,7 @@ class Station:
                     self.var_I.frequency_data = "monthly"
                 self.state_of_data = 1
             else:
-                console.msg(_("Results will be made every {} days").format(globals_vars.analysis_interval_num_days), color='cyan')
+                console.msg(_("Results will be made every {} days").format(globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL), color='cyan')
 
         if self.state_of_data == 3:
             console.msg(_("Converting all var I to data monthly"), color='cyan')

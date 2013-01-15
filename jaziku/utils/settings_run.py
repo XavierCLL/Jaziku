@@ -19,11 +19,11 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-
-from clint.textui import colored
 import sys
+from clint.textui import colored
 
-from jaziku.utils import globals_vars, console
+from jaziku.env import globals_vars
+from jaziku.utils import  console
 
 
 def get():
@@ -70,10 +70,10 @@ def get():
                             "this must be 'enable' or 'disable'"))
 
     # analysis interval
-    if globals_vars.config_run['analysis_interval'] not in globals_vars.options_analysis_interval:
+    if globals_vars.config_run['analysis_interval'] not in globals_vars.ALL_ANALYSIS_INTERVALS:
         console.msg_error_configuration('analysis_interval',
             _("The 'analysis_interval' defined in runfile {0} is invalid,\nmust be one of these: {1}")
-            .format(globals_vars.config_run['analysis_interval'], ', '.join(globals_vars.options_analysis_interval)))
+            .format(globals_vars.config_run['analysis_interval'], ', '.join(globals_vars.ALL_ANALYSIS_INTERVALS)))
 
     if globals_vars.config_run['analysis_interval'] != "trimester":
         # detect analysis_interval number from string
@@ -84,11 +84,11 @@ def get():
                 _count += 1
             except:
                 pass
-        globals_vars.analysis_interval_num_days = int(globals_vars.config_run['analysis_interval'][0:_count])
+        globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL = int(globals_vars.config_run['analysis_interval'][0:_count])
 
     translate_analysis_interval = [_("5days"), _("10days"), _("15days"), _("trimester")]
-    globals_vars.translate_analysis_interval\
-    = translate_analysis_interval[globals_vars.options_analysis_interval.index(globals_vars.config_run['analysis_interval'])]
+    globals_vars.analysis_interval_i18n\
+    = translate_analysis_interval[globals_vars.ALL_ANALYSIS_INTERVALS.index(globals_vars.config_run['analysis_interval'])]
     # analysis_interval setting
     if globals_vars.config_run['analysis_interval']:
         settings["analysis_interval"] = colored.green(globals_vars.config_run['analysis_interval'])
@@ -118,18 +118,18 @@ def get():
         settings["analog_year"] = colored.green(globals_vars.config_run['analog_year'])
     # lags
     if globals_vars.config_run['lags'] in ['default', 'all']:
-        globals_vars.lags = [0, 1, 2]
-        settings["lags"] = ','.join(map(str, globals_vars.lags))
+        globals_vars.LAGS = [0, 1, 2]
+        settings["lags"] = ','.join(map(str, globals_vars.LAGS))
     else:
         try:
             for lag in str(globals_vars.config_run['lags']).split(","):
                 lag = int(float(lag))
                 if lag not in [0, 1, 2]:
                     raise
-                globals_vars.lags.append(lag)
+                globals_vars.LAGS.append(lag)
         except:
             console.msg_error_configuration('lags', _("The lags may be: 0, 1 and/or 2 (comma separated), 'all' or 'default'"))
-        settings["lags"] = colored.green(','.join(map(str, globals_vars.lags)))
+        settings["lags"] = colored.green(','.join(map(str, globals_vars.LAGS)))
     # languages
     settings["language"] = globals_vars.config_run['language']
     ## input options
@@ -394,7 +394,7 @@ def show(stop_in=None):
     # Print some warnings and notifications
 
     if globals_vars.config_run['path_to_file_var_I'] == 'internal':
-        internal_file_I_name = globals_vars.internal_var_I_files[globals_vars.config_run['type_var_I']]
+        internal_file_I_name = globals_vars.FILES_FOR_INTERNAL_VAR_I[globals_vars.config_run['type_var_I']]
         split_internal_var_I = internal_file_I_name.split(".")[0].split("_")
         console.msg(
             _("\n > You are using internal files for independent\n"
@@ -404,7 +404,7 @@ def show(stop_in=None):
               "   url: {4}")
             .format(split_internal_var_I[0], split_internal_var_I[1],
                 split_internal_var_I[2], ' '.join(split_internal_var_I[3::]),
-                globals_vars.internal_var_I_urls[globals_vars.config_run['type_var_I']]), color='yellow')
+                globals_vars.URLS_FOR_INTERNAL_VAR_I[globals_vars.config_run['type_var_I']]), color='yellow')
 
     if (not globals_vars.config_run['limit_var_D_below'] or
         not globals_vars.config_run['limit_var_D_above'] or
@@ -428,7 +428,7 @@ def check():
     # below var D
     if globals_vars.config_run['limit_var_D_below'] == "default":
         # validation type_D
-        if globals_vars.config_run['type_var_D'] not in globals_vars.types_var_D:
+        if globals_vars.config_run['type_var_D'] not in globals_vars.TYPES_VAR_D:
             console.msg_error_configuration('type_var_D',
                 _("{0} not is valid internal type for dependent variable if you\n"
                   "defined LIMIT VAR D BELOW/ABOVE as 'default'. If you want\n"
@@ -448,7 +448,7 @@ def check():
     # above var D
     if globals_vars.config_run['limit_var_D_above'] == "default":
         # validation type_D
-        if globals_vars.config_run['type_var_D'] not in globals_vars.types_var_D:
+        if globals_vars.config_run['type_var_D'] not in globals_vars.TYPES_VAR_D:
             console.msg_error_configuration('limit_var_D_above',
                 _("{0} not is valid internal type for dependent variable if you\n"
                   "defined LIMIT VAR D BELOW/ABOVE as 'default'. If you want\n"
@@ -475,7 +475,7 @@ def check():
     # below var I
     if globals_vars.config_run['limit_var_I_below'] == "default":
         # validation type_I
-        if globals_vars.config_run['type_var_I'] not in globals_vars.types_var_I:
+        if globals_vars.config_run['type_var_I'] not in globals_vars.TYPES_VAR_I:
             console.msg_error_configuration('type_var_I',
                 _("{0} not is valid internal type for independent variable if you\n"
                   "defined LIMIT VAR I BELOW/ABOVE as 'default'. If you want\n"
@@ -495,7 +495,7 @@ def check():
     # above var I
     if globals_vars.config_run['limit_var_I_above'] == "default":
         # validation type_I
-        if globals_vars.config_run['type_var_I'] not in globals_vars.types_var_I:
+        if globals_vars.config_run['type_var_I'] not in globals_vars.TYPES_VAR_I:
             console.msg_error_configuration('limit_var_I_above',
                 _("{0} not is valid internal type for independent variable if you\n"
                   "defined LIMIT VAR I BELOW/ABOVE as 'default'. If you want\n"
@@ -520,7 +520,7 @@ def check():
     # and notify if Jaziku are using the independent variable inside
     # located in plugins/var_I/
     if globals_vars.config_run["path_to_file_var_I"] == "internal":
-        if globals_vars.config_run["type_var_I"] not in globals_vars.internal_var_I_types:
+        if globals_vars.config_run["type_var_I"] not in globals_vars.TYPES_OF_INTERNAL_VAR_I:
             console.msg_error_configuration('path_to_file_var_I',
                 _("The 'path_to_file_var_I' is defined as 'internal' but the\n"
                   "type of independent variable '{0}' not is a valid internal\n"
@@ -531,13 +531,14 @@ def check():
             console.msg_error_configuration('path_to_file_var_I',
                 _("Can't open file '{0}' for var I, \nplease check filename and check that its path is relative (to runfile) or\n"
                   "absolute. If you want run var I with internals files\n"
-                  "of jaziku you need set 'PATH TO FILE VAR I' as 'internal'").format(globals_vars.config_run["path_to_file_var_I"]))
+                  "of jaziku you need set 'PATH TO FILE VAR I' as 'internal'").format(
+                    globals_vars.config_run["path_to_file_var_I"]))
 
     # -------------------------------------------------------------------------
     # thresholds var_I
 
     if not globals_vars.config_run["path_to_file_var_I"] == "internal" and \
-       globals_vars.config_run["type_var_I"] not in globals_vars.internal_var_I_types:
+       globals_vars.config_run["type_var_I"] not in globals_vars.TYPES_OF_INTERNAL_VAR_I:
         if globals_vars.config_run["threshold_below_var_I"] == "default":
             console.msg_error_configuration('threshold_below_var_I',
                 _("The thresholds can't be define as 'default' if the\n"

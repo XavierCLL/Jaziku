@@ -23,7 +23,7 @@ import os
 import sys
 from clint.textui import colored
 
-import globals_vars
+from jaziku.env import globals_vars
 
 #==============================================================================
 # PRINT FUNCTIONS
