@@ -53,6 +53,8 @@ Synopsis run
 
 - jaziku [-h] [-f] runfile
 
+Read manual for more information.
+
 Team
 ----------
 **Developer:**
