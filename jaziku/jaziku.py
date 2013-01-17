@@ -22,9 +22,9 @@
 #
 # Team:
 #   Developer:
-#       Xavier Corredor Llano < xcorredorl (a) ideam.gov.co >
+#       Xavier Corredor Llano < xcorredorl(a)ideam.gov.co >
 #   Roadmap, technical-theoretical support, tester and product verification, doc-user and manual:
-#       Ines Sánchez Rodriguez < incsanchezro (a) gmail.com >
+#       Ines Sánchez Rodriguez < icsanchez(a)ideam.gov.co >
 #==============================================================================
 
 #==============================================================================
@@ -40,9 +40,9 @@ import gettext
 from i18n import i18n
 
 # jaziku import
-from env import globals_vars
+from env import globals_vars, config_run
 from utils import console
-from utils import settings_run
+from utils import settings_to_run
 from modules.station import Station
 from modules.data_analysis import data_analysis
 from modules.input import input_arg
@@ -77,6 +77,11 @@ def main():
     globals_vars.ARGS = input_arg.arguments.parse_args()
 
     # -------------------------------------------------------------------------
+    # Initialize all settings variables in None
+
+    config_run.init()
+
+    # -------------------------------------------------------------------------
     # READ RUNFILE
     # reading configuration run, list of grids and stations from runfile
 
@@ -94,7 +99,7 @@ def main():
     # -------------------------------------------------------------------------
     # Setting language
 
-    globals_vars.config_run['language'] = i18n.set_language(globals_vars.config_run['language'])
+    i18n.set_language(config_run.settings['language'])
 
     # -------------------------------------------------------------------------
     # Start message
@@ -112,24 +117,24 @@ def main():
     # -------------------------------------------------------------------------
     # GET/SET SETTINGS
 
-    globals_vars.settings = settings_run.get()
+    settings_to_run.get()
 
     # -------------------------------------------------------------------------
     # PRINT AND CHECK SETTINGS, AND CONTINUE
 
-    settings_run.check()
+    settings_to_run.check()
 
-    settings_run.show()
+    settings_to_run.show()
 
-    settings_run.check_station_list(stations)
+    settings_to_run.check_station_list(stations)
 
-    settings_run.continue_run()
+    settings_to_run.continue_run()
 
 
     # -------------------------------------------------------------------------
     # DATA ANALYSIS
-
-    if globals_vars.config_run['data_analysis']:
+    # config_run.get['data_analysis']
+    if config_run.settings['data_analysis']:
         print _("\n\n"
                 "#################### DATA ANALYSIS PROCESS #####################\n"
                 "# Data analysis module, here is verified linearity, outliers   #\n"
@@ -157,7 +162,7 @@ def main():
     # CLIMATE AND FORECASTING PRE-PROCESS
 
     # climate
-    if globals_vars.config_run['climate_process']:
+    if config_run.settings['climate_process']:
 
         print _("\n\n"
                 "############### CLIMATE AND FORECASTING PROCESS ################\n"
@@ -183,7 +188,7 @@ def main():
                   "   could be mixed or replaced of old output."), color='yellow')
 
     # forecasting
-    if globals_vars.config_run['forecasting_process']:
+    if config_run.settings['forecasting_process']:
         # forecasting dir output result
         globals_vars.FORECASTING_DIR \
             = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Forecasting'))   # 'results'
@@ -200,7 +205,7 @@ def main():
     # -------------------------------------------------------------------------
     # CLIMATE AND FORECASTING MAIN PROCESS
 
-    if globals_vars.config_run['climate_process']:
+    if config_run.settings['climate_process']:
         # process each station from stations list
         for station in stations:
 
@@ -228,7 +233,7 @@ def main():
     # MAPS PROCESS
 
     # process to create maps
-    if globals_vars.config_run['maps']:
+    if config_run.settings['maps']:
 
         print _("\n\n"
                 "######################### MAPS PROCESS #########################\n"

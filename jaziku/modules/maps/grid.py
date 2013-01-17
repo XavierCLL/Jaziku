@@ -23,11 +23,11 @@ import imp
 import math
 from  numpy import linspace
 
-from jaziku.env import globals_vars
+from jaziku.env import globals_vars, config_run
 from jaziku.utils import  console, array
 from jaziku.modules.station import Station
 
-class Grid:
+class Grid(object):
     """
     Generic grid class for storage several variables of each grid
     """
@@ -136,12 +136,12 @@ class Grid:
         self.shape_mask = False
         # delete data outside of shape in mesh data
         # if grid_resolution is thin, the shape mask is better
-        if globals_vars.config_run['shape_boundary']:
+        if config_run.settings['shape_boundary']:
             self.shape_mask = True
 
         ## set subtitle on maps
-        if globals_vars.config_run['analog_year']:
-            self.subtitle = _("\"Analysis with analog year - {0}\"").format(globals_vars.config_run['analog_year'])
+        if config_run.settings['analog_year']:
+            self.subtitle = _("\"Analysis with analog year - {0}\"").format(config_run.settings['analog_year'])
         else:
             self.subtitle = "\"\""
 
@@ -198,16 +198,16 @@ class Grid:
         ## put value in the base matrix
         # first check if already exist value in this point on matrix (overlapping)
         if int(matrix[lat_location, lon_location]) != globals_vars.VALID_NULL[1]:
-            if globals_vars.config_run['overlapping'] == "average":
+            if config_run.settings['overlapping'] == "average":
                 matrix[lat_location, lon_location] = array.mean([matrix[lat_location, lon_location], value])
                 return matrix, _("average")
-            if globals_vars.config_run['overlapping'] == "maximum":
+            if config_run.settings['overlapping'] == "maximum":
                 matrix[lat_location, lon_location] = max([matrix[lat_location, lon_location], value])
                 return matrix, _("maximum")
-            if globals_vars.config_run['overlapping'] == "minimum":
+            if config_run.settings['overlapping'] == "minimum":
                 matrix[lat_location, lon_location] = min([matrix[lat_location, lon_location], value])
                 return matrix, _("minimum")
-            if globals_vars.config_run['overlapping'] == "neither":
+            if config_run.settings['overlapping'] == "neither":
                 return matrix, _("neither")
         else:
             matrix[lat_location, lon_location] = value

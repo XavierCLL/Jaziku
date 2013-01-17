@@ -28,7 +28,7 @@ from numpy import array
 from matplotlib import pyplot
 from Image import open as img_open
 
-from jaziku.env import globals_vars
+from jaziku.env import globals_vars, config_run
 from jaziku.utils import  watermarking
 from jaziku.modules.climate.contingency_table import get_contingency_table
 
@@ -143,7 +143,7 @@ def climate_graphs(station):
         # save dir image for mosaic
         image_open_list.append(image_dir_save)
 
-    for lag in globals_vars.LAGS:
+    for lag in config_run.settings['lags']:
 
         # create dir for lag
         if not os.path.isdir(os.path.join(graphics_dir_ca, _('lag_{0}').format(lag))):

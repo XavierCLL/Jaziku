@@ -10,6 +10,8 @@ Changelog
 news
 ++++
 
+- [code] Refactoring config_run, this is where save all variable
+  of configuration run settings
 - [code] Refactoring globals_vars in new environment dir
 - [code] Api documentation
 

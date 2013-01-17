@@ -25,7 +25,7 @@ from scipy import stats
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from jaziku.env import globals_vars
+from jaziku.env import globals_vars, config_run
 from jaziku.utils import format_out
 from jaziku.modules.climate import statistic_tests
 from jaziku.modules.climate.contingency_table import get_contingency_table
@@ -138,7 +138,7 @@ def composite_analysis(station):
 
         return pearson, is_sig_risk_analysis_list
 
-    for lag in globals_vars.LAGS:
+    for lag in config_run.settings['lags']:
 
         # dir and name to save the result table
         csv_name \

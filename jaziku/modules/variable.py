@@ -30,7 +30,7 @@ from jaziku.modules.input.input_check import count_null_values
 from jaziku.utils import console, array
 
 
-class Variable():
+class Variable(object):
     """
     Class for save data raw, data dates, date filtered for dependent or
     independent variable of a station.

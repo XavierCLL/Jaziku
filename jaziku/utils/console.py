@@ -110,8 +110,8 @@ def msg_error_configuration(variable, text_error, show_settings=True):
     Print error generic function occurred in configuration run.
     """
     if show_settings:
-        from jaziku.utils import settings_run
-        settings_run.show(stop_in=variable)
+        from jaziku.utils import settings_to_run
+        settings_to_run.show(stop_in=variable)
 
     runfile_open = open(globals_vars.ARGS.runfile, 'rb')
     runfile = (x.replace('\0', '') for x in runfile_open)

@@ -20,7 +20,7 @@
 
 import os
 
-from jaziku.env import globals_vars
+from jaziku.env import globals_vars, config_run
 from jaziku.modules.forecasting.graphs import forecasting_graphs
 from jaziku.modules.maps.data import forecasting_data_for_maps
 from jaziku.utils import console
@@ -38,7 +38,7 @@ def forecasting(station):
     # get and set date for calculate forecasting based on this TODO: forecasting_date now is static
     if station.state_of_data in [1, 3]:
         try:
-            globals_vars.forecasting_date = int(globals_vars.config_run['forecasting_date'])
+            globals_vars.forecasting_date = int(config_run.settings['forecasting_date'])
         finally:
             if not (1 <= globals_vars.forecasting_date <= 12):
                 console.msg_error_configuration('forecasting_date',
@@ -47,7 +47,7 @@ def forecasting(station):
                     .format(globals_vars.forecasting_date), show_settings=False)
     if station.state_of_data in [2, 4]:
         try:
-            globals_vars.forecasting_date = globals_vars.config_run['forecasting_date'].replace('-', '/')
+            globals_vars.forecasting_date = config_run.settings['forecasting_date'].replace('-', '/')
             globals_vars.forecasting_date = globals_vars.forecasting_date.split('/')
             globals_vars.forecasting_date[0] = int(globals_vars.forecasting_date[0])
             globals_vars.forecasting_date[1] = int(globals_vars.forecasting_date[1])
@@ -55,7 +55,7 @@ def forecasting(station):
             console.msg_error_configuration('forecasting_date',
                 _("Month or day for calculate forecasting '{0}' is invalid, \n"
                   "must be month/day or month-day (e.g. 03/11)")
-                .format(globals_vars.config_run['forecasting_date']), show_settings=False)
+                .format(config_run.settings['forecasting_date']), show_settings=False)
         if not (1 <= globals_vars.forecasting_date[0] <= 12):
             console.msg_error_configuration('forecasting_date',
                 _("Month for forecasting process '{0}' is invalid, \n"
@@ -81,7 +81,7 @@ def forecasting(station):
     prob_normal_var_D = {}
     prob_exceed_var_D = {}
 
-    for lag in globals_vars.LAGS:
+    for lag in config_run.settings['lags']:
 
         items_CT = {'a': 0, 'b': 0, 'c': 0, 'd': 0, 'e': 0, 'f': 0, 'g': 0, 'h': 0, 'i': 0}
         order_CT = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
@@ -90,7 +90,7 @@ def forecasting(station):
             _iter = 0
             for column in range(3):
                 for row in range(3):
-                    if not globals_vars.config_run['risk_analysis'] or\
+                    if not config_run.settings['risk_analysis'] or\
                        station.is_sig_risk_analysis[lag][globals_vars.forecasting_date - 1][_iter] == _('yes'):
                         items_CT[order_CT[_iter]] \
                             = station.contingencies_tables_percent[lag][globals_vars.forecasting_date - 1][column][row] / 100.0
@@ -102,7 +102,7 @@ def forecasting(station):
             _iter = 0
             for column in range(3):
                 for row in range(3):
-                    if not globals_vars.config_run['risk_analysis'] or\
+                    if not config_run.settings['risk_analysis'] or\
                        station.is_sig_risk_analysis[lag][month - 1][day][_iter] == _('yes'):
                         items_CT[order_CT[_iter]]\
                             = station.contingencies_tables_percent[lag][month - 1][day][column][row] / 100.0
@@ -125,7 +125,7 @@ def forecasting(station):
     station.prob_exceed_var_D = prob_exceed_var_D
 
     if not globals_vars.threshold_problem[0] and not globals_vars.threshold_problem[1] and\
-       not globals_vars.threshold_problem[2] and globals_vars.config_run['graphics']:
+       not globals_vars.threshold_problem[2] and config_run.settings['graphics']:
         with console.redirectStdStreams():
             forecasting_graphs(station)
     else:

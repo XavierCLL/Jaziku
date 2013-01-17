@@ -26,7 +26,7 @@ from scipy import stats
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from jaziku.env import globals_vars
+from jaziku.env import globals_vars, config_run
 from jaziku.utils import format_out
 from jaziku.utils import console
 from jaziku.modules.input import input_validation
@@ -52,14 +52,14 @@ def get_thresholds_var_D(station):
     # thresholds by below and by above of var D by default
     def thresholds_by_default():
         # check if analog_year is defined
-        if globals_vars.config_run['analog_year']:
+        if config_run.settings['analog_year']:
             # check if analog_year is inside in process period
-            if station.process_period['start'] <= globals_vars.config_run['analog_year'] <= station.process_period['end']:
+            if station.process_period['start'] <= config_run.settings['analog_year'] <= station.process_period['end']:
 
-                _iter_date = date(globals_vars.config_run['analog_year'], 1, 1)
+                _iter_date = date(config_run.settings['analog_year'], 1, 1)
                 var_D_values_of_analog_year = []
                 # get all raw values of var D only in analog year, ignoring null values
-                while _iter_date <= date(globals_vars.config_run['analog_year'], 12, 31):
+                while _iter_date <= date(config_run.settings['analog_year'], 12, 31):
                     if not globals_vars.is_valid_null(station.var_D.data[station.var_D.date.index(_iter_date)]):
                         var_D_values_of_analog_year.append(station.var_D.data[station.var_D.date.index(_iter_date)])
                     if station.var_D.frequency_data== "daily":
@@ -87,7 +87,7 @@ def get_thresholds_var_D(station):
                                    "   station is outside of process period {1} to\n"
                                    "   {2}. The process continue but using the\n"
                                    "   default thresholds .........................")
-                    .format(globals_vars.config_run['analog_year'],
+                    .format(config_run.settings['analog_year'],
                         station.process_period['start'],
                         station.process_period['end']), color='yellow', newline=False)
                 return percentiles(33, 66)
@@ -149,22 +149,22 @@ def get_thresholds_var_D(station):
 
     ## now analysis threshold input in arguments
     # if are define as default
-    if (globals_vars.config_run['threshold_below_var_D'] == "default" and
-        globals_vars.config_run['threshold_above_var_D'] == "default"):
+    if (config_run.settings['threshold_below_var_D'] == "default" and
+        config_run.settings['threshold_above_var_D'] == "default"):
         return thresholds_by_default()
 
     # check if analog_year is defined but thresholds aren't equal to "default"
-    if globals_vars.config_run['analog_year']:
+    if config_run.settings['analog_year']:
         if station.first_iter:
             console.msg(_("\n > WARNING: You have defined the analog year,\n"
                            "   but the thresholds of var D must be\n"
                            "   'default' for use the analog year .........."), color='yellow', newline=False)
 
     # if are define as percentile
-    if (''.join(list(globals_vars.config_run['threshold_below_var_D'])[0:1]) == "p" and
-        ''.join(list(globals_vars.config_run['threshold_above_var_D'])[0:1]) == "p"):
-        below = int(''.join(list(globals_vars.config_run['threshold_below_var_D'])[1::]))
-        above = int(''.join(list(globals_vars.config_run['threshold_above_var_D'])[1::]))
+    if (''.join(list(config_run.settings['threshold_below_var_D'])[0:1]) == "p" and
+        ''.join(list(config_run.settings['threshold_above_var_D'])[0:1]) == "p"):
+        below = int(''.join(list(config_run.settings['threshold_below_var_D'])[1::]))
+        above = int(''.join(list(config_run.settings['threshold_above_var_D'])[1::]))
         if not (0 <= below <= 100) or not (0 <= above <= 100):
             console.msg_error(_("thresholds of dependent variable were defined as "
                                 "percentile\nbut are outside of range 0-100:\n{0} - {1}")
@@ -176,15 +176,15 @@ def get_thresholds_var_D(station):
         return percentiles(below, above)
 
     # if are define as standard deviation
-    if (''.join(list(globals_vars.config_run['threshold_below_var_D'])[0:2]) == "sd" and
-        ''.join(list(globals_vars.config_run['threshold_above_var_D'])[0:2]) == "sd"):
-        below = int(''.join(list(globals_vars.config_run['threshold_below_var_D'])[2::]))
-        above = int(''.join(list(globals_vars.config_run['threshold_above_var_D'])[2::]))
+    if (''.join(list(config_run.settings['threshold_below_var_D'])[0:2]) == "sd" and
+        ''.join(list(config_run.settings['threshold_above_var_D'])[0:2]) == "sd"):
+        below = int(''.join(list(config_run.settings['threshold_below_var_D'])[2::]))
+        above = int(''.join(list(config_run.settings['threshold_above_var_D'])[2::]))
         return thresholds_with_std_deviation(below, above)
 
     # if are define as particular values
-    return thresholds_with_particular_values(globals_vars.config_run['threshold_below_var_D'],
-        globals_vars.config_run['threshold_above_var_D'])
+    return thresholds_with_particular_values(config_run.settings['threshold_below_var_D'],
+        config_run.settings['threshold_above_var_D'])
 
 
 def get_thresholds_var_I(station):
@@ -358,15 +358,15 @@ def get_thresholds_var_I(station):
 
     ## now analysis threshold input in arguments
     # if are define as default
-    if (globals_vars.config_run['threshold_below_var_I'] == "default" and
-        globals_vars.config_run['threshold_above_var_I'] == "default"):
+    if (config_run.settings['threshold_below_var_I'] == "default" and
+        config_run.settings['threshold_above_var_I'] == "default"):
         return thresholds_by_default()
 
     # if are define as percentile
-    if (''.join(list(globals_vars.config_run['threshold_below_var_I'])[0:1]) == "p" and
-        ''.join(list(globals_vars.config_run['threshold_above_var_I'])[0:1]) == "p"):
-        below = float(''.join(list(globals_vars.config_run['threshold_below_var_I'])[1::]))
-        above = float(''.join(list(globals_vars.config_run['threshold_above_var_I'])[1::]))
+    if (''.join(list(config_run.settings['threshold_below_var_I'])[0:1]) == "p" and
+        ''.join(list(config_run.settings['threshold_above_var_I'])[0:1]) == "p"):
+        below = float(''.join(list(config_run.settings['threshold_below_var_I'])[1::]))
+        above = float(''.join(list(config_run.settings['threshold_above_var_I'])[1::]))
         if not (0 <= below <= 100) or not (0 <= above <= 100):
             console.msg_error(_(
                 "thresholds of independent variable were defined as "
@@ -380,15 +380,15 @@ def get_thresholds_var_I(station):
         return percentiles(below, above)
 
     # if are define as standard deviation
-    if (''.join(list(globals_vars.config_run['threshold_below_var_I'])[0:2]) == "sd" and
-        ''.join(list(globals_vars.config_run['threshold_above_var_I'])[0:2]) == "sd"):
-        below = int(''.join(list(globals_vars.config_run['threshold_below_var_I'])[2::]))
-        above = int(''.join(list(globals_vars.config_run['threshold_above_var_I'])[2::]))
+    if (''.join(list(config_run.settings['threshold_below_var_I'])[0:2]) == "sd" and
+        ''.join(list(config_run.settings['threshold_above_var_I'])[0:2]) == "sd"):
+        below = int(''.join(list(config_run.settings['threshold_below_var_I'])[2::]))
+        above = int(''.join(list(config_run.settings['threshold_above_var_I'])[2::]))
         return thresholds_with_std_deviation(below, above)
 
     # if are define as particular values
-    return thresholds_with_particular_values(globals_vars.config_run['threshold_below_var_I'],
-        globals_vars.config_run['threshold_above_var_I'])
+    return thresholds_with_particular_values(config_run.settings['threshold_below_var_I'],
+        config_run.settings['threshold_above_var_I'])
 
 
 def get_contingency_table(station, lag, month, day=None):
@@ -464,7 +464,7 @@ def get_contingency_table(station, lag, month, day=None):
               u"   variable '{2}' with relation to '{3}' inside\n"
               u"   category '{4}'. Therefore, the graphics\n"
               u"   will not be created.")
-            .format(globals_vars.config_run['threshold_below_var_I'], globals_vars.config_run['threshold_above_var_I'],
+            .format(config_run.settings['threshold_below_var_I'], config_run.settings['threshold_above_var_I'],
                 station.var_D.type_series, station.var_I.type_series, globals_vars.phenomenon_below), color='yellow')
         globals_vars.threshold_problem[0] = True
 
@@ -476,7 +476,7 @@ def get_contingency_table(station, lag, month, day=None):
               u"   variable '{2}' with relation to '{3}' inside\n"
               u"   category '{4}'. Therefore, the graphics\n"
               u"   will not be created.")
-            .format(globals_vars.config_run['threshold_below_var_I'], globals_vars.config_run['threshold_above_var_I'],
+            .format(config_run.settings['threshold_below_var_I'], config_run.settings['threshold_above_var_I'],
                 station.var_D.type_series, station.var_I.type_series, globals_vars.phenomenon_normal), color='yellow')
         globals_vars.threshold_problem[1] = True
 
@@ -488,7 +488,7 @@ def get_contingency_table(station, lag, month, day=None):
               u"   variable '{2}' with relation to '{3}' inside\n"
               u"   category '{4}'. Therefore, the graphics\n"
               u"   will not be created.")
-            .format(globals_vars.config_run['threshold_below_var_I'], globals_vars.config_run['threshold_above_var_I'],
+            .format(config_run.settings['threshold_below_var_I'], config_run.settings['threshold_above_var_I'],
                 station.var_D.type_series, station.var_I.type_series, globals_vars.phenomenon_above), color='yellow')
         globals_vars.threshold_problem[2] = True
 
@@ -524,7 +524,7 @@ def contingency_table(station):
     contingencies_tables_percent = {}
     # defined if is first iteration
     station.first_iter = True
-    for lag in globals_vars.LAGS:
+    for lag in config_run.settings['lags']:
 
         tmp_month_list = []
         # all months in year 1->12

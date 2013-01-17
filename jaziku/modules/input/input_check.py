@@ -55,7 +55,7 @@ def check_consistent_data(variable):
 #    if (var_type == "D" and station.var_D.frequency_data== "daily") or\
 #       (var_type == "I" and station.var_I.frequency_data == "daily"):
 #        end_date = date(station.process_period['end'], 12, 31)
-#        if globals_vars.config_run['analysis_interval'] == "trimester":
+#        if config_run.get['analysis_interval'] == "trimester":
 #            date_plus = monthrange(station.process_period['end'] + 1, 1)[1] +\
 #                        monthrange(station.process_period['end'] + 1, 2)[1]
 #            date_minus = 61

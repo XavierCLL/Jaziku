@@ -213,6 +213,7 @@ maps_files_forecasting = {'5days': {}, '10days': {}, '15days': {}, 'trimester': 
 
 #==============================================================================
 # phenomenon based on arguments or not, start with default value
+
 phenomenon_below = None
 phenomenon_normal = None
 phenomenon_above = None
@@ -234,54 +235,15 @@ def graphs_title_properties(tfs=18, ma='center'):
 
 
 #==============================================================================
-# configurations and settings
+# settings to run, this si a global variable of 'settings' inside of settings_to_run
+input_settings = {}
 
-# configuration run read and set from runfile
-config_run = {'data_analysis': None,
-              'climate_process': None,
-              'forecasting_process': None,
-              'analysis_interval': None,
-              'process_period': None,
-              'analog_year': None,
-              'lags': None,
-              'language': None,
-              'type_var_D': None,
-              'limit_var_D_below': None,
-              'limit_var_D_above': None,
-              'threshold_below_var_D': None,
-              'threshold_above_var_D': None,
-              'type_var_I': None,
-              'path_to_file_var_I': None,
-              'limit_var_I_below': None,
-              'limit_var_I_above': None,
-              'threshold_below_var_I': None,
-              'threshold_above_var_I': None,
-              'consistent_data': None,
-              'risk_analysis': None,
-              'graphics': None,
-              'phen_below_label': None,
-              'phen_normal_label': None,
-              'phen_above_label': None,
-              'lag_0_phen_below': None,
-              'lag_0_phen_normal': None,
-              'lag_0_phen_above': None,
-              'lag_1_phen_below': None,
-              'lag_1_phen_normal': None,
-              'lag_1_phen_above': None,
-              'lag_2_phen_below': None,
-              'lag_2_phen_normal': None,
-              'lag_2_phen_above': None,
-              'forecasting_date': None,
-              'maps': None,
-              'marks_stations': None,
-              'overlapping': None,
-              "shape_boundary": None}
-
-# settings run
-settings = {}
-
+#==============================================================================
 # globals variable for defined lags, lags = [ 0, 1 and/or 2 ]
-LAGS = []
+ALL_LAGS = [0, 1, 2]
+
+#==============================================================================
+# globals directories
 
 CLIMATE_DIR = None
 
@@ -289,9 +251,7 @@ FORECASTING_DIR = None
 
 DATA_ANALYSIS_DIR = None
 
-# defined, after read runfile configuration, what run
-maps = {'climate': False, 'forecasting': False, 'correlation': False}
-
+#==============================================================================
 # threshold_problem is global variable for detect problem with
 # threshold of independent variable, if a problem is detected
 # show message and print "nan" (this mean null value for

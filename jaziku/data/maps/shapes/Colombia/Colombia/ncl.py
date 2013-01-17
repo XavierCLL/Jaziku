@@ -19,7 +19,7 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from jaziku.env import globals_vars
+from jaziku.env import globals_vars, config_run
 
 def code(map_properties):
 
@@ -29,7 +29,7 @@ def code(map_properties):
         'shape': map_properties.shape,
         'interpolation_file': os.path.abspath(map_properties.base_path_file) + '.tsv',
         'stations_file': os.path.abspath(map_properties.base_path_file) + '_stations.tsv',
-        'marks_stations': globals_vars.config_run['marks_stations'],
+        'marks_stations': config_run.settings['marks_stations'],
         'label_marks_stations': _('Stations'),
         'save_map': os.path.abspath(map_properties.base_path_file),
         'title': map_properties.title,

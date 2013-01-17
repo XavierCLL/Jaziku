@@ -20,7 +20,7 @@
 
 from datetime import date
 
-from jaziku.env import globals_vars
+from jaziku.env import globals_vars, config_run
 from jaziku.utils import  console
 from jaziku.modules.input.input_check import check_consistent_data
 from jaziku.modules.climate import climate
@@ -32,7 +32,7 @@ from jaziku.modules.variable import Variable
 # for storage several variables of each station
 
 
-class Station:
+class Station(object):
     """
     Generic station class for save several variables, configuration and
     properties for each station
@@ -67,19 +67,19 @@ class Station:
 
         # initialized variable common_period
         # format list: [[  date ,  var_D ,  var_I ],... ]
-        if globals_vars.config_run['process_period']:
-            if (globals_vars.config_run['process_period']['start'] < common_date[0].year + 1 or
-                globals_vars.config_run['process_period']['end'] > common_date[-1].year - 1):
+        if config_run.settings['process_period']:
+            if (config_run.settings['process_period']['start'] < common_date[0].year + 1 or
+                config_run.settings['process_period']['end'] > common_date[-1].year - 1):
                 console.msg(_("\nCalculating the process period ................ "), newline=False)
                 console.msg_error(_(
                     "The period defined in argument {0}-{1} is outside in the\n"
                     "maximum possible period for this station: {2}-{3}.")
-                .format(globals_vars.config_run['process_period']['start'],
-                    globals_vars.config_run['process_period']['end'],
+                .format(config_run.settings['process_period']['start'],
+                    config_run.settings['process_period']['end'],
                     common_date[0].year + 1, common_date[-1].year - 1))
 
-            common_date = common_date[common_date.index(date(globals_vars.config_run['process_period']['start'] - 1, 1, 1)):
-            common_date.index(date(globals_vars.config_run['process_period']['end'] + 1, 12, 1)) + 1]
+            common_date = common_date[common_date.index(date(config_run.settings['process_period']['start'] - 1, 1, 1)):
+            common_date.index(date(config_run.settings['process_period']['end'] + 1, 12, 1)) + 1]
 
         self.common_period = []
         # set values matrix for common_period
@@ -134,7 +134,7 @@ class Station:
         """
         Read, validated and check data
         """
-        if globals_vars.config_run['data_analysis']:
+        if config_run.settings['data_analysis']:
             process = False
         else:
             process = True
@@ -142,13 +142,13 @@ class Station:
         self.var_D.read_data_from_file(self, process=process, messages=True)
         self.var_I.read_data_from_file(self, process=process, messages=True)
 
-        if not globals_vars.config_run['data_analysis']:
+        if not config_run.settings['data_analysis']:
             self.calculate_common_and_process_period()
 
             self.var_D.data_and_null_in_process_period(self)
             self.var_I.data_and_null_in_process_period(self)
 
-        if globals_vars.config_run['consistent_data']:
+        if config_run.settings['consistent_data']:
             check_consistent_data(self.var_D)
             check_consistent_data(self.var_I)
 
@@ -166,15 +166,15 @@ class Station:
         # define if results will made by trimester or every n days
         if self.state_of_data in [1, 3]:
             console.msg(_("Results will be made by trimesters"), color='cyan')
-            if globals_vars.config_run['analysis_interval'] != "trimester":
+            if config_run.settings['analysis_interval'] != "trimester":
                 console.msg_error(_("The var_D of stations have data monthly, but you define\n"
                                     "in runfile the analysis interval as '{0}', this must be,\n"
                                     "in this case, as 'trimester' or use data daily.").format(
-                    globals_vars.config_run['analysis_interval']))
+                    config_run.settings['analysis_interval']))
         if self.state_of_data in [2, 4]:
             # if analysis_interval is defined by trimester but var_I or/and var_D has data
             # daily, first convert in data monthly and continue with results by trimester
-            if globals_vars.config_run['analysis_interval'] == "trimester":
+            if config_run.settings['analysis_interval'] == "trimester":
                 console.msg(_("Results will be made by trimesters"), color='cyan')
                 if self.var_D.frequency_data == "daily":
                     console.msg(_("Converting all var D to data monthly"), color='cyan')
@@ -197,10 +197,10 @@ class Station:
         console.msg(_("Period to process: {0}-{1}").format(self.process_period['start'], self.process_period['end']), color='cyan')
 
         # run climate process
-        if globals_vars.config_run['climate_process']:
+        if config_run.settings['climate_process']:
             climate.climate(self)
 
         # run forecasting process
-        if globals_vars.config_run['forecasting_process']:
+        if config_run.settings['forecasting_process']:
             # TODO: run forecasting without climate¿?
             forecasting.forecasting(self)

@@ -83,6 +83,7 @@ def set_language(language):
     """
     #_ = language.ugettext
 
+    from jaziku.env import config_run
     from jaziku.utils import console
 
     if language and language != "autodetect":
@@ -125,5 +126,5 @@ def set_language(language):
             os.environ["LANG"] = "en"
             lang.install()
 
-    return settings_language
+    config_run.settings['language'] = settings_language
 

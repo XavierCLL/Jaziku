@@ -22,20 +22,20 @@ import os
 import sys
 from clint.textui import colored
 
-from jaziku.env import globals_vars
+from jaziku.env import globals_vars, config_run
 from jaziku.utils import  console
 
 
 def get():
 
-    # set settings default
+    # set settings by default
     settings = {"data_analysis": colored.red(_("disabled")),
                 "climate_process": colored.red(_("disabled")),
                 "forecasting_process": colored.red(_("disabled")),
                 "process_period": colored.red(_("disabled")),
                 "analog_year": colored.red(_("disabled")),
                 "lags": None,
-                "language": globals_vars.config_run['language'],
+                "language": config_run.settings['language'],
                 "consistent_data": colored.red(_("disabled")),
                 "risk_analysis": colored.red(_("disabled")),
                 "graphics": colored.red(_("disabled")),
@@ -47,62 +47,62 @@ def get():
                 "overlapping": None,
                 "shape_boundary": colored.red(_("disabled"))}
 
-    globals_vars.settings = settings
+    globals_vars.input_settings = settings
 
     ## general options
     # data_analysis
-    if globals_vars.config_run['data_analysis'] == True:
+    if config_run.settings['data_analysis'] == True:
         settings["data_analysis"] = colored.green(_("enabled"))
-    elif not globals_vars.config_run['data_analysis'] == False:
+    elif not config_run.settings['data_analysis'] == False:
         console.msg_error_configuration('data_analysis', _("'data_analysis' variable in runfile is wrong,\n"
                                                            "this must be 'enable' or 'disable'"))
     # climate_process
-    if globals_vars.config_run['climate_process'] == True:
+    if config_run.settings['climate_process'] == True:
         settings["climate_process"] = colored.green(_("enabled"))
-    elif not globals_vars.config_run['climate_process'] == False:
+    elif not config_run.settings['climate_process'] == False:
         console.msg_error_configuration('climate_process', _("'climate_process' variable in runfile is wrong,\n"
                             "this must be 'enable' or 'disable'"))
     # forecasting_process
-    if globals_vars.config_run['forecasting_process'] == True:
+    if config_run.settings['forecasting_process'] == True:
         settings["forecasting_process"] = colored.green(_("enabled"))
-    elif not globals_vars.config_run['forecasting_process'] == False:
+    elif not config_run.settings['forecasting_process'] == False:
         console.msg_error_configuration('forecasting_process', _("'forecasting_process' variable in runfile is wrong,\n"
                             "this must be 'enable' or 'disable'"))
 
     # analysis interval
-    if globals_vars.config_run['analysis_interval'] not in globals_vars.ALL_ANALYSIS_INTERVALS:
+    if config_run.settings['analysis_interval'] not in globals_vars.ALL_ANALYSIS_INTERVALS:
         console.msg_error_configuration('analysis_interval',
             _("The 'analysis_interval' defined in runfile {0} is invalid,\nmust be one of these: {1}")
-            .format(globals_vars.config_run['analysis_interval'], ', '.join(globals_vars.ALL_ANALYSIS_INTERVALS)))
+            .format(config_run.settings['analysis_interval'], ', '.join(globals_vars.ALL_ANALYSIS_INTERVALS)))
 
-    if globals_vars.config_run['analysis_interval'] != "trimester":
+    if config_run.settings['analysis_interval'] != "trimester":
         # detect analysis_interval number from string
         _count = 0
-        for digit in globals_vars.config_run['analysis_interval']:
+        for digit in config_run.settings['analysis_interval']:
             try:
                 int(digit)
                 _count += 1
             except:
                 pass
-        globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL = int(globals_vars.config_run['analysis_interval'][0:_count])
+        globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL = int(config_run.settings['analysis_interval'][0:_count])
 
     translate_analysis_interval = [_("5days"), _("10days"), _("15days"), _("trimester")]
     globals_vars.analysis_interval_i18n\
-    = translate_analysis_interval[globals_vars.ALL_ANALYSIS_INTERVALS.index(globals_vars.config_run['analysis_interval'])]
+    = translate_analysis_interval[globals_vars.ALL_ANALYSIS_INTERVALS.index(config_run.settings['analysis_interval'])]
     # analysis_interval setting
-    if globals_vars.config_run['analysis_interval']:
-        settings["analysis_interval"] = colored.green(globals_vars.config_run['analysis_interval'])
+    if config_run.settings['analysis_interval']:
+        settings["analysis_interval"] = colored.green(config_run.settings['analysis_interval'])
 
 
     # process_period
-    if globals_vars.config_run['process_period'] == "maximum":
+    if config_run.settings['process_period'] == "maximum":
         settings["process_period"] = "maximum"
-        globals_vars.config_run['process_period'] = False
+        config_run.settings['process_period'] = False
     else:
         try:
-            args_period_start = int(globals_vars.config_run['process_period'].split('-')[0])
-            args_period_end = int(globals_vars.config_run['process_period'].split('-')[1])
-            globals_vars.config_run['process_period'] = {'start': args_period_start,
+            args_period_start = int(config_run.settings['process_period'].split('-')[0])
+            args_period_end = int(config_run.settings['process_period'].split('-')[1])
+            config_run.settings['process_period'] = {'start': args_period_start,
                                                          'end': args_period_end}
             settings["process_period"] = colored.green("{0}-{1}".format(args_period_start, args_period_end))
         except Exception, e:
@@ -110,191 +110,196 @@ def get():
                 _("The period must be: year_start-year_end (ie. 1980-2008)\n"
                   "or 'maximum' for take the process period maximum possible.\n\n{0}").format(e))
     # analog_year
-    if globals_vars.config_run['analog_year']:
+    if config_run.settings['analog_year']:
         try:
-            globals_vars.config_run['analog_year'] = int(globals_vars.config_run['analog_year'])
+            config_run.settings['analog_year'] = int(config_run.settings['analog_year'])
         except:
             console.msg_error_configuration('analog_year', "the analog_year must be a valid year")
-        settings["analog_year"] = colored.green(globals_vars.config_run['analog_year'])
+        settings["analog_year"] = colored.green(config_run.settings['analog_year'])
     # lags
-    if globals_vars.config_run['lags'] in ['default', 'all']:
-        globals_vars.LAGS = [0, 1, 2]
-        settings["lags"] = ','.join(map(str, globals_vars.LAGS))
+    if config_run.settings['lags'] in ['default', 'all']:
+        config_run.settings['lags'] = globals_vars.ALL_LAGS
+        settings["lags"] = ','.join(map(str, config_run.settings['lags']))
     else:
         try:
-            for lag in str(globals_vars.config_run['lags']).split(","):
+            lags = []
+            for lag in str(config_run.settings['lags']).split(","):
                 lag = int(float(lag))
                 if lag not in [0, 1, 2]:
                     raise
-                globals_vars.LAGS.append(lag)
+                lags.append(lag)
+            config_run.settings['lags'] = lags
         except:
             console.msg_error_configuration('lags', _("The lags may be: 0, 1 and/or 2 (comma separated), 'all' or 'default'"))
-        settings["lags"] = colored.green(','.join(map(str, globals_vars.LAGS)))
+        settings["lags"] = colored.green(','.join(map(str, config_run.settings['lags'])))
     # languages
-    settings["language"] = globals_vars.config_run['language']
+    settings["language"] = config_run.settings['language']
     ## input options
     # type var D
-    if globals_vars.config_run['type_var_D']:
-        settings["type_var_D"] = colored.green(globals_vars.config_run['type_var_D']) + " ({0})".format(globals_vars.units_var_D)
+    if config_run.settings['type_var_D']:
+        settings["type_var_D"] = colored.green(config_run.settings['type_var_D']) + " ({0})".format(globals_vars.units_var_D)
     # limit var D below
-    if globals_vars.config_run['limit_var_D_below'] == 'none':
+    if config_run.settings['limit_var_D_below'] == 'none':
         settings["limit_var_D_below"] = colored.red('none')
-    elif globals_vars.config_run['limit_var_D_below'] == 'default':
+    elif config_run.settings['limit_var_D_below'] == 'default':
         settings["limit_var_D_below"] = _('default')
     else:
-        settings["limit_var_D_below"] = colored.green(globals_vars.config_run['limit_var_D_below'])
+        settings["limit_var_D_below"] = colored.green(config_run.settings['limit_var_D_below'])
     # limit var D above
-    if globals_vars.config_run['limit_var_D_above'] == 'none':
+    if config_run.settings['limit_var_D_above'] == 'none':
         settings["limit_var_D_above"] = colored.red('none')
-    elif globals_vars.config_run['limit_var_D_above'] == 'default':
+    elif config_run.settings['limit_var_D_above'] == 'default':
         settings["limit_var_D_above"] = _('default')
     else:
-        settings["limit_var_D_above"] = colored.green(globals_vars.config_run['limit_var_D_above'])
+        settings["limit_var_D_above"] = colored.green(config_run.settings['limit_var_D_above'])
     # threshold var D
-    if globals_vars.config_run['threshold_below_var_D'] == 'default':
+    if config_run.settings['threshold_below_var_D'] == 'default':
         settings["threshold_below_var_D"] = _('default')
     else:
-        settings["threshold_below_var_D"] = colored.green(globals_vars.config_run['threshold_below_var_D'])
-    if globals_vars.config_run['threshold_above_var_D'] == 'default':
+        settings["threshold_below_var_D"] = colored.green(config_run.settings['threshold_below_var_D'])
+    if config_run.settings['threshold_above_var_D'] == 'default':
         settings["threshold_above_var_D"] = _('default')
     else:
-        settings["threshold_above_var_D"] = colored.green(globals_vars.config_run['threshold_above_var_D'])
+        settings["threshold_above_var_D"] = colored.green(config_run.settings['threshold_above_var_D'])
     # type var I
-    if globals_vars.config_run['type_var_I']:
-        settings["type_var_I"] = colored.green(globals_vars.config_run['type_var_I']) + " ({0})".format(globals_vars.units_var_I)
+    if config_run.settings['type_var_I']:
+        settings["type_var_I"] = colored.green(config_run.settings['type_var_I']) + " ({0})".format(globals_vars.units_var_I)
     # path_to_file_var_I
-    if globals_vars.config_run['path_to_file_var_I'] == 'internal':
-        settings["path_to_file_var_I"] = colored.green(globals_vars.config_run['path_to_file_var_I'])
+    if config_run.settings['path_to_file_var_I'] == 'internal':
+        settings["path_to_file_var_I"] = colored.green(config_run.settings['path_to_file_var_I'])
     else:
-        settings["path_to_file_var_I"] = globals_vars.config_run['path_to_file_var_I']
+        settings["path_to_file_var_I"] = config_run.settings['path_to_file_var_I']
     # limit var I below
-    if globals_vars.config_run['limit_var_I_below'] == 'none':
+    if config_run.settings['limit_var_I_below'] == 'none':
         settings["limit_var_I_below"] = colored.red('none')
-    elif globals_vars.config_run['limit_var_I_below'] == 'default':
+    elif config_run.settings['limit_var_I_below'] == 'default':
         settings["limit_var_I_below"] = _('default')
     else:
-        settings["limit_var_I_below"] = colored.green(globals_vars.config_run['limit_var_I_below'])
+        settings["limit_var_I_below"] = colored.green(config_run.settings['limit_var_I_below'])
     # limit var I above
-    if globals_vars.config_run['limit_var_I_above'] == 'none':
+    if config_run.settings['limit_var_I_above'] == 'none':
         settings["limit_var_I_above"] = colored.red('none')
-    elif globals_vars.config_run['limit_var_I_above'] == 'default':
+    elif config_run.settings['limit_var_I_above'] == 'default':
         settings["limit_var_I_above"] = _('default')
     else:
-        settings["limit_var_I_above"] = colored.green(globals_vars.config_run['limit_var_I_above'])
+        settings["limit_var_I_above"] = colored.green(config_run.settings['limit_var_I_above'])
     # threshold var I
-    if globals_vars.config_run['threshold_below_var_I'] == 'default':
+    if config_run.settings['threshold_below_var_I'] == 'default':
         settings["threshold_below_var_I"] = _('default')
     else:
-        settings["threshold_below_var_I"] = colored.green(globals_vars.config_run['threshold_below_var_I'])
-    if globals_vars.config_run['threshold_above_var_I'] == 'default':
+        settings["threshold_below_var_I"] = colored.green(config_run.settings['threshold_below_var_I'])
+    if config_run.settings['threshold_above_var_I'] == 'default':
         settings["threshold_above_var_I"] = _('default')
     else:
-        settings["threshold_above_var_I"] = colored.green(globals_vars.config_run['threshold_above_var_I'])
+        settings["threshold_above_var_I"] = colored.green(config_run.settings['threshold_above_var_I'])
     ## check options
     # consistent_data
-    if globals_vars.config_run['consistent_data']:
+    if config_run.settings['consistent_data']:
         settings["consistent_data"] = colored.green(_("enabled"))
     # risk_analysis
-    if globals_vars.config_run['risk_analysis']:
+    if config_run.settings['risk_analysis']:
         settings["risk_analysis"] = colored.green(_("enabled"))
 
     ## graphics settings
-    if globals_vars.config_run['graphics']:
+    if config_run.settings['graphics']:
         settings["graphics"] = colored.green(_("enabled"))
     # if phenomenon below is defined inside arguments, else default value
-    if globals_vars.config_run['phen_below_label'] and globals_vars.config_run['phen_below_label'] != "default":
-        globals_vars.phenomenon_below = globals_vars.config_run['phen_below_label']
-        settings["phen_below_label"] = colored.green(globals_vars.config_run['phen_below_label'])
+    if config_run.settings['phen_below_label'] and config_run.settings['phen_below_label'] != "default":
+        globals_vars.phenomenon_below = config_run.settings['phen_below_label']
+        settings["phen_below_label"] = colored.green(config_run.settings['phen_below_label'])
     else:
         globals_vars.phenomenon_below = _('var_I_below')
         settings["phen_below_label"] = globals_vars.phenomenon_below
     # if phenomenon normal is defined inside arguments, else default value
-    if globals_vars.config_run['phen_normal_label'] and globals_vars.config_run['phen_normal_label'] != "default":
-        globals_vars.phenomenon_normal = unicode(globals_vars.config_run['phen_normal_label'], 'utf-8')
-        settings["phen_normal_label"] = colored.green(globals_vars.config_run['phen_normal_label'])
+    if config_run.settings['phen_normal_label'] and config_run.settings['phen_normal_label'] != "default":
+        globals_vars.phenomenon_normal = unicode(config_run.settings['phen_normal_label'], 'utf-8')
+        settings["phen_normal_label"] = colored.green(config_run.settings['phen_normal_label'])
     else:
         globals_vars.phenomenon_normal = _('var_I_normal')
         settings["phen_normal_label"] = globals_vars.phenomenon_normal
     # if phenomenon above is defined inside arguments, else default value
-    if globals_vars.config_run['phen_above_label'] and globals_vars.config_run['phen_above_label'] != "default":
-        globals_vars.phenomenon_above = unicode(globals_vars.config_run['phen_above_label'], 'utf-8')
-        settings["phen_above_label"] = colored.green(globals_vars.config_run['phen_above_label'])
+    if config_run.settings['phen_above_label'] and config_run.settings['phen_above_label'] != "default":
+        globals_vars.phenomenon_above = unicode(config_run.settings['phen_above_label'], 'utf-8')
+        settings["phen_above_label"] = colored.green(config_run.settings['phen_above_label'])
     else:
         globals_vars.phenomenon_above = _('var_I_above')
         settings["phen_above_label"] = globals_vars.phenomenon_above
 
     ## forecasting settings
-    if globals_vars.config_run['forecasting_process']:
-        settings["lag_0_phen_below"] = globals_vars.config_run['lag_0_phen_below']
-        settings["lag_0_phen_normal"] = globals_vars.config_run['lag_0_phen_normal']
-        settings["lag_0_phen_above"] = globals_vars.config_run['lag_0_phen_above']
-        settings["lag_1_phen_below"] = globals_vars.config_run['lag_1_phen_below']
-        settings["lag_1_phen_normal"] = globals_vars.config_run['lag_1_phen_normal']
-        settings["lag_1_phen_above"] = globals_vars.config_run['lag_1_phen_above']
-        settings["lag_2_phen_below"] = globals_vars.config_run['lag_2_phen_below']
-        settings["lag_2_phen_normal"] = globals_vars.config_run['lag_2_phen_normal']
-        settings["lag_2_phen_above"] = globals_vars.config_run['lag_2_phen_above']
-        settings["forecasting_date"] = colored.green(globals_vars.config_run['forecasting_date'])
+    if config_run.settings['forecasting_process']:
+        settings["lag_0_phen_below"] = config_run.settings['lag_0_phen_below']
+        settings["lag_0_phen_normal"] = config_run.settings['lag_0_phen_normal']
+        settings["lag_0_phen_above"] = config_run.settings['lag_0_phen_above']
+        settings["lag_1_phen_below"] = config_run.settings['lag_1_phen_below']
+        settings["lag_1_phen_normal"] = config_run.settings['lag_1_phen_normal']
+        settings["lag_1_phen_above"] = config_run.settings['lag_1_phen_above']
+        settings["lag_2_phen_below"] = config_run.settings['lag_2_phen_below']
+        settings["lag_2_phen_normal"] = config_run.settings['lag_2_phen_normal']
+        settings["lag_2_phen_above"] = config_run.settings['lag_2_phen_above']
+        settings["forecasting_date"] = colored.green(config_run.settings['forecasting_date'])
 
     ## maps settings
-    if globals_vars.config_run['maps']:
-        if globals_vars.config_run['maps'] == "all":
-            globals_vars.maps = {'climate': True, 'forecasting': True, 'correlation': True}
-            settings["maps"] = ','.join(map(str, [m for m in globals_vars.maps if globals_vars.maps[m]]))
+    if config_run.settings['maps']:
+        if config_run.settings['maps'] == "all":
+            config_run.settings['maps'] = {'climate': True, 'forecasting': True, 'correlation': True}
+            settings["maps"] = ','.join(map(str, [m for m in config_run.settings['maps'] if config_run.settings['maps'][m]]))
         else:
             try:
-                for map_to_run in globals_vars.config_run['maps'].split(","):
+                config_run.settings['maps'] = {'climate': False, 'forecasting': False, 'correlation': False}
+                input_maps_list = config_run.settings['maps'].split(",")
+                for map_to_run in input_maps_list:
                     map_to_run = map_to_run.strip()
                     if map_to_run not in ['climate', 'forecasting', 'correlation']:
                         raise
-                    globals_vars.maps[map_to_run] = True
+                    config_run.settings['maps'][map_to_run] = True
             except:
                 console.msg_error_configuration('maps',_("the maps options are: 'climate', 'forecasting', "
                     "'correlation' (comma separated), or 'all'."))
-            settings["maps"] = colored.green(','.join(map(str, [m for m in globals_vars.maps if globals_vars.maps[m]])))
+            settings["maps"] = colored.green(','.join(map(str, [m for m in config_run.settings['maps'] if config_run.settings['maps'][m]])))
 
         # marks_stations
-        if globals_vars.config_run['marks_stations'] in ["enable", "default", True]:
+        if config_run.settings['marks_stations'] in ["enable", "default", True]:
             settings["marks_stations"] = colored.green(_("enabled"))
-            globals_vars.config_run['marks_stations'] = True
-        elif globals_vars.config_run['marks_stations'] in ["disable", False]:
-            globals_vars.config_run['marks_stations'] = False
+            config_run.settings['marks_stations'] = True
+        elif config_run.settings['marks_stations'] in ["disable", False]:
+            config_run.settings['marks_stations'] = False
         else:
             console.msg_error_configuration('marks_stations', _("The marks_stations is wrong, the options are:\n"
                                                                 "disable, enable or default."))
         # set the overlapping solution
-        if globals_vars.config_run['overlapping'] == "default" or not globals_vars.config_run['overlapping']:
-            globals_vars.config_run['overlapping'] = "average"
-            settings['overlapping'] = globals_vars.config_run['overlapping']
-        elif globals_vars.config_run['overlapping'] in ["average", "maximum", "minimum", "neither"]:
-            settings['overlapping'] = colored.green(globals_vars.config_run['overlapping'])
+        if config_run.settings['overlapping'] == "default" or not config_run.settings['overlapping']:
+            config_run.settings['overlapping'] = "average"
+            settings['overlapping'] = config_run.settings['overlapping']
+        elif config_run.settings['overlapping'] in ["average", "maximum", "minimum", "neither"]:
+            settings['overlapping'] = colored.green(config_run.settings['overlapping'])
         else:
             console.msg_error_configuration('overlapping', _("The overlapping solution is wrong, the options are:\n"
                                 "default, average, maximum, minimum or neither"))
         # shape_boundary method
         # TODO: add more method for cut map interpolation around shape
-        if globals_vars.config_run['shape_boundary'] in ["enable", True]:
+        if config_run.settings['shape_boundary'] in ["enable", True]:
             settings["shape_boundary"] = colored.green(_("enabled"))
-        elif globals_vars.config_run['shape_boundary'] in ["default", False]:
-            globals_vars.config_run['shape_boundary'] = False
+        elif config_run.settings['shape_boundary'] in ["default", False]:
+            config_run.settings['shape_boundary'] = False
         else:
             console.msg_error_configuration('shape_boundary', _("The shape_boundary is wrong, the options are:\n"
                                 "disable, enable or default."))
 
     # when climate is disable:
-    if not globals_vars.config_run['climate_process']:
+    if not config_run.settings['climate_process']:
         console.msg(_("\nClimate process is disable, then forecasting and maps\n"
                       "process will be disabled."), color="yellow")
         settings["forecasting_process"] = colored.red(_("disabled"))
         settings["maps"] = colored.red(_("disabled"))
 
-
-    return settings
+    # save input settings
+    globals_vars.input_settings = settings
 
 
 def show(stop_in=None):
 
-    settings = globals_vars.settings
+    # load input settings saved
+    settings = globals_vars.input_settings
 
     if stop_in != None:
         settings[stop_in] = '?'
@@ -355,7 +360,7 @@ def show(stop_in=None):
     if stop_in == "phen_normal_label": return
     print "   {0} ------ {1}".format("phen above label", settings["phen_above_label"])
     if stop_in == "phen_above_label": return
-    if globals_vars.config_run['forecasting_process']:
+    if config_run.settings['forecasting_process']:
         console.msg("   Forecasting options", color='cyan')
         print "   {0} ------ {1}".format("lag 0 phen below", settings["lag_0_phen_below"])
         if stop_in == "lag_0_phen_below": return
@@ -383,7 +388,7 @@ def show(stop_in=None):
     console.msg("   Maps options", color='cyan')
     print "   {0} ------------------ {1}".format("maps", settings["maps"])
     if stop_in == "maps": return
-    if globals_vars.config_run['maps']:
+    if config_run.settings['maps']:
         print "   {0} -------- {1}".format("marks_stations", settings["marks_stations"])
         if stop_in == "marks_stations": return
         print "   {0} ----------- {1}".format("overlapping", settings["overlapping"])
@@ -393,8 +398,8 @@ def show(stop_in=None):
 
     # Print some warnings and notifications
 
-    if globals_vars.config_run['path_to_file_var_I'] == 'internal':
-        internal_file_I_name = globals_vars.FILES_FOR_INTERNAL_VAR_I[globals_vars.config_run['type_var_I']]
+    if config_run.settings['path_to_file_var_I'] == 'internal':
+        internal_file_I_name = globals_vars.FILES_FOR_INTERNAL_VAR_I[config_run.settings['type_var_I']]
         split_internal_var_I = internal_file_I_name.split(".")[0].split("_")
         console.msg(
             _("\n > You are using internal files for independent\n"
@@ -404,12 +409,12 @@ def show(stop_in=None):
               "   url: {4}")
             .format(split_internal_var_I[0], split_internal_var_I[1],
                 split_internal_var_I[2], ' '.join(split_internal_var_I[3::]),
-                globals_vars.URLS_FOR_INTERNAL_VAR_I[globals_vars.config_run['type_var_I']]), color='yellow')
+                globals_vars.URLS_FOR_INTERNAL_VAR_I[config_run.settings['type_var_I']]), color='yellow')
 
-    if (not globals_vars.config_run['limit_var_D_below'] or
-        not globals_vars.config_run['limit_var_D_above'] or
-        not globals_vars.config_run['limit_var_I_below'] or
-        not globals_vars.config_run['limit_var_I_above']):
+    if (not config_run.settings['limit_var_D_below'] or
+        not config_run.settings['limit_var_D_above'] or
+        not config_run.settings['limit_var_I_below'] or
+        not config_run.settings['limit_var_I_above']):
         console.msg(_("\n > WARNING: you are using one or more limits as\n"
                       "   'none' value, this means that series values\n"
                       "   will not be checked if they are valid in\n"
@@ -426,45 +431,45 @@ def check():
     # particular range validation
 
     # below var D
-    if globals_vars.config_run['limit_var_D_below'] == "default":
+    if config_run.settings['limit_var_D_below'] == "default":
         # validation type_D
-        if globals_vars.config_run['type_var_D'] not in globals_vars.TYPES_VAR_D:
+        if config_run.settings['type_var_D'] not in globals_vars.TYPES_VAR_D:
             console.msg_error_configuration('type_var_D',
                 _("{0} not is valid internal type for dependent variable if you\n"
                   "defined LIMIT VAR D BELOW/ABOVE as 'default'. If you want\n"
                   "define a particular type for dependent variable, you must define\n"
                   "as real values (or 'none') the LIMIT VAR D BELOW/ABOVE")
-                .format(globals_vars.config_run['type_var_D']))
-    elif globals_vars.config_run['limit_var_D_below'] in ["none", "None", "NONE", None]:
-        globals_vars.config_run['limit_var_D_below'] = None
+                .format(config_run.settings['type_var_D']))
+    elif config_run.settings['limit_var_D_below'] in ["none", "None", "NONE", None]:
+        config_run.settings['limit_var_D_below'] = None
     else:
         try:
-            globals_vars.config_run['limit_var_D_below'] = float(str(globals_vars.config_run['limit_var_D_below']).replace(',', '.'))
+            config_run.settings['limit_var_D_below'] = float(str(config_run.settings['limit_var_D_below']).replace(',', '.'))
         except:
             console.msg_error_configuration('limit_var_D_below',
                 (_("Problem with particular range validation for "
                    "dependent\nvariable: '{0}' this must be "
-                   "a valid number, 'none' or 'default'.").format(globals_vars.config_run['limit_var_D_below'],)))
+                   "a valid number, 'none' or 'default'.").format(config_run.settings['limit_var_D_below'],)))
     # above var D
-    if globals_vars.config_run['limit_var_D_above'] == "default":
+    if config_run.settings['limit_var_D_above'] == "default":
         # validation type_D
-        if globals_vars.config_run['type_var_D'] not in globals_vars.TYPES_VAR_D:
+        if config_run.settings['type_var_D'] not in globals_vars.TYPES_VAR_D:
             console.msg_error_configuration('limit_var_D_above',
                 _("{0} not is valid internal type for dependent variable if you\n"
                   "defined LIMIT VAR D BELOW/ABOVE as 'default'. If you want\n"
                   "define a particular type for dependent variable, you must define\n"
                   "as real values (or 'none') the LIMIT VAR D BELOW/ABOVE")
-                .format(globals_vars.config_run['type_var_D']))
-    elif globals_vars.config_run['limit_var_D_above'] in ["none", "None", "NONE", None]:
-        globals_vars.config_run['limit_var_D_above'] = None
+                .format(config_run.settings['type_var_D']))
+    elif config_run.settings['limit_var_D_above'] in ["none", "None", "NONE", None]:
+        config_run.settings['limit_var_D_above'] = None
     else:
         try:
-            globals_vars.config_run['limit_var_D_above'] = float(str(globals_vars.config_run['limit_var_D_above']).replace(',', '.'))
+            config_run.settings['limit_var_D_above'] = float(str(config_run.settings['limit_var_D_above']).replace(',', '.'))
         except:
             console.msg_error_configuration('limit_var_D_above',
                 (_("Problem with particular range validation for "
                    "dependent\nvariable: '{0}' this must be "
-                   "a valid number, 'none' or 'default'.").format(globals_vars.config_run['limit_var_D_above'],)))
+                   "a valid number, 'none' or 'default'.").format(config_run.settings['limit_var_D_above'],)))
 
     # -------------------------------------------------------------------------
     # limits var I
@@ -473,45 +478,45 @@ def check():
     # particular range validation
 
     # below var I
-    if globals_vars.config_run['limit_var_I_below'] == "default":
+    if config_run.settings['limit_var_I_below'] == "default":
         # validation type_I
-        if globals_vars.config_run['type_var_I'] not in globals_vars.TYPES_VAR_I:
+        if config_run.settings['type_var_I'] not in globals_vars.TYPES_VAR_I:
             console.msg_error_configuration('type_var_I',
                 _("{0} not is valid internal type for independent variable if you\n"
                   "defined LIMIT VAR I BELOW/ABOVE as 'default'. If you want\n"
                   "define a particular type for independent variable, you must define\n"
                   "as real values (or 'none') the LIMIT VAR I BELOW/ABOVE")
-                .format(globals_vars.config_run['type_var_I']))
-    elif globals_vars.config_run['limit_var_I_below'] in ["none", "None", "NONE", None]:
-        globals_vars.config_run['limit_var_I_below'] = None
+                .format(config_run.settings['type_var_I']))
+    elif config_run.settings['limit_var_I_below'] in ["none", "None", "NONE", None]:
+        config_run.settings['limit_var_I_below'] = None
     else:
         try:
-            globals_vars.config_run['limit_var_I_below'] = float(str(globals_vars.config_run['limit_var_I_below']).replace(',', '.'))
+            config_run.settings['limit_var_I_below'] = float(str(config_run.settings['limit_var_I_below']).replace(',', '.'))
         except:
             console.msg_error_configuration('limit_var_I_below',
                 (_("Problem with particular range validation for "
                    "independent\nvariable: '{0}' this must be "
-                   "a valid number, 'none' or 'default'.").format(globals_vars.config_run['limit_var_I_below'],)))
+                   "a valid number, 'none' or 'default'.").format(config_run.settings['limit_var_I_below'],)))
     # above var I
-    if globals_vars.config_run['limit_var_I_above'] == "default":
+    if config_run.settings['limit_var_I_above'] == "default":
         # validation type_I
-        if globals_vars.config_run['type_var_I'] not in globals_vars.TYPES_VAR_I:
+        if config_run.settings['type_var_I'] not in globals_vars.TYPES_VAR_I:
             console.msg_error_configuration('limit_var_I_above',
                 _("{0} not is valid internal type for independent variable if you\n"
                   "defined LIMIT VAR I BELOW/ABOVE as 'default'. If you want\n"
                   "define a particular type for independent variable, you must define\n"
                   "as real values (or 'none') the LIMIT VAR I BELOW/ABOVE")
-                .format(globals_vars.config_run['type_var_I']))
-    elif globals_vars.config_run['limit_var_I_above'] in ["none", "None", "NONE", None]:
-        globals_vars.config_run['limit_var_I_above'] = None
+                .format(config_run.settings['type_var_I']))
+    elif config_run.settings['limit_var_I_above'] in ["none", "None", "NONE", None]:
+        config_run.settings['limit_var_I_above'] = None
     else:
         try:
-            globals_vars.config_run['limit_var_I_above'] = float(str(globals_vars.config_run['limit_var_I_above']).replace(',', '.'))
+            config_run.settings['limit_var_I_above'] = float(str(config_run.settings['limit_var_I_above']).replace(',', '.'))
         except:
             console.msg_error_configuration('limit_var_I_above',
                 (_("Problem with particular range validation for "
                    "independent\nvariable: '{0}' this must be "
-                   "a valid number, 'none' or 'default'.").format(globals_vars.config_run['limit_var_I_above'],)))
+                   "a valid number, 'none' or 'default'.").format(config_run.settings['limit_var_I_above'],)))
 
     # -------------------------------------------------------------------------
     # path_to_file_var_I
@@ -519,31 +524,31 @@ def check():
     # read from internal variable independent files of Jaziku, check
     # and notify if Jaziku are using the independent variable inside
     # located in plugins/var_I/
-    if globals_vars.config_run["path_to_file_var_I"] == "internal":
-        if globals_vars.config_run["type_var_I"] not in globals_vars.TYPES_OF_INTERNAL_VAR_I:
+    if config_run.settings["path_to_file_var_I"] == "internal":
+        if config_run.settings["type_var_I"] not in globals_vars.TYPES_OF_INTERNAL_VAR_I:
             console.msg_error_configuration('path_to_file_var_I',
                 _("The 'path_to_file_var_I' is defined as 'internal' but the\n"
                   "type of independent variable '{0}' not is a valid internal\n"
                   "type. Please change type I to valid internal type, or define\n"
-                  "a valid path to file var I.").format(globals_vars.config_run["type_var_I"]))
+                  "a valid path to file var I.").format(config_run.settings["type_var_I"]))
     else:
-        if not os.path.isfile(globals_vars.config_run["path_to_file_var_I"]):
+        if not os.path.isfile(config_run.settings["path_to_file_var_I"]):
             console.msg_error_configuration('path_to_file_var_I',
                 _("Can't open file '{0}' for var I, \nplease check filename and check that its path is relative (to runfile) or\n"
                   "absolute. If you want run var I with internals files\n"
                   "of jaziku you need set 'PATH TO FILE VAR I' as 'internal'").format(
-                    globals_vars.config_run["path_to_file_var_I"]))
+                    config_run.settings["path_to_file_var_I"]))
 
     # -------------------------------------------------------------------------
     # thresholds var_I
 
-    if not globals_vars.config_run["path_to_file_var_I"] == "internal" and \
-       globals_vars.config_run["type_var_I"] not in globals_vars.TYPES_OF_INTERNAL_VAR_I:
-        if globals_vars.config_run["threshold_below_var_I"] == "default":
+    if not config_run.settings["path_to_file_var_I"] == "internal" and \
+       config_run.settings["type_var_I"] not in globals_vars.TYPES_OF_INTERNAL_VAR_I:
+        if config_run.settings["threshold_below_var_I"] == "default":
             console.msg_error_configuration('threshold_below_var_I',
                 _("The thresholds can't be define as 'default' if the\n"
                   "type of independent variable not is valid internal type."))
-        if globals_vars.config_run["threshold_above_var_I"] == "default":
+        if config_run.settings["threshold_above_var_I"] == "default":
             console.msg_error_configuration('threshold_above_var_I',
                 _("The thresholds can't be define as 'default' if the\n"
                   "type of independent variable not is valid internal type."))
@@ -552,29 +557,29 @@ def check():
     # check the 9 forecasting values
 
     # if forecasting_process is activated
-    if globals_vars.config_run['forecasting_process']:
+    if config_run.settings['forecasting_process']:
         # lag 0
-        lag_0 = globals_vars.config_run['lag_0_phen_below'] +\
-                globals_vars.config_run['lag_0_phen_normal'] +\
-                globals_vars.config_run['lag_0_phen_above']
+        lag_0 = config_run.settings['lag_0_phen_below'] +\
+                config_run.settings['lag_0_phen_normal'] +\
+                config_run.settings['lag_0_phen_above']
         if not (99 < lag_0 < 101):
             console.msg_error_configuration('lag_0_phen',
                 _("The sum for the 3 values of phenomenon for lag 0\n"
                   "in 'forecasting options' in runfile must be\nequal to 100."))
 
         # lag 1
-        lag_1 = globals_vars.config_run['lag_1_phen_below'] +\
-                globals_vars.config_run['lag_1_phen_normal'] +\
-                globals_vars.config_run['lag_1_phen_above']
+        lag_1 = config_run.settings['lag_1_phen_below'] +\
+                config_run.settings['lag_1_phen_normal'] +\
+                config_run.settings['lag_1_phen_above']
         if not (99 < lag_1 < 101):
             console.msg_error_configuration('lag_1_phen',
                 _("The sum for the 3 values of phenomenon for lag 1\n"
                   "in 'forecasting options' in runfile must be\nequal to 100."))
 
         # lag 2
-        lag_2 = globals_vars.config_run['lag_2_phen_below'] +\
-                globals_vars.config_run['lag_2_phen_normal'] +\
-                globals_vars.config_run['lag_2_phen_above']
+        lag_2 = config_run.settings['lag_2_phen_below'] +\
+                config_run.settings['lag_2_phen_normal'] +\
+                config_run.settings['lag_2_phen_above']
         if not (99 < lag_2 < 101):
             console.msg_error_configuration('lag_2_phen',
                 _("The sum for the 3 values of phenomenon for lag 2\n"

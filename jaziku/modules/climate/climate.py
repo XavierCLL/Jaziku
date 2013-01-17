@@ -20,7 +20,7 @@
 
 import os
 
-from jaziku.env import globals_vars
+from jaziku.env import globals_vars, config_run
 from jaziku.modules.climate import result_table
 from jaziku.modules.climate.lags import calculate_lags
 from jaziku.modules.climate.contingency_table import contingency_table
@@ -62,7 +62,7 @@ def climate(station):
     result_table.composite_analysis(station)
 
     if not globals_vars.threshold_problem[0] and not globals_vars.threshold_problem[1] and\
-       not globals_vars.threshold_problem[2] and globals_vars.config_run['graphics']:
+       not globals_vars.threshold_problem[2] and config_run.settings['graphics']:
         climate_graphs(station)
     else:
         console.msg(_("\n   continue without make graphics ............. "), color='cyan', newline=False)
