@@ -32,7 +32,7 @@ msgstr ""
 
 #: jaziku/data/maps/shapes/Colombia/Colombia/ncl.py:37
 #: jaziku/data/maps/shapes/Colombia/ncl.py:46
-#: jaziku/data/maps/shapes/ncl.py:46 jaziku/modules/forecasting/graphs.py:60
+#: jaziku/data/maps/shapes/ncl.py:46 jaziku/modules/forecast/graphs.py:60
 msgid "Normal"
 msgstr ""
 
@@ -130,7 +130,7 @@ msgstr ""
 
 #: jaziku/utils/settings_run.py:69
 msgid ""
-"'forecasting_process' variable in runfile is wrong,\n"
+"'forecast_process' variable in runfile is wrong,\n"
 "this must be 'enable' or 'disable'"
 msgstr ""
 
@@ -189,7 +189,7 @@ msgstr ""
 
 #: jaziku/utils/settings_run.py:252
 msgid ""
-"the maps options are: 'climate', 'forecasting', 'correlation' (comma "
+"the maps options are: 'climate', 'forecast', 'correlation' (comma "
 "separated), or 'all'."
 msgstr ""
 
@@ -214,7 +214,7 @@ msgstr ""
 #: jaziku/utils/settings_run.py:286
 msgid ""
 "\n"
-"Climate process is disable, then forecasting and maps\n"
+"Climate process is disable, then forecast and maps\n"
 "process will be disabled."
 msgstr ""
 
@@ -297,21 +297,21 @@ msgstr ""
 #: jaziku/utils/settings_run.py:561
 msgid ""
 "The sum for the 3 values of phenomenon for lag 0\n"
-"in 'forecasting options' in runfile must be\n"
+"in 'forecast options' in runfile must be\n"
 "equal to 100."
 msgstr ""
 
 #: jaziku/utils/settings_run.py:570
 msgid ""
 "The sum for the 3 values of phenomenon for lag 1\n"
-"in 'forecasting options' in runfile must be\n"
+"in 'forecast options' in runfile must be\n"
 "equal to 100."
 msgstr ""
 
 #: jaziku/utils/settings_run.py:579
 msgid ""
 "The sum for the 3 values of phenomenon for lag 2\n"
-"in 'forecasting options' in runfile must be\n"
+"in 'forecast options' in runfile must be\n"
 "equal to 100."
 msgstr ""
 
@@ -348,7 +348,7 @@ msgid ""
 msgstr ""
 
 #: jaziku/utils/settings_run.py:625 jaziku/modules/input/input_check.py:83
-#: jaziku/modules/forecasting/forecasting.py:136
+#: jaziku/modules/forecast/forecast.py:136
 #: jaziku/modules/climate/climate.py:73 jaziku/modules/maps/maps.py:67
 #: jaziku/modules/maps/maps.py:380 jaziku/modules/maps/maps.py:491
 #: jaziku/modules/maps/maps.py:548 jaziku/modules/variable.py:106
@@ -644,7 +644,7 @@ msgstr ""
 
 #: jaziku/modules/input/input_runfile.py:169
 msgid ""
-"Problems with the 9 probability values for forecasting process\n"
+"Problems with the 9 probability values for forecast process\n"
 "defined in runfile, these must be a numbers, please check it."
 msgstr ""
 
@@ -721,84 +721,84 @@ msgid ""
 "Jaziku detected missing value for date: {2}-{3}"
 msgstr ""
 
-#: jaziku/modules/forecasting/forecasting.py:36
-msgid "Processing forecasting ........................ "
+#: jaziku/modules/forecast/forecast.py:36
+msgid "Processing forecast ........................ "
 msgstr ""
 
-#: jaziku/modules/forecasting/forecasting.py:45
+#: jaziku/modules/forecast/forecast.py:45
 msgid ""
-"Trimester forecasting '{0}' is invalid, must be a month valid number (1-12)"
+"Trimester forecast '{0}' is invalid, must be a month valid number (1-12)"
 msgstr ""
 
-#: jaziku/modules/forecasting/forecasting.py:56
+#: jaziku/modules/forecast/forecast.py:56
 msgid ""
-"Month or day for calculate forecasting '{0}' is invalid, \n"
+"Month or day for calculate forecast '{0}' is invalid, \n"
 "must be month/day or month-day (e.g. 03/11)"
 msgstr ""
 
-#: jaziku/modules/forecasting/forecasting.py:61
+#: jaziku/modules/forecast/forecast.py:61
 msgid ""
-"Month for forecasting process '{0}' is invalid, \n"
+"Month for forecast process '{0}' is invalid, \n"
 "must be a month valid number (1-12)"
 msgstr ""
 
-#: jaziku/modules/forecasting/forecasting.py:66
+#: jaziku/modules/forecast/forecast.py:66
 msgid ""
-"Start day (month/day) for forecasting process '{0}'\n"
+"Start day (month/day) for forecast process '{0}'\n"
 "is invalid, must be a valid start day based on\n"
 "range analysis interval, the valid start days for\n"
 "{1} are: {2}"
 msgstr ""
 
-#: jaziku/modules/forecasting/forecasting.py:76
+#: jaziku/modules/forecast/forecast.py:76
 #: jaziku/modules/climate/climate.py:53
 msgid "stations"
 msgstr ""
 
-#: jaziku/modules/forecasting/forecasting.py:94
-#: jaziku/modules/forecasting/forecasting.py:106
+#: jaziku/modules/forecast/forecast.py:94
+#: jaziku/modules/forecast/forecast.py:106
 #: jaziku/modules/climate/result_table.py:64
 #: jaziku/modules/climate/result_table.py:97
 #: jaziku/modules/climate/result_table.py:104
 msgid "yes"
 msgstr ""
 
-#: jaziku/modules/forecasting/forecasting.py:132
+#: jaziku/modules/forecast/forecast.py:132
 #: jaziku/modules/climate/climate.py:69
 msgid ""
 "\n"
 "   continue without make graphics ............. "
 msgstr ""
 
-#: jaziku/modules/forecasting/graphs.py:44
+#: jaziku/modules/forecast/graphs.py:44
 #: jaziku/modules/climate/graphs.py:162
 msgid "trim {0} ({1})"
 msgstr ""
 
-#: jaziku/modules/forecasting/graphs.py:46
+#: jaziku/modules/forecast/graphs.py:46
 #: jaziku/modules/climate/graphs.py:163
 msgid "trim_{0}"
 msgstr ""
 
-#: jaziku/modules/forecasting/graphs.py:60
+#: jaziku/modules/forecast/graphs.py:60
 msgid "Decrease"
 msgstr ""
 
-#: jaziku/modules/forecasting/graphs.py:60
+#: jaziku/modules/forecast/graphs.py:60
 msgid "Exceed"
 msgstr ""
 
-#: jaziku/modules/forecasting/graphs.py:76
+#: jaziku/modules/forecast/graphs.py:76
 msgid ""
 "Probability forecasted of {0} - {1}\n"
 "{2} - lag {3} - {4} - ({5}-{6})"
 msgstr ""
 
-#: jaziku/modules/forecasting/graphs.py:84
+#: jaziku/modules/forecast/graphs.py:84
 msgid "prob_of_{0}_lag_{1}_{2}_({3}-{4}).png"
 msgstr ""
 
-#: jaziku/modules/forecasting/graphs.py:103
+#: jaziku/modules/forecast/graphs.py:103
 msgid "mosaic_prob_of_{0}_{1}_({3}-{4}).png"
 msgstr ""
 
@@ -1234,7 +1234,7 @@ msgid "Map_Data_lag_{0}_{1}.csv"
 msgstr ""
 
 #: jaziku/modules/maps/data.py:233 jaziku/modules/maps/data.py:264
-msgid "forecasting_date"
+msgid "forecast_date"
 msgstr ""
 
 #: jaziku/modules/maps/data.py:233 jaziku/modules/maps/data.py:264
@@ -1267,7 +1267,7 @@ msgstr ""
 
 #: jaziku/modules/maps/ncl.py:74
 msgid ""
-"\"Affectation forecasting of the variable {typeVarD}~C~   under variations "
+"\"Affectation forecast of the variable {typeVarD}~C~   under variations "
 "of {typeVarI} to lag {lag} in {date}\""
 msgstr ""
 
@@ -1373,7 +1373,7 @@ msgid "Map_correlation_lag_{0}_{1}"
 msgstr ""
 
 #: jaziku/modules/maps/maps.py:502
-msgid "Processing maps for forecasting:"
+msgid "Processing maps for forecast:"
 msgstr ""
 
 #: jaziku/modules/maps/maps.py:534
@@ -1952,7 +1952,7 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"############### CLIMATE AND FORECASTING PROCESS ################\n"
+"############### CLIMATE AND FORECAST PROCESS ################\n"
 "# Climate Module, here are calculated contingency tables,      #\n"
 "# correlations and parametric tests of interest.               #\n"
 "#                                                              #\n"
@@ -1979,19 +1979,19 @@ msgid ""
 msgstr ""
 
 #: jaziku/jaziku.py:239
-msgid "Jaziku_Forecasting"
+msgid "Jaziku_Forecast"
 msgstr ""
 
 #: jaziku/jaziku.py:241
 msgid ""
 "\n"
-"Saving the result for forecasting in:"
+"Saving the result for forecast in:"
 msgstr ""
 
 #: jaziku/jaziku.py:246
 msgid ""
 "\n"
-" > WARNING: the output directory for forecasting process\n"
+" > WARNING: the output directory for forecast process\n"
 "   is already exist, Jaziku continue but the results\n"
 "   could be mixed or replaced of old output."
 msgstr ""

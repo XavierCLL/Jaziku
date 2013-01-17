@@ -72,8 +72,8 @@ def make_ncl_file(grid, base_path_file, globals_vars):
             map_properties.color_bar_title_on = "False"
             map_properties.colormap = "Green-White-Purple"
             map_properties.units = '''"Pearson"'''
-        if grid.if_running["forecasting"]:
-            map_properties.title = _('''"Affectation forecasting of the variable {typeVarD}~C~   under variations of {typeVarI} to lag {lag} in {date}"''')\
+        if grid.if_running["forecast"]:
+            map_properties.title = _('''"Affectation forecast of the variable {typeVarD}~C~   under variations of {typeVarI} to lag {lag} in {date}"''')\
                      .format(typeVarD=config_run.settings['type_var_D'], typeVarI=config_run.settings['type_var_I'], lag=grid.lag, date=map_properties.date)
             map_properties.color_bar_levels = "(/{array}/)".format(array=range_color_bar(-100, 100, 2.5))
             map_properties.color_bar_step = 2.5

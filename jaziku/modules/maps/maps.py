@@ -144,7 +144,7 @@ def maps(grid):
 
             if grid.if_running["correlation"]:
                 index = float(line[3].replace(',', '.'))  # get pearson value
-            if grid.if_running["climate"] or grid.if_running["forecasting"]:
+            if grid.if_running["climate"] or grid.if_running["forecast"]:
                 index = float(line[7].replace(',', '.'))  # get index value
                 # set the index value on matrix
 
@@ -281,7 +281,7 @@ def maps(grid):
 
         grid.if_running["climate"] = True
         grid.if_running["correlation"] = False
-        grid.if_running["forecasting"] = False
+        grid.if_running["forecast"] = False
 
         print _("Processing maps for climate:")
 
@@ -387,7 +387,7 @@ def maps(grid):
 
         grid.if_running["climate"] = False
         grid.if_running["correlation"] = True
-        grid.if_running["forecasting"] = False
+        grid.if_running["forecast"] = False
 
         print _("Processing maps for correlation:")
 
@@ -492,20 +492,20 @@ def maps(grid):
             console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
-    # Process maps for FORECASTING
+    # Process maps for FORECAST
 
-    if config_run.settings['forecasting_process'] and  config_run.settings['maps']['forecasting']:
+    if config_run.settings['forecast_process'] and  config_run.settings['maps']['forecast']:
 
         grid.if_running["climate"] = False
         grid.if_running["correlation"] = False
-        grid.if_running["forecasting"] = True
+        grid.if_running["forecast"] = True
 
-        print _("Processing maps for forecasting:")
+        print _("Processing maps for forecast:")
 
         # walking file by file of maps directory and make interpolation and map for each file
         for analysis_interval in ['5days', '10days', '15days', 'trimester']:
 
-            if globals_vars.maps_files_forecasting[analysis_interval] == {}:
+            if globals_vars.maps_files_forecast[analysis_interval] == {}:
                 continue
 
             # console message
@@ -514,7 +514,7 @@ def maps(grid):
             else:
                 console.msg("                {0}\t....................... ".format(analysis_interval), newline=False)
 
-            for forecasting_date in globals_vars.maps_files_forecasting[analysis_interval]:
+            for forecast_date in globals_vars.maps_files_forecast[analysis_interval]:
 
                 for lag in config_run.settings['lags']:
                     # show only once
@@ -524,7 +524,7 @@ def maps(grid):
                         message_warning = False
 
                     # file where saved points for plot map
-                    file_map_points = globals_vars.maps_files_forecasting[analysis_interval][forecasting_date][lag]
+                    file_map_points = globals_vars.maps_files_forecast[analysis_interval][forecast_date][lag]
                     # save matrix for interpolation
                     base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
 
@@ -532,9 +532,9 @@ def maps(grid):
                     if not os.path.isdir(base_path):
                         os.makedirs(base_path)
 
-                    base_file = _(u'Map_lag_{0}_{1}').format(lag, forecasting_date)
+                    base_file = _(u'Map_lag_{0}_{1}').format(lag, forecast_date)
 
-                    grid.date = forecasting_date
+                    grid.date = forecast_date
                     grid.lag = lag
 
                     # file for interpolation

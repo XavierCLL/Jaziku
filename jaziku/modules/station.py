@@ -24,7 +24,7 @@ from jaziku.env import globals_vars, config_run
 from jaziku.utils import  console
 from jaziku.modules.input.input_check import check_consistent_data
 from jaziku.modules.climate import climate
-from jaziku.modules.forecasting import forecasting
+from jaziku.modules.forecast import forecast
 from jaziku.modules.variable import Variable
 
 #==============================================================================
@@ -155,7 +155,7 @@ class Station(object):
 
     def process(self):
         """
-        Run climate and forecasting process for this station.
+        Run climate and forecast process for this station.
         """
 
         # restore threshold problem values
@@ -200,7 +200,7 @@ class Station(object):
         if config_run.settings['climate_process']:
             climate.climate(self)
 
-        # run forecasting process
-        if config_run.settings['forecasting_process']:
-            # TODO: run forecasting without climate¿?
-            forecasting.forecasting(self)
+        # run forecast process
+        if config_run.settings['forecast_process']:
+            # TODO: run forecast without climate¿?
+            forecast.forecast(self)

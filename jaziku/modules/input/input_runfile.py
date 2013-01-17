@@ -150,27 +150,27 @@ def read_runfile():
 
     # when climate is disable:
     if not config_run.settings['climate_process']:
-        config_run.settings['forecasting_process'] = False
+        config_run.settings['forecast_process'] = False
         config_run.settings['maps'] = False
 
-    # if forecasting_process is activated
-    if config_run.settings['forecasting_process']:
+    # if forecast_process is activated
+    if config_run.settings['forecast_process']:
         try:
 
-            globals_vars.forecasting_phen_below = [float(str(config_run.settings['lag_0_phen_below']).replace(',', '.')),
+            globals_vars.forecast_phen_below = [float(str(config_run.settings['lag_0_phen_below']).replace(',', '.')),
                                                    float(str(config_run.settings['lag_1_phen_below']).replace(',', '.')),
                                                    float(str(config_run.settings['lag_2_phen_below']).replace(',', '.'))]
-            globals_vars.forecasting_phen_normal = [float(str(config_run.settings['lag_0_phen_normal']).replace(',', '.')),
+            globals_vars.forecast_phen_normal = [float(str(config_run.settings['lag_0_phen_normal']).replace(',', '.')),
                                                     float(str(config_run.settings['lag_1_phen_normal']).replace(',', '.')),
                                                     float(str(config_run.settings['lag_2_phen_normal']).replace(',', '.'))]
-            globals_vars.forecasting_phen_above = [float(str(config_run.settings['lag_0_phen_above']).replace(',', '.')),
+            globals_vars.forecast_phen_above = [float(str(config_run.settings['lag_0_phen_above']).replace(',', '.')),
                                                    float(str(config_run.settings['lag_1_phen_above']).replace(',', '.')),
                                                    float(str(config_run.settings['lag_2_phen_above']).replace(',', '.'))]
         except:
-            console.msg_error(_("Problems with the 9 probability values for forecasting process\n"
+            console.msg_error(_("Problems with the 9 probability values for forecast process\n"
                                 "defined in runfile, these must be a numbers, please check it."), False)
 
-        globals_vars.forecasting_date = config_run.settings['forecasting_date']
+        globals_vars.forecast_date = config_run.settings['forecast_date']
 
     # if path_to_file_var_I is relative convert to absolute
     if not os.path.isabs(config_run.settings["path_to_file_var_I"]):

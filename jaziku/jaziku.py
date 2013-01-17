@@ -159,13 +159,13 @@ def main():
 
 
     # -------------------------------------------------------------------------
-    # CLIMATE AND FORECASTING PRE-PROCESS
+    # CLIMATE AND FORECAST PRE-PROCESS
 
     # climate
     if config_run.settings['climate_process']:
 
         print _("\n\n"
-                "############### CLIMATE AND FORECASTING PROCESS ################\n"
+                "############### CLIMATE AND FORECAST PROCESS ################\n"
                 "# Climate Module, here are calculated contingency tables,      #\n"
                 "# correlations and parametric tests of interest.               #\n"
                 "#                                                              #\n"
@@ -187,23 +187,23 @@ def main():
                   "   is already exist, Jaziku continue but the results\n"
                   "   could be mixed or replaced of old output."), color='yellow')
 
-    # forecasting
-    if config_run.settings['forecasting_process']:
-        # forecasting dir output result
-        globals_vars.FORECASTING_DIR \
-            = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Forecasting'))   # 'results'
+    # forecast
+    if config_run.settings['forecast_process']:
+        # directory for the forecast results
+        globals_vars.FORECAST_DIR \
+            = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Forecast'))   # 'results'
 
-        print _("\nSaving the result for forecasting in:").format(globals_vars.FORECASTING_DIR)
-        print "   " + colored.cyan(globals_vars.FORECASTING_DIR)
+        print _("\nSaving the result for forecast in:").format(globals_vars.FORECAST_DIR)
+        print "   " + colored.cyan(globals_vars.FORECAST_DIR)
 
-        if os.path.isdir(globals_vars.FORECASTING_DIR):
+        if os.path.isdir(globals_vars.FORECAST_DIR):
             console.msg(
-                _("\n > WARNING: the output directory for forecasting process\n"
+                _("\n > WARNING: the output directory for forecast process\n"
                   "   is already exist, Jaziku continue but the results\n"
                   "   could be mixed or replaced of old output."), color='yellow')
 
     # -------------------------------------------------------------------------
-    # CLIMATE AND FORECASTING MAIN PROCESS
+    # CLIMATE AND FORECAST MAIN PROCESS
 
     if config_run.settings['climate_process']:
         # process each station from stations list
@@ -215,7 +215,7 @@ def main():
             # pre_process: read, validated and check data
             station.pre_process()
 
-            # process climate and forecasting for this station
+            # process climate and forecast for this station
             station.process()
 
         console.msg(gettext.ngettext(

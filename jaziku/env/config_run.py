@@ -58,9 +58,9 @@ list_of_all_settings = [
     #   values: boolean
     'climate_process',
 
-    # enable/disable forecasting process
+    # enable/disable forecast process
     #   values: boolean
-    'forecasting_process',
+    'forecast_process',
 
     # analysis interval for process
     #   values: "5days", "10days", "15days" or "trimester"
@@ -144,7 +144,7 @@ list_of_all_settings = [
     'phen_normal_label',
     'phen_above_label',
 
-    # 9 values for forecasting
+    # 9 values for forecast
     #   values: float
     'lag_0_phen_below',
     'lag_0_phen_normal',
@@ -156,12 +156,12 @@ list_of_all_settings = [
     'lag_2_phen_normal',
     'lag_2_phen_above',
 
-    # date for forecasting
+    # date for forecast
     #   values: string
-    'forecasting_date',
+    'forecast_date',
 
     # defined, after read runfile configuration, what run
-    #   values: {'climate': boolean, 'forecasting': boolean, 'correlation': boolean}
+    #   values: {'climate': boolean, 'forecast': boolean, 'correlation': boolean}
     'maps',
 
     # put marks of stations in maps

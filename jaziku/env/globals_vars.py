@@ -195,11 +195,11 @@ NUM_DAYS_OF_ANALYSIS_INTERVAL = None
 analysis_interval_i18n = None # TODO: to settings
 
 #==============================================================================
-# forecasting
-forecasting_phen_below = None
-forecasting_phen_normal = None
-forecasting_phen_above = None
-forecasting_date = None
+# forecast
+forecast_phen_below = None
+forecast_phen_normal = None
+forecast_phen_above = None
+forecast_date = None
 
 #==============================================================================
 # maps
@@ -208,8 +208,8 @@ forecasting_date = None
 maps_files_climate = {'5days': None, '10days': None, '15days': None, 'trimester': None}
 # maps files for correlation:
 maps_files_correlation = {'5days': None, '10days': None, '15days': None, 'trimester': None}
-# maps files for forecasting:
-maps_files_forecasting = {'5days': {}, '10days': {}, '15days': {}, 'trimester': {}}
+# maps files for forecast:
+maps_files_forecast = {'5days': {}, '10days': {}, '15days': {}, 'trimester': {}}
 
 #==============================================================================
 # phenomenon based on arguments or not, start with default value
@@ -247,7 +247,7 @@ ALL_LAGS = [0, 1, 2]
 
 CLIMATE_DIR = None
 
-FORECASTING_DIR = None
+FORECAST_DIR = None
 
 DATA_ANALYSIS_DIR = None
 
