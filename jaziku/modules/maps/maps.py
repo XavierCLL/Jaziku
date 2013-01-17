@@ -23,10 +23,11 @@ import csv
 import numpy
 from subprocess import call
 
+from jaziku.env import globals_vars, config_run
 from jaziku.modules.maps import interpolation
 from jaziku.modules.maps.grid import search_and_set_internal_grid, set_particular_grid
 from jaziku.modules.maps.ncl import make_ncl_file
-from jaziku.utils import globals_vars, console, watermarking
+from jaziku.utils import console, watermarking
 from jaziku.modules.maps.grid import Grid
 
 
@@ -276,7 +277,7 @@ def maps(grid):
     # -------------------------------------------------------------------------
     # Process maps for CLIMATE
 
-    if globals_vars.maps['climate']:
+    if config_run.settings['maps']['climate']:
 
         grid.if_running["climate"] = True
         grid.if_running["correlation"] = False
@@ -296,7 +297,7 @@ def maps(grid):
             else:
                 console.msg("                {0}\t....................... ".format(analysis_interval), newline=False)
 
-            for lag in globals_vars.LAGS:
+            for lag in config_run.settings['lags']:
 
                 # all months in year 1->12
                 for month in range(1, 13):
@@ -304,7 +305,7 @@ def maps(grid):
                     if analysis_interval == 'trimester':
                         for category in [0, 1, 2]:  # phenomenons var_I
                             # show only once
-                            if lag == globals_vars.LAGS[0] and month == 1 and category == 0:
+                            if lag == config_run.settings['lags'][0] and month == 1 and category == 0:
                                 message_warning = True
                             else:
                                 message_warning = False
@@ -345,7 +346,7 @@ def maps(grid):
                         for day in range(len(range_analysis_interval)):
                             for category in [0, 1, 2]:  # phenomenons var_I
                                 # show only once
-                                if lag == globals_vars.LAGS[0] and month == 1 and category == 0 and day == 0:
+                                if lag == config_run.settings['lags'][0] and month == 1 and category == 0 and day == 0:
                                     message_warning = True
                                 else:
                                     message_warning = False
@@ -382,7 +383,7 @@ def maps(grid):
     # -------------------------------------------------------------------------
     # Process maps for CORRELATION
 
-    if globals_vars.maps['correlation']:
+    if config_run.settings['maps']['correlation']:
 
         grid.if_running["climate"] = False
         grid.if_running["correlation"] = True
@@ -402,7 +403,7 @@ def maps(grid):
             else:
                 console.msg("                {0}\t....................... ".format(analysis_interval), newline=False)
 
-            for lag in globals_vars.LAGS:
+            for lag in config_run.settings['lags']:
 
                 # all months in year 1->12
                 for month in range(1, 13):
@@ -410,7 +411,7 @@ def maps(grid):
                     if analysis_interval == 'trimester':
                         category = 1  # normal
                         # show only once
-                        if lag == globals_vars.LAGS[0] and month == 1:
+                        if lag == config_run.settings['lags'][0] and month == 1:
                             message_warning = True
                         else:
                             message_warning = False
@@ -454,7 +455,7 @@ def maps(grid):
                         for day in range(len(range_analysis_interval)):
                             category = 1  # phenomenons var_I
                             # show only once
-                            if lag == globals_vars.LAGS[0] and month == 1 and day == 0:
+                            if lag == config_run.settings['lags'][0] and month == 1 and day == 0:
                                 message_warning = True
                             else:
                                 message_warning = False
@@ -493,7 +494,7 @@ def maps(grid):
     # -------------------------------------------------------------------------
     # Process maps for FORECASTING
 
-    if globals_vars.config_run['forecasting_process'] and  globals_vars.maps['forecasting']:
+    if config_run.settings['forecasting_process'] and  config_run.settings['maps']['forecasting']:
 
         grid.if_running["climate"] = False
         grid.if_running["correlation"] = False
@@ -515,9 +516,9 @@ def maps(grid):
 
             for forecasting_date in globals_vars.maps_files_forecasting[analysis_interval]:
 
-                for lag in globals_vars.LAGS:
+                for lag in config_run.settings['lags']:
                     # show only once
-                    if lag == globals_vars.LAGS[0]:
+                    if lag == config_run.settings['lags'][0]:
                         message_warning = True
                     else:
                         message_warning = False

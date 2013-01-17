@@ -20,7 +20,7 @@
 
 from datetime import date
 
-from jaziku.env import globals_vars
+from jaziku.env import globals_vars, config_run
 
 
 #==============================================================================
@@ -75,25 +75,25 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
         return var_D
 
     # if both were defined as particular range
-    if globals_vars.config_run['limit_var_D_below'] != "default" and globals_vars.config_run['limit_var_D_above'] != "default":
-        if globals_vars.config_run['limit_var_D_below'] is not None and globals_vars.config_run['limit_var_D_above'] is not None:
-            if (globals_vars.config_run['limit_var_D_below'] <= var_D <= globals_vars.config_run['limit_var_D_above']):
+    if config_run.settings['limit_var_D_below'] != "default" and config_run.settings['limit_var_D_above'] != "default":
+        if config_run.settings['limit_var_D_below'] is not None and config_run.settings['limit_var_D_above'] is not None:
+            if (config_run.settings['limit_var_D_below'] <= var_D <= config_run.settings['limit_var_D_above']):
                 return var_D
             else:
                 returnError(_("{0} not valid in particular limits defined in runfile").format(type_var_D),
-                    globals_vars.config_run['limit_var_D_below'], globals_vars.config_run['limit_var_D_above'])
-        elif globals_vars.config_run['limit_var_D_below'] is None and globals_vars.config_run['limit_var_D_above'] is not None:
-            if (var_D <= globals_vars.config_run['limit_var_D_above']):
+                    config_run.settings['limit_var_D_below'], config_run.settings['limit_var_D_above'])
+        elif config_run.settings['limit_var_D_below'] is None and config_run.settings['limit_var_D_above'] is not None:
+            if (var_D <= config_run.settings['limit_var_D_above']):
                 return var_D
             else:
                 returnError(_("{0} not valid in particular limits defined in runfile").format(type_var_D),
-                    'none', globals_vars.config_run['limit_var_D_above'])
-        elif globals_vars.config_run['limit_var_D_above'] is None and globals_vars.config_run['limit_var_D_below'] is not None:
-            if (globals_vars.config_run['limit_var_D_below'] <= var_D):
+                    'none', config_run.settings['limit_var_D_above'])
+        elif config_run.settings['limit_var_D_above'] is None and config_run.settings['limit_var_D_below'] is not None:
+            if (config_run.settings['limit_var_D_below'] <= var_D):
                 return var_D
             else:
                 returnError(_("{0} not valid in particular limits defined in runfile").format(type_var_D),
-                    globals_vars.config_run['limit_var_D_below'], 'none')
+                    config_run.settings['limit_var_D_below'], 'none')
         else:  # this is that both are equal to "none"
             return var_D
 
@@ -104,10 +104,10 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
             limit_below = 0
             limit_above = 200
             # if one of limits was defined as particular range
-            if globals_vars.config_run['limit_var_D_below'] not in ["default", None]:
-                limit_below = globals_vars.config_run['limit_var_D_below']
-            if globals_vars.config_run['limit_var_D_above'] not in ["default", None]:
-                limit_above = globals_vars.config_run['limit_var_D_above']
+            if config_run.settings['limit_var_D_below'] not in ["default", None]:
+                limit_below = config_run.settings['limit_var_D_below']
+            if config_run.settings['limit_var_D_above'] not in ["default", None]:
+                limit_above = config_run.settings['limit_var_D_above']
 
             if (limit_below <= var_D <= limit_above):
                 return var_D
@@ -118,10 +118,10 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
             limit_below = 0
             limit_above = 3500
             # if one of limits was defined as particular range
-            if globals_vars.config_run['limit_var_D_below'] not in ["default", None]:
-                limit_below = globals_vars.config_run['limit_var_D_below']
-            if globals_vars.config_run['limit_var_D_above'] not in ["default", None]:
-                limit_above = globals_vars.config_run['limit_var_D_above']
+            if config_run.settings['limit_var_D_below'] not in ["default", None]:
+                limit_below = config_run.settings['limit_var_D_below']
+            if config_run.settings['limit_var_D_above'] not in ["default", None]:
+                limit_above = config_run.settings['limit_var_D_above']
 
             if (limit_below <= var_D <= limit_above):
                 return var_D
@@ -138,10 +138,10 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
             limit_below = 0
             limit_above = 31
             # if one of limits was defined as particular range
-            if globals_vars.config_run['limit_var_D_below'] not in ["default", None]:
-                limit_below = globals_vars.config_run['limit_var_D_below']
-            if globals_vars.config_run['limit_var_D_above'] not in ["default", None]:
-                limit_above = globals_vars.config_run['limit_var_D_above']
+            if config_run.settings['limit_var_D_below'] not in ["default", None]:
+                limit_below = config_run.settings['limit_var_D_below']
+            if config_run.settings['limit_var_D_above'] not in ["default", None]:
+                limit_above = config_run.settings['limit_var_D_above']
             try:
                 if date_D is None:
                     if limit_below > int(var_D) > limit_above:
@@ -162,10 +162,10 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
             limit_below = -15
             limit_above = 22
             # if one of limits was defined as particular range
-            if globals_vars.config_run['limit_var_D_below'] not in ["default", None]:
-                limit_below = globals_vars.config_run['limit_var_D_below']
-            if globals_vars.config_run['limit_var_D_above'] not in ["default", None]:
-                limit_above = globals_vars.config_run['limit_var_D_above']
+            if config_run.settings['limit_var_D_below'] not in ["default", None]:
+                limit_below = config_run.settings['limit_var_D_below']
+            if config_run.settings['limit_var_D_above'] not in ["default", None]:
+                limit_above = config_run.settings['limit_var_D_above']
 
             if (limit_below <= var_D <= limit_above):
                 return var_D
@@ -176,10 +176,10 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
             limit_below = -15
             limit_above = 50
             # if one of limits was defined as particular range
-            if globals_vars.config_run['limit_var_D_below'] not in ["default", None]:
-                limit_below = globals_vars.config_run['limit_var_D_below']
-            if globals_vars.config_run['limit_var_D_above'] not in ["default", None]:
-                limit_above = globals_vars.config_run['limit_var_D_above']
+            if config_run.settings['limit_var_D_below'] not in ["default", None]:
+                limit_below = config_run.settings['limit_var_D_below']
+            if config_run.settings['limit_var_D_above'] not in ["default", None]:
+                limit_above = config_run.settings['limit_var_D_above']
 
             if (limit_below <= var_D <= limit_above):
                 return var_D
@@ -193,10 +193,10 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
             limit_below = -15
             limit_above = 34
             # if one of limits was defined as particular range
-            if globals_vars.config_run['limit_var_D_below'] not in ["default", None]:
-                limit_below = globals_vars.config_run['limit_var_D_below']
-            if globals_vars.config_run['limit_var_D_above'] not in ["default", None]:
-                limit_above = globals_vars.config_run['limit_var_D_above']
+            if config_run.settings['limit_var_D_below'] not in ["default", None]:
+                limit_below = config_run.settings['limit_var_D_below']
+            if config_run.settings['limit_var_D_above'] not in ["default", None]:
+                limit_above = config_run.settings['limit_var_D_above']
 
             if (limit_below <= var_D <= limit_above):
                 return var_D
@@ -207,10 +207,10 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
             limit_below = -15
             limit_above = 50
             # if one of limits was defined as particular range
-            if globals_vars.config_run['limit_var_D_below'] not in ["default", None]:
-                limit_below = globals_vars.config_run['limit_var_D_below']
-            if globals_vars.config_run['limit_var_D_above'] not in ["default", None]:
-                limit_above = globals_vars.config_run['limit_var_D_above']
+            if config_run.settings['limit_var_D_below'] not in ["default", None]:
+                limit_below = config_run.settings['limit_var_D_below']
+            if config_run.settings['limit_var_D_above'] not in ["default", None]:
+                limit_above = config_run.settings['limit_var_D_above']
 
             if (limit_below <= var_D <= limit_above):
                 return var_D
@@ -224,10 +224,10 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
             limit_below = -15
             limit_above = 34
             # if one of limits was defined as particular range
-            if globals_vars.config_run['limit_var_D_below'] not in ["default", None]:
-                limit_below = globals_vars.config_run['limit_var_D_below']
-            if globals_vars.config_run['limit_var_D_above'] not in ["default", None]:
-                limit_above = globals_vars.config_run['limit_var_D_above']
+            if config_run.settings['limit_var_D_below'] not in ["default", None]:
+                limit_below = config_run.settings['limit_var_D_below']
+            if config_run.settings['limit_var_D_above'] not in ["default", None]:
+                limit_above = config_run.settings['limit_var_D_above']
 
             if (limit_below <= var_D <= limit_above):
                 return var_D
@@ -238,10 +238,10 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
             limit_below = -15
             limit_above = 50
             # if one of limits was defined as particular range
-            if globals_vars.config_run['limit_var_D_below'] not in ["default", None]:
-                limit_below = globals_vars.config_run['limit_var_D_below']
-            if globals_vars.config_run['limit_var_D_above'] not in ["default", None]:
-                limit_above = globals_vars.config_run['limit_var_D_above']
+            if config_run.settings['limit_var_D_below'] not in ["default", None]:
+                limit_below = config_run.settings['limit_var_D_below']
+            if config_run.settings['limit_var_D_above'] not in ["default", None]:
+                limit_above = config_run.settings['limit_var_D_above']
             if (limit_below <= var_D <= limit_above):
                 return var_D
             else:
@@ -253,10 +253,10 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
         limit_below = 400
         limit_above = 1100
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_D_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_D_below']
-        if globals_vars.config_run['limit_var_D_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_D_above']
+        if config_run.settings['limit_var_D_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_D_below']
+        if config_run.settings['limit_var_D_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_D_above']
 
         if (limit_below <= var_D <= limit_above):
             return var_D
@@ -269,10 +269,10 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
         limit_below = 0
         limit_above = 100
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_D_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_D_below']
-        if globals_vars.config_run['limit_var_D_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_D_above']
+        if config_run.settings['limit_var_D_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_D_below']
+        if config_run.settings['limit_var_D_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_D_above']
 
         if (limit_below <= var_D <= limit_above):
             return var_D
@@ -285,10 +285,10 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
         limit_below = 0
         limit_above = 3300
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_D_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_D_below']
-        if globals_vars.config_run['limit_var_D_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_D_above']
+        if config_run.settings['limit_var_D_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_D_below']
+        if config_run.settings['limit_var_D_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_D_above']
 
         if (limit_below <= var_D <= limit_above):
             return var_D
@@ -357,19 +357,19 @@ def validation_var_I(type_var_I, var_I):
         return var_I
 
     # if both were defined as particular range
-    if globals_vars.config_run['limit_var_I_below'] != "default" and globals_vars.config_run['limit_var_I_above'] != "default":
-        if globals_vars.config_run['limit_var_I_below'] is not None and globals_vars.config_run['limit_var_I_above'] is not None:
-            if (globals_vars.config_run['limit_var_I_below'] <= var_I <= globals_vars.config_run['limit_var_I_above']):
+    if config_run.settings['limit_var_I_below'] != "default" and config_run.settings['limit_var_I_above'] != "default":
+        if config_run.settings['limit_var_I_below'] is not None and config_run.settings['limit_var_I_above'] is not None:
+            if (config_run.settings['limit_var_I_below'] <= var_I <= config_run.settings['limit_var_I_above']):
                 return var_I
             else:
                 returnError(_("{0} not valid in particular limits defined in runfile").format(type_var_I))
-        elif globals_vars.config_run['limit_var_I_below'] is None and globals_vars.config_run['limit_var_I_above'] is not None:
-            if (var_I <= globals_vars.config_run['limit_var_I_above']):
+        elif config_run.settings['limit_var_I_below'] is None and config_run.settings['limit_var_I_above'] is not None:
+            if (var_I <= config_run.settings['limit_var_I_above']):
                 return var_I
             else:
                 returnError(_("{0} not valid in particular limits defined in runfile").format(type_var_I))
-        elif globals_vars.config_run['limit_var_I_above'] is None and globals_vars.config_run['limit_var_I_below'] is not None:
-            if (globals_vars.config_run['limit_var_I_below'] <= var_I):
+        elif config_run.settings['limit_var_I_above'] is None and config_run.settings['limit_var_I_below'] is not None:
+            if (config_run.settings['limit_var_I_below'] <= var_I):
                 return var_I
             else:
                 returnError(_("{0} not valid in particular limits defined in runfile").format(type_var_I))
@@ -382,10 +382,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -5
         limit_above = 5
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I
@@ -398,10 +398,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -5
         limit_above = 5
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I
@@ -414,10 +414,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -7
         limit_above = 7
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I
@@ -430,10 +430,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -35
         limit_above = 35
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I
@@ -446,10 +446,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -4.552
         limit_above = 6.078
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I
@@ -462,10 +462,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -6
         limit_above = 6
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I
@@ -478,10 +478,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -7.5
         limit_above = 7.5
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I
@@ -494,10 +494,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -7.5
         limit_above = 7.5
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I
@@ -511,10 +511,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -21
         limit_above = 21
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I
@@ -527,10 +527,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -15.1
         limit_above = 15.1
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I
@@ -543,10 +543,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -60
         limit_above = 60
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I
@@ -559,10 +559,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -10
         limit_above = 10
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I
@@ -575,10 +575,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -7
         limit_above = 7
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I
@@ -591,10 +591,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -3
         limit_above = 3
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I
@@ -607,10 +607,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -5.6
         limit_above = 5.6
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I
@@ -623,10 +623,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -100
         limit_above = 100
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I
@@ -639,10 +639,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -6.36
         limit_above = 6.08
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I
@@ -655,10 +655,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -59.1
         limit_above = 33.24
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (-59.1 <= var_I <= 33.24):
             return var_I
@@ -671,10 +671,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -1.3
         limit_above = 1.3
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I
@@ -687,10 +687,10 @@ def validation_var_I(type_var_I, var_I):
         limit_below = -13
         limit_above = 14
         # if one of limits was defined as particular range
-        if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
-            limit_below = globals_vars.config_run['limit_var_I_below']
-        if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
-            limit_above = globals_vars.config_run['limit_var_I_above']
+        if config_run.settings['limit_var_I_below'] not in ["default", None]:
+            limit_below = config_run.settings['limit_var_I_below']
+        if config_run.settings['limit_var_I_above'] not in ["default", None]:
+            limit_above = config_run.settings['limit_var_I_above']
 
         if (limit_below <= var_I <= limit_above):
             return var_I

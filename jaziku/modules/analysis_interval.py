@@ -21,14 +21,14 @@
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from jaziku.env import globals_vars
+from jaziku.env import globals_vars, config_run
 from jaziku.utils import  console
 
 
 def get_range_analysis_interval():
     # range based on analysis interval
 
-    if globals_vars.config_run['analysis_interval'] != "trimester":
+    if config_run.settings['analysis_interval'] != "trimester":
         if globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL == 5:
             return [1, 6, 11, 16, 21, 26]
         if globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL == 10:
@@ -67,11 +67,11 @@ def check_analysis_interval_and_state_of_data(stations):
                                 "requires that all stations have identical frequency data.").format(
                 station.code, station.name, station.var_D.frequency_data, global_frequency_data))
 
-    if global_state_of_data in [1, 3] and globals_vars.config_run['analysis_interval'] != "trimester":
+    if global_state_of_data in [1, 3] and config_run.settings['analysis_interval'] != "trimester":
         console.msg_error(_("The var_D of stations have data monthly, but you define\n"
                        "in runfile the analysis interval as '{0}', this must be,\n"
                        "in this case, as 'trimester' or use data daily.").format(
-            globals_vars.config_run['analysis_interval']))
+            config_run.settings['analysis_interval']))
 
 
 def get_values_in_range_analysis_interval(station, type, year, month, day=None, lag=None):
@@ -144,7 +144,7 @@ def get_values_in_range_analysis_interval(station, type, year, month, day=None, 
                         date(year, month, 1) + relativedelta(months=iter_month - lag))])
             if station.state_of_data in [2]:
                 # keep constant value for month
-                if globals_vars.config_run['analysis_interval'] == "trimester":
+                if config_run.settings['analysis_interval'] == "trimester":
                     var_I_values.append(station.var_I.data[station.var_I.date.index(
                         date(year, month, 1) + relativedelta(months= -lag))])
                 else:

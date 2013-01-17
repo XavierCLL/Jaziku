@@ -21,8 +21,6 @@
 from setuptools import setup, find_packages
 from jaziku.env import globals_vars
 
-name = globals_vars.PROG_NAME
-
 setup(
     name=globals_vars.PROG_NAME,
     version=globals_vars.VERSION,
@@ -38,7 +36,7 @@ setup(
         'Topic :: Scientific/Engineering',
         'Topic :: Scientific/Engineering :: Atmospheric Science'],
     author="Xavier Corredor Llano, Ines Sánchez Rodriguez",
-    author_email="xcorredorl (a) ideam.gov.co, incsanchezro (a) gmail.com",
+    author_email="xcorredorl(a)ideam.gov.co, icsanchez(a)ideam.gov.co",
     url="http://hg.ideam.gov.co:8000/meteorologia/jaziku",
     platforms="platform-independent",
     install_requires=["scipy", "argparse", "python-dateutil", "matplotlib", "numpy", "PIL", "clint"],

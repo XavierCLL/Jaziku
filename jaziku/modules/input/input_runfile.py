@@ -21,7 +21,7 @@
 import os
 import csv
 
-from jaziku.env import globals_vars
+from jaziku.env import globals_vars, config_run
 from jaziku.modules.maps.grid import Grid
 from jaziku.utils import  console
 from jaziku.modules.station import Station
@@ -35,7 +35,7 @@ def read_runfile():
         stations class list
 
     :global:
-        globals_vars.config_run['*']
+        config_run.get['*']
     """
 
     in_config_run = False
@@ -81,18 +81,18 @@ def read_runfile():
                     " line {0}:\n{1}, no was defined.")
                 .format(runfile.line_num, line_in_run_file[0]), False)
 
-            if line_in_run_file[0] in globals_vars.config_run:
+            if line_in_run_file[0] in config_run.settings:
                 # in this case, for python 'disable' is None,
                 # then let default value (it is 'None')
                 if line_in_run_file[1] == "disable":
-                    globals_vars.config_run[line_in_run_file[0]] = False
+                    config_run.settings[line_in_run_file[0]] = False
                 elif line_in_run_file[1] == "enable":
-                    globals_vars.config_run[line_in_run_file[0]] = True
+                    config_run.settings[line_in_run_file[0]] = True
                 else:
                     try:
-                        globals_vars.config_run[line_in_run_file[0]] = float(str(line_in_run_file[1].replace(',', '.')).replace(',', '.'))
+                        config_run.settings[line_in_run_file[0]] = float(str(line_in_run_file[1].replace(',', '.')).replace(',', '.'))
                     except:
-                        globals_vars.config_run[line_in_run_file[0]] = line_in_run_file[1]
+                        config_run.settings[line_in_run_file[0]] = line_in_run_file[1]
             else:
                 if line_in_run_file[1] == "GRIDS LIST":
                     in_config_run = False
@@ -149,58 +149,58 @@ def read_runfile():
     # post-process after read the runfile
 
     # when climate is disable:
-    if not globals_vars.config_run['climate_process']:
-        globals_vars.config_run['forecasting_process'] = False
-        globals_vars.config_run['maps'] = False
+    if not config_run.settings['climate_process']:
+        config_run.settings['forecasting_process'] = False
+        config_run.settings['maps'] = False
 
     # if forecasting_process is activated
-    if globals_vars.config_run['forecasting_process']:
+    if config_run.settings['forecasting_process']:
         try:
 
-            globals_vars.forecasting_phen_below = [float(str(globals_vars.config_run['lag_0_phen_below']).replace(',', '.')),
-                                                   float(str(globals_vars.config_run['lag_1_phen_below']).replace(',', '.')),
-                                                   float(str(globals_vars.config_run['lag_2_phen_below']).replace(',', '.'))]
-            globals_vars.forecasting_phen_normal = [float(str(globals_vars.config_run['lag_0_phen_normal']).replace(',', '.')),
-                                                    float(str(globals_vars.config_run['lag_1_phen_normal']).replace(',', '.')),
-                                                    float(str(globals_vars.config_run['lag_2_phen_normal']).replace(',', '.'))]
-            globals_vars.forecasting_phen_above = [float(str(globals_vars.config_run['lag_0_phen_above']).replace(',', '.')),
-                                                   float(str(globals_vars.config_run['lag_1_phen_above']).replace(',', '.')),
-                                                   float(str(globals_vars.config_run['lag_2_phen_above']).replace(',', '.'))]
+            globals_vars.forecasting_phen_below = [float(str(config_run.settings['lag_0_phen_below']).replace(',', '.')),
+                                                   float(str(config_run.settings['lag_1_phen_below']).replace(',', '.')),
+                                                   float(str(config_run.settings['lag_2_phen_below']).replace(',', '.'))]
+            globals_vars.forecasting_phen_normal = [float(str(config_run.settings['lag_0_phen_normal']).replace(',', '.')),
+                                                    float(str(config_run.settings['lag_1_phen_normal']).replace(',', '.')),
+                                                    float(str(config_run.settings['lag_2_phen_normal']).replace(',', '.'))]
+            globals_vars.forecasting_phen_above = [float(str(config_run.settings['lag_0_phen_above']).replace(',', '.')),
+                                                   float(str(config_run.settings['lag_1_phen_above']).replace(',', '.')),
+                                                   float(str(config_run.settings['lag_2_phen_above']).replace(',', '.'))]
         except:
             console.msg_error(_("Problems with the 9 probability values for forecasting process\n"
                                 "defined in runfile, these must be a numbers, please check it."), False)
 
-        globals_vars.forecasting_date = globals_vars.config_run['forecasting_date']
+        globals_vars.forecasting_date = config_run.settings['forecasting_date']
 
     # if path_to_file_var_I is relative convert to absolute
-    if not os.path.isabs(globals_vars.config_run["path_to_file_var_I"]):
-        globals_vars.config_run["path_to_file_var_I"] \
+    if not os.path.isabs(config_run.settings["path_to_file_var_I"]):
+        config_run.settings["path_to_file_var_I"] \
             = os.path.abspath(os.path.join(os.path.dirname(globals_vars.ARGS.runfile),
-                                           globals_vars.config_run["path_to_file_var_I"]))
+                                           config_run.settings["path_to_file_var_I"]))
 
     # Set type and units for variables D and I
     # var D
-    if '(' and ')' in globals_vars.config_run['type_var_D']:
-        string = globals_vars.config_run['type_var_D']
+    if '(' and ')' in config_run.settings['type_var_D']:
+        string = config_run.settings['type_var_D']
         # get type
-        globals_vars.config_run['type_var_D'] = string[0:string.index('(')].strip()
+        config_run.settings['type_var_D'] = string[0:string.index('(')].strip()
         # get units
         globals_vars.units_var_D = string[string.index('(')+1:string.index(')')].strip()
     else:
-        if globals_vars.config_run['type_var_D'] in globals_vars.UNITS_FOR_TYPES_VAR_D:
-            globals_vars.units_var_D = globals_vars.UNITS_FOR_TYPES_VAR_D[globals_vars.config_run['type_var_D']]
+        if config_run.settings['type_var_D'] in globals_vars.UNITS_FOR_TYPES_VAR_D:
+            globals_vars.units_var_D = globals_vars.UNITS_FOR_TYPES_VAR_D[config_run.settings['type_var_D']]
         else:
             globals_vars.units_var_D = '--'
     # var I
-    if '(' and ')' in globals_vars.config_run['type_var_I']:
-        string = globals_vars.config_run['type_var_I']
+    if '(' and ')' in config_run.settings['type_var_I']:
+        string = config_run.settings['type_var_I']
         # get type
-        globals_vars.config_run['type_var_I'] = string[0:string.index('(')].strip()
+        config_run.settings['type_var_I'] = string[0:string.index('(')].strip()
         # get units
         globals_vars.units_var_I = string[string.index('(')+1:string.index(')')].strip()
     else:
-        if globals_vars.config_run['type_var_I'] in globals_vars.UNITS_FOR_TYPES_VAR_I:
-            globals_vars.units_var_I = globals_vars.UNITS_FOR_TYPES_VAR_I[globals_vars.config_run['type_var_I']]
+        if config_run.settings['type_var_I'] in globals_vars.UNITS_FOR_TYPES_VAR_I:
+            globals_vars.units_var_I = globals_vars.UNITS_FOR_TYPES_VAR_I[config_run.settings['type_var_I']]
         else:
             globals_vars.units_var_I = '--'
 
@@ -249,13 +249,13 @@ def read_stations(lines_of_stations):
             station.lon = line_station[3].replace(',', '.')
             station.alt = line_station[4].replace(',', '.')
 
-            station.var_D.type_series = globals_vars.config_run['type_var_D']
+            station.var_D.type_series = config_run.settings['type_var_D']
             #station.file_D = open(line_station[5], 'rb')
             station.var_D.set_file(line_station[5])
 
-            station.var_I.type_series = globals_vars.config_run['type_var_I']
-            #station.file_I = globals_vars.config_run['path_to_file_var_I']
-            station.var_I.set_file(globals_vars.config_run['path_to_file_var_I'])
+            station.var_I.type_series = config_run.settings['type_var_I']
+            #station.file_I = config_run.get['path_to_file_var_I']
+            station.var_I.set_file(config_run.settings['path_to_file_var_I'])
 
         except Exception, e:
             console.msg_error_line_stations(station, e)

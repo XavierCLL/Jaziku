@@ -24,7 +24,7 @@ from calendar import monthrange
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from jaziku.env import globals_vars
+from jaziku.env import globals_vars, config_run
 from jaziku.modules.analysis_interval import get_values_in_range_analysis_interval, get_range_analysis_interval
 from jaziku.utils import  array
 from jaziku.utils import format_out
@@ -76,7 +76,7 @@ def calculate_lags(station, makes_files=True):
 
     if station.state_of_data in [1, 3]:
 
-        for lag in globals_vars.LAGS:
+        for lag in config_run.settings['lags']:
 
             if makes_files:
                 if not os.path.isdir(dir_lag[lag]):
@@ -137,7 +137,7 @@ def calculate_lags(station, makes_files=True):
 
     if station.state_of_data in [2, 4]:
 
-        for lag in globals_vars.LAGS:
+        for lag in config_run.settings['lags']:
             if makes_files:
                 if not os.path.isdir(dir_lag[lag]):
                     os.makedirs(dir_lag[lag])
