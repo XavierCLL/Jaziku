@@ -31,7 +31,7 @@ def get():
     # set settings by default
     settings = {"data_analysis": colored.red(_("disabled")),
                 "climate_process": colored.red(_("disabled")),
-                "forecasting_process": colored.red(_("disabled")),
+                "forecast_process": colored.red(_("disabled")),
                 "process_period": colored.red(_("disabled")),
                 "analog_year": colored.red(_("disabled")),
                 "lags": None,
@@ -62,11 +62,11 @@ def get():
     elif not config_run.settings['climate_process'] == False:
         console.msg_error_configuration('climate_process', _("'climate_process' variable in runfile is wrong,\n"
                             "this must be 'enable' or 'disable'"))
-    # forecasting_process
-    if config_run.settings['forecasting_process'] == True:
-        settings["forecasting_process"] = colored.green(_("enabled"))
-    elif not config_run.settings['forecasting_process'] == False:
-        console.msg_error_configuration('forecasting_process', _("'forecasting_process' variable in runfile is wrong,\n"
+    # forecast_process
+    if config_run.settings['forecast_process'] == True:
+        settings["forecast_process"] = colored.green(_("enabled"))
+    elif not config_run.settings['forecast_process'] == False:
+        console.msg_error_configuration('forecast_process', _("'forecast_process' variable in runfile is wrong,\n"
                             "this must be 'enable' or 'disable'"))
 
     # analysis interval
@@ -225,8 +225,8 @@ def get():
         globals_vars.phenomenon_above = _('var_I_above')
         settings["phen_above_label"] = globals_vars.phenomenon_above
 
-    ## forecasting settings
-    if config_run.settings['forecasting_process']:
+    ## forecast settings
+    if config_run.settings['forecast_process']:
         settings["lag_0_phen_below"] = config_run.settings['lag_0_phen_below']
         settings["lag_0_phen_normal"] = config_run.settings['lag_0_phen_normal']
         settings["lag_0_phen_above"] = config_run.settings['lag_0_phen_above']
@@ -236,24 +236,24 @@ def get():
         settings["lag_2_phen_below"] = config_run.settings['lag_2_phen_below']
         settings["lag_2_phen_normal"] = config_run.settings['lag_2_phen_normal']
         settings["lag_2_phen_above"] = config_run.settings['lag_2_phen_above']
-        settings["forecasting_date"] = colored.green(config_run.settings['forecasting_date'])
+        settings["forecast_date"] = colored.green(config_run.settings['forecast_date'])
 
     ## maps settings
     if config_run.settings['maps']:
         if config_run.settings['maps'] == "all":
-            config_run.settings['maps'] = {'climate': True, 'forecasting': True, 'correlation': True}
+            config_run.settings['maps'] = {'climate': True, 'forecast': True, 'correlation': True}
             settings["maps"] = ','.join(map(str, [m for m in config_run.settings['maps'] if config_run.settings['maps'][m]]))
         else:
             try:
-                config_run.settings['maps'] = {'climate': False, 'forecasting': False, 'correlation': False}
+                config_run.settings['maps'] = {'climate': False, 'forecast': False, 'correlation': False}
                 input_maps_list = config_run.settings['maps'].split(",")
                 for map_to_run in input_maps_list:
                     map_to_run = map_to_run.strip()
-                    if map_to_run not in ['climate', 'forecasting', 'correlation']:
+                    if map_to_run not in ['climate', 'forecast', 'correlation']:
                         raise
                     config_run.settings['maps'][map_to_run] = True
             except:
-                console.msg_error_configuration('maps',_("the maps options are: 'climate', 'forecasting', "
+                console.msg_error_configuration('maps',_("the maps options are: 'climate', 'forecast', "
                     "'correlation' (comma separated), or 'all'."))
             settings["maps"] = colored.green(','.join(map(str, [m for m in config_run.settings['maps'] if config_run.settings['maps'][m]])))
 
@@ -287,9 +287,9 @@ def get():
 
     # when climate is disable:
     if not config_run.settings['climate_process']:
-        console.msg(_("\nClimate process is disable, then forecasting and maps\n"
+        console.msg(_("\nClimate process is disable, then forecast and maps\n"
                       "process will be disabled."), color="yellow")
-        settings["forecasting_process"] = colored.red(_("disabled"))
+        settings["forecast_process"] = colored.red(_("disabled"))
         settings["maps"] = colored.red(_("disabled"))
 
     # save input settings
@@ -310,8 +310,8 @@ def show(stop_in=None):
     if stop_in == "data_analysis": return
     print "   {0} ------- {1}".format("climate process", settings["climate_process"])
     if stop_in == "climate_process": return
-    print "   {0} --- {1}".format("forecasting process", settings["forecasting_process"])
-    if stop_in == "forecasting_process": return
+    print "   {0} ------ {1}".format("forecast process", settings["forecast_process"])
+    if stop_in == "forecast_process": return
     print "   {0} ----- {1}".format("analysis interval", settings["analysis_interval"])
     if stop_in == "analysis_interval": return
     print "   {0} -------- {1}".format("process period", settings["process_period"])
@@ -360,8 +360,8 @@ def show(stop_in=None):
     if stop_in == "phen_normal_label": return
     print "   {0} ------ {1}".format("phen above label", settings["phen_above_label"])
     if stop_in == "phen_above_label": return
-    if config_run.settings['forecasting_process']:
-        console.msg("   Forecasting options", color='cyan')
+    if config_run.settings['forecast_process']:
+        console.msg("   Forecast options", color='cyan')
         print "   {0} ------ {1}".format("lag 0 phen below", settings["lag_0_phen_below"])
         if stop_in == "lag_0_phen_below": return
         print "   {0} ----- {1}".format("lag 0 phen normal", settings["lag_0_phen_normal"])
@@ -383,8 +383,8 @@ def show(stop_in=None):
         print "   {0} ------ {1}".format("lag 2 phen above", settings["lag_2_phen_above"])
         if stop_in == "lag_2_phen_above": return
         if stop_in == "lag_2_phen": return
-        print "   {0} ------ {1}".format("forecasting date", settings["forecasting_date"])
-        if stop_in == "forecasting_date": return
+        print "   {0} --------- {1}".format("forecast date", settings["forecast_date"])
+        if stop_in == "forecast_date": return
     console.msg("   Maps options", color='cyan')
     print "   {0} ------------------ {1}".format("maps", settings["maps"])
     if stop_in == "maps": return
@@ -554,10 +554,10 @@ def check():
                   "type of independent variable not is valid internal type."))
 
     # -------------------------------------------------------------------------
-    # check the 9 forecasting values
+    # check the 9 forecast values
 
-    # if forecasting_process is activated
-    if config_run.settings['forecasting_process']:
+    # if forecast_process is activated
+    if config_run.settings['forecast_process']:
         # lag 0
         lag_0 = config_run.settings['lag_0_phen_below'] +\
                 config_run.settings['lag_0_phen_normal'] +\
@@ -565,7 +565,7 @@ def check():
         if not (99 < lag_0 < 101):
             console.msg_error_configuration('lag_0_phen',
                 _("The sum for the 3 values of phenomenon for lag 0\n"
-                  "in 'forecasting options' in runfile must be\nequal to 100."))
+                  "in 'forecast options' in runfile must be\nequal to 100."))
 
         # lag 1
         lag_1 = config_run.settings['lag_1_phen_below'] +\
@@ -574,7 +574,7 @@ def check():
         if not (99 < lag_1 < 101):
             console.msg_error_configuration('lag_1_phen',
                 _("The sum for the 3 values of phenomenon for lag 1\n"
-                  "in 'forecasting options' in runfile must be\nequal to 100."))
+                  "in 'forecast options' in runfile must be\nequal to 100."))
 
         # lag 2
         lag_2 = config_run.settings['lag_2_phen_below'] +\
@@ -583,7 +583,7 @@ def check():
         if not (99 < lag_2 < 101):
             console.msg_error_configuration('lag_2_phen',
                 _("The sum for the 3 values of phenomenon for lag 2\n"
-                  "in 'forecasting options' in runfile must be\nequal to 100."))
+                  "in 'forecast options' in runfile must be\nequal to 100."))
 
 
 def check_station_list(stations):

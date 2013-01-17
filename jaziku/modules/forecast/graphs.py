@@ -20,7 +20,7 @@
 
 #===============================================================================
 # GRAPHS
-# Generate pies charts and mosaics for forecasting
+# Generate pies charts and mosaics for forecast
 # http://matplotlib.sourceforge.net/api/pyplot_api.html
 
 import os
@@ -30,7 +30,7 @@ from Image import open as img_open
 from jaziku.env import globals_vars, config_run
 from jaziku.utils import  watermarking
 
-def forecasting_graphs(station):
+def forecast_graphs(station):
     """
     Generate pie charts and mosaics of probability for below, normal and
     above for independent variable for the composite analysis.
@@ -41,16 +41,16 @@ def forecasting_graphs(station):
     for lag in config_run.settings['lags']:
 
         if station.state_of_data in [1, 3]:
-            forecasting_month = globals_vars.forecasting_date
-            title_date_graphic = _("trim {0} ({1})").format(globals_vars.forecasting_date,
-                globals_vars.get_trimester_in_text(forecasting_month - 1))
-            filename_date_graphic = _("trim_{0}").format(forecasting_month)
+            forecast_month = globals_vars.forecast_date
+            title_date_graphic = _("trim {0} ({1})").format(globals_vars.forecast_date,
+                globals_vars.get_trimester_in_text(forecast_month - 1))
+            filename_date_graphic = _("trim_{0}").format(forecast_month)
 
         if station.state_of_data in [2, 4]:
-            forecasting_month = globals_vars.forecasting_date[0]
-            forecasting_day = globals_vars.forecasting_date[1]
-            title_date_graphic = "{0} {1}".format(globals_vars.get_month_in_text(forecasting_month - 1), forecasting_day)
-            filename_date_graphic = "{0}_{1}".format(globals_vars.get_month_in_text(forecasting_month - 1), forecasting_day)
+            forecast_month = globals_vars.forecast_date[0]
+            forecast_day = globals_vars.forecast_date[1]
+            title_date_graphic = "{0} {1}".format(globals_vars.get_month_in_text(forecast_month - 1), forecast_day)
+            filename_date_graphic = "{0}_{1}".format(globals_vars.get_month_in_text(forecast_month - 1), forecast_day)
 
         ## Options for graphics pie
         # make a square figure and axes
@@ -82,7 +82,7 @@ def forecasting_graphs(station):
         ## Save image
         # pyplot.subplot(111)
         image_dir_save \
-            = os.path.join(station.forecasting_dir, _('prob_of_{0}_lag_{1}_{2}_({3}-{4}).png')
+            = os.path.join(station.forecast_dir, _('prob_of_{0}_lag_{1}_{2}_({3}-{4}).png')
                 .format(station.var_D.type_series, lag, filename_date_graphic,
                         station.process_period['start'], station.process_period['end']))
 
@@ -101,7 +101,7 @@ def forecasting_graphs(station):
         # image_height = 375
         image_width = 375
         mosaic_dir_save \
-            = os.path.join(station.forecasting_dir, _('mosaic_prob_of_{0}_{1}_({3}-{4}).png')
+            = os.path.join(station.forecast_dir, _('mosaic_prob_of_{0}_{1}_({3}-{4}).png')
                 .format(station.var_D.type_series, lag, filename_date_graphic,
                         station.process_period['start'], station.process_period['end']))
         # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid

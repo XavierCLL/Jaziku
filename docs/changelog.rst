@@ -10,6 +10,7 @@ Changelog
 news
 ++++
 
+- Replace 'forecasting' to 'forecast' string in code and in results
 - [code] Refactoring config_run, this is where save all variable
   of configuration run settings
 - [code] Refactoring globals_vars in new environment dir

@@ -190,39 +190,39 @@ def climate_data_for_maps(station):
                         del csv_file
 
 
-def forecasting_data_for_maps(station):
+def forecast_data_for_maps(station):
     """
     Create maps data csv file for plotting for each trimester, phenomenon and
     lag, each file contain all stations processed.
     """
     # -------------------------------------------------------------------------
-    # create maps plots files for forecasting process, only once
+    # create maps plots files for forecast process, only once
 
-    # select text for forecasting date
+    # select text for forecast date
     if station.state_of_data in [1, 3]:
-        forecasting_date_formatted = globals_vars.get_trimester_in_text(globals_vars.forecasting_date - 1)
+        forecast_date_formatted = globals_vars.get_trimester_in_text(globals_vars.forecast_date - 1)
     if station.state_of_data in [2, 4]:
-        month = globals_vars.forecasting_date[0]
-        day = globals_vars.forecasting_date[1]
-        forecasting_date_formatted = globals_vars.get_month_in_text(month - 1) + "_" + str(day)
+        month = globals_vars.forecast_date[0]
+        day = globals_vars.forecast_date[1]
+        forecast_date_formatted = globals_vars.get_month_in_text(month - 1) + "_" + str(day)
 
-    if forecasting_date_formatted not in globals_vars.maps_files_forecasting[config_run.settings['analysis_interval']]:
+    if forecast_date_formatted not in globals_vars.maps_files_forecast[config_run.settings['analysis_interval']]:
 
         if station.state_of_data in [1, 3]:
             lags_list = {}
             # define maps data files and directories
             for lag in config_run.settings['lags']:
 
-                maps_dir = os.path.join(globals_vars.FORECASTING_DIR, _('maps'),
+                maps_dir = os.path.join(globals_vars.FORECAST_DIR, _('maps'),
                     globals_vars.analysis_interval_i18n,
-                    globals_vars.get_trimester_in_text(globals_vars.forecasting_date - 1))
+                    globals_vars.get_trimester_in_text(globals_vars.forecast_date - 1))
 
                 if not os.path.isdir(maps_dir):
                     os.makedirs(maps_dir)
 
                 # write the headers in file
                 csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}_{1}.csv')
-                .format(lag, globals_vars.get_trimester_in_text(globals_vars.forecasting_date - 1)))
+                .format(lag, globals_vars.get_trimester_in_text(globals_vars.forecast_date - 1)))
 
                 if os.path.isfile(csv_name):
                     os.remove(csv_name)
@@ -230,30 +230,30 @@ def forecasting_data_for_maps(station):
                 open_file = open(csv_name, 'w')
                 csv_file = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
                 csv_file.writerow([_('code'), _('lat'), _('lon'),
-                                   _('forecasting_date'), _('prob_decrease_var_D'),
+                                   _('forecast_date'), _('prob_decrease_var_D'),
                                    _('prob_normal_var_D'), _('prob_exceed_var_D'),
                                    _('index'), _('sum')])
                 open_file.close()
                 del csv_file
 
                 lags_list[lag] = csv_name
-            globals_vars.maps_files_forecasting[config_run.settings['analysis_interval']][forecasting_date_formatted] = lags_list
+            globals_vars.maps_files_forecast[config_run.settings['analysis_interval']][forecast_date_formatted] = lags_list
 
         if station.state_of_data in [2, 4]:
             lags_list = {}
             # define maps data files and directories
             for lag in config_run.settings['lags']:
 
-                maps_dir = os.path.join(globals_vars.FORECASTING_DIR, _('maps'),
+                maps_dir = os.path.join(globals_vars.FORECAST_DIR, _('maps'),
                     globals_vars.analysis_interval_i18n,
-                    forecasting_date_formatted)
+                    forecast_date_formatted)
 
                 if not os.path.isdir(maps_dir):
                     os.makedirs(maps_dir)
 
                 # write the headers in file
                 csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}_{1}.csv')
-                .format(lag, forecasting_date_formatted))
+                .format(lag, forecast_date_formatted))
 
                 if os.path.isfile(csv_name):
                     os.remove(csv_name)
@@ -261,14 +261,14 @@ def forecasting_data_for_maps(station):
                 open_file = open(csv_name, 'w')
                 csv_file = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
                 csv_file.writerow([_('code'), _('lat'), _('lon'),
-                                   _('forecasting_date'), _('prob_decrease_var_D'),
+                                   _('forecast_date'), _('prob_decrease_var_D'),
                                    _('prob_normal_var_D'), _('prob_exceed_var_D'),
                                    _('index'), _('sum')])
                 open_file.close()
                 del csv_file
 
                 lags_list[lag] = csv_name
-            globals_vars.maps_files_forecasting[config_run.settings['analysis_interval']][forecasting_date_formatted] = lags_list
+            globals_vars.maps_files_forecast[config_run.settings['analysis_interval']][forecast_date_formatted] = lags_list
 
     def calculate_index():
         # select index
@@ -296,13 +296,13 @@ def forecasting_data_for_maps(station):
         p_index = calculate_index()
 
         # write new row in file
-        csv_name = globals_vars.maps_files_forecasting[config_run.settings['analysis_interval']][forecasting_date_formatted][lag]
+        csv_name = globals_vars.maps_files_forecast[config_run.settings['analysis_interval']][forecast_date_formatted][lag]
         open_file = open(csv_name, 'a')
         csv_file = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
         csv_file.writerow([station.code,
                            format_out.number(station.lat, 4),
                            format_out.number(station.lon, 4),
-                           forecasting_date_formatted,
+                           forecast_date_formatted,
                            format_out.number(station.prob_decrease_var_D[lag]),
                            format_out.number(station.prob_normal_var_D[lag]),
                            format_out.number(station.prob_exceed_var_D[lag]),

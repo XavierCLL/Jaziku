@@ -32,7 +32,7 @@ msgstr "Por debajo"
 
 #: jaziku/data/maps/shapes/Colombia/Colombia/ncl.py:37
 #: jaziku/data/maps/shapes/Colombia/ncl.py:46
-#: jaziku/data/maps/shapes/ncl.py:46 jaziku/modules/forecasting/graphs.py:60
+#: jaziku/data/maps/shapes/ncl.py:46 jaziku/modules/forecast/graphs.py:60
 msgid "Normal"
 msgstr "Normal"
 
@@ -147,10 +147,10 @@ msgstr ""
 
 #: jaziku/utils/settings_run.py:69
 msgid ""
-"'forecasting_process' variable in runfile is wrong,\n"
+"'forecast_process' variable in runfile is wrong,\n"
 "this must be 'enable' or 'disable'"
 msgstr ""
-"La variable 'forecasting_process' en el runfile es\n"
+"La variable 'forecast_process' en el runfile es\n"
 "incorrecta, éste debe ser 'enable' o 'disable'"
 
 #: jaziku/utils/settings_run.py:75
@@ -215,10 +215,10 @@ msgstr "var_I_por_encima"
 
 #: jaziku/utils/settings_run.py:252
 msgid ""
-"the maps options are: 'climate', 'forecasting', 'correlation' (comma "
+"the maps options are: 'climate', 'forecast', 'correlation' (comma "
 "separated), or 'all'."
 msgstr ""
-"las opciones para 'maps' son: 'climate', 'forecasting', "
+"las opciones para 'maps' son: 'climate', 'forecast', "
 "'correlation' (separados por coma), o 'all'."
 
 #: jaziku/utils/settings_run.py:263
@@ -248,7 +248,7 @@ msgstr ""
 #: jaziku/utils/settings_run.py:286
 msgid ""
 "\n"
-"Climate process is disable, then forecasting and maps\n"
+"Climate process is disable, then forecast and maps\n"
 "process will be disabled."
 msgstr ""
 "\n"
@@ -373,31 +373,31 @@ msgstr ""
 #: jaziku/utils/settings_run.py:561
 msgid ""
 "The sum for the 3 values of phenomenon for lag 0\n"
-"in 'forecasting options' in runfile must be\n"
+"in 'forecast options' in runfile must be\n"
 "equal to 100."
 msgstr ""
 "La suma para los 3 valores del fenómeno para el\n"
-"rezago 0 en 'forecasting options' en el runfile\n"
+"rezago 0 en 'forecast options' en el runfile\n"
 "deben ser iguales a 100"
 
 #: jaziku/utils/settings_run.py:570
 msgid ""
 "The sum for the 3 values of phenomenon for lag 1\n"
-"in 'forecasting options' in runfile must be\n"
+"in 'forecast options' in runfile must be\n"
 "equal to 100."
 msgstr ""
 "La suma para los 3 valores del fenómeno para el\n"
-"rezago 1 en 'forecasting options' en el runfile\n"
+"rezago 1 en 'forecast options' en el runfile\n"
 "deben ser iguales a 100"
 
 #: jaziku/utils/settings_run.py:579
 msgid ""
 "The sum for the 3 values of phenomenon for lag 2\n"
-"in 'forecasting options' in runfile must be\n"
+"in 'forecast options' in runfile must be\n"
 "equal to 100."
 msgstr ""
 "La suma para los 3 valores del fenómeno para el\n"
-"rezago 2 en 'forecasting options' en el runfile\n"
+"rezago 2 en 'forecast options' en el runfile\n"
 "deben ser iguales a 100"
 
 #: jaziku/utils/settings_run.py:585
@@ -446,7 +446,7 @@ msgstr ""
 "   Solo es una recomendación, puede continuar."
 
 #: jaziku/utils/settings_run.py:625 jaziku/modules/input/input_check.py:83
-#: jaziku/modules/forecasting/forecasting.py:136
+#: jaziku/modules/forecast/forecast.py:136
 #: jaziku/modules/climate/climate.py:73 jaziku/modules/maps/maps.py:67
 #: jaziku/modules/maps/maps.py:380 jaziku/modules/maps/maps.py:491
 #: jaziku/modules/maps/maps.py:548 jaziku/modules/variable.py:106
@@ -766,7 +766,7 @@ msgstr ""
 
 #: jaziku/modules/input/input_runfile.py:169
 msgid ""
-"Problems with the 9 probability values for forecasting process\n"
+"Problems with the 9 probability values for forecast process\n"
 "defined in runfile, these must be a numbers, please check it."
 msgstr ""
 "Problemas con los 9 valores de probabilidad para el proceso\n"
@@ -875,36 +875,36 @@ msgstr ""
 "\n"
 "Jaziku detectó un valor perdido para la fecha: {2}-{3}"
 
-#: jaziku/modules/forecasting/forecasting.py:36
-msgid "Processing forecasting ........................ "
+#: jaziku/modules/forecast/forecast.py:36
+msgid "Processing forecast ........................ "
 msgstr "Procesando pronóstico ................................. "
 
-#: jaziku/modules/forecasting/forecasting.py:45
+#: jaziku/modules/forecast/forecast.py:45
 msgid ""
-"Trimester forecasting '{0}' is invalid, must be a month valid number (1-12)"
+"Trimester forecast '{0}' is invalid, must be a month valid number (1-12)"
 msgstr ""
 "El trimestre del pronostico '{0}' no es valido, debe ser un numero de mes "
 "valido (1-12)"
 
-#: jaziku/modules/forecasting/forecasting.py:56
+#: jaziku/modules/forecast/forecast.py:56
 msgid ""
-"Month or day for calculate forecasting '{0}' is invalid, \n"
+"Month or day for calculate forecast '{0}' is invalid, \n"
 "must be month/day or month-day (e.g. 03/11)"
 msgstr ""
 "El mes o el dia para el calculo del pronóstico  '{0}' no es valido,\n"
 "debe ser mes/dia o mes-dia (ejemplo 03/11)"
 
-#: jaziku/modules/forecasting/forecasting.py:61
+#: jaziku/modules/forecast/forecast.py:61
 msgid ""
-"Month for forecasting process '{0}' is invalid, \n"
+"Month for forecast process '{0}' is invalid, \n"
 "must be a month valid number (1-12)"
 msgstr ""
 "El mes para el proceso del pronóstico '{0}' no es valido,\n"
 "debe ser un numero de mes valido (1-12)"
 
-#: jaziku/modules/forecasting/forecasting.py:66
+#: jaziku/modules/forecast/forecast.py:66
 msgid ""
-"Start day (month/day) for forecasting process '{0}'\n"
+"Start day (month/day) for forecast process '{0}'\n"
 "is invalid, must be a valid start day based on\n"
 "range analysis interval, the valid start days for\n"
 "{1} are: {2}"
@@ -914,20 +914,20 @@ msgstr ""
 "intervalos de rango de análisis, los días de inicio validos para\n"
 "{1} son: {2}"
 
-#: jaziku/modules/forecasting/forecasting.py:76
+#: jaziku/modules/forecast/forecast.py:76
 #: jaziku/modules/climate/climate.py:53
 msgid "stations"
 msgstr "estaciones"
 
-#: jaziku/modules/forecasting/forecasting.py:94
-#: jaziku/modules/forecasting/forecasting.py:106
+#: jaziku/modules/forecast/forecast.py:94
+#: jaziku/modules/forecast/forecast.py:106
 #: jaziku/modules/climate/result_table.py:64
 #: jaziku/modules/climate/result_table.py:97
 #: jaziku/modules/climate/result_table.py:104
 msgid "yes"
 msgstr "si"
 
-#: jaziku/modules/forecasting/forecasting.py:132
+#: jaziku/modules/forecast/forecast.py:132
 #: jaziku/modules/climate/climate.py:69
 msgid ""
 "\n"
@@ -936,25 +936,25 @@ msgstr ""
 "\n"
 "   continua sin realizar gráficas ..................... "
 
-#: jaziku/modules/forecasting/graphs.py:44
+#: jaziku/modules/forecast/graphs.py:44
 #: jaziku/modules/climate/graphs.py:162
 msgid "trim {0} ({1})"
 msgstr "trim {0} ({1})"
 
-#: jaziku/modules/forecasting/graphs.py:46
+#: jaziku/modules/forecast/graphs.py:46
 #: jaziku/modules/climate/graphs.py:163
 msgid "trim_{0}"
 msgstr "trim_{0}"
 
-#: jaziku/modules/forecasting/graphs.py:60
+#: jaziku/modules/forecast/graphs.py:60
 msgid "Decrease"
 msgstr "Descenso"
 
-#: jaziku/modules/forecasting/graphs.py:60
+#: jaziku/modules/forecast/graphs.py:60
 msgid "Exceed"
 msgstr "Excedencia"
 
-#: jaziku/modules/forecasting/graphs.py:76
+#: jaziku/modules/forecast/graphs.py:76
 msgid ""
 "Probability forecasted of {0} - {1}\n"
 "{2} - lag {3} - {4} - ({5}-{6})"
@@ -962,11 +962,11 @@ msgstr ""
 "Probabilidad pronosticada de {0} - {1}\n"
 "{2} - lag {3} - {4} - ({5}-{6})"
 
-#: jaziku/modules/forecasting/graphs.py:84
+#: jaziku/modules/forecast/graphs.py:84
 msgid "prob_of_{0}_lag_{1}_{2}_({3}-{4}).png"
 msgstr "prob_de_{0}_rez_{1}_{2}_({3}-{4}).png"
 
-#: jaziku/modules/forecasting/graphs.py:103
+#: jaziku/modules/forecast/graphs.py:103
 msgid "mosaic_prob_of_{0}_{1}_({3}-{4}).png"
 msgstr "mosaico_prob_de_{0}_{1}_({3}-{4}).png"
 
@@ -1467,7 +1467,7 @@ msgid "Map_Data_lag_{0}_{1}.csv"
 msgstr "Datos_del_Mapa_rez_{0}_{1}.csv"
 
 #: jaziku/modules/maps/data.py:233 jaziku/modules/maps/data.py:264
-msgid "forecasting_date"
+msgid "forecast_date"
 msgstr "fecha_pronostico"
 
 #: jaziku/modules/maps/data.py:233 jaziku/modules/maps/data.py:264
@@ -1504,7 +1504,7 @@ msgstr ""
 
 #: jaziku/modules/maps/ncl.py:74
 msgid ""
-"\"Affectation forecasting of the variable {typeVarD}~C~   under variations "
+"\"Affectation forecast of the variable {typeVarD}~C~   under variations "
 "of {typeVarI} to lag {lag} in {date}\""
 msgstr ""
 "\"  Pron\"+oacute+\"stico de afectaci\"+oacute+\"n de la variable {typeVarD}"
@@ -1646,7 +1646,7 @@ msgid "Map_correlation_lag_{0}_{1}"
 msgstr "Mapa_de_correlacion_rez_{0}_{1}"
 
 #: jaziku/modules/maps/maps.py:502
-msgid "Processing maps for forecasting:"
+msgid "Processing maps for forecast:"
 msgstr "Procesando mapas para pronóstico:"
 
 #: jaziku/modules/maps/maps.py:534
@@ -2298,7 +2298,7 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"############### CLIMATE AND FORECASTING PROCESS ################\n"
+"############### CLIMATE AND FORECAST PROCESS ################\n"
 "# Climate Module, here are calculated contingency tables,      #\n"
 "# correlations and parametric tests of interest.               #\n"
 "#                                                              #\n"
@@ -2341,13 +2341,13 @@ msgstr ""
 "   o sobrescribir la corrida anterior."
 
 #: jaziku/jaziku.py:239
-msgid "Jaziku_Forecasting"
+msgid "Jaziku_Forecast"
 msgstr "Jaziku_Pronostico"
 
 #: jaziku/jaziku.py:241
 msgid ""
 "\n"
-"Saving the result for forecasting in:"
+"Saving the result for forecast in:"
 msgstr ""
 "\n"
 "Guardando los resultados para el pronóstico en:"
@@ -2355,7 +2355,7 @@ msgstr ""
 #: jaziku/jaziku.py:246
 msgid ""
 "\n"
-" > WARNING: the output directory for forecasting process\n"
+" > WARNING: the output directory for forecast process\n"
 "   is already exist, Jaziku continue but the results\n"
 "   could be mixed or replaced of old output."
 msgstr ""
@@ -2440,12 +2440,12 @@ msgstr "Adiós :)"
 #~ msgid "Index of wind anomaly not valid"
 #~ msgstr "Indice de la anomalía del viento no valida"
 
-#~ msgid "Processing forecasting ({0}-{1}) ............ "
+#~ msgid "Processing forecast ({0}-{1}) ............ "
 #~ msgstr "Procesando pronóstico ({0}-{1}) ..................... "
 
 #~ msgid ""
 #~ "\n"
-#~ "continue without make graphics for forecasting  "
+#~ "continue without make graphics for forecast  "
 #~ msgstr ""
 #~ "\n"
 #~ "continua sin realizar gráficas para pronostico ........ "
@@ -2510,21 +2510,21 @@ msgstr "Adiós :)"
 #~ msgstr "   Los resultados se harán cada {} dias"
 
 #~ msgid ""
-#~ "Neither process (climate, forecasting) were executed, \n"
+#~ "Neither process (climate, forecast) were executed, \n"
 #~ "please enable this process in arguments: \n"
-#~ "'-c, --climate' for climate and/or '-f, --forecasting' for forecasting."
+#~ "'-c, --climate' for climate and/or '-f, --forecast' for forecast."
 #~ msgstr ""
 #~ "Ninguno de los procesos (clima y/o pronóstico) no fueron ejecutados,\n"
 #~ "por favor habilite éstos procesos en los argumentos:\n"
-#~ "'-c, --climate' para clima y/o '-f, --forecasting' para pronóstico."
+#~ "'-c, --climate' para clima y/o '-f, --forecast' para pronóstico."
 
 #~ msgid ""
-#~ "sorry, Jaziku can't run forecasting process without climate, this issue "
+#~ "sorry, Jaziku can't run forecast process without climate, this issue "
 #~ "has not been implemented yet, \n"
 #~ "please run again with the option '-c'"
 #~ msgstr ""
 #~ "lo sentimos, Jaziku no puede correr el proceso de pronostico "
-#~ "(forecasting) sin clima, esta caracteristica aún no ha sido implementada, "
+#~ "(forecast) sin clima, esta caracteristica aún no ha sido implementada, "
 #~ "por favor corralo de nuevo con la opcion '-c'"
 
 #~ msgid "\"Analysis by tertiles\""
@@ -2550,7 +2550,7 @@ msgstr "Adiós :)"
 #~ "variabilidad climática y las principales variables \n"
 #~ "meteorológicas en la escala puntual.\n"
 
-#~ msgid "Trimester forecasting '{0}' is invalid, must be integer number"
+#~ msgid "Trimester forecast '{0}' is invalid, must be integer number"
 #~ msgstr ""
 #~ "El trimestre del pronostico '{0}' no es valido, debe ser un numero entero"
 
@@ -2558,10 +2558,10 @@ msgstr "Adiós :)"
 #~ msgstr "{0} no válido"
 
 #~ msgid ""
-#~ "For forecasting process you need define 9 probability\n"
+#~ "For forecast process you need define 9 probability\n"
 #~ " variables and trimester to process in stations file."
 #~ msgstr ""
-#~ "Para procesar el pronostico (forecasting) necesitas definir\n"
+#~ "Para procesar el pronostico (forecast) necesitas definir\n"
 #~ "las 9 probabilidades y su trimestre a calcular en el \n"
 #~ "archivo de estaciones."
 
@@ -2662,7 +2662,7 @@ msgstr "Adiós :)"
 #~ msgid "Enable climate process"
 #~ msgstr "Habilitar el proceso de clima"
 
-#~ msgid "Enable forecasting process"
+#~ msgid "Enable forecast process"
 #~ msgstr "Habilitar el proceso de pronostico"
 
 #~ msgid "Set phenomenon (var I) below label (e.g. '-p_below 'el niño'')"
@@ -2683,13 +2683,13 @@ msgstr "Adiós :)"
 #~ msgid "Set specific period for process (e.g. 1980-2010)"
 #~ msgstr "Asignar un periodo especifico para el proceso (ejemplo 1980-2010)"
 
-#~ msgid "Enable risk analysis for forecasting process"
+#~ msgid "Enable risk analysis for forecast process"
 #~ msgstr "Habilitar el análisis de riesgo para el proceso de pronóstico"
 
 #~ msgid "disable check consistent data for var_D and var_I"
 #~ msgstr "desactivar la consistencia de los datos para var_D y var_I"
 
-#~ msgid "disable create graphics for climate and forecasting"
+#~ msgid "disable create graphics for climate and forecast"
 #~ msgstr "desactivar la creación de gráficos para clima y pronóstico"
 
 #~ msgid "Set language (e.g. '-l en' for english, '-l es' for spanish)"
