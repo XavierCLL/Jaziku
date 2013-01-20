@@ -1583,7 +1583,7 @@ msgstr ""
 "\n"
 " > ADVERTENCIA: El punto lat:{lat} lon:{lon}\n"
 "   de la estación con código: {code} no fue agregado\n"
-"   porque el punto esta por fuera de la rejilla."
+"   porque el valor del indice es 'nan' (nulo)."
 
 #: jaziku/modules/maps/maps.py:162
 msgid ""

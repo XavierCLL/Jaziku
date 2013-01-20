@@ -21,6 +21,8 @@
 import os
 import imp
 
+from jaziku.utils import globals_vars
+
 
 class MapProperties:
     pass
@@ -89,7 +91,7 @@ def make_ncl_file(grid, base_path_file, globals_vars):
             if grid.need_particular_ncl_script:
                 ncl_script = imp.load_source("ncl_script", os.path.join(grid.shape_path, "ncl.py"))
             else:
-                ncl_script = imp.load_source("ncl_script", os.path.join(globals_vars.ROOT_DIR, 'data', 'maps', 'shapes', "ncl.py"))
+                ncl_script = imp.load_source("ncl_script", os.path.join(globals_vars.JAZIKU_DIR, 'data', 'maps', 'shapes', "ncl.py"))
 
         ncl_file_raw = ncl_script.code(map_properties)
 
