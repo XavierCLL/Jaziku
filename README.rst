@@ -2,8 +2,10 @@
 Jaziku
 ======
 
+Jaziku is statistical inference software for the teleconnections analysis.
+
 About
------------
+-----
 
 Jaziku is a software for the implementation of composite analysis
 metodology between the major indices of climate variability and major
@@ -56,14 +58,22 @@ Synopsis run
 Read manual for more information.
 
 Team
-----------
+----
+
 **Developer:**
     Xavier Corredor Llano < xcorredorl (a) ideam.gov.co >
-**Roadmap, technical-theoretical support, tester, doc-user:**
-    Ines Sánchez Rodriguez < incsanchezro (a) gmail.com >
+**Roadmap, technical-theoretical support, tester and product verification, doc-user and manual:**
+    Ines Sánchez Rodriguez < icsanchez (a) ideam.gov.co >
+
+Help and discussion
+-------------------
+
+- Download `Manual <http://>`_.
+- Join us at the Jaziku discussion `google group <http://groups.google.com/group/jaziku>`_.
 
 How to cite Jaziku
 ------------------
+
     Jaziku is statistical inference software for the teleconnections analysis, (version 0.5.2).
     (2013) IDEAM, Colombia. Jaziku is a free and open source software GPLv3. http://hg.ideam.gov.co:8000/meteorologia/jaziku/summary
 
