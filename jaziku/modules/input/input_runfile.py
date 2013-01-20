@@ -171,8 +171,8 @@ def read_runfile():
 
         globals_vars.forecasting_date = globals_vars.config_run['forecasting_date']
 
-    # if path_to_file_var_I is relative convert to absolute
-    if not os.path.isabs(globals_vars.config_run["path_to_file_var_I"]):
+    # if path_to_file_var_I is relative convert to absolute, except if is 'internal'
+    if not os.path.isabs(globals_vars.config_run["path_to_file_var_I"]) and not globals_vars.config_run["path_to_file_var_I"] == 'internal':
         globals_vars.config_run["path_to_file_var_I"] \
             = os.path.abspath(os.path.join(os.path.dirname(globals_vars.ARGS.runfile),
                                            globals_vars.config_run["path_to_file_var_I"]))
