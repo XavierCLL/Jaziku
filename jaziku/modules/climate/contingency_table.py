@@ -27,9 +27,9 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from jaziku.env import globals_vars, config_run
+from jaziku.core.input import input_validation
 from jaziku.utils import format_out
 from jaziku.utils import console
-from jaziku.modules.input import input_validation
 from jaziku.modules.climate import lags
 
 
@@ -465,7 +465,7 @@ def get_contingency_table(station, lag, month, day=None):
               u"   category '{4}'. Therefore, the graphics\n"
               u"   will not be created.")
             .format(config_run.settings['threshold_below_var_I'], config_run.settings['threshold_above_var_I'],
-                station.var_D.type_series, station.var_I.type_series, globals_vars.phenomenon_below), color='yellow')
+                station.var_D.type_series, station.var_I.type_series, config_run.settings['phen_below_label']), color='yellow')
         globals_vars.threshold_problem[0] = True
 
     # if threshold by below or above calculating normal phenomenon of independent variable is wrong
@@ -477,7 +477,7 @@ def get_contingency_table(station, lag, month, day=None):
               u"   category '{4}'. Therefore, the graphics\n"
               u"   will not be created.")
             .format(config_run.settings['threshold_below_var_I'], config_run.settings['threshold_above_var_I'],
-                station.var_D.type_series, station.var_I.type_series, globals_vars.phenomenon_normal), color='yellow')
+                station.var_D.type_series, station.var_I.type_series, config_run.settings['phen_normal_label']), color='yellow')
         globals_vars.threshold_problem[1] = True
 
     # if threshold by above of independent variable is wrong
@@ -489,7 +489,7 @@ def get_contingency_table(station, lag, month, day=None):
               u"   category '{4}'. Therefore, the graphics\n"
               u"   will not be created.")
             .format(config_run.settings['threshold_below_var_I'], config_run.settings['threshold_above_var_I'],
-                station.var_D.type_series, station.var_I.type_series, globals_vars.phenomenon_above), color='yellow')
+                station.var_D.type_series, station.var_I.type_series, config_run.settings['phen_above_label']), color='yellow')
         globals_vars.threshold_problem[2] = True
 
     try:
@@ -529,7 +529,7 @@ def contingency_table(station):
         tmp_month_list = []
         # all months in year 1->12
         for month in range(1, 13):
-            if station.state_of_data in [1, 3]:
+            if globals_vars.STATE_OF_DATA in [1, 3]:
 
                 contingency_table,\
                 contingency_table_percent,\
@@ -541,7 +541,7 @@ def contingency_table(station):
                 if station.first_iter:
                     station.first_iter = False
 
-            if station.state_of_data in [2, 4]:
+            if globals_vars.STATE_OF_DATA in [2, 4]:
                 tmp_day_list = []
                 for day in station.range_analysis_interval:
 

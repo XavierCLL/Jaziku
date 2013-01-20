@@ -18,14 +18,15 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-import gettext
+import os
+from clint.textui import colored
 
-from jaziku.utils import  console
-from jaziku.modules.station import Station
-from jaziku.modules.analysis_interval import check_analysis_interval_and_state_of_data
 import eda
+from jaziku.env import globals_vars
+from jaziku.utils import  console
 
-def main(stations):
+
+def main(stations_list):
     """
     In jaziku-Data Analysis, the outliers are reported, is made the assessing the homogeneity of
     the series and is made known to the user of statistical values that will allow discerning, in
@@ -33,36 +34,28 @@ def main(stations):
     files folder of time series.
     """
 
-    console.msg(_("\nReading var D and var I of all stations .............. "), newline=False)
+    print _("\n\n"
+            "#################### DATA ANALYSIS PROCESS #####################\n"
+            "# Data analysis module, here is verified linearity, outliers   #\n"
+            "# are reported and the primary statistical time series.        #\n"
+            "################################################################\n")
 
-    # prepared data before do data analysis process
-    for station in stations:
+    # data analysis dir output result
+    globals_vars.DATA_ANALYSIS_DIR\
+        = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Data_Analysis'))   # 'results'
 
-        station.var_D.read_data_from_file(station, process=True, messages=False)
-        station.var_I.read_data_from_file(station, process=True, messages=False)
+    print _("Saving the result for data analysis in:")
+    print "   " + colored.cyan(globals_vars.DATA_ANALYSIS_DIR)
 
-        station.get_state_of_data()
-
-        station.calculate_common_and_process_period()
-
-        station.var_D.data_and_null_in_process_period(station)
-        station.var_I.data_and_null_in_process_period(station)
-
-        station.var_D.do_some_statistic_of_data()
-        station.var_I.do_some_statistic_of_data()
-
-    check_analysis_interval_and_state_of_data(stations)
-
-    console.msg(_("done"), color='green')
-    console.msg(gettext.ngettext(
-        _("   {0} station readed."),
-        _("   {0} stations readed."),
-        Station.stations_processed).format(Station.stations_processed), color='cyan')
-    console.msg('')
+    if os.path.isdir(globals_vars.DATA_ANALYSIS_DIR):
+        console.msg(
+            _("\n > WARNING: the output directory for data analysis process\n"
+              "   is already exist, Jaziku continue but the results\n"
+              "   could be mixed or replaced of old output."), color='yellow')
 
     # -------------------------------------------------------------------------
     # Exploratory data analysis process
 
-    eda.main(stations)
+    eda.main(stations_list)
 
 

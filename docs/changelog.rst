@@ -15,6 +15,9 @@ news
   of configuration run settings
 - [code] Refactoring globals_vars in new environment dir
 - [code] Api documentation
+- [code] Moved principal code files into 'core' directory
+- [code] Moved some variables of globals_vars to config_run.settings
+- [code] Check and prepare all stations before run any modules
 
 fixes
 +++++

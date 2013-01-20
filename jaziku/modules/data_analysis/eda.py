@@ -33,16 +33,16 @@ from scipy.stats import shapiro
 from calendar import monthrange
 
 from jaziku.env import globals_vars, config_run
-from jaziku.modules.analysis_interval import get_values_in_range_analysis_interval, locate_day_in_analysis_interval, get_range_analysis_interval
+from jaziku.core.station import Station
+from jaziku.core.variable import Variable
+from jaziku.core.analysis_interval import get_values_in_range_analysis_interval, locate_day_in_analysis_interval, get_range_analysis_interval
 from jaziku.modules.climate import lags
 from jaziku.modules.climate.contingency_table import get_thresholds_var_I
 from jaziku.modules.climate.lags import  calculate_lags
-from jaziku.modules.station import Station
-from jaziku.modules.variable import Variable
 from jaziku.utils import  console, format_out, watermarking, array
 
 
-def main(stations):
+def main(stations_list):
 
     # -------------------------------------------------------------------------
     # EXPLORATORY DATA ANALYSIS
@@ -92,7 +92,7 @@ def main(stations):
     csv_file_D.writerow(header)
     csv_file_I.writerow(header)
 
-    for station in stations:
+    for station in stations_list:
 
         # var D
         eda_var_D = [
@@ -151,7 +151,7 @@ def main(stations):
     if config_run.settings['graphics']:
         if Station.stations_processed > 1:
             with console.redirectStdStreams():
-                descriptive_statistic_graphs(stations)
+                descriptive_statistic_graphs(stations_list)
             console.msg(_("done"), color='green')
         else:
             console.msg(_("partial\n > WARNING: There is only one station for process\n"
@@ -167,7 +167,7 @@ def main(stations):
     if config_run.settings['graphics']:
         console.msg(_("Graphs inspection of series .......................... "), newline=False)
         with console.redirectStdStreams():
-            graphs_inspection_of_series(stations)
+            graphs_inspection_of_series(stations_list)
         console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
@@ -175,7 +175,7 @@ def main(stations):
 
     console.msg(_("Climatology .......................................... "), newline=False)
     with console.redirectStdStreams():
-        climatology(stations)
+        climatology(stations_list)
     console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
@@ -197,7 +197,7 @@ def main(stations):
 
         if 1 < Station.stations_processed <= 10:
             with console.redirectStdStreams():
-                scatter_plots_of_series(stations)
+                scatter_plots_of_series(stations_list)
             console.msg(_("done"), color='green')
         else:
             if Station.stations_processed == 1:
@@ -217,7 +217,7 @@ def main(stations):
     if config_run.settings['graphics']:
         console.msg(_("Frequency histogram .................................. "), newline=False)
         with console.redirectStdStreams():
-            frequency_histogram(stations)
+            frequency_histogram(stations_list)
         console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
@@ -225,7 +225,7 @@ def main(stations):
 
     console.msg(_("Shapiro Wilks test ................................... "), newline=False)
 
-    shapiro_wilks_test(stations)
+    shapiro_wilks_test(stations_list)
     console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
@@ -239,7 +239,7 @@ def main(stations):
 
     console.msg(_("Outliers ............................................. "), newline=False)
     with console.redirectStdStreams():
-        outliers(stations)
+        outliers(stations_list)
 
     if Station.stations_processed > 50:
         console.msg(_("partial\n > WARNING: The maximum limit for make the box-plot of\n"
@@ -279,7 +279,7 @@ def zoom_graph(ax,x_scale_below=0, x_scale_above=0, y_scale_below=0, y_scale_abo
 
 
 
-def descriptive_statistic_graphs(stations):
+def descriptive_statistic_graphs(stations_list):
     """
     Graphs statistics vs stations and statistics vs altitude for var D
     """
@@ -301,7 +301,7 @@ def descriptive_statistic_graphs(stations):
         for enum, statistic in enumerate(statistics_to_graphs):
             x = []
             y = []
-            for station in stations:
+            for station in stations_list:
                 get_statistic = {'size_data':station.var_D.size_data, 'maximum':station.var_D.maximum,
                                  'minimum':station.var_D.minimum, 'average':station.var_D.average,
                                  'median':station.var_D.median, 'std_dev':station.var_D.std_dev,
@@ -385,7 +385,7 @@ types_var_D = {'PPT':{'graph':'bar','color':'#578ECE'}, 'NDPPT':{'graph':'bar','
                'TEMP':{'graph':'o-','color':'#C08A1C'}, 'PATM':{'graph':'*-','color':'#287F2A'},
                'RH':{'graph':'s-','color':'#833680'}, 'RUNOFF':{'graph':'s-','color':'#833680'}}
 
-def graphs_inspection_of_series(stations):
+def graphs_inspection_of_series(stations_list):
     """
     Graphs for inspection of series, part of EDA.
     """
@@ -398,7 +398,7 @@ def graphs_inspection_of_series(stations):
         os.makedirs(graphs_dir)
 
 
-    for station in stations:
+    for station in stations_list:
         image_list = []
 
         station_image_path = os.path.join(graphs_dir, station.code +'-'+station.name)
@@ -563,7 +563,7 @@ def graphs_inspection_of_series(stations):
         #print h.heap()
         #h.iso(1,[],{})
 
-def climatology(stations):
+def climatology(stations_list):
     """
     Climatology table and graphs, part of EDA.
     """
@@ -586,7 +586,7 @@ def climatology(stations):
 
     csv_climatology_table.writerow(header)
 
-    for station in stations:
+    for station in stations_list:
         # -------------------------------------------------------------------------
         ## for climatology table
         line = [station.code, station.name, station.lat, station.lon, station.alt,
@@ -976,7 +976,7 @@ def climatology(stations):
     del csv_climatology_table
 
 
-def global_common_process(stations, var):
+def global_common_process(stations_list, var):
     """
     Calculate the global common period of all stations
     based on all common process period of all series var D or I
@@ -991,7 +991,7 @@ def global_common_process(stations, var):
 
     if var == 'D':
         firsts = True
-        for station in stations:
+        for station in stations_list:
             if firsts:
                 global_common_date = set(station.var_D.date_in_process_period)
                 firsts = False
@@ -999,7 +999,7 @@ def global_common_process(stations, var):
                 global_common_date = global_common_date & set(station.var_D.date_in_process_period)
     if var == 'I':
         firsts = True
-        for station in stations:
+        for station in stations_list:
             if firsts:
                 global_common_date = set(station.var_I.date_in_process_period)
                 firsts = False
@@ -1013,13 +1013,13 @@ def global_common_process(stations, var):
     #return {'start': global_common_date[0].year, 'end': global_common_date[-1].year}
     return global_common_date
 
-def scatter_plots_of_series(stations):
+def scatter_plots_of_series(stations_list):
 
     # calculate the common period of all common process
-    global_common_date_process_var_D = global_common_process(stations, 'D')
+    global_common_date_process_var_D = global_common_process(stations_list, 'D')
 
-    fig_height = 3.2*len(stations)/1.5
-    fig_with = 4*len(stations)/1.5
+    fig_height = 3.2*len(stations_list)/1.5
+    fig_with = 4*len(stations_list)/1.5
 
     pyplot.figure(figsize=(fig_with,fig_height))
 
@@ -1033,15 +1033,15 @@ def scatter_plots_of_series(stations):
 
     pyplot.suptitle(unicode(title_plot, 'utf-8'), y=(fig_height-0.1)/fig_height, fontsize=14)
 
-    for iter_v, station_v in enumerate(stations):
-        for iter_h, station_h in enumerate(stations):
+    for iter_v, station_v in enumerate(stations_list):
+        for iter_h, station_h in enumerate(stations_list):
             x = station_h.var_D.data[station_h.var_D.date.index(global_common_date_process_var_D[0]):\
             station_h.var_D.date.index(global_common_date_process_var_D[-1])+1]
 
             y = station_v.var_D.data[station_v.var_D.date.index(global_common_date_process_var_D[0]):\
             station_v.var_D.date.index(global_common_date_process_var_D[-1])+1]
 
-            ax = pyplot.subplot2grid((len(stations),len(stations)),(iter_v,iter_h))
+            ax = pyplot.subplot2grid((len(stations_list),len(stations_list)),(iter_v,iter_h))
 
             ax.scatter(x,y, marker='o', color="#638786", edgecolors="#3C5250")
 
@@ -1049,7 +1049,7 @@ def scatter_plots_of_series(stations):
                 ax.set_ylabel(station_v.code, globals_vars.graphs_axis_properties())
             else:
                 ax.set_yticklabels([])
-            if iter_v == len(stations)-1:
+            if iter_v == len(stations_list)-1:
                 ax.set_xlabel(unicode(station_h.code, 'utf-8'), globals_vars.graphs_axis_properties())
             else:
                 ax.set_xticklabels([])
@@ -1073,14 +1073,14 @@ def scatter_plots_of_series(stations):
     pyplot.close('all')
 
 
-def frequency_histogram(stations):
+def frequency_histogram(stations_list):
 
     frequency_histogram_dir = os.path.join(distribution_test_dir, _('Frequency_histogram'))
 
     if not os.path.isdir(frequency_histogram_dir):
         os.makedirs(frequency_histogram_dir)
 
-    for station in stations:
+    for station in stations_list:
 
         n = station.var_D.size_data
 
@@ -1125,7 +1125,7 @@ def frequency_histogram(stations):
         pyplot.close('all')
 
 
-def shapiro_wilks_test(stations):
+def shapiro_wilks_test(stations_list):
 
     file_shapiro_wilks_var_D\
     = os.path.join(distribution_test_dir, _('shapiro_wilks_test_{0}.csv').format(config_run.settings['type_var_D']))
@@ -1138,7 +1138,7 @@ def shapiro_wilks_test(stations):
 
     csv_file_D.writerow(header)
 
-    for station in stations:
+    for station in stations_list:
 
         with console.redirectStdStreams():
             W, p_value = shapiro(station.var_D.data_filtered_in_process_period)
@@ -1169,14 +1169,14 @@ def shapiro_wilks_test(stations):
     del csv_file_D
 
 
-def outliers(stations):
+def outliers(stations_list):
 
     data_stations = []
     codes_stations = []
 
     outliers_all_stations = []
 
-    for station in stations:
+    for station in stations_list:
 
         # -------------------------------------------------------------------------
         ## Outliers graph per station
@@ -1328,11 +1328,11 @@ def outliers(stations):
                 threshold_below_var_I, threshold_above_var_I = get_thresholds_var_I(station)
                 # categorize the value of var I and get the phenomenon_category based in the label phenomenon
                 if value_var_I < threshold_below_var_I:
-                    phenomenon_category = globals_vars.phenomenon_below
+                    phenomenon_category = config_run.settings['phen_below_label']
                 elif value_var_I > threshold_above_var_I:
-                    phenomenon_category = globals_vars.phenomenon_above
+                    phenomenon_category = config_run.settings['phen_above_label']
                 else:
-                    phenomenon_category = globals_vars.phenomenon_normal
+                    phenomenon_category = config_run.settings['phen_normal_label']
 
                 outliers_list.append([outlier_date, value, phenomenon_category])
 
@@ -1351,7 +1351,7 @@ def outliers(stations):
         else:
             name_graph = _("Outliers")+"_{0}".format(config_run.settings['type_var_D'])
 
-        fig = pyplot.figure(figsize=(2.5+len(stations)/2.5,6))
+        fig = pyplot.figure(figsize=(2.5+len(stations_list)/2.5,6))
         ax = fig.add_subplot(111)
         if config_run.settings['process_period']:
             ax.set_title(unicode(_("Outliers")+" - {0} ({1}-{2})".format(config_run.settings['type_var_D'],
@@ -1360,7 +1360,7 @@ def outliers(stations):
             ax.set_title(unicode(_("Outliers")+" - {0}".format(config_run.settings['type_var_D']), 'utf-8'), globals_vars.graphs_title_properties())
 
         ## X
-        xticks(range(len(stations)), codes_stations, rotation='vertical')
+        xticks(range(len(stations_list)), codes_stations, rotation='vertical')
         ax.set_xlabel(unicode(_('Stations'), 'utf-8'), globals_vars.graphs_axis_properties())
 
         ## Y

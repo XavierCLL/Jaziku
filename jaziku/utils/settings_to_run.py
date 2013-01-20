@@ -205,25 +205,25 @@ def get():
         settings["graphics"] = colored.green(_("enabled"))
     # if phenomenon below is defined inside arguments, else default value
     if config_run.settings['phen_below_label'] and config_run.settings['phen_below_label'] != "default":
-        globals_vars.phenomenon_below = config_run.settings['phen_below_label']
+        config_run.settings['phen_below_label'] = unicode(config_run.settings['phen_below_label'], 'utf-8')
         settings["phen_below_label"] = colored.green(config_run.settings['phen_below_label'])
     else:
-        globals_vars.phenomenon_below = _('var_I_below')
-        settings["phen_below_label"] = globals_vars.phenomenon_below
+        config_run.settings['phen_below_label'] = unicode(_('var_I_below'), 'utf-8') # label by default
+        settings["phen_below_label"] = config_run.settings['phen_below_label']
     # if phenomenon normal is defined inside arguments, else default value
     if config_run.settings['phen_normal_label'] and config_run.settings['phen_normal_label'] != "default":
-        globals_vars.phenomenon_normal = unicode(config_run.settings['phen_normal_label'], 'utf-8')
+        config_run.settings['phen_normal_label'] = unicode(config_run.settings['phen_normal_label'], 'utf-8')
         settings["phen_normal_label"] = colored.green(config_run.settings['phen_normal_label'])
     else:
-        globals_vars.phenomenon_normal = _('var_I_normal')
-        settings["phen_normal_label"] = globals_vars.phenomenon_normal
+        config_run.settings['phen_normal_label'] = unicode(_('var_I_normal'), 'utf-8') # label by default
+        settings["phen_normal_label"] = config_run.settings['phen_normal_label']
     # if phenomenon above is defined inside arguments, else default value
     if config_run.settings['phen_above_label'] and config_run.settings['phen_above_label'] != "default":
-        globals_vars.phenomenon_above = unicode(config_run.settings['phen_above_label'], 'utf-8')
+        config_run.settings['phen_above_label'] = unicode(config_run.settings['phen_above_label'], 'utf-8')
         settings["phen_above_label"] = colored.green(config_run.settings['phen_above_label'])
     else:
-        globals_vars.phenomenon_above = _('var_I_above')
-        settings["phen_above_label"] = globals_vars.phenomenon_above
+        config_run.settings['phen_above_label'] = unicode(_('var_I_above'), 'utf-8') # label by default
+        settings["phen_above_label"] = config_run.settings['phen_above_label']
 
     ## forecast settings
     if config_run.settings['forecast_process']:
@@ -586,7 +586,7 @@ def check():
                   "in 'forecast options' in runfile must be\nequal to 100."))
 
 
-def check_station_list(stations):
+def check_station_list(stations_list):
 
     console.msg(_("\nChecking the stations list:"), newline=False)
 
@@ -597,7 +597,7 @@ def check_station_list(stations):
     # first check error
     list_codes = []
     list_names = []
-    for station in stations:
+    for station in stations_list:
         if station.code in list_codes and station.name in list_names:
             console.msg_error_line_stations(station, _("The combination of the code and name of the station can't repeat,\n"
                                                        "many result will be replaced with the same code-name of station." ))
@@ -608,7 +608,7 @@ def check_station_list(stations):
     # check warnings, show and return with the first warning
     list_codes = []
     list_names = []
-    for station in stations:
+    for station in stations_list:
         if station.code in list_codes and not station.name in list_names:
             console.msg(_("WARNING:"), color='yellow')
             console.msg(_("   The code {0} of the station {1} is repeat\n"

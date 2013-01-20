@@ -41,7 +41,7 @@ JAZIKU_DIR = None
 ACCURACY = 4
 
 #==============================================================================
-# arguments and inputs
+# arguments, inputs and outputs
 
 # delimiter for inputs and outputs
 INPUT_CSV_DELIMITER = ";"
@@ -192,14 +192,15 @@ URLS_FOR_INTERNAL_VAR_I = {
 # analysis_interval
 ALL_ANALYSIS_INTERVALS = ["5days", "10days", "15days", "trimester"]
 NUM_DAYS_OF_ANALYSIS_INTERVAL = None
-analysis_interval_i18n = None # TODO: to settings
+analysis_interval_i18n = None
+
+STATE_OF_DATA = None
 
 #==============================================================================
 # forecast
 forecast_phen_below = None
 forecast_phen_normal = None
 forecast_phen_above = None
-forecast_date = None
 
 #==============================================================================
 # maps
@@ -210,13 +211,6 @@ maps_files_climate = {'5days': None, '10days': None, '15days': None, 'trimester'
 maps_files_correlation = {'5days': None, '10days': None, '15days': None, 'trimester': None}
 # maps files for forecast:
 maps_files_forecast = {'5days': {}, '10days': {}, '15days': {}, 'trimester': {}}
-
-#==============================================================================
-# phenomenon based on arguments or not, start with default value
-
-phenomenon_below = None
-phenomenon_normal = None
-phenomenon_above = None
 
 #==============================================================================
 # graphics properties

@@ -65,13 +65,13 @@ def composite_analysis(station):
                 else:
                     is_sig_risk_analysis_list.append(_('no'))
 
-        if station.state_of_data in [1, 3]:
+        if globals_vars.STATE_OF_DATA in [1, 3]:
             # get values of var D and I from this lag and month
             var_D_values = get_lag_values(station, 'var_D', lag, month)
 
             var_I_values = get_lag_values(station, 'var_I', lag, month)
 
-        if station.state_of_data in [2, 4]:
+        if globals_vars.STATE_OF_DATA in [2, 4]:
             # get values of var D and I from this lag, month and day
             var_D_values = get_lag_values(station, 'var_D', lag, month, day)
 
@@ -166,12 +166,12 @@ def composite_analysis(station):
         # print division line between lags
         csv_result_table.writerow([
             '', '', '', '', '', '', '', '', '',
-            globals_vars.phenomenon_below, '', '',
-            globals_vars.phenomenon_normal, '', '',
-            globals_vars.phenomenon_above, '', '',
-            globals_vars.phenomenon_below, '', '',
-            globals_vars.phenomenon_normal, '', '',
-            globals_vars.phenomenon_above])
+            config_run.settings['phen_below_label'], '', '',
+            config_run.settings['phen_normal_label'], '', '',
+            config_run.settings['phen_above_label'], '', '',
+            config_run.settings['phen_below_label'], '', '',
+            config_run.settings['phen_normal_label'], '', '',
+            config_run.settings['phen_above_label']])
 
         csv_result_table.writerow([
             '', '', '', '', '', '', '', '', '',
@@ -188,7 +188,7 @@ def composite_analysis(station):
         # all months in year 1->12
         for month in range(1, 13):
 
-            if station.state_of_data in [1, 3]:
+            if globals_vars.STATE_OF_DATA in [1, 3]:
                 # get the contingency tables and thresholds
                 contingency_table,\
                 contingency_table_percent,\
@@ -204,7 +204,7 @@ def composite_analysis(station):
                 pearson_list_month.append(pearson)
                 is_sig_risk_analysis_month.append(is_sig_risk_analysis_list)
 
-            if station.state_of_data in [2, 4]:
+            if globals_vars.STATE_OF_DATA in [2, 4]:
                 pearson_list_day = []
                 is_sig_risk_analysis_list_day = []
                 for day in station.range_analysis_interval:

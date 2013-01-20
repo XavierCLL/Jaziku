@@ -65,7 +65,7 @@ is_first_time_run = True
 values = []
 for row in reader:
     if is_first_time_run:
-        stations = row[2::]
+        stations_list = row[2::]
         is_first_time_run = False
     else:
         values.append(row)
@@ -85,7 +85,7 @@ for year in range(years):
         if is_first_time_run:
             is_first_time_run = False
 
-            for station in stations:
+            for station in stations_list:
                 if not os.path.isdir(stations_dir):
                     os.makedirs(stations_dir)
                 file_name = os.path.join(stations_dir, station)

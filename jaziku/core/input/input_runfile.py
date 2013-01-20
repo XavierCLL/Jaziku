@@ -22,9 +22,9 @@ import os
 import csv
 
 from jaziku.env import globals_vars, config_run
+from jaziku.core.station import Station
 from jaziku.modules.maps.grid import Grid
 from jaziku.utils import  console
-from jaziku.modules.station import Station
 
 
 def read_runfile():
@@ -170,7 +170,7 @@ def read_runfile():
             console.msg_error(_("Problems with the 9 probability values for forecast process\n"
                                 "defined in runfile, these must be a numbers, please check it."), False)
 
-        globals_vars.forecast_date = config_run.settings['forecast_date']
+        config_run.settings['forecast_date'] = config_run.settings['forecast_date']
 
     # if path_to_file_var_I is relative convert to absolute
     if not os.path.isabs(config_run.settings["path_to_file_var_I"]):
@@ -244,7 +244,7 @@ def read_stations(lines_of_stations):
                                   "the stations list need for run climate process.\n"))
 
             station.code = line_station[0]
-            station.name = line_station[1]
+            station.name = unicode(line_station[1], 'utf-8')
             station.lat = line_station[2].replace(',', '.')
             station.lon = line_station[3].replace(',', '.')
             station.alt = line_station[4].replace(',', '.')

@@ -33,7 +33,6 @@
 import sys
 import gc
 import os.path
-from clint.textui import colored
 
 # internationalization and init languages variable "_()"
 import gettext
@@ -41,12 +40,14 @@ from i18n import i18n
 
 # jaziku import
 from env import globals_vars, config_run
+from core import stations
+from core.input import input_runfile, input_arg, input_check
+from core.station import Station
 from utils import console
 from utils import settings_to_run
-from modules.station import Station
+from modules.climate import climate
+from modules.forecast import forecast
 from modules.data_analysis import data_analysis
-from modules.input import input_arg
-from modules.input import input_runfile
 from modules.maps import maps
 from modules.maps.grid import Grid
 from modules.maps.maps import check_basic_requirements_for_maps
@@ -94,7 +95,7 @@ def main():
         console.msg_error(_("[runfile] no such file or directory: {0}".format(globals_vars.ARGS.runfile)),False)
 
     # read all settings and all stations from runfile
-    stations = input_runfile.read_runfile()
+    stations_list = input_runfile.read_runfile()
 
     # -------------------------------------------------------------------------
     # Setting language
@@ -126,36 +127,22 @@ def main():
 
     settings_to_run.show()
 
-    settings_to_run.check_station_list(stations)
+    settings_to_run.check_station_list(stations_list)
 
     settings_to_run.continue_run()
 
+    # -------------------------------------------------------------------------
+    # PRE-PROCESS: PREPARE DATA OF ALL STATIONS
+
+    stations.prepare_all_stations(stations_list)
 
     # -------------------------------------------------------------------------
     # DATA ANALYSIS
     # config_run.get['data_analysis']
     if config_run.settings['data_analysis']:
-        print _("\n\n"
-                "#################### DATA ANALYSIS PROCESS #####################\n"
-                "# Data analysis module, here is verified linearity, outliers   #\n"
-                "# are reported and the primary statistical time series.        #\n"
-                "################################################################\n")
-
-        # data analysis dir output result
-        globals_vars.DATA_ANALYSIS_DIR\
-            = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Data_Analysis'))   # 'results'
-
-        print _("Saving the result for data analysis in:")
-        print "   " + colored.cyan(globals_vars.DATA_ANALYSIS_DIR)
-
-        if os.path.isdir(globals_vars.DATA_ANALYSIS_DIR):
-            console.msg(
-                _("\n > WARNING: the output directory for data analysis process\n"
-                  "   is already exist, Jaziku continue but the results\n"
-                  "   could be mixed or replaced of old output."), color='yellow')
 
         # main process for data analysis
-        data_analysis.main(stations)
+        data_analysis.main(stations_list)
 
 
     # -------------------------------------------------------------------------
@@ -163,57 +150,25 @@ def main():
 
     # climate
     if config_run.settings['climate_process']:
-
-        print _("\n\n"
-                "############### CLIMATE AND FORECAST PROCESS ################\n"
-                "# Climate Module, here are calculated contingency tables,      #\n"
-                "# correlations and parametric tests of interest.               #\n"
-                "#                                                              #\n"
-                "# Modulo forecasts, predictions are calculated here associated #\n"
-                "# with the dependent variable as a function of contingency     #\n"
-                "# tables and the probability of the independent variable.      #\n"
-                "################################################################\n")
-
-        # climate dir output result
-        globals_vars.CLIMATE_DIR \
-            = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Climate'))   # 'results'
-
-        print _("Saving the result for climate in:")
-        print "   " + colored.cyan(globals_vars.CLIMATE_DIR)
-
-        if os.path.isdir(globals_vars.CLIMATE_DIR):
-            console.msg(
-                _("\n > WARNING: the output directory for climate process\n"
-                  "   is already exist, Jaziku continue but the results\n"
-                  "   could be mixed or replaced of old output."), color='yellow')
+        climate.pre_process()
 
     # forecast
     if config_run.settings['forecast_process']:
-        # directory for the forecast results
-        globals_vars.FORECAST_DIR \
-            = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Forecast'))   # 'results'
-
-        print _("\nSaving the result for forecast in:").format(globals_vars.FORECAST_DIR)
-        print "   " + colored.cyan(globals_vars.FORECAST_DIR)
-
-        if os.path.isdir(globals_vars.FORECAST_DIR):
-            console.msg(
-                _("\n > WARNING: the output directory for forecast process\n"
-                  "   is already exist, Jaziku continue but the results\n"
-                  "   could be mixed or replaced of old output."), color='yellow')
+        forecast.pre_process()
 
     # -------------------------------------------------------------------------
     # CLIMATE AND FORECAST MAIN PROCESS
 
     if config_run.settings['climate_process']:
         # process each station from stations list
-        for station in stations:
+        for station in stations_list:
 
             # console message
             print _("\n################# STATION: {0} ({1})").format(station.name, station.code)
 
-            # pre_process: read, validated and check data
-            station.pre_process()
+            # only for show information
+            station.var_D.read_data_from_file(station, process=False, messages=True)
+            station.var_I.read_data_from_file(station, process=False, messages=True)
 
             # process climate and forecast for this station
             station.process()
@@ -224,7 +179,7 @@ def main():
                     Station.stations_processed).format(Station.stations_processed), color='green')
 
     # delete instance of stations for clean memory
-    del stations
+    del stations_list
     # force run garbage collector memory
     gc.collect()
 
