@@ -3,7 +3,8 @@
 import sys
 import platform
 
-from jaziku import main
+# TODO:
+#from jaziku import main
 #from jaziku.utils import globals_vars
 #from jaziku.i18n import i18n
 
@@ -16,7 +17,7 @@ from jaziku import main
 __platform__ = platform.system()
 __license__ = 'GPLv3'
 __py_version__ = sys.version_info
-__author__ = 'Xavier Corredor & Ines Sanchez'
+__author__ = 'Xavier Corredor Llano & Ines Sanchez Rodriguez'
 __url__ = ''
 
 PLATFORM_WIN = ('Windows')
