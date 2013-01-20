@@ -57,6 +57,7 @@ fixes
   run jaziku in anywhere directory with absolute path to runfile (now it is
   possible)
 - Check if var D exist
+- Fix path when used var I as internal
 
 0.5.1 (**2012-12-05**)
 ----------------------

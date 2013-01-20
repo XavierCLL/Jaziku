@@ -172,10 +172,11 @@ def read_runfile():
 
         config_run.settings['forecast_date'] = config_run.settings['forecast_date']
 
-    # if path_to_file_var_I is relative convert to absolute
-    if not os.path.isabs(config_run.settings["path_to_file_var_I"]):
+    # if path_to_file_var_I is relative convert to absolute, except if is 'internal'
+    if not os.path.isabs(config_run.settings["path_to_file_var_I"]) and\
+       not config_run.settings["path_to_file_var_I"] == 'internal':
         config_run.settings["path_to_file_var_I"] \
-            = os.path.abspath(os.path.join(os.path.dirname(globals_vars.ARGS.runfile),
+ = os.path.abspath(os.path.join(os.path.dirname(globals_vars.ARGS.runfile),
                                            config_run.settings["path_to_file_var_I"]))
 
     # Set type and units for variables D and I
@@ -185,7 +186,7 @@ def read_runfile():
         # get type
         config_run.settings['type_var_D'] = string[0:string.index('(')].strip()
         # get units
-        globals_vars.units_var_D = string[string.index('(')+1:string.index(')')].strip()
+        globals_vars.units_var_D = string[string.index('(') + 1:string.index(')')].strip()
     else:
         if config_run.settings['type_var_D'] in globals_vars.UNITS_FOR_TYPES_VAR_D:
             globals_vars.units_var_D = globals_vars.UNITS_FOR_TYPES_VAR_D[config_run.settings['type_var_D']]
@@ -197,7 +198,7 @@ def read_runfile():
         # get type
         config_run.settings['type_var_I'] = string[0:string.index('(')].strip()
         # get units
-        globals_vars.units_var_I = string[string.index('(')+1:string.index(')')].strip()
+        globals_vars.units_var_I = string[string.index('(') + 1:string.index(')')].strip()
     else:
         if config_run.settings['type_var_I'] in globals_vars.UNITS_FOR_TYPES_VAR_I:
             globals_vars.units_var_I = globals_vars.UNITS_FOR_TYPES_VAR_I[config_run.settings['type_var_I']]
