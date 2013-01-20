@@ -216,7 +216,7 @@ def get_thresholds_var_I(station):
 
         # thresholds for Index of the Southern Oscillation NOAA
         def if_var_I_is_SOI():
-            return -1.2, 0.9
+            return -0.9, 0.9
 
         # thresholds for Index of the Southern Oscillation calculated between Tahití and Darwin
         def if_var_I_is_SOI_TROUP():
@@ -228,7 +228,7 @@ def get_thresholds_var_I(station):
 
         # thresholds for Radiation wavelength Long tropical
         def if_var_I_is_OLR():
-            return -1.1, 0.9
+            return -0.1, 0.2
 
         # thresholds for Index of wind anomaly to 200 hpa
         def if_var_I_is_W200():
@@ -260,14 +260,14 @@ def get_thresholds_var_I(station):
 
         # thresholds for quasibienal oscillation index
         def if_var_I_is_QBO():
-            return percentiles(33, 66)
+            return -1, 1
 
         # thresholds for North atlantic oscillation index
         def if_var_I_is_NAO():
             return -1, 1
 
         # thresholds for Caribbean (CAR) Index
-        def if_var_I_is_SST_CAR():
+        def if_var_I_is_CAR():
             return percentiles(33, 66)
 
         # thresholds for Monthly anomaly of the ocean surface area Ocean region
@@ -297,7 +297,7 @@ def get_thresholds_var_I(station):
             "ARH": if_var_I_is_ARH,
             "QBO": if_var_I_is_QBO,
             "NAO": if_var_I_is_NAO,
-            "SST_CAR": if_var_I_is_SST_CAR,
+            "CAR": if_var_I_is_CAR,
             "AREA_WHWP": if_var_I_is_AREA_WHWP
         }
 

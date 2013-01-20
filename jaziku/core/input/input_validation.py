@@ -333,7 +333,7 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
 # % Amazon relative humidity----------ARH             %              -100 to 100
 # quasibienal oscillation index-------QBO           Km/h            -59.1 to 33.24
 # North atlantic oscillation index----NAO         anomaly           -6.36 to 6.08
-# Carribbean (CAR) Index------------SST_CAR         °C               -1.3 to 1.3
+# Caribbean (CAR) Index------------CAR         °C               -1.3 to 1.3
 # Monthly anomaly of the
 # ocean surface area Ocean                    Area anomaly scaled
 # region >28.5C--------------------AREA_WHWP     by 10e6 km^2         -13 to 14
@@ -459,8 +459,8 @@ def validation_var_I(type_var_I, var_I):
     # validation for Radiation wavelength Long tropical
     def if_var_I_is_OLR():
         # default values
-        limit_below = -6
-        limit_above = 6
+        limit_below = -5.2
+        limit_above = 5.2
         # if one of limits was defined as particular range
         if config_run.settings['limit_var_I_below'] not in ["default", None]:
             limit_below = config_run.settings['limit_var_I_below']
@@ -636,8 +636,8 @@ def validation_var_I(type_var_I, var_I):
     # validation for North atlantic oscillation index
     def if_var_I_is_NAO():
         # default values
-        limit_below = -6.36
-        limit_above = 6.08
+        limit_below = -11.9
+        limit_above = 11.9
         # if one of limits was defined as particular range
         if config_run.settings['limit_var_I_below'] not in ["default", None]:
             limit_below = config_run.settings['limit_var_I_below']
@@ -652,8 +652,8 @@ def validation_var_I(type_var_I, var_I):
     # validation for quasibienal oscillation index
     def if_var_I_is_QBO():
         # default values
-        limit_below = -59.1
-        limit_above = 33.24
+        limit_below = -43
+        limit_above = 28
         # if one of limits was defined as particular range
         if config_run.settings['limit_var_I_below'] not in ["default", None]:
             limit_below = config_run.settings['limit_var_I_below']
@@ -665,8 +665,8 @@ def validation_var_I(type_var_I, var_I):
         else:
             returnError(_("Quasibienal Oscillation Index not valid"), limit_below, limit_above)
 
-    # validation for Carribbean (CAR) Index
-    def if_var_I_is_SST_CAR():
+    # validation for Caribbean (CAR) Index
+    def if_var_I_is_CAR():
         # default values
         limit_below = -1.3
         limit_above = 1.3
@@ -679,7 +679,7 @@ def validation_var_I(type_var_I, var_I):
         if (limit_below <= var_I <= limit_above):
             return var_I
         else:
-            returnError(_("Carribbean (CAR) Index not valid"), limit_below, limit_above)
+            returnError(_("Caribbean (CAR) Index not valid"), limit_below, limit_above)
 
     # validation for Monthly anomaly of the ocean surface area Ocean region
     def if_var_I_is_AREA_WHWP():
@@ -720,7 +720,7 @@ def validation_var_I(type_var_I, var_I):
       "ARH": if_var_I_is_ARH,
       "NAO": if_var_I_is_NAO,
       "QBO": if_var_I_is_QBO,
-      "SST_CAR": if_var_I_is_SST_CAR,
+      "CAR": if_var_I_is_CAR,
       "AREA_WHWP": if_var_I_is_AREA_WHWP
     }
     return validation[type_var_I]()
