@@ -713,7 +713,7 @@ msgid "Quasibienal Oscillation Index not valid"
 msgstr "Indice de la oscilacion quasibienal no valida"
 
 #: jaziku/modules/input/input_validation.py:682
-msgid "Carribbean (CAR) Index not valid"
+msgid "Caribbean (CAR) Index not valid"
 msgstr "Indice del caribe (CAR) no valido"
 
 #: jaziku/modules/input/input_validation.py:698

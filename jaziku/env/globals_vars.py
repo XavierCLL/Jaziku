@@ -114,14 +114,14 @@ units_var_D = None
 
 # Valid input types for independent variable, known and internal for jaziku
 TYPES_VAR_I = ['ONI1', 'ONI2', 'SOI', 'SOI_TROUP', 'OLR', 'W200', 'W850w', 'W850c', 'W850e', 'SST12',
-               'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34', 'ARH', 'QBO', 'NAO', 'SST_CAR', 'AREA_WHWP']
+               'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34', 'ARH', 'QBO', 'NAO', 'CAR', 'AREA_WHWP']
 
 # Units for types for independent variable, known and internal for jaziku
 UNITS_FOR_TYPES_VAR_I = {'ONI1':'anomaly', 'ONI2':'anomaly', 'SOI':'Std anomaly', 'SOI_TROUP':'Std anomaly', 'OLR':'W/m2',
-                        'W200':'Std anomaly', 'W850w':'anomaly', 'W850c':'anomaly', 'W850e':'anomaly',
-                        'SST12':'Celsius', 'SST3':'Celsius', 'SST4':'Celsius', 'SST34':'Celsius', 'ASST12':'anomaly',
-                        'ASST3':'anomaly', 'ASST4':'anomaly', 'ASST34':'anomaly', 'ARH':'%', 'QBO':'Km/h',
-                        'NAO':'anomaly', 'SST_CAR':'Celsius', 'AREA_WHWP':'anomaly scaled 10e6 km^2'}
+                         'W200':'Std anomaly', 'W850w':'anomaly', 'W850c':'anomaly', 'W850e':'anomaly',
+                         'SST12':'Celsius', 'SST3':'Celsius', 'SST4':'Celsius', 'SST34':'Celsius', 'ASST12':'anomaly',
+                         'ASST3':'anomaly', 'ASST4':'anomaly', 'ASST34':'anomaly', 'ARH':'%', 'QBO':'Km/h',
+                         'NAO':'anomaly', 'CAR':'Celsius', 'AREA_WHWP':'anomaly scaled 10e6 km^2'}
 
 # variable use for set units for var I, known and unknown for jaziku
 # for particular units set it in runfile, please read jaziku's manual
@@ -132,7 +132,8 @@ units_var_I = None
 
 # types of internal independent variables (only internal variables for jaziku)
 TYPES_OF_INTERNAL_VAR_I = ['ONI1', 'ONI2', 'SOI', 'SOI_TROUP', 'OLR', 'W200', 'W850w', 'W850c', 'W850e', 'SST12',
-                        'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34', 'ARH', 'QBO', 'NAO', 'SST_CAR', 'AREA_WHWP']
+                           'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34', 'ARH', 'QBO', 'NAO',
+                           'CAR', 'AREA_WHWP']
 
 # namefiles of internal independent variables for each type
 FILES_FOR_INTERNAL_VAR_I = {
@@ -155,15 +156,15 @@ FILES_FOR_INTERNAL_VAR_I = {
     "ASST4": "ASST4_1982_2012_CPC_NCEP_NOAA.txt",
     "ASST34": "ASST34_1982_2012_CPC_NCEP_NOAA.txt",
     "ARH": "ARH_DIPOLE_1979_2009_NCEPNCAR_REAL.txt", #TODO: update series
-    "NAO": "NAO_1950_2012_CPC_NCEP_NOAA.txt",
-    "QBO": "QBO_1950_2012_ESRL_NOAA.txt",
-    "SST_CAR": "SST_CAR_1951_2010_ESRL_NOAA.txt",
+    "NAO": "NAO_1865_2012_Hurrel1995.txt",
+    "QBO": "QBO_1979_2012_ESRL_NOAA.txt",
+    "CAR": "CAR_1951_2010_ESRL_NOAA.txt",
     "AREA_WHWP": "AREA_WHWP_1948_2012_ESRL_NOAA.txt"
 }
 
 # urls where get the internal files for independent variables for each type
 URLS_FOR_INTERNAL_VAR_I = {
-    "ONI1": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears.shtml
+    "ONI1": "http://goo.gl/6tXjh", # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears_1971-2000_climo.shtml
     "ONI2": "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears.shtml
     "SOI": "http://goo.gl/scbO7", # http://www.cpc.ncep.noaa.gov/data/indices/soi
     "SOI_TROUP": "http://goo.gl/2hDk8", # http://www.bom.gov.au/climate/current/soihtm1.shtml
@@ -182,9 +183,9 @@ URLS_FOR_INTERNAL_VAR_I = {
     "ASST4": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
     "ASST34": "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
     "ARH": "http://goo.gl/5oiZJ", # http://nomad1.ncep.noaa.gov/ncep_data/index.html
-    "NAO": "http://goo.gl/1uDjY", # http://www.cpc.ncep.noaa.gov/products/precip/CWlink/pna/nao.shtml
-    "QBO": "http://goo.gl/UO6PX", # http://www.esrl.noaa.gov/psd/data/climateindices/list/
-    "SST_CAR": "http://goo.gl/BsAeN", # http://www.esrl.noaa.gov/psd/forecasts/sstlim/forcar.html
+    "NAO": "http://goo.gl/ArdVn", # http://climatedataguide.ucar.edu/sites/default/files/cas_data_files/asphilli/nao_station_monthly_2.txt
+    "QBO": "http://goo.gl/erjsJ and http://goo.gl/qKTrT", # http://www.cpc.ncep.noaa.gov/data/indices/qbo.u50.index and http://www.cpc.ncep.noaa.gov/data/indices/qbo.u30.index
+    "CAR": "http://goo.gl/c0Xbv", # http://www.esrl.noaa.gov/psd/forecasts/sstlim/Globalsst.html
     "AREA_WHWP": "http://goo.gl/mV4QI"  # http://www.esrl.noaa.gov/psd/data/correlation/whwp.data
 }
 

@@ -40,8 +40,8 @@ news
   W850e, SST12, SST3, SST4, SST34, ASST12, ASST3, ASST4, ASST34 and
   updated the remaining series
 - (Temporally until version 0.7) disable MEI series
-- Special case when var_I is ONI1 or ONI2, don't calculate trimesters because
-  the ONI series was calculated by trimesters from original source
+- Special case when var_I is ONI1, ONI2 or CAR, don't calculate trimesters
+  because the ONI series was calculated by trimesters from original source
 - New multiyears climatology tables for monthly and/or N days
 
 fixes

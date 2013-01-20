@@ -41,7 +41,7 @@ from i18n import i18n
 # jaziku import
 from env import globals_vars, config_run
 from core import stations
-from core.input import input_runfile, input_arg, input_check
+from core.input import input_runfile, input_arg
 from core.station import Station
 from utils import console
 from utils import settings_to_run
