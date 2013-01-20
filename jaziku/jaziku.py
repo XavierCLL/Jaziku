@@ -33,7 +33,6 @@
 import sys
 import gc
 import os.path
-import csv
 #from pylab import *
 from clint.textui import colored
 

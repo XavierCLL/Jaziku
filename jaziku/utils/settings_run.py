@@ -203,7 +203,7 @@ def get():
         settings["graphics"] = colored.green(_("enabled"))
     # if phenomenon below is defined inside arguments, else default value
     if globals_vars.config_run['phen_below_label'] and globals_vars.config_run['phen_below_label'] != "default":
-        globals_vars.phenomenon_below = globals_vars.config_run['phen_below_label']
+        globals_vars.phenomenon_below = unicode(globals_vars.config_run['phen_below_label'], 'utf-8')
         settings["phen_below_label"] = colored.green(globals_vars.config_run['phen_below_label'])
     else:
         globals_vars.phenomenon_below = _('var_I_below')
