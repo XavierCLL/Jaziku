@@ -19,6 +19,7 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+from clint.textui import colored
 
 from jaziku.env import globals_vars, config_run
 from jaziku.modules.climate import result_table
@@ -28,7 +29,33 @@ from jaziku.modules.climate.graphs import climate_graphs
 from jaziku.modules.maps.data import climate_data_for_maps
 from jaziku.utils import console
 
-def climate(station):
+
+def pre_process():
+
+    print _("\n\n"
+            "############### CLIMATE AND FORECAST PROCESS ################\n"
+            "# Climate Module, here are calculated contingency tables,      #\n"
+            "# correlations and parametric tests of interest.               #\n"
+            "#                                                              #\n"
+            "# Modulo forecasts, predictions are calculated here associated #\n"
+            "# with the dependent variable as a function of contingency     #\n"
+            "# tables and the probability of the independent variable.      #\n"
+            "################################################################\n")
+
+    # climate dir output result
+    globals_vars.CLIMATE_DIR\
+        = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Climate'))   # 'results'
+
+    print _("Saving the result for climate in:")
+    print "   " + colored.cyan(globals_vars.CLIMATE_DIR)
+
+    if os.path.isdir(globals_vars.CLIMATE_DIR):
+        console.msg(
+            _("\n > WARNING: the output directory for climate process\n"
+              "   is already exist, Jaziku continue but the results\n"
+              "   could be mixed or replaced of old output."), color='yellow')
+
+def process(station):
     """
     In climate process, it calculate the relationship between the dependent and independent
     variable which is generally determined by the joint probability distribution, but that being

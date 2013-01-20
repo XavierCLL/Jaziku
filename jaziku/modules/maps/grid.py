@@ -25,7 +25,7 @@ from  numpy import linspace
 
 from jaziku.env import globals_vars, config_run
 from jaziku.utils import  console, array
-from jaziku.modules.station import Station
+from jaziku.core.station import Station
 
 class Grid(object):
     """

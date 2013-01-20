@@ -35,9 +35,9 @@ def climate_data_for_maps(station):
     # create maps plots files for climate process, only once
     if globals_vars.maps_files_climate[config_run.settings['analysis_interval']] is None:
         # create and define csv output file for maps climate
-        phenomenon = {0: globals_vars.phenomenon_below,
-                      1: globals_vars.phenomenon_normal,
-                      2: globals_vars.phenomenon_above}
+        phenomenon = {0: config_run.settings['phen_below_label'],
+                      1: config_run.settings['phen_normal_label'],
+                      2: config_run.settings['phen_above_label']}
         globals_vars.maps_files_climate[config_run.settings['analysis_interval']] = {}  # [lag][month][phenomenon]
 
         # define maps data files and directories
@@ -56,7 +56,7 @@ def climate_data_for_maps(station):
             month_list = []
             for month in range(1, 13):
 
-                if station.state_of_data in [1, 3]:
+                if globals_vars.STATE_OF_DATA in [1, 3]:
                     categories_list = []
                     for category in phenomenon:
                         maps_data_phenom = os.path.join(maps_data_lag, phenomenon[category])
@@ -83,7 +83,7 @@ def climate_data_for_maps(station):
                         categories_list.append(csv_name)
 
                     month_list.append(categories_list)
-                if station.state_of_data in [2, 4]:
+                if globals_vars.STATE_OF_DATA in [2, 4]:
                     day_list = []
                     for day in station.range_analysis_interval:
                         categories_list = []
@@ -144,7 +144,7 @@ def climate_data_for_maps(station):
         # all months in year 1->12
         for month in range(1, 13):
 
-            if station.state_of_data in [1, 3]:
+            if globals_vars.STATE_OF_DATA in [1, 3]:
                 for phenomenon in [0, 1, 2]:
                     var_below = station.contingencies_tables_percent[lag][month - 1][phenomenon][0]
                     var_normal = station.contingencies_tables_percent[lag][month - 1][phenomenon][1]
@@ -166,7 +166,7 @@ def climate_data_for_maps(station):
                     open_file.close()
                     del csv_file
 
-            if station.state_of_data in [2, 4]:
+            if globals_vars.STATE_OF_DATA in [2, 4]:
                 for day in range(len(station.range_analysis_interval)):
                     for phenomenon in [0, 1, 2]:
                         var_below = station.contingencies_tables_percent[lag][month - 1][day][phenomenon][0]
@@ -199,30 +199,30 @@ def forecast_data_for_maps(station):
     # create maps plots files for forecast process, only once
 
     # select text for forecast date
-    if station.state_of_data in [1, 3]:
-        forecast_date_formatted = globals_vars.get_trimester_in_text(globals_vars.forecast_date - 1)
-    if station.state_of_data in [2, 4]:
-        month = globals_vars.forecast_date[0]
-        day = globals_vars.forecast_date[1]
+    if globals_vars.STATE_OF_DATA in [1, 3]:
+        forecast_date_formatted = globals_vars.get_trimester_in_text(config_run.settings['forecast_date'] - 1)
+    if globals_vars.STATE_OF_DATA in [2, 4]:
+        month = config_run.settings['forecast_date'][0]
+        day = config_run.settings['forecast_date'][1]
         forecast_date_formatted = globals_vars.get_month_in_text(month - 1) + "_" + str(day)
 
     if forecast_date_formatted not in globals_vars.maps_files_forecast[config_run.settings['analysis_interval']]:
 
-        if station.state_of_data in [1, 3]:
+        if globals_vars.STATE_OF_DATA in [1, 3]:
             lags_list = {}
             # define maps data files and directories
             for lag in config_run.settings['lags']:
 
                 maps_dir = os.path.join(globals_vars.FORECAST_DIR, _('maps'),
                     globals_vars.analysis_interval_i18n,
-                    globals_vars.get_trimester_in_text(globals_vars.forecast_date - 1))
+                    globals_vars.get_trimester_in_text(config_run.settings['forecast_date'] - 1))
 
                 if not os.path.isdir(maps_dir):
                     os.makedirs(maps_dir)
 
                 # write the headers in file
                 csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}_{1}.csv')
-                .format(lag, globals_vars.get_trimester_in_text(globals_vars.forecast_date - 1)))
+                .format(lag, globals_vars.get_trimester_in_text(config_run.settings['forecast_date'] - 1)))
 
                 if os.path.isfile(csv_name):
                     os.remove(csv_name)
@@ -239,7 +239,7 @@ def forecast_data_for_maps(station):
                 lags_list[lag] = csv_name
             globals_vars.maps_files_forecast[config_run.settings['analysis_interval']][forecast_date_formatted] = lags_list
 
-        if station.state_of_data in [2, 4]:
+        if globals_vars.STATE_OF_DATA in [2, 4]:
             lags_list = {}
             # define maps data files and directories
             for lag in config_run.settings['lags']:

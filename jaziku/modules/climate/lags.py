@@ -25,9 +25,8 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from jaziku.env import globals_vars, config_run
-from jaziku.modules.analysis_interval import get_values_in_range_analysis_interval, get_range_analysis_interval
-from jaziku.utils import  array
-from jaziku.utils import format_out
+from jaziku.core.analysis_interval import get_values_in_range_analysis_interval, get_range_analysis_interval
+from jaziku.utils import  array, format_out
 
 
 def get_lag_values(station, var, lag, month, day=None):
@@ -74,7 +73,7 @@ def calculate_lags(station, makes_files=True):
 
     range_analysis_interval = get_range_analysis_interval()
 
-    if station.state_of_data in [1, 3]:
+    if globals_vars.STATE_OF_DATA in [1, 3]:
 
         for lag in config_run.settings['lags']:
 
@@ -135,7 +134,7 @@ def calculate_lags(station, makes_files=True):
                     open_file.close()
                     del csv_file
 
-    if station.state_of_data in [2, 4]:
+    if globals_vars.STATE_OF_DATA in [2, 4]:
 
         for lag in config_run.settings['lags']:
             if makes_files:

@@ -23,10 +23,10 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from numpy import median, average, var
 from scipy.stats.stats import tstd, variation, skew, kurtosis
+from jaziku.core.input import input_vars
 
 from jaziku.env import globals_vars
-from jaziku.modules.input import input_vars
-from jaziku.modules.input.input_check import count_null_values
+from jaziku.core.input.input_check import count_null_values
 from jaziku.utils import console, array
 
 

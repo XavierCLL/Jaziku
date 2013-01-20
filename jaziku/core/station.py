@@ -22,10 +22,10 @@ from datetime import date
 
 from jaziku.env import globals_vars, config_run
 from jaziku.utils import  console
-from jaziku.modules.input.input_check import check_consistent_data
+from jaziku.core.input.input_check import check_consistent_data
 from jaziku.modules.climate import climate
 from jaziku.modules.forecast import forecast
-from jaziku.modules.variable import Variable
+from jaziku.core.variable import Variable
 
 #==============================================================================
 # STATION CLASS
@@ -101,56 +101,7 @@ class Station(object):
         self.process_period = {'start': self.common_period[0][0].year + 1,
                                'end': self.common_period[-1][0].year - 1}
 
-
-    def get_state_of_data(self):
-        """
-        Calculate and write output based on type of data (daily or monthly)
-        of dependent and independent variable.
-
-        :return by reference:
-            STATION.state_of_data
-        """
-        # -------------------------------------------------------------------------
-        # State of the data for process, calculate and write output based on type
-        # of data (daily or monthly) of dependent and independent variable
-        #
-        # | state |  var D  |  var I  |         possible results
-        # |   1   | monthly | monthly |            trimester
-        # |   2   |  daily  | monthly | 5days, 10days, 15days and trimester
-        # |   3   | monthly |  daily  |            trimester
-        # |   4   |  daily  |  daily  | 5days, 10days, 15days and trimester
-        #
-        if self.var_D.frequency_data == "monthly" and self.var_I.frequency_data == "monthly":
-            self.state_of_data = 1
-        if self.var_D.frequency_data == "daily" and self.var_I.frequency_data == "monthly":
-            self.state_of_data = 2
-        if self.var_D.frequency_data == "monthly" and self.var_I.frequency_data == "daily":
-            self.state_of_data = 3
-        if self.var_D.frequency_data == "daily" and self.var_I.frequency_data == "daily":
-            self.state_of_data = 4
-
-
-    def pre_process(self):
-        """
-        Read, validated and check data
-        """
-        if config_run.settings['data_analysis']:
-            process = False
-        else:
-            process = True
-
-        self.var_D.read_data_from_file(self, process=process, messages=True)
-        self.var_I.read_data_from_file(self, process=process, messages=True)
-
-        if not config_run.settings['data_analysis']:
-            self.calculate_common_and_process_period()
-
-            self.var_D.data_and_null_in_process_period(self)
-            self.var_I.data_and_null_in_process_period(self)
-
-        if config_run.settings['consistent_data']:
-            check_consistent_data(self.var_D)
-            check_consistent_data(self.var_I)
+# get_state_of_data() :TODO: delete all instances
 
 
     def process(self):
@@ -158,20 +109,20 @@ class Station(object):
         Run climate and forecast process for this station.
         """
 
+        # TODO: BUG fix
+
         # restore threshold problem values
         globals_vars.threshold_problem = [False, False, False]
 
-        self.get_state_of_data()
-
         # define if results will made by trimester or every n days
-        if self.state_of_data in [1, 3]:
+        if globals_vars.STATE_OF_DATA in [1, 3]:
             console.msg(_("Results will be made by trimesters"), color='cyan')
             if config_run.settings['analysis_interval'] != "trimester":
                 console.msg_error(_("The var_D of stations have data monthly, but you define\n"
                                     "in runfile the analysis interval as '{0}', this must be,\n"
                                     "in this case, as 'trimester' or use data daily.").format(
                     config_run.settings['analysis_interval']))
-        if self.state_of_data in [2, 4]:
+        if globals_vars.STATE_OF_DATA in [2, 4]:
             # if analysis_interval is defined by trimester but var_I or/and var_D has data
             # daily, first convert in data monthly and continue with results by trimester
             if config_run.settings['analysis_interval'] == "trimester":
@@ -184,11 +135,11 @@ class Station(object):
                     console.msg(_("Converting all var I to data monthly"), color='cyan')
                     self.var_I.daily2monthly()
                     self.var_I.frequency_data = "monthly"
-                self.state_of_data = 1
+                globals_vars.STATE_OF_DATA = 1
             else:
                 console.msg(_("Results will be made every {} days").format(globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL), color='cyan')
 
-        if self.state_of_data == 3:
+        if globals_vars.STATE_OF_DATA == 3:
             console.msg(_("Converting all var I to data monthly"), color='cyan')
             self.var_I.daily2monthly()
             self.var_I.frequency_data = "monthly"
@@ -198,9 +149,9 @@ class Station(object):
 
         # run climate process
         if config_run.settings['climate_process']:
-            climate.climate(self)
+            climate.process(self)
 
         # run forecast process
         if config_run.settings['forecast_process']:
             # TODO: run forecast without climate¿?
-            forecast.forecast(self)
+            forecast.process(self)

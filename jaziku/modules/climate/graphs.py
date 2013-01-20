@@ -115,8 +115,8 @@ def climate_graphs(station):
         #             shadow = True, fancybox = True)
 
         # table in graphic
-        colLabels = (globals_vars.phenomenon_below, globals_vars.phenomenon_normal,
-                     globals_vars.phenomenon_above)
+        colLabels = (config_run.settings['phen_below_label'], config_run.settings['phen_normal_label'],
+                     config_run.settings['phen_above_label'])
 
         rowLabels = [_('var D below'), _('var D normal'), _('var D above')]
 
@@ -154,7 +154,7 @@ def climate_graphs(station):
         # all months in year 1->12
         for month in range(1, 13):
 
-            if station.state_of_data in [1, 3]:
+            if globals_vars.STATE_OF_DATA in [1, 3]:
                 contingency_table,\
                 contingency_table_percent,\
                 contingency_table_percent_print,\
@@ -164,7 +164,7 @@ def climate_graphs(station):
                 filename_period = _("trim_{0}").format(month)
                 create_chart()
 
-            if station.state_of_data in [2, 4]:
+            if globals_vars.STATE_OF_DATA in [2, 4]:
 
                 for day in station.range_analysis_interval:
 
@@ -188,7 +188,7 @@ def climate_graphs(station):
                                   station.var_D.type_series, station.var_I.type_series, station.process_period['start'],
                                   station.process_period['end']))
 
-        if station.state_of_data in [1, 3]:
+        if globals_vars.STATE_OF_DATA in [1, 3]:
             # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
             mosaic_plots = pyplot.figure(figsize=((image_width * 3) / 100, (image_height * 4) / 100))
             mosaic_plots.savefig(mosaic_dir_save, dpi=100)
@@ -200,7 +200,7 @@ def climate_graphs(station):
                     mosaic.paste(img_open(image_open_list[i]), (image_width * h, image_height * v))
                     i += 1
 
-        if station.state_of_data in [2, 4]:
+        if globals_vars.STATE_OF_DATA in [2, 4]:
             # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
             mosaic_plots = pyplot.figure(figsize=((image_width * len(station.range_analysis_interval))
                                              / 100, (image_height * 12) / 100))

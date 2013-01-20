@@ -121,9 +121,9 @@ def maps(grid):
     # initialize matrix with null value
     base_matrix.fill(globals_vars.VALID_NULL[1])
 
-    phenomenon = {0: globals_vars.phenomenon_below,
-                  1: globals_vars.phenomenon_normal,
-                  2: globals_vars.phenomenon_above}
+    phenomenon = {0: config_run.settings['phen_below_label'],
+                  1: config_run.settings['phen_normal_label'],
+                  2: config_run.settings['phen_above_label']}
 
     def process_map():
         # add counter of maps created in this grid
