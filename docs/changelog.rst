@@ -39,6 +39,7 @@ fixes
   possible)
 - Check if var D exist
 - Fix path when used var I as internal
+- Initialize matplotlib backend in raster graphics
 
 0.5.1 (**2012-12-05**)
 ----------------------

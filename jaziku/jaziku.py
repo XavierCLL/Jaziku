@@ -33,8 +33,8 @@
 import sys
 import gc
 import os.path
-#from pylab import *
 from clint.textui import colored
+from matplotlib import use
 
 # internationalization and init languages variable "_()"
 import gettext
@@ -70,6 +70,9 @@ def main():
     # set encoding to utf-8
     reload(sys)
     sys.setdefaultencoding("utf-8")
+
+    # initialize matplotlib backend
+    use("AGG", warn=False, force=True)
 
     #set the root directory where jaziku was installed
     globals_vars.JAZIKU_DIR = os.path.dirname(os.path.realpath(__file__))
