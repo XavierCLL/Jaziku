@@ -71,6 +71,9 @@ def main():
     reload(sys)
     sys.setdefaultencoding("utf-8")
 
+    # initialize matplotlib backend
+    use("AGG", warn=False, force=True)
+
     #set the root directory where jaziku was installed
     globals_vars.JAZIKU_DIR = os.path.dirname(os.path.realpath(__file__))
 
