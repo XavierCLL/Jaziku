@@ -176,7 +176,7 @@ def read_runfile():
     if not os.path.isabs(config_run.settings["path_to_file_var_I"]) and\
        not config_run.settings["path_to_file_var_I"] == 'internal':
         config_run.settings["path_to_file_var_I"] \
- = os.path.abspath(os.path.join(os.path.dirname(globals_vars.ARGS.runfile),
+            = os.path.abspath(os.path.join(os.path.dirname(globals_vars.ARGS.runfile),
                                            config_run.settings["path_to_file_var_I"]))
 
     # Set type and units for variables D and I

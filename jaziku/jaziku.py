@@ -33,6 +33,7 @@
 import sys
 import gc
 import os.path
+from matplotlib import use
 
 # internationalization and init languages variable "_()"
 import gettext
@@ -71,7 +72,7 @@ def main():
     reload(sys)
     sys.setdefaultencoding("utf-8")
 
-    # initialize matplotlib backend
+    # initialize matplotlib backend in raster graphics (png)
     use("AGG", warn=False, force=True)
 
     #set the root directory where jaziku was installed
