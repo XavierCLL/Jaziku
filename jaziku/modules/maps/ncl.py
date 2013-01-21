@@ -21,10 +21,7 @@
 import os
 import imp
 
-from jaziku.env import config_run
-
-from jaziku.utils import globals_vars
-
+from jaziku.env import globals_vars, config_run
 
 class MapProperties(object):
     pass
