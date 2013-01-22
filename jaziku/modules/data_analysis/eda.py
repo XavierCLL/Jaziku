@@ -34,7 +34,7 @@ from calendar import monthrange
 
 from jaziku.modules.analysis_interval import get_values_in_range_analysis_interval, locate_day_in_analysis_interval, get_range_analysis_interval
 from jaziku.modules.climate import lags
-from jaziku.modules.climate.contingency_table import get_thresholds_var_I
+from jaziku.modules.climate.contingency_table import get_category_of_phenomenon
 from jaziku.modules.climate.lags import  calculate_lags
 from jaziku.modules.station import Station
 from jaziku.modules.variable import Variable
@@ -1354,17 +1354,11 @@ def outliers(stations):
                 # get the mean of all values of var I in analysis interval in the corresponding period of outlier (var_D)
                 value_var_I = array.mean(values_var_I)
 
-                # get thresholds of var I in the period of outlier
-                threshold_below_var_I, threshold_above_var_I = get_thresholds_var_I(station)
-                # categorize the value of var I and get the phenomenon_category based in the label phenomenon
-                if value_var_I < threshold_below_var_I:
-                    phenomenon_category = globals_vars.phenomenon_below
-                elif value_var_I > threshold_above_var_I:
-                    phenomenon_category = globals_vars.phenomenon_above
-                else:
-                    phenomenon_category = globals_vars.phenomenon_normal
+                # get categorize of phenomenon for the value_var_I
+                category_of_phenomenon = get_category_of_phenomenon(value_var_I, station)
 
-                outliers_list.append([outlier_date, value, phenomenon_category])
+                # save outlier
+                outliers_list.append([outlier_date, value, category_of_phenomenon])
 
         outliers_station['outliers'] = outliers_list
 
