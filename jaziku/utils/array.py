@@ -26,6 +26,10 @@ def mean(values):
     Return the mean from all values, ignoring valid null values.
     """
 
+    # check if 'values' is only one number
+    if isinstance(values, (int, float)):
+        return values
+
     sums = 0
     count = 0
     for value in values:
