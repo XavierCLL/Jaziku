@@ -410,7 +410,7 @@ def get_category_of_phenomenon(value, station):
     # categorize the value of var I and get the category_of_phenomenon based in the label phenomenon
 
     # SPECIAL CASE: for some variables for set the category of phenomenon the thresholds are inclusive
-    if station.var_I.type_series in ['ONI1', 'ONI2', 'W850w', 'SST4', 'SST12', 'ASST3', 'ASST34', 'ASST4', 'ASST12']:
+    if station.var_I.type_series in ['ONI1', 'ONI2', 'SST12', 'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34']:
         if value <= threshold_below_var_I:
             category_of_phenomenon = globals_vars.phenomenon_below
         elif value >= threshold_above_var_I:
