@@ -32,7 +32,8 @@ from jaziku.utils import  array, format_out
 def get_lag_values(station, var, lag, month, day=None):
     """
     Return all values of var_D, var_I or date
-    of specific lag, month and/or day.
+    inside the period to process with a specific lag,
+    month and/or day.
     """
 
     var_select = {'date': 0, 'var_D': 1, 'var_I': 2}
@@ -110,7 +111,7 @@ def calculate_lags(station, makes_files=True):
                     # get values and calculate mean_var_D
                     mean_var_D = array.mean(get_values_in_range_analysis_interval(station,'D', iter_year, month))
 
-                    # special case when var_I is ONI1, ONI2 or CAR, don't calculate trimesters because the ONI and CAR
+                    # SPECIAL CASE: when var_I is ONI1, ONI2 or CAR, don't calculate trimesters because the ONI and CAR
                     # series was calculated by trimesters from original source
                     if station.var_I.type_series in ['ONI1', 'ONI2', 'CAR']:
                         mean_var_I = station.var_I.data[station.var_I.date.index(date(iter_year, month, 1) +
@@ -180,8 +181,14 @@ def calculate_lags(station, makes_files=True):
                         # get values and calculate mean_var_D
                         mean_var_D = array.mean(get_values_in_range_analysis_interval(station,'D', iter_year, month, day, lag))
 
-                        # get values and calculate mean_var_I
-                        mean_var_I = array.mean(get_values_in_range_analysis_interval(station,'I', iter_year, month, day, lag))
+                        # SPECIAL CASE: when var_I is ONI1, ONI2 or CAR, don't calculate trimesters because the ONI and CAR
+                        # series was calculated by trimesters from original source
+                        if station.var_I.type_series in ['ONI1', 'ONI2', 'CAR']:
+                            mean_var_I = station.var_I.data[station.var_I.date.index(date(iter_year, month, day) +
+                                                                                     relativedelta(months=-lag))]
+                        else:
+                            # get values and calculate mean_var_I
+                            mean_var_I = array.mean(get_values_in_range_analysis_interval(station,'I', iter_year, month, day, lag))
 
                         # add line in list: Lag_X
                         vars()['Lag_' + str(lag)].append([date(iter_year, month, day), mean_var_D, mean_var_I])
