@@ -1281,6 +1281,31 @@ def outliers(stations):
         outliers_list = []
 
         for index, value in enumerate(station.var_D.data_in_process_period):
+            # detect all outliers in the process period, save in outliers_list
+            # the value, the date and the categorize the outliers inside phenomenos
+            # of independent variable
+
+            # TODO: translate
+            # para categorizar los atípicos en las fases del fenómeno, Jaziku evalúa atípico por atípico haciendo lo siguiente:
+            #
+            # 1.primero evalua en que rango de intervalo de analisis se encuentra el atipico, ejemplo: si el atipico
+            #   es de la fecha 17 del mes (M) y el  intervalo de analisis es de 5 dias, se encuentra en el rango de
+            #   intervalo de analisis de 16-21 dias
+            # 2.luego obtiene todos los valores de la variable independiente para todos los años del periodo a procesar
+            #   dentro del intervalo de analisis encontrado (1) del mes (M) del atipico
+            # 3.calcula la media de los valores del punto (2)
+            # 4.calcula los umbrales de la variable independiente para todos los años del periodo a procesar para el
+            #   analisis del periodo (1) del atípico
+            # 5.ubica el valor medio calculado (3) dentro (por debajo, normal, por encima) de los dos umbrales calculados (4)
+            # 6.categorizar el atípico segun (5)
+            #
+            # Tener en cuenta que:
+            # * cuando la variable dependiente es mensual y la independiente diaria, la variable independiente es
+            #   convertida a mensual antes de evaluar las fases del fenómeno de los atípicos
+            # * si la variable dependiente es diaria y la independiente mensual, la variable dependiente se convierte
+            #   a mensual si el intervalo de análisis es trimestral antes de evaluar las fases del fenómeno de los atípicos
+            # * si las dos variables son diarias y el intervalo de análisis es trimestral, ambas variables son
+            #   convertidas a mensuales antes de evaluar las fases del fenómeno de los atípicos
 
             if (value < outliers_station['whiskers_below'] or
                 value > outliers_station['whiskers_above']) and \
@@ -1319,6 +1344,12 @@ def outliers(stations):
                     station.var_I_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month)
                     # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                     values_var_I = get_values_in_range_analysis_interval(station, 'I', outlier_date.year, outlier_date.month, None, 0)
+
+                # SPECIAL CASE: when var_I is ONI1, ONI2 or CAR, don't calculate trimesters because the ONI and CAR
+                # series was calculated by trimesters from original source
+                if station.var_I.frequency_data == "monthly" and station.var_I.type_series in ['ONI1', 'ONI2', 'CAR']:
+                    # take the first month (in this case, it is the mean of trimester)
+                    values_var_I = values_var_I[0]
 
                 # get the mean of all values of var I in analysis interval in the corresponding period of outlier (var_D)
                 value_var_I = array.mean(values_var_I)
