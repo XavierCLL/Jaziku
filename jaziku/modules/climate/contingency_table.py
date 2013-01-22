@@ -391,6 +391,43 @@ def get_thresholds_var_I(station):
         config_run.settings['threshold_above_var_I'])
 
 
+def get_category_of_phenomenon(value, station):
+    """
+    Calculate the category of phenomenon for independent variable based on label phenomenon,
+    evaluate where is the 'value' in the thresholds (by default or defined by user), this is
+    below, normal or above and return the label for this position.
+
+    For some variables for set the category of phenomenon the thresholds are inclusive,
+    for ('ONI1', 'ONI2', 'W850w', 'SST4', 'SST12', 'ASST3', 'ASST34', 'ASST4', 'ASST12'):
+        the value is not normal when { threshold below >= value >= threshold above }
+    else:
+        the value is not normal when { threshold below > value > threshold above }
+    """
+
+    # get thresholds of var I in the period of outlier
+    threshold_below_var_I, threshold_above_var_I = get_thresholds_var_I(station)
+
+    # categorize the value of var I and get the category_of_phenomenon based in the label phenomenon
+
+    # SPECIAL CASE: for some variables for set the category of phenomenon the thresholds are inclusive
+    if station.var_I.type_series in ['ONI1', 'ONI2', 'W850w', 'SST4', 'SST12', 'ASST3', 'ASST34', 'ASST4', 'ASST12']:
+        if value <= threshold_below_var_I:
+            category_of_phenomenon = globals_vars.phenomenon_below
+        elif value >= threshold_above_var_I:
+            category_of_phenomenon = globals_vars.phenomenon_above
+        else:
+            category_of_phenomenon = globals_vars.phenomenon_normal
+    else:
+        if value < threshold_below_var_I:
+            category_of_phenomenon = globals_vars.phenomenon_below
+        elif value > threshold_above_var_I:
+            category_of_phenomenon = globals_vars.phenomenon_above
+        else:
+            category_of_phenomenon = globals_vars.phenomenon_normal
+
+    return category_of_phenomenon
+
+
 def get_contingency_table(station, lag, month, day=None):
     """
     Calculate and return the contingency table in absolute values,
