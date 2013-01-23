@@ -41,6 +41,8 @@ fixes
 - Fix path when used var I as internal
 - Initialize matplotlib backend in raster graphics
 - Fixes for 'special case' in categorize the outliers and calculate lags
+- Fixes when use particular value in thresholds for var D or I
+- Apply special case when are calculating the contingency table
 
 0.5.1 (**2012-12-05**)
 ----------------------
