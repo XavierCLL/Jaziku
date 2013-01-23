@@ -111,7 +111,7 @@ def calculate_lags(station, makes_files=True):
                     # get values and calculate mean_var_D
                     mean_var_D = array.mean(get_values_in_range_analysis_interval(station,'D', iter_year, month))
 
-                    # SPECIAL CASE: when var_I is ONI1, ONI2 or CAR, don't calculate trimesters because the ONI and CAR
+                    # SPECIAL CASE 1: when var_I is ONI1, ONI2 or CAR, don't calculate trimesters because the ONI and CAR
                     # series was calculated by trimesters from original source
                     if station.var_I.type_series in ['ONI1', 'ONI2', 'CAR']:
                         mean_var_I = station.var_I.data[station.var_I.date.index(date(iter_year, month, 1) +
@@ -181,7 +181,7 @@ def calculate_lags(station, makes_files=True):
                         # get values and calculate mean_var_D
                         mean_var_D = array.mean(get_values_in_range_analysis_interval(station,'D', iter_year, month, day, lag))
 
-                        # SPECIAL CASE: when var_I is ONI1, ONI2 or CAR, don't calculate trimesters because the ONI and CAR
+                        # SPECIAL CASE 1: when var_I is ONI1, ONI2 or CAR, don't calculate trimesters because the ONI and CAR
                         # series was calculated by trimesters from original source
                         if station.var_I.type_series in ['ONI1', 'ONI2', 'CAR']:
                             mean_var_I = station.var_I.data[station.var_I.date.index(date(iter_year, month, day) +
