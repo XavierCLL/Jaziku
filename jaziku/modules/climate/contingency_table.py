@@ -160,31 +160,42 @@ def get_thresholds_var_D(station):
                            "   but the thresholds of var D must be\n"
                            "   'default' for use the analog year .........."), color='yellow', newline=False)
 
-    # if are define as percentile
-    if (''.join(list(globals_vars.config_run['threshold_below_var_D'])[0:1]) == "p" and
-        ''.join(list(globals_vars.config_run['threshold_above_var_D'])[0:1]) == "p"):
-        below = int(''.join(list(globals_vars.config_run['threshold_below_var_D'])[1::]))
-        above = int(''.join(list(globals_vars.config_run['threshold_above_var_D'])[1::]))
-        if not (0 <= below <= 100) or not (0 <= above <= 100):
-            console.msg_error(_("thresholds of dependent variable were defined as "
-                                "percentile\nbut are outside of range 0-100:\n{0} - {1}")
-            .format(below, above))
-        if below > above:
-            console.msg_error(_("threshold below of dependent variable can't be "
-                                "greater than threshold above:\n{0} - {1}")
-            .format(below, above))
-        return percentiles(below, above)
+    # if are define as percentile or standard deviation
+    if isinstance(globals_vars.config_run['threshold_below_var_D'], str) and\
+       isinstance(globals_vars.config_run['threshold_above_var_D'], str):
 
-    # if are define as standard deviation
-    if (''.join(list(globals_vars.config_run['threshold_below_var_D'])[0:2]) == "sd" and
-        ''.join(list(globals_vars.config_run['threshold_above_var_D'])[0:2]) == "sd"):
-        below = int(''.join(list(globals_vars.config_run['threshold_below_var_D'])[2::]))
-        above = int(''.join(list(globals_vars.config_run['threshold_above_var_D'])[2::]))
-        return thresholds_with_std_deviation(below, above)
+        # if are define as percentile
+        if (''.join(list(globals_vars.config_run['threshold_below_var_D'])[0:1]) == "p" and
+            ''.join(list(globals_vars.config_run['threshold_above_var_D'])[0:1]) == "p"):
+            below = int(''.join(list(globals_vars.config_run['threshold_below_var_D'])[1::]))
+            above = int(''.join(list(globals_vars.config_run['threshold_above_var_D'])[1::]))
+            if not (0 <= below <= 100) or not (0 <= above <= 100):
+                console.msg_error(_("thresholds of dependent variable were defined as "
+                                    "percentile\nbut are outside of range 0-100:\n{0} - {1}")
+                .format(below, above))
+            if below > above:
+                console.msg_error(_("threshold below of dependent variable can't be "
+                                    "greater than threshold above:\n{0} - {1}")
+                .format(below, above))
+            return percentiles(below, above)
+
+        # if are define as standard deviation
+        if (''.join(list(globals_vars.config_run['threshold_below_var_D'])[0:2]) == "sd" and
+            ''.join(list(globals_vars.config_run['threshold_above_var_D'])[0:2]) == "sd"):
+            below = int(''.join(list(globals_vars.config_run['threshold_below_var_D'])[2::]))
+            above = int(''.join(list(globals_vars.config_run['threshold_above_var_D'])[2::]))
+            return thresholds_with_std_deviation(below, above)
 
     # if are define as particular values
-    return thresholds_with_particular_values(globals_vars.config_run['threshold_below_var_D'],
-        globals_vars.config_run['threshold_above_var_D'])
+    if isinstance(globals_vars.config_run['threshold_below_var_D'], (int, float)) and\
+       isinstance(globals_vars.config_run['threshold_above_var_D'], (int, float)):
+        return thresholds_with_particular_values(globals_vars.config_run['threshold_below_var_D'],
+                                                 globals_vars.config_run['threshold_above_var_D'])
+
+    # unrecognizable thresholds
+    console.msg_error(_("unrecognizable thresholds '{0}' and/or '{1}' for var D").
+                        format(globals_vars.config_run['threshold_below_var_D'],
+                               globals_vars.config_run['threshold_above_var_D']))
 
 
 def get_thresholds_var_I(station):
@@ -362,34 +373,44 @@ def get_thresholds_var_I(station):
         globals_vars.config_run['threshold_above_var_I'] == "default"):
         return thresholds_by_default()
 
-    # if are define as percentile
-    if (''.join(list(globals_vars.config_run['threshold_below_var_I'])[0:1]) == "p" and
-        ''.join(list(globals_vars.config_run['threshold_above_var_I'])[0:1]) == "p"):
-        below = float(''.join(list(globals_vars.config_run['threshold_below_var_I'])[1::]))
-        above = float(''.join(list(globals_vars.config_run['threshold_above_var_I'])[1::]))
-        if not (0 <= below <= 100) or not (0 <= above <= 100):
-            console.msg_error(_(
-                "thresholds of independent variable were defined as "
-                "percentile\nbut are outside of range 0-100:\n{0} - {1}")
-            .format(below, above))
-        if below > above:
-            console.msg_error(_(
-                "threshold below of independent variable can't be "
-                "greater than threshold above:\n{0} - {1}")
-            .format(below, above))
-        return percentiles(below, above)
+    # if are define as percentile or standard deviation
+    if isinstance(globals_vars.config_run['threshold_below_var_I'], str) and\
+       isinstance(globals_vars.config_run['threshold_above_var_I'], str):
 
-    # if are define as standard deviation
-    if (''.join(list(globals_vars.config_run['threshold_below_var_I'])[0:2]) == "sd" and
-        ''.join(list(globals_vars.config_run['threshold_above_var_I'])[0:2]) == "sd"):
-        below = int(''.join(list(globals_vars.config_run['threshold_below_var_I'])[2::]))
-        above = int(''.join(list(globals_vars.config_run['threshold_above_var_I'])[2::]))
-        return thresholds_with_std_deviation(below, above)
+        # if are define as percentile
+        if (''.join(list(globals_vars.config_run['threshold_below_var_I'])[0:1]) == "p" and
+            ''.join(list(globals_vars.config_run['threshold_above_var_I'])[0:1]) == "p"):
+            below = float(''.join(list(globals_vars.config_run['threshold_below_var_I'])[1::]))
+            above = float(''.join(list(globals_vars.config_run['threshold_above_var_I'])[1::]))
+            if not (0 <= below <= 100) or not (0 <= above <= 100):
+                console.msg_error(_(
+                    "thresholds of independent variable were defined as "
+                    "percentile\nbut are outside of range 0-100:\n{0} - {1}")
+                .format(below, above))
+            if below > above:
+                console.msg_error(_(
+                    "threshold below of independent variable can't be "
+                    "greater than threshold above:\n{0} - {1}")
+                .format(below, above))
+            return percentiles(below, above)
+
+        # if are define as standard deviation
+        if (''.join(list(globals_vars.config_run['threshold_below_var_I'])[0:2]) == "sd" and
+            ''.join(list(globals_vars.config_run['threshold_above_var_I'])[0:2]) == "sd"):
+            below = int(''.join(list(globals_vars.config_run['threshold_below_var_I'])[2::]))
+            above = int(''.join(list(globals_vars.config_run['threshold_above_var_I'])[2::]))
+            return thresholds_with_std_deviation(below, above)
 
     # if are define as particular values
-    return thresholds_with_particular_values(globals_vars.config_run['threshold_below_var_I'],
-        globals_vars.config_run['threshold_above_var_I'])
+    if isinstance(globals_vars.config_run['threshold_below_var_I'], (int, float)) and\
+       isinstance(globals_vars.config_run['threshold_above_var_I'], (int, float)):
+        return thresholds_with_particular_values(globals_vars.config_run['threshold_below_var_I'],
+                                                 globals_vars.config_run['threshold_above_var_I'])
 
+    # unrecognizable thresholds
+    console.msg_error(_("unrecognizable thresholds '{0}' and/or '{1}' for var I").
+                        format(globals_vars.config_run['threshold_below_var_I'],
+                               globals_vars.config_run['threshold_above_var_I']))
 
 def get_category_of_phenomenon(value, station):
     """
@@ -409,7 +430,7 @@ def get_category_of_phenomenon(value, station):
 
     # categorize the value of var I and get the category_of_phenomenon based in the label phenomenon
 
-    # SPECIAL CASE: for some variables for set the category of phenomenon the thresholds are inclusive
+    # SPECIAL CASE 2: for some variables for set the category of phenomenon the thresholds are inclusive
     if station.var_I.type_series in ['ONI1', 'ONI2', 'SST12', 'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34']:
         if value <= threshold_below_var_I:
             category_of_phenomenon = globals_vars.phenomenon_below
@@ -455,37 +476,68 @@ def get_contingency_table(station, lag, month, day=None):
     thresholds_var_D_var_I = [format_out.number(threshold_below_var_D), format_out.number(threshold_above_var_D),
                               format_out.number(threshold_below_var_I), format_out.number(threshold_above_var_I)]
 
+    # -------------------------------------------------------------------------
     ## Calculating contingency table with absolute values
-    contingency_table = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
-    for index, var_I in enumerate(station.var_I_values):
-        if var_I <= threshold_below_var_I:
-            if station.var_D_values[index] <= threshold_below_var_D:
-                contingency_table[0][0] += 1
-            if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
-                contingency_table[0][1] += 1
-            if station.var_D_values[index] >= threshold_above_var_D:
-                contingency_table[0][2] += 1
-        if threshold_below_var_I < var_I < threshold_above_var_I:
-            if station.var_D_values[index] <= threshold_below_var_D:
-                contingency_table[1][0] += 1
-            if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
-                contingency_table[1][1] += 1
-            if station.var_D_values[index] >= threshold_above_var_D:
-                contingency_table[1][2] += 1
-        if var_I >= threshold_above_var_I:
-            if station.var_D_values[index] <= threshold_below_var_D:
-                contingency_table[2][0] += 1
-            if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
-                contingency_table[2][1] += 1
-            if station.var_D_values[index] >= threshold_above_var_D:
-                contingency_table[2][2] += 1
 
+    contingency_table = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+
+    # SPECIAL CASE 2: for some variables for set the category of phenomenon the thresholds are inclusive (<=, >=)
+    if station.var_I.type_series in ['ONI1', 'ONI2', 'SST12', 'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34']:
+        for index, var_I in enumerate(station.var_I_values):
+            if var_I <= threshold_below_var_I:
+                if station.var_D_values[index] <= threshold_below_var_D:
+                    contingency_table[0][0] += 1
+                if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
+                    contingency_table[0][1] += 1
+                if station.var_D_values[index] >= threshold_above_var_D:
+                    contingency_table[0][2] += 1
+            if threshold_below_var_I < var_I < threshold_above_var_I:
+                if station.var_D_values[index] <= threshold_below_var_D:
+                    contingency_table[1][0] += 1
+                if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
+                    contingency_table[1][1] += 1
+                if station.var_D_values[index] >= threshold_above_var_D:
+                    contingency_table[1][2] += 1
+            if var_I >= threshold_above_var_I:
+                if station.var_D_values[index] <= threshold_below_var_D:
+                    contingency_table[2][0] += 1
+                if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
+                    contingency_table[2][1] += 1
+                if station.var_D_values[index] >= threshold_above_var_D:
+                    contingency_table[2][2] += 1
+    else:
+        # normal case
+        for index, var_I in enumerate(station.var_I_values):
+            if var_I < threshold_below_var_I:
+                if station.var_D_values[index] <= threshold_below_var_D:
+                    contingency_table[0][0] += 1
+                if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
+                    contingency_table[0][1] += 1
+                if station.var_D_values[index] >= threshold_above_var_D:
+                    contingency_table[0][2] += 1
+            if threshold_below_var_I <= var_I <= threshold_above_var_I:
+                if station.var_D_values[index] <= threshold_below_var_D:
+                    contingency_table[1][0] += 1
+                if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
+                    contingency_table[1][1] += 1
+                if station.var_D_values[index] >= threshold_above_var_D:
+                    contingency_table[1][2] += 1
+            if var_I > threshold_above_var_I:
+                if station.var_D_values[index] <= threshold_below_var_D:
+                    contingency_table[2][0] += 1
+                if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
+                    contingency_table[2][1] += 1
+                if station.var_D_values[index] >= threshold_above_var_D:
+                    contingency_table[2][2] += 1
+
+    # -------------------------------------------------------------------------
     ## Calculating contingency table with values in percent
     tertile_size = station.size_time_series / 3.0
     contingency_table_percent = matrix(contingency_table) * tertile_size
 
     sum_per_column_percent = contingency_table_percent.sum(axis=1)
 
+    # -------------------------------------------------------------------------
     # threshold_problem is global variable for detect problem with
     # threshold of independent variable, if a problem is detected
     # show message and print "nan" (this mean null value for

@@ -1345,7 +1345,7 @@ def outliers(stations):
                     # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                     values_var_I = get_values_in_range_analysis_interval(station, 'I', outlier_date.year, outlier_date.month, None, 0)
 
-                # SPECIAL CASE: when var_I is ONI1, ONI2 or CAR, don't calculate trimesters because the ONI and CAR
+                # SPECIAL CASE 1: when var_I is ONI1, ONI2 or CAR, don't calculate trimesters because the ONI and CAR
                 # series was calculated by trimesters from original source
                 if station.var_I.frequency_data == "monthly" and station.var_I.type_series in ['ONI1', 'ONI2', 'CAR']:
                     # take the first month (in this case, it is the mean of trimester)
