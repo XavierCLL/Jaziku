@@ -168,7 +168,8 @@ def get():
     if config_run.settings['path_to_file_var_I'] == 'internal':
         settings["path_to_file_var_I"] = colored.green(config_run.settings['path_to_file_var_I'])
     else:
-        settings["path_to_file_var_I"] = config_run.settings['path_to_file_var_I']
+        #settings["path_to_file_var_I"] = config_run.settings['path_to_file_var_I']
+        settings["path_to_file_var_I"] = os.path.relpath(config_run.settings['path_to_file_var_I'], os.path.abspath(os.path.dirname(globals_vars.ARGS.runfile)))
     # limit var I below
     if config_run.settings['limit_var_I_below'] == 'none':
         settings["limit_var_I_below"] = colored.red('none')

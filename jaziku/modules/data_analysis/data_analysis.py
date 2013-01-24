@@ -45,7 +45,7 @@ def main(stations_list):
         = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Data_Analysis'))   # 'results'
 
     print _("Saving the result for data analysis in:")
-    print "   " + colored.cyan(globals_vars.DATA_ANALYSIS_DIR)
+    print "   " + colored.cyan(os.path.relpath(globals_vars.DATA_ANALYSIS_DIR, os.path.abspath(os.path.dirname(globals_vars.ARGS.runfile))))
 
     if os.path.isdir(globals_vars.DATA_ANALYSIS_DIR):
         console.msg(

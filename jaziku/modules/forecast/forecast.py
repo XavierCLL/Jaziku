@@ -33,7 +33,7 @@ def pre_process():
     = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Forecast'))   # 'results'
 
     print _("\nSaving the result for forecast in:").format(globals_vars.FORECAST_DIR)
-    print "   " + colored.cyan(globals_vars.FORECAST_DIR)
+    print "   " + colored.cyan(os.path.relpath(globals_vars.FORECAST_DIR, os.path.abspath(os.path.dirname(globals_vars.ARGS.runfile))))
 
     if os.path.isdir(globals_vars.FORECAST_DIR):
         console.msg(
