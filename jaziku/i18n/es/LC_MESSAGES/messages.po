@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-20 21:19-0500\n"
+"POT-Creation-Date: 2013-01-24 12:39-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: data/maps/shapes/Colombia/Colombia/ncl.py:33
 #: data/maps/shapes/Colombia/ncl.py:42 data/maps/shapes/ncl.py:42
-#: modules/data_analysis/eda.py:344 modules/data_analysis/eda.py:1363
+#: modules/data_analysis/eda.py:344 modules/data_analysis/eda.py:1388
 msgid "Stations"
 msgstr ""
 
@@ -345,7 +345,7 @@ msgstr ""
 #: utils/settings_run.py:625 modules/input/input_check.py:83
 #: modules/forecasting/forecasting.py:136 modules/climate/climate.py:73
 #: modules/maps/maps.py:67 modules/maps/maps.py:380 modules/maps/maps.py:491
-#: modules/maps/maps.py:548 modules/variable.py:106
+#: modules/maps/maps.py:548 modules/variable.py:109
 #: modules/data_analysis/data_analysis.py:56 modules/data_analysis/eda.py:154
 #: modules/data_analysis/eda.py:160 modules/data_analysis/eda.py:170
 #: modules/data_analysis/eda.py:178 modules/data_analysis/eda.py:200
@@ -774,24 +774,24 @@ msgstr ""
 msgid "mosaic_prob_of_{0}_{1}_({3}-{4}).png"
 msgstr ""
 
-#: modules/climate/lags.py:70 modules/climate/lags.py:71
-#: modules/climate/lags.py:72
+#: modules/climate/lags.py:71 modules/climate/lags.py:72
+#: modules/climate/lags.py:73
 msgid "time_series"
 msgstr ""
 
-#: modules/climate/lags.py:70
+#: modules/climate/lags.py:71
 msgid "lag_0"
 msgstr ""
 
-#: modules/climate/lags.py:71
+#: modules/climate/lags.py:72
 msgid "lag_1"
 msgstr ""
 
-#: modules/climate/lags.py:72
+#: modules/climate/lags.py:73
 msgid "lag_2"
 msgstr ""
 
-#: modules/climate/lags.py:88
+#: modules/climate/lags.py:89
 msgid "Mean_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv"
 msgstr ""
 
@@ -923,14 +923,14 @@ msgid ""
 msgstr ""
 
 #: modules/climate/contingency_table.py:129
-#: modules/climate/contingency_table.py:342
+#: modules/climate/contingency_table.py:353
 msgid ""
 "thresholds could not were identified:\n"
 "{0} - {1}"
 msgstr ""
 
 #: modules/climate/contingency_table.py:133
-#: modules/climate/contingency_table.py:173
+#: modules/climate/contingency_table.py:177
 msgid ""
 "threshold below of dependent variable can't be greater than threshold "
 "above:\n"
@@ -952,45 +952,53 @@ msgid ""
 "   'default' for use the analog year .........."
 msgstr ""
 
-#: modules/climate/contingency_table.py:169
+#: modules/climate/contingency_table.py:173
 msgid ""
 "thresholds of dependent variable were defined as percentile\n"
 "but are outside of range 0-100:\n"
 "{0} - {1}"
 msgstr ""
 
-#: modules/climate/contingency_table.py:324
+#: modules/climate/contingency_table.py:196
+msgid "unrecognizable thresholds '{0}' and/or '{1}' for var D"
+msgstr ""
+
+#: modules/climate/contingency_table.py:335
 msgid ""
 "thresholds of independent variable were defined as N standard deviation\n"
 " but are outside of range, this values must be 1, 2 or 3:\n"
 "sd{0} sd{1}"
 msgstr ""
 
-#: modules/climate/contingency_table.py:347
-#: modules/climate/contingency_table.py:377
+#: modules/climate/contingency_table.py:358
+#: modules/climate/contingency_table.py:392
 msgid ""
 "threshold below of independent variable can't be greater than threshold "
 "above:\n"
 "{0} - {1}"
 msgstr ""
 
-#: modules/climate/contingency_table.py:356
+#: modules/climate/contingency_table.py:367
 msgid ""
 "Problem with thresholds of independent variable:\n"
 "\n"
 "{0}"
 msgstr ""
 
-#: modules/climate/contingency_table.py:372
+#: modules/climate/contingency_table.py:387
 msgid ""
 "thresholds of independent variable were defined as percentile\n"
 "but are outside of range 0-100:\n"
 "{0} - {1}"
 msgstr ""
 
-#: modules/climate/contingency_table.py:462
-#: modules/climate/contingency_table.py:474
-#: modules/climate/contingency_table.py:486
+#: modules/climate/contingency_table.py:411
+msgid "unrecognizable thresholds '{0}' and/or '{1}' for var I"
+msgstr ""
+
+#: modules/climate/contingency_table.py:551
+#: modules/climate/contingency_table.py:563
+#: modules/climate/contingency_table.py:575
 msgid ""
 "\n"
 "\n"
@@ -1339,26 +1347,26 @@ msgstr ""
 msgid "Map_lag_{0}_{1}"
 msgstr ""
 
-#: modules/variable.py:95
+#: modules/variable.py:98
 msgid "Read and check (range validation) for var {0} ... "
 msgstr ""
 
-#: modules/variable.py:109
+#: modules/variable.py:112
 msgid "   the variable {0} has data daily"
 msgstr ""
 
-#: modules/variable.py:111
+#: modules/variable.py:114
 msgid "   the variable {0} has data monthly"
 msgstr ""
 
-#: modules/variable.py:143 modules/variable.py:211
+#: modules/variable.py:146 modules/variable.py:214
 msgid ""
 "Reading var {0} from file '{1}':\n"
 "don't have the minimum data required (november and december)\n"
 "for the first year ({2}) of the series."
 msgstr ""
 
-#: modules/variable.py:174 modules/variable.py:241
+#: modules/variable.py:177 modules/variable.py:244
 msgid ""
 "Reading var {0} from file '{1}':\n"
 "don't have the minimum data required (january and february)\n"
@@ -1404,32 +1412,32 @@ msgid "Descriptive_Statistics_{0}.csv"
 msgstr ""
 
 #: modules/data_analysis/eda.py:88 modules/data_analysis/eda.py:581
-#: modules/data_analysis/eda.py:1136 modules/data_analysis/eda.py:1417
+#: modules/data_analysis/eda.py:1136 modules/data_analysis/eda.py:1442
 msgid "CODE"
 msgstr ""
 
 #: modules/data_analysis/eda.py:88 modules/data_analysis/eda.py:581
-#: modules/data_analysis/eda.py:1136 modules/data_analysis/eda.py:1417
+#: modules/data_analysis/eda.py:1136 modules/data_analysis/eda.py:1442
 msgid "NAME"
 msgstr ""
 
 #: modules/data_analysis/eda.py:88 modules/data_analysis/eda.py:581
-#: modules/data_analysis/eda.py:1136 modules/data_analysis/eda.py:1417
+#: modules/data_analysis/eda.py:1136 modules/data_analysis/eda.py:1442
 msgid "LAT"
 msgstr ""
 
 #: modules/data_analysis/eda.py:88 modules/data_analysis/eda.py:581
-#: modules/data_analysis/eda.py:1136 modules/data_analysis/eda.py:1417
+#: modules/data_analysis/eda.py:1136 modules/data_analysis/eda.py:1442
 msgid "LON"
 msgstr ""
 
 #: modules/data_analysis/eda.py:88 modules/data_analysis/eda.py:581
-#: modules/data_analysis/eda.py:1136 modules/data_analysis/eda.py:1417
+#: modules/data_analysis/eda.py:1136 modules/data_analysis/eda.py:1442
 msgid "ALT"
 msgstr ""
 
 #: modules/data_analysis/eda.py:88 modules/data_analysis/eda.py:581
-#: modules/data_analysis/eda.py:1136 modules/data_analysis/eda.py:1417
+#: modules/data_analysis/eda.py:1136 modules/data_analysis/eda.py:1442
 msgid "PROCESS PERIOD"
 msgstr ""
 
@@ -1524,9 +1532,9 @@ msgid "Shapiro Wilks test ................................... "
 msgstr ""
 
 #: modules/data_analysis/eda.py:234 modules/data_analysis/eda.py:1190
-#: modules/data_analysis/eda.py:1195 modules/data_analysis/eda.py:1347
-#: modules/data_analysis/eda.py:1351 modules/data_analysis/eda.py:1356
-#: modules/data_analysis/eda.py:1359
+#: modules/data_analysis/eda.py:1195 modules/data_analysis/eda.py:1372
+#: modules/data_analysis/eda.py:1376 modules/data_analysis/eda.py:1381
+#: modules/data_analysis/eda.py:1384
 msgid "Outliers"
 msgstr ""
 
@@ -1745,35 +1753,35 @@ msgstr ""
 msgid "Station"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1400 modules/data_analysis/eda.py:1405
+#: modules/data_analysis/eda.py:1425 modules/data_analysis/eda.py:1430
 msgid "Outliers_table"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1417
+#: modules/data_analysis/eda.py:1442
 msgid "WHISKERS BELOW"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1418
+#: modules/data_analysis/eda.py:1443
 msgid "WHISKERS ABOVE"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1418
+#: modules/data_analysis/eda.py:1443
 msgid "# OUTLIERS"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1420
+#: modules/data_analysis/eda.py:1445
 msgid "DATE"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1420
+#: modules/data_analysis/eda.py:1445
 msgid "VALUE"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1420
+#: modules/data_analysis/eda.py:1445
 msgid "PHEN_CAT"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1439
+#: modules/data_analysis/eda.py:1464
 msgid "OUTLIERS LIST:"
 msgstr ""
 
@@ -1836,11 +1844,11 @@ msgid ""
 "You version of python is {0}, please use Jaziku with python v2.6 or v2.7"
 msgstr ""
 
-#: jaziku.py:90
+#: jaziku.py:93
 msgid "[runfile] no such file or directory: {0}"
 msgstr ""
 
-#: jaziku.py:103
+#: jaziku.py:106
 msgid ""
 "\n"
 "############################ JAZIKU ############################\n"
@@ -1852,7 +1860,7 @@ msgid ""
 "################################################################"
 msgstr ""
 
-#: jaziku.py:134
+#: jaziku.py:137
 msgid ""
 "\n"
 "\n"
@@ -1862,15 +1870,15 @@ msgid ""
 "################################################################\n"
 msgstr ""
 
-#: jaziku.py:142
+#: jaziku.py:145
 msgid "Jaziku_Data_Analysis"
 msgstr ""
 
-#: jaziku.py:144
+#: jaziku.py:147
 msgid "Saving the result for data analysis in:"
 msgstr ""
 
-#: jaziku.py:149
+#: jaziku.py:152
 msgid ""
 "\n"
 " > WARNING: the output directory for data analysis process\n"
@@ -1878,7 +1886,7 @@ msgid ""
 "   could be mixed or replaced of old output."
 msgstr ""
 
-#: jaziku.py:163
+#: jaziku.py:166
 msgid ""
 "\n"
 "\n"
@@ -1892,15 +1900,15 @@ msgid ""
 "################################################################\n"
 msgstr ""
 
-#: jaziku.py:175
+#: jaziku.py:178
 msgid "Jaziku_Climate"
 msgstr ""
 
-#: jaziku.py:177
+#: jaziku.py:180
 msgid "Saving the result for climate in:"
 msgstr ""
 
-#: jaziku.py:182
+#: jaziku.py:185
 msgid ""
 "\n"
 " > WARNING: the output directory for climate process\n"
@@ -1908,17 +1916,17 @@ msgid ""
 "   could be mixed or replaced of old output."
 msgstr ""
 
-#: jaziku.py:190
+#: jaziku.py:193
 msgid "Jaziku_Forecasting"
 msgstr ""
 
-#: jaziku.py:192
+#: jaziku.py:195
 msgid ""
 "\n"
 "Saving the result for forecasting in:"
 msgstr ""
 
-#: jaziku.py:197
+#: jaziku.py:200
 msgid ""
 "\n"
 " > WARNING: the output directory for forecasting process\n"
@@ -1926,25 +1934,25 @@ msgid ""
 "   could be mixed or replaced of old output."
 msgstr ""
 
-#: jaziku.py:209
+#: jaziku.py:212
 msgid ""
 "\n"
 "################# STATION: {0} ({1})"
 msgstr ""
 
-#: jaziku.py:218
+#: jaziku.py:221
 msgid ""
 "\n"
 "{0} station processed."
 msgstr ""
 
-#: jaziku.py:219
+#: jaziku.py:222
 msgid ""
 "\n"
 "{0} stations processed."
 msgstr ""
 
-#: jaziku.py:234
+#: jaziku.py:237
 msgid ""
 "\n"
 "\n"
@@ -1956,24 +1964,24 @@ msgid ""
 "################################################################"
 msgstr ""
 
-#: jaziku.py:251
+#: jaziku.py:254
 msgid ""
 "\n"
 "{0} map created for {1}"
 msgstr ""
 
-#: jaziku.py:252
+#: jaziku.py:255
 msgid ""
 "\n"
 "{0} maps created for {1}"
 msgstr ""
 
-#: jaziku.py:255
+#: jaziku.py:258
 msgid ""
 "\n"
 "Process completed!"
 msgstr ""
 
-#: jaziku.py:257
+#: jaziku.py:260
 msgid "Good bye :)"
 msgstr ""
