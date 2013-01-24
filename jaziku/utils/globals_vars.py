@@ -31,7 +31,7 @@ PROG_NAME = "jaziku"
 
 VERSION = "0.5.2"
 
-VERSION_DATE = "20/01/2013"
+VERSION_DATE = "23/01/2013"
 
 # absolute directory where is installed Jaziku in your system,
 # this variable is set in jaziku.py
@@ -152,7 +152,7 @@ internal_var_I_files = {
     "ASST34": "ASST34_1982_2012_CPC_NCEP_NOAA.txt",
     "ARH": "ARH_DIPOLE_1979_2009_NCEPNCAR_REAL.txt", #TODO: update series
     "NAO": "NAO_1865_2012_Hurrel1995.txt",
-    "QBO": "QBO_1979_2012_ESRL_NOAA.txt",
+    "QBO": "QBO_1979_2012_CPC_NOAA.txt",
     "CAR": "CAR_1951_2010_ESRL_NOAA.txt",
     "AREA_WHWP": "AREA_WHWP_1948_2012_ESRL_NOAA.txt"
 }
