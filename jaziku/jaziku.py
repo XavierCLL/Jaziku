@@ -145,7 +145,7 @@ def main():
             = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Data_Analysis'))   # 'results'
 
         print _("Saving the result for data analysis in:")
-        print "   " + colored.cyan(globals_vars.data_analysis_dir)
+        print "   " + colored.cyan(os.path.relpath(globals_vars.data_analysis_dir, os.path.abspath(os.path.dirname(globals_vars.ARGS.runfile))))
 
         if os.path.isdir(globals_vars.data_analysis_dir):
             console.msg(
@@ -178,7 +178,7 @@ def main():
             = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Climate'))   # 'results'
 
         print _("Saving the result for climate in:")
-        print "   " + colored.cyan(globals_vars.climate_dir)
+        print "   " + colored.cyan(os.path.relpath(globals_vars.climate_dir, os.path.abspath(os.path.dirname(globals_vars.ARGS.runfile))))
 
         if os.path.isdir(globals_vars.climate_dir):
             console.msg(
@@ -192,8 +192,8 @@ def main():
         globals_vars.forecasting_dir \
             = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Forecasting'))   # 'results'
 
-        print _("\nSaving the result for forecasting in:").format(globals_vars.forecasting_dir)
-        print "   " + colored.cyan(globals_vars.forecasting_dir)
+        print _("\nSaving the result for forecasting in:")
+        print "   " + colored.cyan(os.path.relpath(globals_vars.forecasting_dir, os.path.abspath(os.path.dirname(globals_vars.ARGS.runfile))))
 
         if os.path.isdir(globals_vars.forecasting_dir):
             console.msg(
