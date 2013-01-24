@@ -47,7 +47,7 @@ def pre_process():
         = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Climate'))   # 'results'
 
     print _("Saving the result for climate in:")
-    print "   " + colored.cyan(globals_vars.CLIMATE_DIR)
+    print "   " + colored.cyan(os.path.relpath(globals_vars.CLIMATE_DIR, os.path.abspath(os.path.dirname(globals_vars.ARGS.runfile))))
 
     if os.path.isdir(globals_vars.CLIMATE_DIR):
         console.msg(
