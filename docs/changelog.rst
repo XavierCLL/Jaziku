@@ -4,7 +4,7 @@
 Changelog
 =========
 
-0.5.2 (**2013-01-xx**)
+0.5.2 (**2013-01-24**)
 ----------------------
 
 news
@@ -22,7 +22,7 @@ news
   updated the remaining series
 - (Temporally until version 0.7) disable MEI series
 - Special case when var_I is ONI1, ONI2 or CAR, don't calculate trimesters
-  because the ONI series was calculated by trimesters from original source
+  because the ONI and CAR series was calculated by trimesters from original source
 - New multiyears climatology tables for monthly and/or N days
 
 fixes

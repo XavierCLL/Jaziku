@@ -79,6 +79,9 @@ class Variable():
                 else:
                     self.file_path = os.path.abspath(file)
 
+        # relative path to file
+        self.file_relpath = os.path.relpath(file, os.path.abspath(os.path.dirname(globals_vars.ARGS.runfile)))
+
 
     def read_data_from_file(self, station, process=True, messages=True):
         """
