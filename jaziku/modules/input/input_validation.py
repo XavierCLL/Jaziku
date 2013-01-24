@@ -331,7 +331,7 @@ def validation_var_D(type_var_D, var_D, date_D, frequency_data_of_var_D):
 # Anomaly sea surface temperature----ASST4         anomaly           -3 to 3
 # Anomaly sea surface temperature----ASST34        anomaly          -10 to 10
 # % Amazon relative humidity----------ARH             %              -100 to 100
-# quasibienal oscillation index-------QBO           Km/h            -59.1 to 33.24
+# quasibienal oscillation index-------QBO           m/s            -59.1 to 33.24
 # North atlantic oscillation index----NAO         anomaly           -6.36 to 6.08
 # Caribbean (CAR) Index------------CAR         °C               -1.3 to 1.3
 # Monthly anomaly of the
@@ -652,15 +652,15 @@ def validation_var_I(type_var_I, var_I):
     # validation for quasibienal oscillation index
     def if_var_I_is_QBO():
         # default values
-        limit_below = -43
-        limit_above = 28
+        limit_below = -40
+        limit_above = 40
         # if one of limits was defined as particular range
         if globals_vars.config_run['limit_var_I_below'] not in ["default", None]:
             limit_below = globals_vars.config_run['limit_var_I_below']
         if globals_vars.config_run['limit_var_I_above'] not in ["default", None]:
             limit_above = globals_vars.config_run['limit_var_I_above']
 
-        if (-59.1 <= var_I <= 33.24):
+        if (limit_below <= var_I <= limit_above):
             return var_I
         else:
             returnError(_("Quasibienal Oscillation Index not valid"), limit_below, limit_above)

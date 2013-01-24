@@ -271,7 +271,7 @@ def get_thresholds_var_I(station):
 
         # thresholds for quasibienal oscillation index
         def if_var_I_is_QBO():
-            return -1, 1
+            return -4, 4
 
         # thresholds for North atlantic oscillation index
         def if_var_I_is_NAO():
