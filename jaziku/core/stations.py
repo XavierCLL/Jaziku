@@ -30,7 +30,7 @@ from jaziku.utils import console
 def prepare_all_stations(stations_list):
 
     print _("\n\n"
-            "################# PREPARE DATA OF ALL STATIONS #################\n")
+            "##################### PREPARE ALL STATIONS #####################\n")
 
     # Read vars
     console.msg(_("Reading var D and var I of all stations ................. "), newline=False)

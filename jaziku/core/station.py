@@ -22,7 +22,6 @@ from datetime import date
 
 from jaziku.env import globals_vars, config_run
 from jaziku.utils import  console
-from jaziku.core.input.input_check import check_consistent_data
 from jaziku.modules.climate import climate
 from jaziku.modules.forecast import forecast
 from jaziku.core.variable import Variable
@@ -60,7 +59,7 @@ class Station(object):
             STATION.process_period {'start','end'}
         """
 
-        # interceptions values of date_D and date_I (python set functions wuau!!)
+        # interceptions values of date_D and date_I (with python set functions wuau!!)
         common_date = list(set(self.var_D.date) & set(self.var_I.date))
         # sort common date
         common_date.sort()
@@ -100,8 +99,6 @@ class Station(object):
         # calculate the process period
         self.process_period = {'start': self.common_period[0][0].year + 1,
                                'end': self.common_period[-1][0].year - 1}
-
-# get_state_of_data() :TODO: delete all instances
 
 
     def process(self):

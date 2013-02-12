@@ -35,7 +35,8 @@ from calendar import monthrange
 from jaziku.env import globals_vars, config_run
 from jaziku.core.station import Station
 from jaziku.core.variable import Variable
-from jaziku.core.analysis_interval import get_values_in_range_analysis_interval, locate_day_in_analysis_interval, get_range_analysis_interval
+from jaziku.core.analysis_interval import get_values_in_range_analysis_interval, locate_day_in_analysis_interval, \
+    get_range_analysis_interval, get_state_of_data, set_global_state_of_data
 from jaziku.modules.climate import lags
 from jaziku.modules.climate.contingency_table import get_category_of_phenomenon
 from jaziku.modules.climate.lags import  calculate_lags
@@ -1247,10 +1248,14 @@ def outliers(stations_list):
 
         # prepare data if:
         if station.var_D.frequency_data == "monthly" and station.var_I.frequency_data == "daily":
+            # TODO: move this in prepare_all_stations or use station_copy
             station = copy.deepcopy(station)
             station.var_I.daily2monthly()
             station.var_I.frequency_data = "monthly"
             station.var_I.data_and_null_in_process_period(station)
+
+            # temporally change global STATE_OF_DATA
+            globals_vars.STATE_OF_DATA = get_state_of_data(station)
 
         # special cases with analysis_interval equal to trimester
         if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "daily" and \
@@ -1264,8 +1269,8 @@ def outliers(stations_list):
                 station_copy.var_I.frequency_data = "monthly"
                 station_copy.var_I.data_and_null_in_process_period(station)
 
-                station_copy.get_state_of_data()
-                calculate_lags(station_copy, makes_files=False)
+                # temporally change global STATE_OF_DATA
+                globals_vars.STATE_OF_DATA = get_state_of_data(station_copy)
         elif station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "monthly" and\
            config_run.settings['analysis_interval'] == "trimester":
             station_copy = copy.deepcopy(station)
@@ -1273,11 +1278,10 @@ def outliers(stations_list):
             station_copy.var_D.frequency_data = "monthly"
             station_copy.var_D.data_and_null_in_process_period(station)
 
-            station_copy.get_state_of_data()
-            calculate_lags(station_copy, makes_files=False)
-        else:
-            station.get_state_of_data()
-            calculate_lags(station, makes_files=False)
+            # temporally change global STATE_OF_DATA
+            globals_vars.STATE_OF_DATA = get_state_of_data(station_copy)
+
+        calculate_lags(station, makes_files=False)
 
         outliers_list = []
 
@@ -1479,3 +1483,7 @@ def outliers(stations_list):
 
     open_file_D.close()
     del csv_file_D
+
+    # return to original global STATE_OF_DATA variable
+    globals_vars.STATE_OF_DATA = None
+    set_global_state_of_data(stations_list)

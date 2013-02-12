@@ -49,7 +49,7 @@ def process(station):
     """
 
     # console message
-    console.msg(_("Processing forecast ........................ "), newline=False)
+    console.msg(_("Processing forecast ........................... "), newline=False)
 
     # get and set date for calculate forecast based on this TODO: forecast_date now is static BUG: run only once
     if globals_vars.STATE_OF_DATA in [1, 3]:
