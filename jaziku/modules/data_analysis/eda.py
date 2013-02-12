@@ -48,7 +48,7 @@ def main(stations_list):
     # EXPLORATORY DATA ANALYSIS
     # -------------------------------------------------------------------------
 
-    console.msg(_("################# EXPLORATORY DATA ANALYSIS:"))
+    console.msg(_("\n################# EXPLORATORY DATA ANALYSIS:"))
 
     if not config_run.settings['graphics']:
         console.msg(_("\n > WARNING: The 'graphics' in 'output options' is disabled,\n"

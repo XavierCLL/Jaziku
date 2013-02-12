@@ -78,7 +78,7 @@ def check_consistent_data(station):
     console.msg("   {0} - {1}:".format(station.code, station.name))
 
     # var D
-    console.msg(_("      var D: {0} null of {1} ...... ").format(station.var_D.null_values_in_process_period,
+    console.msg(_("      var D: {0} null of {1} ...\t").format(station.var_D.null_values_in_process_period,
                                                           len(station.var_D.data_in_process_period)), newline=False)
     # check var D
     if  station.var_D.null_values_in_process_period / float(len(station.var_D.data_in_process_period)) >= 0.15:
@@ -86,10 +86,10 @@ def check_consistent_data(station):
                             "of values inside common period, therefore, for Jaziku\n"
                             "the data are not consistent for process."))
 
-    console.msg(_("done"), color='green')
+    console.msg(_("ok"), color='green')
 
     # var I
-    console.msg(_("      var I: {0} null of {1} ...... ").format(station.var_I.null_values_in_process_period,
+    console.msg(_("      var I: {0} null of {1} ...\t").format(station.var_I.null_values_in_process_period,
         len(station.var_I.data_in_process_period)), newline=False)
     # check var I
     if  station.var_I.null_values_in_process_period / float(len(station.var_I.data_in_process_period)) >= 0.15:
@@ -97,4 +97,4 @@ def check_consistent_data(station):
                             "of values inside common period, therefore, for Jaziku\n"
                             "the data are not consistent for process."))
 
-    console.msg(_("done"), color='green')
+    console.msg(_("ok"), color='green')
