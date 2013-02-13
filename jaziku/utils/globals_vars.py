@@ -29,9 +29,9 @@ from math import isnan
 
 PROG_NAME = "jaziku"
 
-VERSION = "0.5.2"
+VERSION = "0.5.2a"
 
-VERSION_DATE = "24/01/2013"
+VERSION_DATE = "13/02/2013"
 
 # absolute directory where is installed Jaziku in your system,
 # this variable is set in jaziku.py
