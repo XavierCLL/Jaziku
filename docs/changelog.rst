@@ -4,6 +4,15 @@
 Changelog
 =========
 
+0.5.2a (**2013-02-13**)
+----------------------
+
+fixes
++++++
+
+- Fix bug: enable "shape_boundary" option. Bug description: when "shape_boundary"
+  option is enable the maps aren't cutting data outside of shape in mesh data.
+
 0.5.2 (**2013-01-24**)
 ----------------------
 
