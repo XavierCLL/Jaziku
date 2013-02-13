@@ -92,6 +92,38 @@ def check_analysis_interval():
                             "in this case, as 'trimester' or use data daily.").format(
             config_run.settings['analysis_interval']))
 
+def adjust_data_of_variables(stations_list):
+
+    if globals_vars.STATE_OF_DATA == 3:
+        console.msg(_("   Converting var I of all stations to data monthly ..... "), color='cyan', newline=False)
+        for station in stations_list:
+            station.var_I.daily2monthly()
+            station.var_I.frequency_data = "monthly"
+
+        # recalculate global STATE_OF_DATA
+        globals_vars.STATE_OF_DATA = None
+        set_global_state_of_data(stations_list)
+        console.msg(_("done"), color='green')
+
+    if globals_vars.STATE_OF_DATA in [2, 4]:
+        # if analysis_interval is defined by trimester but var_I or/and var_D has data
+        # daily, first convert in data monthly and continue with results by trimester
+        if config_run.settings['analysis_interval'] == "trimester":
+            console.msg(_("   Converting var D of all stations to data monthly ..... "), color='cyan', newline=False)
+            for station in stations_list:
+                station.var_D.daily2monthly()
+                station.var_D.frequency_data = "monthly"
+            console.msg(_("done"), color='green')
+            if globals_vars.STATE_OF_DATA == 4:
+                console.msg(_("   Converting var I of all stations to data monthly ..... "), color='cyan', newline=False)
+                for station in stations_list:
+                    station.var_I.daily2monthly()
+                    station.var_I.frequency_data = "monthly"
+                console.msg(_("done"), color='green')
+
+            # recalculate global STATE_OF_DATA
+            globals_vars.STATE_OF_DATA = None
+            set_global_state_of_data(stations_list)
 
 def locate_day_in_analysis_interval(day_for_locate):
     """

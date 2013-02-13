@@ -174,8 +174,15 @@ def main():
             station.var_D.read_data_from_file(station, process=False, messages=True)
             station.var_I.read_data_from_file(station, process=False, messages=True)
 
-            # process climate and forecast for this station
-            station.process()
+            ## process climate and forecast for this station
+            # run climate process
+            if config_run.settings['climate_process']:
+                climate.process(station)
+
+            # run forecast process
+            if config_run.settings['forecast_process']:
+                # TODO: run forecast without climate¿?
+                forecast.process(station)
 
         console.msg(gettext.ngettext(
                     _("\n{0} station processed."),

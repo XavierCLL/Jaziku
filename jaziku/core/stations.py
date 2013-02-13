@@ -20,7 +20,7 @@
 
 import gettext
 
-from jaziku.env import config_run
+from jaziku.env import config_run, globals_vars
 from jaziku.core import analysis_interval
 from jaziku.core.station import Station
 from jaziku.core.input import input_check
@@ -74,6 +74,12 @@ def prepare_all_stations(stations_list):
     console.msg(_("Check analysis interval ................................. "), newline=False)
     analysis_interval.check_analysis_interval()
     console.msg(_("done"), color='green')
+
+    # when var D is monthly and var I is daily, only can process with data monthly,
+    # then, Jaziku need convert var I of all stations to data monthly
+    console.msg(_("Adjust data of all variables if is needed:"))
+    analysis_interval.adjust_data_of_variables(stations_list)
+    console.msg(_("   ok"), color='green')
 
     console.msg('')
     console.msg(gettext.ngettext(

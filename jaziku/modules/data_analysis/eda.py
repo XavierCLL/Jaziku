@@ -1246,17 +1246,6 @@ def outliers(stations_list):
         outliers_station['whiskers_below'] = boxplot_station['whiskers'][0].get_data()[1][1]
         outliers_station['whiskers_above'] = boxplot_station['whiskers'][1].get_data()[1][1]
 
-        # prepare data if:
-        if station.var_D.frequency_data == "monthly" and station.var_I.frequency_data == "daily":
-            # TODO: move this in prepare_all_stations or use station_copy
-            station = copy.deepcopy(station)
-            station.var_I.daily2monthly()
-            station.var_I.frequency_data = "monthly"
-            station.var_I.data_and_null_in_process_period(station)
-
-            # temporally change global STATE_OF_DATA
-            globals_vars.STATE_OF_DATA = get_state_of_data(station)
-
         # special cases with analysis_interval equal to trimester
         if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "daily" and \
            config_run.settings['analysis_interval'] == "trimester":
