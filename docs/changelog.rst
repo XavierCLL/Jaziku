@@ -4,11 +4,13 @@
 Changelog
 =========
 
+
 0.6.0 (**2013-02-xx**)
 ----------------------
 
 news
 ++++
+
 - Make function that adjust data of all variables if is needed and check
   and convert variables in prepare data function (before run anything)
   (ATTENTION: this change modify several results mainly in EDA module)
@@ -23,6 +25,16 @@ news
 
 fixes
 +++++
+
+
+0.5.2a (**2013-02-13**)
+-----------------------
+
+fixes
++++++
+
+- Fix bug: enable "shape_boundary" option. Bug description: when "shape_boundary"
+  option is enable the maps aren't cutting data outside of shape in mesh data.
 
 
 0.5.2 (**2013-01-24**)
@@ -64,6 +76,7 @@ fixes
 - Fixes for 'special case' in categorize the outliers and calculate lags
 - Fixes when use particular value in thresholds for var D or I
 - Apply special case when are calculating the contingency table
+
 
 0.5.1 (**2012-12-05**)
 ----------------------
@@ -195,6 +208,7 @@ fixes
 - fix when cheking the numbers of parameters of stations list in runfile
 - other minor bugfixes
 
+
 0.4.1 (**2012-08-13**)
 ----------------------
 
@@ -227,6 +241,7 @@ fixes
 - fixes typos in messages warnings
 - fix translations in some string
 
+
 0.4.0 (**2012-06-29**)
 ----------------------
 
@@ -258,6 +273,7 @@ fixes
 
 - many fixies and comprobations of all features and changes
 - (especifig bug that affect 0.3 version) bug translation in phenomenon label
+
 
 0.3.0 (**2012-05-22**)
 ----------------------
@@ -302,6 +318,7 @@ fixes
 - fixed calculating pearson for data daily
 - fixed table order for calculate forecasting
   
+
 0.2.1 (**2012-03-24**)
 ----------------------
 
@@ -335,6 +352,7 @@ fixes
 - fix memory leak using pyplot library   
 - fix several strings messages, correct to translate after install, translation
   works now.
+
 
 0.1.0 initial version (**2011-11-03**)
 --------------------------------
