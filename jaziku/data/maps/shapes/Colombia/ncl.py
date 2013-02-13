@@ -405,10 +405,15 @@ begin
   res@lbLabelAutoStride           =   True
   ;res@cnLabelBarEndStyle          = "IncludeMinMaxLabels"
 
-  res@sfXArray                    = lon
-  res@sfYArray                    = lat
+  if(ENABLE_MASK) then
+    data_mask = shape_mask(lat, lon, idx)
+    contour = gsn_csm_contour(wks,data_mask,res)
+  else
+    res@sfXArray                    = lon
+    res@sfYArray                    = lat
+    contour = gsn_csm_contour(wks,idx,res)
+  end if
 
-  contour = gsn_csm_contour(wks,idx,res)
   overlay(map,contour)
   map = draw_outlines(wks, map, "{shape}")
 
