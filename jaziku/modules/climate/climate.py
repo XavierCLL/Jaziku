@@ -68,6 +68,24 @@ def process(station):
     possible categories of the independent variable.
     """
 
+    # restore threshold problem values
+    globals_vars.threshold_problem = [False, False, False]
+
+    # -------------------------------------------------------------------------
+    # inform some characteristic to process
+
+    # define if results will made by trimester or every n days
+    if globals_vars.STATE_OF_DATA in [1, 3] or config_run.settings['analysis_interval'] == "trimester":
+        console.msg(_("Results will be made by trimesters"), color='cyan')
+    else:
+        console.msg(_("Results will be made every {} days").format(globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL), color='cyan')
+
+    # inform the period to process
+    console.msg(_("Period to process: {0}-{1}").format(station.process_period['start'], station.process_period['end']), color='cyan')
+
+    # -------------------------------------------------------------------------
+    # prepare files
+
     # console message
     console.msg(_("Processing climate ............................ "), newline=False)
 
@@ -79,6 +97,9 @@ def process(station):
         = os.path.join(globals_vars.CLIMATE_DIR, _('stations'), station.code + '_' + station.name)   # 'results'
     if not os.path.isdir(station.climate_dir):
         os.makedirs(station.climate_dir)
+
+    # -------------------------------------------------------------------------
+    # process
 
     calculate_lags(station)
 

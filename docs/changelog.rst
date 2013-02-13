@@ -9,7 +9,9 @@ Changelog
 
 news
 ++++
-
+- Make function that adjust data of all variables if is needed and check
+  and convert variables in prepare data function (before run anything)
+  (ATTENTION: this change modify several results mainly in EDA module)
 - Replace 'forecasting' to 'forecast' string in code and in results
 - [code] Refactoring config_run, this is where save all variable
   of configuration run settings
