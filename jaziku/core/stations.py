@@ -57,14 +57,6 @@ def prepare_all_stations(stations_list):
         for station in stations_list:
             input_check.check_consistent_data(station)
 
-    # statistics for data analysis
-    if config_run.settings['data_analysis']:
-        console.msg(_("Statistics of data for data analysis module ............. "), newline=False)
-        for station in stations_list:
-            station.var_D.do_some_statistic_of_data()
-            station.var_I.do_some_statistic_of_data()
-        console.msg(_("done"), color='green')
-
     # state of data
     console.msg(_("Set global state of data ................................ "), newline=False)
     analysis_interval.set_global_state_of_data(stations_list)
@@ -78,8 +70,31 @@ def prepare_all_stations(stations_list):
     # when var D is monthly and var I is daily, only can process with data monthly,
     # then, Jaziku need convert var I of all stations to data monthly
     console.msg(_("Adjust data of all variables if is needed:"))
-    analysis_interval.adjust_data_of_variables(stations_list)
-    console.msg(_("   ok"), color='green')
+    is_data_adjusted = analysis_interval.adjust_data_of_variables(stations_list)
+    if not is_data_adjusted:
+        console.msg(_("   data not need to be adjusted"), color='cyan')
+
+    if is_data_adjusted:
+        # common and process period
+        console.msg(_("Re-calculate common and process period for each stations  "), newline=False)
+        for station in stations_list:
+            station.calculate_common_and_process_period()
+        console.msg(_("done"), color='green')
+
+        # data, date and null
+        console.msg(_("Re-prepare data, date and null in process period ........ "), newline=False)
+        for station in stations_list:
+            station.var_D.data_and_null_in_process_period(station)
+            station.var_I.data_and_null_in_process_period(station)
+        console.msg(_("done"), color='green')
+
+    # statistics for data analysis
+    if config_run.settings['data_analysis']:
+        console.msg(_("Statistics of data for data analysis module ............. "), newline=False)
+        for station in stations_list:
+            station.var_D.do_some_statistic_of_data()
+            station.var_I.do_some_statistic_of_data()
+        console.msg(_("done"), color='green')
 
     console.msg('')
     console.msg(gettext.ngettext(

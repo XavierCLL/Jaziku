@@ -105,6 +105,8 @@ def adjust_data_of_variables(stations_list):
         set_global_state_of_data(stations_list)
         console.msg(_("done"), color='green')
 
+        return True
+
     if globals_vars.STATE_OF_DATA in [2, 4]:
         # if analysis_interval is defined by trimester but var_I or/and var_D has data
         # daily, first convert in data monthly and continue with results by trimester
@@ -124,6 +126,10 @@ def adjust_data_of_variables(stations_list):
             # recalculate global STATE_OF_DATA
             globals_vars.STATE_OF_DATA = None
             set_global_state_of_data(stations_list)
+
+            return True
+
+    return False
 
 def locate_day_in_analysis_interval(day_for_locate):
     """
