@@ -21,6 +21,7 @@
 import os
 import sys
 from clint.textui import colored
+from jaziku.core import analysis_interval
 
 from jaziku.env import globals_vars, config_run
 from jaziku.utils import  console
@@ -555,7 +556,7 @@ def check():
                   "type of independent variable not is valid internal type."))
 
     # -------------------------------------------------------------------------
-    # check the 9 forecast values
+    # check the 9 forecast values and forecast date
 
     # if forecast_process is activated
     if config_run.settings['forecast_process']:
@@ -585,6 +586,62 @@ def check():
             console.msg_error_configuration('lag_2_phen',
                 _("The sum for the 3 values of phenomenon for lag 2\n"
                   "in 'forecast options' in runfile must be\nequal to 100."))
+
+        # forecast date
+        try:
+            if isinstance(config_run.settings['forecast_date'], list):
+                config_run.settings['forecast_date'][0] = int(config_run.settings['forecast_date'][0])
+                forecast_month = config_run.settings['forecast_date'][0]
+            else:
+                config_run.settings['forecast_date'] = int(config_run.settings['forecast_date'])
+                forecast_month = config_run.settings['forecast_date']
+        except:
+            console.msg_error_configuration('forecast_date',
+                                            _("The month for forecast '{0}' is invalid, "
+                                              "must be a integer: month or month;day")
+                                            .format(config_run.settings['forecast_date']))
+
+        if not (1 <= forecast_month <= 12):
+            console.msg_error_configuration('forecast_date',
+                                            _("The month for forecast '{0}' is invalid, "
+                                              "must be a valid month number (1-12)")
+                                            .format(forecast_month))
+
+        if isinstance(config_run.settings['forecast_date'], list):
+            if not isinstance(config_run.settings['forecast_date'][1], (float, int)):
+                console.msg_error_configuration('forecast_date',
+                                                _("The day for forecast process '{0}' is invalid, \n"
+                                                  "must be a valid day number (1-31)")
+                                                .format(config_run.settings['forecast_date'][1]))
+            if not (1 <= config_run.settings['forecast_date'][1] <= 31):
+                console.msg_error_configuration('forecast_date',
+                                                _("The day for forecast process '{0}' is invalid, \n"
+                                                  "must be a valid day number (1-31)")
+                                                .format(config_run.settings['forecast_date'][1]))
+
+            forecast_day = int(config_run.settings['forecast_date'][1])
+            config_run.settings['forecast_date'] = {'month':forecast_month,'day':forecast_day}
+
+            if config_run.settings['forecast_date']['day'] not in analysis_interval.get_range_analysis_interval():
+                console.msg_error_configuration('forecast_date',
+                                                _("Start day (month/day) for forecast process '{0}'\nis invalid, "
+                                                  "must be a valid start day based on\nrange analysis "
+                                                  "interval, the valid start days for\n{1} are: {2}")
+                                                .format(config_run.settings['forecast_date']['day'],
+                                                        globals_vars.analysis_interval_i18n,
+                                                        analysis_interval.get_range_analysis_interval()))
+
+            config_run.settings['forecast_date']['text'] \
+                = globals_vars.get_month_in_text(config_run.settings['forecast_date']['month']-1) \
+                + ' ' + str(config_run.settings['forecast_date']['day'])
+
+        else:
+            config_run.settings['forecast_date'] = {'month':forecast_month}
+
+            config_run.settings['forecast_date']['text'] \
+                = globals_vars.get_month_in_text(config_run.settings['forecast_date']['month']-1)
+
+        globals_vars.input_settings["forecast_date"] = colored.green(config_run.settings['forecast_date']['text'])
 
 
 def check_station_list(stations_list):
