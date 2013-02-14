@@ -11,6 +11,8 @@ Changelog
 news
 ++++
 
+- Fixes input, check and format for 'forecast_date' option, now new input
+  format: month or month;day in runfile.
 - Make function that adjust data of all variables if is needed and check
   and convert variables in prepare data function (before run anything)
   (ATTENTION: this change modify several results mainly in EDA module)
@@ -22,6 +24,7 @@ news
 - [code] Moved principal code files into 'core' directory
 - [code] Moved some variables of globals_vars to config_run.settings
 - [code] Check and prepare all stations before run any modules
+- [code] More reused code in input_runfile with new functions
 
 fixes
 +++++

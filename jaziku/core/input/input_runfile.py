@@ -27,6 +27,19 @@ from jaziku.modules.maps.grid import Grid
 from jaziku.utils import  console
 
 
+def get_float(item):
+    try:
+        return float(str(item.replace(',', '.')).replace(',', '.'))
+    except:
+        return item
+
+def get_integer(item):
+    try:
+        return int(str(item.replace(',', '.')).replace(',', '.'))
+    except:
+        return item
+
+
 def read_runfile():
     """
     Read all settings and all stations from runfile
@@ -89,10 +102,13 @@ def read_runfile():
                 elif line_in_run_file[1] == "enable":
                     config_run.settings[line_in_run_file[0]] = True
                 else:
-                    try:
-                        config_run.settings[line_in_run_file[0]] = float(str(line_in_run_file[1].replace(',', '.')).replace(',', '.'))
-                    except:
-                        config_run.settings[line_in_run_file[0]] = line_in_run_file[1]
+                    if len(line_in_run_file) == 2:
+                        try:
+                            config_run.settings[line_in_run_file[0]] = get_float(line_in_run_file[1])
+                        except:
+                            config_run.settings[line_in_run_file[0]] = line_in_run_file[1]
+                    else: # >2
+                        config_run.settings[line_in_run_file[0]] = [get_float(item) for item in line_in_run_file[1::]]
             else:
                 if line_in_run_file[1] == "GRIDS LIST":
                     in_config_run = False
@@ -119,13 +135,13 @@ def read_runfile():
                     setattr(Grid.all_grids[-1], line_in_run_file[0], None)
                 if len(line_in_run_file) == 2:
                     try:
-                        setattr(Grid.all_grids[-1], line_in_run_file[0], float(line_in_run_file[1].replace(',', '.')))
+                        setattr(Grid.all_grids[-1], line_in_run_file[0], get_float(line_in_run_file[1]))
                     except:
                         setattr(Grid.all_grids[-1], line_in_run_file[0], line_in_run_file[1])
                 if len(line_in_run_file) == 3:
                     try:
-                        setattr(Grid.all_grids[-1], line_in_run_file[0], [float(line_in_run_file[1].replace(',', '.')),
-                                                                          float(line_in_run_file[2].replace(',', '.'))])
+                        setattr(Grid.all_grids[-1], line_in_run_file[0], [get_float(line_in_run_file[1]),
+                                                                          get_float(line_in_run_file[2])])
                     except:
                         setattr(Grid.all_grids[-1], line_in_run_file[0], [line_in_run_file[1], line_in_run_file[2]])
             else:
@@ -157,20 +173,19 @@ def read_runfile():
     if config_run.settings['forecast_process']:
         try:
 
-            globals_vars.forecast_phen_below = [float(str(config_run.settings['lag_0_phen_below']).replace(',', '.')),
-                                                   float(str(config_run.settings['lag_1_phen_below']).replace(',', '.')),
-                                                   float(str(config_run.settings['lag_2_phen_below']).replace(',', '.'))]
-            globals_vars.forecast_phen_normal = [float(str(config_run.settings['lag_0_phen_normal']).replace(',', '.')),
-                                                    float(str(config_run.settings['lag_1_phen_normal']).replace(',', '.')),
-                                                    float(str(config_run.settings['lag_2_phen_normal']).replace(',', '.'))]
-            globals_vars.forecast_phen_above = [float(str(config_run.settings['lag_0_phen_above']).replace(',', '.')),
-                                                   float(str(config_run.settings['lag_1_phen_above']).replace(',', '.')),
-                                                   float(str(config_run.settings['lag_2_phen_above']).replace(',', '.'))]
+            globals_vars.forecast_phen_below = [get_float(config_run.settings['lag_0_phen_below']),
+                                                get_float(config_run.settings['lag_1_phen_below']),
+                                                get_float(config_run.settings['lag_2_phen_below'])]
+            globals_vars.forecast_phen_normal = [get_float(config_run.settings['lag_0_phen_normal']),
+                                                 get_float(config_run.settings['lag_1_phen_normal']),
+                                                 get_float(config_run.settings['lag_2_phen_normal'])]
+            globals_vars.forecast_phen_above = [get_float(config_run.settings['lag_0_phen_above']),
+                                                get_float(config_run.settings['lag_1_phen_above']),
+                                                get_float(config_run.settings['lag_2_phen_above'])]
         except:
             console.msg_error(_("Problems with the 9 probability values for forecast process\n"
                                 "defined in runfile, these must be a numbers, please check it."), False)
 
-        config_run.settings['forecast_date'] = config_run.settings['forecast_date']
 
     # if path_to_file_var_I is relative convert to absolute, except if is 'internal'
     if not os.path.isabs(config_run.settings["path_to_file_var_I"]) and\

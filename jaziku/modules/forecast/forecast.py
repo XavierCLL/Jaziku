@@ -49,41 +49,11 @@ def process(station):
     """
 
     # console message
-    console.msg(_("Processing forecast ........................... "), newline=False)
+    console.msg(_("Processing forecast:"))
 
-    # get and set date for calculate forecast based on this TODO: forecast_date now is static BUG: run only once
-    if globals_vars.STATE_OF_DATA in [1, 3]:
-        try:
-            config_run.settings['forecast_date'] = int(config_run.settings['forecast_date'])
-        finally:
-            if not (1 <= config_run.settings['forecast_date'] <= 12):
-                console.msg_error_configuration('forecast_date',
-                    _("Trimester forecast '{0}' is invalid, "
-                      "must be a month valid number (1-12)")
-                    .format(config_run.settings['forecast_date']), show_settings=False)
-    if globals_vars.STATE_OF_DATA in [2, 4]:
-        try:
-            config_run.settings['forecast_date'] = config_run.settings['forecast_date'].replace('-', '/')
-            config_run.settings['forecast_date'] = config_run.settings['forecast_date'].split('/')
-            config_run.settings['forecast_date'][0] = int(config_run.settings['forecast_date'][0])
-            config_run.settings['forecast_date'][1] = int(config_run.settings['forecast_date'][1])
-        except:
-            console.msg_error_configuration('forecast_date',
-                _("Month or day for calculate forecast '{0}' is invalid, \n"
-                  "must be month/day or month-day (e.g. 03/11)")
-                .format(config_run.settings['forecast_date']), show_settings=False)
-        if not (1 <= config_run.settings['forecast_date'][0] <= 12):
-            console.msg_error_configuration('forecast_date',
-                _("Month for forecast process '{0}' is invalid, \n"
-                  "must be a month valid number (1-12)")
-                .format(config_run.settings['forecast_date'][0]), show_settings=False)
-        if config_run.settings['forecast_date'][1] not in station.range_analysis_interval:
-            console.msg_error_configuration('forecast_date',
-                _("Start day (month/day) for forecast process '{0}'\nis invalid, "
-                  "must be a valid start day based on\nrange analysis "
-                  "interval, the valid start days for\n{1} are: {2}")
-                .format(config_run.settings['forecast_date'][1], globals_vars.analysis_interval_i18n,
-                    station.range_analysis_interval), show_settings=False)
+    console.msg(_("   making forecast for date: ")+config_run.settings['forecast_date']['text'], color="cyan", newline=False)
+
+    # TODO: replace all instances of station.range_analysis_interval
 
     # create directory for output files
     if not os.path.isdir(globals_vars.FORECAST_DIR):
@@ -107,14 +77,14 @@ def process(station):
             for column in range(3):
                 for row in range(3):
                     if not config_run.settings['risk_analysis'] or\
-                       station.is_sig_risk_analysis[lag][config_run.settings['forecast_date'] - 1][_iter] == _('yes'):
+                       station.is_sig_risk_analysis[lag][config_run.settings['forecast_date']['month'] - 1][_iter] == _('yes'):
                         items_CT[order_CT[_iter]] \
-                            = station.contingencies_tables_percent[lag][config_run.settings['forecast_date'] - 1][column][row] / 100.0
+                            = station.contingencies_tables_percent[lag][config_run.settings['forecast_date']['month'] - 1][column][row] / 100.0
                         _iter += 1
 
         if globals_vars.STATE_OF_DATA in [2, 4]:
-            month = config_run.settings['forecast_date'][0]
-            day = station.range_analysis_interval.index(config_run.settings['forecast_date'][1])
+            month = config_run.settings['forecast_date']['month']
+            day = station.range_analysis_interval.index(config_run.settings['forecast_date']['day'])
             _iter = 0
             for column in range(3):
                 for row in range(3):
