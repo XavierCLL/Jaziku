@@ -21,9 +21,9 @@
 import os
 import sys
 from clint.textui import colored
-from jaziku.core import analysis_interval
 
 from jaziku.env import globals_vars, config_run
+from jaziku.core import analysis_interval
 from jaziku.utils import  console
 
 

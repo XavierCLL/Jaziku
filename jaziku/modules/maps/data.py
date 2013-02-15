@@ -202,9 +202,8 @@ def forecast_data_for_maps(station):
     if globals_vars.STATE_OF_DATA in [1, 3]:
         forecast_date_formatted = globals_vars.get_trimester_in_text(config_run.settings['forecast_date']['month'] - 1)
     if globals_vars.STATE_OF_DATA in [2, 4]:
-        month = config_run.settings['forecast_date']['month']
-        day = config_run.settings['forecast_date']['day']
-        forecast_date_formatted = globals_vars.get_month_in_text(month - 1) + "_" + str(day)
+        forecast_date_formatted = globals_vars.get_month_in_text(config_run.settings['forecast_date']['month'] - 1) \
+                                  + "_" + str(config_run.settings['forecast_date']['day'])
 
     if forecast_date_formatted not in globals_vars.maps_files_forecast[config_run.settings['analysis_interval']]:
 
