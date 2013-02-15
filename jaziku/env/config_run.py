@@ -157,7 +157,7 @@ list_of_all_settings = [
     'lag_2_phen_above',
 
     # date for forecast
-    #   values: int (month) or [ int (month), int (year) ]
+    #   values: {'month': int, 'day': int, 'text':str} or {'month': int, 'text':str}
     'forecast_date',
 
     # defined, after read runfile configuration, what run

@@ -41,16 +41,17 @@ def forecast_graphs(station):
     for lag in config_run.settings['lags']:
 
         if globals_vars.STATE_OF_DATA in [1, 3]:
-            forecast_month = config_run.settings['forecast_date']['month']
-            title_date_graphic = _("trim {0} ({1})").format(forecast_month,
-                globals_vars.get_trimester_in_text(forecast_month - 1))
-            filename_date_graphic = _("trim_{0}").format(forecast_month)
+            title_date_graphic = _("trim {0} ({1})").format(config_run.settings['forecast_date']['month'],
+                globals_vars.get_trimester_in_text(config_run.settings['forecast_date']['month'] - 1))
+            filename_date_graphic = _("trim_{0}").format(config_run.settings['forecast_date']['month'])
 
         if globals_vars.STATE_OF_DATA in [2, 4]:
-            forecast_month = config_run.settings['forecast_date']['month']
-            forecast_day = config_run.settings['forecast_date']['day']
-            title_date_graphic = "{0} {1}".format(globals_vars.get_month_in_text(forecast_month - 1), forecast_day)
-            filename_date_graphic = "{0}_{1}".format(globals_vars.get_month_in_text(forecast_month - 1), forecast_day)
+            title_date_graphic = "{0} {1}"\
+                .format(globals_vars.get_month_in_text(config_run.settings['forecast_date']['month'] - 1),
+                        config_run.settings['forecast_date']['day'])
+            filename_date_graphic = "{0}_{1}"\
+                .format(globals_vars.get_month_in_text(config_run.settings['forecast_date']['month'] - 1),
+                        config_run.settings['forecast_date']['day'])
 
         ## Options for graphics pie
         # make a square figure and axes
