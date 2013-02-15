@@ -97,7 +97,7 @@ def climate_data_for_maps(station):
                             csv_name \
                                 = os.path.join(maps_data_phenom, _(u'Map_Data_lag_{0}_{1}_{2}.csv')
                                     .format(lag,
-                                            globals_vars.get_month_in_text(month - 1) + "_" + str(day),
+                                            format_out.get_month_in_text(month - 1) + "_" + str(day),
                                             phenomenon[category]))
 
                             if os.path.isfile(csv_name):
@@ -200,9 +200,9 @@ def forecast_data_for_maps(station):
 
     # select text for forecast date
     if globals_vars.STATE_OF_DATA in [1, 3]:
-        forecast_date_formatted = globals_vars.get_trimester_in_text(config_run.settings['forecast_date']['month'] - 1)
+        forecast_date_formatted = format_out.get_trimester_in_text(config_run.settings['forecast_date']['month'] - 1)
     if globals_vars.STATE_OF_DATA in [2, 4]:
-        forecast_date_formatted = globals_vars.get_month_in_text(config_run.settings['forecast_date']['month'] - 1) \
+        forecast_date_formatted = format_out.get_month_in_text(config_run.settings['forecast_date']['month'] - 1) \
                                   + "_" + str(config_run.settings['forecast_date']['day'])
 
     if forecast_date_formatted not in globals_vars.maps_files_forecast[config_run.settings['analysis_interval']]:
@@ -214,14 +214,14 @@ def forecast_data_for_maps(station):
 
                 maps_dir = os.path.join(globals_vars.FORECAST_DIR, _('maps'),
                     globals_vars.analysis_interval_i18n,
-                    globals_vars.get_trimester_in_text(config_run.settings['forecast_date']['month'] - 1))
+                    format_out.get_trimester_in_text(config_run.settings['forecast_date']['month'] - 1))
 
                 if not os.path.isdir(maps_dir):
                     os.makedirs(maps_dir)
 
                 # write the headers in file
                 csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}_{1}.csv')
-                .format(lag, globals_vars.get_trimester_in_text(config_run.settings['forecast_date']['month'] - 1)))
+                .format(lag, format_out.get_trimester_in_text(config_run.settings['forecast_date']['month'] - 1)))
 
                 if os.path.isfile(csv_name):
                     os.remove(csv_name)
