@@ -31,6 +31,9 @@ from jaziku.utils import console
 
 
 def pre_process():
+    """
+    Show message and prepare directory
+    """
 
     print _("\n\n"
             "############### CLIMATE AND FORECAST PROCESS ################\n"
