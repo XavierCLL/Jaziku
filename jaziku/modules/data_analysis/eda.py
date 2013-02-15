@@ -566,7 +566,7 @@ def graphs_inspection_of_series(stations_list):
 
 def climatology(stations_list):
     """
-    Climatology table and graphs, part of EDA.
+    Make table and graphs of climatology, part of EDA.
     """
 
     graphs_dir = os.path.join(shapiro_wilks_dir, _('Graphs_Inspection_of_Series'))

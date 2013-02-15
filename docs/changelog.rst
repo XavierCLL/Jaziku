@@ -26,9 +26,13 @@ news
 - [code] Check and prepare all stations before run any modules
 - [code] More reused code in input_runfile with new functions
 - [code] Organize get_month and get_trimester text function in format_out
+- [code] Organize thresholds functions
 
 fixes
 +++++
+
+- Change the mode to entry forecast_date in runfile, this fixed problems with
+  format entries that are auto-convert from sheets application
 
 
 0.5.2a (**2013-02-13**)
