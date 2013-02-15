@@ -25,6 +25,7 @@ news
 - [code] Moved some variables of globals_vars to config_run.settings
 - [code] Check and prepare all stations before run any modules
 - [code] More reused code in input_runfile with new functions
+- [code] Organize get_month and get_trimester text function in format_out
 
 fixes
 +++++

@@ -24,7 +24,7 @@ from clint.textui import colored
 
 from jaziku.env import globals_vars, config_run
 from jaziku.core import analysis_interval
-from jaziku.utils import  console
+from jaziku.utils import  console, format_out
 
 
 def get():
@@ -632,14 +632,14 @@ def check():
                                                         analysis_interval.get_range_analysis_interval()))
 
             config_run.settings['forecast_date']['text'] \
-                = globals_vars.get_month_in_text(config_run.settings['forecast_date']['month']-1) \
+                = format_out.get_month_in_text(config_run.settings['forecast_date']['month']-1) \
                 + ' ' + str(config_run.settings['forecast_date']['day'])
 
         else:
             config_run.settings['forecast_date'] = {'month':forecast_month}
 
             config_run.settings['forecast_date']['text'] \
-                = globals_vars.get_month_in_text(config_run.settings['forecast_date']['month']-1)
+                = format_out.get_month_in_text(config_run.settings['forecast_date']['month']-1)
 
         globals_vars.input_settings["forecast_date"] = colored.green(config_run.settings['forecast_date']['text'])
 

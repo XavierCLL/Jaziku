@@ -29,7 +29,7 @@ from matplotlib import pyplot
 from Image import open as img_open
 
 from jaziku.env import globals_vars, config_run
-from jaziku.utils import  watermarking
+from jaziku.utils import  watermarking, format_out
 from jaziku.modules.climate.contingency_table import get_contingency_table
 
 
@@ -160,7 +160,7 @@ def climate_graphs(station):
                 contingency_table_percent_print,\
                 thresholds_var_D_var_I = get_contingency_table(station, lag, month)
 
-                title_period = _("trim {0} ({1})").format(month, globals_vars.get_trimester_in_text(month - 1))
+                title_period = _("trim {0} ({1})").format(month, format_out.get_trimester_in_text(month - 1))
                 filename_period = _("trim_{0}").format(month)
                 create_chart()
 
@@ -173,8 +173,8 @@ def climate_graphs(station):
                     contingency_table_percent_print,\
                     thresholds_var_D_var_I = get_contingency_table(station, lag, month, day)
 
-                    title_period = globals_vars.get_month_in_text(month - 1) + " " + str(day)
-                    filename_period = globals_vars.get_month_in_text(month - 1) + "_" + str(day)
+                    title_period = format_out.get_month_in_text(month - 1) + " " + str(day)
+                    filename_period = format_out.get_month_in_text(month - 1) + "_" + str(day)
 
                     create_chart()
 

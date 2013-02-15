@@ -29,3 +29,23 @@ def number(num, accuracy=False):
         return str(round(float(num), accuracy)).replace('.', ',')
     else:
         return str(round(float(num), globals_vars.ACCURACY)).replace('.', ',')
+
+# trimester text for print
+def get_trimester_in_text(trimester):
+    """
+    return the three first letters of three months of trimester
+    """
+    _trim_text = {-2: _('NDJ'), -1: _('DJF'), 0: _('JFM'), 1: _('FMA'), 2: _('MAM'),
+                 3: _('AMJ'), 4: _('MJJ'), 5: _('JJA'), 6: _('JAS'), 7: _('ASO'),
+                 8: _('SON'), 9: _('OND'), 10: _('NDJ'), 11: _('DJF')}
+    return _trim_text[trimester]
+
+# month text for print
+def get_month_in_text(month):
+    """
+    return the name of month (first three letters)
+    """
+    _month_text = {-2: _('Nov'), -1: _('Dec'), 0: _('Jan'), 1: _('Feb'), 2: _('Mar'),
+                  3: _('Apr'), 4: _('May'), 5: _('Jun'), 6: _('Jul'), 7: _('Aug'),
+                  8: _('Sep'), 9: _('Oct'), 10: _('Nov'), 11: _('Dec')}
+    return _month_text[month]
