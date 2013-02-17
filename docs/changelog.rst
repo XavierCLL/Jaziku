@@ -27,6 +27,7 @@ news
 - [code] More reused code in input_runfile with new functions
 - [code] Organize get_month and get_trimester text function in format_out
 - [code] Organize thresholds functions
+- [code] Refactoring settings
 
 fixes
 +++++

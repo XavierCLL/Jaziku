@@ -44,8 +44,8 @@ from env import globals_vars, config_run
 from core import stations
 from core.input import input_runfile, input_arg
 from core.station import Station
+from core.settings import settings
 from utils import console
-from utils import settings_to_run
 from modules.climate import climate
 from modules.forecast import forecast
 from modules.data_analysis import data_analysis
@@ -120,20 +120,9 @@ def main():
     .format(globals_vars.VERSION, globals_vars.VERSION_DATE)
 
     # -------------------------------------------------------------------------
-    # GET/SET SETTINGS
+    # GET/SET AND CHECK SETTINGS TO RUN
 
-    settings_to_run.get()
-
-    # -------------------------------------------------------------------------
-    # PRINT AND CHECK SETTINGS, AND CONTINUE
-
-    settings_to_run.check()
-
-    settings_to_run.show()
-
-    settings_to_run.check_station_list(stations_list)
-
-    settings_to_run.continue_run()
+    settings.main(stations_list)
 
     # -------------------------------------------------------------------------
     # PRE-PROCESS: PREPARE DATA OF ALL STATIONS
