@@ -50,131 +50,149 @@ settings = {}
 # all settings variables
 list_of_all_settings = [
 
+    ## MODULES
+
     # enable/disable data analysis process
-    #   values: boolean
+    #   input: boolean (disable, enable)
     'data_analysis',
 
     # enable/disable climate process
-    #   values: boolean
+    #   input: boolean (disable, enable)
     'climate_process',
 
     # enable/disable forecast process
-    #   values: boolean
+    #   input: boolean (disable, enable)
     'forecast_process',
 
+    ## OUTPUTS
+
+    # do or not graphics
+    #   input: boolean (disable, enable)
+    'graphics',
+
+    # defined, after read runfile configuration, what run
+    #   input: ('climate', 'forecast', 'correlation') or combining of them
+    #   access: {'climate': boolean, 'forecast': boolean, 'correlation': boolean}
+    'maps',
+
+    ## GENERAL OPTIONS
+
     # analysis interval for process
-    #   values: "5days", "10days", "15days" or "trimester"
+    #   input/access: "5days", "10days", "15days" or "trimester"
     'analysis_interval',
 
+    # defines how many categories to process
+    #   input: int (3 or 7)
+    'class_category_analysis',
+
     # start-end period to process
+    #   input: maximum, yyyy-yyyy
     #   values: {'start': int, 'end': int}
     'process_period',
 
     # process with analog year
-    #   values: int
+    #   input: yyyy
     'analog_year',
 
     # lags for process
-    #   values: [0, 1 and/or 2]
+    #   input: 0, 1 or 2 or combining of them
     'lags',
 
     # languages
-    #   values: string (e.g 'es', 'en')
+    #   input: default, string (e.g 'es', 'en')
     'language',
 
+    ## VAR D OPTIONS
+
     # type for dependence variable
-    #   values: string
+    #   input: string
     'type_var_D',
 
-    # limit by below for dependence variable
-    #   values: 'default', none or float
-    'limit_var_D_below',
+    # limits below and above for dependence variable
+    #   input: 'default', none or float (below; above)
+    #   access: {'below','above'}
+    'limits_var_D',
 
-    # limit by above for dependence variable
-    #   values: 'default', none or float
-    'limit_var_D_above',
+    # threshold for dependence variable
+    # the number of input values depend of class_category_analysis, thus:
+    # if is 3 categories should be 2 thresholds
+    # if is 7 categories should be 6 thresholds
+    #   input: 'default', pNN, sdN or float
+    #      float: (below;above) or (below3;below2;below1;above1;above2;above3)
+    #   access: {'below','above'} or {'below3','below2','below1','above1','above2','above3'}
+    'thresholds_var_D',
 
-    # threshold by below for dependence variable
-    #   values: 'default', pNN, sdN or float
-    'threshold_below_var_D',
-
-    # threshold by above for dependence variable
-    #   values: 'default', pNN, sdN or float
-    'threshold_above_var_D',
+    ## VAR I OPTIONS
 
     # type for independence variable
-    #   values: string
+    #   input: string
     'type_var_I',
 
     # path
-    #   values: string
+    #   input: string or 'internal'
     'path_to_file_var_I',
 
-    # limit by below for independence variable
-    #   values: 'default', none or float
-    'limit_var_I_below',
+    # limits below and above for independence variable
+    #   input: 'default', none or float (below; above)
+    #   access: {'below','above'}
+    'limits_var_I',
 
-    # limit by above for independence variable
-    #   values: 'default', none or float
-    'limit_var_I_above',
+    # threshold for independence variable
+    # the number of input values depend of class_category_analysis, thus:
+    # if is 3 categories should be 2 thresholds
+    # if is 7 categories should be 6 thresholds
+    #   input: 'default', pNN, sdN or float
+    #      float: (below;above) or (below3;below2;below1;above1;above2;above3)
+    #   access: {'below','above'} or {'below3','below2','below1','above1','above2','above3'}
+    'thresholds_var_I',
 
-    # threshold by below for independence variable
-    #   values: 'default', pNN, sdN or float
-    'threshold_below_var_I',
-
-    # threshold by above for independence variable
-    #   values: 'default', pNN, sdN or float
-    'threshold_above_var_I',
+    ## CHECK OPTIONS
 
     # check consistent data
-    #   values: boolean
+    #   input: boolean (disable, enable)
     'consistent_data',
 
     # do or not risk analysis
-    #   values: boolean
+    #   input: boolean (disable, enable)
     'risk_analysis',
 
-    # do or not graphics
-    #   values: boolean
-    'graphics',
+    ## OUTPUT OPTIONS
 
-    # label phenomenon
-    #   values: string
-    'phen_below_label',
-    'phen_normal_label',
-    'phen_above_label',
+    # labels for all categories for independent variable
+    # the number of input labels depend of class_category_analysis, thus:
+    # if is 3 categories should be 3 labels
+    # if is 7 categories should be 7 labels
+    #   input: string or 'default'
+    #   access: {'below','normal','above'} or {'below3','below2','below1','normal','above1','above2','above3'}
+    'var_I_category_labels',
 
-    # 9 values for forecast
-    #   values: float
-    'lag_0_phen_below',
-    'lag_0_phen_normal',
-    'lag_0_phen_above',
-    'lag_1_phen_below',
-    'lag_1_phen_normal',
-    'lag_1_phen_above',
-    'lag_2_phen_below',
-    'lag_2_phen_normal',
-    'lag_2_phen_above',
+    ## FORECAST OPTIONS
 
     # date for forecast
-    #   values: {'month': int, 'day': int, 'text':str} or {'month': int, 'text':str}
+    #   input: month or month;day
+    #   access: {'month': int, 'day': int, 'text':str} or {'month': int, 'text':str}
     'forecast_date',
 
-    # defined, after read runfile configuration, what run
-    #   values: {'climate': boolean, 'forecast': boolean, 'correlation': boolean}
-    'maps',
+    # values for forecast process
+    #   input: (float, float, float)
+    #   access: {'below', 'normal', 'above'}
+    'forecast_var_I_lag_0',
+    'forecast_var_I_lag_1',
+    'forecast_var_I_lag_2',
 
-    # put marks of stations in maps
-    #   values: boolean (disable, enable or default)
-    'marks_stations',
+    ## MAPS OPTIONS
 
     # set overlapping solution when jaziku make interpolation for maps
-    #   values: default, average, maximum, minimum or neither
+    #   input: default, average, maximum, minimum or neither
     'overlapping',
 
     # set if jaziku cut boundary of shape in maps
-    #   values: boolean (disable, enable or default)
-    "shape_boundary"
+    #   input: boolean (disable, enable or default)
+    "shape_boundary",
+
+    # put marks of stations in maps
+    #   input: boolean (disable, enable or default)
+    'marks_stations'
 ]
 
 def init():
