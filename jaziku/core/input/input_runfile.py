@@ -85,10 +85,10 @@ def read_runfile():
 
         # read CONFIGURATION RUN
         if in_config_run:
-            if line_in_run_file[0][0:3] == "## ":
+            if line_in_run_file[0].startswith("#"):
                 continue
 
-            if len(line_in_run_file) <= 1:
+            if not len(line_in_run_file) >= 2:
                 console.msg_error(_(
                     "error read line in 'CONFIGURATION RUN' in runfile,"
                     " line {0}:\n{1}, no was defined.")
@@ -108,7 +108,10 @@ def read_runfile():
                         except:
                             config_run.settings[line_in_run_file[0]] = line_in_run_file[1]
                     else: # >2
-                        config_run.settings[line_in_run_file[0]] = [get_float(item) for item in line_in_run_file[1::]]
+                        try:
+                            config_run.settings[line_in_run_file[0]] = [get_float(item) for item in line_in_run_file[1::]]
+                        except:
+                            config_run.settings[line_in_run_file[0]] = [item for item in line_in_run_file[1::]]
             else:
                 if line_in_run_file[1] == "GRIDS LIST":
                     in_config_run = False
@@ -124,7 +127,7 @@ def read_runfile():
 
         # read GRIDS LIST
         if in_grids_list:
-            if line_in_run_file[0][0:2] == "##" and line_in_run_file[0] != "####################":
+            if line_in_run_file[0].startswith("#") and line_in_run_file[0] != "####################":
                 if grid:
                     del grid
                 grid = Grid()
@@ -154,7 +157,7 @@ def read_runfile():
 
         # read STATIONS LIST
         if in_station_list:
-            if line_in_run_file[0][0:2] == "##":
+            if line_in_run_file[0].startswith("#"):
                 continue
             lines_of_stations.append([line_in_run_file, runfile.line_num])
 
