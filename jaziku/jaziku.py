@@ -45,13 +45,13 @@ from core import stations
 from core.input import input_runfile, input_arg
 from core.station import Station
 from core.settings import settings
-from utils import console
 from modules.climate import climate
 from modules.forecast import forecast
 from modules.data_analysis import data_analysis
 from modules.maps import maps
 from modules.maps.grid import Grid
 from modules.maps.maps import check_basic_requirements_for_maps
+from utils import console
 
 
 #==============================================================================

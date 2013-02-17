@@ -227,16 +227,12 @@ def get():
 
     ## forecast settings
     if config_run.settings['forecast_process']:
-        settings["lag_0_phen_below"] = config_run.settings['lag_0_phen_below']
-        settings["lag_0_phen_normal"] = config_run.settings['lag_0_phen_normal']
-        settings["lag_0_phen_above"] = config_run.settings['lag_0_phen_above']
-        settings["lag_1_phen_below"] = config_run.settings['lag_1_phen_below']
-        settings["lag_1_phen_normal"] = config_run.settings['lag_1_phen_normal']
-        settings["lag_1_phen_above"] = config_run.settings['lag_1_phen_above']
-        settings["lag_2_phen_below"] = config_run.settings['lag_2_phen_below']
-        settings["lag_2_phen_normal"] = config_run.settings['lag_2_phen_normal']
-        settings["lag_2_phen_above"] = config_run.settings['lag_2_phen_above']
+        # forecast date
         settings["forecast_date"] = colored.green(config_run.settings['forecast_date'])
+        # 9 values for forecast
+        settings['forecast_var_I_lag_0'] = config_run.settings['forecast_var_I_lag_0']
+        settings['forecast_var_I_lag_1'] = config_run.settings['forecast_var_I_lag_1']
+        settings['forecast_var_I_lag_2'] = config_run.settings['forecast_var_I_lag_2']
 
     ## maps settings
     if config_run.settings['maps']:

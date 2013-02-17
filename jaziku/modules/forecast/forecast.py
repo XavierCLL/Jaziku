@@ -94,17 +94,17 @@ def process(station):
                             = station.contingencies_tables_percent[lag][month - 1][day][column][row] / 100.0
                         _iter += 1
 
-        prob_decrease_var_D[lag] = (items_CT['a'] * globals_vars.forecast_phen_below[lag]) +\
-                                   (items_CT['d'] * globals_vars.forecast_phen_normal[lag]) +\
-                                   (items_CT['g'] * globals_vars.forecast_phen_above[lag])
+        prob_decrease_var_D[lag] = (items_CT['a'] * config_run.settings['forecast_var_I_lag_'+lag]['below']) +\
+                                   (items_CT['d'] * config_run.settings['forecast_var_I_lag_'+lag]['normal']) +\
+                                   (items_CT['g'] * config_run.settings['forecast_var_I_lag_'+lag]['above'])
 
-        prob_normal_var_D[lag] = (items_CT['b'] * globals_vars.forecast_phen_below[lag]) +\
-                                 (items_CT['e'] * globals_vars.forecast_phen_normal[lag]) +\
-                                 (items_CT['h'] * globals_vars.forecast_phen_above[lag])
+        prob_normal_var_D[lag] = (items_CT['b'] * config_run.settings['forecast_var_I_lag_'+lag]['below']) +\
+                                 (items_CT['e'] * config_run.settings['forecast_var_I_lag_'+lag]['normal']) +\
+                                 (items_CT['h'] * config_run.settings['forecast_var_I_lag_'+lag]['above'])
 
-        prob_exceed_var_D[lag] = (items_CT['c'] * globals_vars.forecast_phen_below[lag]) +\
-                                 (items_CT['f'] * globals_vars.forecast_phen_normal[lag]) +\
-                                 (items_CT['i'] * globals_vars.forecast_phen_above[lag])
+        prob_exceed_var_D[lag] = (items_CT['c'] * config_run.settings['forecast_var_I_lag_'+lag]['below']) +\
+                                 (items_CT['f'] * config_run.settings['forecast_var_I_lag_'+lag]['normal']) +\
+                                 (items_CT['i'] * config_run.settings['forecast_var_I_lag_'+lag]['above'])
 
     station.prob_decrease_var_D = prob_decrease_var_D
     station.prob_normal_var_D = prob_normal_var_D
