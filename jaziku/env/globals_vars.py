@@ -181,12 +181,6 @@ analysis_interval_i18n = None
 STATE_OF_DATA = None
 
 #==============================================================================
-# forecast
-forecast_phen_below = None
-forecast_phen_normal = None
-forecast_phen_above = None
-
-#==============================================================================
 # maps
 
 # maps files for climate:

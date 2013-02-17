@@ -85,7 +85,7 @@ def read_runfile():
 
         # read CONFIGURATION RUN
         if in_config_run:
-            if line_in_run_file[0].startswith("#"):
+            if line_in_run_file[0].startswith("#") and not line_in_run_file[0] == "####################":
                 continue
 
             if not len(line_in_run_file) >= 2:
@@ -127,7 +127,7 @@ def read_runfile():
 
         # read GRIDS LIST
         if in_grids_list:
-            if line_in_run_file[0].startswith("#") and line_in_run_file[0] != "####################":
+            if line_in_run_file[0].startswith("#") and not line_in_run_file[0] == "####################":
                 if grid:
                     del grid
                 grid = Grid()
@@ -157,7 +157,7 @@ def read_runfile():
 
         # read STATIONS LIST
         if in_station_list:
-            if line_in_run_file[0].startswith("#"):
+            if line_in_run_file[0].startswith("#") and not line_in_run_file[0] == "####################":
                 continue
             lines_of_stations.append([line_in_run_file, runfile.line_num])
 
@@ -171,24 +171,6 @@ def read_runfile():
     if not config_run.settings['climate_process']:
         config_run.settings['forecast_process'] = False
         config_run.settings['maps'] = False
-
-    # if forecast_process is activated
-    if config_run.settings['forecast_process']:
-        try:
-
-            globals_vars.forecast_phen_below = [get_float(config_run.settings['lag_0_phen_below']),
-                                                get_float(config_run.settings['lag_1_phen_below']),
-                                                get_float(config_run.settings['lag_2_phen_below'])]
-            globals_vars.forecast_phen_normal = [get_float(config_run.settings['lag_0_phen_normal']),
-                                                 get_float(config_run.settings['lag_1_phen_normal']),
-                                                 get_float(config_run.settings['lag_2_phen_normal'])]
-            globals_vars.forecast_phen_above = [get_float(config_run.settings['lag_0_phen_above']),
-                                                get_float(config_run.settings['lag_1_phen_above']),
-                                                get_float(config_run.settings['lag_2_phen_above'])]
-        except:
-            console.msg_error(_("Problems with the 9 probability values for forecast process\n"
-                                "defined in runfile, these must be a numbers, please check it."), False)
-
 
     # if path_to_file_var_I is relative convert to absolute, except if is 'internal'
     if not os.path.isabs(config_run.settings["path_to_file_var_I"]) and\
