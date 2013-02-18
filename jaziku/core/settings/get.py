@@ -49,18 +49,23 @@ def get():
     globals_vars.input_settings = settings
 
     ## general options
+    # ------------------------
     # data_analysis
     if config_run.settings['data_analysis'] == True:
         settings["data_analysis"] = colored.green(_("enabled"))
     elif not config_run.settings['data_analysis'] == False:
         console.msg_error_configuration('data_analysis', _("'data_analysis' variable in runfile is wrong,\n"
                                                            "this must be 'enable' or 'disable'"))
+
+    # ------------------------
     # climate_process
     if config_run.settings['climate_process'] == True:
         settings["climate_process"] = colored.green(_("enabled"))
     elif not config_run.settings['climate_process'] == False:
         console.msg_error_configuration('climate_process', _("'climate_process' variable in runfile is wrong,\n"
                             "this must be 'enable' or 'disable'"))
+
+    # ------------------------
     # forecast_process
     if config_run.settings['forecast_process'] == True:
         settings["forecast_process"] = colored.green(_("enabled"))
@@ -68,6 +73,7 @@ def get():
         console.msg_error_configuration('forecast_process', _("'forecast_process' variable in runfile is wrong,\n"
                             "this must be 'enable' or 'disable'"))
 
+    # ------------------------
     # analysis interval
     if config_run.settings['analysis_interval'] not in globals_vars.ALL_ANALYSIS_INTERVALS:
         console.msg_error_configuration('analysis_interval',
@@ -87,12 +93,12 @@ def get():
 
     translate_analysis_interval = [_("5days"), _("10days"), _("15days"), _("trimester")]
     globals_vars.analysis_interval_i18n\
-    = translate_analysis_interval[globals_vars.ALL_ANALYSIS_INTERVALS.index(config_run.settings['analysis_interval'])]
+        = translate_analysis_interval[globals_vars.ALL_ANALYSIS_INTERVALS.index(config_run.settings['analysis_interval'])]
     # analysis_interval setting
     if config_run.settings['analysis_interval']:
         settings["analysis_interval"] = colored.green(config_run.settings['analysis_interval'])
 
-
+    # ------------------------
     # process_period
     if config_run.settings['process_period'] == "maximum":
         settings["process_period"] = "maximum"
@@ -108,6 +114,8 @@ def get():
             console.msg_error_configuration('process_period',
                 _("The period must be: year_start-year_end (ie. 1980-2008)\n"
                   "or 'maximum' for take the process period maximum possible.\n\n{0}").format(e))
+
+    # ------------------------
     # analog_year
     if config_run.settings['analog_year']:
         try:
@@ -115,6 +123,8 @@ def get():
         except:
             console.msg_error_configuration('analog_year', "the analog_year must be a valid year")
         settings["analog_year"] = colored.green(config_run.settings['analog_year'])
+
+    # ------------------------
     # lags
     if config_run.settings['lags'] in ['default', 'all']:
         config_run.settings['lags'] = globals_vars.ALL_LAGS
@@ -131,26 +141,56 @@ def get():
         except:
             console.msg_error_configuration('lags', _("The lags may be: 0, 1 and/or 2 (comma separated), 'all' or 'default'"))
         settings["lags"] = colored.green(','.join(map(str, config_run.settings['lags'])))
+
+    # ------------------------
     # languages
     settings["language"] = config_run.settings['language']
+
     ## input options
+    # ------------------------
     # type var D
     if config_run.settings['type_var_D']:
         settings["type_var_D"] = colored.green(config_run.settings['type_var_D']) + " ({0})".format(globals_vars.units_var_D)
-    # limit var D below
-    if config_run.settings['limit_var_D_below'] == 'none':
-        settings["limit_var_D_below"] = colored.red('none')
-    elif config_run.settings['limit_var_D_below'] == 'default':
-        settings["limit_var_D_below"] = _('default')
+
+    # ------------------------
+    # limits var D below
+    if not isinstance(config_run.settings['limits_var_D'], list):
+        if config_run.settings['limits_var_D'] == 'none':
+            config_run.settings['limits_var_D'] = {'below': None, 'above': None}
+            settings["limits_var_D"] = colored.red('none')
+        elif config_run.settings['limits_var_D'] == 'default':
+            config_run.settings['limits_var_D'] = {'below': 'default', 'above': 'default'}
+            settings["limits_var_D"] = _('default')
+        else:
+            console.msg_error_configuration('limits_var_D',
+                (_("Problem with particular range validation for "
+                   "dependent\nvariable: '{0}' this must be "
+                   "a valid number: <below>;<above>,\n'none' or 'default'.").format(config_run.settings['limits_var_D'])))
     else:
-        settings["limit_var_D_below"] = colored.green(config_run.settings['limit_var_D_below'])
-    # limit var D above
-    if config_run.settings['limit_var_D_above'] == 'none':
-        settings["limit_var_D_above"] = colored.red('none')
-    elif config_run.settings['limit_var_D_above'] == 'default':
-        settings["limit_var_D_above"] = _('default')
-    else:
-        settings["limit_var_D_above"] = colored.green(config_run.settings['limit_var_D_above'])
+        config_run.settings['limits_var_D'] = {'below': config_run.settings['limits_var_D'][0],
+                                               'above': config_run.settings['limits_var_D'][1]}
+        # below
+        if config_run.settings['limits_var_D']['below'] == 'none':
+            config_run.settings['limits_var_D']['below'] = None
+            settings["limits_var_D"] = colored.red('none')
+        elif config_run.settings['limits_var_D']['below'] == 'default':
+            settings["limits_var_D"] = _('default')
+        else:
+            settings["limits_var_D"] = colored.green(config_run.settings['limits_var_D']['below'])
+
+        settings["limits_var_D"] += ' - '
+
+        # above
+        if config_run.settings['limits_var_D']['above'] == 'none':
+            config_run.settings['limits_var_D']['above'] = None
+            settings["limits_var_D"] += colored.red('none')
+        elif config_run.settings['limits_var_D']['above'] == 'default':
+            settings["limits_var_D"] += _('default')
+        else:
+            settings["limits_var_D"] += colored.green(config_run.settings['limits_var_D']['above'])
+
+
+    # ------------------------
     # threshold var D
     if config_run.settings['threshold_below_var_D'] == 'default':
         settings["threshold_below_var_D"] = _('default')
@@ -160,29 +200,58 @@ def get():
         settings["threshold_above_var_D"] = _('default')
     else:
         settings["threshold_above_var_D"] = colored.green(config_run.settings['threshold_above_var_D'])
+
+    # ------------------------
     # type var I
     if config_run.settings['type_var_I']:
         settings["type_var_I"] = colored.green(config_run.settings['type_var_I']) + " ({0})".format(globals_vars.units_var_I)
+
+    # ------------------------
     # path_to_file_var_I
     if config_run.settings['path_to_file_var_I'] == 'internal':
         settings["path_to_file_var_I"] = colored.green(config_run.settings['path_to_file_var_I'])
     else:
         #settings["path_to_file_var_I"] = config_run.settings['path_to_file_var_I']
         settings["path_to_file_var_I"] = os.path.relpath(config_run.settings['path_to_file_var_I'], os.path.abspath(os.path.dirname(globals_vars.ARGS.runfile)))
-    # limit var I below
-    if config_run.settings['limit_var_I_below'] == 'none':
-        settings["limit_var_I_below"] = colored.red('none')
-    elif config_run.settings['limit_var_I_below'] == 'default':
-        settings["limit_var_I_below"] = _('default')
+
+    # ------------------------
+    # limits var I below
+    if not isinstance(config_run.settings['limits_var_I'], list):
+        if config_run.settings['limits_var_I'] == 'none':
+            config_run.settings['limits_var_I'] = {'below': None, 'above': None}
+            settings["limits_var_I"] = colored.red('none')
+        elif config_run.settings['limits_var_I'] == 'default':
+            config_run.settings['limits_var_I'] = {'below': 'default', 'above': 'default'}
+            settings["limits_var_I"] = _('default')
+        else:
+            console.msg_error_configuration('limits_var_I',
+                (_("Problem with particular range validation for "
+                   "independent\nvariable: '{0}' this must be "
+                   "a valid number: <below>;<above>,\n'none' or 'default'.").format(config_run.settings['limits_var_I'])))
     else:
-        settings["limit_var_I_below"] = colored.green(config_run.settings['limit_var_I_below'])
-    # limit var I above
-    if config_run.settings['limit_var_I_above'] == 'none':
-        settings["limit_var_I_above"] = colored.red('none')
-    elif config_run.settings['limit_var_I_above'] == 'default':
-        settings["limit_var_I_above"] = _('default')
-    else:
-        settings["limit_var_I_above"] = colored.green(config_run.settings['limit_var_I_above'])
+        config_run.settings['limits_var_I'] = {'below': config_run.settings['limits_var_I'][0],
+                                               'above': config_run.settings['limits_var_I'][1]}
+        # below
+        if config_run.settings['limits_var_I']['below'] == 'none':
+            config_run.settings['limits_var_I']['below'] = None
+            settings["limits_var_I"] = colored.red('none')
+        elif config_run.settings['limits_var_I']['below'] == 'default':
+            settings["limits_var_I"] = _('default')
+        else:
+            settings["limits_var_I"] = colored.green(config_run.settings['limits_var_I']['below'])
+
+        settings["limits_var_I"] += ' - '
+
+        # above
+        if config_run.settings['limits_var_I']['above'] == 'none':
+            config_run.settings['limits_var_I']['above'] = None
+            settings["limits_var_I"] += colored.red('none')
+        elif config_run.settings['limits_var_I']['above'] == 'default':
+            settings["limits_var_I"] += _('default')
+        else:
+            settings["limits_var_I"] += colored.green(config_run.settings['limits_var_I']['above'])
+
+    # ------------------------
     # threshold var I
     if config_run.settings['threshold_below_var_I'] == 'default':
         settings["threshold_below_var_I"] = _('default')
@@ -192,17 +261,24 @@ def get():
         settings["threshold_above_var_I"] = _('default')
     else:
         settings["threshold_above_var_I"] = colored.green(config_run.settings['threshold_above_var_I'])
+
     ## check options
+    # ------------------------
     # consistent_data
     if config_run.settings['consistent_data']:
         settings["consistent_data"] = colored.green(_("enabled"))
+
+    # ------------------------
     # risk_analysis
     if config_run.settings['risk_analysis']:
         settings["risk_analysis"] = colored.green(_("enabled"))
 
     ## graphics settings
+    # ------------------------
     if config_run.settings['graphics']:
         settings["graphics"] = colored.green(_("enabled"))
+
+
     # if phenomenon below is defined inside arguments, else default value
     if config_run.settings['phen_below_label'] and config_run.settings['phen_below_label'] != "default":
         config_run.settings['phen_below_label'] = unicode(config_run.settings['phen_below_label'], 'utf-8')
@@ -225,7 +301,8 @@ def get():
         config_run.settings['phen_above_label'] = unicode(_('var_I_above'), 'utf-8') # label by default
         settings["phen_above_label"] = config_run.settings['phen_above_label']
 
-    ## forecast settings
+    # ------------------------
+    # forecast settings
     if config_run.settings['forecast_process']:
         # forecast date
         settings["forecast_date"] = colored.green(config_run.settings['forecast_date'])
@@ -234,7 +311,8 @@ def get():
         settings['forecast_var_I_lag_1'] = config_run.settings['forecast_var_I_lag_1']
         settings['forecast_var_I_lag_2'] = config_run.settings['forecast_var_I_lag_2']
 
-    ## maps settings
+    # ------------------------
+    # maps settings
     if config_run.settings['maps']:
         if config_run.settings['maps'] == "all":
             config_run.settings['maps'] = {'climate': True, 'forecast': True, 'correlation': True}
@@ -281,6 +359,8 @@ def get():
             console.msg_error_configuration('shape_boundary', _("The shape_boundary is wrong, the options are:\n"
                                 "disable, enable or default."))
 
+    ## post-get
+    # ------------------------
     # when climate is disable:
     if not config_run.settings['climate_process']:
         console.msg(_("\nClimate process is disable, then forecast and maps\n"
