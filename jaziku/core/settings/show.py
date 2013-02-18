@@ -137,10 +137,10 @@ def show(stop_in=None):
                 split_internal_var_I[2], ' '.join(split_internal_var_I[3::]),
                 globals_vars.URLS_FOR_INTERNAL_VAR_I[config_run.settings['type_var_I']]), color='yellow')
 
-    if (not config_run.settings['limit_var_D_below'] or
-        not config_run.settings['limit_var_D_above'] or
-        not config_run.settings['limit_var_I_below'] or
-        not config_run.settings['limit_var_I_above']):
+    if (not config_run.settings['limits_var_D']['below'] or
+        not config_run.settings['limits_var_D']['above'] or
+        not config_run.settings['limits_var_I']['below'] or
+        not config_run.settings['limits_var_I']['above']):
         console.msg(_("\n > WARNING: you are using one or more limits as\n"
                       "   'none' value, this means that series values\n"
                       "   will not be checked if they are valid in\n"

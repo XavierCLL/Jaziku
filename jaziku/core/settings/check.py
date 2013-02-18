@@ -35,7 +35,7 @@ def configuration_run():
     # particular range validation
 
     # below var D
-    if config_run.settings['limit_var_D_below'] == "default":
+    if config_run.settings['limits_var_D']['below'] == "default":
         # validation type_D
         if config_run.settings['type_var_D'] not in globals_vars.TYPES_VAR_D:
             console.msg_error_configuration('type_var_D',
@@ -44,36 +44,36 @@ def configuration_run():
                   "define a particular type for dependent variable, you must define\n"
                   "as real values (or 'none') the LIMIT VAR D BELOW/ABOVE")
                 .format(config_run.settings['type_var_D']))
-    elif config_run.settings['limit_var_D_below'] in ["none", "None", "NONE", None]:
-        config_run.settings['limit_var_D_below'] = None
+    elif config_run.settings['limits_var_D']['below'] in ["none", "None", "NONE", None]:
+        config_run.settings['limits_var_D']['below'] = None
     else:
         try:
-            config_run.settings['limit_var_D_below'] = float(str(config_run.settings['limit_var_D_below']).replace(',', '.'))
+            config_run.settings['limits_var_D']['below'] = float(str(config_run.settings['limits_var_D']['below']).replace(',', '.'))
         except:
-            console.msg_error_configuration('limit_var_D_below',
+            console.msg_error_configuration('limits_var_D',
                 (_("Problem with particular range validation for "
                    "dependent\nvariable: '{0}' this must be "
-                   "a valid number, 'none' or 'default'.").format(config_run.settings['limit_var_D_below'],)))
+                   "a valid number, 'none' or 'default'.").format(config_run.settings['limits_var_D']['below'])))
     # above var D
-    if config_run.settings['limit_var_D_above'] == "default":
+    if config_run.settings['limits_var_D']['above'] == "default":
         # validation type_D
         if config_run.settings['type_var_D'] not in globals_vars.TYPES_VAR_D:
-            console.msg_error_configuration('limit_var_D_above',
+            console.msg_error_configuration('limits_var_D',
                 _("{0} not is valid internal type for dependent variable if you\n"
                   "defined LIMIT VAR D BELOW/ABOVE as 'default'. If you want\n"
                   "define a particular type for dependent variable, you must define\n"
                   "as real values (or 'none') the LIMIT VAR D BELOW/ABOVE")
                 .format(config_run.settings['type_var_D']))
-    elif config_run.settings['limit_var_D_above'] in ["none", "None", "NONE", None]:
-        config_run.settings['limit_var_D_above'] = None
+    elif config_run.settings['limits_var_D']['above'] in ["none", "None", "NONE", None]:
+        config_run.settings['limits_var_D']['above'] = None
     else:
         try:
-            config_run.settings['limit_var_D_above'] = float(str(config_run.settings['limit_var_D_above']).replace(',', '.'))
+            config_run.settings['limits_var_D']['above'] = float(str(config_run.settings['limits_var_D']['above']).replace(',', '.'))
         except:
-            console.msg_error_configuration('limit_var_D_above',
+            console.msg_error_configuration('limits_var_D',
                 (_("Problem with particular range validation for "
                    "dependent\nvariable: '{0}' this must be "
-                   "a valid number, 'none' or 'default'.").format(config_run.settings['limit_var_D_above'],)))
+                   "a valid number, 'none' or 'default'.").format(config_run.settings['limits_var_D']['above'])))
 
     # -------------------------------------------------------------------------
     # limits var I
@@ -82,7 +82,7 @@ def configuration_run():
     # particular range validation
 
     # below var I
-    if config_run.settings['limit_var_I_below'] == "default":
+    if config_run.settings['limits_var_I']['below'] == "default":
         # validation type_I
         if config_run.settings['type_var_I'] not in globals_vars.TYPES_VAR_I:
             console.msg_error_configuration('type_var_I',
@@ -91,36 +91,36 @@ def configuration_run():
                   "define a particular type for independent variable, you must define\n"
                   "as real values (or 'none') the LIMIT VAR I BELOW/ABOVE")
                 .format(config_run.settings['type_var_I']))
-    elif config_run.settings['limit_var_I_below'] in ["none", "None", "NONE", None]:
-        config_run.settings['limit_var_I_below'] = None
+    elif config_run.settings['limits_var_I']['below'] in ["none", "None", "NONE", None]:
+        config_run.settings['limits_var_I']['below'] = None
     else:
         try:
-            config_run.settings['limit_var_I_below'] = float(str(config_run.settings['limit_var_I_below']).replace(',', '.'))
+            config_run.settings['limits_var_I']['below'] = float(str(config_run.settings['limits_var_I']['below']).replace(',', '.'))
         except:
-            console.msg_error_configuration('limit_var_I_below',
+            console.msg_error_configuration('limits_var_I',
                 (_("Problem with particular range validation for "
                    "independent\nvariable: '{0}' this must be "
-                   "a valid number, 'none' or 'default'.").format(config_run.settings['limit_var_I_below'],)))
+                   "a valid number, 'none' or 'default'.").format(config_run.settings['limits_var_I']['below'])))
     # above var I
-    if config_run.settings['limit_var_I_above'] == "default":
+    if config_run.settings['limits_var_I']['above'] == "default":
         # validation type_I
         if config_run.settings['type_var_I'] not in globals_vars.TYPES_VAR_I:
-            console.msg_error_configuration('limit_var_I_above',
+            console.msg_error_configuration('limits_var_I',
                 _("{0} not is valid internal type for independent variable if you\n"
                   "defined LIMIT VAR I BELOW/ABOVE as 'default'. If you want\n"
                   "define a particular type for independent variable, you must define\n"
                   "as real values (or 'none') the LIMIT VAR I BELOW/ABOVE")
                 .format(config_run.settings['type_var_I']))
-    elif config_run.settings['limit_var_I_above'] in ["none", "None", "NONE", None]:
-        config_run.settings['limit_var_I_above'] = None
+    elif config_run.settings['limits_var_I']['above'] in ["none", "None", "NONE", None]:
+        config_run.settings['limits_var_I']['above'] = None
     else:
         try:
-            config_run.settings['limit_var_I_above'] = float(str(config_run.settings['limit_var_I_above']).replace(',', '.'))
+            config_run.settings['limits_var_I']['above'] = float(str(config_run.settings['limits_var_I']['above']).replace(',', '.'))
         except:
-            console.msg_error_configuration('limit_var_I_above',
+            console.msg_error_configuration('limits_var_I',
                 (_("Problem with particular range validation for "
                    "independent\nvariable: '{0}' this must be "
-                   "a valid number, 'none' or 'default'.").format(config_run.settings['limit_var_I_above'],)))
+                   "a valid number, 'none' or 'default'.").format(config_run.settings['limits_var_I']['above'])))
 
     # -------------------------------------------------------------------------
     # path_to_file_var_I
