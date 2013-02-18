@@ -28,7 +28,16 @@ from jaziku.utils import console, format_out, format_in
 
 def configuration_run():
 
-    # -------------------------------------------------------------------------
+    # ------------------------
+    # class_category_analysis
+    config_run.settings['class_category_analysis'] = format_in.to_integer(config_run.settings['class_category_analysis'])
+
+    if config_run.settings['class_category_analysis'] not in [3,5]:
+        console.msg_error_configuration('class_category_analysis',
+            _("The 'class_category_analysis' {0} not is valid,\n"
+              "this should be '3' or '7'."))
+
+    # ------------------------
     # limits var D
 
     # check and validate if file D is defined as particular file with
@@ -75,7 +84,7 @@ def configuration_run():
                    "dependent\nvariable: '{0}' this must be "
                    "a valid number, 'none' or 'default'.").format(config_run.settings['limits_var_D']['above'])))
 
-    # -------------------------------------------------------------------------
+    # ------------------------
     # limits var I
 
     # check and validate if file I is defined as particular file with
@@ -122,7 +131,7 @@ def configuration_run():
                    "independent\nvariable: '{0}' this must be "
                    "a valid number, 'none' or 'default'.").format(config_run.settings['limits_var_I']['above'])))
 
-    # -------------------------------------------------------------------------
+    # ------------------------
     # path_to_file_var_I
 
     # read from internal variable independent files of Jaziku, check
@@ -143,7 +152,7 @@ def configuration_run():
                   "of jaziku you need set 'PATH TO FILE VAR I' as 'internal'").format(
                     config_run.settings["path_to_file_var_I"]))
 
-    # -------------------------------------------------------------------------
+    # ------------------------
     # thresholds var_I
 
     if not config_run.settings["path_to_file_var_I"] == "internal" and \
@@ -157,7 +166,7 @@ def configuration_run():
                 _("The thresholds can't be define as 'default' if the\n"
                   "type of independent variable not is valid internal type."))
 
-    # -------------------------------------------------------------------------
+    # ------------------------
     # check the 9 forecast values and forecast date
 
     # if forecast_process is activated
