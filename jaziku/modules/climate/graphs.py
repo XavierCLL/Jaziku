@@ -160,7 +160,7 @@ def climate_graphs(station):
                 contingency_table_percent_print,\
                 thresholds_var_D_var_I = get_contingency_table(station, lag, month)
 
-                title_period = _("trim {0} ({1})").format(month, format_out.get_trimester_in_text(month - 1))
+                title_period = _("trim {0} ({1})").format(month, format_out.trimester_in_initials(month - 1))
                 filename_period = _("trim_{0}").format(month)
                 create_chart()
 
@@ -173,8 +173,8 @@ def climate_graphs(station):
                     contingency_table_percent_print,\
                     thresholds_var_D_var_I = get_contingency_table(station, lag, month, day)
 
-                    title_period = format_out.get_month_in_text(month - 1) + " " + str(day)
-                    filename_period = format_out.get_month_in_text(month - 1) + "_" + str(day)
+                    title_period = format_out.month_in_initials(month - 1) + " " + str(day)
+                    filename_period = format_out.month_in_initials(month - 1) + "_" + str(day)
 
                     create_chart()
 

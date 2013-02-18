@@ -321,9 +321,9 @@ def maps(grid):
                                 os.makedirs(base_path)
 
                             base_file = _(u'Map_lag_{0}_{1}_{2}')\
-                                .format(lag, format_out.get_trimester_in_text(month - 1), phenomenon[category])
+                                .format(lag, format_out.trimester_in_initials(month - 1), phenomenon[category])
 
-                            grid.date = format_out.get_trimester_in_text(month - 1)
+                            grid.date = format_out.trimester_in_initials(month - 1)
                             grid.lag = lag
 
                             # file for interpolation
@@ -363,10 +363,10 @@ def maps(grid):
 
                                 base_file = _(u'Map_lag_{0}_{1}_{2}')\
                                     .format(lag,
-                                            format_out.get_month_in_text(month - 1) + "_" + str(range_analysis_interval[day]),
+                                            format_out.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day]),
                                             phenomenon[category])
 
-                                grid.date = format_out.get_month_in_text(month - 1) + "_" + str(range_analysis_interval[day])
+                                grid.date = format_out.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day])
                                 grid.lag = lag
 
                                 # file for interpolation
@@ -430,9 +430,9 @@ def maps(grid):
                         if not os.path.isdir(base_path):
                             os.makedirs(base_path)
 
-                        base_file = _(u'Map_correlation_lag_{0}_{1}').format(lag, format_out.get_trimester_in_text(month - 1))
+                        base_file = _(u'Map_correlation_lag_{0}_{1}').format(lag, format_out.trimester_in_initials(month - 1))
 
-                        grid.date = format_out.get_trimester_in_text(month - 1)
+                        grid.date = format_out.trimester_in_initials(month - 1)
                         grid.lag = lag
 
                         # file for interpolation
@@ -475,9 +475,9 @@ def maps(grid):
                                 os.makedirs(base_path)
 
                             base_file = _(u'Map_correlation_lag_{0}_{1}')\
-                            .format(lag, format_out.get_month_in_text(month - 1) + "_" + str(range_analysis_interval[day]))
+                            .format(lag, format_out.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day]))
 
-                            grid.date = format_out.get_month_in_text(month - 1) + "_" + str(range_analysis_interval[day])
+                            grid.date = format_out.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day])
                             grid.lag = lag
 
                             # file for interpolation
