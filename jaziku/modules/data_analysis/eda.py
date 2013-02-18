@@ -580,10 +580,10 @@ def climatology(stations_list):
     csv_climatology_table = csv.writer(open_file_climatology_table, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
 
     # print header
-    header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), format_out.get_month_in_text(0), format_out.get_month_in_text(1),
-              format_out.get_month_in_text(2), format_out.get_month_in_text(3), format_out.get_month_in_text(4), format_out.get_month_in_text(5),
-              format_out.get_month_in_text(6), format_out.get_month_in_text(7), format_out.get_month_in_text(8), format_out.get_month_in_text(9),
-              format_out.get_month_in_text(10), format_out.get_month_in_text(11)]
+    header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), format_out.month_in_initials(0), format_out.month_in_initials(1),
+              format_out.month_in_initials(2), format_out.month_in_initials(3), format_out.month_in_initials(4), format_out.month_in_initials(5),
+              format_out.month_in_initials(6), format_out.month_in_initials(7), format_out.month_in_initials(8), format_out.month_in_initials(9),
+              format_out.month_in_initials(10), format_out.month_in_initials(11)]
 
     csv_climatology_table.writerow(header)
 
@@ -643,7 +643,7 @@ def climatology(stations_list):
             os.makedirs(station_climatology_path)
 
         x = range(1, 13)
-        x_labels = [format_out.get_month_in_text(i) for i in range(12)]
+        x_labels = [format_out.month_in_initials(i) for i in range(12)]
 
         # do that matplotlib plot zeros in extreme values
         for value in y_mean:
@@ -824,7 +824,7 @@ def climatology(stations_list):
             x_labels = []
             for i in range(len(y_mean)):
                 if i%x_step_label == 0:
-                    x_labels.append(format_out.get_month_in_text(i/x_step_label))
+                    x_labels.append(format_out.month_in_initials(i/x_step_label))
                 else:
                     x_labels.append('')
 
@@ -957,7 +957,7 @@ def climatology(stations_list):
             header = ['']
             for month in range(1, 13):
                 for day in get_range_analysis_interval():
-                    header.append(format_out.get_month_in_text(month-1) +' '+str(day))
+                    header.append(format_out.month_in_initials(month-1) +' '+str(day))
 
             csv_table.writerow(header)
 

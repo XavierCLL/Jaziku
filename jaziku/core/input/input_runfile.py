@@ -24,20 +24,7 @@ import csv
 from jaziku.env import globals_vars, config_run
 from jaziku.core.station import Station
 from jaziku.modules.maps.grid import Grid
-from jaziku.utils import  console
-
-
-def get_float(item):
-    try:
-        return float(str(item.replace(',', '.')).replace(',', '.'))
-    except:
-        return item
-
-def get_integer(item):
-    try:
-        return int(str(item.replace(',', '.')).replace(',', '.'))
-    except:
-        return item
+from jaziku.utils import  console, format_in
 
 
 def read_runfile():
@@ -104,12 +91,12 @@ def read_runfile():
                 else:
                     if len(line_in_run_file) == 2:
                         try:
-                            config_run.settings[line_in_run_file[0]] = get_float(line_in_run_file[1])
+                            config_run.settings[line_in_run_file[0]] = format_in.to_float(line_in_run_file[1])
                         except:
                             config_run.settings[line_in_run_file[0]] = line_in_run_file[1]
                     else: # >2
                         try:
-                            config_run.settings[line_in_run_file[0]] = [get_float(item) for item in line_in_run_file[1::]]
+                            config_run.settings[line_in_run_file[0]] = [format_in.to_float(item) for item in line_in_run_file[1::]]
                         except:
                             config_run.settings[line_in_run_file[0]] = [item for item in line_in_run_file[1::]]
             else:
@@ -138,13 +125,13 @@ def read_runfile():
                     setattr(Grid.all_grids[-1], line_in_run_file[0], None)
                 if len(line_in_run_file) == 2:
                     try:
-                        setattr(Grid.all_grids[-1], line_in_run_file[0], get_float(line_in_run_file[1]))
+                        setattr(Grid.all_grids[-1], line_in_run_file[0], format_in.to_float(line_in_run_file[1]))
                     except:
                         setattr(Grid.all_grids[-1], line_in_run_file[0], line_in_run_file[1])
                 if len(line_in_run_file) == 3:
                     try:
-                        setattr(Grid.all_grids[-1], line_in_run_file[0], [get_float(line_in_run_file[1]),
-                                                                          get_float(line_in_run_file[2])])
+                        setattr(Grid.all_grids[-1], line_in_run_file[0], [format_in.to_float(line_in_run_file[1]),
+                                                                          format_in.to_float(line_in_run_file[2])])
                     except:
                         setattr(Grid.all_grids[-1], line_in_run_file[0], [line_in_run_file[1], line_in_run_file[2]])
             else:

@@ -23,7 +23,7 @@ from clint.textui import colored
 
 from jaziku.core import analysis_interval
 from jaziku.env import config_run, globals_vars
-from jaziku.utils import console, format_out
+from jaziku.utils import console, format_out, format_in
 
 
 def configuration_run():
@@ -48,7 +48,7 @@ def configuration_run():
         config_run.settings['limits_var_D']['below'] = None
     else:
         try:
-            config_run.settings['limits_var_D']['below'] = float(str(config_run.settings['limits_var_D']['below']).replace(',', '.'))
+            config_run.settings['limits_var_D']['below'] = format_in.to_float(config_run.settings['limits_var_D']['below'])
         except:
             console.msg_error_configuration('limits_var_D',
                 (_("Problem with particular range validation for "
@@ -68,7 +68,7 @@ def configuration_run():
         config_run.settings['limits_var_D']['above'] = None
     else:
         try:
-            config_run.settings['limits_var_D']['above'] = float(str(config_run.settings['limits_var_D']['above']).replace(',', '.'))
+            config_run.settings['limits_var_D']['above'] = format_in.to_float(config_run.settings['limits_var_D']['above'])
         except:
             console.msg_error_configuration('limits_var_D',
                 (_("Problem with particular range validation for "
@@ -95,7 +95,7 @@ def configuration_run():
         config_run.settings['limits_var_I']['below'] = None
     else:
         try:
-            config_run.settings['limits_var_I']['below'] = float(str(config_run.settings['limits_var_I']['below']).replace(',', '.'))
+            config_run.settings['limits_var_I']['below'] = format_in.to_float(config_run.settings['limits_var_I']['below'])
         except:
             console.msg_error_configuration('limits_var_I',
                 (_("Problem with particular range validation for "
@@ -115,7 +115,7 @@ def configuration_run():
         config_run.settings['limits_var_I']['above'] = None
     else:
         try:
-            config_run.settings['limits_var_I']['above'] = float(str(config_run.settings['limits_var_I']['above']).replace(',', '.'))
+            config_run.settings['limits_var_I']['above'] = format_in.to_float(config_run.settings['limits_var_I']['above'])
         except:
             console.msg_error_configuration('limits_var_I',
                 (_("Problem with particular range validation for "
@@ -165,7 +165,7 @@ def configuration_run():
 
         ## check and reset the 9 values for forecast process
         try:
-            config_run.settings['forecast_var_I_lag_0'] = [float(item) for item in config_run.settings['forecast_var_I_lag_0']]
+            config_run.settings['forecast_var_I_lag_0'] = [format_in.to_float(item) for item in config_run.settings['forecast_var_I_lag_0']]
             if not len(config_run.settings['forecast_var_I_lag_0']) == 3:
                 raise
         except:
@@ -173,7 +173,7 @@ def configuration_run():
                                             _("The 'forecast_var_I_lag_0' should be a three valid\n"
                                               "values (int or float) in different row."))
         try:
-            config_run.settings['forecast_var_I_lag_1'] = [float(item) for item in config_run.settings['forecast_var_I_lag_1']]
+            config_run.settings['forecast_var_I_lag_1'] = [format_in.to_float(item) for item in config_run.settings['forecast_var_I_lag_1']]
             if not len(config_run.settings['forecast_var_I_lag_1']) == 3:
                 raise
         except:
@@ -181,7 +181,7 @@ def configuration_run():
                                             _("The 'forecast_var_I_lag_1' should be a three valid\n"
                                               "values (int or float) in different row."))
         try:
-            config_run.settings['forecast_var_I_lag_2'] = [float(item) for item in config_run.settings['forecast_var_I_lag_2']]
+            config_run.settings['forecast_var_I_lag_2'] = [format_in.to_float(item) for item in config_run.settings['forecast_var_I_lag_2']]
             if not len(config_run.settings['forecast_var_I_lag_2']) == 3:
                 raise
         except:
@@ -262,14 +262,14 @@ def configuration_run():
                                                         analysis_interval.get_range_analysis_interval()))
 
             config_run.settings['forecast_date']['text'] \
-                = format_out.get_month_in_text(config_run.settings['forecast_date']['month']-1) \
+                = format_out.month_in_initials(config_run.settings['forecast_date']['month']-1) \
                 + ' ' + str(config_run.settings['forecast_date']['day'])
 
         else:
             config_run.settings['forecast_date'] = {'month':forecast_month}
 
             config_run.settings['forecast_date']['text'] \
-                = format_out.get_month_in_text(config_run.settings['forecast_date']['month']-1)
+                = format_out.month_in_initials(config_run.settings['forecast_date']['month']-1)
 
         globals_vars.input_settings["forecast_date"] = colored.green(config_run.settings['forecast_date']['text'])
 

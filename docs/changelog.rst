@@ -28,6 +28,7 @@ news
 - [code] Organize get_month and get_trimester text function in format_out
 - [code] Organize thresholds functions
 - [code] Refactoring settings
+- [code] Refactoring format_in format_out
 
 fixes
 +++++

@@ -43,15 +43,15 @@ def forecast_graphs(station):
 
         if globals_vars.STATE_OF_DATA in [1, 3]:
             title_date_graphic = _("trim {0} ({1})").format(config_run.settings['forecast_date']['month'],
-                format_out.get_trimester_in_text(config_run.settings['forecast_date']['month'] - 1))
+                format_out.trimester_in_initials(config_run.settings['forecast_date']['month'] - 1))
             filename_date_graphic = _("trim_{0}").format(config_run.settings['forecast_date']['month'])
 
         if globals_vars.STATE_OF_DATA in [2, 4]:
             title_date_graphic = "{0} {1}"\
-                .format(format_out.get_month_in_text(config_run.settings['forecast_date']['month'] - 1),
+                .format(format_out.month_in_initials(config_run.settings['forecast_date']['month'] - 1),
                         config_run.settings['forecast_date']['day'])
             filename_date_graphic = "{0}_{1}"\
-                .format(format_out.get_month_in_text(config_run.settings['forecast_date']['month'] - 1),
+                .format(format_out.month_in_initials(config_run.settings['forecast_date']['month'] - 1),
                         config_run.settings['forecast_date']['day'])
 
         ## Options for graphics pie
