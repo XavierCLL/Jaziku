@@ -181,7 +181,7 @@ analysis_interval_i18n = None
 STATE_OF_DATA = None
 
 #==============================================================================
-# maps
+# maps #TODO: is now static fix it!
 
 # maps files for climate:
 maps_files_climate = {'5days': None, '10days': None, '15days': None, 'trimester': None}

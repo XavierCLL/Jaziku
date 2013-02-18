@@ -48,7 +48,7 @@ def get():
 
     globals_vars.input_settings = settings
 
-    ## general options
+    ## MODULES
     # ------------------------
     # data_analysis
     if config_run.settings['data_analysis'] == True:
@@ -73,6 +73,33 @@ def get():
         console.msg_error_configuration('forecast_process', _("'forecast_process' variable in runfile is wrong,\n"
                             "this must be 'enable' or 'disable'"))
 
+    ## OUTPUTS
+    # ------------------------
+    # graphics
+    if config_run.settings['graphics']:
+        settings["graphics"] = colored.green(_("enabled"))
+
+    # ------------------------
+    # maps
+    if config_run.settings['maps']:
+        if config_run.settings['maps'] == "all":
+            config_run.settings['maps'] = {'climate': True, 'forecast': True, 'correlation': True}
+            settings["maps"] = ','.join(map(str, [m for m in config_run.settings['maps'] if config_run.settings['maps'][m]]))
+        else:
+            try:
+                config_run.settings['maps'] = {'climate': False, 'forecast': False, 'correlation': False}
+                input_maps_list = config_run.settings['maps'].split(",")
+                for map_to_run in input_maps_list:
+                    map_to_run = map_to_run.strip()
+                    if map_to_run not in ['climate', 'forecast', 'correlation']:
+                        raise
+                    config_run.settings['maps'][map_to_run] = True
+            except:
+                console.msg_error_configuration('maps',_("the maps options are: 'climate', 'forecast', "
+                                                         "'correlation' (comma separated), or 'all'."))
+            settings["maps"] = colored.green(','.join(map(str, [m for m in config_run.settings['maps'] if config_run.settings['maps'][m]])))
+
+    ## GENERAL OPTIONS
     # ------------------------
     # analysis interval
     if config_run.settings['analysis_interval'] not in globals_vars.ALL_ANALYSIS_INTERVALS:
@@ -97,6 +124,10 @@ def get():
     # analysis_interval setting
     if config_run.settings['analysis_interval']:
         settings["analysis_interval"] = colored.green(config_run.settings['analysis_interval'])
+
+    # ------------------------
+    # class_category_analysis
+    settings["class_category_analysis"] = colored.green(config_run.settings['class_category_analysis'])
 
     # ------------------------
     # process_period
@@ -275,10 +306,6 @@ def get():
 
     ## graphics settings
     # ------------------------
-    if config_run.settings['graphics']:
-        settings["graphics"] = colored.green(_("enabled"))
-
-
     # if phenomenon below is defined inside arguments, else default value
     if config_run.settings['phen_below_label'] and config_run.settings['phen_below_label'] != "default":
         config_run.settings['phen_below_label'] = unicode(config_run.settings['phen_below_label'], 'utf-8')
@@ -314,22 +341,6 @@ def get():
     # ------------------------
     # maps settings
     if config_run.settings['maps']:
-        if config_run.settings['maps'] == "all":
-            config_run.settings['maps'] = {'climate': True, 'forecast': True, 'correlation': True}
-            settings["maps"] = ','.join(map(str, [m for m in config_run.settings['maps'] if config_run.settings['maps'][m]]))
-        else:
-            try:
-                config_run.settings['maps'] = {'climate': False, 'forecast': False, 'correlation': False}
-                input_maps_list = config_run.settings['maps'].split(",")
-                for map_to_run in input_maps_list:
-                    map_to_run = map_to_run.strip()
-                    if map_to_run not in ['climate', 'forecast', 'correlation']:
-                        raise
-                    config_run.settings['maps'][map_to_run] = True
-            except:
-                console.msg_error_configuration('maps',_("the maps options are: 'climate', 'forecast', "
-                    "'correlation' (comma separated), or 'all'."))
-            settings["maps"] = colored.green(','.join(map(str, [m for m in config_run.settings['maps'] if config_run.settings['maps'][m]])))
 
         # marks_stations
         if config_run.settings['marks_stations'] in ["enable", "default", True]:
