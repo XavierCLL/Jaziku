@@ -34,7 +34,7 @@ def main(stations_list):
     # -------------------------------------------------------------------------
     # GET/SET SETTINGS
 
-    settings.get()
+    settings.get.configuration_run()
 
     # -------------------------------------------------------------------------
     # PRINT AND CHECK SETTINGS
