@@ -22,7 +22,7 @@ from jaziku.env import globals_vars, config_run
 from jaziku.utils import console
 
 
-def show(stop_in=None):
+def configuration_run(stop_in=None):
 
     # load input settings saved
     settings = globals_vars.input_settings
