@@ -41,10 +41,10 @@ from i18n import i18n
 
 # jaziku import
 from env import globals_vars, config_run
+from core import settings
 from core import stations
 from core.input import input_runfile, input_arg
 from core.station import Station
-from core.settings import settings
 from modules.climate import climate
 from modules.forecast import forecast
 from modules.data_analysis import data_analysis
