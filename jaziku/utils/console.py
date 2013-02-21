@@ -111,7 +111,7 @@ def msg_error_configuration(variable, text_error, show_settings=True):
     """
     if show_settings:
         from jaziku.core import settings
-        settings.show(stop_in=variable)
+        settings.show.configuration_run(stop_in=variable)
 
     runfile_open = open(globals_vars.ARGS.runfile, 'rb')
     runfile = (x.replace('\0', '') for x in runfile_open)

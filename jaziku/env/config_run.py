@@ -64,17 +64,6 @@ list_of_all_settings = [
     #   input: boolean (disable, enable)
     'forecast_process',
 
-    ## OUTPUTS
-
-    # do or not graphics
-    #   input: boolean (disable, enable)
-    'graphics',
-
-    # defined, after read runfile configuration, what run
-    #   input: ('climate', 'forecast', 'correlation') or combining of them
-    #   access: {'climate': boolean, 'forecast': boolean, 'correlation': boolean}
-    'maps',
-
     ## GENERAL OPTIONS
 
     # analysis interval for process
@@ -101,6 +90,35 @@ list_of_all_settings = [
     # languages
     #   input: default, string (e.g 'es', 'en')
     'language',
+
+    ## CHECK OPTIONS
+
+    # check consistent data
+    #   input: boolean (disable, enable)
+    'consistent_data',
+
+    # do or not risk analysis
+    #   input: boolean (disable, enable)
+    'risk_analysis',
+
+    ## OUTPUT OPTIONS
+
+    # do or not graphics
+    #   input: boolean (disable, enable)
+    'graphics',
+
+    # defined, after read runfile configuration, what run
+    #   input: ('climate', 'forecast', 'correlation') or combining of them
+    #   access: {'climate': boolean, 'forecast': boolean, 'correlation': boolean}
+    'maps',
+
+    # labels for all categories for independent variable
+    # the number of input labels depend of class_category_analysis, thus:
+    # if is 3 categories should be 3 labels
+    # if is 7 categories should be 7 labels
+    #   input: string or 'default'
+    #   access: {'below','normal','above'} or {'below3','below2','below1','normal','above1','above2','above3'}
+    'var_I_category_labels',
 
     ## VAR D OPTIONS
 
@@ -145,26 +163,6 @@ list_of_all_settings = [
     #      float: (below;above) or (below3;below2;below1;above1;above2;above3)
     #   access: {'below','above'} or {'below3','below2','below1','above1','above2','above3'}
     'thresholds_var_I',
-
-    ## CHECK OPTIONS
-
-    # check consistent data
-    #   input: boolean (disable, enable)
-    'consistent_data',
-
-    # do or not risk analysis
-    #   input: boolean (disable, enable)
-    'risk_analysis',
-
-    ## OUTPUT OPTIONS
-
-    # labels for all categories for independent variable
-    # the number of input labels depend of class_category_analysis, thus:
-    # if is 3 categories should be 3 labels
-    # if is 7 categories should be 7 labels
-    #   input: string or 'default'
-    #   access: {'below','normal','above'} or {'below3','below2','below1','normal','above1','above2','above3'}
-    'var_I_category_labels',
 
     ## FORECAST OPTIONS
 

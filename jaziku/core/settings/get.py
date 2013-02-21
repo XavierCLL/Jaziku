@@ -22,7 +22,7 @@ import os
 from clint.textui import colored
 
 from jaziku.env import config_run, globals_vars
-from jaziku.utils import console
+from jaziku.utils import console, format_in
 
 
 def configuration_run():
@@ -73,32 +73,6 @@ def configuration_run():
         console.msg_error_configuration('forecast_process', _("'forecast_process' variable in runfile is wrong,\n"
                             "this must be 'enable' or 'disable'"))
 
-    ## OUTPUTS
-    # ------------------------
-    # graphics
-    if config_run.settings['graphics']:
-        settings["graphics"] = colored.green(_("enabled"))
-
-    # ------------------------
-    # maps
-    if config_run.settings['maps']:
-        if config_run.settings['maps'] == "all":
-            config_run.settings['maps'] = {'climate': True, 'forecast': True, 'correlation': True}
-            settings["maps"] = ','.join(map(str, [m for m in config_run.settings['maps'] if config_run.settings['maps'][m]]))
-        else:
-            try:
-                config_run.settings['maps'] = {'climate': False, 'forecast': False, 'correlation': False}
-                input_maps_list = config_run.settings['maps'].split(",")
-                for map_to_run in input_maps_list:
-                    map_to_run = map_to_run.strip()
-                    if map_to_run not in ['climate', 'forecast', 'correlation']:
-                        raise
-                    config_run.settings['maps'][map_to_run] = True
-            except:
-                console.msg_error_configuration('maps',_("the maps options are: 'climate', 'forecast', "
-                                                         "'correlation' (comma separated), or 'all'."))
-            settings["maps"] = colored.green(','.join(map(str, [m for m in config_run.settings['maps'] if config_run.settings['maps'][m]])))
-
     ## GENERAL OPTIONS
     # ------------------------
     # analysis interval
@@ -127,6 +101,7 @@ def configuration_run():
 
     # ------------------------
     # class_category_analysis
+    config_run.settings['class_category_analysis'] = format_in.to_integer(config_run.settings['class_category_analysis'])
     settings["class_category_analysis"] = colored.green(config_run.settings['class_category_analysis'])
 
     # ------------------------
@@ -177,6 +152,50 @@ def configuration_run():
     # languages
     settings["language"] = config_run.settings['language']
 
+    ## CHECK OPTIONS
+    # ------------------------
+    # consistent_data
+    if config_run.settings['consistent_data']:
+        settings["consistent_data"] = colored.green(_("enabled"))
+
+    # ------------------------
+    # risk_analysis
+    if config_run.settings['risk_analysis']:
+        settings["risk_analysis"] = colored.green(_("enabled"))
+
+    ## OUTPUT OPTIONS
+    # ------------------------
+    # graphics
+    if config_run.settings['graphics']:
+        settings["graphics"] = colored.green(_("enabled"))
+
+    # ------------------------
+    # maps
+    if config_run.settings['maps']:
+        if config_run.settings['maps'] == "all":
+            config_run.settings['maps'] = {'climate': True, 'forecast': True, 'correlation': True}
+            settings["maps"] = ','.join(map(str, [m for m in config_run.settings['maps'] if config_run.settings['maps'][m]]))
+        else:
+            try:
+                config_run.settings['maps'] = {'climate': False, 'forecast': False, 'correlation': False}
+                input_maps_list = config_run.settings['maps'].split(",")
+                for map_to_run in input_maps_list:
+                    map_to_run = map_to_run.strip()
+                    if map_to_run not in ['climate', 'forecast', 'correlation']:
+                        raise
+                    config_run.settings['maps'][map_to_run] = True
+            except:
+                console.msg_error_configuration('maps',_("the maps options are: 'climate', 'forecast', "
+                                                         "'correlation' (comma separated), or 'all'."))
+            settings["maps"] = colored.green(','.join(map(str, [m for m in config_run.settings['maps'] if config_run.settings['maps'][m]])))
+
+    # ------------------------
+    # var_I_category_labels
+    if config_run.settings['var_I_category_labels'] and config_run.settings['var_I_category_labels'] != "default":
+        settings["var_I_category_labels"] = colored.green(config_run.settings['var_I_category_labels'])
+    else:
+        settings["var_I_category_labels"] = config_run.settings['var_I_category_labels']
+
     ## VAR D OPTIONS
     # ------------------------
     # type var D
@@ -222,15 +241,11 @@ def configuration_run():
 
 
     # ------------------------
-    # threshold var D
-    if config_run.settings['threshold_below_var_D'] == 'default':
-        settings["threshold_below_var_D"] = _('default')
+    # thresholds var D
+    if config_run.settings['thresholds_var_D'] == 'default':
+        settings["thresholds_var_D"] = _('default')
     else:
-        settings["threshold_below_var_D"] = colored.green(config_run.settings['threshold_below_var_D'])
-    if config_run.settings['threshold_above_var_D'] == 'default':
-        settings["threshold_above_var_D"] = _('default')
-    else:
-        settings["threshold_above_var_D"] = colored.green(config_run.settings['threshold_above_var_D'])
+        settings["thresholds_var_D"] = colored.green(config_run.settings['thresholds_var_D'])
 
     ## VAR I OPTIONS
     # ------------------------
@@ -284,50 +299,11 @@ def configuration_run():
             settings["limits_var_I"] += colored.green(config_run.settings['limits_var_I']['above'])
 
     # ------------------------
-    # threshold var I
-    if config_run.settings['threshold_below_var_I'] == 'default':
-        settings["threshold_below_var_I"] = _('default')
+    # thresholds var I
+    if config_run.settings['thresholds_var_I'] == 'default':
+        settings["thresholds_var_I"] = _('default')
     else:
-        settings["threshold_below_var_I"] = colored.green(config_run.settings['threshold_below_var_I'])
-    if config_run.settings['threshold_above_var_I'] == 'default':
-        settings["threshold_above_var_I"] = _('default')
-    else:
-        settings["threshold_above_var_I"] = colored.green(config_run.settings['threshold_above_var_I'])
-
-    ## CHECK OPTIONS
-    # ------------------------
-    # consistent_data
-    if config_run.settings['consistent_data']:
-        settings["consistent_data"] = colored.green(_("enabled"))
-
-    # ------------------------
-    # risk_analysis
-    if config_run.settings['risk_analysis']:
-        settings["risk_analysis"] = colored.green(_("enabled"))
-
-    ## OUPUT OPTIONS
-    # ------------------------
-    # if phenomenon below is defined inside arguments, else default value
-    if config_run.settings['phen_below_label'] and config_run.settings['phen_below_label'] != "default":
-        config_run.settings['phen_below_label'] = unicode(config_run.settings['phen_below_label'], 'utf-8')
-        settings["phen_below_label"] = colored.green(config_run.settings['phen_below_label'])
-    else:
-        config_run.settings['phen_below_label'] = unicode(_('var_I_below'), 'utf-8') # label by default
-        settings["phen_below_label"] = config_run.settings['phen_below_label']
-    # if phenomenon normal is defined inside arguments, else default value
-    if config_run.settings['phen_normal_label'] and config_run.settings['phen_normal_label'] != "default":
-        config_run.settings['phen_normal_label'] = unicode(config_run.settings['phen_normal_label'], 'utf-8')
-        settings["phen_normal_label"] = colored.green(config_run.settings['phen_normal_label'])
-    else:
-        config_run.settings['phen_normal_label'] = unicode(_('var_I_normal'), 'utf-8') # label by default
-        settings["phen_normal_label"] = config_run.settings['phen_normal_label']
-    # if phenomenon above is defined inside arguments, else default value
-    if config_run.settings['phen_above_label'] and config_run.settings['phen_above_label'] != "default":
-        config_run.settings['phen_above_label'] = unicode(config_run.settings['phen_above_label'], 'utf-8')
-        settings["phen_above_label"] = colored.green(config_run.settings['phen_above_label'])
-    else:
-        config_run.settings['phen_above_label'] = unicode(_('var_I_above'), 'utf-8') # label by default
-        settings["phen_above_label"] = config_run.settings['phen_above_label']
+        settings["thresholds_var_I"] = colored.green(config_run.settings['thresholds_var_I'])
 
     ## FORECAST OPTION
     # ------------------------
