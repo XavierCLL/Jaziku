@@ -31,15 +31,20 @@ def configuration_run(stop_in=None):
         settings[stop_in] = '?'
 
     print _("\nConfiguration run:")
-    console.msg("   General options", color='cyan')
+
+    console.msg("   Modules", color='cyan')
     print "   {0} --------- {1}".format("data analysis", settings["data_analysis"])
     if stop_in == "data_analysis": return
     print "   {0} ------- {1}".format("climate process", settings["climate_process"])
     if stop_in == "climate_process": return
     print "   {0} ------ {1}".format("forecast process", settings["forecast_process"])
     if stop_in == "forecast_process": return
+
+    console.msg("   General options", color='cyan')
     print "   {0} ----- {1}".format("analysis interval", settings["analysis_interval"])
     if stop_in == "analysis_interval": return
+    print "   {0} - {1}".format("class category analysis", settings["class_category_analysis"])
+    if stop_in == "class_category_analysis": return
     print "   {0} -------- {1}".format("process period", settings["process_period"])
     if stop_in == "process_period": return
     print "   {0} ----------- {1}".format("analog year", settings["analog_year"])
@@ -48,72 +53,53 @@ def configuration_run(stop_in=None):
     if stop_in == "lags": return
     print "   {0} -------------- {1}".format("language", settings["language"])
     if stop_in == "language": return
-    console.msg("   Var D options", color='cyan')
-    print "   {0} ------------ {1}".format("type var D", settings["type_var_D"])
-    if stop_in == "type_var_D": return
-    print "   {0} ----- {1}".format("limit var D below", settings["limit_var_D_below"])
-    if stop_in == "limit_var_D_below": return
-    print "   {0} ----- {1}".format("limit var D above", settings["limit_var_D_above"])
-    if stop_in == "limit_var_D_above": return
-    print "   {0} - {1}".format("threshold below var D", settings["threshold_below_var_D"])
-    if stop_in == "threshold_below_var_D": return
-    print "   {0} - {1}".format("threshold above var D", settings["threshold_above_var_D"])
-    if stop_in == "threshold_above_var_D": return
-    console.msg("   Var I options", color='cyan')
-    print "   {0} ------------ {1}".format("type var I", settings["type_var_I"])
-    if stop_in == "type_var_I": return
-    print "   {0} ---- {1}".format("path to file var I", settings["path_to_file_var_I"])
-    if stop_in == "path_to_file_var_I": return
-    print "   {0} ----- {1}".format("limit var I below", settings["limit_var_I_below"])
-    if stop_in == "limit_var_I_below": return
-    print "   {0} ----- {1}".format("limit var I above", settings["limit_var_I_above"])
-    if stop_in == "limit_var_I_above": return
-    print "   {0} - {1}".format("threshold below var I", settings["threshold_below_var_I"])
-    if stop_in == "threshold_below_var_I": return
-    print "   {0} - {1}".format("threshold above var I", settings["threshold_above_var_I"])
-    if stop_in == "threshold_above_var_I": return
+
     console.msg("   Check options", color='cyan')
     print "   {0} ------- {1}".format("consistent data", settings["consistent_data"])
     if stop_in == "consistent_data": return
     print "   {0} --------- {1}".format("risk analysis", settings["risk_analysis"])
     if stop_in == "risk_analysis": return
+
     console.msg("   Output options", color='cyan')
     print "   {0} -------------- {1}".format("graphics", settings["graphics"])
     if stop_in == "graphics": return
-    print "   {0} ------ {1}".format("phen below label", settings["phen_below_label"])
-    if stop_in == "phen_below_label": return
-    print "   {0} ----- {1}".format("phen normal label", settings["phen_normal_label"])
-    if stop_in == "phen_normal_label": return
-    print "   {0} ------ {1}".format("phen above label", settings["phen_above_label"])
-    if stop_in == "phen_above_label": return
-    if config_run.settings['forecast_process']:
-        console.msg("   Forecast options", color='cyan')
-        print "   {0} ------ {1}".format("lag 0 phen below", settings["lag_0_phen_below"])
-        if stop_in == "lag_0_phen_below": return
-        print "   {0} ----- {1}".format("lag 0 phen normal", settings["lag_0_phen_normal"])
-        if stop_in == "lag_0_phen_normal": return
-        print "   {0} ------ {1}".format("lag 0 phen above", settings["lag_0_phen_above"])
-        if stop_in == "lag_0_phen_above": return
-        if stop_in == "lag_0_phen": return
-        print "   {0} ------ {1}".format("lag 1 phen below", settings["lag_1_phen_below"])
-        if stop_in == "lag_1_phen_below": return
-        print "   {0} ----- {1}".format("lag 1 phen normal", settings["lag_1_phen_normal"])
-        if stop_in == "lag_1_phen_normal": return
-        print "   {0} ------ {1}".format("lag 1 phen above", settings["lag_1_phen_above"])
-        if stop_in == "lag_1_phen_above": return
-        if stop_in == "lag_1_phen": return
-        print "   {0} ------ {1}".format("lag 2 phen below", settings["lag_2_phen_below"])
-        if stop_in == "lag_2_phen_below": return
-        print "   {0} ----- {1}".format("lag 2 phen normal", settings["lag_2_phen_normal"])
-        if stop_in == "lag_2_phen_normal": return
-        print "   {0} ------ {1}".format("lag 2 phen above", settings["lag_2_phen_above"])
-        if stop_in == "lag_2_phen_above": return
-        if stop_in == "lag_2_phen": return
-        print "   {0} --------- {1}".format("forecast date", settings["forecast_date"])
-        if stop_in == "forecast_date": return
-    console.msg("   Maps options", color='cyan')
     print "   {0} ------------------ {1}".format("maps", settings["maps"])
     if stop_in == "maps": return
+    print "   {0} ----- {1}".format("phen normal label", settings["phen_normal_label"])
+    if stop_in == "var_I_category_labels": return
+    print "   {0} - {1}".format("var_I_category_labels", settings["var_I_category_labels"])
+    if stop_in == "var_I_category_labels": return
+
+    console.msg("   Var D options", color='cyan')
+    print "   {0} ------------ {1}".format("type var D", settings["type_var_D"])
+    if stop_in == "type_var_D": return
+    print "   {0} ---------- {1}".format("limits var D", settings["limits_var_D"])
+    if stop_in == "limits_var_D": return
+    print "   {0} ------ {1}".format("thresholds var D", settings["thresholds_var_D"])
+    if stop_in == "thresholds_var_D": return
+
+    console.msg("   Var I options", color='cyan')
+    print "   {0} ------------ {1}".format("type var I", settings["type_var_I"])
+    if stop_in == "type_var_I": return
+    print "   {0} ---- {1}".format("path to file var I", settings["path_to_file_var_I"])
+    if stop_in == "path_to_file_var_I": return
+    print "   {0} ---------- {1}".format("limits var I", settings["limits_var_I"])
+    if stop_in == "limits_var_I": return
+    print "   {0} ------ {1}".format("thresholds var I", settings["thresholds_var_I"])
+    if stop_in == "thresholds_var_I": return
+
+    if config_run.settings['forecast_process']:
+        console.msg("   Forecast options", color='cyan')
+        print "   {0} --------- {1}".format("forecast date", settings["forecast_date"])
+        if stop_in == "forecast_date": return
+        print "   {0} -- {1}".format("forecast var I lag 0", settings["forecast_var_I_lag_0"])
+        if stop_in == "forecast_var_I_lag_0": return
+        print "   {0} -- {1}".format("forecast var I lag 1", settings["forecast_var_I_lag_1"])
+        if stop_in == "forecast_var_I_lag_1": return
+        print "   {0} -- {1}".format("forecast var I lag 2", settings["forecast_var_I_lag_2"])
+        if stop_in == "forecast_var_I_lag_2": return
+
+    console.msg("   Maps options", color='cyan')
     if config_run.settings['maps']:
         print "   {0} -------- {1}".format("marks_stations", settings["marks_stations"])
         if stop_in == "marks_stations": return

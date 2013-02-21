@@ -32,10 +32,46 @@ def configuration_run():
     # class_category_analysis
     config_run.settings['class_category_analysis'] = format_in.to_integer(config_run.settings['class_category_analysis'])
 
-    if config_run.settings['class_category_analysis'] not in [3,5]:
+    if config_run.settings['class_category_analysis'] not in [3,7]:
         console.msg_error_configuration('class_category_analysis',
             _("The 'class_category_analysis' {0} not is valid,\n"
-              "this should be '3' or '7'."))
+              "this should be '3' or '7'.").format(config_run.settings['class_category_analysis']))
+
+    # ------------------------
+    # var_I_category_labels
+
+    if config_run.settings['class_category_analysis'] == 3:
+        if config_run.settings['var_I_category_labels'] == "default":
+            config_run.settings['var_I_category_labels'] = [unicode(_("below"), 'utf-8'),
+                                                            unicode(_("normal"), 'utf-8'),
+                                                            unicode(_("above"), 'utf-8')]
+        else:
+            if len(config_run.settings['var_I_category_labels']) == 3:
+                config_run.settings['var_I_category_labels']\
+                    = [unicode(label, 'utf-8') for label in config_run.settings['var_I_category_labels']]
+            else:
+                console.msg_error_configuration('var_I_category_labels',
+                                                _("The 'var_I_category_labels' {0} not is valid,\n"
+                                                  "this should be 3 labels in different rows."))
+
+
+    if config_run.settings['class_category_analysis'] == 7:
+        if config_run.settings['var_I_category_labels'] == "default":
+            config_run.settings['var_I_category_labels'] = [unicode(_("strong below"), 'utf-8'),
+                                                            unicode(_("moderate below"), 'utf-8'),
+                                                            unicode(_("weak below"), 'utf-8'),
+                                                            unicode(_("normal"), 'utf-8'),
+                                                            unicode(_("weak above"), 'utf-8'),
+                                                            unicode(_("moderate above"), 'utf-8'),
+                                                            unicode(_("strong above"), 'utf-8')]
+        else:
+            if len(config_run.settings['var_I_category_labels']) == 7:
+                config_run.settings['var_I_category_labels'] \
+                    = [unicode(label, 'utf-8') for label in config_run.settings['var_I_category_labels']]
+            else:
+                console.msg_error_configuration('var_I_category_labels',
+                                                _("The 'var_I_category_labels' {0} not is valid,\n"
+                                                  "this should be 7 labels in different rows."))
 
     # ------------------------
     # limits var D
@@ -157,12 +193,8 @@ def configuration_run():
 
     if not config_run.settings["path_to_file_var_I"] == "internal" and \
        config_run.settings["type_var_I"] not in globals_vars.TYPES_OF_INTERNAL_VAR_I:
-        if config_run.settings["threshold_below_var_I"] == "default":
-            console.msg_error_configuration('threshold_below_var_I',
-                _("The thresholds can't be define as 'default' if the\n"
-                  "type of independent variable not is valid internal type."))
-        if config_run.settings["threshold_above_var_I"] == "default":
-            console.msg_error_configuration('threshold_above_var_I',
+        if config_run.settings["thresholds_var_I"] == "default":
+            console.msg_error_configuration('thresholds_var_I',
                 _("The thresholds can't be define as 'default' if the\n"
                   "type of independent variable not is valid internal type."))
 
