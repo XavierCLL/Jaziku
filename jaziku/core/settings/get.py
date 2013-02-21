@@ -25,7 +25,7 @@ from jaziku.env import config_run, globals_vars
 from jaziku.utils import console
 
 
-def get():
+def configuration_run():
 
     # set settings by default
     settings = {"data_analysis": colored.red(_("disabled")),
@@ -177,7 +177,7 @@ def get():
     # languages
     settings["language"] = config_run.settings['language']
 
-    ## input options
+    ## VAR D OPTIONS
     # ------------------------
     # type var D
     if config_run.settings['type_var_D']:
@@ -232,6 +232,7 @@ def get():
     else:
         settings["threshold_above_var_D"] = colored.green(config_run.settings['threshold_above_var_D'])
 
+    ## VAR I OPTIONS
     # ------------------------
     # type var I
     if config_run.settings['type_var_I']:
@@ -293,7 +294,7 @@ def get():
     else:
         settings["threshold_above_var_I"] = colored.green(config_run.settings['threshold_above_var_I'])
 
-    ## check options
+    ## CHECK OPTIONS
     # ------------------------
     # consistent_data
     if config_run.settings['consistent_data']:
@@ -304,7 +305,7 @@ def get():
     if config_run.settings['risk_analysis']:
         settings["risk_analysis"] = colored.green(_("enabled"))
 
-    ## graphics settings
+    ## OUPUT OPTIONS
     # ------------------------
     # if phenomenon below is defined inside arguments, else default value
     if config_run.settings['phen_below_label'] and config_run.settings['phen_below_label'] != "default":
@@ -328,6 +329,7 @@ def get():
         config_run.settings['phen_above_label'] = unicode(_('var_I_above'), 'utf-8') # label by default
         settings["phen_above_label"] = config_run.settings['phen_above_label']
 
+    ## FORECAST OPTION
     # ------------------------
     # forecast settings
     if config_run.settings['forecast_process']:
@@ -338,6 +340,7 @@ def get():
         settings['forecast_var_I_lag_1'] = config_run.settings['forecast_var_I_lag_1']
         settings['forecast_var_I_lag_2'] = config_run.settings['forecast_var_I_lag_2']
 
+    ## MAPS OPTIONS
     # ------------------------
     # maps settings
     if config_run.settings['maps']:
@@ -381,3 +384,8 @@ def get():
 
     # save input settings
     globals_vars.input_settings = settings
+
+
+def grids_list():
+    # TODO
+    pass

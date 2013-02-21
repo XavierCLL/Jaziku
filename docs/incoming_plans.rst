@@ -15,12 +15,12 @@ Incoming Plans / TODO
 - Modification of maps for 3, 4 and 5 categories
 - Modification of the linear combination between the contingency table and forecasted by categories of the independent variable.
 - Modification of the option analog years for 4 and 5 categories
-- Standardized variables graphic option (Dependent variable transformation to the same format of Independent Variable)
 
 0.7 (**2013-04-xx**)
 --------------------
 - Add month and two-months to analysis resolution
 - Include MEI index for bimonthly analysis
+- Standardized variables graphic option (Dependent variable transformation to the same format of Independent Variable)
 
 0.8 (**2013-05-xx**)
 --------------------
@@ -60,7 +60,7 @@ Others TODO
 To be included
 --------------
 - save log
-- print console standard method
+- print console through classes
 - settings class
 - more interpolations
 
