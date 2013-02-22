@@ -15,12 +15,13 @@ import sys, os
 import imp
 
 this_file_dir = os.path.dirname(os.path.realpath(__file__))
-globals_vars = imp.load_source('globals_vars', os.path.join(os.path.dirname(os.path.dirname(this_file_dir)), 'jaziku', 'utils', 'globals_vars.py'))
+jaziku_path = os.path.join(os.path.dirname(os.path.dirname(this_file_dir)))
+globals_vars = imp.load_source('globals_vars', os.path.join(jaziku_path, 'jaziku', 'env', 'globals_vars.py'))
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath(jaziku_path))
 
 # -- General configuration -----------------------------------------------------
 
@@ -29,7 +30,7 @@ globals_vars = imp.load_source('globals_vars', os.path.join(os.path.dirname(os.p
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage', 'sphinx.ext.pngmath']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage', 'sphinx.ext.pngmath', 'sphinx.ext.intersphinx']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -74,7 +75,7 @@ exclude_patterns = ['_build']
 #default_role = None
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
-#add_function_parentheses = True
+add_function_parentheses = True
 
 # If true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
@@ -232,7 +233,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'Jaziku', u'Jaziku Documentation',
-   u'Xavier Corredor Llano, Ines Sánchez Rodriguez', 'Jaziku', 'One line description of project.',
+   u'Xavier Corredor Llano, Ines Sánchez Rodriguez', 'Jaziku', 'Jaziku is statistical inference software for the teleconnections analysis.',
    'Miscellaneous'),
 ]
 
