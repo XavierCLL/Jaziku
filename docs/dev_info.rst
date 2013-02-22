@@ -44,7 +44,7 @@ https://secure.rhodecode.org/rhodecode/files/tip/
             - `likes_spam`: A boolean indicating if we like SPAM or not.
             - `eggs`: An integer count of the eggs we have laid.
 
-        Examples:
+        :Examples:
             examples code here
 
         :Raises:
