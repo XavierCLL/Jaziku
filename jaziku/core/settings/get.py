@@ -101,7 +101,7 @@ def configuration_run():
 
     # ------------------------
     # class_category_analysis
-    config_run.settings['class_category_analysis'] = format_in.to_integer(config_run.settings['class_category_analysis'])
+    config_run.settings['class_category_analysis'] = format_in.to_int(config_run.settings['class_category_analysis'])
     settings["class_category_analysis"] = colored.green(config_run.settings['class_category_analysis'])
 
     # ------------------------
@@ -177,8 +177,8 @@ def configuration_run():
             settings["maps"] = ','.join(map(str, [m for m in config_run.settings['maps'] if config_run.settings['maps'][m]]))
         else:
             try:
-                config_run.settings['maps'] = {'climate': False, 'forecast': False, 'correlation': False}
                 input_maps_list = config_run.settings['maps'].split(",")
+                config_run.settings['maps'] = {'climate': False, 'forecast': False, 'correlation': False}
                 for map_to_run in input_maps_list:
                     map_to_run = map_to_run.strip()
                     if map_to_run not in ['climate', 'forecast', 'correlation']:
@@ -191,10 +191,10 @@ def configuration_run():
 
     # ------------------------
     # var_I_category_labels
-    if config_run.settings['var_I_category_labels'] and config_run.settings['var_I_category_labels'] != "default":
-        settings["var_I_category_labels"] = colored.green(config_run.settings['var_I_category_labels'])
+    if config_run.settings['var_I_category_labels'] == "default":
+        settings["var_I_category_labels"] = [config_run.settings['var_I_category_labels']]
     else:
-        settings["var_I_category_labels"] = config_run.settings['var_I_category_labels']
+        settings["var_I_category_labels"] = ["'"+label+"'" for label in config_run.settings['var_I_category_labels']]
 
     ## VAR D OPTIONS
     # ------------------------

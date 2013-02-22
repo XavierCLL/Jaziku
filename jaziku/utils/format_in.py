@@ -18,14 +18,14 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-def to_integer(item):
+def to_int(item):
     try:
-        return int(str(item.replace(',', '.')).replace(',', '.'))
+        return int(float(str(item).replace(',', '.')))
     except:
         return item
 
 def to_float(item):
     try:
-        return float(str(item.replace(',', '.')).replace(',', '.'))
+        return float(str(item).replace(',', '.'))
     except:
         return item

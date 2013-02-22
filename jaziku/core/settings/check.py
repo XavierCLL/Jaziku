@@ -30,7 +30,7 @@ def configuration_run():
 
     # ------------------------
     # class_category_analysis
-    config_run.settings['class_category_analysis'] = format_in.to_integer(config_run.settings['class_category_analysis'])
+    config_run.settings['class_category_analysis'] = format_in.to_int(config_run.settings['class_category_analysis'])
 
     if config_run.settings['class_category_analysis'] not in [3,7]:
         console.msg_error_configuration('class_category_analysis',
