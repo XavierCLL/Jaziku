@@ -362,17 +362,20 @@ def validation_var_I(type_var_I, var_I):
             if (config_run.settings['limits_var_I']['below'] <= var_I <= config_run.settings['limits_var_I']['above']):
                 return var_I
             else:
-                returnError(_("{0} not valid in particular limits defined in runfile").format(type_var_I))
+                returnError(_("{0} not valid in particular limits defined in runfile").format(type_var_I),
+                            config_run.settings['limits_var_I']['below'], config_run.settings['limits_var_I']['above'])
         elif config_run.settings['limits_var_I']['below'] is None and config_run.settings['limits_var_I']['above'] is not None:
             if (var_I <= config_run.settings['limits_var_I']['above']):
                 return var_I
             else:
-                returnError(_("{0} not valid in particular limits defined in runfile").format(type_var_I))
+                returnError(_("{0} not valid in particular limits defined in runfile").format(type_var_I),
+                            config_run.settings['limits_var_I']['below'], config_run.settings['limits_var_I']['above'])
         elif config_run.settings['limits_var_I']['above'] is None and config_run.settings['limits_var_I']['below'] is not None:
             if (config_run.settings['limits_var_I']['below'] <= var_I):
                 return var_I
             else:
-                returnError(_("{0} not valid in particular limits defined in runfile").format(type_var_I))
+                returnError(_("{0} not valid in particular limits defined in runfile").format(type_var_I),
+                            config_run.settings['limits_var_I']['below'], config_run.settings['limits_var_I']['above'])
         else:  # this is that both are equal to "none"
             return var_I
 
