@@ -23,6 +23,8 @@ from datetime import date
 from jaziku.env import globals_vars, config_run
 
 
+#TODO: better functions, return True or False
+
 #==============================================================================
 # VALIDATION FOR DEPENDENT AND INDEPENDENT VARIABLE
 
