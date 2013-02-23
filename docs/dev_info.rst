@@ -1,8 +1,9 @@
 
-Syntax language and rules
+Guidelines and rules of language syntax
 -------------------------
 
 :Pages:
+http://epydoc.sourceforge.net/manual-fields.html
 http://google-styleguide.googlecode.com/svn/trunk/pyguide.html
 http://pythonhosted.org/an_example_pypi_project/sphinx.html
 
@@ -21,34 +22,23 @@ https://secure.rhodecode.org/rhodecode/files/tip/
         represented by big_table.  Silly things may happen if
         other_silly_variable is not None.
 
-        :Args:
-            - `big_table`: An open Bigtable Table instance.
-            - `keys`: A sequence of strings representing the key of each table row
-                to fetch.
-            - `other_silly_variable`: Another optional variable, that has a much
-                longer name than the other args, and which does nothing.
+        :param big_table: An open Bigtable Table instance.
+        :type big_table: int
+        :param keys: A sequence of strings representing the key of each table row to fetch.
+        :type keys: dict
 
-        :Returns:
-            A dict mapping keys to the corresponding table row data
-            fetched. Each row is represented as a tuple of strings. For
-            example:
+        :return: Return a dictionary depend of `class_category_analysis`, thus:
 
-            {'Serak': ('Rigel VII', 'Preparer'),
-             'Zim': ('Irk', 'Invader'),
-             'Lrrr': ('Omicron Persei 8', 'Emperor')}
+            if `class_category_analysis` is 3:
+                - `<dict>`, 2 keys: {'below','above'}
+            if `class_category_analysis` is 7:
+                - `<dict>`, 6 keys: {'below3','below2','below1','above1','above2','above3'}
+        :rtype: dict
 
-            If a key from the keys argument is missing from the dictionary,
-            then that row was not found in the table.
+        :ivar likes_spam: A boolean indicating if we like SPAM or not.
+        :ivar eggs: An integer count of the eggs we have laid.
 
-        :Attributes:
-            - `likes_spam`: A boolean indicating if we like SPAM or not.
-            - `eggs`: An integer count of the eggs we have laid.
-
-        :Examples:
-            examples code here
-
-        :Raises:
-            - `IOError`: An error occurred accessing the bigtable.Table object.
+        :examples: examples code here
 
         .. note:: Requires server version **>= 1.1.3+**
 
