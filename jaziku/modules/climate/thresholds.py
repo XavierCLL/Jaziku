@@ -28,381 +28,351 @@ from jaziku.env import config_run, globals_vars
 from jaziku.utils import console
 
 
-def get_thresholds_var_D(station):
+def percentile(values, percentile_value):
+    """Calculate the percentile of input values list
+
+    :param values: values for make percentile
+    :type values: list
+    :param percentile_value: percentile value
+    :type percentile_value: float
+
+    :return: value of percentile
+    :rtype: float
     """
-    Calculate and return threshold by below and above
-    of dependent variable, the type of threshold as
+    return stats.scoreatpercentile(values, percentile_value)
+
+
+def percentiles(values, percentile_values):
+    """Calculate various percentiles of input values list
+
+    :param values: values for make percentile
+    :type values: list
+    :param percentile_values: percentile values 2 or 6 depending
+        of `class_category_analysis`
+    :type percentile_values: list
+
+    :return: values of percentile
+    :rtype: list
+
+    :raise ValueError: invalid argument
+    """
+    if len(percentile_values) in [2, 6]:
+        return [percentile(values, percentile_value) for percentile_value in percentile_values]
+    else:
+        raise ValueError("the 'percentile_values' should be a list with 2 or 6 values")
+
+
+def thresholds_dictionary(func):
+    def wrapper_func(*args):
+        thresholds_list = func(*args)
+        if config_run.settings['class_category_analysis'] == 3:
+            return {'below': thresholds_list[0],
+                    'above': thresholds_list[1]}
+        if config_run.settings['class_category_analysis'] == 7:
+            return {'below3': thresholds_list[0],
+                    'below2': thresholds_list[1],
+                    'below1': thresholds_list[2],
+                    'above1': thresholds_list[3],
+                    'above2': thresholds_list[4],
+                    'above3': thresholds_list[5]}
+    return wrapper_func
+
+
+def get_thresholds(station, variable):
+    """Calculate and return thresholds of dependent or
+    independent variable, the type of threshold as
     defined by the user in station file, these may be:
     "default", "pNN" (percentile NN), "sdN" (standard
     deviation N) and particular value.
+
+    :param station: station for get thresholds
+    :type station: Station
+    :param variable: variable for calculate thresholds
+    :type station: Variable
+
+    :return: Return a dictionary depend of `class_category_analysis`, thus:
+
+        if `class_category_analysis` is 2:
+            - `<dict>`, 2 keys: {'below','above'}
+        if `class_category_analysis` is 6:
+            - `<dict>`, 6 keys: {'below3','below2','below1','above1','above2','above3'}
+    :rtype: dict
     """
 
-    # Calculate percentile "below" and "above"
-    def percentiles(below, above):
-
-        threshold_below_var_D = stats.scoreatpercentile(station.var_D_values, below)
-        threshold_above_var_D = stats.scoreatpercentile(station.var_D_values, above)
-        return threshold_below_var_D, threshold_above_var_D
-
-    # thresholds by below and by above of var D by default
+    @thresholds_dictionary
     def thresholds_by_default():
-        # check if analog_year is defined
-        if config_run.settings['analog_year']:
-            # check if analog_year is inside in process period
-            if station.process_period['start'] <= config_run.settings['analog_year'] <= station.process_period['end']:
+        """thresholds by default of var D or var I"""
+        if variable.type == 'D':
+            return default_thresholds_var_D(station, variable)
+        if variable.type == 'I':
+            return default_thresholds_var_I(station, variable)
 
-                _iter_date = date(config_run.settings['analog_year'], 1, 1)
-                var_D_values_of_analog_year = []
-                # get all raw values of var D only in analog year, ignoring null values
-                while _iter_date <= date(config_run.settings['analog_year'], 12, 31):
-                    if not globals_vars.is_valid_null(station.var_D.data[station.var_D.date.index(_iter_date)]):
-                        var_D_values_of_analog_year.append(station.var_D.data[station.var_D.date.index(_iter_date)])
-                    if station.var_D.frequency_data== "daily":
-                        _iter_date += relativedelta(days=1)
-                    if station.var_D.frequency_data== "monthly":
-                        _iter_date += relativedelta(months=1)
-                threshold_below_var_D = stats.scoreatpercentile(var_D_values_of_analog_year, 33)
-                threshold_above_var_D = stats.scoreatpercentile(var_D_values_of_analog_year, 66)
+    @thresholds_dictionary
+    def thresholds_with_percentiles(percentile_values):
+        if False in [(0 <= value <= 100) for value in percentile_values]:
+            console.msg_error(_("the thresholds of var {0} were defined as "
+                                "percentile\nbut are outside of range 0-100:\n{1}")
+            .format(variable.type, thresholds_input))
 
-                # check if thresholds are valid
-                if math.isnan(threshold_below_var_D) or math.isnan(threshold_above_var_D):
-                    if station.first_iter:
-                        console.msg(_("\n > WARNING: Thresholds calculated with analog year for var_D are wrong,\n"
-                                      "   using default thresholds instead"), color='yellow'),
+        percentile_values_sort = list(percentile_values)
+        percentile_values_sort.sort()
+        if not percentile_values_sort == percentile_values:
+            console.msg_error(_("the percentile values of var {0} must have "
+                                "rising values:\n{1}")
+            .format(variable.type, thresholds_input))
+        return percentiles(variable.specific_values, percentile_values)
 
-                    return percentiles(33, 66)
-                else:
-                    if station.first_iter:
-                        console.msg(_("\n   Using thresholds with analog year for var_D "), color='cyan'),
+    @thresholds_dictionary
+    def thresholds_with_std_deviation(std_dev_values):
+        """Standard deviation 1, 2 or 3
 
-                    return threshold_below_var_D, threshold_above_var_D
-            else:
-                if station.first_iter:
-                    console.msg(_("\n > WARNING: The analog year ({0}) for this\n"
-                                   "   station is outside of process period {1} to\n"
-                                   "   {2}. The process continue but using the\n"
-                                   "   default thresholds .........................")
-                    .format(config_run.settings['analog_year'],
-                        station.process_period['start'],
-                        station.process_period['end']), color='yellow', newline=False)
-                return percentiles(33, 66)
-        else:
-            return percentiles(33, 66)
+        :param std_dev_values: list 2 or 6 values [below...above]
+        :type std_dev_values: list
+        """
+        if config_run.settings['class_category_analysis'] == 3:
+            values_without_nulls = []
+            for value in variable.specific_values:
+                if not globals_vars.is_valid_null(value):
+                    values_without_nulls.append(value)
 
-    # thresholds by below and by above of var D with standard deviation
-    def thresholds_with_std_deviation(below, above):
-        values_without_nulls = []
-        for value in station.var_D_values:
-            if not globals_vars.is_valid_null(value):
-                values_without_nulls.append(value)
+            def func_standard_deviation(values):
+                avg = float((sum(values))) / len(values)
+                sums = 0
+                for value in values:
+                    sums += (value - avg) ** 2
+                return (sums / (len(values) - 1)) ** 0.5
 
-        def func_standard_deviation(values):
-            avg = float((sum(values))) / len(values)
-            sums = 0
-            for value in values:
-                sums += (value - avg) ** 2
-            return (sums / (len(values) - 1)) ** 0.5
+            if std_dev_values[0] not in [1, 2, 3] or std_dev_values[1] not in [1, 2, 3]:
+                console.msg_error(_("thresholds of var {0} were defined as "
+                                    "N standard deviation\n but are outside of range, "
+                                    "this values must be 1, 2 or 3:\nsd{1} sd{2}")
+                .format(variable.type ,std_dev_values[0], std_dev_values[1]))
+            p50 = percentile(values_without_nulls, 50)
+            std_deviation = func_standard_deviation(values_without_nulls)
 
-        if below not in [1, 2, 3] or above not in [1, 2, 3]:
-            console.msg_error(_("thresholds of dependent variable were defined as "
-                                "N standard deviation\n but are outside of range, "
-                                "this values must be 1, 2 or 3:\nsd{0} sd{1}")
-            .format(below, above))
-        p50 = stats.scoreatpercentile(values_without_nulls, 50)
-        std_deviation = func_standard_deviation(values_without_nulls)
+            return [p50 - std_dev_values[0] * std_deviation,
+                    p50 + std_dev_values[1] * std_deviation]
 
-        return p50 - below * std_deviation, p50 + above * std_deviation
+        if config_run.settings['class_category_analysis'] == 7:
+            # TODO:
+            raise ValueError("TODO")
 
-    # thresholds by below and by above of var D with particular values,
-    # these values validation with type of var D
-    def thresholds_with_particular_values(below, above):
-
+    @thresholds_dictionary
+    def thresholds_with_particular_values(thresholds_input):
+        thresholds_input_sort = list(thresholds_input)
+        thresholds_input_sort.sort()
+        if not thresholds_input_sort == thresholds_input:
+            console.msg_error(_("the thresholds values of var {0} must have "
+                                "rising values:\n{1}")
+            .format(variable.type, thresholds_input))
         try:
-            below = float(below)
-            above = float(above)
-        except:
-            console.msg_error(_("thresholds could not were identified:\n{0} - {1}")
-            .format(below, above))
-
-        if below > above:
-            console.msg_error(_("threshold below of dependent variable can't be "
-                                "greater than threshold above:\n{0} - {1}")
-            .format(below, above))
-        try:
-            threshold_below_var_D = input_validation.validation_var_D(station.var_D.type_series,
-                below,
-                None,
-                station.var_D.frequency_data)
-            threshold_above_var_D = input_validation.validation_var_D(station.var_D.type_series,
-                above,
-                None,
-                station.var_D.frequency_data)
-            return threshold_below_var_D, threshold_above_var_D
+            for threshold in thresholds_input:
+                # these values validation with type of var D or var I
+                if variable.type == 'D':
+                    input_validation.validation_var_D(variable.type_series, threshold, None, variable.frequency_data)
+                if variable.type == 'I':
+                    input_validation.validation_var_I(variable.type_series, threshold)
+                    #TODO replace variable.type_series
+            return thresholds_input
         except Exception, e:
-            console.msg_error(_("Problem with thresholds of dependent "
-                                "variable:\n\n{0}").format(e))
+            console.msg_error(_("Problems validating the thresholds for var {0}:"
+                                "\n\n{1}").format(variable.type, e))
+
+    ## get defined thresholds on config_run and variable
+    if variable.type == 'D':
+        thresholds_input = config_run.settings['thresholds_var_D']
+    if variable.type == 'I':
+        thresholds_input = config_run.settings['thresholds_var_I']
 
     ## now analysis threshold input in arguments
     # if are define as default
-    if (config_run.settings['threshold_below_var_D'] == "default" and
-        config_run.settings['threshold_above_var_D'] == "default"):
+    if thresholds_input == "default":
         return thresholds_by_default()
 
     # check if analog_year is defined but thresholds aren't equal to "default"
     if config_run.settings['analog_year']:
         if station.first_iter:
             console.msg(_("\n > WARNING: You have defined the analog year,\n"
-                           "   but the thresholds of var D must be\n"
-                           "   'default' for use the analog year .........."), color='yellow', newline=False)
+                          "   but the thresholds of var D must be\n"
+                          "   'default' for use the analog year .........."), color='yellow', newline=False)
 
-    # if are define as percentile or standard deviation
-    if isinstance(config_run.settings['threshold_below_var_D'], str) and\
-       isinstance(config_run.settings['threshold_above_var_D'], str):
+    # if are defined as percentile or standard deviation (all str instance)
+    if not False in [isinstance(threshold,str) for threshold in thresholds_input]:
 
-        # if are define as percentile
-        if (''.join(list(config_run.settings['threshold_below_var_D'])[0:1]) == "p" and
-            ''.join(list(config_run.settings['threshold_above_var_D'])[0:1]) == "p"):
-            below = int(''.join(list(config_run.settings['threshold_below_var_D'])[1::]))
-            above = int(''.join(list(config_run.settings['threshold_above_var_D'])[1::]))
-            if not (0 <= below <= 100) or not (0 <= above <= 100):
-                console.msg_error(_("thresholds of dependent variable were defined as "
-                                    "percentile\nbut are outside of range 0-100:\n{0} - {1}")
-                .format(below, above))
-            if below > above:
-                console.msg_error(_("threshold below of dependent variable can't be "
-                                    "greater than threshold above:\n{0} - {1}")
-                .format(below, above))
-            return percentiles(below, above)
+        # if are defined as percentile
+        if not False in [threshold[0:1] in ['p','P'] for threshold in thresholds_input]:
+            percentile_values = [int(threshold[1::]) for threshold in thresholds_input]
+            return thresholds_with_percentiles(percentile_values)
 
-        # if are define as standard deviation
-        if (''.join(list(config_run.settings['threshold_below_var_D'])[0:2]) == "sd" and
-            ''.join(list(config_run.settings['threshold_above_var_D'])[0:2]) == "sd"):
-            below = int(''.join(list(config_run.settings['threshold_below_var_D'])[2::]))
-            above = int(''.join(list(config_run.settings['threshold_above_var_D'])[2::]))
-            return thresholds_with_std_deviation(below, above)
+        # if are defined as standard deviation
+        if not False in [threshold[0:2] in ['sd','SD'] for threshold in thresholds_input]:
+            std_dev_values = [int(threshold[2::]) for threshold in thresholds_input]
+            return thresholds_with_std_deviation(std_dev_values)
 
-    # if are define as particular values
-    if isinstance(config_run.settings['threshold_below_var_D'], (int, float)) and\
-       isinstance(config_run.settings['threshold_above_var_D'], (int, float)):
-        return thresholds_with_particular_values(config_run.settings['threshold_below_var_D'],
-                                                 config_run.settings['threshold_above_var_D'])
+    # if are defined as particular values
+    if not False in [isinstance(threshold,(int, float)) for threshold in thresholds_input]:
+        return thresholds_with_particular_values(thresholds_input)
 
     # unrecognizable thresholds
-    console.msg_error(_("unrecognizable thresholds '{0}' and/or '{1}' for var D").
-                        format(config_run.settings['threshold_below_var_D'],
-                               config_run.settings['threshold_above_var_D']))
+    console.msg_error(_("unrecognizable thresholds '{0}' for var {1}")
+        .format(thresholds_input, variable.type))
 
 
-def get_thresholds_var_I(station):
-    """
-    Calculate and return threshold by below and above
-    of independent variable, the type of threshold as
-    defined by the user in station file, these may be:
-    "default", "pNN" (percentile NN), "sdN" (standard
-    deviation N) and particular value.
-    """
+def default_thresholds_var_D(station, variable):
+    """thresholds by default of var D"""
 
-    # Calculate percentile "below" and "above"
-    def percentiles(below, above):
+    # check if analog_year is defined
+    if config_run.settings['analog_year']:
+        # check if analog_year is inside in process period
+        if station.process_period['start'] <= config_run.settings['analog_year'] <= station.process_period['end']:
 
-        threshold_below_var_I = stats.scoreatpercentile(station.var_I_values, below)
-        threshold_above_var_I = stats.scoreatpercentile(station.var_I_values, above)
-        return threshold_below_var_I, threshold_above_var_I
+            _iter_date = date(config_run.settings['analog_year'], 1, 1)
+            specific_values_with_analog_year = []
+            # get all raw values of var D only in analog year, ignoring null values
+            while _iter_date <= date(config_run.settings['analog_year'], 12, 31):
+                if not globals_vars.is_valid_null(variable.data[variable.date.index(_iter_date)]):
+                    specific_values_with_analog_year.append(variable.data[variable.date.index(_iter_date)])
+                if variable.frequency_data == "daily":
+                    _iter_date += relativedelta(days=1)
+                if variable.frequency_data == "monthly":
+                    _iter_date += relativedelta(months=1)
 
-    # thresholds by below and by above of var I by default
-    def thresholds_by_default():
+            if config_run.settings['class_category_analysis'] == 3:
+                thresholds = {'below': percentile(specific_values_with_analog_year, 33),
+                              'above': percentile(specific_values_with_analog_year, 66)}
+            if config_run.settings['class_category_analysis'] == 7:
+                # TODO:
+                raise ValueError("TODO")
 
-        # thresholds for Oceanic Nino Index
-        def if_var_I_is_ONI1():
-            return -0.5, 0.5
+            # check if all thresholds are valid (not 'nan')
+            if True in [math.isnan(threshold) for threshold in thresholds]:
+                if station.first_iter:
+                    console.msg(_("\n > WARNING: Thresholds calculated with analog year for var_D are wrong,\n"
+                                  "   using default thresholds instead"), color='yellow'),
+            else:
+                # return thresholds with analog year
+                if station.first_iter:
+                    console.msg(_("\n   Using thresholds with analog year for var_D "), color='cyan'),
 
-        # thresholds for Oceanic Nino Index
-        def if_var_I_is_ONI2():
-            return -0.5, 0.5
+                return thresholds
+        else:
+            if station.first_iter:
+                console.msg(_("\n > WARNING: The analog year ({0}) for this\n"
+                              "   station is outside of process period {1} to\n"
+                              "   {2}. The process continue but using the\n"
+                              "   default thresholds .........................")
+                            .format(config_run.settings['analog_year'],
+                                    station.process_period['start'],
+                                    station.process_period['end']), color='yellow', newline=False)
 
-        # thresholds for Index of the Southern Oscillation NOAA
-        def if_var_I_is_SOI():
-            return -0.9, 0.9
+    # return thresholds without analog year
+    if config_run.settings['class_category_analysis'] == 3:
+        thresholds = {'below': percentile(variable.specific_values, 33),
+                      'above': percentile(variable.specific_values, 66)}
+    if config_run.settings['class_category_analysis'] == 7:
+        # TODO:
+        raise ValueError("TODO")
 
-        # thresholds for Index of the Southern Oscillation calculated between Tahití and Darwin
-        def if_var_I_is_SOI_TROUP():
-            return -8, 8
+    return thresholds
 
-        # thresholds for Multivariate ENSO index
-        def if_var_I_is_MEI():
-            return percentiles(33, 66)
 
-        # thresholds for Radiation wavelength Long tropical
-        def if_var_I_is_OLR():
-            return -0.1, 0.2
+def default_thresholds_var_I(station, variable):
+    """thresholds by default of var I"""
 
-        # thresholds for Index of wind anomaly to 200 hpa
-        def if_var_I_is_W200():
-            return percentiles(33, 66)
+    # thresholds for Oceanic Nino Index
+    def if_var_I_is_ONI1():
+        return -0.5, 0.5
 
-        # thresholds for Index of wind anomaly to 850 hpa west
-        def if_var_I_is_W850w():
-            return percentiles(33, 66)
+    # thresholds for Oceanic Nino Index
+    def if_var_I_is_ONI2():
+        return -0.5, 0.5
 
-        # thresholds for Index of wind anomaly to 850 hpa center
-        def if_var_I_is_W850c():
-            return percentiles(33, 66)
+    # thresholds for Index of the Southern Oscillation NOAA
+    def if_var_I_is_SOI():
+        return -0.9, 0.9
 
-        # thresholds for Index of wind anomaly to 850 hpa east
-        def if_var_I_is_W850e():
-            return percentiles(33, 66)
+    # thresholds for Index of the Southern Oscillation calculated between Tahití and Darwin
+    def if_var_I_is_SOI_TROUP():
+        return -8, 8
 
-        # thresholds for Sea surface temperature
-        def if_var_I_is_SST():
-            return percentiles(33, 66)
+    # thresholds for Multivariate ENSO index
+    def if_var_I_is_MEI():
+        return percentiles(station.var_I_values, [33, 66])
 
-        # thresholds for Anomaly Sea surface temperature
-        def if_var_I_is_ASST():
-            return percentiles(33, 66)
+    # thresholds for Radiation wavelength Long tropical
+    def if_var_I_is_OLR():
+        return -0.1, 0.2
 
-        # thresholds for % Amazon relative humidity
-        def if_var_I_is_ARH():
-            return percentiles(33, 66)
+    # thresholds for Index of wind anomaly to 200 hpa
+    def if_var_I_is_W200():
+        return percentiles(station.var_I_values, [33, 66])
 
-        # thresholds for quasibienal oscillation index
-        def if_var_I_is_QBO():
-            return -4, 4
+    # thresholds for Index of wind anomaly to 850 hpa west
+    def if_var_I_is_W850w():
+        return percentiles(station.var_I_values, [33, 66])
 
-        # thresholds for North atlantic oscillation index
-        def if_var_I_is_NAO():
-            return -1, 1
+    # thresholds for Index of wind anomaly to 850 hpa center
+    def if_var_I_is_W850c():
+        return percentiles(station.var_I_values, [33, 66])
 
-        # thresholds for Caribbean (CAR) Index
-        def if_var_I_is_CAR():
-            return percentiles(33, 66)
+    # thresholds for Index of wind anomaly to 850 hpa east
+    def if_var_I_is_W850e():
+        return percentiles(station.var_I_values, [33, 66])
 
-        # thresholds for Monthly anomaly of the ocean surface area Ocean region
-        def if_var_I_is_AREA_WHWP():
-            return percentiles(33, 66)
+    # thresholds for Sea surface temperature
+    def if_var_I_is_SST():
+        return percentiles(station.var_I_values, [33, 66])
 
-        # switch validation
-        select_threshold_var_I = {
-            "ONI1": if_var_I_is_ONI1,
-            "ONI2": if_var_I_is_ONI2,
-            "SOI": if_var_I_is_SOI,
-            "SOI_TROUP": if_var_I_is_SOI_TROUP,
-            #"MEI": if_var_I_is_MEI,
-            "OLR": if_var_I_is_OLR,
-            "W200": if_var_I_is_W200,
-            "W850w": if_var_I_is_W850w,
-            "W850c": if_var_I_is_W850c,
-            "W850e": if_var_I_is_W850e,
-            "SST12": if_var_I_is_SST,
-            "SST3": if_var_I_is_SST,
-            "SST4": if_var_I_is_SST,
-            "SST34": if_var_I_is_SST,
-            "ASST12": if_var_I_is_ASST,
-            "ASST3": if_var_I_is_ASST,
-            "ASST4": if_var_I_is_ASST,
-            "ASST34": if_var_I_is_ASST,
-            "ARH": if_var_I_is_ARH,
-            "QBO": if_var_I_is_QBO,
-            "NAO": if_var_I_is_NAO,
-            "CAR": if_var_I_is_CAR,
-            "AREA_WHWP": if_var_I_is_AREA_WHWP
-        }
+    # thresholds for Anomaly Sea surface temperature
+    def if_var_I_is_ASST():
+        return percentiles(station.var_I_values, [33, 66])
 
-        threshold_below_var_I, threshold_above_var_I = select_threshold_var_I[station.var_I.type_series]()
-        return threshold_below_var_I, threshold_above_var_I
+    # thresholds for % Amazon relative humidity
+    def if_var_I_is_ARH():
+        return percentiles(station.var_I_values, [33, 66])
 
-    # thresholds by below and by above of var I with standard deviation
-    def thresholds_with_std_deviation(below, above):
+    # thresholds for quasibienal oscillation index
+    def if_var_I_is_QBO():
+        return -4, 4
 
-        values_without_nulls = []
-        for value in station.var_I_values:
-            if not globals_vars.is_valid_null(value):
-                values_without_nulls.append(value)
+    # thresholds for North atlantic oscillation index
+    def if_var_I_is_NAO():
+        return -1, 1
 
-        def func_standard_deviation(values):
-            avg = float((sum(values))) / len(values)
-            sums = 0
-            for value in values:
-                sums += (value - avg) ** 2
-            return (sums / (len(values) - 1)) ** 0.5
+    # thresholds for Caribbean (CAR) Index
+    def if_var_I_is_CAR():
+        return percentiles(station.var_I_values, [33, 66])
 
-        if below not in [1, 2, 3] or above not in [1, 2, 3]:
-            console.msg_error(_(
-                "thresholds of independent variable were defined as "
-                "N standard deviation\n but are outside of range, "
-                "this values must be 1, 2 or 3:\nsd{0} sd{1}")
-            .format(below, above))
-        p50 = stats.scoreatpercentile(values_without_nulls, 50)
-        std_deviation = func_standard_deviation(values_without_nulls)
+    # thresholds for Monthly anomaly of the ocean surface area Ocean region
+    def if_var_I_is_AREA_WHWP():
+        return percentiles(station.var_I_values, [33, 66])
 
-        return p50 - below * std_deviation, p50 + above * std_deviation
+    # switch validation
+    select_threshold_var_I = {
+        "ONI1": if_var_I_is_ONI1,
+        "ONI2": if_var_I_is_ONI2,
+        "SOI": if_var_I_is_SOI,
+        "SOI_TROUP": if_var_I_is_SOI_TROUP,
+        #"MEI": if_var_I_is_MEI,
+        "OLR": if_var_I_is_OLR,
+        "W200": if_var_I_is_W200,
+        "W850w": if_var_I_is_W850w,
+        "W850c": if_var_I_is_W850c,
+        "W850e": if_var_I_is_W850e,
+        "SST12": if_var_I_is_SST,
+        "SST3": if_var_I_is_SST,
+        "SST4": if_var_I_is_SST,
+        "SST34": if_var_I_is_SST,
+        "ASST12": if_var_I_is_ASST,
+        "ASST3": if_var_I_is_ASST,
+        "ASST4": if_var_I_is_ASST,
+        "ASST34": if_var_I_is_ASST,
+        "ARH": if_var_I_is_ARH,
+        "QBO": if_var_I_is_QBO,
+        "NAO": if_var_I_is_NAO,
+        "CAR": if_var_I_is_CAR,
+        "AREA_WHWP": if_var_I_is_AREA_WHWP
+    }
 
-    # thresholds by below and by above of var I with particular values,
-    # these values validation with type of var I
-    def thresholds_with_particular_values(below, above):
-
-        try:
-            below = float(below)
-            above = float(above)
-        except:
-            console.msg_error(_(
-                "thresholds could not were identified:\n{0} - {1}")
-            .format(below, above))
-
-        if below > above:
-            console.msg_error(_(
-                "threshold below of independent variable can't be "
-                "greater than threshold above:\n{0} - {1}")
-            .format(below, above))
-        try:
-            threshold_below_var_I = input_validation.validation_var_I(station.var_I.type_series, below)
-            threshold_above_var_I = input_validation.validation_var_I(station.var_I.type_series, above)
-            return threshold_below_var_I, threshold_above_var_I
-        except Exception, e:
-            console.msg_error(_(
-                "Problem with thresholds of independent "
-                "variable:\n\n{0}").format(e))
-
-    ## now analysis threshold input in arguments
-    # if are define as default
-    if (config_run.settings['threshold_below_var_I'] == "default" and
-        config_run.settings['threshold_above_var_I'] == "default"):
-        return thresholds_by_default()
-
-    # if are define as percentile or standard deviation
-    if isinstance(config_run.settings['threshold_below_var_I'], str) and\
-       isinstance(config_run.settings['threshold_above_var_I'], str):
-
-        # if are define as percentile
-        if (''.join(list(config_run.settings['threshold_below_var_I'])[0:1]) == "p" and
-            ''.join(list(config_run.settings['threshold_above_var_I'])[0:1]) == "p"):
-            below = float(''.join(list(config_run.settings['threshold_below_var_I'])[1::]))
-            above = float(''.join(list(config_run.settings['threshold_above_var_I'])[1::]))
-            if not (0 <= below <= 100) or not (0 <= above <= 100):
-                console.msg_error(_(
-                    "thresholds of independent variable were defined as "
-                    "percentile\nbut are outside of range 0-100:\n{0} - {1}")
-                .format(below, above))
-            if below > above:
-                console.msg_error(_(
-                    "threshold below of independent variable can't be "
-                    "greater than threshold above:\n{0} - {1}")
-                .format(below, above))
-            return percentiles(below, above)
-
-        # if are define as standard deviation
-        if (''.join(list(config_run.settings['threshold_below_var_I'])[0:2]) == "sd" and
-            ''.join(list(config_run.settings['threshold_above_var_I'])[0:2]) == "sd"):
-            below = int(''.join(list(config_run.settings['threshold_below_var_I'])[2::]))
-            above = int(''.join(list(config_run.settings['threshold_above_var_I'])[2::]))
-            return thresholds_with_std_deviation(below, above)
-
-    # if are define as particular values
-    if isinstance(config_run.settings['threshold_below_var_I'], (int, float)) and\
-       isinstance(config_run.settings['threshold_above_var_I'], (int, float)):
-        return thresholds_with_particular_values(config_run.settings['threshold_below_var_I'],
-                                                 config_run.settings['threshold_above_var_I'])
-
-    # unrecognizable thresholds
-    console.msg_error(_("unrecognizable thresholds '{0}' and/or '{1}' for var I").
-                        format(config_run.settings['threshold_below_var_I'],
-                               config_run.settings['threshold_above_var_I']))
+    threshold_below_var_I, threshold_above_var_I = select_threshold_var_I[station.var_I.type_series]()
+    return threshold_below_var_I, threshold_above_var_I
