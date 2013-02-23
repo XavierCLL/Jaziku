@@ -29,6 +29,7 @@ news
 - [code] Organize thresholds functions
 - [code] Refactoring settings
 - [code] Refactoring format_in format_out
+- [code] Refactoring thresholds functions for different class_category_analysis
 
 fixes
 +++++
