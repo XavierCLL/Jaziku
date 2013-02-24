@@ -38,7 +38,7 @@ from jaziku.core.variable import Variable
 from jaziku.core.analysis_interval import get_values_in_range_analysis_interval, locate_day_in_analysis_interval, \
     get_range_analysis_interval, get_state_of_data, set_global_state_of_data
 from jaziku.modules.climate import lags
-from jaziku.modules.climate.contingency_table import get_category_of_phenomenon
+from jaziku.modules.climate.contingency_table import get_label_of_var_I_category
 from jaziku.modules.climate.lags import  calculate_lags
 from jaziku.utils import  console, format_out, watermarking, array
 
@@ -1310,32 +1310,32 @@ def outliers(stations_list):
                 if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "daily":
                     if config_run.settings['analysis_interval'] == "trimester":
                         # get I values for outliers date
-                        station.var_I_values = lags.get_lag_values(station_copy, 'var_I', 0, outlier_date.month)
+                        station.var_I.specific_values = lags.get_lag_values(station_copy, 'var_I', 0, outlier_date.month)
                         # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                         values_var_I = get_values_in_range_analysis_interval(station_copy, 'I', outlier_date.year, outlier_date.month, None, 0)
                     else:
                         # get the corresponding start day of analysis interval
                         day = locate_day_in_analysis_interval(outlier_date.day)
                         # get I values for outliers date
-                        station.var_I_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month, day)
+                        station.var_I.specific_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month, day)
                         # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                         values_var_I = get_values_in_range_analysis_interval(station, 'I', outlier_date.year, outlier_date.month, day, 0)
                 if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "monthly":
                     if config_run.settings['analysis_interval'] == "trimester":
                         # get I values for outliers date
-                        station.var_I_values = lags.get_lag_values(station_copy, 'var_I', 0, outlier_date.month)
+                        station.var_I.specific_values = lags.get_lag_values(station_copy, 'var_I', 0, outlier_date.month)
                         # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                         values_var_I = get_values_in_range_analysis_interval(station_copy, 'I', outlier_date.year, outlier_date.month, None, 0)
                     else:
                         # get the corresponding start day of analysis interval
                         day = locate_day_in_analysis_interval(outlier_date.day)
                         # get I values for outliers date
-                        station.var_I_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month, day)
+                        station.var_I.specific_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month, day)
                         # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                         values_var_I = get_values_in_range_analysis_interval(station, 'I', outlier_date.year, outlier_date.month, day, 0)
                 if station.var_D.frequency_data == "monthly" and station.var_I.frequency_data == "monthly":
                     # get I values for outliers date
-                    station.var_I_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month)
+                    station.var_I.specific_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month)
                     # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                     values_var_I = get_values_in_range_analysis_interval(station, 'I', outlier_date.year, outlier_date.month, None, 0)
 
@@ -1349,7 +1349,7 @@ def outliers(stations_list):
                 value_var_I = array.mean(values_var_I)
 
                 # get categorize of phenomenon for the value_var_I
-                category_of_phenomenon = get_category_of_phenomenon(value_var_I, station)
+                category_of_phenomenon = get_label_of_var_I_category(value_var_I, station)
 
                 # save outlier
                 outliers_list.append([outlier_date, value, category_of_phenomenon])

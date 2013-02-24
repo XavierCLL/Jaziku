@@ -19,27 +19,13 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
-from scipy import stats
+import numpy
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from jaziku.core.input import input_validation
 from jaziku.env import config_run, globals_vars
-from jaziku.utils import console
-
-
-def percentile(values, percentile_value):
-    """Calculate the percentile of input values list
-
-    :param values: values for make percentile
-    :type values: list
-    :param percentile_value: percentile value
-    :type percentile_value: float
-
-    :return: value of percentile
-    :rtype: float
-    """
-    return stats.scoreatpercentile(values, percentile_value)
+from jaziku.utils import console, format_in, array
 
 
 def percentiles(values, percentile_values):
@@ -57,7 +43,7 @@ def percentiles(values, percentile_values):
     :raise ValueError: invalid argument
     """
     if len(percentile_values) in [2, 6]:
-        return [percentile(values, percentile_value) for percentile_value in percentile_values]
+        return [numpy.percentile(values, percentile_value) for percentile_value in percentile_values]
     else:
         raise ValueError("the 'percentile_values' should be a list with 2 or 6 values")
 
@@ -99,6 +85,9 @@ def get_thresholds(station, variable):
     :rtype: dict
     """
 
+    # first clean specific values of null and empty elements
+    variable.specific_values_cleaned = array.clean(variable.specific_values)
+
     @thresholds_dictionary
     def thresholds_by_default():
         """thresholds by default of var D or var I"""
@@ -109,6 +98,9 @@ def get_thresholds(station, variable):
 
     @thresholds_dictionary
     def thresholds_with_percentiles(percentile_values):
+
+        percentile_values = [format_in.to_float(value) for value in percentile_values]
+
         if False in [(0 <= value <= 100) for value in percentile_values]:
             console.msg_error(_("the thresholds of var {0} were defined as "
                                 "percentile\nbut are outside of range 0-100:\n{1}")
@@ -120,42 +112,55 @@ def get_thresholds(station, variable):
             console.msg_error(_("the percentile values of var {0} must have "
                                 "rising values:\n{1}")
             .format(variable.type, thresholds_input))
-        return percentiles(variable.specific_values, percentile_values)
+        return percentiles(variable.specific_values_cleaned, percentile_values)
 
     @thresholds_dictionary
     def thresholds_with_std_deviation(std_dev_values):
-        """Standard deviation 1, 2 or 3
 
-        :param std_dev_values: list 2 or 6 values [below...above]
-        :type std_dev_values: list
-        """
+        std_dev_values = [format_in.to_float(value) for value in std_dev_values]
+
+        # check if all values of std deviation are float
+        if False in [isinstance(value, float) for value in std_dev_values]:
+            console.msg_error(_("thresholds of var {0} were defined as "
+                                "N standard deviation (sdN)\n but the value N is "
+                                "invalid number (float or integer)\n{1}")
+                .format(variable.type, std_dev_values))
+
         if config_run.settings['class_category_analysis'] == 3:
-            values_without_nulls = []
-            for value in variable.specific_values:
-                if not globals_vars.is_valid_null(value):
-                    values_without_nulls.append(value)
 
-            def func_standard_deviation(values):
-                avg = float((sum(values))) / len(values)
-                sums = 0
-                for value in values:
-                    sums += (value - avg) ** 2
-                return (sums / (len(values) - 1)) ** 0.5
-
-            if std_dev_values[0] not in [1, 2, 3] or std_dev_values[1] not in [1, 2, 3]:
-                console.msg_error(_("thresholds of var {0} were defined as "
-                                    "N standard deviation\n but are outside of range, "
-                                    "this values must be 1, 2 or 3:\nsd{1} sd{2}")
-                .format(variable.type ,std_dev_values[0], std_dev_values[1]))
-            p50 = percentile(values_without_nulls, 50)
-            std_deviation = func_standard_deviation(values_without_nulls)
+            p50 = numpy.percentile(variable.specific_values_cleaned, 50)
+            std_deviation = numpy.std(variable.specific_values_cleaned)
 
             return [p50 - std_dev_values[0] * std_deviation,
                     p50 + std_dev_values[1] * std_deviation]
 
         if config_run.settings['class_category_analysis'] == 7:
-            # TODO:
-            raise ValueError("TODO")
+
+            # check is the std deviations below values are decreasing
+            std_dev_values_below_sort = list(std_dev_values[0:3])
+            std_dev_values_below_sort.sort(reverse=True)
+            if not std_dev_values_below_sort == std_dev_values[0:3]:
+                console.msg_error(_("the sdt deviation values (sdN) by below (first 3) of var {0}\n"
+                                    "must have decreasing values:\n{1}")
+                .format(variable.type, std_dev_values))
+
+            # check is the std deviations above values are rising
+            std_dev_values_above_sort = list(std_dev_values[3::])
+            std_dev_values_above_sort.sort()
+            if not std_dev_values_above_sort == std_dev_values[3::]:
+                console.msg_error(_("the sdt deviation values (sdN) by above (last 3) of var {0}\n"
+                                    "must have rising values:\n{1}")
+                .format(variable.type, std_dev_values))
+
+            p50 = numpy.percentile(variable.specific_values_cleaned, 50)
+            std_deviation = numpy.std(variable.specific_values_cleaned)
+
+            return [p50 - std_dev_values[0] * std_deviation,
+                    p50 - std_dev_values[1] * std_deviation,
+                    p50 - std_dev_values[2] * std_deviation,
+                    p50 + std_dev_values[3] * std_deviation,
+                    p50 + std_dev_values[4] * std_deviation,
+                    p50 + std_dev_values[5] * std_deviation]
 
     @thresholds_dictionary
     def thresholds_with_particular_values(thresholds_input):
@@ -201,12 +206,12 @@ def get_thresholds(station, variable):
 
         # if are defined as percentile
         if not False in [threshold[0:1] in ['p','P'] for threshold in thresholds_input]:
-            percentile_values = [int(threshold[1::]) for threshold in thresholds_input]
+            percentile_values = [threshold[1::] for threshold in thresholds_input]
             return thresholds_with_percentiles(percentile_values)
 
         # if are defined as standard deviation
         if not False in [threshold[0:2] in ['sd','SD'] for threshold in thresholds_input]:
-            std_dev_values = [int(threshold[2::]) for threshold in thresholds_input]
+            std_dev_values = [threshold[2::] for threshold in thresholds_input]
             return thresholds_with_std_deviation(std_dev_values)
 
     # if are defined as particular values
@@ -238,8 +243,8 @@ def default_thresholds_var_D(station, variable):
                     _iter_date += relativedelta(months=1)
 
             if config_run.settings['class_category_analysis'] == 3:
-                thresholds = {'below': percentile(specific_values_with_analog_year, 33),
-                              'above': percentile(specific_values_with_analog_year, 66)}
+                thresholds = {'below': numpy.percentile(specific_values_with_analog_year, 33),
+                              'above': numpy.percentile(specific_values_with_analog_year, 66)}
             if config_run.settings['class_category_analysis'] == 7:
                 # TODO:
                 raise ValueError("TODO")
@@ -267,8 +272,8 @@ def default_thresholds_var_D(station, variable):
 
     # return thresholds without analog year
     if config_run.settings['class_category_analysis'] == 3:
-        thresholds = {'below': percentile(variable.specific_values, 33),
-                      'above': percentile(variable.specific_values, 66)}
+        thresholds = {'below': numpy.percentile(variable.specific_values_cleaned, 33),
+                      'above': numpy.percentile(variable.specific_values_cleaned, 66)}
     if config_run.settings['class_category_analysis'] == 7:
         # TODO:
         raise ValueError("TODO")
