@@ -58,8 +58,8 @@ languages = [name for name in os.listdir(LOCALE_DIR) if os.path.isdir(os.path.jo
 
 # init languages
 
-locale_language = locale.getdefaultlocale()[0][0:2]
 try:
+    locale_language = locale.getdefaultlocale()[0][0:2]
     lang = gettext.translation(APP_NAME, LOCALE_DIR,
         languages=[locale_language],
         codeset="utf-8")
