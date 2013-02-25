@@ -37,6 +37,7 @@ fixes
 - Change the mode to entry forecast_date in runfile, this fixed problems with
   format entries that are auto-convert from sheets application
 - Fixed input validation for var I with particular values
+- Fix crash detecting languages function when the OS in not defined default locale
 
 
 0.5.2a (**2013-02-13**)
