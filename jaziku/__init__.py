@@ -2,14 +2,12 @@
 
 import sys
 import platform
+from matplotlib import use
 
-# TODO:
-#from jaziku import main
-#from jaziku.utils import globals_vars
-#from jaziku.i18n import i18n
+# initialize matplotlib backend in raster graphics (png)
+use("AGG", warn=False, force=True)
 
 #VERSION = (1, 4, 0, 'b')
-
 
 #__version__ = ('.'.join((str(each) for each in VERSION[:3])) +
 #               '.'.join(VERSION[3:]))
