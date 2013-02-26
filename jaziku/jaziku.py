@@ -43,7 +43,7 @@ from i18n import i18n
 from env import globals_vars, config_run
 from core import settings
 from core import stations
-from core.input import input_runfile, input_arg
+from core.input import runfile, arg
 from core.station import Station
 from modules.climate import climate
 from modules.forecast import forecast
@@ -79,7 +79,7 @@ def main():
     globals_vars.JAZIKU_DIR = os.path.dirname(os.path.realpath(__file__))
 
     # Parser and check arguments
-    globals_vars.ARGS = input_arg.arguments.parse_args()
+    globals_vars.ARGS = arg.arguments.parse_args()
 
     # -------------------------------------------------------------------------
     # Initialize all settings variables in None
@@ -99,7 +99,7 @@ def main():
         console.msg_error(_("[runfile] no such file or directory: {0}".format(globals_vars.ARGS.runfile)),False)
 
     # read all settings and all stations from runfile
-    stations_list = input_runfile.read_runfile()
+    stations_list = runfile.read_runfile()
 
     # -------------------------------------------------------------------------
     # Setting language
