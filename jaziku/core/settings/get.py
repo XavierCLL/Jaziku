@@ -200,7 +200,7 @@ def configuration_run():
     # ------------------------
     # type var D
     if config_run.settings['type_var_D']:
-        settings["type_var_D"] = colored.green(config_run.settings['type_var_D']) + " ({0})".format(globals_vars.units_var_D)
+        settings["type_var_D"] = colored.green(config_run.settings['type_var_D']) + " ({0})".format(env.var_D.units)
 
     # ------------------------
     # limits var D below
@@ -251,7 +251,7 @@ def configuration_run():
     # ------------------------
     # type var I
     if config_run.settings['type_var_I']:
-        settings["type_var_I"] = colored.green(config_run.settings['type_var_I']) + " ({0})".format(globals_vars.units_var_I)
+        settings["type_var_I"] = colored.green(config_run.settings['type_var_I']) + " ({0})".format(env.var_I.units)
 
     # ------------------------
     # path_to_file_var_I

@@ -18,14 +18,14 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-from jaziku.env import globals_vars, config_run
+from jaziku import env
 from jaziku.utils import console
 
 
 def configuration_run(stop_in=None):
 
     # load input settings saved
-    settings = globals_vars.input_settings
+    settings = env.globals_vars.input_settings
 
     if stop_in != None:
         settings[stop_in] = '?'
@@ -91,7 +91,7 @@ def configuration_run(stop_in=None):
     print "   {0} -------- {1}".format("thresholds var I", settings["thresholds_var_I"])
     if stop_in == "thresholds_var_I": return
 
-    if config_run.settings['forecast_process']:
+    if env.config_run.settings['forecast_process']:
         console.msg("   Forecast options", color='cyan')
         print "   {0} ----------- {1}".format("forecast date", settings["forecast_date"])
         if stop_in == "forecast_date": return
@@ -103,7 +103,7 @@ def configuration_run(stop_in=None):
         if stop_in == "forecast_var_I_lag_2": return
 
     console.msg("   Maps options", color='cyan')
-    if config_run.settings['maps']:
+    if env.config_run.settings['maps']:
         print "   {0} ------------- {1}".format("overlapping", settings["overlapping"])
         if stop_in == "overlapping": return
         print "   {0} ---------- {1}".format("marks_stations", settings["marks_stations"])
@@ -113,8 +113,8 @@ def configuration_run(stop_in=None):
 
     # Print some warnings and notifications
 
-    if config_run.settings['path_to_file_var_I'] == 'internal':
-        internal_file_I_name = globals_vars.FILES_FOR_INTERNAL_VAR_I[config_run.settings['type_var_I']]
+    if env.config_run.settings['path_to_file_var_I'] == 'internal':
+        internal_file_I_name = env.var_I.INTERNAL_FILES[env.config_run.settings['type_var_I']]
         split_internal_var_I = internal_file_I_name.split(".")[0].split("_")
         console.msg(
             _("\n > You are using internal files for independent\n"
@@ -124,12 +124,12 @@ def configuration_run(stop_in=None):
               "   url: {4}")
             .format(split_internal_var_I[0], split_internal_var_I[1],
                 split_internal_var_I[2], ' '.join(split_internal_var_I[3::]),
-                globals_vars.URLS_FOR_INTERNAL_VAR_I[config_run.settings['type_var_I']]), color='yellow')
+                env.var_I.INTERNAL_URLS[env.config_run.settings['type_var_I']]), color='yellow')
 
-    if (not config_run.settings['limits_var_D']['below'] or
-        not config_run.settings['limits_var_D']['above'] or
-        not config_run.settings['limits_var_I']['below'] or
-        not config_run.settings['limits_var_I']['above']):
+    if (not env.config_run.settings['limits_var_D']['below'] or
+        not env.config_run.settings['limits_var_D']['above'] or
+        not env.config_run.settings['limits_var_I']['below'] or
+        not env.config_run.settings['limits_var_I']['above']):
         console.msg(_("\n > WARNING: you are using one or more limits as\n"
                       "   'none' value, this means that series values\n"
                       "   will not be checked if they are valid in\n"

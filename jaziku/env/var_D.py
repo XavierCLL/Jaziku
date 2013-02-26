@@ -48,7 +48,7 @@ INTERNAL_UNITS = {
 
 # variable use for set units for var D, known and unknown for jaziku
 # for particular units set it in runfile, please read jaziku's manual
-UNITS = None
+units = None
 
 # Internal limits for var_D (dependent variable)
 #
@@ -105,7 +105,3 @@ def get_internal_limits(variable):
         return INTERNAL_LIMITS[variable.type_series][variable.frequency_data]
     else:
         return [None,None]
-
-def get_internal_units():
-    from jaziku.env import config_run
-    return INTERNAL_UNITS[config_run.settings['type_var_D']]

@@ -23,9 +23,9 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from numpy import median, average, var
 from scipy.stats.stats import tstd, variation, skew, kurtosis
-from jaziku.core.input import input_vars
 
-from jaziku.env import globals_vars
+from jaziku import env
+from jaziku.core.input import input_vars
 from jaziku.core.input.input_check import count_null_values
 from jaziku.utils import console, array
 
@@ -60,7 +60,7 @@ class Variable(object):
             self.file_name = os.path.basename(file)
             # if path to file is relative convert to absolute
             if not os.path.isabs(file):
-                self.file_path = os.path.abspath(os.path.join(os.path.dirname(globals_vars.ARGS.runfile),file))
+                self.file_path = os.path.abspath(os.path.join(os.path.dirname(env.globals_vars.ARGS.runfile),file))
             else:
                 self.file_path = os.path.abspath(file)
 
@@ -70,18 +70,18 @@ class Variable(object):
             # and notify if Jaziku are using the independent variable inside
             # located in plugins/var_I/
             if file == "internal":
-                self.file_name = globals_vars.FILES_FOR_INTERNAL_VAR_I[self.type_series]
-                self.file_path = os.path.join(globals_vars.JAZIKU_DIR, 'data', 'var_I', self.file_name)
+                self.file_name = env.var_I.INTERNAL_FILES[self.type_series]
+                self.file_path = os.path.join(env.globals_vars.JAZIKU_DIR, 'data', 'var_I', self.file_name)
             else:
                 self.file_name = os.path.basename(file)
                 # if path to file is relative convert to absolute
                 if not os.path.isabs(file):
-                    self.file_path = os.path.abspath(os.path.join(os.path.dirname(globals_vars.ARGS.runfile),file))
+                    self.file_path = os.path.abspath(os.path.join(os.path.dirname(env.globals_vars.ARGS.runfile),file))
                 else:
                     self.file_path = os.path.abspath(file)
 
         # relative path to file
-        self.file_relpath = os.path.relpath(file, os.path.abspath(os.path.dirname(globals_vars.ARGS.runfile)))
+        self.file_relpath = os.path.relpath(file, os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile)))
 
 
     def read_data_from_file(self, station, process=True, messages=True):
