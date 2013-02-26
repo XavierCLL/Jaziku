@@ -20,10 +20,10 @@
 
 import gettext
 
-from jaziku.env import config_run, globals_vars
+from jaziku import env
 from jaziku.core import analysis_interval
 from jaziku.core.station import Station
-from jaziku.core.input import input_check
+from jaziku.core.input import validation
 from jaziku.utils import console
 
 
@@ -52,10 +52,10 @@ def prepare_all_stations(stations_list):
         station.var_I.data_and_null_in_process_period(station)
     console.msg(_("done"), color='green')
 
-    if config_run.settings['consistent_data']:
+    if env.config_run.settings['consistent_data']:
         console.msg(_("Check if the data are consistent for var D and I:"))
         for station in stations_list:
-            input_check.check_consistent_data(station)
+            validation.check_consistent_data(station)
 
     # state of data
     console.msg(_("Set global state of data ................................ "), newline=False)
@@ -89,7 +89,7 @@ def prepare_all_stations(stations_list):
         console.msg(_("done"), color='green')
 
     # statistics for data analysis
-    if config_run.settings['data_analysis']:
+    if env.config_run.settings['data_analysis']:
         console.msg(_("Statistics of data for data analysis module ............. "), newline=False)
         for station in stations_list:
             station.var_D.do_some_statistic_of_data()

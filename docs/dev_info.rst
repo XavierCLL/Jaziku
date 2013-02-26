@@ -3,6 +3,8 @@ Guidelines and rules of language syntax
 -------------------------
 
 :Pages:
+http://epydoc.sourceforge.net/fields.html
+http://docutils.sourceforge.net/docs/user/rst/quickref.html
 http://epydoc.sourceforge.net/manual-fields.html
 http://google-styleguide.googlecode.com/svn/trunk/pyguide.html
 http://pythonhosted.org/an_example_pypi_project/sphinx.html
@@ -15,7 +17,7 @@ https://secure.rhodecode.org/rhodecode/files/tip/
 :Example:
 .. code-block:: python
 
-    def fetch_bigtable_rows(big_table, keys, other_silly_variable=None):
+    def fetch_bigtable_rows(big_table, keys, other_silly_variable=None, *tools, **options):
         """Fetches rows from a Bigtable.
 
         Retrieves rows pertaining to the given keys from the Table instance
@@ -26,6 +28,10 @@ https://secure.rhodecode.org/rhodecode/files/tip/
         :type big_table: int
         :param keys: A sequence of strings representing the key of each table row to fetch.
         :type keys: dict
+        :param tools: Tools that should be used to plant the seed.
+        :param options: Any extra options for the planting.
+
+        :keyword soak: non-explicit keyword parameters in arguments
 
         :return: Return a dictionary depend of `class_category_analysis`, thus:
 
@@ -35,8 +41,14 @@ https://secure.rhodecode.org/rhodecode/files/tip/
                 - `<dict>`, 6 keys: {'below3','below2','below1','above1','above2','above3'}
         :rtype: dict
 
+        Return by reference:
+
+        :ivar STATION.var_D.data: data read from file
+        :ivar STATION.var_D.date: date read from file
         :ivar likes_spam: A boolean indicating if we like SPAM or not.
         :ivar eggs: An integer count of the eggs we have laid.
+
+        :requires: ...
 
         :examples: examples code here
 
