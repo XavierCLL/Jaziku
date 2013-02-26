@@ -21,7 +21,7 @@
 import os
 import csv
 
-from jaziku.env import globals_vars, config_run
+from jaziku import env
 from jaziku.core.station import Station
 from jaziku.modules.maps.grid import Grid
 from jaziku.utils import  console, format_in
@@ -35,7 +35,7 @@ def read_runfile():
         stations class list
 
     :global:
-        config_run.get['*']
+        env.config_run.get['*']
     """
 
     in_config_run = False
@@ -45,13 +45,13 @@ def read_runfile():
     grid = None
     lines_of_stations = []
 
-    runfile_open = open(globals_vars.ARGS.runfile, 'rb')
+    runfile_open = open(env.globals_vars.ARGS.runfile, 'rb')
 
     # delete all NULL byte inside the runfile.csv
     runfile = (x.replace('\0', '') for x in runfile_open)
 
     # open runfile as csv
-    runfile = csv.reader(runfile, delimiter=globals_vars.INPUT_CSV_DELIMITER)
+    runfile = csv.reader(runfile, delimiter=env.globals_vars.INPUT_CSV_DELIMITER)
 
     # -------------------------------------------------------------------------
     # read line by line the RUNFILE
@@ -81,24 +81,24 @@ def read_runfile():
                     " line {0}:\n{1}, no was defined.")
                 .format(runfile.line_num, line_in_run_file[0]), False)
 
-            if line_in_run_file[0] in config_run.settings:
+            if line_in_run_file[0] in env.config_run.settings:
                 # in this case, for python 'disable' is None,
                 # then let default value (it is 'None')
                 if line_in_run_file[1] == "disable":
-                    config_run.settings[line_in_run_file[0]] = False
+                    env.config_run.settings[line_in_run_file[0]] = False
                 elif line_in_run_file[1] == "enable":
-                    config_run.settings[line_in_run_file[0]] = True
+                    env.config_run.settings[line_in_run_file[0]] = True
                 else:
                     if len(line_in_run_file) == 2:
                         try:
-                            config_run.settings[line_in_run_file[0]] = format_in.to_float(line_in_run_file[1])
+                            env.config_run.settings[line_in_run_file[0]] = format_in.to_float(line_in_run_file[1])
                         except:
-                            config_run.settings[line_in_run_file[0]] = line_in_run_file[1]
+                            env.config_run.settings[line_in_run_file[0]] = line_in_run_file[1]
                     else: # >2
                         try:
-                            config_run.settings[line_in_run_file[0]] = [format_in.to_float(item) for item in line_in_run_file[1::]]
+                            env.config_run.settings[line_in_run_file[0]] = [format_in.to_float(item) for item in line_in_run_file[1::]]
                         except:
-                            config_run.settings[line_in_run_file[0]] = [item for item in line_in_run_file[1::]]
+                            env.config_run.settings[line_in_run_file[0]] = [item for item in line_in_run_file[1::]]
             else:
                 if line_in_run_file[1] == "GRIDS LIST":
                     in_config_run = False
@@ -155,42 +155,42 @@ def read_runfile():
     # post-process after read the runfile
 
     # when climate is disable:
-    if not config_run.settings['climate_process']:
-        config_run.settings['forecast_process'] = False
-        config_run.settings['maps'] = False
+    if not env.config_run.settings['climate_process']:
+        env.config_run.settings['forecast_process'] = False
+        env.config_run.settings['maps'] = False
 
     # if path_to_file_var_I is relative convert to absolute, except if is 'internal'
-    if not os.path.isabs(config_run.settings["path_to_file_var_I"]) and\
-       not config_run.settings["path_to_file_var_I"] == 'internal':
-        config_run.settings["path_to_file_var_I"] \
-            = os.path.abspath(os.path.join(os.path.dirname(globals_vars.ARGS.runfile),
-                                           config_run.settings["path_to_file_var_I"]))
+    if not os.path.isabs(env.config_run.settings["path_to_file_var_I"]) and\
+       not env.config_run.settings["path_to_file_var_I"] == 'internal':
+        env.config_run.settings["path_to_file_var_I"] \
+            = os.path.abspath(os.path.join(os.path.dirname(env.globals_vars.ARGS.runfile),
+                                           env.config_run.settings["path_to_file_var_I"]))
 
     # Set type and units for variables D and I
     # var D
-    if '(' and ')' in config_run.settings['type_var_D']:
-        string = config_run.settings['type_var_D']
+    if '(' and ')' in env.config_run.settings['type_var_D']:
+        string = env.config_run.settings['type_var_D']
         # get type
-        config_run.settings['type_var_D'] = string[0:string.index('(')].strip()
+        env.config_run.settings['type_var_D'] = string[0:string.index('(')].strip()
         # get units
-        globals_vars.units_var_D = string[string.index('(') + 1:string.index(')')].strip()
+        env.var_D.units = string[string.index('(') + 1:string.index(')')].strip()
     else:
-        if config_run.settings['type_var_D'] in globals_vars.UNITS_FOR_TYPES_VAR_D:
-            globals_vars.units_var_D = globals_vars.UNITS_FOR_TYPES_VAR_D[config_run.settings['type_var_D']]
+        if env.config_run.settings['type_var_D'] in env.var_D.INTERNAL_UNITS:
+            env.var_D.units = env.var_D.INTERNAL_UNITS[env.config_run.settings['type_var_D']]
         else:
-            globals_vars.units_var_D = '--'
+            env.var_D.units = '--'
     # var I
-    if '(' and ')' in config_run.settings['type_var_I']:
-        string = config_run.settings['type_var_I']
+    if '(' and ')' in env.config_run.settings['type_var_I']:
+        string = env.config_run.settings['type_var_I']
         # get type
-        config_run.settings['type_var_I'] = string[0:string.index('(')].strip()
+        env.config_run.settings['type_var_I'] = string[0:string.index('(')].strip()
         # get units
-        globals_vars.units_var_I = string[string.index('(') + 1:string.index(')')].strip()
+        env.var_I.units = string[string.index('(') + 1:string.index(')')].strip()
     else:
-        if config_run.settings['type_var_I'] in globals_vars.UNITS_FOR_TYPES_VAR_I:
-            globals_vars.units_var_I = globals_vars.UNITS_FOR_TYPES_VAR_I[config_run.settings['type_var_I']]
+        if env.config_run.settings['type_var_I'] in env.var_I.INTERNAL_UNITS:
+            env.var_I.units = env.var_I.INTERNAL_UNITS[env.config_run.settings['type_var_I']]
         else:
-            globals_vars.units_var_I = '--'
+            env.var_I.units = '--'
 
     # -------------------------------------------------------------------------
     # read stations:
@@ -237,13 +237,13 @@ def read_stations(lines_of_stations):
             station.lon = line_station[3].replace(',', '.')
             station.alt = line_station[4].replace(',', '.')
 
-            station.var_D.type_series = config_run.settings['type_var_D']
+            station.var_D.type_series = env.config_run.settings['type_var_D']
             #station.file_D = open(line_station[5], 'rb')
             station.var_D.set_file(line_station[5])
 
-            station.var_I.type_series = config_run.settings['type_var_I']
-            #station.file_I = config_run.get['path_to_file_var_I']
-            station.var_I.set_file(config_run.settings['path_to_file_var_I'])
+            station.var_I.type_series = env.config_run.settings['type_var_I']
+            #station.file_I = env.config_run.get['path_to_file_var_I']
+            station.var_I.set_file(env.config_run.settings['path_to_file_var_I'])
 
         except Exception, e:
             console.msg_error_line_stations(station, e)

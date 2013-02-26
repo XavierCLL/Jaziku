@@ -21,7 +21,7 @@
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from jaziku.env import globals_vars, config_run
+from jaziku import env
 from jaziku.utils import  console
 
 
@@ -30,12 +30,12 @@ def get_range_analysis_interval():
     Return all start days of analysis interval
     """
 
-    if config_run.settings['analysis_interval'] != "trimester":
-        if globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL == 5:
+    if env.config_run.settings['analysis_interval'] != "trimester":
+        if env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL == 5:
             return [1, 6, 11, 16, 21, 26]
-        if globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL == 10:
+        if env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL == 10:
             return [1, 11, 21]
-        if globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL == 15:
+        if env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL == 15:
             return [1, 16]
     else:
         return None
@@ -73,11 +73,11 @@ def set_global_state_of_data(stations_list):
 
     for station in stations_list:
 
-        if globals_vars.STATE_OF_DATA is None:
-            globals_vars.STATE_OF_DATA = get_state_of_data(station)
+        if env.globals_vars.STATE_OF_DATA is None:
+            env.globals_vars.STATE_OF_DATA = get_state_of_data(station)
             global_frequency_data_of_var_D = station.var_D.frequency_data
             continue
-        if globals_vars.STATE_OF_DATA != get_state_of_data(station):
+        if env.globals_vars.STATE_OF_DATA != get_state_of_data(station):
             console.msg_error(_("The station with code '{0}' and name '{1}'\n"
                                 "have data {2} but other stations has data {3}. Jaziku\n"
                                 "requires that all stations have identical frequency data.").format(
@@ -86,37 +86,37 @@ def set_global_state_of_data(stations_list):
 
 def check_analysis_interval():
 
-    if globals_vars.STATE_OF_DATA in [1, 3] and config_run.settings['analysis_interval'] != "trimester":
+    if env.globals_vars.STATE_OF_DATA in [1, 3] and env.config_run.settings['analysis_interval'] != "trimester":
         console.msg_error(_("The var_D of stations have data monthly, but you define\n"
                             "in runfile the analysis interval as '{0}', this must be,\n"
                             "in this case, as 'trimester' or use data daily.").format(
-            config_run.settings['analysis_interval']))
+            env.config_run.settings['analysis_interval']))
 
 def adjust_data_of_variables(stations_list):
 
-    if globals_vars.STATE_OF_DATA == 3:
+    if env.globals_vars.STATE_OF_DATA == 3:
         console.msg(_("   Converting var I of all stations to data monthly ..... "), color='cyan', newline=False)
         for station in stations_list:
             station.var_I.daily2monthly()
             station.var_I.frequency_data = "monthly"
 
         # recalculate global STATE_OF_DATA
-        globals_vars.STATE_OF_DATA = None
+        env.globals_vars.STATE_OF_DATA = None
         set_global_state_of_data(stations_list)
         console.msg(_("done"), color='green')
 
         return True
 
-    if globals_vars.STATE_OF_DATA in [2, 4]:
+    if env.globals_vars.STATE_OF_DATA in [2, 4]:
         # if analysis_interval is defined by trimester but var_I or/and var_D has data
         # daily, first convert in data monthly and continue with results by trimester
-        if config_run.settings['analysis_interval'] == "trimester":
+        if env.config_run.settings['analysis_interval'] == "trimester":
             console.msg(_("   Converting var D of all stations to data monthly ..... "), color='cyan', newline=False)
             for station in stations_list:
                 station.var_D.daily2monthly()
                 station.var_D.frequency_data = "monthly"
             console.msg(_("done"), color='green')
-            if globals_vars.STATE_OF_DATA == 4:
+            if env.globals_vars.STATE_OF_DATA == 4:
                 console.msg(_("   Converting var I of all stations to data monthly ..... "), color='cyan', newline=False)
                 for station in stations_list:
                     station.var_I.daily2monthly()
@@ -124,7 +124,7 @@ def adjust_data_of_variables(stations_list):
                 console.msg(_("done"), color='green')
 
             # recalculate global STATE_OF_DATA
-            globals_vars.STATE_OF_DATA = None
+            env.globals_vars.STATE_OF_DATA = None
             set_global_state_of_data(stations_list)
 
             return True
@@ -206,18 +206,18 @@ def get_values_in_range_analysis_interval(station, type, year, month, day=None, 
                 iter_date += relativedelta(days=1)
 
         if station.var_I.frequency_data == "monthly":
-            if globals_vars.STATE_OF_DATA in [1, 3]:
+            if env.globals_vars.STATE_OF_DATA in [1, 3]:
                 # get the three values for var_I in this month
                 for iter_month in range(3):
                     var_I_values.append(station.var_I.data[station.var_I.date.index(
                         date(year, month, 1) + relativedelta(months=iter_month - lag))])
-            if globals_vars.STATE_OF_DATA in [2]:
+            if env.globals_vars.STATE_OF_DATA in [2]:
                 # keep constant value for month
-                if config_run.settings['analysis_interval'] == "trimester":
+                if env.config_run.settings['analysis_interval'] == "trimester":
                     var_I_values.append(station.var_I.data[station.var_I.date.index(
                         date(year, month, 1) + relativedelta(months= -lag))])
                 else:
-                    real_date = date(year, month, day) + relativedelta(days= -globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL * lag)
+                    real_date = date(year, month, day) + relativedelta(days= -env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL * lag)
                     # e.g if lag 2 in march and calculate to 15days go to february and not january
                     if month - real_date.month > 1:
                         real_date = date(real_date.year, real_date.month + 1, 1)

@@ -28,7 +28,7 @@ from numpy import array
 from matplotlib import pyplot
 from Image import open as img_open
 
-from jaziku.env import globals_vars, config_run
+from jaziku import env
 from jaziku.utils import  watermarking, format_out
 from jaziku.modules.climate.contingency_table import get_contingency_table
 
@@ -115,8 +115,8 @@ def climate_graphs(station):
         #             shadow = True, fancybox = True)
 
         # table in graphic
-        colLabels = (config_run.settings['phen_below_label'], config_run.settings['phen_normal_label'],
-                     config_run.settings['phen_above_label'])
+        colLabels = (env.config_run.settings['phen_below_label'], env.config_run.settings['phen_normal_label'],
+                     env.config_run.settings['phen_above_label'])
 
         rowLabels = [_('var D below'), _('var D normal'), _('var D above')]
 
@@ -143,7 +143,7 @@ def climate_graphs(station):
         # save dir image for mosaic
         image_open_list.append(image_dir_save)
 
-    for lag in config_run.settings['lags']:
+    for lag in env.config_run.settings['lags']:
 
         # create dir for lag
         if not os.path.isdir(os.path.join(graphics_dir_ca, _('lag_{0}').format(lag))):
@@ -154,7 +154,7 @@ def climate_graphs(station):
         # all months in year 1->12
         for month in range(1, 13):
 
-            if globals_vars.STATE_OF_DATA in [1, 3]:
+            if env.globals_vars.STATE_OF_DATA in [1, 3]:
                 contingency_table,\
                 contingency_table_percent,\
                 contingency_table_percent_print,\
@@ -164,7 +164,7 @@ def climate_graphs(station):
                 filename_period = _("trim_{0}").format(month)
                 create_chart()
 
-            if globals_vars.STATE_OF_DATA in [2, 4]:
+            if env.globals_vars.STATE_OF_DATA in [2, 4]:
 
                 for day in station.range_analysis_interval:
 
@@ -184,11 +184,11 @@ def climate_graphs(station):
         image_width = 600
         mosaic_dir_save \
             = os.path.join(graphics_dir_ca, _('mosaic_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
-                          .format(lag, globals_vars.analysis_interval_i18n, station.code, station.name,
+                          .format(lag, env.globals_vars.analysis_interval_i18n, station.code, station.name,
                                   station.var_D.type_series, station.var_I.type_series, station.process_period['start'],
                                   station.process_period['end']))
 
-        if globals_vars.STATE_OF_DATA in [1, 3]:
+        if env.globals_vars.STATE_OF_DATA in [1, 3]:
             # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
             mosaic_plots = pyplot.figure(figsize=((image_width * 3) / 100, (image_height * 4) / 100))
             mosaic_plots.savefig(mosaic_dir_save, dpi=100)
@@ -200,7 +200,7 @@ def climate_graphs(station):
                     mosaic.paste(img_open(image_open_list[i]), (image_width * h, image_height * v))
                     i += 1
 
-        if globals_vars.STATE_OF_DATA in [2, 4]:
+        if env.globals_vars.STATE_OF_DATA in [2, 4]:
             # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
             mosaic_plots = pyplot.figure(figsize=((image_width * len(station.range_analysis_interval))
                                              / 100, (image_height * 12) / 100))

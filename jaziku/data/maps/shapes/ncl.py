@@ -19,7 +19,7 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from jaziku.env import globals_vars, config_run
+from jaziku import env
 
 # this ncl code for generic regions
 
@@ -34,11 +34,11 @@ def code(map_properties):
 
     map_properties_vars = {
         'ncarg_root': os.environ.get('NCARG_ROOT'),
-        'jaziku_ncl_plugins': os.path.abspath(os.path.join(globals_vars.JAZIKU_DIR,'data','maps','ncl_plugins')),
+        'jaziku_ncl_plugins': os.path.abspath(os.path.join(env.globals_vars.JAZIKU_DIR,'data','maps','ncl_plugins')),
         'shape': map_properties.shape,
         'interpolation_file': os.path.abspath(map_properties.base_path_file) + '.tsv',
         'stations_file': os.path.abspath(map_properties.base_path_file) + '_stations.tsv',
-        'marks_stations': config_run.settings['marks_stations'],
+        'marks_stations': env.config_run.settings['marks_stations'],
         'label_marks_stations': _('Stations'),
         'save_map': os.path.abspath(map_properties.base_path_file),
         'title': map_properties.title,

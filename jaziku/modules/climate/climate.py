@@ -21,7 +21,7 @@
 import os
 from clint.textui import colored
 
-from jaziku.env import globals_vars, config_run
+from jaziku import env
 from jaziku.modules.climate import result_table
 from jaziku.modules.climate.lags import calculate_lags
 from jaziku.modules.climate.contingency_table import contingency_table
@@ -46,13 +46,13 @@ def pre_process():
             "################################################################\n")
 
     # climate dir output result
-    globals_vars.CLIMATE_DIR\
-        = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Climate'))   # 'results'
+    env.globals_vars.CLIMATE_DIR\
+        = os.path.join(env.globals_vars.WORK_DIR, _('Jaziku_Climate'))   # 'results'
 
     print _("Saving the result for climate in:")
-    print "   " + colored.cyan(os.path.relpath(globals_vars.CLIMATE_DIR, os.path.abspath(os.path.dirname(globals_vars.ARGS.runfile))))
+    print "   " + colored.cyan(os.path.relpath(env.globals_vars.CLIMATE_DIR, os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile))))
 
-    if os.path.isdir(globals_vars.CLIMATE_DIR):
+    if os.path.isdir(env.globals_vars.CLIMATE_DIR):
         console.msg(
             _("\n > WARNING: the output directory for climate process\n"
               "   is already exist, Jaziku continue but the results\n"
@@ -72,16 +72,16 @@ def process(station):
     """
 
     # restore threshold problem values
-    globals_vars.threshold_problem = [False, False, False]
+    env.globals_vars.threshold_problem = [False, False, False]
 
     # -------------------------------------------------------------------------
     # inform some characteristic to process
 
     # define if results will made by trimester or every n days
-    if globals_vars.STATE_OF_DATA in [1, 3] or config_run.settings['analysis_interval'] == "trimester":
+    if env.globals_vars.STATE_OF_DATA in [1, 3] or env.config_run.settings['analysis_interval'] == "trimester":
         console.msg(_("Results will be made by trimesters"), color='cyan')
     else:
-        console.msg(_("Results will be made every {} days").format(globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL), color='cyan')
+        console.msg(_("Results will be made every {} days").format(env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL), color='cyan')
 
     # inform the period to process
     console.msg(_("Period to process: {0}-{1}").format(station.process_period['start'], station.process_period['end']), color='cyan')
@@ -93,11 +93,11 @@ def process(station):
     console.msg(_("Processing climate ............................ "), newline=False)
 
     # create directory for output files
-    if not os.path.isdir(globals_vars.CLIMATE_DIR):
-        os.makedirs(globals_vars.CLIMATE_DIR)
+    if not os.path.isdir(env.globals_vars.CLIMATE_DIR):
+        os.makedirs(env.globals_vars.CLIMATE_DIR)
 
     station.climate_dir \
-        = os.path.join(globals_vars.CLIMATE_DIR, _('stations'), station.code + '_' + station.name)   # 'results'
+        = os.path.join(env.globals_vars.CLIMATE_DIR, _('stations'), station.code + '_' + station.name)   # 'results'
     if not os.path.isdir(station.climate_dir):
         os.makedirs(station.climate_dir)
 
@@ -112,8 +112,8 @@ def process(station):
 
     result_table.composite_analysis(station)
 
-    if not globals_vars.threshold_problem[0] and not globals_vars.threshold_problem[1] and\
-       not globals_vars.threshold_problem[2] and config_run.settings['graphics']:
+    if not env.globals_vars.threshold_problem[0] and not env.globals_vars.threshold_problem[1] and\
+       not env.globals_vars.threshold_problem[2] and env.config_run.settings['graphics']:
         climate_graphs(station)
     else:
         console.msg(_("\n   continue without make graphics ............. "), color='cyan', newline=False)

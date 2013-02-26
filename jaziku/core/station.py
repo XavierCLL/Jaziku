@@ -20,10 +20,8 @@
 
 from datetime import date
 
-from jaziku.env import globals_vars, config_run
+from jaziku import env
 from jaziku.utils import  console
-from jaziku.modules.climate import climate
-from jaziku.modules.forecast import forecast
 from jaziku.core.variable import Variable
 
 #==============================================================================
@@ -66,19 +64,19 @@ class Station(object):
 
         # initialized variable common_period
         # format list: [[  date ,  var_D ,  var_I ],... ]
-        if config_run.settings['process_period']:
-            if (config_run.settings['process_period']['start'] < common_date[0].year + 1 or
-                config_run.settings['process_period']['end'] > common_date[-1].year - 1):
+        if env.config_run.settings['process_period']:
+            if (env.config_run.settings['process_period']['start'] < common_date[0].year + 1 or
+                env.config_run.settings['process_period']['end'] > common_date[-1].year - 1):
                 console.msg(_("\nCalculating the process period ................ "), newline=False)
                 console.msg_error(_(
                     "The period defined in argument {0}-{1} is outside in the\n"
                     "maximum possible period for this station: {2}-{3}.")
-                .format(config_run.settings['process_period']['start'],
-                    config_run.settings['process_period']['end'],
+                .format(env.config_run.settings['process_period']['start'],
+                    env.config_run.settings['process_period']['end'],
                     common_date[0].year + 1, common_date[-1].year - 1))
 
-            common_date = common_date[common_date.index(date(config_run.settings['process_period']['start'] - 1, 1, 1)):
-            common_date.index(date(config_run.settings['process_period']['end'] + 1, 12, 1)) + 1]
+            common_date = common_date[common_date.index(date(env.config_run.settings['process_period']['start'] - 1, 1, 1)):
+            common_date.index(date(env.config_run.settings['process_period']['end'] + 1, 12, 1)) + 1]
 
         self.common_period = []
         # set values matrix for common_period

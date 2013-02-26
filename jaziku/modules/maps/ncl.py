@@ -21,7 +21,7 @@
 import os
 import imp
 
-from jaziku.env import globals_vars, config_run
+from jaziku import env
 
 class MapProperties(object):
     pass
@@ -57,7 +57,7 @@ def make_ncl_file(grid, base_path_file, globals_vars):
 
         if grid.if_running["climate"]:
             map_properties.title = _('''"Scenario of affectation of the variable {typeVarD}~C~    under variations of {typeVarI} to lag {lag} in {date}"''')\
-                     .format(typeVarD=config_run.settings['type_var_D'], typeVarI=config_run.settings['type_var_I'], lag=grid.lag, date=map_properties.date)
+                     .format(typeVarD=env.config_run.settings['type_var_D'], typeVarI=env.config_run.settings['type_var_I'], lag=grid.lag, date=map_properties.date)
             map_properties.color_bar_levels = "(/{array}/)".format(array=range_color_bar(-100, 100, 2.5))
             map_properties.color_bar_step = 2.5
             map_properties.color_bar_title_on = "True"
@@ -65,7 +65,7 @@ def make_ncl_file(grid, base_path_file, globals_vars):
             map_properties.units = '''"%"'''
         if grid.if_running["correlation"]:
             map_properties.title = _('''"Lineal correlation between the variable {typeVarI}~C~              and {typeVarD} to lag {lag} in {date}"''')\
-                     .format(typeVarD=config_run.settings['type_var_D'], typeVarI=config_run.settings['type_var_I'], lag=grid.lag, date=map_properties.date)
+                     .format(typeVarD=env.config_run.settings['type_var_D'], typeVarI=env.config_run.settings['type_var_I'], lag=grid.lag, date=map_properties.date)
             map_properties.color_bar_levels = "(/{array}/)".format(array=range_color_bar(-1, 1, 0.025))
             map_properties.color_bar_step = 0.025
             map_properties.color_bar_title_on = "False"
@@ -73,7 +73,7 @@ def make_ncl_file(grid, base_path_file, globals_vars):
             map_properties.units = '''"Pearson"'''
         if grid.if_running["forecast"]:
             map_properties.title = _('''"Affectation forecast of the variable {typeVarD}~C~   under variations of {typeVarI} to lag {lag} in {date}"''')\
-                     .format(typeVarD=config_run.settings['type_var_D'], typeVarI=config_run.settings['type_var_I'], lag=grid.lag, date=map_properties.date)
+                     .format(typeVarD=env.config_run.settings['type_var_D'], typeVarI=env.config_run.settings['type_var_I'], lag=grid.lag, date=map_properties.date)
             map_properties.color_bar_levels = "(/{array}/)".format(array=range_color_bar(-100, 100, 2.5))
             map_properties.color_bar_step = 2.5
             map_properties.color_bar_title_on = "True"

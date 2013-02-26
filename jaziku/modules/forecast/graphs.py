@@ -27,7 +27,7 @@ import os
 from matplotlib import pyplot
 from Image import open as img_open
 
-from jaziku.env import globals_vars, config_run
+from jaziku import env
 from jaziku.utils import  watermarking, format_out
 
 
@@ -39,20 +39,20 @@ def forecast_graphs(station):
 
     image_open_list = []
 
-    for lag in config_run.settings['lags']:
+    for lag in env.config_run.settings['lags']:
 
-        if globals_vars.STATE_OF_DATA in [1, 3]:
-            title_date_graphic = _("trim {0} ({1})").format(config_run.settings['forecast_date']['month'],
-                format_out.trimester_in_initials(config_run.settings['forecast_date']['month'] - 1))
-            filename_date_graphic = _("trim_{0}").format(config_run.settings['forecast_date']['month'])
+        if env.globals_vars.STATE_OF_DATA in [1, 3]:
+            title_date_graphic = _("trim {0} ({1})").format(env.config_run.settings['forecast_date']['month'],
+                format_out.trimester_in_initials(env.config_run.settings['forecast_date']['month'] - 1))
+            filename_date_graphic = _("trim_{0}").format(env.config_run.settings['forecast_date']['month'])
 
-        if globals_vars.STATE_OF_DATA in [2, 4]:
+        if env.globals_vars.STATE_OF_DATA in [2, 4]:
             title_date_graphic = "{0} {1}"\
-                .format(format_out.month_in_initials(config_run.settings['forecast_date']['month'] - 1),
-                        config_run.settings['forecast_date']['day'])
+                .format(format_out.month_in_initials(env.config_run.settings['forecast_date']['month'] - 1),
+                        env.config_run.settings['forecast_date']['day'])
             filename_date_graphic = "{0}_{1}"\
-                .format(format_out.month_in_initials(config_run.settings['forecast_date']['month'] - 1),
-                        config_run.settings['forecast_date']['day'])
+                .format(format_out.month_in_initials(env.config_run.settings['forecast_date']['month'] - 1),
+                        env.config_run.settings['forecast_date']['day'])
 
         ## Options for graphics pie
         # make a square figure and axes
@@ -98,7 +98,7 @@ def forecast_graphs(station):
 
     ## Create mosaic
 
-    if len(config_run.settings['lags']) != 1:
+    if len(env.config_run.settings['lags']) != 1:
         # definition height and width of individual image
         # image_height = 375
         image_width = 375
@@ -108,10 +108,10 @@ def forecast_graphs(station):
                         station.process_period['start'], station.process_period['end']))
         # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
         # http://www.classical-webdesigns.co.uk/resources/pixelinchconvert.html
-        pyplot.figure(figsize=(3.75 * len(config_run.settings['lags']), 3.75))
+        pyplot.figure(figsize=(3.75 * len(env.config_run.settings['lags']), 3.75))
         pyplot.savefig(mosaic_dir_save, dpi=100)
         mosaic = img_open(mosaic_dir_save)
-        for lag_iter in range(len(config_run.settings['lags'])):
+        for lag_iter in range(len(env.config_run.settings['lags'])):
             mosaic.paste(img_open(image_open_list[lag_iter]), (image_width * lag_iter, 0))
         # save
         mosaic.save(mosaic_dir_save)
