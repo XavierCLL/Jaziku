@@ -30,6 +30,7 @@ news
 - [code] Refactoring settings
 - [code] Refactoring format_in format_out
 - [code] Refactoring thresholds functions for different class_category_analysis
+- [code] Refactoring variables for var_D and var_I from globals_vars
 
 fixes
 +++++
