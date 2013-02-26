@@ -25,9 +25,10 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from pylab import size
 
-from jaziku.env import globals_vars
-from jaziku.core.input import input_validation
+from jaziku import env
+from jaziku.core.input import validation
 from jaziku.utils import  console
+
 
 #==============================================================================
 # INPUT DATA PROCESSING
@@ -39,9 +40,13 @@ def read_var_D(station):
     Read dependent variable from file define in station list
     and check and validate value by value.
 
-    :return:
-        STATION.var_D.data
-        STATION.var_D.date
+    :param station: station instance
+    :type station: Station
+
+    Return by reference:
+
+    :ivar STATION.var_D.data: data read from file
+    :ivar STATION.var_D.date: date read from file
     """
     date_D = []
     var_D = []
@@ -58,8 +63,8 @@ def read_var_D(station):
     # The series accept three delimiters: spaces (' '), tabulation ('\t') or semi-colon (';')
     # this check which delimiter is using this file
     test_line = open_file_D.readline()
-    if len(test_line.split(globals_vars.INPUT_CSV_DELIMITER)) >= 2:
-        delimiter = globals_vars.INPUT_CSV_DELIMITER
+    if len(test_line.split(env.globals_vars.INPUT_CSV_DELIMITER)) >= 2:
+        delimiter = env.globals_vars.INPUT_CSV_DELIMITER
     if len(test_line.split(' ')) >= 2:
         delimiter = ' '
     if len(test_line.split('\t')) >= 2:
@@ -134,20 +139,19 @@ def read_var_D(station):
                         missing_date.year,
                         missing_date.month))
             value = float(row[1])
-            if globals_vars.is_valid_null(value):  # TODO: deprecated valid null
+            if env.globals_vars.is_valid_null(value):  # TODO: deprecated valid null
                 value = float('nan')
             # set date of dependent variable from file_D, column 1,
             # format: yyyy-mm-dd
             date_D.append(date(year, month, day))
-            # set values of dependent variable
-            var_D.append(input_validation.validation_var_D(station.var_D.type_series,
-                value,
-                date_D[-1],
-                station.var_D.frequency_data))
+            # check variable if is within limits
+            if validation.is_the_value_within_limits(value, station.var_D):
+                # set values of dependent variable
+                var_D.append(value)
 
         except Exception, e:
             console.msg_error(_("Reading from file '{0}' in line: {1}\n\n{2}")
-            .format(station.var_D.file_name, csv_file_D.line_num, e), False)
+            .format(station.var_D.file_name, csv_file_D.line_num, e))
 
         if first:
             first = False
@@ -158,17 +162,19 @@ def read_var_D(station):
     station.var_D.data = var_D
     station.var_D.date = date_D
 
-    #return station
-
 
 def read_var_I(station):
     """
     Read independent variable from file define in station list
     and check and validate value by value.
 
-    :return:
-        STATION.var_I.data
-        STATION.var_I.date
+    :param station: station instance
+    :type station: Station
+
+    Return by reference:
+
+    :ivar STATION.var_I.data: data read from file
+    :ivar STATION.var_I.date: date read from file
     """
     date_I = []
     var_I = []
@@ -247,17 +253,19 @@ def read_var_I(station):
                         missing_date.year,
                         missing_date.month))
             value = float(row[1])
-            if globals_vars.is_valid_null(value):  # TODO: deprecated valid null
+            if env.globals_vars.is_valid_null(value):  # TODO: deprecated valid null
                 value = float('nan')
             # set date of independent variable from file_I, column 1,
             # format: yyyy-mm
             date_I.append(date(year, month, day))
-            # set values of independent variable
-            var_I.append(input_validation.validation_var_I(station.var_I.type_series, value))
+            # check variable if is within limits
+            if validation.is_the_value_within_limits(value, station.var_I):
+                # set values of independent variable
+                var_I.append(value)
 
         except Exception, e:
             console.msg_error(_("Reading from file '{0}' in line: {1}\n\n{2}")
-            .format(station.var_I.file_name, csv_file_I.line_num, e), False)
+            .format(station.var_I.file_name, csv_file_I.line_num, e))
 
         if first:
             first = False
@@ -268,4 +276,3 @@ def read_var_I(station):
     station.var_I.data = var_I
     station.var_I.date = date_I
 
-    #return station
