@@ -25,7 +25,7 @@ from numpy import median, average, var
 from scipy.stats.stats import tstd, variation, skew, kurtosis
 
 from jaziku import env
-from jaziku.core.input import input_vars
+from jaziku.core.input import vars
 from jaziku.core.input import validation
 from jaziku.utils import console, array
 
@@ -100,10 +100,10 @@ class Variable(object):
 
         if process:
             if self.type == 'D':
-                input_vars.read_var_D(station)
+                vars.read_var_D(station)
                 self.fill_variable(station)
             if self.type == 'I':
-                input_vars.read_var_I(station)
+                vars.read_var_I(station)
                 self.fill_variable(station)
 
         if messages:
