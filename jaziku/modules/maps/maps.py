@@ -23,7 +23,7 @@ import csv
 import numpy
 from subprocess import call
 
-from jaziku.env import globals_vars, config_run
+from jaziku import env
 from jaziku.modules.maps import interpolation
 from jaziku.modules.maps.grid import search_and_set_internal_grid, set_particular_grid
 from jaziku.modules.maps.ncl import make_ncl_file
@@ -119,11 +119,11 @@ def maps(grid):
     global base_matrix
     base_matrix = numpy.matrix(numpy.empty([grid.lat_size, grid.lon_size]))
     # initialize matrix with null value
-    base_matrix.fill(globals_vars.VALID_NULL[1])
+    base_matrix.fill(env.globals_vars.VALID_NULL[1])
 
-    phenomenon = {0: config_run.settings['phen_below_label'],
-                  1: config_run.settings['phen_normal_label'],
-                  2: config_run.settings['phen_above_label']}
+    phenomenon = {0: env.config_run.settings['phen_below_label'],
+                  1: env.config_run.settings['phen_normal_label'],
+                  2: env.config_run.settings['phen_above_label']}
 
     def process_map():
         # add counter of maps created in this grid
@@ -132,7 +132,7 @@ def maps(grid):
         matrix = base_matrix.copy()
         # read values from saved file and set points on matrix
         open_file = open(file_map_points, 'rb')
-        csv_file = csv.reader(open_file, delimiter=globals_vars.INPUT_CSV_DELIMITER)
+        csv_file = csv.reader(open_file, delimiter=env.globals_vars.INPUT_CSV_DELIMITER)
         first_line = True
         marks_stations = []
         for line in csv_file:
@@ -189,7 +189,7 @@ def maps(grid):
 
         # save values to .INC file
         for value in matrix_vector:
-            if int(value) == globals_vars.VALID_NULL[1]:
+            if int(value) == env.globals_vars.VALID_NULL[1]:
                 open_file.write(str(int(value)) + '\n')
             else:
                 open_file.write(str(value) + '\n')
@@ -238,12 +238,12 @@ def maps(grid):
         # make ncl file for map
         base_path_file = os.path.join(base_path, base_file)
         # make and write ncl file for ncl process
-        ncl_file = make_ncl_file(grid, base_path_file, globals_vars)
+        ncl_file = make_ncl_file(grid, base_path_file, env.globals_vars)
         devnull = os.open(os.devnull, os.O_WRONLY)
 
         ## COLORMAP
         # setting path to colormap
-        path_to_colormap = os.path.join(globals_vars.JAZIKU_DIR, 'data', 'maps', 'colormaps')
+        path_to_colormap = os.path.join(env.globals_vars.JAZIKU_DIR, 'data', 'maps', 'colormaps')
         # set colormap ncl variable into variables system
         os.environ["NCARG_COLORMAPS"] = path_to_colormap
 
@@ -277,7 +277,7 @@ def maps(grid):
     # -------------------------------------------------------------------------
     # Process maps for CLIMATE
 
-    if config_run.settings['maps']['climate']:
+    if env.config_run.settings['maps']['climate']:
 
         grid.if_running["climate"] = True
         grid.if_running["correlation"] = False
@@ -286,9 +286,9 @@ def maps(grid):
         print _("Processing maps for climate:")
 
         # walking file by file of maps directory and make interpolation and map for each file
-        for analysis_interval in globals_vars.ALL_ANALYSIS_INTERVALS:
+        for analysis_interval in env.globals_vars.ALL_ANALYSIS_INTERVALS:
 
-            if globals_vars.maps_files_climate[analysis_interval] is None:
+            if env.globals_vars.maps_files_climate[analysis_interval] is None:
                 continue
 
             # console message
@@ -297,7 +297,7 @@ def maps(grid):
             else:
                 console.msg("                {0}\t....................... ".format(analysis_interval), newline=False)
 
-            for lag in config_run.settings['lags']:
+            for lag in env.config_run.settings['lags']:
 
                 # all months in year 1->12
                 for month in range(1, 13):
@@ -305,13 +305,13 @@ def maps(grid):
                     if analysis_interval == 'trimester':
                         for category in [0, 1, 2]:  # phenomenons var_I
                             # show only once
-                            if lag == config_run.settings['lags'][0] and month == 1 and category == 0:
+                            if lag == env.config_run.settings['lags'][0] and month == 1 and category == 0:
                                 message_warning = True
                             else:
                                 message_warning = False
 
                             # file where saved points for plot map
-                            file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][category]
+                            file_map_points = env.globals_vars.maps_files_climate[analysis_interval][lag][month - 1][category]
 
                             # save matrix for interpolation
                             base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
@@ -346,13 +346,13 @@ def maps(grid):
                         for day in range(len(range_analysis_interval)):
                             for category in [0, 1, 2]:  # phenomenons var_I
                                 # show only once
-                                if lag == config_run.settings['lags'][0] and month == 1 and category == 0 and day == 0:
+                                if lag == env.config_run.settings['lags'][0] and month == 1 and category == 0 and day == 0:
                                     message_warning = True
                                 else:
                                     message_warning = False
 
                                 # file where saved points for plot map
-                                file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][day][category]
+                                file_map_points = env.globals_vars.maps_files_climate[analysis_interval][lag][month - 1][day][category]
 
                                 # save matrix for interpolation
                                 base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
@@ -383,7 +383,7 @@ def maps(grid):
     # -------------------------------------------------------------------------
     # Process maps for CORRELATION
 
-    if config_run.settings['maps']['correlation']:
+    if env.config_run.settings['maps']['correlation']:
 
         grid.if_running["climate"] = False
         grid.if_running["correlation"] = True
@@ -392,9 +392,9 @@ def maps(grid):
         print _("Processing maps for correlation:")
 
         # walking file by file of maps directory and make interpolation and map for each file
-        for analysis_interval in globals_vars.ALL_ANALYSIS_INTERVALS:
+        for analysis_interval in env.globals_vars.ALL_ANALYSIS_INTERVALS:
 
-            if globals_vars.maps_files_climate[analysis_interval] is None:
+            if env.globals_vars.maps_files_climate[analysis_interval] is None:
                 continue
 
             # console message
@@ -403,7 +403,7 @@ def maps(grid):
             else:
                 console.msg("                {0}\t....................... ".format(analysis_interval), newline=False)
 
-            for lag in config_run.settings['lags']:
+            for lag in env.config_run.settings['lags']:
 
                 # all months in year 1->12
                 for month in range(1, 13):
@@ -411,17 +411,17 @@ def maps(grid):
                     if analysis_interval == 'trimester':
                         category = 1  # normal
                         # show only once
-                        if lag == config_run.settings['lags'][0] and month == 1:
+                        if lag == env.config_run.settings['lags'][0] and month == 1:
                             message_warning = True
                         else:
                             message_warning = False
 
                         # file where saved points for plot map
-                        file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][category]
+                        file_map_points = env.globals_vars.maps_files_climate[analysis_interval][lag][month - 1][category]
 
                         # save matrix for interpolation
-                        base_path = os.path.join(globals_vars.CLIMATE_DIR, _('maps'),
-                            globals_vars.analysis_interval_i18n,
+                        base_path = os.path.join(env.globals_vars.CLIMATE_DIR, _('maps'),
+                            env.globals_vars.analysis_interval_i18n,
                             _('lag_{0}').format(lag),
                             _('Correlation'),
                             grid.grid_name)
@@ -455,17 +455,17 @@ def maps(grid):
                         for day in range(len(range_analysis_interval)):
                             category = 1  # phenomenons var_I
                             # show only once
-                            if lag == config_run.settings['lags'][0] and month == 1 and day == 0:
+                            if lag == env.config_run.settings['lags'][0] and month == 1 and day == 0:
                                 message_warning = True
                             else:
                                 message_warning = False
 
                             # file where saved points for plot map
-                            file_map_points = globals_vars.maps_files_climate[analysis_interval][lag][month - 1][day][category]
+                            file_map_points = env.globals_vars.maps_files_climate[analysis_interval][lag][month - 1][day][category]
 
                             # save matrix for interpolation
-                            base_path = os.path.join(globals_vars.CLIMATE_DIR, _('maps'),
-                                globals_vars.analysis_interval_i18n,
+                            base_path = os.path.join(env.globals_vars.CLIMATE_DIR, _('maps'),
+                                env.globals_vars.analysis_interval_i18n,
                                 _('lag_{0}').format(lag),
                                 _('Correlation'),
                                 grid.grid_name)
@@ -494,7 +494,7 @@ def maps(grid):
     # -------------------------------------------------------------------------
     # Process maps for FORECAST
 
-    if config_run.settings['forecast_process'] and  config_run.settings['maps']['forecast']:
+    if env.config_run.settings['forecast_process'] and  env.config_run.settings['maps']['forecast']:
 
         grid.if_running["climate"] = False
         grid.if_running["correlation"] = False
@@ -505,7 +505,7 @@ def maps(grid):
         # walking file by file of maps directory and make interpolation and map for each file
         for analysis_interval in ['5days', '10days', '15days', 'trimester']:
 
-            if globals_vars.maps_files_forecast[analysis_interval] == {}:
+            if env.globals_vars.maps_files_forecast[analysis_interval] == {}:
                 continue
 
             # console message
@@ -514,17 +514,17 @@ def maps(grid):
             else:
                 console.msg("                {0}\t....................... ".format(analysis_interval), newline=False)
 
-            for forecast_date in globals_vars.maps_files_forecast[analysis_interval]:
+            for forecast_date in env.globals_vars.maps_files_forecast[analysis_interval]:
 
-                for lag in config_run.settings['lags']:
+                for lag in env.config_run.settings['lags']:
                     # show only once
-                    if lag == config_run.settings['lags'][0]:
+                    if lag == env.config_run.settings['lags'][0]:
                         message_warning = True
                     else:
                         message_warning = False
 
                     # file where saved points for plot map
-                    file_map_points = globals_vars.maps_files_forecast[analysis_interval][forecast_date][lag]
+                    file_map_points = env.globals_vars.maps_files_forecast[analysis_interval][forecast_date][lag]
                     # save matrix for interpolation
                     base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
 

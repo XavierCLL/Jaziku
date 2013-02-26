@@ -32,7 +32,6 @@ from Image import open as img_open
 from scipy.stats import shapiro
 from calendar import monthrange
 
-#from jaziku.env import env.globals_vars, env.config_run
 from jaziku import env
 from jaziku.core.station import Station
 from jaziku.core.variable import Variable

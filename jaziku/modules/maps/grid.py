@@ -23,7 +23,7 @@ import imp
 import math
 from  numpy import linspace
 
-from jaziku.env import globals_vars, config_run
+from jaziku import env
 from jaziku.utils import  console, array
 from jaziku.core.station import Station
 
@@ -136,12 +136,12 @@ class Grid(object):
         self.shape_mask = False
         # delete data outside of shape in mesh data
         # if grid_resolution is thin, the shape mask is better
-        if config_run.settings['shape_boundary']:
+        if env.config_run.settings['shape_boundary']:
             self.shape_mask = True
 
         ## set subtitle on maps
-        if config_run.settings['analog_year']:
-            self.subtitle = _("\"Analysis with analog year - {0}\"").format(config_run.settings['analog_year'])
+        if env.config_run.settings['analog_year']:
+            self.subtitle = _("\"Analysis with analog year - {0}\"").format(env.config_run.settings['analog_year'])
         else:
             self.subtitle = "\"\""
 
@@ -197,17 +197,17 @@ class Grid(object):
 
         ## put value in the base matrix
         # first check if already exist value in this point on matrix (overlapping)
-        if int(matrix[lat_location, lon_location]) != globals_vars.VALID_NULL[1]:
-            if config_run.settings['overlapping'] == "average":
+        if int(matrix[lat_location, lon_location]) != env.globals_vars.VALID_NULL[1]:
+            if env.config_run.settings['overlapping'] == "average":
                 matrix[lat_location, lon_location] = array.mean([matrix[lat_location, lon_location], value])
                 return matrix, _("average")
-            if config_run.settings['overlapping'] == "maximum":
+            if env.config_run.settings['overlapping'] == "maximum":
                 matrix[lat_location, lon_location] = max([matrix[lat_location, lon_location], value])
                 return matrix, _("maximum")
-            if config_run.settings['overlapping'] == "minimum":
+            if env.config_run.settings['overlapping'] == "minimum":
                 matrix[lat_location, lon_location] = min([matrix[lat_location, lon_location], value])
                 return matrix, _("minimum")
-            if config_run.settings['overlapping'] == "neither":
+            if env.config_run.settings['overlapping'] == "neither":
                 return matrix, _("neither")
         else:
             matrix[lat_location, lon_location] = value
@@ -220,8 +220,8 @@ def search_and_set_internal_grid(grid):
     console.msg(_("   Setting internal grid"), color='yellow')
     grid.is_internal = True
 
-    grid.shape_path = os.path.join(globals_vars.JAZIKU_DIR, 'data', 'maps', 'shapes', grid.grid_path)
-    dir_to_list = os.path.join(globals_vars.JAZIKU_DIR, 'data', 'maps', 'shapes', grid.country)
+    grid.shape_path = os.path.join(env.globals_vars.JAZIKU_DIR, 'data', 'maps', 'shapes', grid.grid_path)
+    dir_to_list = os.path.join(env.globals_vars.JAZIKU_DIR, 'data', 'maps', 'shapes', grid.country)
 
     try:
         listdir = [name for name in os.listdir(dir_to_list) if os.path.isdir(os.path.join(dir_to_list, name))]

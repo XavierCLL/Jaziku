@@ -22,7 +22,7 @@ import os
 import geo_bsd as hpgl
 from geo_bsd.routines import *
 
-from jaziku.env import globals_vars
+from jaziku import env
 from jaziku.utils import  console
 
 
@@ -32,7 +32,7 @@ def ordinary_kriging(base_grid, inc_file):
     with console.redirectStdStreams():
         size = (base_grid.lat_size, base_grid.lon_size, 1)  # (alto, ancho, paso)
         grid = SugarboxGrid(base_grid.lat_size, base_grid.lon_size, 1)
-        data = load_cont_property(os.path.abspath(inc_file.encode('utf-8')), globals_vars.VALID_NULL[1], size)
+        data = load_cont_property(os.path.abspath(inc_file.encode('utf-8')), env.globals_vars.VALID_NULL[1], size)
 
         semivariogram = CovarianceModel(type=base_grid.semivariogram_type,
                                      ranges=(base_grid.radiuses[0] / 2,

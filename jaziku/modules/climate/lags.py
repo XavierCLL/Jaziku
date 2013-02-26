@@ -24,7 +24,7 @@ from calendar import monthrange
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from jaziku.env import globals_vars, config_run
+from jaziku import env
 from jaziku.core.analysis_interval import get_values_in_range_analysis_interval, get_range_analysis_interval
 from jaziku.utils import  array, format_out
 
@@ -74,9 +74,9 @@ def calculate_lags(station, makes_files=True):
 
     range_analysis_interval = get_range_analysis_interval()
 
-    if globals_vars.STATE_OF_DATA in [1, 3]:
+    if env.globals_vars.STATE_OF_DATA in [1, 3]:
 
-        for lag in config_run.settings['lags']:
+        for lag in env.config_run.settings['lags']:
 
             if makes_files:
                 if not os.path.isdir(dir_lag[lag]):
@@ -100,7 +100,7 @@ def calculate_lags(station, makes_files=True):
                     # output write file:
                     # [[ yyyy/month, Mean_Lag_X_var_D, Mean_Lag_X_var_I ],... ]
                     open_file = open(csv_name, 'w')
-                    csv_file = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
+                    csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
                 iter_year = station.process_period['start']
 
@@ -134,9 +134,9 @@ def calculate_lags(station, makes_files=True):
                     open_file.close()
                     del csv_file
 
-    if globals_vars.STATE_OF_DATA in [2, 4]:
+    if env.globals_vars.STATE_OF_DATA in [2, 4]:
 
-        for lag in config_run.settings['lags']:
+        for lag in env.config_run.settings['lags']:
             if makes_files:
                 if not os.path.isdir(dir_lag[lag]):
                     os.makedirs(dir_lag[lag])
@@ -147,7 +147,7 @@ def calculate_lags(station, makes_files=True):
                     csv_name = os.path.join(dir_lag[lag],
                         _('Mean_lag_{0}_{1}days_month_{2}_{3}_'
                           '{4}_{5}_{6}_({7}-{8}).csv')
-                        .format(lag, globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL,
+                        .format(lag, env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL,
                             month, station.code,
                             station.name, station.var_D.type_series,
                             station.var_I.type_series,
@@ -160,7 +160,7 @@ def calculate_lags(station, makes_files=True):
                     # output write file:
                     # [[ yyyy/month, Mean_Lag_X_var_D, Mean_Lag_X_var_I ],... ]
                     open_file = open(csv_name, 'w')
-                    csv_file = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
+                    csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
                 #days_for_this_month = monthrange(iter_year, month)[1]
 

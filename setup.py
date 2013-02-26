@@ -19,11 +19,11 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 from setuptools import setup, find_packages
-from jaziku.env import globals_vars
+from jaziku import env
 
 setup(
-    name=globals_vars.PROG_NAME,
-    version=globals_vars.VERSION,
+    name=env.globals_vars.PROG_NAME,
+    version=env.globals_vars.VERSION,
     license="GNU General Public License (GPL) v3",
     description="Jaziku is statistical inference software for the teleconnections analysis.",
     long_description=open('README.rst').read(),

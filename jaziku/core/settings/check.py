@@ -21,8 +21,8 @@
 import os
 from clint.textui import colored
 
+from jaziku import env
 from jaziku.core import analysis_interval
-from jaziku.env import config_run, globals_vars
 from jaziku.utils import console, format_out, format_in
 
 
@@ -30,48 +30,70 @@ def configuration_run():
 
     # ------------------------
     # class_category_analysis
-    config_run.settings['class_category_analysis'] = format_in.to_int(config_run.settings['class_category_analysis'])
+    env.config_run.settings['class_category_analysis'] = format_in.to_int(env.config_run.settings['class_category_analysis'])
 
-    if config_run.settings['class_category_analysis'] not in [3,7]:
+    if env.config_run.settings['class_category_analysis'] not in [3,7]:
         console.msg_error_configuration('class_category_analysis',
             _("The 'class_category_analysis' {0} not is valid,\n"
-              "this should be '3' or '7'.").format(config_run.settings['class_category_analysis']))
+              "this should be '3' or '7'.").format(env.config_run.settings['class_category_analysis']))
 
     # ------------------------
     # var_I_category_labels
 
-    if config_run.settings['class_category_analysis'] == 3:
-        if config_run.settings['var_I_category_labels'] == "default":
-            config_run.settings['var_I_category_labels'] = [unicode(_("below"), 'utf-8'),
-                                                            unicode(_("normal"), 'utf-8'),
-                                                            unicode(_("above"), 'utf-8')]
+    def var_I_category_labels_dictionary(func):
+        def wrapper_func(*args):
+            labels_list = func(*args)
+            if env.config_run.settings['class_category_analysis'] == 3:
+                return {'below': labels_list[0],
+                        'normal': labels_list[1],
+                        'above': labels_list[2]}
+            if env.config_run.settings['class_category_analysis'] == 7:
+                return {'below3': labels_list[0],
+                        'below2': labels_list[1],
+                        'below1': labels_list[2],
+                        'normal': labels_list[3],
+                        'above1': labels_list[4],
+                        'above2': labels_list[5],
+                        'above3': labels_list[6]}
+        return wrapper_func
+
+    if env.config_run.settings['class_category_analysis'] == 3:
+        if env.config_run.settings['var_I_category_labels'] == "default":
+            env.config_run.settings['var_I_category_labels'] = [unicode(_("below"), 'utf-8'),
+                                                                unicode(_("normal"), 'utf-8'),
+                                                                unicode(_("above"), 'utf-8')]
         else:
-            if len(config_run.settings['var_I_category_labels']) == 3:
-                config_run.settings['var_I_category_labels']\
-                    = [unicode(label, 'utf-8') for label in config_run.settings['var_I_category_labels']]
+            if len(env.config_run.settings['var_I_category_labels']) == 3:
+                env.config_run.settings['var_I_category_labels']\
+                    = [unicode(label, 'utf-8') for label in env.config_run.settings['var_I_category_labels']]
             else:
                 console.msg_error_configuration('var_I_category_labels',
                                                 _("The 'var_I_category_labels' {0} not is valid,\n"
                                                   "this should be 3 labels in different rows."))
 
 
-    if config_run.settings['class_category_analysis'] == 7:
-        if config_run.settings['var_I_category_labels'] == "default":
-            config_run.settings['var_I_category_labels'] = [unicode(_("strong below"), 'utf-8'),
-                                                            unicode(_("moderate below"), 'utf-8'),
-                                                            unicode(_("weak below"), 'utf-8'),
-                                                            unicode(_("normal"), 'utf-8'),
-                                                            unicode(_("weak above"), 'utf-8'),
-                                                            unicode(_("moderate above"), 'utf-8'),
-                                                            unicode(_("strong above"), 'utf-8')]
+    if env.config_run.settings['class_category_analysis'] == 7:
+        if env.config_run.settings['var_I_category_labels'] == "default":
+            env.config_run.settings['var_I_category_labels'] = [unicode(_("strong below"), 'utf-8'),
+                                                                unicode(_("moderate below"), 'utf-8'),
+                                                                unicode(_("weak below"), 'utf-8'),
+                                                                unicode(_("normal"), 'utf-8'),
+                                                                unicode(_("weak above"), 'utf-8'),
+                                                                unicode(_("moderate above"), 'utf-8'),
+                                                                unicode(_("strong above"), 'utf-8')]
         else:
-            if len(config_run.settings['var_I_category_labels']) == 7:
-                config_run.settings['var_I_category_labels'] \
-                    = [unicode(label, 'utf-8') for label in config_run.settings['var_I_category_labels']]
+            if len(env.config_run.settings['var_I_category_labels']) == 7:
+                env.config_run.settings['var_I_category_labels'] \
+                    = [unicode(label, 'utf-8') for label in env.config_run.settings['var_I_category_labels']]
             else:
                 console.msg_error_configuration('var_I_category_labels',
                                                 _("The 'var_I_category_labels' {0} not is valid,\n"
                                                   "this should be 7 labels in different rows."))
+    @var_I_category_labels_dictionary
+    def format_labels(labels_list):
+        return labels_list
+
+    env.config_run.settings['var_I_category_labels'] = format_labels(env.config_run.settings['var_I_category_labels'])
 
     # ------------------------
     # limits var D
@@ -80,45 +102,48 @@ def configuration_run():
     # particular range validation
 
     # below var D
-    if config_run.settings['limits_var_D']['below'] == "default":
+    if env.config_run.settings['limits_var_D']['below'] == "default":
         # validation type_D
-        if config_run.settings['type_var_D'] not in globals_vars.TYPES_VAR_D:
+        if env.config_run.settings['type_var_D'] not in env.var_D.INTERNAL_TYPES:
             console.msg_error_configuration('type_var_D',
                 _("{0} not is valid internal type for dependent variable if you\n"
                   "defined LIMIT VAR D BELOW/ABOVE as 'default'. If you want\n"
                   "define a particular type for dependent variable, you must define\n"
                   "as real values (or 'none') the LIMIT VAR D BELOW/ABOVE")
-                .format(config_run.settings['type_var_D']))
-    elif config_run.settings['limits_var_D']['below'] in ["none", "None", "NONE", None]:
-        config_run.settings['limits_var_D']['below'] = None
+                .format(env.config_run.settings['type_var_D']))
+    elif env.config_run.settings['limits_var_D']['below'] in ["none", "None", "NONE", None]:
+        env.config_run.settings['limits_var_D']['below'] = None
     else:
         try:
-            config_run.settings['limits_var_D']['below'] = format_in.to_float(config_run.settings['limits_var_D']['below'])
+            env.config_run.settings['limits_var_D']['below'] = format_in.to_float(env.config_run.settings['limits_var_D']['below'])
         except:
             console.msg_error_configuration('limits_var_D',
                 (_("Problem with particular range validation for "
                    "dependent\nvariable: '{0}' this must be "
-                   "a valid number, 'none' or 'default'.").format(config_run.settings['limits_var_D']['below'])))
+                   "a valid number, 'none' or 'default'.").format(env.config_run.settings['limits_var_D']['below'])))
+
     # above var D
-    if config_run.settings['limits_var_D']['above'] == "default":
+    if env.config_run.settings['limits_var_D']['above'] == "default":
         # validation type_D
-        if config_run.settings['type_var_D'] not in globals_vars.TYPES_VAR_D:
+        if env.config_run.settings['type_var_D'] not in env.var_D.INTERNAL_TYPES:
             console.msg_error_configuration('limits_var_D',
                 _("{0} not is valid internal type for dependent variable if you\n"
                   "defined LIMIT VAR D BELOW/ABOVE as 'default'. If you want\n"
                   "define a particular type for dependent variable, you must define\n"
                   "as real values (or 'none') the LIMIT VAR D BELOW/ABOVE")
-                .format(config_run.settings['type_var_D']))
-    elif config_run.settings['limits_var_D']['above'] in ["none", "None", "NONE", None]:
-        config_run.settings['limits_var_D']['above'] = None
+                .format(env.config_run.settings['type_var_D']))
+    elif env.config_run.settings['limits_var_D']['above'] in ["none", "None", "NONE", None]:
+        env.config_run.settings['limits_var_D']['above'] = None
     else:
         try:
-            config_run.settings['limits_var_D']['above'] = format_in.to_float(config_run.settings['limits_var_D']['above'])
+            env.config_run.settings['limits_var_D']['above'] = format_in.to_float(env.config_run.settings['limits_var_D']['above'])
         except:
             console.msg_error_configuration('limits_var_D',
                 (_("Problem with particular range validation for "
                    "dependent\nvariable: '{0}' this must be "
-                   "a valid number, 'none' or 'default'.").format(config_run.settings['limits_var_D']['above'])))
+                   "a valid number, 'none' or 'default'.").format(env.config_run.settings['limits_var_D']['above'])))
+
+    env.config_run.settings['limits_var_D']['ready'] = False
 
     # ------------------------
     # limits var I
@@ -127,45 +152,47 @@ def configuration_run():
     # particular range validation
 
     # below var I
-    if config_run.settings['limits_var_I']['below'] == "default":
+    if env.config_run.settings['limits_var_I']['below'] == "default":
         # validation type_I
-        if config_run.settings['type_var_I'] not in globals_vars.TYPES_VAR_I:
+        if env.config_run.settings['type_var_I'] not in env.var_I.INTERNAL_TYPES:
             console.msg_error_configuration('type_var_I',
                 _("{0} not is valid internal type for independent variable if you\n"
                   "defined LIMIT VAR I BELOW/ABOVE as 'default'. If you want\n"
                   "define a particular type for independent variable, you must define\n"
                   "as real values (or 'none') the LIMIT VAR I BELOW/ABOVE")
-                .format(config_run.settings['type_var_I']))
-    elif config_run.settings['limits_var_I']['below'] in ["none", "None", "NONE", None]:
-        config_run.settings['limits_var_I']['below'] = None
+                .format(env.config_run.settings['type_var_I']))
+    elif env.config_run.settings['limits_var_I']['below'] in ["none", "None", "NONE", None]:
+        env.config_run.settings['limits_var_I']['below'] = None
     else:
         try:
-            config_run.settings['limits_var_I']['below'] = format_in.to_float(config_run.settings['limits_var_I']['below'])
+            env.config_run.settings['limits_var_I']['below'] = format_in.to_float(env.config_run.settings['limits_var_I']['below'])
         except:
             console.msg_error_configuration('limits_var_I',
                 (_("Problem with particular range validation for "
                    "independent\nvariable: '{0}' this must be "
-                   "a valid number, 'none' or 'default'.").format(config_run.settings['limits_var_I']['below'])))
+                   "a valid number, 'none' or 'default'.").format(env.config_run.settings['limits_var_I']['below'])))
     # above var I
-    if config_run.settings['limits_var_I']['above'] == "default":
+    if env.config_run.settings['limits_var_I']['above'] == "default":
         # validation type_I
-        if config_run.settings['type_var_I'] not in globals_vars.TYPES_VAR_I:
+        if env.config_run.settings['type_var_I'] not in env.var_I.INTERNAL_TYPES:
             console.msg_error_configuration('limits_var_I',
                 _("{0} not is valid internal type for independent variable if you\n"
                   "defined LIMIT VAR I BELOW/ABOVE as 'default'. If you want\n"
                   "define a particular type for independent variable, you must define\n"
                   "as real values (or 'none') the LIMIT VAR I BELOW/ABOVE")
-                .format(config_run.settings['type_var_I']))
-    elif config_run.settings['limits_var_I']['above'] in ["none", "None", "NONE", None]:
-        config_run.settings['limits_var_I']['above'] = None
+                .format(env.config_run.settings['type_var_I']))
+    elif env.config_run.settings['limits_var_I']['above'] in ["none", "None", "NONE", None]:
+        env.config_run.settings['limits_var_I']['above'] = None
     else:
         try:
-            config_run.settings['limits_var_I']['above'] = format_in.to_float(config_run.settings['limits_var_I']['above'])
+            env.config_run.settings['limits_var_I']['above'] = format_in.to_float(env.config_run.settings['limits_var_I']['above'])
         except:
             console.msg_error_configuration('limits_var_I',
                 (_("Problem with particular range validation for "
                    "independent\nvariable: '{0}' this must be "
-                   "a valid number, 'none' or 'default'.").format(config_run.settings['limits_var_I']['above'])))
+                   "a valid number, 'none' or 'default'.").format(env.config_run.settings['limits_var_I']['above'])))
+
+    env.config_run.settings['limits_var_I']['ready'] = False
 
     # ------------------------
     # path_to_file_var_I
@@ -173,27 +200,27 @@ def configuration_run():
     # read from internal variable independent files of Jaziku, check
     # and notify if Jaziku are using the independent variable inside
     # located in plugins/var_I/
-    if config_run.settings["path_to_file_var_I"] == "internal":
-        if config_run.settings["type_var_I"] not in globals_vars.TYPES_OF_INTERNAL_VAR_I:
+    if env.config_run.settings["path_to_file_var_I"] == "internal":
+        if env.config_run.settings["type_var_I"] not in env.var_I.INTERNAL_TYPES:
             console.msg_error_configuration('path_to_file_var_I',
                 _("The 'path_to_file_var_I' is defined as 'internal' but the\n"
                   "type of independent variable '{0}' not is a valid internal\n"
                   "type. Please change type I to valid internal type, or define\n"
-                  "a valid path to file var I.").format(config_run.settings["type_var_I"]))
+                  "a valid path to file var I.").format(env.config_run.settings["type_var_I"]))
     else:
-        if not os.path.isfile(config_run.settings["path_to_file_var_I"]):
+        if not os.path.isfile(env.config_run.settings["path_to_file_var_I"]):
             console.msg_error_configuration('path_to_file_var_I',
                 _("Can't open file '{0}' for var I, \nplease check filename and check that its path is relative (to runfile) or\n"
                   "absolute. If you want run var I with internals files\n"
                   "of jaziku you need set 'PATH TO FILE VAR I' as 'internal'").format(
-                    config_run.settings["path_to_file_var_I"]))
+                    env.config_run.settings["path_to_file_var_I"]))
 
     # ------------------------
     # thresholds var_I
 
-    if not config_run.settings["path_to_file_var_I"] == "internal" and \
-       config_run.settings["type_var_I"] not in globals_vars.TYPES_OF_INTERNAL_VAR_I:
-        if config_run.settings["thresholds_var_I"] == "default":
+    if not env.config_run.settings["path_to_file_var_I"] == "internal" and \
+       env.config_run.settings["type_var_I"] not in env.var_I.INTERNAL_TYPES:
+        if env.config_run.settings["thresholds_var_I"] == "default":
             console.msg_error_configuration('thresholds_var_I',
                 _("The thresholds can't be define as 'default' if the\n"
                   "type of independent variable not is valid internal type."))
@@ -202,28 +229,28 @@ def configuration_run():
     # check the 9 forecast values and forecast date
 
     # if forecast_process is activated
-    if config_run.settings['forecast_process']:
+    if env.config_run.settings['forecast_process']:
 
         ## check and reset the 9 values for forecast process
         try:
-            config_run.settings['forecast_var_I_lag_0'] = [format_in.to_float(item) for item in config_run.settings['forecast_var_I_lag_0']]
-            if not len(config_run.settings['forecast_var_I_lag_0']) == 3:
+            env.config_run.settings['forecast_var_I_lag_0'] = [format_in.to_float(item) for item in env.config_run.settings['forecast_var_I_lag_0']]
+            if not len(env.config_run.settings['forecast_var_I_lag_0']) == 3:
                 raise
         except:
             console.msg_error_configuration('forecast_var_I_lag_0',
                                             _("The 'forecast_var_I_lag_0' should be a three valid\n"
                                               "values (int or float) in different row."))
         try:
-            config_run.settings['forecast_var_I_lag_1'] = [format_in.to_float(item) for item in config_run.settings['forecast_var_I_lag_1']]
-            if not len(config_run.settings['forecast_var_I_lag_1']) == 3:
+            env.config_run.settings['forecast_var_I_lag_1'] = [format_in.to_float(item) for item in env.config_run.settings['forecast_var_I_lag_1']]
+            if not len(env.config_run.settings['forecast_var_I_lag_1']) == 3:
                 raise
         except:
             console.msg_error_configuration('forecast_var_I_lag_1',
                                             _("The 'forecast_var_I_lag_1' should be a three valid\n"
                                               "values (int or float) in different row."))
         try:
-            config_run.settings['forecast_var_I_lag_2'] = [format_in.to_float(item) for item in config_run.settings['forecast_var_I_lag_2']]
-            if not len(config_run.settings['forecast_var_I_lag_2']) == 3:
+            env.config_run.settings['forecast_var_I_lag_2'] = [format_in.to_float(item) for item in env.config_run.settings['forecast_var_I_lag_2']]
+            if not len(env.config_run.settings['forecast_var_I_lag_2']) == 3:
                 raise
         except:
             console.msg_error_configuration('forecast_var_I_lag_2',
@@ -231,46 +258,46 @@ def configuration_run():
                                               "values (int or float) in different row."))
 
         # check sum of forecast_var_I_lag_0
-        if not (99 < sum(config_run.settings['forecast_var_I_lag_0']) < 101):
+        if not (99 < sum(env.config_run.settings['forecast_var_I_lag_0']) < 101):
             console.msg_error_configuration('forecast_var_I_lag_0',
                 _("The sum for the 3 values of phenomenon for lag 0\n"
                   "in 'forecast options' in runfile must be\nequal to 100."))
 
         # check sum of forecast_var_I_lag_1
-        if not (99 < sum(config_run.settings['forecast_var_I_lag_1']) < 101):
+        if not (99 < sum(env.config_run.settings['forecast_var_I_lag_1']) < 101):
             console.msg_error_configuration('forecast_var_I_lag_1',
                 _("The sum for the 3 values of phenomenon for lag 1\n"
                   "in 'forecast options' in runfile must be\nequal to 100."))
 
         # check sum of forecast_var_I_lag_2
-        if not (99 < sum(config_run.settings['forecast_var_I_lag_2']) < 101):
+        if not (99 < sum(env.config_run.settings['forecast_var_I_lag_2']) < 101):
             console.msg_error_configuration('forecast_var_I_lag_2',
                 _("The sum for the 3 values of phenomenon for lag 2\n"
                   "in 'forecast options' in runfile must be\nequal to 100."))
 
         # reset forecast_var_I_lag_N
-        config_run.settings['forecast_var_I_lag_0'] = {'below':config_run.settings['forecast_var_I_lag_0'][0],
-                                                       'normal':config_run.settings['forecast_var_I_lag_0'][1],
-                                                       'above':config_run.settings['forecast_var_I_lag_0'][2]}
-        config_run.settings['forecast_var_I_lag_1'] = {'below':config_run.settings['forecast_var_I_lag_1'][0],
-                                                       'normal':config_run.settings['forecast_var_I_lag_1'][1],
-                                                       'above':config_run.settings['forecast_var_I_lag_1'][2]}
-        config_run.settings['forecast_var_I_lag_2'] = {'below':config_run.settings['forecast_var_I_lag_2'][0],
-                                                       'normal':config_run.settings['forecast_var_I_lag_2'][1],
-                                                       'above':config_run.settings['forecast_var_I_lag_2'][2]}
+        env.config_run.settings['forecast_var_I_lag_0'] = {'below':env.config_run.settings['forecast_var_I_lag_0'][0],
+                                                           'normal':env.config_run.settings['forecast_var_I_lag_0'][1],
+                                                           'above':env.config_run.settings['forecast_var_I_lag_0'][2]}
+        env.config_run.settings['forecast_var_I_lag_1'] = {'below':env.config_run.settings['forecast_var_I_lag_1'][0],
+                                                           'normal':env.config_run.settings['forecast_var_I_lag_1'][1],
+                                                           'above':env.config_run.settings['forecast_var_I_lag_1'][2]}
+        env.config_run.settings['forecast_var_I_lag_2'] = {'below':env.config_run.settings['forecast_var_I_lag_2'][0],
+                                                           'normal':env.config_run.settings['forecast_var_I_lag_2'][1],
+                                                           'above':env.config_run.settings['forecast_var_I_lag_2'][2]}
         ## forecast date
         try:
-            if isinstance(config_run.settings['forecast_date'], list):
-                config_run.settings['forecast_date'][0] = int(config_run.settings['forecast_date'][0])
-                forecast_month = config_run.settings['forecast_date'][0]
+            if isinstance(env.config_run.settings['forecast_date'], list):
+                env.config_run.settings['forecast_date'][0] = int(env.config_run.settings['forecast_date'][0])
+                forecast_month = env.config_run.settings['forecast_date'][0]
             else:
-                config_run.settings['forecast_date'] = int(config_run.settings['forecast_date'])
-                forecast_month = config_run.settings['forecast_date']
+                env.config_run.settings['forecast_date'] = int(env.config_run.settings['forecast_date'])
+                forecast_month = env.config_run.settings['forecast_date']
         except:
             console.msg_error_configuration('forecast_date',
                                             _("The month for forecast '{0}' is invalid, "
                                               "must be a integer: month or month;day")
-                                            .format(config_run.settings['forecast_date']))
+                                            .format(env.config_run.settings['forecast_date']))
 
         if not (1 <= forecast_month <= 12):
             console.msg_error_configuration('forecast_date',
@@ -278,41 +305,41 @@ def configuration_run():
                                               "must be a valid month number (1-12)")
                                             .format(forecast_month))
 
-        if isinstance(config_run.settings['forecast_date'], list):
-            if not isinstance(config_run.settings['forecast_date'][1], (float, int)):
+        if isinstance(env.config_run.settings['forecast_date'], list):
+            if not isinstance(env.config_run.settings['forecast_date'][1], (float, int)):
                 console.msg_error_configuration('forecast_date',
                                                 _("The day for forecast process '{0}' is invalid, \n"
                                                   "must be a valid day number (1-31)")
-                                                .format(config_run.settings['forecast_date'][1]))
-            if not (1 <= config_run.settings['forecast_date'][1] <= 31):
+                                                .format(env.config_run.settings['forecast_date'][1]))
+            if not (1 <= env.config_run.settings['forecast_date'][1] <= 31):
                 console.msg_error_configuration('forecast_date',
                                                 _("The day for forecast process '{0}' is invalid, \n"
                                                   "must be a valid day number (1-31)")
-                                                .format(config_run.settings['forecast_date'][1]))
+                                                .format(env.config_run.settings['forecast_date'][1]))
 
-            forecast_day = int(config_run.settings['forecast_date'][1])
-            config_run.settings['forecast_date'] = {'month':forecast_month,'day':forecast_day}
+            forecast_day = int(env.config_run.settings['forecast_date'][1])
+            env.config_run.settings['forecast_date'] = {'month':forecast_month,'day':forecast_day}
 
-            if config_run.settings['forecast_date']['day'] not in analysis_interval.get_range_analysis_interval():
+            if env.config_run.settings['forecast_date']['day'] not in analysis_interval.get_range_analysis_interval():
                 console.msg_error_configuration('forecast_date',
                                                 _("Start day (month/day) for forecast process '{0}'\nis invalid, "
                                                   "must be a valid start day based on\nrange analysis "
                                                   "interval, the valid start days for\n{1} are: {2}")
-                                                .format(config_run.settings['forecast_date']['day'],
-                                                        globals_vars.analysis_interval_i18n,
+                                                .format(env.config_run.settings['forecast_date']['day'],
+                                                        env.globals_vars.analysis_interval_i18n,
                                                         analysis_interval.get_range_analysis_interval()))
 
-            config_run.settings['forecast_date']['text'] \
-                = format_out.month_in_initials(config_run.settings['forecast_date']['month']-1) \
-                + ' ' + str(config_run.settings['forecast_date']['day'])
+            env.config_run.settings['forecast_date']['text'] \
+                = format_out.month_in_initials(env.config_run.settings['forecast_date']['month']-1) \
+                + ' ' + str(env.config_run.settings['forecast_date']['day'])
 
         else:
-            config_run.settings['forecast_date'] = {'month':forecast_month}
+            env.config_run.settings['forecast_date'] = {'month':forecast_month}
 
-            config_run.settings['forecast_date']['text'] \
-                = format_out.month_in_initials(config_run.settings['forecast_date']['month']-1)
+            env.config_run.settings['forecast_date']['text'] \
+                = format_out.month_in_initials(env.config_run.settings['forecast_date']['month']-1)
 
-        globals_vars.input_settings["forecast_date"] = colored.green(config_run.settings['forecast_date']['text'])
+        env.globals_vars.input_settings["forecast_date"] = colored.green(env.config_run.settings['forecast_date']['text'])
 
 
 def grids_list():

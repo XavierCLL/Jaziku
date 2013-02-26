@@ -25,7 +25,7 @@ from scipy import stats
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from jaziku.env import globals_vars, config_run
+from jaziku import env
 from jaziku.utils import format_out
 from jaziku.modules.climate import statistic_tests
 from jaziku.modules.climate.contingency_table import get_contingency_table
@@ -65,13 +65,13 @@ def composite_analysis(station):
                 else:
                     is_sig_risk_analysis_list.append(_('no'))
 
-        if globals_vars.STATE_OF_DATA in [1, 3]:
+        if env.globals_vars.STATE_OF_DATA in [1, 3]:
             # get values of var D and I from this lag and month
             var_D_values = get_lag_values(station, 'var_D', lag, month)
 
             var_I_values = get_lag_values(station, 'var_I', lag, month)
 
-        if globals_vars.STATE_OF_DATA in [2, 4]:
+        if env.globals_vars.STATE_OF_DATA in [2, 4]:
             # get values of var D and I from this lag, month and day
             var_D_values = get_lag_values(station, 'var_D', lag, month, day)
 
@@ -138,7 +138,7 @@ def composite_analysis(station):
 
         return pearson, is_sig_risk_analysis_list
 
-    for lag in config_run.settings['lags']:
+    for lag in env.config_run.settings['lags']:
 
         # dir and name to save the result table
         csv_name \
@@ -150,7 +150,7 @@ def composite_analysis(station):
             os.remove(csv_name)
 
         open_file = open(csv_name, 'w')
-        csv_result_table = csv.writer(open_file, delimiter=globals_vars.OUTPUT_CSV_DELIMITER)
+        csv_result_table = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
         # print headers in result table
         csv_result_table.writerow([
@@ -166,12 +166,12 @@ def composite_analysis(station):
         # print division line between lags
         csv_result_table.writerow([
             '', '', '', '', '', '', '', '', '',
-            config_run.settings['phen_below_label'], '', '',
-            config_run.settings['phen_normal_label'], '', '',
-            config_run.settings['phen_above_label'], '', '',
-            config_run.settings['phen_below_label'], '', '',
-            config_run.settings['phen_normal_label'], '', '',
-            config_run.settings['phen_above_label']])
+            env.config_run.settings['phen_below_label'], '', '',
+            env.config_run.settings['phen_normal_label'], '', '',
+            env.config_run.settings['phen_above_label'], '', '',
+            env.config_run.settings['phen_below_label'], '', '',
+            env.config_run.settings['phen_normal_label'], '', '',
+            env.config_run.settings['phen_above_label']])
 
         csv_result_table.writerow([
             '', '', '', '', '', '', '', '', '',
@@ -188,7 +188,7 @@ def composite_analysis(station):
         # all months in year 1->12
         for month in range(1, 13):
 
-            if globals_vars.STATE_OF_DATA in [1, 3]:
+            if env.globals_vars.STATE_OF_DATA in [1, 3]:
                 # get the contingency tables and thresholds
                 contingency_table,\
                 contingency_table_percent,\
@@ -204,7 +204,7 @@ def composite_analysis(station):
                 pearson_list_month.append(pearson)
                 is_sig_risk_analysis_month.append(is_sig_risk_analysis_list)
 
-            if globals_vars.STATE_OF_DATA in [2, 4]:
+            if env.globals_vars.STATE_OF_DATA in [2, 4]:
                 pearson_list_day = []
                 is_sig_risk_analysis_list_day = []
                 for day in station.range_analysis_interval:

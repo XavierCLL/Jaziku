@@ -22,7 +22,7 @@ import os
 from clint.textui import colored
 
 import eda
-from jaziku.env import globals_vars
+from jaziku import env
 from jaziku.utils import  console
 
 
@@ -41,13 +41,13 @@ def main(stations_list):
             "################################################################\n")
 
     # data analysis dir output result
-    globals_vars.DATA_ANALYSIS_DIR\
-        = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Data_Analysis'))   # 'results'
+    env.globals_vars.DATA_ANALYSIS_DIR\
+        = os.path.join(env.globals_vars.WORK_DIR, _('Jaziku_Data_Analysis'))   # 'results'
 
     print _("Saving the result for data analysis in:")
-    print "   " + colored.cyan(os.path.relpath(globals_vars.DATA_ANALYSIS_DIR, os.path.abspath(os.path.dirname(globals_vars.ARGS.runfile))))
+    print "   " + colored.cyan(os.path.relpath(env.globals_vars.DATA_ANALYSIS_DIR, os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile))))
 
-    if os.path.isdir(globals_vars.DATA_ANALYSIS_DIR):
+    if os.path.isdir(env.globals_vars.DATA_ANALYSIS_DIR):
         console.msg(
             _("\n > WARNING: the output directory for data analysis process\n"
               "   is already exist, Jaziku continue but the results\n"

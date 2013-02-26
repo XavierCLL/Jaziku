@@ -20,15 +20,15 @@
 
 import argparse  # http://docs.python.org/py3k/library/argparse.html
 
-from jaziku.env import globals_vars
-from jaziku.utils import  console
+from jaziku import env
+from jaziku.utils import console
 
 #==============================================================================
 # PARSER AND CHECK ARGUMENTS
 
 # Create parser arguments
 arguments = argparse.ArgumentParser(
-                 prog=globals_vars.PROG_NAME,
+                 prog=env.globals_vars.PROG_NAME,
                  description=_("Jaziku is statistical inference software for the\nteleconnections analysis"),
                  epilog=console.msg_footer(text=True),
                  formatter_class=argparse.RawTextHelpFormatter)
