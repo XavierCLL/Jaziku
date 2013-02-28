@@ -124,7 +124,7 @@ def configuration_run(stop_in=None):
               "   url: {4}")
             .format(split_internal_var_I[0], split_internal_var_I[1],
                 split_internal_var_I[2], ' '.join(split_internal_var_I[3::]),
-                env.var_I.INTERNAL_URLS[env.config_run.settings['type_var_I']]), color='yellow')
+                env.var_I.INTERNAL_URLS[env.config_run.settings['type_var_I']]))
 
     if (not env.config_run.settings['limits_var_D']['below'] or
         not env.config_run.settings['limits_var_D']['above'] or

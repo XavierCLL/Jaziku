@@ -30,7 +30,7 @@ from Image import open as img_open
 
 from jaziku import env
 from jaziku.utils import  watermarking, format_out
-from jaziku.modules.climate.contingency_table import get_contingency_table
+from jaziku.modules.climate.contingency_table import get_specific_contingency_table
 
 
 def column(matrix, i):
@@ -158,7 +158,7 @@ def climate_graphs(station):
                 contingency_table,\
                 contingency_table_percent,\
                 contingency_table_percent_print,\
-                thresholds_var_D_var_I = get_contingency_table(station, lag, month)
+                thresholds_var_D_var_I = get_specific_contingency_table(station, lag, month)
 
                 title_period = _("trim {0} ({1})").format(month, format_out.trimester_in_initials(month - 1))
                 filename_period = _("trim_{0}").format(month)
@@ -171,7 +171,7 @@ def climate_graphs(station):
                     contingency_table,\
                     contingency_table_percent,\
                     contingency_table_percent_print,\
-                    thresholds_var_D_var_I = get_contingency_table(station, lag, month, day)
+                    thresholds_var_D_var_I = get_specific_contingency_table(station, lag, month, day)
 
                     title_period = format_out.month_in_initials(month - 1) + " " + str(day)
                     filename_period = format_out.month_in_initials(month - 1) + "_" + str(day)
