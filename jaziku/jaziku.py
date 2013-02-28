@@ -39,8 +39,8 @@ from matplotlib import use
 import gettext
 from i18n import i18n
 
-# jaziku import
-from env import globals_vars, config_run
+# jaziku imports
+import env
 from core import settings
 from core import stations
 from core.input import runfile, arg
@@ -49,8 +49,6 @@ from modules.climate import climate
 from modules.forecast import forecast
 from modules.data_analysis import data_analysis
 from modules.maps import maps
-from modules.maps.grid import Grid
-from modules.maps.maps import check_basic_requirements_for_maps
 from utils import console
 
 
@@ -76,15 +74,15 @@ def main():
     use("AGG", warn=False, force=True)
 
     #set the root directory where jaziku was installed
-    globals_vars.JAZIKU_DIR = os.path.dirname(os.path.realpath(__file__))
+    env.globals_vars.JAZIKU_DIR = os.path.dirname(os.path.realpath(__file__))
 
     # Parser and check arguments
-    globals_vars.ARGS = arg.arguments.parse_args()
+    env.globals_vars.ARGS = arg.arguments.parse_args()
 
     # -------------------------------------------------------------------------
     # Initialize all settings variables in None
 
-    config_run.init()
+    env.config_run.init()
 
     # -------------------------------------------------------------------------
     # READ RUNFILE
@@ -92,11 +90,11 @@ def main():
 
     # absolute directory to save all result,
     # this is absolute directory where is the runfile + filename of runfile
-    globals_vars.WORK_DIR = os.path.abspath(os.path.splitext(globals_vars.ARGS.runfile)[0])
+    env.globals_vars.WORK_DIR = os.path.abspath(os.path.splitext(env.globals_vars.ARGS.runfile)[0])
 
     # test if runfile exist
-    if not os.path.isfile(globals_vars.ARGS.runfile):
-        console.msg_error(_("[runfile] no such file or directory: {0}".format(globals_vars.ARGS.runfile)),False)
+    if not os.path.isfile(env.globals_vars.ARGS.runfile):
+        console.msg_error(_("[runfile] no such file or directory: {0}".format(env.globals_vars.ARGS.runfile)),False)
 
     # read all settings and all stations from runfile
     stations_list = runfile.read_runfile()
@@ -104,7 +102,7 @@ def main():
     # -------------------------------------------------------------------------
     # Setting language
 
-    i18n.set_language(config_run.settings['language'])
+    i18n.set_language(env.config_run.settings['language'])
 
     # -------------------------------------------------------------------------
     # Start message
@@ -117,7 +115,7 @@ def main():
             "#                 Version {0} - {1}\t               #\n"
             "#           Copyright (C) 2011-2013 IDEAM - Colombia           #\n"
             "################################################################")\
-    .format(globals_vars.VERSION, globals_vars.VERSION_DATE)
+    .format(env.globals_vars.VERSION, env.globals_vars.VERSION_DATE)
 
     # -------------------------------------------------------------------------
     # GET/SET AND CHECK SETTINGS TO RUN
@@ -131,8 +129,8 @@ def main():
 
     # -------------------------------------------------------------------------
     # DATA ANALYSIS
-    # config_run.get['data_analysis']
-    if config_run.settings['data_analysis']:
+    # env.config_run.get['data_analysis']
+    if env.config_run.settings['data_analysis']:
 
         # main process for data analysis
         data_analysis.main(stations_list)
@@ -142,17 +140,17 @@ def main():
     # CLIMATE AND FORECAST PRE-PROCESS
 
     # climate
-    if config_run.settings['climate_process']:
+    if env.config_run.settings['climate_process']:
         climate.pre_process()
 
     # forecast
-    if config_run.settings['forecast_process']:
+    if env.config_run.settings['forecast_process']:
         forecast.pre_process()
 
     # -------------------------------------------------------------------------
     # CLIMATE AND FORECAST MAIN PROCESS
 
-    if config_run.settings['climate_process']:
+    if env.config_run.settings['climate_process']:
         # process each station from stations list
         for station in stations_list:
 
@@ -165,11 +163,11 @@ def main():
 
             ## process climate and forecast for this station
             # run climate process
-            if config_run.settings['climate_process']:
+            if env.config_run.settings['climate_process']:
                 climate.process(station)
 
             # run forecast process
-            if config_run.settings['forecast_process']:
+            if env.config_run.settings['forecast_process']:
                 # TODO: run forecast without climate¿?
                 forecast.process(station)
 
@@ -188,7 +186,7 @@ def main():
     # MAPS PROCESS
 
     # process to create maps
-    if config_run.settings['maps']:
+    if env.config_run.settings['maps']:
 
         print _("\n\n"
                 "######################### MAPS PROCESS #########################\n"
@@ -199,17 +197,17 @@ def main():
                 "################################################################")
 
         # first check requirements
-        check_basic_requirements_for_maps()
+        maps.check_basic_requirements_for_maps()
 
-        for grid in Grid.all_grids:
+        for grid in maps.Grid.all_grids:
             # process all maps for this grid
             maps.maps(grid)
 
-        for grid in Grid.all_grids:
+        for grid in maps.Grid.all_grids:
             console.msg(gettext.ngettext(
                         _("\n{0} map created for {1}"),
                         _("\n{0} maps created for {1}"),
-                        Grid.maps_created_in_grid).format(Grid.maps_created_in_grid, grid.grid_fullname), color='green')
+                        maps.Grid.maps_created_in_grid).format(maps.Grid.maps_created_in_grid, grid.grid_fullname), color='green')
 
     console.msg(_("\nProcess completed!"), color='green')
 

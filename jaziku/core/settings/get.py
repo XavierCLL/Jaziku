@@ -174,7 +174,6 @@ def configuration_run():
     if env.config_run.settings['maps']:
         if env.config_run.settings['maps'] == "all":
             env.config_run.settings['maps'] = {'climate': True, 'forecast': True, 'correlation': True}
-            settings["maps"] = ','.join(map(str, [m for m in env.config_run.settings['maps'] if env.config_run.settings['maps'][m]]))
         else:
             try:
                 input_maps_list = env.config_run.settings['maps'].split(",")
@@ -187,9 +186,12 @@ def configuration_run():
             except:
                 console.msg_error_configuration('maps',_("the maps options are: 'climate', 'forecast', "
                                                          "'correlation' (comma separated), or 'all'."))
-            settings["maps"] = colored.green(','.join(map(str, [m for m in env.config_run.settings['maps'] if env.config_run.settings['maps'][m]])))
 
-    # ------------------------
+        settings["maps"] = colored.green(_("enabled")) + ' (' + \
+                           (', '.join(map(str, [m for m in env.config_run.settings['maps'] if env.config_run.settings['maps'][m]]))) + \
+                           ')'
+
+        # ------------------------
     # var_I_category_labels
     if env.config_run.settings['var_I_category_labels'] == "default":
         settings["var_I_category_labels"] = [env.config_run.settings['var_I_category_labels']]
@@ -228,7 +230,7 @@ def configuration_run():
         else:
             settings["limits_var_D"] = colored.green(env.config_run.settings['limits_var_D']['below'])
 
-        settings["limits_var_D"] += ' - '
+        settings["limits_var_D"] += ' | '
 
         # above
         if env.config_run.settings['limits_var_D']['above'] == 'none':
@@ -245,7 +247,7 @@ def configuration_run():
     if env.config_run.settings['thresholds_var_D'] == 'default':
         settings["thresholds_var_D"] = _('default')
     else:
-        settings["thresholds_var_D"] = colored.green(env.config_run.settings['thresholds_var_D'])
+        settings["thresholds_var_D"] = colored.green(' | '.join([str(thr) for thr in env.config_run.settings['thresholds_var_D']]))
 
     ## VAR I OPTIONS
     # ------------------------
@@ -287,7 +289,7 @@ def configuration_run():
         else:
             settings["limits_var_I"] = colored.green(env.config_run.settings['limits_var_I']['below'])
 
-        settings["limits_var_I"] += ' - '
+        settings["limits_var_I"] += ' | '
 
         # above
         if env.config_run.settings['limits_var_I']['above'] == 'none':
@@ -303,7 +305,7 @@ def configuration_run():
     if env.config_run.settings['thresholds_var_I'] == 'default':
         settings["thresholds_var_I"] = _('default')
     else:
-        settings["thresholds_var_I"] = colored.green(env.config_run.settings['thresholds_var_I'])
+        settings["thresholds_var_I"] = colored.green(' | '.join([str(thr) for thr in env.config_run.settings['thresholds_var_I']]))
 
     ## FORECAST OPTION
     # ------------------------
