@@ -58,8 +58,8 @@ def prepare_all_stations(stations_list):
             validation.check_consistent_data(station)
 
     # state of data
-    console.msg(_("Set global state of data ................................ "), newline=False)
-    analysis_interval.set_global_state_of_data(stations_list)
+    console.msg(_("Set state of data ....................................... "), newline=False)
+    env.globals_vars.STATE_OF_DATA = analysis_interval.get_state_of_data()
     console.msg(_("done"), color='green')
 
     # analysis interval

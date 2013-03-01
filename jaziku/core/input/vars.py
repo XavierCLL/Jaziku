@@ -102,19 +102,23 @@ def read_var_D(station):
                 "run again.")
             .format(station.var_D.file_name, csv_file_D.line_num), False)
 
-        # check if var D is daily or month
+        # check if var D is daily or mstation.contingency_tablesonth
         if first:
-            if size(row[0].split("-")) == 3:
-                station.var_D.frequency_data= "daily"
-            else:
-                station.var_D.frequency_data= "monthly"
+            try:
+                if size(row[0].split("-")) == 3:
+                    env.var_D.set_FREQUENCY_DATA("daily")
+                else:
+                    env.var_D.set_FREQUENCY_DATA("monthly")
+            except ValueError as error:
+                console.msg_error(_("Problems settings the frequency data for the station\n"
+                                    "with code '{0}' and name '{1}':\n\n").format( station.code, station.name) + str(error))
 
         try:
             # delete garbage characters and convert format
             year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
             month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
 
-            if station.var_D.frequency_data== "daily":
+            if env.var_D.is_daily():
                 day = int(re.sub(r'[^\w]', '', row[0].split("-")[2]))
                 # check if the values are continuous
                 if not first and date(year, month, day) + relativedelta(days= -1) != date_D[-1]:
@@ -126,7 +130,7 @@ def read_var_D(station):
                         csv_file_D.line_num,
                         missing_date))
 
-            if station.var_D.frequency_data== "monthly":
+            if env.var_D.is_monthly():
                 day = 1
                 # check if the values are continuous
                 if not first and date(year, month, day) + relativedelta(months= -1) != date_D[-1]:
@@ -219,16 +223,16 @@ def read_var_I(station):
         # check if var I is daily or month
         if first:
             if size(row[0].split("-")) == 3:
-                station.var_I.frequency_data = "daily"
+                env.var_I.set_FREQUENCY_DATA("daily")
             else:
-                station.var_I.frequency_data = "monthly"
+                env.var_I.set_FREQUENCY_DATA("monthly")
 
         try:
             # delete garbage characters and convert format
             year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
             month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
 
-            if station.var_I.frequency_data == "daily":
+            if env.var_I.is_daily():
                 day = int(re.sub(r'[^\w]', '', row[0].split("-")[2]))
                 # check if the values are continuous
                 if not first and date(year, month, day) + relativedelta(days= -1) != date_I[-1]:
@@ -240,7 +244,7 @@ def read_var_I(station):
                         csv_file_I.line_num,
                         missing_date))
 
-            if station.var_I.frequency_data == "monthly":
+            if env.var_I.is_monthly():
                 day = 1
                 # check if the values are continuous
                 if not first and date(year, month, day) + relativedelta(months= -1) != date_I[-1]:
