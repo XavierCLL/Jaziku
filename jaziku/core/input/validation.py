@@ -93,11 +93,11 @@ def set_limits(variable):
     if variable.type == 'D':
         input_limit_below = env.config_run.settings['limits_var_D']['below']
         input_limit_above = env.config_run.settings['limits_var_D']['above']
-        limits_by_default = env.var_D.get_internal_limits(variable)
+        limits_by_default = env.var_D.get_internal_limits()
     if variable.type == 'I':
         input_limit_below = env.config_run.settings['limits_var_I']['below']
         input_limit_above = env.config_run.settings['limits_var_I']['above']
-        limits_by_default = env.var_I.get_internal_limits(variable)
+        limits_by_default = env.var_I.get_internal_limits()
 
     if input_limit_below is not None:
         # defined limit by below
@@ -176,7 +176,7 @@ def check_consistent_data(station):
 #    # temporal var initialize end_date = end common_period - 1 year,
 #    # month=12, day=31
 #    if (var_type == "D" and station.var_D.frequency_data== "daily") or\
-#       (var_type == "I" and station.var_I.frequency_data == "daily"):
+#       (var_type == "I" and env.var_I.is_daily()):
 #        end_date = date(station.process_period['end'], 12, 31)
 #        if env.config_run.get['analysis_interval'] == "trimester":
 #            date_plus = monthrange(station.process_period['end'] + 1, 1)[1] +\

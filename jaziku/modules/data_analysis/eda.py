@@ -23,7 +23,6 @@ import csv
 import copy
 import matplotlib.dates as mdates
 from math import log10
-from operator import itemgetter
 from dateutil.relativedelta import relativedelta
 from matplotlib import pyplot
 from numpy import histogram
@@ -36,7 +35,7 @@ from jaziku import env
 from jaziku.core.station import Station
 from jaziku.core.variable import Variable
 from jaziku.core.analysis_interval import get_values_in_range_analysis_interval, locate_day_in_analysis_interval, \
-    get_range_analysis_interval, get_state_of_data, set_global_state_of_data
+    get_range_analysis_interval, get_state_of_data
 from jaziku.modules.climate import lags
 from jaziku.modules.climate.contingency_table import get_label_of_var_I_category
 from jaziku.modules.climate.lags import  calculate_lags
@@ -410,9 +409,9 @@ def graphs_inspection_of_series(stations_list):
         list_graphs = [[station.var_D,'D'], [station.var_I,'I']]
 
         # add special plot for make mosaic when the frequency off var D and var I are different
-        if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "monthly":
+        if env.var_D.is_daily() and env.var_I.is_monthly():
             list_graphs.append([station.var_I, 'special_I'])
-        if station.var_D.frequency_data == "monthly" and station.var_I.frequency_data == "daily":
+        if env.var_D.is_monthly() and env.var_I.is_daily():
             list_graphs.append([station.var_D, 'special_D'])
 
         for var, type in list_graphs:
@@ -439,9 +438,9 @@ def graphs_inspection_of_series(stations_list):
                 if type == 'special_D':
                     len_x = len(station.var_I.date_in_process_period)
                 # dynamic with based of number of stations
-            if var.frequency_data == "monthly":
+            if env.var_[var.type].is_monthly():
                 with_fig = 8 + len_x/150
-            if var.frequency_data == "daily" or type == 'special_I' or type == 'special_D':
+            if env.var_[var.type].is_daily() or type == 'special_I' or type == 'special_D':
                 #with_fig = len_x/20+4
                 with_fig = 12
 
@@ -456,12 +455,12 @@ def graphs_inspection_of_series(stations_list):
             y_scale_below=-0.04
             y_scale_above=-0.04
 
-            if var.frequency_data == "daily" or type == 'special_I' or type == 'special_D':
+            if env.var_[var.type].is_daily() or type == 'special_I' or type == 'special_D':
                 x_scale_below=-3.0/len_x
                 x_scale_above=-6.0/len_x
 
             if type == 'D' or type == 'special_D':
-                if var.frequency_data == "daily" or type == 'special_D':
+                if env.var_[var.type].is_daily() or type == 'special_D':
                     if type_var not in types_var_D:
                         # default for generic type for var D
                         ax.plot(x, y, '-', color="#638786")
@@ -472,7 +471,7 @@ def graphs_inspection_of_series(stations_list):
                         else:
                             #ax.plot(x, y, TYPES_VAR_D[type_var]['graph'], color=TYPES_VAR_D[type_var]['color'])
                             ax.plot(x, y, '-', color=types_var_D[type_var]['color'])
-                if var.frequency_data == "monthly" and not type == 'special_D':
+                if env.var_[var.type].is_monthly() and not type == 'special_D':
                     if type_var not in types_var_D:
                         # default for generic type for var D
                         ax.plot(x, y, '-', color="#638786")
@@ -522,10 +521,10 @@ def graphs_inspection_of_series(stations_list):
 
 
         ## create mosaic
-        if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "monthly":
+        if env.var_D.is_daily() and env.var_I.is_monthly():
             image_var_D = img_open(image_list[0])
             image_var_I = img_open(image_list[2])
-        elif station.var_D.frequency_data == "monthly" and station.var_I.frequency_data == "daily":
+        elif env.var_D.is_monthly() and env.var_I.is_daily():
             image_var_D = img_open(image_list[2])
             image_var_I = img_open(image_list[1])
         else:
@@ -600,7 +599,7 @@ def climatology(stations_list):
         y_mean = []
         y_max = [] # value to add to mean for max value
         y_min = [] # value to subtract to mean for min value
-        if station.var_D.frequency_data == "monthly":
+        if env.var_D.is_monthly():
             for month in range(1,13):
                 values = []
                 for iter, value in  enumerate(var_D.data):
@@ -611,7 +610,7 @@ def climatology(stations_list):
                 y_max.append(array.maximum(values) - y_mean[-1])
                 y_min.append(y_mean[-1] - array.minimum(values))
 
-        if station.var_D.frequency_data == "daily":
+        if env.var_D.is_daily():
             for month in range(1,13):
                 years_values_mean = []
                 years_values_max = []
@@ -788,7 +787,7 @@ def climatology(stations_list):
         # -------------------------------------------------------------------------
         ## for climatology graphs, every 5, 10 or 15 days based to analysis interval
 
-        if station.var_D.frequency_data == "daily" and not env.config_run.settings['analysis_interval'] == "trimester":
+        if env.var_D.is_daily() and not env.config_run.settings['analysis_interval'] == "trimester":
             y_mean = []
             y_max = [] # value to add to mean for max value
             y_min = [] # value to subtract to mean for min value
@@ -1177,6 +1176,10 @@ def outliers(stations_list):
 
     outliers_all_stations = []
 
+    # save original state of data for var D and I
+    original_freq_data_var_D = env.var_D.FREQUENCY_DATA
+    original_freq_data_var_I = env.var_I.FREQUENCY_DATA
+
     for station in stations_list:
 
         # -------------------------------------------------------------------------
@@ -1247,28 +1250,28 @@ def outliers(stations_list):
         outliers_station['whiskers_above'] = boxplot_station['whiskers'][1].get_data()[1][1]
 
         # special cases with analysis_interval equal to trimester
-        if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "daily" and \
+        if env.var_D.is_daily() and env.var_I.is_daily() and \
            env.config_run.settings['analysis_interval'] == "trimester":
                 station_copy = copy.deepcopy(station)
                 station_copy.var_D.daily2monthly()
-                station_copy.var_D.frequency_data = "monthly"
+                env.var_D.set_FREQUENCY_DATA("monthly", check=False)
                 station_copy.var_D.data_and_null_in_process_period(station)
 
                 station_copy.var_I.daily2monthly()
-                station_copy.var_I.frequency_data = "monthly"
+                env.var_I.set_FREQUENCY_DATA("monthly", check=False)
                 station_copy.var_I.data_and_null_in_process_period(station)
 
                 # temporally change global STATE_OF_DATA
-                env.globals_vars.STATE_OF_DATA = get_state_of_data(station_copy)
-        elif station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "monthly" and\
+                env.globals_vars.STATE_OF_DATA = get_state_of_data()
+        elif env.var_D.is_daily() and env.var_I.is_monthly() and\
            env.config_run.settings['analysis_interval'] == "trimester":
             station_copy = copy.deepcopy(station)
             station_copy.var_D.daily2monthly()
-            station_copy.var_D.frequency_data = "monthly"
+            env.var_D.set_FREQUENCY_DATA("monthly", check=False)
             station_copy.var_D.data_and_null_in_process_period(station)
 
             # temporally change global STATE_OF_DATA
-            env.globals_vars.STATE_OF_DATA = get_state_of_data(station_copy)
+            env.globals_vars.STATE_OF_DATA = get_state_of_data()
 
         calculate_lags(station, makes_files=False)
 
@@ -1307,7 +1310,7 @@ def outliers(stations_list):
                 # date of outlier
                 outlier_date = station.var_D.date_in_process_period[index]
 
-                if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "daily":
+                if env.var_D.is_daily() and env.var_I.is_daily():
                     if env.config_run.settings['analysis_interval'] == "trimester":
                         # get I values for outliers date
                         station.var_I.specific_values = lags.get_lag_values(station_copy, 'var_I', 0, outlier_date.month)
@@ -1320,7 +1323,7 @@ def outliers(stations_list):
                         station.var_I.specific_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month, day)
                         # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                         values_var_I = get_values_in_range_analysis_interval(station, 'I', outlier_date.year, outlier_date.month, day, 0)
-                if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "monthly":
+                if env.var_D.is_daily() and env.var_I.is_monthly():
                     if env.config_run.settings['analysis_interval'] == "trimester":
                         # get I values for outliers date
                         station.var_I.specific_values = lags.get_lag_values(station_copy, 'var_I', 0, outlier_date.month)
@@ -1333,7 +1336,7 @@ def outliers(stations_list):
                         station.var_I.specific_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month, day)
                         # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                         values_var_I = get_values_in_range_analysis_interval(station, 'I', outlier_date.year, outlier_date.month, day, 0)
-                if station.var_D.frequency_data == "monthly" and station.var_I.frequency_data == "monthly":
+                if env.var_D.is_monthly() and env.var_I.is_monthly():
                     # get I values for outliers date
                     station.var_I.specific_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month)
                     # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
@@ -1341,7 +1344,7 @@ def outliers(stations_list):
 
                 # SPECIAL CASE 1: when var_I is ONI1, ONI2 or CAR, don't calculate trimesters because the ONI and CAR
                 # series was calculated by trimesters from original source
-                if station.var_I.frequency_data == "monthly" and env.config_run.settings['type_var_I'] in ['ONI1', 'ONI2', 'CAR']:
+                if env.var_I.is_monthly() and env.config_run.settings['type_var_I'] in ['ONI1', 'ONI2', 'CAR']:
                     # take the first month (in this case, it is the mean of trimester)
                     values_var_I = values_var_I[0]
 
@@ -1459,7 +1462,7 @@ def outliers(stations_list):
         ]
 
         # sort the outliers list base on outlier value
-        outliers_station['outliers'] = sorted(outliers_station['outliers'], key=itemgetter(1))
+        outliers_station['outliers'] = sorted(outliers_station['outliers'], key=lambda x: x[1])
 
         for outlier in outliers_station['outliers']:
 
@@ -1474,5 +1477,6 @@ def outliers(stations_list):
     del csv_file_D
 
     # return to original global STATE_OF_DATA variable
-    env.globals_vars.STATE_OF_DATA = None
-    set_global_state_of_data(stations_list)
+    env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
+    env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
+    env.globals_vars.STATE_OF_DATA = get_state_of_data()

@@ -25,6 +25,23 @@ from jaziku import env
 from jaziku.utils import  console
 
 
+#TODO
+class PeriodOfAnalysisInterval(object):
+    def __init__(self, type, month=None, day=None):
+        self.type = type
+        if type == "trimester":
+            self.trimester = month
+        if type == "15days":
+            self.month = month
+            self.day = day
+        if type == "10days":
+            self.month = month
+            self.day = day
+        if type == "5days":
+            self.month = month
+            self.day = day
+
+
 def get_range_analysis_interval():
     """
     Return all start days of analysis interval
@@ -41,7 +58,7 @@ def get_range_analysis_interval():
         return None
 
 
-def get_state_of_data(station):
+def get_state_of_data():
     """
     Calculate and define the state of data based on type of data (daily or monthly)
     of dependent and independent variable.
@@ -59,29 +76,14 @@ def get_state_of_data(station):
     # |   3   | monthly |  daily  |            trimester
     # |   4   |  daily  |  daily  | 5days, 10days, 15days and trimester
     #
-    if station.var_D.frequency_data == "monthly" and station.var_I.frequency_data == "monthly":
+    if env.var_D.is_monthly() and env.var_I.is_monthly():
         return 1
-    if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "monthly":
+    if env.var_D.is_daily() and env.var_I.is_monthly():
         return 2
-    if station.var_D.frequency_data == "monthly" and station.var_I.frequency_data == "daily":
+    if env.var_D.is_monthly() and env.var_I.is_daily():
         return 3
-    if station.var_D.frequency_data == "daily" and station.var_I.frequency_data == "daily":
+    if env.var_D.is_daily() and env.var_I.is_daily():
         return 4
-
-
-def set_global_state_of_data(stations_list):
-
-    for station in stations_list:
-
-        if env.globals_vars.STATE_OF_DATA is None:
-            env.globals_vars.STATE_OF_DATA = get_state_of_data(station)
-            global_frequency_data_of_var_D = station.var_D.frequency_data
-            continue
-        if env.globals_vars.STATE_OF_DATA != get_state_of_data(station):
-            console.msg_error(_("The station with code '{0}' and name '{1}'\n"
-                                "have data {2} but other stations has data {3}. Jaziku\n"
-                                "requires that all stations have identical frequency data.").format(
-                station.code, station.name, station.var_D.frequency_data, global_frequency_data_of_var_D))
 
 
 def check_analysis_interval():
@@ -92,17 +94,17 @@ def check_analysis_interval():
                             "in this case, as 'trimester' or use data daily.").format(
             env.config_run.settings['analysis_interval']))
 
+
 def adjust_data_of_variables(stations_list):
 
     if env.globals_vars.STATE_OF_DATA == 3:
         console.msg(_("   Converting var I of all stations to data monthly ..... "), color='cyan', newline=False)
         for station in stations_list:
             station.var_I.daily2monthly()
-            station.var_I.frequency_data = "monthly"
+            env.var_I.set_FREQUENCY_DATA("monthly", check=False)
 
         # recalculate global STATE_OF_DATA
-        env.globals_vars.STATE_OF_DATA = None
-        set_global_state_of_data(stations_list)
+        env.globals_vars.STATE_OF_DATA = get_state_of_data()
         console.msg(_("done"), color='green')
 
         return True
@@ -114,22 +116,22 @@ def adjust_data_of_variables(stations_list):
             console.msg(_("   Converting var D of all stations to data monthly ..... "), color='cyan', newline=False)
             for station in stations_list:
                 station.var_D.daily2monthly()
-                station.var_D.frequency_data = "monthly"
+                env.var_D.set_FREQUENCY_DATA("monthly", check=False)
             console.msg(_("done"), color='green')
             if env.globals_vars.STATE_OF_DATA == 4:
                 console.msg(_("   Converting var I of all stations to data monthly ..... "), color='cyan', newline=False)
                 for station in stations_list:
                     station.var_I.daily2monthly()
-                    station.var_I.frequency_data = "monthly"
+                    env.var_I.set_FREQUENCY_DATA("monthly", check=False)
                 console.msg(_("done"), color='green')
 
             # recalculate global STATE_OF_DATA
-            env.globals_vars.STATE_OF_DATA = None
-            set_global_state_of_data(stations_list)
+            env.globals_vars.STATE_OF_DATA = get_state_of_data()
 
             return True
 
     return False
+
 
 def locate_day_in_analysis_interval(day_for_locate):
     """
@@ -161,7 +163,7 @@ def get_values_in_range_analysis_interval(station, type, year, month, day=None, 
 
     if type == 'D':
         var_D_values = []
-        if station.var_D.frequency_data == "daily":
+        if env.var_D.is_daily():
             # clone range for add the last day (32) for calculate interval_day_var_D
             rai_plus = list(range_analysis_interval)
             rai_plus.append(32)
@@ -175,7 +177,7 @@ def get_values_in_range_analysis_interval(station, type, year, month, day=None, 
                 if now.month == month:
                     index_var_D = station.var_D.date.index(now)
                     var_D_values.append(station.var_D.data[index_var_D])
-        if station.var_D.frequency_data == "monthly":
+        if env.var_D.is_monthly():
             # get the three values for var_D in this month
             for iter_month in range(3):
                 var_D_values.append(station.var_D.data[station.var_D.date.index(
@@ -185,7 +187,7 @@ def get_values_in_range_analysis_interval(station, type, year, month, day=None, 
 
     if type == 'I':
         var_I_values = []
-        if station.var_I.frequency_data == "daily":
+        if env.var_I.is_daily():
             # from day to next iterator based on analysis interval
             start_interval = range_analysis_interval[range_analysis_interval.index(day) - lag]
             try:
@@ -205,7 +207,7 @@ def get_values_in_range_analysis_interval(station, type, year, month, day=None, 
                 var_I_values.append(station.var_I.data[index_var_I])
                 iter_date += relativedelta(days=1)
 
-        if station.var_I.frequency_data == "monthly":
+        if env.var_I.is_monthly():
             if env.globals_vars.STATE_OF_DATA in [1, 3]:
                 # get the three values for var_I in this month
                 for iter_month in range(3):

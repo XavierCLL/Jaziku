@@ -22,6 +22,10 @@
 #==============================================================================
 # types and units for internal VAR D
 
+# globals vars for all var I
+TYPE_SERIES = None
+FREQUENCY_DATA = None
+
 # Valid input types for dependent variable, known for jaziku
 INTERNAL_TYPES = [
     'PPT',          # precipitation
@@ -100,8 +104,38 @@ INTERNAL_THRESHOLDS_7_CATEGORIES = {}
 #==============================================================================
 # functions
 
-def get_internal_limits(variable):
-    if variable.type_series in INTERNAL_LIMITS:
-        return INTERNAL_LIMITS[variable.type_series][variable.frequency_data]
+def get_internal_limits():
+    global FREQUENCY_DATA
+    global TYPE_SERIES
+
+    if TYPE_SERIES in INTERNAL_LIMITS:
+        return INTERNAL_LIMITS[TYPE_SERIES][FREQUENCY_DATA]
     else:
         return [None,None]
+
+def is_daily():
+    global FREQUENCY_DATA
+    if FREQUENCY_DATA == 'daily':
+        return True
+    else:
+        return False
+
+def is_monthly():
+    global FREQUENCY_DATA
+    if FREQUENCY_DATA == 'monthly':
+        return True
+    else:
+        return False
+
+def set_FREQUENCY_DATA(new_freq_data, check=True):
+    global FREQUENCY_DATA
+    global TYPE_SERIES
+    if FREQUENCY_DATA is None or check is False:
+        FREQUENCY_DATA = new_freq_data
+    else:
+        if not FREQUENCY_DATA == new_freq_data:
+            raise ValueError(_("The frequency data '{0}' for the var D is different\n"
+                               "for the others stations before assigned as '{2}'.\n\n"
+                               "Jaziku requires that all stations for var D\n"
+                               "have identical frequency data.")
+            .format(new_freq_data, TYPE_SERIES, FREQUENCY_DATA))

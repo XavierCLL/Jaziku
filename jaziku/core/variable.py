@@ -38,7 +38,6 @@ class Variable(object):
     :attributes:
         VARIABLE.type: type of variable 'D' (dependent) or 'I' (independent)
         VARIABLE.type_series: type of series (D or I), e.g. 'SOI'
-        VARIABLE.frequency_data: frequency of data series
         VARIABLE.file_name: the name of file of series
         VARIABLE.file_path: the absolute path where save the file of series
         VARIABLE.data: complete data of series
@@ -109,9 +108,9 @@ class Variable(object):
         if messages:
             console.msg(_("done"), color='green')
 
-            if self.frequency_data == "daily":
+            if env.var_[self.type].is_daily():
                 console.msg(_("   the variable {0} has data daily").format(self.type), color='cyan')
-            if self.frequency_data== "monthly":
+            if env.var_[self.type].is_monthly():
                 console.msg(_("   the variable {0} has data monthly").format(self.type), color='cyan')
 
     def fill_variable(self, station):
@@ -126,7 +125,7 @@ class Variable(object):
         values.
         """
 
-        if self.frequency_data == "daily":
+        if env.var_[self.type].is_daily():
 
             def below():
                 first_year = self.date[0].year
@@ -195,7 +194,7 @@ class Variable(object):
             # fill data above
             above()
 
-        if self.frequency_data== "monthly":
+        if env.var_[self.type].is_monthly():
 
             def below():
                 first_year = self.date[0].year
@@ -301,7 +300,7 @@ class Variable(object):
             VARIABLE.null_values_in_process_period (int)
         """
         start_date_var = date(station.process_period['start'], 1, 1)
-        if self.frequency_data== "daily":
+        if (self.type == 'D' and env.var_D.is_daily()) or (self.type == 'I' and env.var_I.is_daily()):
             end_date_var = date(station.process_period['end'], 12, 31)
         else:
             end_date_var = date(station.process_period['end'], 12, 1)

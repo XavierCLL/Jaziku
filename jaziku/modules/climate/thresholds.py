@@ -242,9 +242,9 @@ def thresholds_by_default_for_var_D(station, variable):
             while _iter_date <= date(env.config_run.settings['analog_year'], 12, 31):
                 if not env.globals_vars.is_valid_null(variable.data[variable.date.index(_iter_date)]):
                     specific_values_with_analog_year.append(variable.data[variable.date.index(_iter_date)])
-                if variable.frequency_data == "daily":
+                if env.var_[variable.type].is_daily():
                     _iter_date += relativedelta(days=1)
-                if variable.frequency_data == "monthly":
+                if env.var_[variable.type].is_monthly():
                     _iter_date += relativedelta(months=1)
 
             if env.config_run.settings['class_category_analysis'] == 3:

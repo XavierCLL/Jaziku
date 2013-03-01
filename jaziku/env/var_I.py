@@ -22,6 +22,10 @@
 #==============================================================================
 # types and units for internal VAR I
 
+# globals vars for all var I
+TYPE_SERIES = None
+FREQUENCY_DATA = None
+
 # Valid input types for independent variable, known and internal for jaziku
 
 INTERNAL_TYPES = [
@@ -165,9 +169,9 @@ INTERNAL_THRESHOLDS_3_CATEGORIES = {
 
 # thresholds when class_category_analysis is 7
 INTERNAL_THRESHOLDS_7_CATEGORIES = {
-    'ONI1':         [-1,-0.8,-0.5,0.5,0.6,1.2],
-    'ONI2':         None,
-    'SOI':          [-0.9,0.9],
+    'ONI1':         [-1.5,-1,-0.5,0.5,1,1.5],
+    'ONI2':         [-1.5,-1,-0.5,0.5,1,1.5],
+    'SOI':          [-2.87,-1.61,-1,1,1.61,2.86],
     'SOI_TROUP':    [-8,8],
     #'MEI':          ['p33','p66'],
     'OLR':          [-0.1,0.2],
@@ -179,10 +183,10 @@ INTERNAL_THRESHOLDS_7_CATEGORIES = {
     'SST3':         ['p33','p66'],
     'SST4':         ['p33','p66'],
     'SST34':        ['p33','p66'],
-    'ASST12':       ['p33','p66'],
-    'ASST3':        ['p33','p66'],
-    'ASST4':        ['p33','p66'],
-    'ASST34':       ['p33','p66'],
+    'ASST12':       [-1,-0.6,-0.4,0.4,0.6,1],
+    'ASST3':        [-1,-0.6,-0.4,0.4,0.6,1],
+    'ASST4':        [-1,-0.6,-0.4,0.4,0.6,1],
+    'ASST34':       [-1,-0.6,-0.4,0.4,0.6,1],
     'ARH':          ['p33','p66'],
     'QBO':          [-4,4],
     'NAO':          [-1,1],
@@ -249,18 +253,49 @@ INTERNAL_URLS = {
 # functions
 
 def get_internal_thresholds():
+    global TYPE_SERIES
     from jaziku.env import config_run
     if config_run.settings['class_category_analysis'] == 3:
-        if config_run.settings['type_var_I'] in INTERNAL_THRESHOLDS_3_CATEGORIES:
-            return INTERNAL_THRESHOLDS_3_CATEGORIES[config_run.settings['type_var_I']]
+        if TYPE_SERIES in INTERNAL_THRESHOLDS_3_CATEGORIES:
+            return INTERNAL_THRESHOLDS_3_CATEGORIES[TYPE_SERIES]
     if config_run.settings['class_category_analysis'] == 7:
-        if config_run.settings['type_var_I'] in INTERNAL_THRESHOLDS_7_CATEGORIES:
-            return INTERNAL_THRESHOLDS_7_CATEGORIES[config_run.settings['type_var_I']]
+        if TYPE_SERIES in INTERNAL_THRESHOLDS_7_CATEGORIES:
+            return INTERNAL_THRESHOLDS_7_CATEGORIES[TYPE_SERIES]
     return None
 
 
-def get_internal_limits(variable):
-    if variable.type_series in INTERNAL_LIMITS:
-        return INTERNAL_LIMITS[variable.type_series][variable.frequency_data]
+def get_internal_limits():
+    global FREQUENCY_DATA
+    global TYPE_SERIES
+
+    if TYPE_SERIES in INTERNAL_LIMITS:
+        return INTERNAL_LIMITS[TYPE_SERIES][FREQUENCY_DATA]
     else:
         return [None,None]
+
+def is_daily():
+    global FREQUENCY_DATA
+    if FREQUENCY_DATA == 'daily':
+        return True
+    else:
+        return False
+
+def is_monthly():
+    global FREQUENCY_DATA
+    if FREQUENCY_DATA == 'monthly':
+        return True
+    else:
+        return False
+
+def set_FREQUENCY_DATA(new_freq_data, check=True):
+    global FREQUENCY_DATA
+    global TYPE_SERIES
+    if FREQUENCY_DATA is None or check is False:
+        FREQUENCY_DATA = new_freq_data
+    else:
+        if not FREQUENCY_DATA == new_freq_data:
+            raise ValueError(_("The frequency data '{0}' for the var I is different\n"
+                               "for the others stations before assigned as '{2}'.\n\n"
+                               "Jaziku requires that all stations for var I\n"
+                               "have identical frequency data.")
+                .format(new_freq_data, TYPE_SERIES, FREQUENCY_DATA))
