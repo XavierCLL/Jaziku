@@ -191,7 +191,7 @@ def configuration_run():
                            (', '.join(map(str, [m for m in env.config_run.settings['maps'] if env.config_run.settings['maps'][m]]))) + \
                            ')'
 
-        # ------------------------
+    # ------------------------
     # var_I_category_labels
     if env.config_run.settings['var_I_category_labels'] == "default":
         settings["var_I_category_labels"] = [env.config_run.settings['var_I_category_labels']]

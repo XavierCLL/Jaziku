@@ -18,8 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-import os
 from numpy import matrix
 
 from jaziku import env
@@ -30,8 +28,7 @@ from jaziku.modules.climate.thresholds import get_thresholds
 
 
 def get_label_of_var_I_category(value, station):
-    """
-    Calculate, for a particular 'value', the var I category label based on 'var_I_category_labels'
+    """Calculate, for a particular 'value', the var I category label based on 'var_I_category_labels'
     and thresholds of var I, evaluate where is the 'value' inside the thresholds and return
     the correspondent label for this position.
 
@@ -111,11 +108,32 @@ def get_label_of_var_I_category(value, station):
     return label_of_var_I_category
 
 
-def get_contingency_table(station, lag, month, day=None):
-    """
-    Calculate and return the contingency table in absolute values,
+def get_specific_contingency_table(station, lag, month, day=None):
+    """Calculate and return the contingency table in absolute values,
     values in percent, values to print and thresholds by below and
-    above of dependent and independent variable.
+    above of dependent and independent variable for specific lag,
+    trimester(month) or month/day within the whole period to process.
+
+    If the `state of data` is 1 or 3, the month is the first
+    month of trimester.
+
+    If the `state of data` is 2 or 4, the month/day is the first
+    day of the fraction of `analysis interval`.
+
+    :param station: Stations instance
+    :type station: Station
+    :param lag: lag for calculate the contingency table
+    :type lag: int
+    :param month: month for calculate the contingency table
+    :type month: int
+    :param day: day for calculate the contingency table when is
+        data is daily
+    :type day: int
+
+    :return: specific_contingency_table dict:
+        {'in_values', 'in_percentage', 'in_percentage_formatted',
+        'thresholds_var_D', 'thresholds_var_I'}
+    :rtype: dict
     """
 
     if day is None:
@@ -134,75 +152,83 @@ def get_contingency_table(station, lag, month, day=None):
     # calculate thresholds as defined by the user in station file for var I
     thresholds_var_I = get_thresholds(station, station.var_I)
 
-    print station.var_D.specific_values
-    print thresholds_var_D
-    print thresholds_var_I
+    print env.var_I.FREQUENCY_DATA
+    print env.var_I.is_daily()
+    print env.var_I.is_monthly()
     exit()
-
-    # this is to print later in contingency table
-    thresholds_var_D_var_I = [format_out.number(thresholds_var_D['below']), format_out.number(thresholds_var_D['above']),
-                              format_out.number(thresholds_var_I['below']), format_out.number(thresholds_var_I['above'])]
 
     # -------------------------------------------------------------------------
     ## Calculating contingency table with absolute values
 
     contingency_table = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
 
-    # SPECIAL CASE 2: for some variables for set the category of phenomenon the thresholds are inclusive (<=, >=)
+    # SPECIAL CASE 2: for some variables for set the category of phenomenon the thresholds are exclusive (<=, >=)
     if env.config_run.settings['type_var_I'] in ['ONI1', 'ONI2', 'SST12', 'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34']:
-        for index, var_I in enumerate(station.var_I.specific_values):
-            if var_I <= thresholds_var_I['below']:
-                if station.var_D.specific_values[index] <= thresholds_var_D['below']:
-                    contingency_table[0][0] += 1
-                if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
-                    contingency_table[0][1] += 1
-                if station.var_D.specific_values[index] >= thresholds_var_D['above']:
-                    contingency_table[0][2] += 1
-            if thresholds_var_I['below'] < var_I < thresholds_var_I['above']:
-                if station.var_D.specific_values[index] <= thresholds_var_D['below']:
-                    contingency_table[1][0] += 1
-                if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
-                    contingency_table[1][1] += 1
-                if station.var_D.specific_values[index] >= thresholds_var_D['above']:
-                    contingency_table[1][2] += 1
-            if var_I >= thresholds_var_I['above']:
-                if station.var_D.specific_values[index] <= thresholds_var_D['below']:
-                    contingency_table[2][0] += 1
-                if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
-                    contingency_table[2][1] += 1
-                if station.var_D.specific_values[index] >= thresholds_var_D['above']:
-                    contingency_table[2][2] += 1
+        if env.config_run.settings['class_category_analysis'] == 3:
+            for index, var_I in enumerate(station.var_I.specific_values):
+                if var_I <= thresholds_var_I['below']:
+                    if station.var_D.specific_values[index] <= thresholds_var_D['below']:
+                        contingency_table[0][0] += 1
+                    if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
+                        contingency_table[0][1] += 1
+                    if station.var_D.specific_values[index] >= thresholds_var_D['above']:
+                        contingency_table[0][2] += 1
+                if thresholds_var_I['below'] < var_I < thresholds_var_I['above']:
+                    if station.var_D.specific_values[index] <= thresholds_var_D['below']:
+                        contingency_table[1][0] += 1
+                    if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
+                        contingency_table[1][1] += 1
+                    if station.var_D.specific_values[index] >= thresholds_var_D['above']:
+                        contingency_table[1][2] += 1
+                if var_I >= thresholds_var_I['above']:
+                    if station.var_D.specific_values[index] <= thresholds_var_D['below']:
+                        contingency_table[2][0] += 1
+                    if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
+                        contingency_table[2][1] += 1
+                    if station.var_D.specific_values[index] >= thresholds_var_D['above']:
+                        contingency_table[2][2] += 1
+        if env.config_run.settings['class_category_analysis'] == 7:
+            pass
     else:
         # normal case
-        for index, var_I in enumerate(station.var_I.specific_values):
-            if var_I < thresholds_var_I['below']:
-                if station.var_D.specific_values[index] <= thresholds_var_D['below']:
-                    contingency_table[0][0] += 1
-                if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
-                    contingency_table[0][1] += 1
-                if station.var_D.specific_values[index] >= thresholds_var_D['above']:
-                    contingency_table[0][2] += 1
-            if thresholds_var_I['below'] <= var_I <= thresholds_var_I['above']:
-                if station.var_D.specific_values[index] <= thresholds_var_D['below']:
-                    contingency_table[1][0] += 1
-                if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
-                    contingency_table[1][1] += 1
-                if station.var_D.specific_values[index] >= thresholds_var_D['above']:
-                    contingency_table[1][2] += 1
-            if var_I > thresholds_var_I['above']:
-                if station.var_D.specific_values[index] <= thresholds_var_D['below']:
-                    contingency_table[2][0] += 1
-                if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
-                    contingency_table[2][1] += 1
-                if station.var_D.specific_values[index] >= thresholds_var_D['above']:
-                    contingency_table[2][2] += 1
+        if env.config_run.settings['class_category_analysis'] == 3:
+            for index, var_I in enumerate(station.var_I.specific_values):
+                if var_I < thresholds_var_I['below']:
+                    if station.var_D.specific_values[index] <= thresholds_var_D['below']:
+                        contingency_table[0][0] += 1
+                    if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
+                        contingency_table[0][1] += 1
+                    if station.var_D.specific_values[index] >= thresholds_var_D['above']:
+                        contingency_table[0][2] += 1
+                if thresholds_var_I['below'] <= var_I <= thresholds_var_I['above']:
+                    if station.var_D.specific_values[index] <= thresholds_var_D['below']:
+                        contingency_table[1][0] += 1
+                    if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
+                        contingency_table[1][1] += 1
+                    if station.var_D.specific_values[index] >= thresholds_var_D['above']:
+                        contingency_table[1][2] += 1
+                if var_I > thresholds_var_I['above']:
+                    if station.var_D.specific_values[index] <= thresholds_var_D['below']:
+                        contingency_table[2][0] += 1
+                    if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
+                        contingency_table[2][1] += 1
+                    if station.var_D.specific_values[index] >= thresholds_var_D['above']:
+                        contingency_table[2][2] += 1
+        if env.config_run.settings['class_category_analysis'] == 7:
+            pass
+
+
 
     # -------------------------------------------------------------------------
     ## Calculating contingency table with values in percent
-    tertile_size = station.size_time_series / 3.0
-    contingency_table_percent = matrix(contingency_table) * tertile_size
+    if env.config_run.settings['class_category_analysis'] == 3:
+        tertile_size = station.size_time_series / 3.0
+        contingency_table_percent = matrix(contingency_table) * tertile_size
 
-    sum_per_column_percent = contingency_table_percent.sum(axis=1)
+        sum_per_column_percent = contingency_table_percent.sum(axis=1)
+
+    if env.config_run.settings['class_category_analysis'] == 7:
+        pass
 
     # -------------------------------------------------------------------------
     # threshold_problem is global variable for detect problem with
@@ -248,36 +274,51 @@ def get_contingency_table(station, lag, month, day=None):
                 station.var_D.type_series, station.var_I.type_series, env.config_run.settings['phen_above_label']), color='yellow')
         env.globals_vars.threshold_problem[2] = True
 
-    try:
-        # not shows error if there are any problem with threshold
-        sys.stderr = open(os.devnull, 'w')
-        # Calculating contingency table percent
+    # Calculating contingency table percent
+    if env.config_run.settings['class_category_analysis'] == 3:
         contingency_table_percent \
             = [(contingency_table_percent[0] * 100 / float(sum_per_column_percent[0])).tolist()[0],
                (contingency_table_percent[1] * 100 / float(sum_per_column_percent[1])).tolist()[0],
                (contingency_table_percent[2] * 100 / float(sum_per_column_percent[2])).tolist()[0]]
-    except:
+    if env.config_run.settings['class_category_analysis'] == 7:
         pass
 
     # Contingency table percent to print in result table and graphics (reduce the number of decimals)
     contingency_table_percent_print = []
-    for row in contingency_table_percent:
-        contingency_table_percent_print.append([format_out.number(row[0], 1),
-                                                format_out.number(row[1], 1),
-                                                format_out.number(row[2], 1)])
+    if env.config_run.settings['class_category_analysis'] == 3:
+        for row in contingency_table_percent:
+            contingency_table_percent_print.append([format_out.number(row[0], 1),
+                                                    format_out.number(row[1], 1),
+                                                    format_out.number(row[2], 1)])
+    if env.config_run.settings['class_category_analysis'] == 7:
+        pass
 
-    return contingency_table, contingency_table_percent,\
-           contingency_table_percent_print, thresholds_var_D_var_I
+    specific_contingency_table = {'in_values':contingency_table,
+                                  'in_percentage':contingency_table_percent,
+                                  'in_percentage_formatted':contingency_table_percent,
+                                  'thresholds_var_D':thresholds_var_D.values(),
+                                  'thresholds_var_I':thresholds_var_I.values()}
+
+    return specific_contingency_table
 
 
-def contingency_table(station):
-    """
-    Print the contingency table for each trimester and each lag
+def get_contingency_tables(station):
+    """get all contingencies tables for all trimester or
+    all month/day for each lag.
+
+    :param station: station for get all contingencies tables
+    :type station: Station
+
+    Return by reference:
+
+    :ivar station.contingency_tables: get and set  to station
+        all contingencies tables within a list
+        [lag][month/trimester][day].
     """
 
     # [lag][month][phenomenon][data(0,1,2)]
     # [lag][month][day][phenomenon][data(0,1,2)]
-    contingencies_tables_percent = {}
+    contingency_tables = {}
     # defined if is first iteration
     station.first_iter = True
     for lag in env.config_run.settings['lags']:
@@ -287,12 +328,9 @@ def contingency_table(station):
         for month in range(1, 13):
             if env.globals_vars.STATE_OF_DATA in [1, 3]:
 
-                contingency_table,\
-                contingency_table_percent,\
-                contingency_table_percent_print,\
-                thresholds_var_D_var_I = get_contingency_table(station, lag, month)
+                specific_contingency_table = get_specific_contingency_table(station, lag, month)
 
-                tmp_month_list.append(contingency_table_percent)
+                tmp_month_list.append(specific_contingency_table)
 
                 if station.first_iter:
                     station.first_iter = False
@@ -301,18 +339,15 @@ def contingency_table(station):
                 tmp_day_list = []
                 for day in station.range_analysis_interval:
 
-                    contingency_table,\
-                    contingency_table_percent,\
-                    contingency_table_percent_print,\
-                    thresholds_var_D_var_I = get_contingency_table(station, lag,
+                    specific_contingency_table = get_specific_contingency_table(station, lag,
                         month, day)
-                    tmp_day_list.append(contingency_table_percent)
+                    tmp_day_list.append(specific_contingency_table)
 
                     if station.first_iter:
                         station.first_iter = False
 
                 tmp_month_list.append(tmp_day_list)
 
-        contingencies_tables_percent[lag] = tmp_month_list
+        contingency_tables[lag] = tmp_month_list
 
-    station.contingencies_tables_percent = contingencies_tables_percent
+    station.contingency_tables = contingency_tables

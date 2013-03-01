@@ -30,7 +30,6 @@ from Image import open as img_open
 
 from jaziku import env
 from jaziku.utils import  watermarking, format_out
-from jaziku.modules.climate.contingency_table import get_specific_contingency_table
 
 
 def column(matrix, i):
@@ -84,11 +83,11 @@ def climate_graphs(station):
         # colors for paint bars and labels: below, normal , above
         colours = ['#DD4620', '#62AD29', '#6087F1']
         # assigning values for plot:
-        var_D_below = pyplot.bar(ind, column(contingency_table_percent, 0),
+        var_D_below = pyplot.bar(ind, column(specific_contingency_table['in_percentage'], 0),
             width, color=colours[0])
-        var_D_normal = pyplot.bar(ind + width, column(contingency_table_percent, 1),
+        var_D_normal = pyplot.bar(ind + width, column(specific_contingency_table['in_percentage'], 1),
             width, color=colours[1])
-        var_D_above = pyplot.bar(ind + 2 * width, column(contingency_table_percent, 2),
+        var_D_above = pyplot.bar(ind + 2 * width, column(specific_contingency_table['in_percentage'], 2),
             width, color=colours[2])
 
         # assign value for each bar
@@ -120,9 +119,9 @@ def climate_graphs(station):
 
         rowLabels = [_('var D below'), _('var D normal'), _('var D above')]
 
-        contingency_table_percent_graph = [column(contingency_table_percent_print, 0),
-                                           column(contingency_table_percent_print, 1),
-                                           column(contingency_table_percent_print, 2)]
+        contingency_table_percent_graph = [column(specific_contingency_table['in_percentage_formatted'], 0),
+                                           column(specific_contingency_table['in_percentage_formatted'], 1),
+                                           column(specific_contingency_table['in_percentage_formatted'], 2)]
 
         # Add a table at the bottom of the axes
         pyplot.table(cellText=contingency_table_percent_graph,
@@ -155,10 +154,8 @@ def climate_graphs(station):
         for month in range(1, 13):
 
             if env.globals_vars.STATE_OF_DATA in [1, 3]:
-                contingency_table,\
-                contingency_table_percent,\
-                contingency_table_percent_print,\
-                thresholds_var_D_var_I = get_specific_contingency_table(station, lag, month)
+
+                specific_contingency_table = station.contingency_tables[lag][month]
 
                 title_period = _("trim {0} ({1})").format(month, format_out.trimester_in_initials(month - 1))
                 filename_period = _("trim_{0}").format(month)
@@ -168,10 +165,7 @@ def climate_graphs(station):
 
                 for day in station.range_analysis_interval:
 
-                    contingency_table,\
-                    contingency_table_percent,\
-                    contingency_table_percent_print,\
-                    thresholds_var_D_var_I = get_specific_contingency_table(station, lag, month, day)
+                    specific_contingency_table = station.contingency_tables[lag][month][day]
 
                     title_period = format_out.month_in_initials(month - 1) + " " + str(day)
                     filename_period = format_out.month_in_initials(month - 1) + "_" + str(day)

@@ -32,6 +32,7 @@ news
 - [code] Refactoring thresholds functions for different class_category_analysis
 - [code] Refactoring variables for var_D and var_I from globals_vars
 - [code] Refactoring limits and null values validations in core.input.validation.py
+- [code] Refactoring contingency_tables functions
 
 fixes
 +++++

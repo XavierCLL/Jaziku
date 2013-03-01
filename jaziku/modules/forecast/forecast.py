@@ -79,7 +79,7 @@ def process(station):
                     if not env.config_run.settings['risk_analysis'] or\
                        station.is_sig_risk_analysis[lag][env.config_run.settings['forecast_date']['month'] - 1][_iter] == _('yes'):
                         items_CT[order_CT[_iter]] \
-                            = station.contingencies_tables_percent[lag][env.config_run.settings['forecast_date']['month'] - 1][column][row] / 100.0
+                            = station.contingency_tables[lag][env.config_run.settings['forecast_date']['month'] - 1]['in_percentage'][column][row] / 100.0
                         _iter += 1
 
         if env.globals_vars.STATE_OF_DATA in [2, 4]:
@@ -91,7 +91,7 @@ def process(station):
                     if not env.config_run.settings['risk_analysis'] or\
                        station.is_sig_risk_analysis[lag][month - 1][day][_iter] == _('yes'):
                         items_CT[order_CT[_iter]]\
-                            = station.contingencies_tables_percent[lag][month - 1][day][column][row] / 100.0
+                            = station.contingency_tables[lag][month - 1][day]['in_percentage'][column][row] / 100.0
                         _iter += 1
 
         prob_decrease_var_D[lag] = (items_CT['a'] * env.config_run.settings['forecast_var_I_lag_'+lag]['below']) +\
