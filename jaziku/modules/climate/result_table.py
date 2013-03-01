@@ -28,7 +28,6 @@ from dateutil.relativedelta import relativedelta
 from jaziku import env
 from jaziku.utils import format_out
 from jaziku.modules.climate import statistic_tests
-from jaziku.modules.climate.contingency_table import get_contingency_table
 from jaziku.modules.climate.lags import get_lag_values
 
 
@@ -48,12 +47,12 @@ def composite_analysis(station):
 
         is_sig_risk_analysis_list = []
 
-        contingency_table_matrix = matrix(contingency_table)
+        contingency_table_matrix = matrix(specific_contingency_table['in_values'])
         sum_per_row = contingency_table_matrix.sum(axis=0).tolist()[0]
         sum_per_column = contingency_table_matrix.sum(axis=1).tolist()
         sum_contingency_table = contingency_table_matrix.sum()
 
-        for c, column_table in enumerate(contingency_table):
+        for c, column_table in enumerate(specific_contingency_table['in_values']):
             for r, Xi in enumerate(column_table):
                 M = sum_per_column[c]
                 n = sum_per_row[r]
@@ -85,7 +84,7 @@ def composite_analysis(station):
 
         # contingency test
         Observed, Expected, test_stat, crit_value, df, p_value, alpha \
-            = statistic_tests.contingency_test(contingency_table, None, 0.9, -1)
+            = statistic_tests.contingency_test(specific_contingency_table['in_values'], None, 0.9, -1)
 
         # calculate the correlation of contingency table
         chi_cdf = 1 - p_value
@@ -112,22 +111,22 @@ def composite_analysis(station):
         csv_result_table.writerow([
             var_D_text, var_I_text,
             format_out.number(pearson), format_out.number(singr), is_significant_singr,
-            thresholds_var_D_var_I[0], thresholds_var_D_var_I[1],
-            thresholds_var_D_var_I[2], thresholds_var_D_var_I[3],
-            contingency_table[0][0], contingency_table[0][1],
-            contingency_table[0][2], contingency_table[1][0],
-            contingency_table[1][1], contingency_table[1][2],
-            contingency_table[2][0], contingency_table[2][1],
-            contingency_table[2][2],
-            contingency_table_percent_print[0][0],
-            contingency_table_percent_print[0][1],
-            contingency_table_percent_print[0][2],
-            contingency_table_percent_print[1][0],
-            contingency_table_percent_print[1][1],
-            contingency_table_percent_print[1][2],
-            contingency_table_percent_print[2][0],
-            contingency_table_percent_print[2][1],
-            contingency_table_percent_print[2][2],
+            ' | '.join([str(item) for item in specific_contingency_table['thresholds_var_D']]),
+            ' | '.join([str(item) for item in specific_contingency_table['thresholds_var_I']]),
+            specific_contingency_table['in_values'][0][0], specific_contingency_table['in_values'][0][1],
+            specific_contingency_table['in_values'][0][2], specific_contingency_table['in_values'][1][0],
+            specific_contingency_table['in_values'][1][1], specific_contingency_table['in_values'][1][2],
+            specific_contingency_table['in_values'][2][0], specific_contingency_table['in_values'][2][1],
+            specific_contingency_table['in_values'][2][2],
+            specific_contingency_table['in_percentage_formatted'][0][0],
+            specific_contingency_table['in_percentage_formatted'][0][1],
+            specific_contingency_table['in_percentage_formatted'][0][2],
+            specific_contingency_table['in_percentage_formatted'][1][0],
+            specific_contingency_table['in_percentage_formatted'][1][1],
+            specific_contingency_table['in_percentage_formatted'][1][2],
+            specific_contingency_table['in_percentage_formatted'][2][0],
+            specific_contingency_table['in_percentage_formatted'][2][1],
+            specific_contingency_table['in_percentage_formatted'][2][2],
             is_sig_risk_analysis_list[0], is_sig_risk_analysis_list[1],
             is_sig_risk_analysis_list[2], is_sig_risk_analysis_list[3],
             is_sig_risk_analysis_list[4], is_sig_risk_analysis_list[5],
@@ -155,9 +154,8 @@ def composite_analysis(station):
         # print headers in result table
         csv_result_table.writerow([
             _('var_D'), _('var_I'), _('Pearson'), _('Sign Pearson'),
-            _('Is sign \'Sign Pearson\'?'), _('threshold below (var D)'),
-            _('threshold above (var D)'), _('threshold below (var I)'),
-            _('threshold above (var I)'), _('Contingency Table (CT)'),
+            _('Is sign \'Sign Pearson\'?'), _('thresholds var D'),
+            _('thresholds var I'), _('Contingency Table (CT)'),
             '', '', '', '', '', '', '', '', _('Contingency Table in %'),
             '', '', '', '', '', '', '', '', _('is sig risk analysis?'),
             '', '', '', '', '', '', '', '', _('Test Stat - Chi2'),
@@ -190,10 +188,8 @@ def composite_analysis(station):
 
             if env.globals_vars.STATE_OF_DATA in [1, 3]:
                 # get the contingency tables and thresholds
-                contingency_table,\
-                contingency_table_percent,\
-                contingency_table_percent_print,\
-                thresholds_var_D_var_I = get_contingency_table(station, lag, month)
+
+                specific_contingency_table = station.contingency_tables[lag][month]
 
                 # for print text date in result table
                 var_D_text = format_out.trimester_in_initials(month - 1)
@@ -209,10 +205,8 @@ def composite_analysis(station):
                 is_sig_risk_analysis_list_day = []
                 for day in station.range_analysis_interval:
                     # get the contingency tables and thresholds
-                    contingency_table,\
-                    contingency_table_percent,\
-                    contingency_table_percent_print,\
-                    thresholds_var_D_var_I = get_contingency_table(station, lag, month, day)
+
+                    specific_contingency_table = station.contingency_tables[lag][month][day]
 
                     # this is for calculate date for print in result table
                     # this depend on range analysis interval and lags (var_I)

@@ -24,7 +24,7 @@ from clint.textui import colored
 from jaziku import env
 from jaziku.modules.climate import result_table
 from jaziku.modules.climate.lags import calculate_lags
-from jaziku.modules.climate.contingency_table import contingency_table
+from jaziku.modules.climate.contingency_table import get_contingency_tables
 from jaziku.modules.climate.graphs import climate_graphs
 from jaziku.modules.maps.data import climate_data_for_maps
 from jaziku.utils import console
@@ -108,7 +108,8 @@ def process(station):
 
     station.size_time_series = (len(station.common_period) / 12) - 2
 
-    contingency_table(station)
+    # get all contingency tables for this station
+    get_contingency_tables(station)
 
     result_table.composite_analysis(station)
 
