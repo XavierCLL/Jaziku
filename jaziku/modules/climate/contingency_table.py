@@ -52,7 +52,7 @@ def get_label_of_var_I_category(value, station):
 
     # categorize the value of var I and get the label_of_var_I_category based in the label phenomenon
 
-    # SPECIAL CASE 2: for some variables for set the category of phenomenon the thresholds are inclusive
+    # SPECIAL CASE 2: for some variables for set the category of phenomenon for the normal case the thresholds are exclude (<=, >=)
     if env.config_run.settings['type_var_I'] in ['ONI1', 'ONI2', 'SST12', 'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34']:
 
         if env.config_run.settings['class_category_analysis'] == 3:
@@ -152,72 +152,98 @@ def get_specific_contingency_table(station, lag, month, day=None):
     # calculate thresholds as defined by the user in station file for var I
     thresholds_var_I = get_thresholds(station, station.var_I)
 
-    print env.var_I.FREQUENCY_DATA
-    print env.var_I.is_daily()
-    print env.var_I.is_monthly()
-    exit()
-
     # -------------------------------------------------------------------------
     ## Calculating contingency table with absolute values
+    if env.config_run.settings['class_category_analysis'] == 3:
+        # matrix 3x3
+        contingency_table = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+    if env.config_run.settings['class_category_analysis'] == 7:
+        # matrix 7x7
+        contingency_table = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0],
+                             [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]]
 
-    contingency_table = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+    if env.config_run.settings['class_category_analysis'] == 3:
+        def __matrix_row_var_D(column_var_I):
+            if station.var_D.specific_values[index] <= thresholds_var_D['below']:
+                contingency_table[column_var_I][0] += 1
+            if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
+                contingency_table[column_var_I][1] += 1
+            if station.var_D.specific_values[index] >= thresholds_var_D['above']:
+                contingency_table[column_var_I][2] += 1
 
-    # SPECIAL CASE 2: for some variables for set the category of phenomenon the thresholds are exclusive (<=, >=)
+    if env.config_run.settings['class_category_analysis'] == 7:
+        def __matrix_row_var_D(column_var_I):
+            if station.var_D.specific_values[index] <= thresholds_var_D['below3']:
+                contingency_table[column_var_I][0] += 1
+            if thresholds_var_D['below3'] < station.var_D.specific_values[index] <= thresholds_var_D['below2']:
+                contingency_table[column_var_I][1] += 1
+            if thresholds_var_D['below2'] < station.var_D.specific_values[index] <= thresholds_var_D['below1']:
+                contingency_table[column_var_I][2] += 1
+            if thresholds_var_D['below1'] < station.var_D.specific_values[index] < thresholds_var_D['above1']:
+                contingency_table[column_var_I][3] += 1
+            if thresholds_var_D['above1'] <= station.var_D.specific_values[index] < thresholds_var_D['above2']:
+                contingency_table[column_var_I][4] += 1
+            if thresholds_var_D['above2'] <= station.var_D.specific_values[index] < thresholds_var_D['above3']:
+                contingency_table[column_var_I][5] += 1
+            if station.var_D.specific_values[index] >= thresholds_var_D['above3']:
+                contingency_table[column_var_I][6] += 1
+
+    # SPECIAL CASE 2: for some variables for set the category of phenomenon for the normal case the thresholds are exclude (<=, >=)
     if env.config_run.settings['type_var_I'] in ['ONI1', 'ONI2', 'SST12', 'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34']:
+
         if env.config_run.settings['class_category_analysis'] == 3:
             for index, var_I in enumerate(station.var_I.specific_values):
                 if var_I <= thresholds_var_I['below']:
-                    if station.var_D.specific_values[index] <= thresholds_var_D['below']:
-                        contingency_table[0][0] += 1
-                    if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
-                        contingency_table[0][1] += 1
-                    if station.var_D.specific_values[index] >= thresholds_var_D['above']:
-                        contingency_table[0][2] += 1
+                    __matrix_row_var_D(0)
                 if thresholds_var_I['below'] < var_I < thresholds_var_I['above']:
-                    if station.var_D.specific_values[index] <= thresholds_var_D['below']:
-                        contingency_table[1][0] += 1
-                    if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
-                        contingency_table[1][1] += 1
-                    if station.var_D.specific_values[index] >= thresholds_var_D['above']:
-                        contingency_table[1][2] += 1
+                    __matrix_row_var_D(1)
                 if var_I >= thresholds_var_I['above']:
-                    if station.var_D.specific_values[index] <= thresholds_var_D['below']:
-                        contingency_table[2][0] += 1
-                    if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
-                        contingency_table[2][1] += 1
-                    if station.var_D.specific_values[index] >= thresholds_var_D['above']:
-                        contingency_table[2][2] += 1
+                    __matrix_row_var_D(2)
+
         if env.config_run.settings['class_category_analysis'] == 7:
-            pass
-    else:
-        # normal case
+            for index, var_I in enumerate(station.var_I.specific_values):
+                if var_I <= thresholds_var_I['below3']:
+                    __matrix_row_var_D(0)
+                if thresholds_var_I['below3'] < var_I <= thresholds_var_I['below2']:
+                    __matrix_row_var_D(1)
+                if thresholds_var_I['below2'] < var_I <= thresholds_var_I['below1']:
+                    __matrix_row_var_D(2)
+                if thresholds_var_I['below1'] < var_I < thresholds_var_I['above1']:
+                    __matrix_row_var_D(3)
+                if thresholds_var_I['above1'] <= var_I < thresholds_var_I['above2']:
+                    __matrix_row_var_D(4)
+                if thresholds_var_I['above2'] <= var_I < thresholds_var_I['above3']:
+                    __matrix_row_var_D(5)
+                if var_I >= thresholds_var_I['above3']:
+                    __matrix_row_var_D(6)
+
+    else: # normal case
+
         if env.config_run.settings['class_category_analysis'] == 3:
             for index, var_I in enumerate(station.var_I.specific_values):
                 if var_I < thresholds_var_I['below']:
-                    if station.var_D.specific_values[index] <= thresholds_var_D['below']:
-                        contingency_table[0][0] += 1
-                    if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
-                        contingency_table[0][1] += 1
-                    if station.var_D.specific_values[index] >= thresholds_var_D['above']:
-                        contingency_table[0][2] += 1
+                    __matrix_row_var_D(0)
                 if thresholds_var_I['below'] <= var_I <= thresholds_var_I['above']:
-                    if station.var_D.specific_values[index] <= thresholds_var_D['below']:
-                        contingency_table[1][0] += 1
-                    if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
-                        contingency_table[1][1] += 1
-                    if station.var_D.specific_values[index] >= thresholds_var_D['above']:
-                        contingency_table[1][2] += 1
+                    __matrix_row_var_D(1)
                 if var_I > thresholds_var_I['above']:
-                    if station.var_D.specific_values[index] <= thresholds_var_D['below']:
-                        contingency_table[2][0] += 1
-                    if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
-                        contingency_table[2][1] += 1
-                    if station.var_D.specific_values[index] >= thresholds_var_D['above']:
-                        contingency_table[2][2] += 1
+                    __matrix_row_var_D(2)
+
         if env.config_run.settings['class_category_analysis'] == 7:
-            pass
-
-
+            for index, var_I in enumerate(station.var_I.specific_values):
+                if var_I < thresholds_var_I['below3']:
+                    __matrix_row_var_D(0)
+                if thresholds_var_I['below3'] <= var_I < thresholds_var_I['below2']:
+                    __matrix_row_var_D(1)
+                if thresholds_var_I['below2'] <= var_I < thresholds_var_I['below1']:
+                    __matrix_row_var_D(2)
+                if thresholds_var_I['below1'] <= var_I <= thresholds_var_I['above1']:
+                    __matrix_row_var_D(3)
+                if thresholds_var_I['above1'] < var_I <= thresholds_var_I['above2']:
+                    __matrix_row_var_D(4)
+                if thresholds_var_I['above2'] < var_I <= thresholds_var_I['above3']:
+                    __matrix_row_var_D(5)
+                if var_I > thresholds_var_I['above3']:
+                    __matrix_row_var_D(6)
 
     # -------------------------------------------------------------------------
     ## Calculating contingency table with values in percent
