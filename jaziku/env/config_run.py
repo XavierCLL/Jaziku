@@ -122,7 +122,7 @@ list_of_all_settings = [
 
     ## VAR D OPTIONS
 
-    # type for dependence variable
+    # type for dependence variable (jaziku used this only input, USE: env.var_D.TYPE_SERIES)
     #   input: string
     'type_var_D',
 
@@ -142,7 +142,7 @@ list_of_all_settings = [
 
     ## VAR I OPTIONS
 
-    # type for independence variable
+    # type for independence variable (jaziku used this only input, USE: env.var_I.TYPE_SERIES)
     #   input: string
     'type_var_I',
 

@@ -171,24 +171,26 @@ def read_runfile():
     if '(' and ')' in env.config_run.settings['type_var_D']:
         string = env.config_run.settings['type_var_D']
         # get type
-        env.config_run.settings['type_var_D'] = string[0:string.index('(')].strip()
+        env.var_D.TYPE_SERIES = string[0:string.index('(')].strip()
         # get units
         env.var_D.units = string[string.index('(') + 1:string.index(')')].strip()
     else:
-        if env.config_run.settings['type_var_D'] in env.var_D.INTERNAL_UNITS:
-            env.var_D.units = env.var_D.INTERNAL_UNITS[env.config_run.settings['type_var_D']]
+        env.var_D.TYPE_SERIES = env.config_run.settings['type_var_D']
+        if env.var_D.TYPE_SERIES in env.var_D.INTERNAL_UNITS:
+            env.var_D.units = env.var_D.INTERNAL_UNITS[env.var_D.TYPE_SERIES]
         else:
             env.var_D.units = '--'
     # var I
     if '(' and ')' in env.config_run.settings['type_var_I']:
         string = env.config_run.settings['type_var_I']
         # get type
-        env.config_run.settings['type_var_I'] = string[0:string.index('(')].strip()
+        env.var_I.TYPE_SERIES = string[0:string.index('(')].strip()
         # get units
         env.var_I.units = string[string.index('(') + 1:string.index(')')].strip()
     else:
-        if env.config_run.settings['type_var_I'] in env.var_I.INTERNAL_UNITS:
-            env.var_I.units = env.var_I.INTERNAL_UNITS[env.config_run.settings['type_var_I']]
+        env.var_I.TYPE_SERIES = env.config_run.settings['type_var_I']
+        if env.var_I.TYPE_SERIES in env.var_I.INTERNAL_UNITS:
+            env.var_I.units = env.var_I.INTERNAL_UNITS[env.var_I.TYPE_SERIES]
         else:
             env.var_I.units = '--'
 
@@ -237,11 +239,11 @@ def read_stations(lines_of_stations):
             station.lon = line_station[3].replace(',', '.')
             station.alt = line_station[4].replace(',', '.')
 
-            station.var_D.type_series = env.config_run.settings['type_var_D']
+            station.var_D.type_series = env.var_D.TYPE_SERIES
             #station.file_D = open(line_station[5], 'rb')
             station.var_D.set_file(line_station[5])
 
-            station.var_I.type_series = env.config_run.settings['type_var_I']
+            station.var_I.type_series = env.var_I.TYPE_SERIES
             #station.file_I = env.config_run.get['path_to_file_var_I']
             station.var_I.set_file(env.config_run.settings['path_to_file_var_I'])
 

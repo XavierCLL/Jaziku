@@ -102,7 +102,7 @@ def get_thresholds(station, variable, thresholds_input=None):
                 console.msg_error(_("the thresholds of var {0} were defined as "
                                     "'default'\nbut this variable ({1}) has not "
                                     "internal thresholds.")
-                .format(variable.type, env.config_run.settings['type_var_I']))
+                .format(variable.type, env.var_I.TYPE_SERIES))
             return get_thresholds(station, variable, env.var_I.get_internal_thresholds())
 
     @thresholds_dictionary
