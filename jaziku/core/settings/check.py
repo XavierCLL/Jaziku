@@ -104,13 +104,13 @@ def configuration_run():
     # below var D
     if env.config_run.settings['limits_var_D']['below'] == "default":
         # validation type_D
-        if env.config_run.settings['type_var_D'] not in env.var_D.INTERNAL_TYPES:
+        if env.var_D.TYPE_SERIES not in env.var_D.INTERNAL_TYPES:
             console.msg_error_configuration('type_var_D',
                 _("{0} not is valid internal type for dependent variable if you\n"
                   "defined LIMIT VAR D BELOW/ABOVE as 'default'. If you want\n"
                   "define a particular type for dependent variable, you must define\n"
                   "as real values (or 'none') the LIMIT VAR D BELOW/ABOVE")
-                .format(env.config_run.settings['type_var_D']))
+                .format(env.var_D.TYPE_SERIES))
     elif env.config_run.settings['limits_var_D']['below'] in ["none", "None", "NONE", None]:
         env.config_run.settings['limits_var_D']['below'] = None
     else:
@@ -125,13 +125,13 @@ def configuration_run():
     # above var D
     if env.config_run.settings['limits_var_D']['above'] == "default":
         # validation type_D
-        if env.config_run.settings['type_var_D'] not in env.var_D.INTERNAL_TYPES:
+        if env.var_D.TYPE_SERIES not in env.var_D.INTERNAL_TYPES:
             console.msg_error_configuration('limits_var_D',
                 _("{0} not is valid internal type for dependent variable if you\n"
                   "defined LIMIT VAR D BELOW/ABOVE as 'default'. If you want\n"
                   "define a particular type for dependent variable, you must define\n"
                   "as real values (or 'none') the LIMIT VAR D BELOW/ABOVE")
-                .format(env.config_run.settings['type_var_D']))
+                .format(env.var_D.TYPE_SERIES))
     elif env.config_run.settings['limits_var_D']['above'] in ["none", "None", "NONE", None]:
         env.config_run.settings['limits_var_D']['above'] = None
     else:
@@ -154,13 +154,13 @@ def configuration_run():
     # below var I
     if env.config_run.settings['limits_var_I']['below'] == "default":
         # validation type_I
-        if env.config_run.settings['type_var_I'] not in env.var_I.INTERNAL_TYPES:
+        if env.var_I.TYPE_SERIES not in env.var_I.INTERNAL_TYPES:
             console.msg_error_configuration('type_var_I',
                 _("{0} not is valid internal type for independent variable if you\n"
                   "defined LIMIT VAR I BELOW/ABOVE as 'default'. If you want\n"
                   "define a particular type for independent variable, you must define\n"
                   "as real values (or 'none') the LIMIT VAR I BELOW/ABOVE")
-                .format(env.config_run.settings['type_var_I']))
+                .format(env.var_I.TYPE_SERIES))
     elif env.config_run.settings['limits_var_I']['below'] in ["none", "None", "NONE", None]:
         env.config_run.settings['limits_var_I']['below'] = None
     else:
@@ -174,13 +174,13 @@ def configuration_run():
     # above var I
     if env.config_run.settings['limits_var_I']['above'] == "default":
         # validation type_I
-        if env.config_run.settings['type_var_I'] not in env.var_I.INTERNAL_TYPES:
+        if env.var_I.TYPE_SERIES not in env.var_I.INTERNAL_TYPES:
             console.msg_error_configuration('limits_var_I',
                 _("{0} not is valid internal type for independent variable if you\n"
                   "defined LIMIT VAR I BELOW/ABOVE as 'default'. If you want\n"
                   "define a particular type for independent variable, you must define\n"
                   "as real values (or 'none') the LIMIT VAR I BELOW/ABOVE")
-                .format(env.config_run.settings['type_var_I']))
+                .format(env.var_I.TYPE_SERIES))
     elif env.config_run.settings['limits_var_I']['above'] in ["none", "None", "NONE", None]:
         env.config_run.settings['limits_var_I']['above'] = None
     else:

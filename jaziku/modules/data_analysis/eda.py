@@ -74,10 +74,10 @@ def main(stations_list):
         os.makedirs(shapiro_wilks_dir)
 
     file_descriptive_statistics_var_D\
-    = os.path.join(shapiro_wilks_dir, _('Descriptive_Statistics_{0}.csv').format(env.config_run.settings['type_var_D']))
+    = os.path.join(shapiro_wilks_dir, _('Descriptive_Statistics_{0}.csv').format(env.var_D.TYPE_SERIES))
 
     file_descriptive_statistics_var_I\
-    = os.path.join(shapiro_wilks_dir, _('Descriptive_Statistics_{0}.csv').format(env.config_run.settings['type_var_I']))
+    = os.path.join(shapiro_wilks_dir, _('Descriptive_Statistics_{0}.csv').format(env.var_I.TYPE_SERIES))
 
     open_file_D = open(file_descriptive_statistics_var_D, 'w')
     csv_file_D = csv.writer(open_file_D, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
@@ -290,7 +290,7 @@ def descriptive_statistic_graphs(stations_list):
                      'std_dev':'dots','skewness':'dots', 'kurtosis':'dots', 'coef_variation':'dots'}
 
     # directory for save graphs of descriptive statistic
-    graphs_dir = os.path.join(shapiro_wilks_dir, _('Graphs_for_{0}').format(env.config_run.settings['type_var_D']))
+    graphs_dir = os.path.join(shapiro_wilks_dir, _('Graphs_for_{0}').format(env.var_D.TYPE_SERIES))
 
     if not os.path.isdir(graphs_dir):
         os.makedirs(graphs_dir)
@@ -318,7 +318,7 @@ def descriptive_statistic_graphs(stations_list):
                 if value == 0:
                     y[y.index(value)] = 0.0001
 
-            name_graph = _("{0}_({1})_{2}").format(statistic, env.config_run.settings['type_var_D'], graph)
+            name_graph = _("{0}_({1})_{2}").format(statistic, env.var_D.TYPE_SERIES, graph)
             # dynamic with based of number of stations
             with_fig = Station.stations_processed/5+4
             fig = pyplot.figure(figsize=(with_fig, 6), dpi=100)
@@ -326,7 +326,7 @@ def descriptive_statistic_graphs(stations_list):
             #tfs = 18.5 - 10/(Station.stations_processed)
 
             if Station.stations_processed <= 5:
-                title = _("{0} ({1})\n{2}").format(statistic.replace('_',' '), env.config_run.settings['type_var_D'], graph.replace('_',' '))
+                title = _("{0} ({1})\n{2}").format(statistic.replace('_',' '), env.var_D.TYPE_SERIES, graph.replace('_',' '))
             else:
                 title = name_graph.replace('_',' ')
 
@@ -575,7 +575,7 @@ def climatology(stations_list):
 
     # climatology table file
     open_file_climatology_table\
-        = open(os.path.join(graphs_dir, _('Climatology_table_{0}').format(env.config_run.settings['type_var_D'])+'.csv'), 'w')
+        = open(os.path.join(graphs_dir, _('Climatology_table_{0}').format(env.var_D.TYPE_SERIES)+'.csv'), 'w')
     csv_climatology_table = csv.writer(open_file_climatology_table, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
     # print header
@@ -650,19 +650,19 @@ def climatology(stations_list):
                 y_mean[y_mean.index(value)] = 0.0001
 
         title=_("Multiyear climatology (monthly)\n{0} {1} - {2} ({3}-{4})").format(station.code, station.name,
-                env.config_run.settings['type_var_D'], station.process_period['start'], station.process_period['end'])
+                env.var_D.TYPE_SERIES, station.process_period['start'], station.process_period['end'])
 
         # -------------------------------------------------------------------------
         # climatology monthly without whiskers
 
-        name_graph = _("Multiyear_climatology_(monthly)_{0}_{1}_{2}").format(station.code, station.name, env.config_run.settings['type_var_D'])
+        name_graph = _("Multiyear_climatology_(monthly)_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
 
         fig = pyplot.figure(figsize=(8, 5.5))
         ax = fig.add_subplot(111)
 
         ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
 
-        type_var = env.config_run.settings['type_var_D']
+        type_var = env.var_D.TYPE_SERIES
 
         ## X
         ax.set_xlabel(_('Months'), env.globals_vars.graphs_axis_properties())
@@ -710,14 +710,14 @@ def climatology(stations_list):
         # -------------------------------------------------------------------------
         # climatology monthly with whiskers
 
-        name_graph = _("Multiyear_climatology_(monthly+whiskers)_{0}_{1}_{2}").format(station.code, station.name, env.config_run.settings['type_var_D'])
+        name_graph = _("Multiyear_climatology_(monthly+whiskers)_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
 
         fig = pyplot.figure(figsize=(8, 5.5))
         ax = fig.add_subplot(111)
 
         ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
 
-        type_var = env.config_run.settings['type_var_D']
+        type_var = env.var_D.TYPE_SERIES
 
         ## X
         ax.set_xlabel(_('Months'), env.globals_vars.graphs_axis_properties())
@@ -764,7 +764,7 @@ def climatology(stations_list):
         # -------------------------------------------------------------------------
         # climatology monthly table (csv)
 
-        name_csv_table = _("Multiyear_climatology_table_{0}_{1}_{2}.csv").format(station.code, station.name, env.config_run.settings['type_var_D'])
+        name_csv_table = _("Multiyear_climatology_table_{0}_{1}_{2}.csv").format(station.code, station.name, env.var_D.TYPE_SERIES)
         open_file = open(os.path.join(station_climatology_path,name_csv_table), 'w')
         csv_table = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
@@ -828,21 +828,21 @@ def climatology(stations_list):
                     x_labels.append('')
 
             title = _("Multiyear climatology (each {0} days)\n{1} {2} - {3} ({4}-{5})").format(env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL,
-                station.code, station.name, env.config_run.settings['type_var_D'], station.process_period['start'],
+                station.code, station.name, env.var_D.TYPE_SERIES, station.process_period['start'],
                 station.process_period['end'])
 
             # -------------------------------------------------------------------------
             # climatology N days without whiskers
 
             name_graph = _("Multiyear_climatology_({0}days)_{1}_{2}_{3}").format(env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL,
-                station.code, station.name, env.config_run.settings['type_var_D'])
+                station.code, station.name, env.var_D.TYPE_SERIES)
 
             with_fig = 5 + len(y_mean)/9
             fig = pyplot.figure(figsize=(with_fig, 5.5))
             ax = fig.add_subplot(111)
             ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
 
-            type_var = env.config_run.settings['type_var_D']
+            type_var = env.var_D.TYPE_SERIES
 
             ## X
             ax.set_xlabel(_('Months'), env.globals_vars.graphs_axis_properties())
@@ -892,14 +892,14 @@ def climatology(stations_list):
             # climatology N days with whiskers
 
             name_graph = _("Multiyear_climatology_({0}days+whiskers)_{1}_{2}_{3}").format(env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL,
-                station.code, station.name, env.config_run.settings['type_var_D'])
+                station.code, station.name, env.var_D.TYPE_SERIES)
 
             with_fig = 5 + len(y_mean)/9
             fig = pyplot.figure(figsize=(with_fig, 5.5))
             ax = fig.add_subplot(111)
             ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
 
-            type_var = env.config_run.settings['type_var_D']
+            type_var = env.var_D.TYPE_SERIES
 
             ## X
             ax.set_xlabel(_('Months'), env.globals_vars.graphs_axis_properties())
@@ -948,7 +948,7 @@ def climatology(stations_list):
             # -------------------------------------------------------------------------
             # climatology N days table (csv)
 
-            name_csv_table = _("Multiyear_climatology_table_{0}days_{1}_{2}_{3}.csv").format(env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL, station.code, station.name, env.config_run.settings['type_var_D'])
+            name_csv_table = _("Multiyear_climatology_table_{0}days_{1}_{2}_{3}.csv").format(env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL, station.code, station.name, env.var_D.TYPE_SERIES)
             open_file = open(os.path.join(station_climatology_path,name_csv_table), 'w')
             csv_table = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
@@ -1023,11 +1023,11 @@ def scatter_plots_of_series(stations_list):
 
     pyplot.figure(figsize=(fig_with,fig_height))
 
-    name_plot = _("scatter_plots_of_series") + "_{0}_{2}-{3}".format(env.config_run.settings['type_var_D'],
+    name_plot = _("scatter_plots_of_series") + "_{0}_{2}-{3}".format(env.var_D.TYPE_SERIES,
         env.var_D.units,
         global_common_date_process_var_D[0].year, global_common_date_process_var_D[-1].year)
 
-    title_plot = _("Scatter plots of series") + "\n{0} ({1}) {2}-{3}".format(env.config_run.settings['type_var_D'],
+    title_plot = _("Scatter plots of series") + "\n{0} ({1}) {2}-{3}".format(env.var_D.TYPE_SERIES,
         env.var_D.units,
         global_common_date_process_var_D[0].year, global_common_date_process_var_D[-1].year)
 
@@ -1089,16 +1089,16 @@ def frequency_histogram(stations_list):
 
         hist, bin_edges = histogram(station.var_D.data_filtered_in_process_period, bins=bins)
 
-        name_graph = _("frequency_histogram_{0}_{1}_{2}").format(station.code, station.name, env.config_run.settings['type_var_D'])
+        name_graph = _("frequency_histogram_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
 
         fig = pyplot.figure()
         ax = fig.add_subplot(111)
         ax.set_title(unicode(_("Frequency histogram\n{0} {1} - {2} ({3}-{4})").format(station.code, station.name,
-            env.config_run.settings['type_var_D'], station.process_period['start'], station.process_period['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
+            env.var_D.TYPE_SERIES, station.process_period['start'], station.process_period['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
 
 
         ## X
-        type_var = env.config_run.settings['type_var_D']
+        type_var = env.var_D.TYPE_SERIES
         ax.set_xlabel(unicode('{0} ({1})'.format(type_var, env.var_D.units), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
         ## Y
@@ -1128,7 +1128,7 @@ def frequency_histogram(stations_list):
 def shapiro_wilks_test(stations_list):
 
     file_shapiro_wilks_var_D\
-    = os.path.join(distribution_test_dir, _('shapiro_wilks_test_{0}.csv').format(env.config_run.settings['type_var_D']))
+    = os.path.join(distribution_test_dir, _('shapiro_wilks_test_{0}.csv').format(env.var_D.TYPE_SERIES))
 
     open_file_D = open(file_shapiro_wilks_var_D, 'w')
     csv_file_D = csv.writer(open_file_D, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
@@ -1193,11 +1193,11 @@ def outliers(stations_list):
                 os.makedirs(outliers_per_stations_dir)
 
             name_graph = _("Outliers")+"_{0}_{1}_{2}_({3}-{4})".format(station.code, station.name,
-            env.config_run.settings['type_var_D'], station.process_period['start'], station.process_period['end'])
+            env.var_D.TYPE_SERIES, station.process_period['start'], station.process_period['end'])
 
             fig = pyplot.figure(figsize=(3,6))
             ax = fig.add_subplot(111)
-            ax.set_title(unicode(_("Outliers")+"\n{0} ({1}-{2})".format(env.config_run.settings['type_var_D'],
+            ax.set_title(unicode(_("Outliers")+"\n{0} ({1}-{2})".format(env.var_D.TYPE_SERIES,
                 station.process_period['start'], station.process_period['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
 
             ## X
@@ -1206,7 +1206,7 @@ def outliers(stations_list):
             ax.set_xlabel(unicode(_('Station'), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             ## Y
-            type_var = env.config_run.settings['type_var_D']
+            type_var = env.var_D.TYPE_SERIES
             ax.set_ylabel(unicode('{0} ({1})'.format(type_var, env.var_D.units), 'utf-8'), env.globals_vars.graphs_axis_properties())
             #ax.set_ylabel(_('Frequency'))
 
@@ -1344,7 +1344,7 @@ def outliers(stations_list):
 
                 # SPECIAL CASE 1: when var_I is ONI1, ONI2 or CAR, don't calculate trimesters because the ONI and CAR
                 # series was calculated by trimesters from original source
-                if env.var_I.is_monthly() and env.config_run.settings['type_var_I'] in ['ONI1', 'ONI2', 'CAR']:
+                if env.var_I.is_monthly() and env.var_I.TYPE_SERIES in ['ONI1', 'ONI2', 'CAR']:
                     # take the first month (in this case, it is the mean of trimester)
                     values_var_I = values_var_I[0]
 
@@ -1367,25 +1367,25 @@ def outliers(stations_list):
     if env.config_run.settings['graphics'] and ( 1 < Station.stations_processed <= 50 ):
         if env.config_run.settings['process_period']:
             name_graph = _("Outliers")+"_{0}_({1}-{2})".format(
-                env.config_run.settings['type_var_D'], env.config_run.settings['process_period']['start'],
+                env.var_D.TYPE_SERIES, env.config_run.settings['process_period']['start'],
                 env.config_run.settings['process_period']['end'])
         else:
-            name_graph = _("Outliers")+"_{0}".format(env.config_run.settings['type_var_D'])
+            name_graph = _("Outliers")+"_{0}".format(env.var_D.TYPE_SERIES)
 
         fig = pyplot.figure(figsize=(2.5+len(stations_list)/2.5,6))
         ax = fig.add_subplot(111)
         if env.config_run.settings['process_period']:
-            ax.set_title(unicode(_("Outliers")+" - {0} ({1}-{2})".format(env.config_run.settings['type_var_D'],
+            ax.set_title(unicode(_("Outliers")+" - {0} ({1}-{2})".format(env.var_D.TYPE_SERIES,
                 env.config_run.settings['process_period']['start'], env.config_run.settings['process_period']['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
         else:
-            ax.set_title(unicode(_("Outliers")+" - {0}".format(env.config_run.settings['type_var_D']), 'utf-8'), env.globals_vars.graphs_title_properties())
+            ax.set_title(unicode(_("Outliers")+" - {0}".format(env.var_D.TYPE_SERIES), 'utf-8'), env.globals_vars.graphs_title_properties())
 
         ## X
         xticks(range(len(stations_list)), codes_stations, rotation='vertical')
         ax.set_xlabel(unicode(_('Stations'), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
         ## Y
-        type_var = env.config_run.settings['type_var_D']
+        type_var = env.var_D.TYPE_SERIES
         ax.set_ylabel(unicode('{0} ({1})'.format(type_var, env.var_D.units), 'utf-8'), env.globals_vars.graphs_axis_properties())
         #ax.set_ylabel(_('Frequency'))
 
@@ -1420,12 +1420,12 @@ def outliers(stations_list):
     if env.config_run.settings['process_period']:
         file_outliers_var_D\
         = os.path.join(outliers_dir, _("Outliers_table")+"_{0}_({1}-{2}).csv".format(
-            env.config_run.settings['type_var_D'], env.config_run.settings['process_period']['start'],
+            env.var_D.TYPE_SERIES, env.config_run.settings['process_period']['start'],
             env.config_run.settings['process_period']['end']))
     else:
         file_outliers_var_D\
         = os.path.join(outliers_dir, _("Outliers_table")+"_{0}.csv".format(
-            env.config_run.settings['type_var_D']))
+            env.var_D.TYPE_SERIES))
 
     open_file_D = open(file_outliers_var_D, 'w')
     csv_file_D = csv.writer(open_file_D, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)

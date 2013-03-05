@@ -114,7 +114,7 @@ def configuration_run(stop_in=None):
     # Print some warnings and notifications
 
     if env.config_run.settings['path_to_file_var_I'] == 'internal':
-        internal_file_I_name = env.var_I.INTERNAL_FILES[env.config_run.settings['type_var_I']]
+        internal_file_I_name = env.var_I.INTERNAL_FILES[env.var_I.TYPE_SERIES]
         split_internal_var_I = internal_file_I_name.split(".")[0].split("_")
         console.msg(
             _("\n > You are using internal files for independent\n"
@@ -124,7 +124,7 @@ def configuration_run(stop_in=None):
               "   url: {4}")
             .format(split_internal_var_I[0], split_internal_var_I[1],
                 split_internal_var_I[2], ' '.join(split_internal_var_I[3::]),
-                env.var_I.INTERNAL_URLS[env.config_run.settings['type_var_I']]))
+                env.var_I.INTERNAL_URLS[env.var_I.TYPE_SERIES]))
 
     if (not env.config_run.settings['limits_var_D']['below'] or
         not env.config_run.settings['limits_var_D']['above'] or
