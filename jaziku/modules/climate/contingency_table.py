@@ -32,11 +32,12 @@ def get_label_of_var_I_category(value, station):
     and thresholds of var I, evaluate where is the 'value' inside the thresholds and return
     the correspondent label for this position.
 
-    For some variables, for set a particular var I category the thresholds are inclusive,
+    For some variables, for set the category of phenomenon for the normal case the thresholds
+    are exclude (< >):
     for ('ONI1', 'ONI2', 'W850w', 'SST4', 'SST12', 'ASST3', 'ASST34', 'ASST4', 'ASST12'):
-        the value is not normal when { threshold below >= value >= threshold above }
+        the value is normal when { threshold below* < value < threshold above* }
     else:
-        the value is not normal when { threshold below > value > threshold above }
+        the value is normal when { threshold below* <= value <= threshold above* }
 
     :param value: values for calculate the label
     :type value: float
@@ -52,8 +53,8 @@ def get_label_of_var_I_category(value, station):
 
     # categorize the value of var I and get the label_of_var_I_category based in the label phenomenon
 
-    # SPECIAL CASE 2: for some variables for set the category of phenomenon for the normal case the thresholds are exclude (<=, >=)
-    if env.config_run.settings['type_var_I'] in ['ONI1', 'ONI2', 'SST12', 'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34']:
+    # SPECIAL CASE 2: for some variables, for set the category of phenomenon for the normal case the thresholds are exclude (< >)
+    if env.var_I.TYPE_SERIES in ['ONI1', 'ONI2', 'SST12', 'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34']:
 
         if env.config_run.settings['class_category_analysis'] == 3:
             if value <= thresholds_var_I['below']:
@@ -188,8 +189,8 @@ def get_specific_contingency_table(station, lag, month, day=None):
             if station.var_D.specific_values[index] >= thresholds_var_D['above3']:
                 contingency_table[column_var_I][6] += 1
 
-    # SPECIAL CASE 2: for some variables for set the category of phenomenon for the normal case the thresholds are exclude (<=, >=)
-    if env.config_run.settings['type_var_I'] in ['ONI1', 'ONI2', 'SST12', 'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34']:
+    # SPECIAL CASE 2: for some variables, for set the category of phenomenon for the normal case the thresholds are exclude (< >)
+    if env.var_I.TYPE_SERIES in ['ONI1', 'ONI2', 'SST12', 'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34']:
 
         if env.config_run.settings['class_category_analysis'] == 3:
             for index, var_I in enumerate(station.var_I.specific_values):
@@ -249,12 +250,13 @@ def get_specific_contingency_table(station, lag, month, day=None):
     ## Calculating contingency table with values in percent
     if env.config_run.settings['class_category_analysis'] == 3:
         tertile_size = station.size_time_series / 3.0
-        contingency_table_percent = matrix(contingency_table) * tertile_size
-
-        sum_per_column_percent = contingency_table_percent.sum(axis=1)
+        contingency_table_tertile_size = matrix(contingency_table) * tertile_size
+        sum_per_column_CTts = contingency_table_tertile_size.sum(axis=1)
 
     if env.config_run.settings['class_category_analysis'] == 7:
-        pass
+        tertile_size = station.size_time_series / 7.0 # TODO v0.6: check
+        contingency_table_tertile_size = matrix(contingency_table) * tertile_size
+        sum_per_column_CTts = contingency_table_tertile_size.sum(axis=1)
 
     # -------------------------------------------------------------------------
     # threshold_problem is global variable for detect problem with
@@ -264,64 +266,50 @@ def get_specific_contingency_table(station, lag, month, day=None):
     # table, jaziku continue but the graphics will not be created
     # because "nan"  character could not be calculate.
 
-    # if threshold by below of independent variable is wrong
-    if float(sum_per_column_percent[0]) == 0 and not env.globals_vars.threshold_problem[0]:
-        console.msg(
-            _(u"\n\n > WARNING: The thresholds selected '{0}' and '{1}'\n"
-              u"   are not suitable for compound analysis of\n"
-              u"   variable '{2}' with relation to '{3}' inside\n"
-              u"   category '{4}'. Therefore, the graphics\n"
-              u"   will not be created.")
-            .format(env.config_run.settings['threshold_below_var_I'], env.config_run.settings['threshold_above_var_I'],
-                station.var_D.type_series, station.var_I.type_series, env.config_run.settings['phen_below_label']), color='yellow')
-        env.globals_vars.threshold_problem[0] = True
-
-    # if threshold by below or above calculating normal phenomenon of independent variable is wrong
-    if float(sum_per_column_percent[1]) == 0 and not env.globals_vars.threshold_problem[1]:
-        console.msg(
-            _(u"\n\n > WARNING: The thresholds selected '{0}' and '{1}'\n"
-              u"   are not suitable for compound analysis of\n"
-              u"   variable '{2}' with relation to '{3}' inside\n"
-              u"   category '{4}'. Therefore, the graphics\n"
-              u"   will not be created.")
-            .format(env.config_run.settings['threshold_below_var_I'], env.config_run.settings['threshold_above_var_I'],
-                station.var_D.type_series, station.var_I.type_series, env.config_run.settings['phen_normal_label']), color='yellow')
-        env.globals_vars.threshold_problem[1] = True
-
-    # if threshold by above of independent variable is wrong
-    if float(sum_per_column_percent[2]) == 0 and not env.globals_vars.threshold_problem[2]:
-        console.msg(
-            _(u"\n\n > WARNING: The thresholds selected '{0}' and '{1}'\n"
-              u"   are not suitable for compound analysis of\n"
-              u"   variable '{2}' with relation to '{3}' inside\n"
-              u"   category '{4}'. Therefore, the graphics\n"
-              u"   will not be created.")
-            .format(env.config_run.settings['threshold_below_var_I'], env.config_run.settings['threshold_above_var_I'],
-                station.var_D.type_series, station.var_I.type_series, env.config_run.settings['phen_above_label']), color='yellow')
-        env.globals_vars.threshold_problem[2] = True
-
-    # Calculating contingency table percent
     if env.config_run.settings['class_category_analysis'] == 3:
-        contingency_table_percent \
-            = [(contingency_table_percent[0] * 100 / float(sum_per_column_percent[0])).tolist()[0],
-               (contingency_table_percent[1] * 100 / float(sum_per_column_percent[1])).tolist()[0],
-               (contingency_table_percent[2] * 100 / float(sum_per_column_percent[2])).tolist()[0]]
+        labels = ['below','normal','above']
     if env.config_run.settings['class_category_analysis'] == 7:
-        pass
+        labels = ['below3','below2','below1','normal','above1','above2','above3']
+
+    for index, label in enumerate(labels):
+        if float(sum_per_column_CTts[index]) == 0 and not env.globals_vars.threshold_problem[index]:
+            console.msg(
+                _(u"\n\n > WARNING: The thresholds defined for var I\n"
+                  u"   are not suitable for compound analysis of\n"
+                  u"   variable '{0}' with relation to '{1}' inside\n"
+                  u"   category '{2}'. Therefore, the graphics\n"
+                  u"   will not be created.")
+                .format(env.var_D.TYPE_SERIES, env.var_I.TYPE_SERIES, env.config_run.settings['var_I_category_labels'][label]), color='yellow')
+            env.globals_vars.threshold_problem[index] = True
+
+    # -------------------------------------------------------------------------
+    # Calculating contingency table percent
+    contingency_table_percent = []
+    for item_CT in range(env.config_run.settings['class_category_analysis']):
+        with console.redirectStdStreams():
+            contingency_table_percent.\
+                append((contingency_table_tertile_size[item_CT] * 100 / float(sum_per_column_CTts[item_CT])).tolist()[0])
 
     # Contingency table percent to print in result table and graphics (reduce the number of decimals)
-    contingency_table_percent_print = []
+    contingency_table_percent_formatted = []
     if env.config_run.settings['class_category_analysis'] == 3:
         for row in contingency_table_percent:
-            contingency_table_percent_print.append([format_out.number(row[0], 1),
-                                                    format_out.number(row[1], 1),
-                                                    format_out.number(row[2], 1)])
+            contingency_table_percent_formatted.append([format_out.number(row[0], 1),
+                                                        format_out.number(row[1], 1),
+                                                        format_out.number(row[2], 1)])
     if env.config_run.settings['class_category_analysis'] == 7:
-        pass
+        for row in contingency_table_percent:
+            contingency_table_percent_formatted.append([format_out.number(row[0], 1),
+                                                        format_out.number(row[1], 1),
+                                                        format_out.number(row[2], 1),
+                                                        format_out.number(row[3], 1),
+                                                        format_out.number(row[4], 1),
+                                                        format_out.number(row[5], 1),
+                                                        format_out.number(row[6], 1)])
 
     specific_contingency_table = {'in_values':contingency_table,
                                   'in_percentage':contingency_table_percent,
-                                  'in_percentage_formatted':contingency_table_percent,
+                                  'in_percentage_formatted':contingency_table_percent_formatted,
                                   'thresholds_var_D':thresholds_var_D.values(),
                                   'thresholds_var_I':thresholds_var_I.values()}
 
