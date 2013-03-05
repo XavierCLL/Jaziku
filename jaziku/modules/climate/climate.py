@@ -71,8 +71,8 @@ def process(station):
     possible categories of the independent variable.
     """
 
-    # restore threshold problem values
-    env.globals_vars.threshold_problem = [False, False, False]
+    # init threshold problem values
+    env.globals_vars.threshold_problem = [False]*env.config_run.settings['class_category_analysis']
 
     # -------------------------------------------------------------------------
     # inform some characteristic to process

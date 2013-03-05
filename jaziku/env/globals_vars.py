@@ -136,5 +136,5 @@ DATA_ANALYSIS_DIR = None
 # division by zero) in contingency tabla percent in result
 # table, jaziku continue but the graphics will not be created
 # because "nan"  character could not be calculate.
-threshold_problem = [False, False, False]
+threshold_problem = []
 
