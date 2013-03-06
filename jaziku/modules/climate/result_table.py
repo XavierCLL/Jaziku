@@ -29,23 +29,27 @@ from jaziku import env
 from jaziku.utils import format_out
 from jaziku.modules.climate import statistic_tests
 from jaziku.modules.climate.lags import get_lag_values
+from jaziku.utils.matrix import column
 
 
 def composite_analysis(station):
-    """
-    Calculate and print the result table for composite analysis in csv
+    """Calculate and print the result table for composite analysis in csv
     file, this file contain several variables of previous calculations and
     different tests.
+
+    :param station: station for process
+    :type station: Station
     """
 
     pearson_list = {}
     is_sig_risk_analysis = {}
 
     def main_process():
+
         # test:
         # is significance risk analysis?
 
-        is_sig_risk_analysis_list = []
+        is_sig_risk_analysis = []
 
         contingency_table_matrix = matrix(specific_contingency_table['in_values'])
         sum_per_row = contingency_table_matrix.sum(axis=0).tolist()[0]
@@ -53,6 +57,7 @@ def composite_analysis(station):
         sum_contingency_table = contingency_table_matrix.sum()
 
         for c, column_table in enumerate(specific_contingency_table['in_values']):
+            column_risk_analysis = []
             for r, Xi in enumerate(column_table):
                 M = sum_per_column[c]
                 n = sum_per_row[r]
@@ -60,9 +65,11 @@ def composite_analysis(station):
                 X = stats.hypergeom.cdf(Xi, N, M, n)
                 Y = stats.hypergeom.sf(Xi, N, M, n, loc=1)
                 if X <= 0.1 or Y <= 0.1:
-                    is_sig_risk_analysis_list.append(_('yes'))
+                    column_risk_analysis.append(_('yes'))
                 else:
-                    is_sig_risk_analysis_list.append(_('no'))
+                    column_risk_analysis.append(_('no'))
+
+            is_sig_risk_analysis.append(column_risk_analysis)
 
         if env.globals_vars.STATE_OF_DATA in [1, 3]:
             # get values of var D and I from this lag and month
@@ -105,37 +112,68 @@ def composite_analysis(station):
             is_significant_singr = _('no')
 
         #===============================================================================
-        # result table (csv file), add one line of this trimester and lag
+        # result table (csv file) - main contain
 
-        # add new line in csv_file_write
-        csv_result_table.writerow([
-            var_D_text, var_I_text,
-            format_out.number(pearson), format_out.number(singr), is_significant_singr,
-            ' | '.join([str(item) for item in specific_contingency_table['thresholds_var_D']]),
-            ' | '.join([str(item) for item in specific_contingency_table['thresholds_var_I']]),
-            specific_contingency_table['in_values'][0][0], specific_contingency_table['in_values'][0][1],
-            specific_contingency_table['in_values'][0][2], specific_contingency_table['in_values'][1][0],
-            specific_contingency_table['in_values'][1][1], specific_contingency_table['in_values'][1][2],
-            specific_contingency_table['in_values'][2][0], specific_contingency_table['in_values'][2][1],
-            specific_contingency_table['in_values'][2][2],
-            specific_contingency_table['in_percentage_formatted'][0][0],
-            specific_contingency_table['in_percentage_formatted'][0][1],
-            specific_contingency_table['in_percentage_formatted'][0][2],
-            specific_contingency_table['in_percentage_formatted'][1][0],
-            specific_contingency_table['in_percentage_formatted'][1][1],
-            specific_contingency_table['in_percentage_formatted'][1][2],
-            specific_contingency_table['in_percentage_formatted'][2][0],
-            specific_contingency_table['in_percentage_formatted'][2][1],
-            specific_contingency_table['in_percentage_formatted'][2][2],
-            is_sig_risk_analysis_list[0], is_sig_risk_analysis_list[1],
-            is_sig_risk_analysis_list[2], is_sig_risk_analysis_list[3],
-            is_sig_risk_analysis_list[4], is_sig_risk_analysis_list[5],
-            is_sig_risk_analysis_list[6], is_sig_risk_analysis_list[7],
-            is_sig_risk_analysis_list[8],
-            format_out.number(test_stat), format_out.number(crit_value),
-            is_significant_CT, format_out.number(corr_CT, 4)])
+        if env.config_run.settings['class_category_analysis'] == 3:
+            var_D_labels_for_CT = [_('var D below'), _('var D normal'), _('var D above')]
+            # first line for value
+            csv_result_table.writerow(
+                [var_D_text, var_I_text, format_out.number(pearson),
+                 format_out.number(singr), is_significant_singr] + \
+                [format_out.number(item) for item in specific_contingency_table['thresholds_var_D']] + \
+                [format_out.number(item) for item in specific_contingency_table['thresholds_var_I']] + \
+                ([''] + [
+                env.config_run.settings['var_I_category_labels']['below'],
+                env.config_run.settings['var_I_category_labels']['normal'],
+                env.config_run.settings['var_I_category_labels']['above']])*3 + \
+                [format_out.number(test_stat), format_out.number(crit_value),
+                 is_significant_CT, format_out.number(corr_CT)])
+            # second/third and fourth line for value
+            for index, label in enumerate(var_D_labels_for_CT):
+                csv_result_table.writerow(
+                    ['']*9 + \
+                    [label] + \
+                    column(specific_contingency_table['in_values'], index) + \
+                    [label] + \
+                    column(specific_contingency_table['in_percentage_formatted'], index) + \
+                    [label] + \
+                    column(is_sig_risk_analysis, index))
+            # line separator
+            csv_result_table.writerow([])
 
-        return pearson, is_sig_risk_analysis_list
+        if env.config_run.settings['class_category_analysis'] == 7:
+            var_D_labels_for_CT = [_('var D strong below'), _('var D moderate below'), _('var D weak below'),
+                                   _('var D weak above'), _('var D moderate above'), _('var D strong above')]
+            # first line for value
+            csv_result_table.writerow(
+                [var_D_text, var_I_text, format_out.number(pearson),
+                 format_out.number(singr), is_significant_singr] + \
+                [format_out.number(item) for item in specific_contingency_table['thresholds_var_D']] + \
+                [format_out.number(item) for item in specific_contingency_table['thresholds_var_I']] + \
+                ([''] + [
+                env.config_run.settings['var_I_category_labels']['below3'],
+                env.config_run.settings['var_I_category_labels']['below2'],
+                env.config_run.settings['var_I_category_labels']['below1'],
+                env.config_run.settings['var_I_category_labels']['normal'],
+                env.config_run.settings['var_I_category_labels']['above1'],
+                env.config_run.settings['var_I_category_labels']['above2'],
+                env.config_run.settings['var_I_category_labels']['above3']])*3 + \
+                [format_out.number(test_stat), format_out.number(crit_value),
+                 is_significant_CT, format_out.number(corr_CT)])
+            # second/third and fourth line for value
+            for index, label in enumerate(var_D_labels_for_CT):
+                csv_result_table.writerow(
+                    ['']*17 + \
+                    [label] + \
+                    column(specific_contingency_table['in_values'], index) + \
+                    [label] + \
+                    column(specific_contingency_table['in_percentage_formatted'], index) + \
+                    [label] + \
+                    column(is_sig_risk_analysis, index))
+            # line separator
+            csv_result_table.writerow([])
+
+        return pearson, is_sig_risk_analysis
 
     for lag in env.config_run.settings['lags']:
 
@@ -151,34 +189,38 @@ def composite_analysis(station):
         open_file = open(csv_name, 'w')
         csv_result_table = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
-        # print headers in result table
-        csv_result_table.writerow([
-            _('var_D'), _('var_I'), _('Pearson'), _('Sign Pearson'),
-            _('Is sign \'Sign Pearson\'?'), _('thresholds var D'),
-            _('thresholds var I'), _('Contingency Table (CT)'),
-            '', '', '', '', '', '', '', '', _('Contingency Table in %'),
-            '', '', '', '', '', '', '', '', _('is sig risk analysis?'),
-            '', '', '', '', '', '', '', '', _('Test Stat - Chi2'),
-            _('Crit Value - Chi2'), _('Is sig CT?'), _('Correl CT')])
+        #===============================================================================
+        # result table (csv file) - headers
+        if env.config_run.settings['class_category_analysis'] == 3:
+            # print first line of header
+            csv_result_table.writerow(
+                [_('VAR_D'), _('VAR_I'), _('PEARSON'), _('SIGN. PEARSON'),
+                 _("IS SIGN 'SIGN PEARSON'?"), _('THRESHOLDS VAR D')] + \
+                [''] + [_('THRESHOLDS VAR I')] + [''] + \
+                [_('CONTINGENCY TABLE (CT)')] + ['']*3 + \
+                [_('CONTINGENCY TABLE IN %')] + ['']*3 + \
+                [_('IS SIGN RISK ANALYSIS?')] + ['']*3 + \
+                [_('TEST STAT - CHI2'), _('CRIT VALUE - Chi2'), _('IS SIGN CT?'), _('CORREL CT')])
+            # print second line of header
+            csv_result_table.writerow(
+                ['']*5 + \
+                [_('below'),_('above')]*2)
 
-        # print division line between lags
-        csv_result_table.writerow([
-            '', '', '', '', '', '', '', '', '',
-            env.config_run.settings['phen_below_label'], '', '',
-            env.config_run.settings['phen_normal_label'], '', '',
-            env.config_run.settings['phen_above_label'], '', '',
-            env.config_run.settings['phen_below_label'], '', '',
-            env.config_run.settings['phen_normal_label'], '', '',
-            env.config_run.settings['phen_above_label']])
-
-        csv_result_table.writerow([
-            '', '', '', '', '', '', '', '', '',
-            _('var D below'), _('var D normal'), _('var D above'),
-            _('var D below'), _('var D normal'), _('var D above'),
-            _('var D below'), _('var D normal'), _('var D above'),
-            _('var D below'), _('var D normal'), _('var D above'),
-            _('var D below'), _('var D normal'), _('var D above'),
-            _('var D below'), _('var D normal'), _('var D above')])
+        if env.config_run.settings['class_category_analysis'] == 7:
+            # print first line of header
+            csv_result_table.writerow(
+                [_('VAR_D'), _('VAR_I'), _('PEARSON'), _('SIGN. PEARSON'),
+                 _("IS SIGN 'SIGN PEARSON'?"), _('THRESHOLDS VAR D')] + \
+                ['']*5 + [_('THRESHOLDS VAR I')] + ['']*5 + \
+                [_('CONTINGENCY TABLE (CT)')] + ['']*7 + \
+                [_('CONTINGENCY TABLE IN %')] + ['']*7 + \
+                [_('IS SIGN RISK ANALYSIS?')] + ['']*7 + \
+                [_('TEST STAT - CHI2'), _('CRIT VALUE - Chi2'), _('IS SIGN CT?'), _('CORREL CT')])
+            # print second line of header
+            csv_result_table.writerow(
+                ['']*5 + \
+                [_('strong below'), _('moderate below'), _('weak below'),
+                 _('weak above'), _('moderate above'), _('strong above')]*2)
 
         pearson_list_month = []
         is_sig_risk_analysis_month = []
@@ -189,7 +231,7 @@ def composite_analysis(station):
             if env.globals_vars.STATE_OF_DATA in [1, 3]:
                 # get the contingency tables and thresholds
 
-                specific_contingency_table = station.contingency_tables[lag][month]
+                specific_contingency_table = station.contingency_tables[lag][month-1]
 
                 # for print text date in result table
                 var_D_text = format_out.trimester_in_initials(month - 1)
@@ -206,7 +248,7 @@ def composite_analysis(station):
                 for day in station.range_analysis_interval:
                     # get the contingency tables and thresholds
 
-                    specific_contingency_table = station.contingency_tables[lag][month][day]
+                    specific_contingency_table = station.contingency_tables[lag][month-1][day]
 
                     # this is for calculate date for print in result table
                     # this depend on range analysis interval and lags (var_I)
