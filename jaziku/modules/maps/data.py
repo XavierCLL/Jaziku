@@ -120,24 +120,23 @@ def climate_data_for_maps(station):
 
             env.globals_vars.maps_files_climate[env.config_run.settings['analysis_interval']][lag] = month_list
 
-    def calculate_index():
-        # select index
-        if var_below > var_normal:
-            if var_below > var_above:
-                return -var_below
-            elif var_above > var_normal:
-                return var_above
-            elif var_below == var_normal:
+    def calculate_index(category, values):
+
+        # below-normal-above
+        if category == 3:
+            # select index
+            if (values['N'] >= values['B'] and values['N'] >= values['A']) or values['B'] == values['A']:
                 return 0
-            else:
-                return var_below
-        else:
-            if var_normal == var_above:
-                return 0
-            elif var_normal > var_above:
-                return 0
-            else:
-                return var_above
+            elif values['B'] > values['A']:
+                return -values['B']
+            elif values['A'] > values['B']:
+                return values['A']
+
+        if category == 7:
+            B = max([values['B3'], values['B2'], values['B1']])
+            A = max([values['A3'], values['A2'], values['A1']])
+            new_values = {'B':B, 'N':values['N'], 'A':A}
+            return calculate_index(3, new_values)
 
     for lag in env.config_run.settings['lags']:
 
@@ -146,11 +145,21 @@ def climate_data_for_maps(station):
 
             if env.globals_vars.STATE_OF_DATA in [1, 3]:
                 for phenomenon in [0, 1, 2]:
-                    var_below = station.contingencies_tables_percent[lag][month - 1][phenomenon][0]
-                    var_normal = station.contingencies_tables_percent[lag][month - 1][phenomenon][1]
-                    var_above = station.contingencies_tables_percent[lag][month - 1][phenomenon][2]
+                    if env.config_run.settings['class_category_analysis'] == 3:
+                        values_CT = {'B': station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][0],
+                                     'N': station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][1],
+                                     'A': station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][2]}
+                        p_index = calculate_index(3, values_CT)
 
-                    p_index = calculate_index()
+                    if env.config_run.settings['class_category_analysis'] == 7:
+                        values_CT = {'B3': station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][0],
+                                     'B2': station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][1],
+                                     'B1': station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][2],
+                                     'N':  station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][3],
+                                     'A1': station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][4],
+                                     'A2': station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][5],
+                                     'A3': station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][6]}
+                        p_index = calculate_index(7, values_CT)
 
                     # write new row in file
                     csv_name = env.globals_vars.maps_files_climate[env.config_run.settings['analysis_interval']][lag][month - 1][phenomenon]
@@ -169,11 +178,21 @@ def climate_data_for_maps(station):
             if env.globals_vars.STATE_OF_DATA in [2, 4]:
                 for day in range(len(station.range_analysis_interval)):
                     for phenomenon in [0, 1, 2]:
-                        var_below = station.contingencies_tables_percent[lag][month - 1][day][phenomenon][0]
-                        var_normal = station.contingencies_tables_percent[lag][month - 1][day][phenomenon][1]
-                        var_above = station.contingencies_tables_percent[lag][month - 1][day][phenomenon][2]
+                        if env.config_run.settings['class_category_analysis'] == 3:
+                            values_CT = {'B': station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][0],
+                                         'N': station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][1],
+                                         'A': station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][2]}
+                            p_index = calculate_index(3, values_CT)
 
-                        p_index = calculate_index()
+                        if env.config_run.settings['class_category_analysis'] == 7:
+                            values_CT = {'B3': station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][0],
+                                         'B2': station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][1],
+                                         'B1': station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][2],
+                                         'N':  station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][3],
+                                         'A1': station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][4],
+                                         'A2': station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][5],
+                                         'A3': station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][6]}
+                            p_index = calculate_index(7, values_CT)
 
                         # write new row in file
                         csv_name = env.globals_vars.maps_files_climate[env.config_run.settings['analysis_interval']][lag][month - 1][day][phenomenon]
