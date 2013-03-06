@@ -34,6 +34,7 @@ news
 - [code] Refactoring limits and null values validations in core.input.validation.py
 - [code] Refactoring contingency_tables functions
 - [code] Refactoring result table functions and csv results
+- [code] Adjust and fixes the maps data for climate for 3 and 7 categories
 
 fixes
 +++++
