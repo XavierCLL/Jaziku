@@ -33,6 +33,7 @@ news
 - [code] Refactoring variables for var_D and var_I from globals_vars
 - [code] Refactoring limits and null values validations in core.input.validation.py
 - [code] Refactoring contingency_tables functions
+- [code] Refactoring result table functions and csv results
 
 fixes
 +++++
