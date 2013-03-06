@@ -115,7 +115,6 @@ def composite_analysis(station):
         # result table (csv file) - main contain
 
         if env.config_run.settings['class_category_analysis'] == 3:
-            var_D_labels_for_CT = [_('var D below'), _('var D normal'), _('var D above')]
             # first line for value
             csv_result_table.writerow(
                 [var_D_text, var_I_text, format_out.number(pearson),
@@ -129,7 +128,7 @@ def composite_analysis(station):
                 [format_out.number(test_stat), format_out.number(crit_value),
                  is_significant_CT, format_out.number(corr_CT)])
             # second/third and fourth line for value
-            for index, label in enumerate(var_D_labels_for_CT):
+            for index, label in enumerate(env.var_D.get_generic_labels()):
                 csv_result_table.writerow(
                     ['']*9 + \
                     [label] + \
@@ -142,8 +141,6 @@ def composite_analysis(station):
             csv_result_table.writerow([])
 
         if env.config_run.settings['class_category_analysis'] == 7:
-            var_D_labels_for_CT = [_('var D strong below'), _('var D moderate below'), _('var D weak below'),
-                                   _('var D weak above'), _('var D moderate above'), _('var D strong above')]
             # first line for value
             csv_result_table.writerow(
                 [var_D_text, var_I_text, format_out.number(pearson),
@@ -161,7 +158,7 @@ def composite_analysis(station):
                 [format_out.number(test_stat), format_out.number(crit_value),
                  is_significant_CT, format_out.number(corr_CT)])
             # second/third and fourth line for value
-            for index, label in enumerate(var_D_labels_for_CT):
+            for index, label in enumerate(env.var_D.get_generic_labels()):
                 csv_result_table.writerow(
                     ['']*17 + \
                     [label] + \

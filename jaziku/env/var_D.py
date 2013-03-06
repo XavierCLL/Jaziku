@@ -18,6 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
+from jaziku.env import config_run
 
 #==============================================================================
 # types and units for internal VAR D
@@ -139,3 +140,20 @@ def set_FREQUENCY_DATA(new_freq_data, check=True):
                                "Jaziku requires that all stations for var D\n"
                                "have identical frequency data.")
             .format(new_freq_data, TYPE_SERIES, FREQUENCY_DATA))
+
+def get_generic_labels(upper=False):
+    # generic labels for var D
+    LABELS_3_CATEGORIES = [_('var D below'), _('var D normal'), _('var D above')]
+    LABELS_7_CATEGORIES = [_('var D strong below'), _('var D moderate below'), _('var D weak below'), _('var D normal'),
+                           _('var D weak above'), _('var D moderate above'), _('var D strong above')]
+
+    if config_run.settings['class_category_analysis'] == 3:
+        if upper:
+            return [label.upper() for label in LABELS_3_CATEGORIES]
+        else:
+            return LABELS_3_CATEGORIES
+    if config_run.settings['class_category_analysis'] == 7:
+        if upper:
+            return [label.upper() for label in LABELS_7_CATEGORIES]
+        else:
+            return LABELS_7_CATEGORIES
