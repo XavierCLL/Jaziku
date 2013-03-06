@@ -30,12 +30,7 @@ from Image import open as img_open
 
 from jaziku import env
 from jaziku.utils import  watermarking, format_out
-
-
-def column(matrix, i):
-    """Return column i from matrix"""
-
-    return [row[i] for row in matrix]
+from jaziku.utils.matrix import column
 
 
 def climate_graphs(station):
