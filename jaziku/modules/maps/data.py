@@ -35,9 +35,7 @@ def climate_data_for_maps(station):
     # create maps plots files for climate process, only once
     if env.globals_vars.maps_files_climate[env.config_run.settings['analysis_interval']] is None:
         # create and define csv output file for maps climate
-        phenomenon = {0: env.config_run.settings['phen_below_label'],
-                      1: env.config_run.settings['phen_normal_label'],
-                      2: env.config_run.settings['phen_above_label']}
+
         env.globals_vars.maps_files_climate[env.config_run.settings['analysis_interval']] = {}  # [lag][month][phenomenon]
 
         # define maps data files and directories
@@ -58,25 +56,25 @@ def climate_data_for_maps(station):
 
                 if env.globals_vars.STATE_OF_DATA in [1, 3]:
                     categories_list = []
-                    for category in phenomenon:
-                        maps_data_phenom = os.path.join(maps_data_lag, phenomenon[category])
+                    for category_label in env.config_run.settings['var_I_category_labels'].values():
+                        maps_data_for_category_label = os.path.join(maps_data_lag, category_label)
 
-                        if not os.path.isdir(maps_data_phenom):
-                            os.makedirs(maps_data_phenom)
+                        if not os.path.isdir(maps_data_for_category_label):
+                            os.makedirs(maps_data_for_category_label)
 
                         csv_name \
-                            = os.path.join(maps_data_phenom, _(u'Map_Data_lag_{0}_trim_{1}_{2}.csv')
-                                          .format(lag, month, phenomenon[category]))
+                            = os.path.join(maps_data_for_category_label, _(u'Map_Data_lag_{0}_trim_{1}_{2}.csv')
+                                          .format(lag, month, category_label))
 
                         if os.path.isfile(csv_name):
                             os.remove(csv_name)
 
-                        # write new row in file
+                        # write header
                         open_file = open(csv_name, 'w')
                         csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
-                        csv_file.writerow([_('code'), _('lat'), _('lon'), _('pearson'),
-                                           _('var_below'), _('var_normal'), _('var_above'),
-                                           _('p_index'), _('sum')])
+                        csv_file.writerow([_('CODE'), _('LAT'), _('LON'), _('PEARSON')] + \
+                                          env.var_D.get_generic_labels(upper=True) + \
+                                          [_('INDEX'), _('SUM')])
                         open_file.close()
                         del csv_file
 
@@ -88,27 +86,27 @@ def climate_data_for_maps(station):
                     for day in station.range_analysis_interval:
                         categories_list = []
 
-                        for category in phenomenon:
-                            maps_data_phenom = os.path.join(maps_data_lag, phenomenon[category])
+                        for category_label in env.config_run.settings['var_I_category_labels'].values():
+                            maps_data_for_category_label = os.path.join(maps_data_lag, category_label)
 
-                            if not os.path.isdir(maps_data_phenom):
-                                os.makedirs(maps_data_phenom)
+                            if not os.path.isdir(maps_data_for_category_label):
+                                os.makedirs(maps_data_for_category_label)
 
                             csv_name \
-                                = os.path.join(maps_data_phenom, _(u'Map_Data_lag_{0}_{1}_{2}.csv')
+                                = os.path.join(maps_data_for_category_label, _(u'Map_Data_lag_{0}_{1}_{2}.csv')
                                     .format(lag,
                                             format_out.month_in_initials(month - 1) + "_" + str(day),
-                                            phenomenon[category]))
+                                            category_label))
 
                             if os.path.isfile(csv_name):
                                 os.remove(csv_name)
 
-                            # write new row in file
+                            # write header
                             open_file = open(csv_name, 'w')
                             csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
-                            csv_file.writerow([_('code'), _('lat'), _('lon'), _('pearson'),
-                                               _('var_below'), _('var_normal'), _('var_above'),
-                                               _('p_index'), _('sum')])
+                            csv_file.writerow([_('CODE'), _('LAT'), _('LON'), _('PEARSON')] + \
+                                              env.var_D.get_generic_labels(upper=True) + \
+                                              [_('INDEX'), _('SUM')])
                             open_file.close()
                             del csv_file
 
@@ -131,6 +129,7 @@ def climate_data_for_maps(station):
                 return -values['B']
             elif values['A'] > values['B']:
                 return values['A']
+            return float('NaN')
 
         if category == 7:
             B = max([values['B3'], values['B2'], values['B1']])
@@ -144,67 +143,93 @@ def climate_data_for_maps(station):
         for month in range(1, 13):
 
             if env.globals_vars.STATE_OF_DATA in [1, 3]:
-                for phenomenon in [0, 1, 2]:
+                for category_var_I in range(env.config_run.settings['class_category_analysis']):
                     if env.config_run.settings['class_category_analysis'] == 3:
-                        values_CT = {'B': station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][0],
-                                     'N': station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][1],
-                                     'A': station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][2]}
+                        values_CT = {'B': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][0],
+                                     'N': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][1],
+                                     'A': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][2]}
                         p_index = calculate_index(3, values_CT)
 
                     if env.config_run.settings['class_category_analysis'] == 7:
-                        values_CT = {'B3': station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][0],
-                                     'B2': station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][1],
-                                     'B1': station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][2],
-                                     'N':  station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][3],
-                                     'A1': station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][4],
-                                     'A2': station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][5],
-                                     'A3': station.contingency_tables[lag][month - 1]['in_percentage'][phenomenon][6]}
+                        values_CT = {'B3': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][0],
+                                     'B2': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][1],
+                                     'B1': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][2],
+                                     'N':  station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][3],
+                                     'A1': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][4],
+                                     'A2': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][5],
+                                     'A3': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][6]}
                         p_index = calculate_index(7, values_CT)
 
                     # write new row in file
-                    csv_name = env.globals_vars.maps_files_climate[env.config_run.settings['analysis_interval']][lag][month - 1][phenomenon]
+                    csv_name = env.globals_vars.maps_files_climate[env.config_run.settings['analysis_interval']][lag][month - 1][category_var_I]
                     open_file = open(csv_name, 'a')
                     csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
-                    csv_file.writerow([station.code, format_out.number(station.lat), format_out.number(station.lon),
-                                       format_out.number(station.pearson_list[lag][month - 1]),
-                                       format_out.number(var_below), format_out.number(var_normal),
-                                       format_out.number(var_above), format_out.number(p_index),
-                                       format_out.number(sum([float(var_below),
-                                                              float(var_normal),
-                                                              float(var_above)]))])
+                    if env.config_run.settings['class_category_analysis'] == 3:
+                        csv_file.writerow([station.code, format_out.number(station.lat), format_out.number(station.lon),
+                                           format_out.number(station.pearson_list[lag][month - 1]),
+                                           format_out.number(values_CT['B']),
+                                           format_out.number(values_CT['N']),
+                                           format_out.number(values_CT['A']),
+                                           format_out.number(p_index),
+                                           format_out.number(sum([float(value_CT) for value_CT in values_CT.values()]))])
+                    if env.config_run.settings['class_category_analysis'] == 7:
+                        csv_file.writerow([station.code, format_out.number(station.lat), format_out.number(station.lon),
+                                           format_out.number(station.pearson_list[lag][month - 1]),
+                                           format_out.number(values_CT['B3']),
+                                           format_out.number(values_CT['B2']),
+                                           format_out.number(values_CT['B1']),
+                                           format_out.number(values_CT['N']),
+                                           format_out.number(values_CT['A1']),
+                                           format_out.number(values_CT['A2']),
+                                           format_out.number(values_CT['A3']),
+                                           format_out.number(p_index),
+                                           format_out.number(sum([float(value_CT) for value_CT in values_CT.values()]))])
                     open_file.close()
                     del csv_file
 
             if env.globals_vars.STATE_OF_DATA in [2, 4]:
                 for day in range(len(station.range_analysis_interval)):
-                    for phenomenon in [0, 1, 2]:
+                    for category_var_I in range(env.config_run.settings['class_category_analysis']):
                         if env.config_run.settings['class_category_analysis'] == 3:
-                            values_CT = {'B': station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][0],
-                                         'N': station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][1],
-                                         'A': station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][2]}
+                            values_CT = {'B': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][0],
+                                         'N': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][1],
+                                         'A': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][2]}
                             p_index = calculate_index(3, values_CT)
 
                         if env.config_run.settings['class_category_analysis'] == 7:
-                            values_CT = {'B3': station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][0],
-                                         'B2': station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][1],
-                                         'B1': station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][2],
-                                         'N':  station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][3],
-                                         'A1': station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][4],
-                                         'A2': station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][5],
-                                         'A3': station.contingency_tables[lag][month - 1][day]['in_percentage'][phenomenon][6]}
+                            values_CT = {'B3': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][0],
+                                         'B2': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][1],
+                                         'B1': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][2],
+                                         'N':  station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][3],
+                                         'A1': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][4],
+                                         'A2': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][5],
+                                         'A3': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][6]}
                             p_index = calculate_index(7, values_CT)
 
                         # write new row in file
-                        csv_name = env.globals_vars.maps_files_climate[env.config_run.settings['analysis_interval']][lag][month - 1][day][phenomenon]
+                        csv_name = env.globals_vars.maps_files_climate[env.config_run.settings['analysis_interval']][lag][month - 1][day][category_var_I]
                         open_file = open(csv_name, 'a')
                         csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
-                        csv_file.writerow([station.code, format_out.number(station.lat), format_out.number(station.lon),
-                                           format_out.number(station.pearson_list[lag][month - 1][day]),
-                                           format_out.number(var_below), format_out.number(var_normal),
-                                           format_out.number(var_above), format_out.number(p_index),
-                                           format_out.number(sum([float(var_below),
-                                                                  float(var_normal),
-                                                                  float(var_above)]))])
+                        if env.config_run.settings['class_category_analysis'] == 3:
+                            csv_file.writerow([station.code, format_out.number(station.lat), format_out.number(station.lon),
+                                               format_out.number(station.pearson_list[lag][month - 1][day]),
+                                               format_out.number(values_CT['B']),
+                                               format_out.number(values_CT['N']),
+                                               format_out.number(values_CT['A']),
+                                               format_out.number(p_index),
+                                               format_out.number(sum([float(value_CT) for value_CT in values_CT.values()]))])
+                        if env.config_run.settings['class_category_analysis'] == 7:
+                            csv_file.writerow([station.code, format_out.number(station.lat), format_out.number(station.lon),
+                                               format_out.number(station.pearson_list[lag][month - 1][day]),
+                                               format_out.number(values_CT['B3']),
+                                               format_out.number(values_CT['B2']),
+                                               format_out.number(values_CT['B1']),
+                                               format_out.number(values_CT['N']),
+                                               format_out.number(values_CT['A1']),
+                                               format_out.number(values_CT['A2']),
+                                               format_out.number(values_CT['A3']),
+                                               format_out.number(p_index),
+                                               format_out.number(sum([float(value_CT) for value_CT in values_CT.values()]))])
                         open_file.close()
                         del csv_file
 
