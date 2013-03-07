@@ -210,7 +210,8 @@ def configuration_run():
     else:
         if not os.path.isfile(env.config_run.settings["path_to_file_var_I"]):
             console.msg_error_configuration('path_to_file_var_I',
-                _("Can't open file '{0}' for var I, \nplease check filename and check that its path is relative (to runfile) or\n"
+                _("Can't open file '{0}' for var I,\n"
+                  "please check filename and check that its path is relative (to runfile) or\n"
                   "absolute. If you want run var I with internals files\n"
                   "of jaziku you need set 'PATH TO FILE VAR I' as 'internal'").format(
                     env.config_run.settings["path_to_file_var_I"]))

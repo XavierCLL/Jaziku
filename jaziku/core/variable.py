@@ -69,8 +69,9 @@ class Variable(object):
             # and notify if Jaziku are using the independent variable inside
             # located in plugins/var_I/
             if file == "internal":
-                self.file_name = env.var_I.INTERNAL_FILES[self.type_series]
-                self.file_path = os.path.join(env.globals_vars.JAZIKU_DIR, 'data', 'var_I', self.file_name)
+                if self.type_series in env.var_I.INTERNAL_FILES:
+                    self.file_name = env.var_I.INTERNAL_FILES[self.type_series]
+                    self.file_path = os.path.join(env.globals_vars.JAZIKU_DIR, 'data', 'var_I', self.file_name)
             else:
                 self.file_name = os.path.basename(file)
                 # if path to file is relative convert to absolute
