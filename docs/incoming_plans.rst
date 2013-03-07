@@ -21,6 +21,7 @@ Incoming Plans / TODO
 - Add month and two-months to analysis resolution
 - Include MEI index for bimonthly analysis
 - Standardized variables graphic option (Dependent variable transformation to the same format of Independent Variable)
+- Migrate/make manual, documentation and main page of Jaziku to sphinx using reStructuredTex http://sphinx-doc.org/
 
 0.8 (**2013-05-xx**)
 --------------------
