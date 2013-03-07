@@ -11,6 +11,8 @@ Changelog
 news
 ++++
 
+- Updated thresholds for var I for 7 categories
+- have the possibility of define internal thresholds for data daily o monthly
 - Fixes input, check and format for 'forecast_date' option, now new input
   format: month or month;day in runfile.
 - Make function that adjust data of all variables if is needed and check
