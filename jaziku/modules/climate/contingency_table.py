@@ -34,7 +34,7 @@ def get_label_of_var_I_category(value, station):
 
     For some variables, for set the category of phenomenon for the normal case the thresholds
     are exclude (< >):
-    for ('ONI1', 'ONI2', 'W850w', 'SST4', 'SST12', 'ASST3', 'ASST34', 'ASST4', 'ASST12'):
+    for ('ONI1', 'ONI2', 'W850w', 'SST4', 'SST12'):
         the value is normal when { threshold below* < value < threshold above* }
     else:
         the value is normal when { threshold below* <= value <= threshold above* }
@@ -53,33 +53,8 @@ def get_label_of_var_I_category(value, station):
 
     # categorize the value of var I and get the label_of_var_I_category based in the label phenomenon
 
-    # SPECIAL CASE 2: for some variables, for set the category of phenomenon for the normal case the thresholds are exclude (< >)
-    if env.var_I.TYPE_SERIES in ['ONI1', 'ONI2', 'SST12', 'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34']:
-
-        if env.config_run.settings['class_category_analysis'] == 3:
-            if value <= thresholds_var_I['below']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['below']
-            elif value >= thresholds_var_I['above']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['above']
-            else:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['normal']
-
-        if env.config_run.settings['class_category_analysis'] == 7:
-            if value <= thresholds_var_I['below3']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['below3']
-            elif thresholds_var_I['below3'] < value <= thresholds_var_I['below2']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['below2']
-            elif thresholds_var_I['below2'] < value <= thresholds_var_I['below1']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['below1']
-            elif thresholds_var_I['below1'] < value < thresholds_var_I['above1']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['normal']
-            elif thresholds_var_I['above1'] <= value < thresholds_var_I['above2']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['above1']
-            elif thresholds_var_I['above2'] <= value < thresholds_var_I['above3']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['above2']
-            elif value >= thresholds_var_I['above3']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['above3']
-    else:
+    if env.var_I.is_normal_inclusive():
+        # default case
 
         if env.config_run.settings['class_category_analysis'] == 3:
             if value < thresholds_var_I['below']:
@@ -104,7 +79,33 @@ def get_label_of_var_I_category(value, station):
                 label_of_var_I_category = env.config_run.settings['var_I_category_labels']['above2']
             elif value > thresholds_var_I['above3']:
                 label_of_var_I_category = env.config_run.settings['var_I_category_labels']['above3']
+    else:
+        # SPECIAL CASE 2: for some variables, for set the category of phenomenon for the normal case the thresholds are exclude (< >)
+        # please see env/var_I file
 
+        if env.config_run.settings['class_category_analysis'] == 3:
+            if value <= thresholds_var_I['below']:
+                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['below']
+            elif value >= thresholds_var_I['above']:
+                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['above']
+            else:
+                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['normal']
+
+        if env.config_run.settings['class_category_analysis'] == 7:
+            if value <= thresholds_var_I['below3']:
+                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['below3']
+            elif thresholds_var_I['below3'] < value <= thresholds_var_I['below2']:
+                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['below2']
+            elif thresholds_var_I['below2'] < value <= thresholds_var_I['below1']:
+                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['below1']
+            elif thresholds_var_I['below1'] < value < thresholds_var_I['above1']:
+                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['normal']
+            elif thresholds_var_I['above1'] <= value < thresholds_var_I['above2']:
+                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['above1']
+            elif thresholds_var_I['above2'] <= value < thresholds_var_I['above3']:
+                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['above2']
+            elif value >= thresholds_var_I['above3']:
+                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['above3']
 
     return label_of_var_I_category
 
@@ -189,36 +190,9 @@ def get_specific_contingency_table(station, lag, month, day=None):
             if station.var_D.specific_values[index] >= thresholds_var_D['above3']:
                 contingency_table[column_var_I][6] += 1
 
-    # SPECIAL CASE 2: for some variables, for set the category of phenomenon for the normal case the thresholds are exclude (< >)
-    if env.var_I.TYPE_SERIES in ['ONI1', 'ONI2', 'SST12', 'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34']:
 
-        if env.config_run.settings['class_category_analysis'] == 3:
-            for index, var_I in enumerate(station.var_I.specific_values):
-                if var_I <= thresholds_var_I['below']:
-                    __matrix_row_var_D(0)
-                if thresholds_var_I['below'] < var_I < thresholds_var_I['above']:
-                    __matrix_row_var_D(1)
-                if var_I >= thresholds_var_I['above']:
-                    __matrix_row_var_D(2)
-
-        if env.config_run.settings['class_category_analysis'] == 7:
-            for index, var_I in enumerate(station.var_I.specific_values):
-                if var_I <= thresholds_var_I['below3']:
-                    __matrix_row_var_D(0)
-                if thresholds_var_I['below3'] < var_I <= thresholds_var_I['below2']:
-                    __matrix_row_var_D(1)
-                if thresholds_var_I['below2'] < var_I <= thresholds_var_I['below1']:
-                    __matrix_row_var_D(2)
-                if thresholds_var_I['below1'] < var_I < thresholds_var_I['above1']:
-                    __matrix_row_var_D(3)
-                if thresholds_var_I['above1'] <= var_I < thresholds_var_I['above2']:
-                    __matrix_row_var_D(4)
-                if thresholds_var_I['above2'] <= var_I < thresholds_var_I['above3']:
-                    __matrix_row_var_D(5)
-                if var_I >= thresholds_var_I['above3']:
-                    __matrix_row_var_D(6)
-
-    else: # normal case
+    if env.var_I.is_normal_inclusive():
+        # default case
 
         if env.config_run.settings['class_category_analysis'] == 3:
             for index, var_I in enumerate(station.var_I.specific_values):
@@ -244,6 +218,37 @@ def get_specific_contingency_table(station, lag, month, day=None):
                 if thresholds_var_I['above2'] < var_I <= thresholds_var_I['above3']:
                     __matrix_row_var_D(5)
                 if var_I > thresholds_var_I['above3']:
+                    __matrix_row_var_D(6)
+
+
+    else:
+        # SPECIAL CASE 2: for some variables, for set the category of phenomenon for the normal case the thresholds are exclude (< >)
+        # please see env/var_I file
+
+        if env.config_run.settings['class_category_analysis'] == 3:
+            for index, var_I in enumerate(station.var_I.specific_values):
+                if var_I <= thresholds_var_I['below']:
+                    __matrix_row_var_D(0)
+                if thresholds_var_I['below'] < var_I < thresholds_var_I['above']:
+                    __matrix_row_var_D(1)
+                if var_I >= thresholds_var_I['above']:
+                    __matrix_row_var_D(2)
+
+        if env.config_run.settings['class_category_analysis'] == 7:
+            for index, var_I in enumerate(station.var_I.specific_values):
+                if var_I <= thresholds_var_I['below3']:
+                    __matrix_row_var_D(0)
+                if thresholds_var_I['below3'] < var_I <= thresholds_var_I['below2']:
+                    __matrix_row_var_D(1)
+                if thresholds_var_I['below2'] < var_I <= thresholds_var_I['below1']:
+                    __matrix_row_var_D(2)
+                if thresholds_var_I['below1'] < var_I < thresholds_var_I['above1']:
+                    __matrix_row_var_D(3)
+                if thresholds_var_I['above1'] <= var_I < thresholds_var_I['above2']:
+                    __matrix_row_var_D(4)
+                if thresholds_var_I['above2'] <= var_I < thresholds_var_I['above3']:
+                    __matrix_row_var_D(5)
+                if var_I >= thresholds_var_I['above3']:
                     __matrix_row_var_D(6)
 
     # -------------------------------------------------------------------------

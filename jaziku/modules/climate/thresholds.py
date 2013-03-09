@@ -251,7 +251,7 @@ def thresholds_by_default_for_var_D(station, variable):
                 thresholds = {'below': numpy.percentile(specific_values_with_analog_year, 33),
                               'above': numpy.percentile(specific_values_with_analog_year, 66)}
             if env.config_run.settings['class_category_analysis'] == 7:
-                # TODO:
+                # TODO v0.6:
                 raise ValueError("TODO")
 
             # check if all thresholds are valid (not 'nan')
@@ -280,7 +280,7 @@ def thresholds_by_default_for_var_D(station, variable):
         thresholds = {'below': numpy.percentile(variable.specific_values_cleaned, 33),
                       'above': numpy.percentile(variable.specific_values_cleaned, 66)}
     if env.config_run.settings['class_category_analysis'] == 7:
-        # TODO:
+        # TODO v0.6:
         raise ValueError("TODO")
 
     return thresholds
