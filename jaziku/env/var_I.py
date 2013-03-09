@@ -114,84 +114,92 @@ units = None
 # region >28.5C--------------------AREA_WHWP     by 10e6 km^2         -13 to 14
 
 INTERNAL_LIMITS = {
-    'ONI1':         {'daily': None,          'monthly': [-0.5,0.5]},
-    'ONI2':         {'daily': None,          'monthly': [-0.5,0.5]},
-    'SOI':          {'daily': None,          'monthly': [-7,7]},
-    'SOI_TROUP':    {'daily': None,          'monthly': [-35,35]},
-    #'MEI':          {'daily': None,          'monthly': [-4.552,6.078]},
-    'OLR':          {'daily': None,          'monthly': [-5.2,5.2]},
-    'W200':         {'daily': None,          'monthly': [-7.5,7.5]},
-    'W850w':        {'daily': None,          'monthly': [-7.5,7.5]},
-    'W850c':        {'daily': None,          'monthly': [-21,21]},
-    'W850e':        {'daily': None,          'monthly': [-15.1,15.1]},
-    'SST12':        {'daily': None,          'monthly': [-60,60]},
-    'SST3':         {'daily': None,          'monthly': [-60,60]},
-    'SST4':         {'daily': None,          'monthly': [-60,60]},
-    'SST34':        {'daily': None,          'monthly': [-60,60]},
-    'ASST12':       {'daily': None,          'monthly': [-10,10]},
-    'ASST3':        {'daily': None,          'monthly': [-7,7]},
-    'ASST4':        {'daily': None,          'monthly': [-3,3]},
-    'ASST34':       {'daily': None,          'monthly': [-5.6,5.6]},
-    'ARH':          {'daily': None,          'monthly': [-100,100]},
-    'QBO':          {'daily': None,          'monthly': [-40,40]},
-    'NAO':          {'daily': None,          'monthly': [-11.9,11.9]},
-    'CAR':          {'daily': None,          'monthly': [-1.3,1.3]},
-    'AREA_WHWP':    {'daily': None,          'monthly': [-13,14]}
+    'ONI1':         {'daily': None, 'monthly': [-0.5,0.5]},
+    'ONI2':         {'daily': None, 'monthly': [-0.5,0.5]},
+    'SOI':          {'daily': None, 'monthly': [-7,7]},
+    'SOI_TROUP':    {'daily': None, 'monthly': [-35,35]},
+    #'MEI':          {'daily': None, 'monthly': [-4.552,6.078]},
+    'OLR':          {'daily': None, 'monthly': [-5.2,5.2]},
+    'W200':         {'daily': None, 'monthly': [-7.5,7.5]},
+    'W850w':        {'daily': None, 'monthly': [-7.5,7.5]},
+    'W850c':        {'daily': None, 'monthly': [-21,21]},
+    'W850e':        {'daily': None, 'monthly': [-15.1,15.1]},
+    'SST12':        {'daily': None, 'monthly': [-60,60]},
+    'SST3':         {'daily': None, 'monthly': [-60,60]},
+    'SST4':         {'daily': None, 'monthly': [-60,60]},
+    'SST34':        {'daily': None, 'monthly': [-60,60]},
+    'ASST12':       {'daily': None, 'monthly': [-10,10]},
+    'ASST3':        {'daily': None, 'monthly': [-7,7]},
+    'ASST4':        {'daily': None, 'monthly': [-3,3]},
+    'ASST34':       {'daily': None, 'monthly': [-5.6,5.6]},
+    'ARH':          {'daily': None, 'monthly': [-100,100]},
+    'QBO':          {'daily': None, 'monthly': [-40,40]},
+    'NAO':          {'daily': None, 'monthly': [-11.9,11.9]},
+    'CAR':          {'daily': None, 'monthly': [-1.3,1.3]},
+    'AREA_WHWP':    {'daily': None, 'monthly': [-13,14]}
 }
 
 
+# When the 'normal_inclusive' is True this mean that for the normal values the thresholds
+# are inclusive:
+#
+# if 'normal_inclusive' == True:
+#   threshold_below* <= normal <= threshold_above*
+# if 'normal_inclusive' == False:
+#   threshold_below* < normal < threshold_above*
+
 # thresholds when class_category_analysis is 3
 INTERNAL_THRESHOLDS_3_CATEGORIES = {
-    'ONI1':         {'daily': None,          'monthly': [-0.5,0.5]},
-    'ONI2':         {'daily': None,          'monthly': [-0.5,0.5]},
-    'SOI':          {'daily': None,          'monthly': [-0.9,0.9]},
-    'SOI_TROUP':    {'daily': None,          'monthly': [-8,8]},
-    #'MEI':          {'daily': None,          'monthly': ['p33','p66']},
-    'OLR':          {'daily': None,          'monthly': [-0.1,0.2]},
-    'W200':         {'daily': None,          'monthly': ['p33','p66']},
-    'W850w':        {'daily': None,          'monthly': ['p33','p66']},
-    'W850c':        {'daily': None,          'monthly': ['p33','p66']},
-    'W850e':        {'daily': None,          'monthly': ['p33','p66']},
-    'SST12':        {'daily': None,          'monthly': ['p33','p66']},
-    'SST3':         {'daily': None,          'monthly': ['p33','p66']},
-    'SST4':         {'daily': None,          'monthly': ['p33','p66']},
-    'SST34':        {'daily': None,          'monthly': ['p33','p66']},
-    'ASST12':       {'daily': None,          'monthly': ['p33','p66']},
-    'ASST3':        {'daily': None,          'monthly': ['p33','p66']},
-    'ASST4':        {'daily': None,          'monthly': ['p33','p66']},
-    'ASST34':       {'daily': None,          'monthly': ['p33','p66']},
-    'ARH':          {'daily': None,          'monthly': ['p33','p66']},
-    'QBO':          {'daily': None,          'monthly': [-4,4]},
-    'NAO':          {'daily': None,          'monthly': [-1,1]},
-    'CAR':          {'daily': None,          'monthly': ['p33','p66']},
-    'AREA_WHWP':    {'daily': None,          'monthly': ['p33','p66']}
+    'ONI1':         {'daily': None, 'monthly': [-0.5,0.5], 'normal_inclusive': False},
+    'ONI2':         {'daily': None, 'monthly': [-0.5,0.5], 'normal_inclusive': False},
+    'SOI':          {'daily': None, 'monthly': [-0.9,0.9], 'normal_inclusive': True},
+    'SOI_TROUP':    {'daily': None, 'monthly': [-8,8], 'normal_inclusive': True},
+    #'MEI':          {'daily': None, 'monthly': ['p33','p66']},
+    'OLR':          {'daily': None, 'monthly': [-0.1,0.2], 'normal_inclusive': True},
+    'W200':         {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': True},
+    'W850w':        {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': True},
+    'W850c':        {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': True},
+    'W850e':        {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': True},
+    'SST12':        {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': False},
+    'SST3':         {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': False},
+    'SST4':         {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': False},
+    'SST34':        {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': False},
+    'ASST12':       {'daily': None, 'monthly': ['sd-0.4','sd0.4'], 'normal_inclusive': True},
+    'ASST3':        {'daily': None, 'monthly': ['sd-0.4','sd0.4'], 'normal_inclusive': True},
+    'ASST4':        {'daily': None, 'monthly': ['sd-0.4','sd0.4'], 'normal_inclusive': True},
+    'ASST34':       {'daily': None, 'monthly': ['sd-0.4','sd0.4'], 'normal_inclusive': True},
+    'ARH':          {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': True},
+    'QBO':          {'daily': None, 'monthly': [-4,4], 'normal_inclusive': True},
+    'NAO':          {'daily': None, 'monthly': [-1,1], 'normal_inclusive': True},
+    'CAR':          {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': True},
+    'AREA_WHWP':    {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': True}
 }
 
 # thresholds when class_category_analysis is 7
 INTERNAL_THRESHOLDS_7_CATEGORIES = {
-    'ONI1':         {'daily': None,          'monthly': [-1.5,-1,-0.5,0.5,1,1.5]}, #TODO v0.6: check
-    'ONI2':         {'daily': None,          'monthly': [-1.5,-1,-0.5,0.5,1,1.5]},
-    'SOI':          {'daily': None,          'monthly': [-2.86,-1.61,-1,1,1.61,2.86]},
-    'SOI_TROUP':    {'daily': None,          'monthly': [-22.99,-12.99,-8,8,12.99,22.99]},
-    #'MEI':          {'daily': None,          'monthly': None},
-    'OLR':          {'daily': None,          'monthly': None},
-    'W200':         {'daily': None,          'monthly': None},
-    'W850w':        {'daily': None,          'monthly': None},
-    'W850c':        {'daily': None,          'monthly': None},
-    'W850e':        {'daily': None,          'monthly': None},
-    'SST12':        {'daily': None,          'monthly': None},
-    'SST3':         {'daily': None,          'monthly': None},
-    'SST4':         {'daily': None,          'monthly': None},
-    'SST34':        {'daily': None,          'monthly': None},
-    'ASST12':       {'daily': None,          'monthly': [-1,-0.6,-0.4,0.4,0.6,1]}, #TODO v0.6: check
-    'ASST3':        {'daily': None,          'monthly': [-1,-0.6,-0.4,0.4,0.6,1]},
-    'ASST4':        {'daily': None,          'monthly': [-1,-0.6,-0.4,0.4,0.6,1]},
-    'ASST34':       {'daily': None,          'monthly': [-1,-0.6,-0.4,0.4,0.6,1]},
-    'ARH':          {'daily': None,          'monthly': None},
-    'QBO':          {'daily': None,          'monthly': None},
-    'NAO':          {'daily': None,          'monthly': None},
-    'CAR':          {'daily': None,          'monthly': None},
-    'AREA_WHWP':    {'daily': None,          'monthly': None}
+    'ONI1':         {'daily': None, 'monthly': [-1.5,-1,-0.5,0.5,1,1.5], 'normal_inclusive':False},
+    'ONI2':         {'daily': None, 'monthly': [-1.5,-1,-0.5,0.5,1,1.5], 'normal_inclusive': False},
+    'SOI':          {'daily': None, 'monthly': [-2.86,-1.61,-1,1,1.61,2.86], 'normal_inclusive':True},
+    'SOI_TROUP':    {'daily': None, 'monthly': [-22.99,-12.99,-8,8,12.99,22.99], 'normal_inclusive':True},
+    #'MEI':          {'daily': None, 'monthly': None, 'normal_inclusive':True},
+    'OLR':          {'daily': None, 'monthly': None, 'normal_inclusive':True},
+    'W200':         {'daily': None, 'monthly': None, 'normal_inclusive':True},
+    'W850w':        {'daily': None, 'monthly': None, 'normal_inclusive':True},
+    'W850c':        {'daily': None, 'monthly': None, 'normal_inclusive':True},
+    'W850e':        {'daily': None, 'monthly': None, 'normal_inclusive':True},
+    'SST12':        {'daily': None, 'monthly': None, 'normal_inclusive':False},
+    'SST3':         {'daily': None, 'monthly': None, 'normal_inclusive':False},
+    'SST4':         {'daily': None, 'monthly': None, 'normal_inclusive':False},
+    'SST34':        {'daily': None, 'monthly': None, 'normal_inclusive':False},
+    'ASST12':       {'daily': None, 'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'normal_inclusive':True},
+    'ASST3':        {'daily': None, 'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'normal_inclusive':True},
+    'ASST4':        {'daily': None, 'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'normal_inclusive':True},
+    'ASST34':       {'daily': None, 'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'normal_inclusive':True},
+    'ARH':          {'daily': None, 'monthly': None, 'normal_inclusive':True},
+    'QBO':          {'daily': None, 'monthly': None, 'normal_inclusive':True},
+    'NAO':          {'daily': None, 'monthly': None, 'normal_inclusive':True},
+    'CAR':          {'daily': None, 'monthly': None, 'normal_inclusive':True},
+    'AREA_WHWP':    {'daily': None, 'monthly': None, 'normal_inclusive':True}
 }
 
 # namefiles of internal independent variables for each type
@@ -288,6 +296,14 @@ def is_monthly():
         return True
     else:
         return False
+
+def is_normal_inclusive():
+    global TYPE_SERIES
+    from jaziku.env import config_run
+    if config_run.settings['class_category_analysis'] == 3:
+        return INTERNAL_THRESHOLDS_3_CATEGORIES[TYPE_SERIES]['normal_inclusive']
+    if config_run.settings['class_category_analysis'] == 7:
+        return INTERNAL_THRESHOLDS_7_CATEGORIES[TYPE_SERIES]['normal_inclusive']
 
 def set_FREQUENCY_DATA(new_freq_data, check=True):
     global FREQUENCY_DATA
