@@ -94,12 +94,33 @@ INTERNAL_LIMITS = {
     'RUNOFF':       {'daily':   [0,3300],      'monthly': [0,3300]},
 }
 
+# When the 'normal_inclusive' is True this mean that for the normal values the thresholds
+# are inclusive:
+#
+# if 'normal_inclusive' == True:
+#   threshold_below* <= normal <= threshold_above*
+# if 'normal_inclusive' == False:
+#   threshold_below* < normal < threshold_above*
 
 # thresholds when class_category_analysis is 3
-INTERNAL_THRESHOLDS_3_CATEGORIES = {}
+INTERNAL_THRESHOLDS_3_CATEGORIES = {
+    'PPT':          {'daily': ['p33','p66'], 'monthly': ['p33','p66'], 'normal_inclusive': True},
+    'NDPPT':        {'daily': ['p33','p66'], 'monthly': ['p33','p66'], 'normal_inclusive': True},
+    'TMIN':         {'daily': [-1,1], 'monthly': [-1,1], 'normal_inclusive': True},
+    'TMAX':         {'daily': [-1,1], 'monthly': [-1,1], 'normal_inclusive': True},
+    'TEMP':         {'daily': [-1,1], 'monthly': [-1,1], 'normal_inclusive': True},
+    'PATM':         {'daily': ['p33','p66'], 'monthly': ['p33','p66'], 'normal_inclusive': True},
+    'RH':           {'daily': ['p33','p66'], 'monthly': ['p33','p66'], 'normal_inclusive': True},
+    'RUNOFF':       {'daily': ['p33','p66'], 'monthly': ['p33','p66'], 'normal_inclusive': True},
+}
 
 # thresholds when class_category_analysis is 7
-INTERNAL_THRESHOLDS_7_CATEGORIES = {}
+INTERNAL_THRESHOLDS_7_CATEGORIES = {
+    'PPT':          {'daily': ['30%','60%','90%','110%','140%','170%'], 'monthly': ['30%','60%','90%','110%','140%','170%'], 'normal_inclusive': True},
+    'TMIN':         {'daily': [-2,-1.5,-1,1,1.5,2], 'monthly': [-2,-1.5,-1,1,1.5,2], 'normal_inclusive': True},
+    'TMAX':         {'daily': [-2,-1.5,-1,1,1.5,2], 'monthly': [-2,-1.5,-1,1,1.5,2], 'normal_inclusive': True},
+    'TEMP':         {'daily': [-2,-1.5,-1,1,1.5,2], 'monthly': [-2,-1.5,-1,1,1.5,2], 'normal_inclusive': True},
+}
 
 
 #==============================================================================
@@ -113,6 +134,19 @@ def get_internal_limits():
         return INTERNAL_LIMITS[TYPE_SERIES][FREQUENCY_DATA]
     else:
         return [None,None]
+
+def get_internal_thresholds():
+    global FREQUENCY_DATA
+    global TYPE_SERIES
+
+    from jaziku.env import config_run
+    if config_run.settings['class_category_analysis'] == 3:
+        if TYPE_SERIES in INTERNAL_THRESHOLDS_3_CATEGORIES:
+            return INTERNAL_THRESHOLDS_3_CATEGORIES[TYPE_SERIES][FREQUENCY_DATA]
+    if config_run.settings['class_category_analysis'] == 7:
+        if TYPE_SERIES in INTERNAL_THRESHOLDS_7_CATEGORIES:
+            return INTERNAL_THRESHOLDS_7_CATEGORIES[TYPE_SERIES][FREQUENCY_DATA]
+    return None
 
 def is_daily():
     global FREQUENCY_DATA

@@ -100,10 +100,9 @@ def get_thresholds(station, variable, thresholds_input=None):
             internal_thresholds = env.var_I.get_internal_thresholds()
             if internal_thresholds is None:
                 console.msg_error(_("the thresholds of var {0} were defined as "
-                                    "'default'\nbut this variable ({1}) has not "
-                                    "internal thresholds.")
+                                    "'default'\nbut this variable ({1}) no internal thresholds defined")
                 .format(variable.type, env.var_I.TYPE_SERIES))
-            return get_thresholds(station, variable, env.var_I.get_internal_thresholds())
+            return get_thresholds(station, variable, internal_thresholds)
 
     @thresholds_dictionary
     def thresholds_with_percentiles(percentile_values):
@@ -232,7 +231,7 @@ def get_thresholds(station, variable, thresholds_input=None):
 def thresholds_by_default_for_var_D(station, variable):
 
     # check if analog_year is defined
-    if env.config_run.settings['analog_year']:
+    if env.config_run.settings['analog_year']:  # TODO v0.6.0
         # check if analog_year is inside in process period
         if station.process_period['start'] <= env.config_run.settings['analog_year'] <= station.process_period['end']:
 
@@ -276,11 +275,10 @@ def thresholds_by_default_for_var_D(station, variable):
                                     station.process_period['end']), color='yellow', newline=False)
 
     # return thresholds without analog year
-    if env.config_run.settings['class_category_analysis'] == 3:
-        thresholds = {'below': numpy.percentile(variable.specific_values_cleaned, 33),
-                      'above': numpy.percentile(variable.specific_values_cleaned, 66)}
-    if env.config_run.settings['class_category_analysis'] == 7:
-        # TODO v0.6:
-        raise ValueError("TODO")
+    internal_thresholds = env.var_D.get_internal_thresholds()
+    if internal_thresholds is None:
+        console.msg_error(_("the thresholds of var {0} were defined as "
+                            "'default'\nbut this variable ({1}) no internal thresholds defined")
+        .format(variable.type, env.var_I.TYPE_SERIES))
+    return get_thresholds(station, variable, internal_thresholds)
 
-    return thresholds

@@ -260,6 +260,15 @@ INTERNAL_URLS = {
 #==============================================================================
 # functions
 
+def get_internal_limits():
+    global FREQUENCY_DATA
+    global TYPE_SERIES
+
+    if TYPE_SERIES in INTERNAL_LIMITS:
+        return INTERNAL_LIMITS[TYPE_SERIES][FREQUENCY_DATA]
+    else:
+        return [None,None]
+
 def get_internal_thresholds():
     global FREQUENCY_DATA
     global TYPE_SERIES
@@ -272,16 +281,6 @@ def get_internal_thresholds():
         if TYPE_SERIES in INTERNAL_THRESHOLDS_7_CATEGORIES:
             return INTERNAL_THRESHOLDS_7_CATEGORIES[TYPE_SERIES][FREQUENCY_DATA]
     return None
-
-
-def get_internal_limits():
-    global FREQUENCY_DATA
-    global TYPE_SERIES
-
-    if TYPE_SERIES in INTERNAL_LIMITS:
-        return INTERNAL_LIMITS[TYPE_SERIES][FREQUENCY_DATA]
-    else:
-        return [None,None]
 
 def is_daily():
     global FREQUENCY_DATA

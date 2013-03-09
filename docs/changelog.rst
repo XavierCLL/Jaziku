@@ -11,7 +11,8 @@ Changelog
 news
 ++++
 
-- Updated thresholds for var I for 7 categories
+- Updated thresholds for var D for 3 and 7 categories (ATTENTION: this change modify several results)
+- Updated thresholds for var I for 3 and 7 categories (ATTENTION: this change modify several results)
 - have the possibility of define internal thresholds and limits for data
   daily o monthly
 - Fixes input, check and format for 'forecast_date' option, now new input
