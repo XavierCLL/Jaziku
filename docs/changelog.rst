@@ -11,6 +11,8 @@ Changelog
 news
 ++++
 
+- New options in runfile: calculation_mode_series_D and calculation_mode_series_I, these
+  are the options to calculate the series: totalize or mean
 - Updated thresholds for var D for 3 and 7 categories (ATTENTION: this change modify several results)
 - Updated thresholds for var I for 3 and 7 categories (ATTENTION: this change modify several results)
 - have the possibility of define internal thresholds and limits for data

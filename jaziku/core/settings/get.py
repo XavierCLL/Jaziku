@@ -205,6 +205,17 @@ def configuration_run():
         settings["type_var_D"] = colored.green(env.var_D.TYPE_SERIES) + " ({0})".format(env.var_D.units)
 
     # ------------------------
+    # calculation_mode_series_D
+    if env.config_run.settings['calculation_mode_series_D'] == 'default':
+        env.config_run.settings['calculation_mode_series_D'] = 'totalize'
+        settings["calculation_mode_series_D"] = env.config_run.settings['calculation_mode_series_D']
+    elif env.config_run.settings['calculation_mode_series_D'] in ['totalize', 'mean']:
+        settings["calculation_mode_series_D"] = colored.green(env.config_run.settings['calculation_mode_series_D'])
+    else:
+        console.msg_error_configuration('calculation_mode_series_D', _("The calculation_mode_series_D is wrong, the options are:\n"
+                                                     "default, totalize or mean"))
+
+    # ------------------------
     # limits var D below
     if not isinstance(env.config_run.settings['limits_var_D'], list):
         if env.config_run.settings['limits_var_D'] == 'none':
@@ -254,6 +265,17 @@ def configuration_run():
     # type var I
     if env.var_I.TYPE_SERIES:
         settings["type_var_I"] = colored.green(env.var_I.TYPE_SERIES) + " ({0})".format(env.var_I.units)
+
+    # ------------------------
+    # calculation_mode_series_I
+    if env.config_run.settings['calculation_mode_series_I'] == 'default':
+        env.config_run.settings['calculation_mode_series_I'] = 'totalize'
+        settings["calculation_mode_series_I"] = env.config_run.settings['calculation_mode_series_I']
+    elif env.config_run.settings['calculation_mode_series_I'] in ['totalize', 'mean']:
+        settings["calculation_mode_series_I"] = colored.green(env.config_run.settings['calculation_mode_series_I'])
+    else:
+        console.msg_error_configuration('calculation_mode_series_I', _("The calculation_mode_series_I is wrong, the options are:\n"
+                                                                       "default, totalize or mean"))
 
     # ------------------------
     # path_to_file_var_I
