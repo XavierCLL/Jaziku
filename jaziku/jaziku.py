@@ -157,10 +157,6 @@ def main():
             # console message
             print _("\n################# STATION: {0} ({1})").format(station.name, station.code)
 
-            # only for show information
-            station.var_D.read_data_from_file(station, process=False, messages=True)
-            station.var_I.read_data_from_file(station, process=False, messages=True)
-
             ## process climate and forecast for this station
             # run climate process
             if env.config_run.settings['climate_process']:

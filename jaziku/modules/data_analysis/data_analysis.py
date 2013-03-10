@@ -34,7 +34,7 @@ def main(stations_list):
     files folder of time series.
     """
 
-    print _("\n"
+    print _("\n\n"
             "#################### DATA ANALYSIS PROCESS #####################\n"
             "# Data analysis module, here is verified linearity, outliers   #\n"
             "# are reported and the primary statistical time series.        #\n"

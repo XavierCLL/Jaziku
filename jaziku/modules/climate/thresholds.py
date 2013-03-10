@@ -279,6 +279,6 @@ def thresholds_by_default_for_var_D(station, variable):
     if internal_thresholds is None:
         console.msg_error(_("the thresholds of var {0} were defined as "
                             "'default'\nbut this variable ({1}) no internal thresholds defined")
-        .format(variable.type, env.var_I.TYPE_SERIES))
+        .format(variable.type, env.var_D.TYPE_SERIES))
     return get_thresholds(station, variable, internal_thresholds)
 

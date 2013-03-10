@@ -84,7 +84,7 @@ class Variable(object):
         self.file_relpath = os.path.relpath(file, os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile)))
 
 
-    def read_data_from_file(self, station, process=True, messages=True):
+    def read_data_from_file(self, station):
         """
         Read var I or var D from files, validated and check consistent.
 
@@ -95,24 +95,13 @@ class Variable(object):
 
         # -------------------------------------------------------------------------
         # Reading the variables from files and check based on range validation
-        if messages:
-            console.msg(_("Read and check (range validation) for var {0} ... ").format(self.type), newline=False)
-
-        if process:
-            if self.type == 'D':
-                vars.read_var_D(station)
-                self.fill_variable(station)
-            if self.type == 'I':
-                vars.read_var_I(station)
-                self.fill_variable(station)
-
-        if messages:
-            console.msg(_("done"), color='green')
-
-            if env.var_[self.type].is_daily():
-                console.msg(_("   the variable {0} has data daily").format(self.type), color='cyan')
-            if env.var_[self.type].is_monthly():
-                console.msg(_("   the variable {0} has data monthly").format(self.type), color='cyan')
+        # and fill variable if is needed
+        if self.type == 'D':
+            vars.read_var_D(station)
+            self.fill_variable(station)
+        if self.type == 'I':
+            vars.read_var_I(station)
+            self.fill_variable(station)
 
     def fill_variable(self, station):
         """
