@@ -206,14 +206,7 @@ def configuration_run():
 
     # ------------------------
     # calculation_mode_series_D
-    if env.config_run.settings['calculation_mode_series_D'] == 'default':
-        env.config_run.settings['calculation_mode_series_D'] = 'totalize'
-        settings["calculation_mode_series_D"] = env.config_run.settings['calculation_mode_series_D']
-    elif env.config_run.settings['calculation_mode_series_D'] in ['totalize', 'mean']:
-        settings["calculation_mode_series_D"] = colored.green(env.config_run.settings['calculation_mode_series_D'])
-    else:
-        console.msg_error_configuration('calculation_mode_series_D', _("The calculation_mode_series_D is wrong, the options are:\n"
-                                                     "default, totalize or mean"))
+    settings["calculation_mode_series_D"] = env.config_run.settings['calculation_mode_series_D']
 
     # ------------------------
     # limits var D below
@@ -268,14 +261,7 @@ def configuration_run():
 
     # ------------------------
     # calculation_mode_series_I
-    if env.config_run.settings['calculation_mode_series_I'] == 'default':
-        env.config_run.settings['calculation_mode_series_I'] = 'totalize'
-        settings["calculation_mode_series_I"] = env.config_run.settings['calculation_mode_series_I']
-    elif env.config_run.settings['calculation_mode_series_I'] in ['totalize', 'mean']:
-        settings["calculation_mode_series_I"] = colored.green(env.config_run.settings['calculation_mode_series_I'])
-    else:
-        console.msg_error_configuration('calculation_mode_series_I', _("The calculation_mode_series_I is wrong, the options are:\n"
-                                                                       "default, totalize or mean"))
+    settings["calculation_mode_series_I"] = env.config_run.settings['calculation_mode_series_I']
 
     # ------------------------
     # path_to_file_var_I
