@@ -29,6 +29,7 @@ from matplotlib import pyplot
 from Image import open as img_open
 
 from jaziku import env
+from jaziku.core.analysis_interval import get_range_analysis_interval
 from jaziku.utils import  watermarking, format_out
 from jaziku.utils.matrix import column
 
@@ -158,7 +159,7 @@ def climate_graphs(station):
 
             if env.globals_vars.STATE_OF_DATA in [2, 4]:
 
-                for day in station.range_analysis_interval:
+                for day in get_range_analysis_interval():
 
                     specific_contingency_table = station.contingency_tables[lag][month][day]
 
@@ -191,14 +192,14 @@ def climate_graphs(station):
 
         if env.globals_vars.STATE_OF_DATA in [2, 4]:
             # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
-            mosaic_plots = pyplot.figure(figsize=((image_width * len(station.range_analysis_interval))
+            mosaic_plots = pyplot.figure(figsize=((image_width * len(get_range_analysis_interval()))
                                              / 100, (image_height * 12) / 100))
             mosaic_plots.savefig(mosaic_dir_save, dpi=100)
             mosaic = img_open(mosaic_dir_save)
             i = 0
             # add image in mosaic based on months(m) and days(d)
             for m in range(12):
-                for d in range(len(station.range_analysis_interval)):
+                for d in range(len(get_range_analysis_interval())):
                     mosaic.paste(img_open(image_open_list[i]), (image_width * d, image_height * m))
                     i += 1
 

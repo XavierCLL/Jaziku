@@ -1313,32 +1313,32 @@ def outliers(stations_list):
                 if env.var_D.is_daily() and env.var_I.is_daily():
                     if env.config_run.settings['analysis_interval'] == "trimester":
                         # get I values for outliers date
-                        station.var_I.specific_values = lags.get_lag_values(station_copy, 'var_I', 0, outlier_date.month)
+                        station.var_I.specific_values = lags.get_specific_values(station_copy, 'var_I', 0, outlier_date.month)
                         # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                         values_var_I = get_values_in_range_analysis_interval(station_copy, 'I', outlier_date.year, outlier_date.month, None, 0)
                     else:
                         # get the corresponding start day of analysis interval
                         day = locate_day_in_analysis_interval(outlier_date.day)
                         # get I values for outliers date
-                        station.var_I.specific_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month, day)
+                        station.var_I.specific_values = lags.get_specific_values(station, 'var_I', 0, outlier_date.month, day)
                         # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                         values_var_I = get_values_in_range_analysis_interval(station, 'I', outlier_date.year, outlier_date.month, day, 0)
                 if env.var_D.is_daily() and env.var_I.is_monthly():
                     if env.config_run.settings['analysis_interval'] == "trimester":
                         # get I values for outliers date
-                        station.var_I.specific_values = lags.get_lag_values(station_copy, 'var_I', 0, outlier_date.month)
+                        station.var_I.specific_values = lags.get_specific_values(station_copy, 'var_I', 0, outlier_date.month)
                         # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                         values_var_I = get_values_in_range_analysis_interval(station_copy, 'I', outlier_date.year, outlier_date.month, None, 0)
                     else:
                         # get the corresponding start day of analysis interval
                         day = locate_day_in_analysis_interval(outlier_date.day)
                         # get I values for outliers date
-                        station.var_I.specific_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month, day)
+                        station.var_I.specific_values = lags.get_specific_values(station, 'var_I', 0, outlier_date.month, day)
                         # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                         values_var_I = get_values_in_range_analysis_interval(station, 'I', outlier_date.year, outlier_date.month, day, 0)
                 if env.var_D.is_monthly() and env.var_I.is_monthly():
                     # get I values for outliers date
-                    station.var_I.specific_values = lags.get_lag_values(station, 'var_I', 0, outlier_date.month)
+                    station.var_I.specific_values = lags.get_specific_values(station, 'var_I', 0, outlier_date.month)
                     # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                     values_var_I = get_values_in_range_analysis_interval(station, 'I', outlier_date.year, outlier_date.month, None, 0)
 
