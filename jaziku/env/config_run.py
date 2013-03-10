@@ -180,7 +180,7 @@ list_of_all_settings = [
     'forecast_date',
 
     # values for forecast process
-    #   input: (float, float, float)
+    #   input: float
     #   access: {'below','normal','above'} or {'below3','below2','below1','normal','above1','above2','above3'}
     'forecast_var_I_lag_0',
     'forecast_var_I_lag_1',

@@ -217,7 +217,7 @@ class Grid(object):
 
 def search_and_set_internal_grid(grid):
 
-    console.msg(_("   Setting internal grid"), color='yellow')
+    console.msg(_("   Setting internal grid and shape map:"), color='yellow', newline=False)
     grid.is_internal = True
 
     grid.shape_path = os.path.join(env.globals_vars.JAZIKU_DIR, 'data', 'maps', 'shapes', grid.grid_path)
@@ -253,10 +253,11 @@ def search_and_set_internal_grid(grid):
                             "please check the grid parameter; area,\n"
                             "region and/or country name are wrong.\n").format(grid.grid_fullname), False)
 
+    console.msg(_("ok"), color='green')
 
 def set_particular_grid(grid):
 
-    console.msg(_("   Setting particular shape"), color='yellow')
+    console.msg(_("   Setting external grid and shape map:"), color='yellow', newline=False)
     grid.is_internal = False
 
     grid.shape_path = os.path.realpath(grid.shape_path)
@@ -291,3 +292,5 @@ def set_particular_grid(grid):
     else:
             grid.particular_properties_map = {}
             grid.need_particular_ncl_script = False
+
+    console.msg(_("ok"), color='green')

@@ -57,8 +57,13 @@ def read_runfile():
     # read line by line the RUNFILE
 
     for line_in_run_file in runfile:
-        # trim all items in line_in_run_file
-        line_in_run_file = [i.strip() for i in line_in_run_file if i != '']
+
+        if line_in_run_file[0].strip() not in ['forecast_var_I_lag_0','forecast_var_I_lag_1','forecast_var_I_lag_2']:
+            # trim all items in line_in_run_file and clean empty items
+            line_in_run_file = [i.strip() for i in line_in_run_file if i != '']
+        else:
+            # trim all items in line_in_run_file and NOT clean empty items
+            line_in_run_file = [i.strip() for i in line_in_run_file]
 
         # if line is null o empty, e.g. empty but with tabs or spaces
         if not line_in_run_file or not line_in_run_file[0].strip() or line_in_run_file == []:

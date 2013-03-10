@@ -41,6 +41,27 @@ def pre_process():
               "   is already exist, Jaziku continue but the results\n"
               "   could be mixed or replaced of old output."), color='yellow')
 
+    # reset forecast_var_I_lag_N
+    if env.config_run.settings['class_category_analysis'] == 3:
+        for lag in ['0','1','2']:
+            env.config_run.settings['forecast_var_I_lag_'+lag] \
+                = {'below':env.config_run.settings['forecast_var_I_lag_'+lag][0],
+                   'normal':env.config_run.settings['forecast_var_I_lag_'+lag][1],
+                   'above':env.config_run.settings['forecast_var_I_lag_'+lag][2]}
+
+    if env.config_run.settings['class_category_analysis'] == 7:
+        for lag in ['0','1','2']:
+            env.config_run.settings['forecast_var_I_lag_'+lag] \
+                = [None if value == '' else value for value in env.config_run.settings['forecast_var_I_lag_'+lag]]
+            env.config_run.settings['forecast_var_I_lag_'+lag] \
+                = {'below3':env.config_run.settings['forecast_var_I_lag_'+lag][0],
+                   'below2':env.config_run.settings['forecast_var_I_lag_'+lag][1],
+                   'below1':env.config_run.settings['forecast_var_I_lag_'+lag][2],
+                   'normal':env.config_run.settings['forecast_var_I_lag_'+lag][3],
+                   'above1':env.config_run.settings['forecast_var_I_lag_'+lag][4],
+                   'above2':env.config_run.settings['forecast_var_I_lag_'+lag][5],
+                   'above3':env.config_run.settings['forecast_var_I_lag_'+lag][6]}
+
 def process(station):
     """
     In forecast process the aim is predict the forecast given a phenomenon phase that
