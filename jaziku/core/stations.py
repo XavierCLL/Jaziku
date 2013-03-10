@@ -53,7 +53,7 @@ def prepare_all_stations(stations_list):
         console.msg(_("has data monthly").format(env.var_I.TYPE_SERIES), color='cyan')
 
     # show thresholds tu use
-    console.msg(_("Thresholds to use:"))
+    console.msg(_("Thresholds to use (for {0} categories):").format(env.config_run.settings['class_category_analysis']))
 
     console.msg(_("   var_D ({0}):").format(env.var_D.TYPE_SERIES), newline=False)
     if env.config_run.settings['thresholds_var_D'] == 'default':

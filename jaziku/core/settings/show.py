@@ -32,7 +32,7 @@ def configuration_run(stop_in=None):
 
     print _("\nConfiguration run:")
 
-    console.msg("   Modules", color='cyan')
+    console.msg("  Modules:", color='cyan')
     print "   {0} ------------- {1}".format("data analysis", settings["data_analysis"])
     if stop_in == "data_analysis": return
     print "   {0} ----------- {1}".format("climate process", settings["climate_process"])
@@ -40,7 +40,7 @@ def configuration_run(stop_in=None):
     print "   {0} ---------- {1}".format("forecast process", settings["forecast_process"])
     if stop_in == "forecast_process": return
 
-    console.msg("   General options", color='cyan')
+    console.msg("  General options:", color='cyan')
     print "   {0} --------- {1}".format("analysis interval", settings["analysis_interval"])
     if stop_in == "analysis_interval": return
     print "   {0} --- {1}".format("class category analysis", settings["class_category_analysis"])
@@ -54,13 +54,13 @@ def configuration_run(stop_in=None):
     print "   {0} ------------------ {1}".format("language", settings["language"])
     if stop_in == "language": return
 
-    console.msg("   Check options", color='cyan')
+    console.msg("  Check options:", color='cyan')
     print "   {0} ----------- {1}".format("consistent data", settings["consistent_data"])
     if stop_in == "consistent_data": return
     print "   {0} ------------- {1}".format("risk analysis", settings["risk_analysis"])
     if stop_in == "risk_analysis": return
 
-    console.msg("   Output options", color='cyan')
+    console.msg("  Output options:", color='cyan')
     print "   {0} ------------------ {1}".format("graphics", settings["graphics"])
     if stop_in == "graphics": return
     print "   {0} ---------------------- {1}".format("maps", settings["maps"])
@@ -68,12 +68,12 @@ def configuration_run(stop_in=None):
     if stop_in == "var_I_category_labels": return
     for x, label in enumerate(settings["var_I_category_labels"]):
         if x == 0:
-            print "   {0} ----- {1}".format("var_I_category_labels", label)
+            print "   {0} ----- {1}".format("var I category labels", label)
         else:
             print "                             {0}".format(label)
     if stop_in == "var_I_category_labels": return
 
-    console.msg("   Var D options", color='cyan')
+    console.msg("  Var D options:", color='cyan')
     print "   {0} ---------------- {1}".format("type var D", settings["type_var_D"])
     if stop_in == "type_var_D": return
     print "   {0} - {1}".format("calculation mode series D", settings["calculation_mode_series_D"])
@@ -83,7 +83,7 @@ def configuration_run(stop_in=None):
     print "   {0} ---------- {1}".format("thresholds var D", settings["thresholds_var_D"])
     if stop_in == "thresholds_var_D": return
 
-    console.msg("   Var I options", color='cyan')
+    console.msg("  Var I options:", color='cyan')
     print "   {0} ---------------- {1}".format("type var I", settings["type_var_I"])
     if stop_in == "type_var_I": return
     print "   {0} - {1}".format("calculation mode series I", settings["calculation_mode_series_I"])
@@ -96,7 +96,7 @@ def configuration_run(stop_in=None):
     if stop_in == "thresholds_var_I": return
 
     if env.config_run.settings['forecast_process']:
-        console.msg("   Forecast options", color='cyan')
+        console.msg("  Forecast options:", color='cyan')
         print "   {0} ------------- {1}".format("forecast date", settings["forecast_date"])
         if stop_in == "forecast_date": return
         print "   {0} ------ {1}".format("forecast var I lag 0", settings["forecast_var_I_lag_0"])
@@ -106,11 +106,11 @@ def configuration_run(stop_in=None):
         print "   {0} ------ {1}".format("forecast var I lag 2", settings["forecast_var_I_lag_2"])
         if stop_in == "forecast_var_I_lag_2": return
 
-    console.msg("   Maps options", color='cyan')
+    console.msg("  Maps options:", color='cyan')
     if env.config_run.settings['maps']:
         print "   {0} --------------- {1}".format("overlapping", settings["overlapping"])
         if stop_in == "overlapping": return
-        print "   {0} ------------ {1}".format("marks_stations", settings["marks_stations"])
+        print "   {0} ------------ {1}".format("marks stations", settings["marks_stations"])
         if stop_in == "marks_stations": return
         print "   {0} ------------ {1}".format("shape boundary", settings["shape_boundary"])
         if stop_in == "shape_boundary": return
