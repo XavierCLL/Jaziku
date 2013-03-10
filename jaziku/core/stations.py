@@ -35,9 +35,41 @@ def prepare_all_stations(stations_list):
     # Read vars
     console.msg(_("Reading var D and var I of all stations ................. "), newline=False)
     for station in stations_list:
-        station.var_D.read_data_from_file(station, process=True, messages=False)
-        station.var_I.read_data_from_file(station, process=True, messages=False)
+        station.var_D.read_data_from_file(station)
+        station.var_I.read_data_from_file(station)
     console.msg(_("done"), color='green')
+
+    # show some information of variables
+    console.msg(_("   var_D ({0}):").format(env.var_D.TYPE_SERIES), newline=False)
+    if env.var_D.is_daily():
+        console.msg(_("has data daily").format(env.var_D.TYPE_SERIES), color='cyan')
+    else:
+        console.msg(_("has data monthly").format(env.var_D.TYPE_SERIES), color='cyan')
+
+    console.msg(_("   var_I ({0}):").format(env.var_I.TYPE_SERIES), newline=False)
+    if env.var_I.is_daily():
+        console.msg(_("has data daily").format(env.var_I.TYPE_SERIES), color='cyan')
+    else:
+        console.msg(_("has data monthly").format(env.var_I.TYPE_SERIES), color='cyan')
+
+    # show thresholds tu use
+    console.msg(_("Thresholds to use:"))
+
+    console.msg(_("   var_D ({0}):").format(env.var_D.TYPE_SERIES), newline=False)
+    if env.config_run.settings['thresholds_var_D'] == 'default':
+        thresholds_D = env.var_D.get_internal_thresholds()
+    else:
+        thresholds_D = env.config_run.settings['thresholds_var_D']
+    if isinstance(thresholds_D, list):
+        console.msg(' | '.join([str(thr) for thr in thresholds_D]), color='cyan')
+
+    console.msg(_("   var_I ({0}):").format(env.var_I.TYPE_SERIES), newline=False)
+    if env.config_run.settings['thresholds_var_I'] == 'default':
+        thresholds_I = env.var_I.get_internal_thresholds()
+    else:
+        thresholds_I = env.config_run.settings['thresholds_var_I']
+    if isinstance(thresholds_I, list):
+        console.msg(' | '.join([str(thr) for thr in thresholds_I]), color='cyan')
 
     # common and process period
     console.msg(_("Calculate common and process period for each stations ... "), newline=False)
@@ -101,4 +133,3 @@ def prepare_all_stations(stations_list):
         _("{0} station prepared."),
         _("{0} stations prepared."),
         Station.stations_processed).format(Station.stations_processed), color='cyan')
-    console.msg('')

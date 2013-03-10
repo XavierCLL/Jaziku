@@ -259,7 +259,7 @@ def get_specific_contingency_table(station, lag, month, day=None):
         sum_per_column_CTts = contingency_table_tertile_size.sum(axis=1)
 
     if env.config_run.settings['class_category_analysis'] == 7:
-        tertile_size = station.size_time_series / 7.0 # TODO v0.6: check
+        tertile_size = station.size_time_series / 7.0  # TODO v0.6: check
         contingency_table_tertile_size = matrix(contingency_table) * tertile_size
         sum_per_column_CTts = contingency_table_tertile_size.sum(axis=1)
 
