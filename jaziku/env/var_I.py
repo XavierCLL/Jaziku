@@ -80,6 +80,32 @@ INTERNAL_UNITS = {
     'AREA_WHWP':    'anomaly scaled 10e6 km^2'
 }
 
+# calculation mode series for internal independent variable
+CALCULATION_MODE_SERIES = {
+    'ONI1':         'mean',
+    'ONI2':         'mean',
+    'SOI':          'mean',
+    'SOI_TROUP':    'mean',
+    'OLR':          'mean',
+    'W200':         'mean',
+    'W850w':        'mean',
+    'W850c':        'mean',
+    'W850e':        'mean',
+    'SST12':        'mean',
+    'SST3':         'mean',
+    'SST4':         'mean',
+    'SST34':        'mean',
+    'ASST12':       'mean',
+    'ASST3':        'mean',
+    'ASST4':        'mean',
+    'ASST34':       'mean',
+    'ARH':          'mean',
+    'QBO':          'mean',
+    'NAO':          'mean',
+    'CAR':          'mean',
+    'AREA_WHWP':    'mean'
+}
+
 # variable use for set units for var I, known and unknown for jaziku
 # for particular units set it in runfile, please read jaziku's manual
 units = None

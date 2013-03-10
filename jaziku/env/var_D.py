@@ -51,6 +51,18 @@ INTERNAL_UNITS = {
     'RUNOFF':       'm^3/s'
 }
 
+# calculation mode series for internal independent variable
+CALCULATION_MODE_SERIES = {
+    'PPT':          'totalize',
+    'NDPPT':        'totalize',
+    'TMIN':         'mean',
+    'TMAX':         'mean',
+    'TEMP':         'mean',
+    'PATM':         'mean',
+    'RH':           'mean',
+    'RUNOFF':       'mean'
+}
+
 # variable use for set units for var D, known and unknown for jaziku
 # for particular units set it in runfile, please read jaziku's manual
 units = None
