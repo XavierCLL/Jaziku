@@ -85,7 +85,7 @@ def prepare_all_stations(stations_list):
     console.msg(_("done"), color='green')
 
     if env.config_run.settings['consistent_data']:
-        console.msg(_("Check if the data are consistent for var D and I:"))
+        console.msg(_("Check if the data are consistent for var_D and var_I:"))
         for station in stations_list:
             validation.check_consistent_data(station)
 

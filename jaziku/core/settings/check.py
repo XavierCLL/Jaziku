@@ -277,7 +277,7 @@ def configuration_run():
         ## check and reset the 9 values for forecast process
         try:
             env.config_run.settings['forecast_var_I_lag_0'] = [format_in.to_float(item) for item in env.config_run.settings['forecast_var_I_lag_0']]
-            if not len(env.config_run.settings['forecast_var_I_lag_0']) == 3:
+            if env.config_run.settings['class_category_analysis'] == 3 and not len(env.config_run.settings['forecast_var_I_lag_0']) == 3:
                 raise
         except:
             console.msg_error_configuration('forecast_var_I_lag_0',
@@ -285,7 +285,7 @@ def configuration_run():
                                               "values (int or float) in different row."))
         try:
             env.config_run.settings['forecast_var_I_lag_1'] = [format_in.to_float(item) for item in env.config_run.settings['forecast_var_I_lag_1']]
-            if not len(env.config_run.settings['forecast_var_I_lag_1']) == 3:
+            if env.config_run.settings['class_category_analysis'] == 3 and not len(env.config_run.settings['forecast_var_I_lag_1']) == 3:
                 raise
         except:
             console.msg_error_configuration('forecast_var_I_lag_1',
@@ -293,7 +293,7 @@ def configuration_run():
                                               "values (int or float) in different row."))
         try:
             env.config_run.settings['forecast_var_I_lag_2'] = [format_in.to_float(item) for item in env.config_run.settings['forecast_var_I_lag_2']]
-            if not len(env.config_run.settings['forecast_var_I_lag_2']) == 3:
+            if env.config_run.settings['class_category_analysis'] == 3 and not len(env.config_run.settings['forecast_var_I_lag_2']) == 3:
                 raise
         except:
             console.msg_error_configuration('forecast_var_I_lag_2',
@@ -301,33 +301,23 @@ def configuration_run():
                                               "values (int or float) in different row."))
 
         # check sum of forecast_var_I_lag_0
-        if not (99 < sum(env.config_run.settings['forecast_var_I_lag_0']) < 101):
+        if not (99 < sum([value for value in env.config_run.settings['forecast_var_I_lag_0'] if value != '']) < 101):
             console.msg_error_configuration('forecast_var_I_lag_0',
                 _("The sum for the 3 values of phenomenon for lag 0\n"
                   "in 'forecast options' in runfile must be\nequal to 100."))
 
         # check sum of forecast_var_I_lag_1
-        if not (99 < sum(env.config_run.settings['forecast_var_I_lag_1']) < 101):
+        if not (99 < sum([value for value in env.config_run.settings['forecast_var_I_lag_1'] if value != '']) < 101):
             console.msg_error_configuration('forecast_var_I_lag_1',
                 _("The sum for the 3 values of phenomenon for lag 1\n"
                   "in 'forecast options' in runfile must be\nequal to 100."))
 
         # check sum of forecast_var_I_lag_2
-        if not (99 < sum(env.config_run.settings['forecast_var_I_lag_2']) < 101):
+        if not (99 < sum([value for value in env.config_run.settings['forecast_var_I_lag_2'] if value != '']) < 101):
             console.msg_error_configuration('forecast_var_I_lag_2',
                 _("The sum for the 3 values of phenomenon for lag 2\n"
                   "in 'forecast options' in runfile must be\nequal to 100."))
 
-        # reset forecast_var_I_lag_N
-        env.config_run.settings['forecast_var_I_lag_0'] = {'below':env.config_run.settings['forecast_var_I_lag_0'][0],
-                                                           'normal':env.config_run.settings['forecast_var_I_lag_0'][1],
-                                                           'above':env.config_run.settings['forecast_var_I_lag_0'][2]}
-        env.config_run.settings['forecast_var_I_lag_1'] = {'below':env.config_run.settings['forecast_var_I_lag_1'][0],
-                                                           'normal':env.config_run.settings['forecast_var_I_lag_1'][1],
-                                                           'above':env.config_run.settings['forecast_var_I_lag_1'][2]}
-        env.config_run.settings['forecast_var_I_lag_2'] = {'below':env.config_run.settings['forecast_var_I_lag_2'][0],
-                                                           'normal':env.config_run.settings['forecast_var_I_lag_2'][1],
-                                                           'above':env.config_run.settings['forecast_var_I_lag_2'][2]}
         ## forecast date
         try:
             if isinstance(env.config_run.settings['forecast_date'], list):
