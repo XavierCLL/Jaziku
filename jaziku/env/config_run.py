@@ -126,6 +126,10 @@ list_of_all_settings = [
     #   input: string
     'type_var_D',
 
+    # this is the mode of series calculation
+    #   input: 'default', 'totalize', 'mean'
+    'calculation_mode_series_D',
+
     # limits below and above for dependence variable
     #   input: 'default', none or float (below; above)
     #   access: {'below','above'}
@@ -145,6 +149,10 @@ list_of_all_settings = [
     # type for independence variable (jaziku used this only input, USE: env.var_I.TYPE_SERIES)
     #   input: string
     'type_var_I',
+
+    # this is the mode of series calculation
+    #   input: 'default', 'totalize', 'mean'
+    'calculation_mode_series_I',
 
     # path
     #   input: string or 'internal'
@@ -173,7 +181,7 @@ list_of_all_settings = [
 
     # values for forecast process
     #   input: (float, float, float)
-    #   access: {'below', 'normal', 'above'}
+    #   access: {'below','normal','above'} or {'below3','below2','below1','normal','above1','above2','above3'}
     'forecast_var_I_lag_0',
     'forecast_var_I_lag_1',
     'forecast_var_I_lag_2',
