@@ -26,9 +26,10 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from jaziku import env
+from jaziku.core.analysis_interval import get_range_analysis_interval
 from jaziku.utils import format_out
 from jaziku.modules.climate import statistic_tests
-from jaziku.modules.climate.lags import get_lag_values
+from jaziku.modules.climate.lags import get_specific_values
 from jaziku.utils.matrix import column
 
 
@@ -73,15 +74,15 @@ def composite_analysis(station):
 
         if env.globals_vars.STATE_OF_DATA in [1, 3]:
             # get values of var D and I from this lag and month
-            var_D_values = get_lag_values(station, 'var_D', lag, month)
+            var_D_values = get_specific_values(station, 'var_D', lag, month)
 
-            var_I_values = get_lag_values(station, 'var_I', lag, month)
+            var_I_values = get_specific_values(station, 'var_I', lag, month)
 
         if env.globals_vars.STATE_OF_DATA in [2, 4]:
             # get values of var D and I from this lag, month and day
-            var_D_values = get_lag_values(station, 'var_D', lag, month, day)
+            var_D_values = get_specific_values(station, 'var_D', lag, month, day)
 
-            var_I_values = get_lag_values(station, 'var_I', lag, month, day)
+            var_I_values = get_specific_values(station, 'var_I', lag, month, day)
 
         # calculate pearson correlation of var_D and var_I
         pearson = stats.pearsonr(var_D_values, var_I_values)[0]
@@ -242,7 +243,8 @@ def composite_analysis(station):
             if env.globals_vars.STATE_OF_DATA in [2, 4]:
                 pearson_list_day = []
                 is_sig_risk_analysis_list_day = []
-                for day in station.range_analysis_interval:
+                range_analysis_interval = get_range_analysis_interval()
+                for day in range_analysis_interval:
                     # get the contingency tables and thresholds
 
                     specific_contingency_table = station.contingency_tables[lag][month-1][day]
@@ -254,8 +256,8 @@ def composite_analysis(station):
 
                     # for print text date in result table
                     var_D_text = format_out.month_in_initials(date_now.month - 1) + " " + str(day)
-                    var_I_text = format_out.month_in_initials((date_now - relativedelta(days=(station.range_analysis_interval[1] - 1) * lag)).month - 1)\
-                                 + " " + str(station.range_analysis_interval[station.range_analysis_interval.index(day) - lag])
+                    var_I_text = format_out.month_in_initials((date_now - relativedelta(days=(range_analysis_interval[1] - 1) * lag)).month - 1)\
+                                 + " " + str(range_analysis_interval[range_analysis_interval.index(day) - lag])
 
                     pearson, is_sig_risk_analysis_list = main_process()  # <-
 

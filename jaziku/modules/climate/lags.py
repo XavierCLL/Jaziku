@@ -29,11 +29,24 @@ from jaziku.core.analysis_interval import get_values_in_range_analysis_interval,
 from jaziku.utils import  array, format_out
 
 
-def get_lag_values(station, var, lag, month, day=None):
-    """
-    Return all values of var_D, var_I or date
+def get_specific_values(station, var, lag, month, day=None):
+    """Return all values of var_D, var_I or date
     inside the period to process with a specific lag,
-    month and/or day.
+    trimester/month and/or day.
+
+    :param station: station for calculate the lag
+    :type station: Station
+    :param var: variable to process 'var_D', 'var_I', 'date'
+    :type var: str
+    :param lag: lag to get values
+    :type lag: int
+    :param month: trimester/month to get values
+    :type month: int
+    :param day: day of month, or None if is trimester
+    :type day: int
+
+    :return: list of specific values
+    :rtype: list
     """
 
     var_select = {'date': 0, 'var_D': 1, 'var_I': 2}
@@ -50,14 +63,21 @@ def get_lag_values(station, var, lag, month, day=None):
 
 
 def calculate_lags(station, makes_files=True):
-    """
-    Calculate and return lags 0, 1 and 2 of specific stations
+    """Calculate and return lags 0, 1 and 2 of specific stations
     and save csv file of time series for each lag and trimester,
     the lags are calculated based in: +1 year below of start
     common period and -1 year above of end common period.
 
+    :param station: station for process
+    :type station: Station
+    :param makes_files: make lags file time series or not
+    :type makes_files: bool
+
     Return by reference:
-    station with: Lag_0, Lag_1, Lag_2 and range_analysis_interval
+
+    :ivar STATION.Lag_0: lag 0 of this station
+    :ivar STATION.Lag_1: lag 1 of this station
+    :ivar STATION.Lag_2: lag 2 of this station
     """
 
     # initialized Lag_X
@@ -71,8 +91,6 @@ def calculate_lags(station, makes_files=True):
         dir_lag = [os.path.join(station.climate_dir, _('time_series'), _('lag_0')),
                    os.path.join(station.climate_dir, _('time_series'), _('lag_1')),
                    os.path.join(station.climate_dir, _('time_series'), _('lag_2'))]
-
-    range_analysis_interval = get_range_analysis_interval()
 
     if env.globals_vars.STATE_OF_DATA in [1, 3]:
 
@@ -164,7 +182,7 @@ def calculate_lags(station, makes_files=True):
 
                 #days_for_this_month = monthrange(iter_year, month)[1]
 
-                for day in range_analysis_interval:
+                for day in get_range_analysis_interval():
 
                     iter_year = station.process_period['start']
 
@@ -203,5 +221,4 @@ def calculate_lags(station, makes_files=True):
                     open_file.close()
                     del csv_file
 
-    station.range_analysis_interval = range_analysis_interval
     station.Lag_0, station.Lag_1, station.Lag_2 = Lag_0, Lag_1, Lag_2

@@ -22,6 +22,7 @@ import os
 import csv
 
 from jaziku import env
+from jaziku.core.analysis_interval import get_range_analysis_interval
 from jaziku.utils import format_out
 
 
@@ -83,7 +84,7 @@ def climate_data_for_maps(station):
                     month_list.append(categories_list)
                 if env.globals_vars.STATE_OF_DATA in [2, 4]:
                     day_list = []
-                    for day in station.range_analysis_interval:
+                    for day in get_range_analysis_interval():
                         categories_list = []
 
                         for category_label in env.config_run.settings['var_I_category_labels'].values():
@@ -188,7 +189,7 @@ def climate_data_for_maps(station):
                     del csv_file
 
             if env.globals_vars.STATE_OF_DATA in [2, 4]:
-                for day in range(len(station.range_analysis_interval)):
+                for day in range(len(get_range_analysis_interval())):
                     for category_var_I in range(env.config_run.settings['class_category_analysis']):
                         if env.config_run.settings['class_category_analysis'] == 3:
                             values_CT = {'B': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][0],

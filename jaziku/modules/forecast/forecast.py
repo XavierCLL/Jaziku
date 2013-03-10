@@ -22,6 +22,7 @@ import os
 from clint.textui import colored
 
 from jaziku import env
+from jaziku.core.analysis_interval import get_range_analysis_interval
 from jaziku.modules.forecast.graphs import forecast_graphs
 from jaziku.modules.maps.data import forecast_data_for_maps
 from jaziku.utils import console
@@ -74,8 +75,6 @@ def process(station):
 
     console.msg(_("   making forecast for date: ")+env.config_run.settings['forecast_date']['text'], color="cyan", newline=False)
 
-    # TODO: replace all instances of station.range_analysis_interval
-
     # create directory for output files
     if not os.path.isdir(env.globals_vars.FORECAST_DIR):
         os.makedirs(env.globals_vars.FORECAST_DIR)
@@ -93,6 +92,8 @@ def process(station):
         items_CT = {'a': 0, 'b': 0, 'c': 0, 'd': 0, 'e': 0, 'f': 0, 'g': 0, 'h': 0, 'i': 0}
         order_CT = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
 
+        # TODO v0.6.0: complete for 7 categories
+
         if env.globals_vars.STATE_OF_DATA in [1, 3]:
             _iter = 0
             for column in range(3):
@@ -105,7 +106,7 @@ def process(station):
 
         if env.globals_vars.STATE_OF_DATA in [2, 4]:
             month = env.config_run.settings['forecast_date']['month']
-            day = station.range_analysis_interval.index(env.config_run.settings['forecast_date']['day'])
+            day = get_range_analysis_interval().index(env.config_run.settings['forecast_date']['day'])
             _iter = 0
             for column in range(3):
                 for row in range(3):
@@ -115,17 +116,17 @@ def process(station):
                             = station.contingency_tables[lag][month - 1][day]['in_percentage'][column][row] / 100.0
                         _iter += 1
 
-        prob_decrease_var_D[lag] = (items_CT['a'] * env.config_run.settings['forecast_var_I_lag_'+lag]['below']) +\
-                                   (items_CT['d'] * env.config_run.settings['forecast_var_I_lag_'+lag]['normal']) +\
-                                   (items_CT['g'] * env.config_run.settings['forecast_var_I_lag_'+lag]['above'])
+        prob_decrease_var_D[lag] = (items_CT['a'] * env.config_run.settings['forecast_var_I_lag_'+str(lag)]['below']) +\
+                                   (items_CT['d'] * env.config_run.settings['forecast_var_I_lag_'+str(lag)]['normal']) +\
+                                   (items_CT['g'] * env.config_run.settings['forecast_var_I_lag_'+str(lag)]['above'])
 
-        prob_normal_var_D[lag] = (items_CT['b'] * env.config_run.settings['forecast_var_I_lag_'+lag]['below']) +\
-                                 (items_CT['e'] * env.config_run.settings['forecast_var_I_lag_'+lag]['normal']) +\
-                                 (items_CT['h'] * env.config_run.settings['forecast_var_I_lag_'+lag]['above'])
+        prob_normal_var_D[lag] = (items_CT['b'] * env.config_run.settings['forecast_var_I_lag_'+str(lag)]['below']) +\
+                                 (items_CT['e'] * env.config_run.settings['forecast_var_I_lag_'+str(lag)]['normal']) +\
+                                 (items_CT['h'] * env.config_run.settings['forecast_var_I_lag_'+str(lag)]['above'])
 
-        prob_exceed_var_D[lag] = (items_CT['c'] * env.config_run.settings['forecast_var_I_lag_'+lag]['below']) +\
-                                 (items_CT['f'] * env.config_run.settings['forecast_var_I_lag_'+lag]['normal']) +\
-                                 (items_CT['i'] * env.config_run.settings['forecast_var_I_lag_'+lag]['above'])
+        prob_exceed_var_D[lag] = (items_CT['c'] * env.config_run.settings['forecast_var_I_lag_'+str(lag)]['below']) +\
+                                 (items_CT['f'] * env.config_run.settings['forecast_var_I_lag_'+str(lag)]['normal']) +\
+                                 (items_CT['i'] * env.config_run.settings['forecast_var_I_lag_'+str(lag)]['above'])
 
     station.prob_decrease_var_D = prob_decrease_var_D
     station.prob_normal_var_D = prob_normal_var_D
