@@ -144,12 +144,12 @@ def get_thresholds(station, variable, thresholds_input=None):
 
         if env.config_run.settings['class_category_analysis'] == 7:
 
-            # check is the std deviations below values are decreasing
+            # check is the std deviations below values are rising
             std_dev_values_below_sort = list(std_dev_values[0:3])
-            std_dev_values_below_sort.sort(reverse=True)
+            std_dev_values_below_sort.sort()
             if not std_dev_values_below_sort == std_dev_values[0:3]:
                 console.msg_error(_("the sdt deviation values (sdN) by below (first 3) in\n"
-                                    "thresholds of var {0} must have decreasing values:\n{1}")
+                                    "thresholds of var {0} must have rising values:\n{1}")
                 .format(variable.type, std_dev_values))
 
             # check is the std deviations above values are rising
