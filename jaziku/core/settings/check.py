@@ -43,6 +43,9 @@ def configuration_run():
     def var_I_category_labels_dictionary(func):
         def wrapper_func(*args):
             labels_list = func(*args)
+            if isinstance(labels_list, dict):
+            # it is when it is called twice
+                return labels_list
             if env.config_run.settings['class_category_analysis'] == 3:
                 return {'below': labels_list[0],
                         'normal': labels_list[1],
@@ -59,9 +62,7 @@ def configuration_run():
 
     if env.config_run.settings['class_category_analysis'] == 3:
         if env.config_run.settings['var_I_category_labels'] == "default":
-            env.config_run.settings['var_I_category_labels'] = [unicode(_("below"), 'utf-8'),
-                                                                unicode(_("normal"), 'utf-8'),
-                                                                unicode(_("above"), 'utf-8')]
+            env.config_run.settings['var_I_category_labels'] = env.globals_vars.generic_labels()
         else:
             if len(env.config_run.settings['var_I_category_labels']) == 3:
                 env.config_run.settings['var_I_category_labels']\
@@ -74,13 +75,7 @@ def configuration_run():
 
     if env.config_run.settings['class_category_analysis'] == 7:
         if env.config_run.settings['var_I_category_labels'] == "default":
-            env.config_run.settings['var_I_category_labels'] = [unicode(_("strong below"), 'utf-8'),
-                                                                unicode(_("moderate below"), 'utf-8'),
-                                                                unicode(_("weak below"), 'utf-8'),
-                                                                unicode(_("normal"), 'utf-8'),
-                                                                unicode(_("weak above"), 'utf-8'),
-                                                                unicode(_("moderate above"), 'utf-8'),
-                                                                unicode(_("strong above"), 'utf-8')]
+            env.config_run.settings['var_I_category_labels'] = env.globals_vars.generic_labels()
         else:
             if len(env.config_run.settings['var_I_category_labels']) == 7:
                 env.config_run.settings['var_I_category_labels'] \

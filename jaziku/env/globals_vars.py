@@ -31,7 +31,7 @@ PROG_NAME = "jaziku"
 
 VERSION = "0.6.0"
 
-VERSION_DATE = "12/01/2013"
+VERSION_DATE = "10/03/2013"
 
 # absolute directory where is installed Jaziku in your system,
 # this variable is set in jaziku.py
@@ -85,6 +85,31 @@ NUM_DAYS_OF_ANALYSIS_INTERVAL = None
 analysis_interval_i18n = None
 
 STATE_OF_DATA = None
+
+#==============================================================================
+# generic labels
+
+def generic_labels(id=False):
+    from jaziku.env.config_run import settings
+    if settings['class_category_analysis'] == 3:
+        labels = {'below':_(u'below'),
+                  'normal':_(u'normal'),
+                  'above':_(u'above')}
+    if settings['class_category_analysis'] == 7:
+        labels = {'below3':_(u'strong below'),
+                  'below2':_(u'moderate below'),
+                  'below1':_(u'weak below'),
+                  'normal':_(u'normal'),
+                  'above1':_(u'weak above'),
+                  'above2':_(u'moderate above'),
+                  'above3':_(u'strong above')}
+    if id is False:
+        return labels
+
+    if id in labels:
+        return labels[id]
+
+    return None
 
 #==============================================================================
 # maps #TODO: is now static fix it!
