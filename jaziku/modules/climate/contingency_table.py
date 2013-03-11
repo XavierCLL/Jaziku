@@ -316,8 +316,8 @@ def get_specific_contingency_table(station, lag, month, day=None):
     specific_contingency_table = {'in_values':contingency_table,
                                   'in_percentage':contingency_table_percent,
                                   'in_percentage_formatted':contingency_table_percent_formatted,
-                                  'thresholds_var_D':thresholds_var_D.values(),
-                                  'thresholds_var_I':thresholds_var_I.values()}
+                                  'thresholds_var_D':thresholds_var_D,
+                                  'thresholds_var_I':thresholds_var_I}
 
     return specific_contingency_table
 
@@ -331,7 +331,7 @@ def get_contingency_tables(station):
 
     Return by reference:
 
-    :ivar station.contingency_tables: get and set  to station
+    :ivar STATION.contingency_tables: get and set  to station
         all contingencies tables within a list
         [lag][month/trimester][day].
     """

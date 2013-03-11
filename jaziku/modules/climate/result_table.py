@@ -27,6 +27,7 @@ from dateutil.relativedelta import relativedelta
 
 from jaziku import env
 from jaziku.core.analysis_interval import get_range_analysis_interval
+from jaziku.modules.climate.thresholds import thresholds_to_list
 from jaziku.utils import format_out
 from jaziku.modules.climate import statistic_tests
 from jaziku.modules.climate.lags import get_specific_values
@@ -120,8 +121,8 @@ def composite_analysis(station):
             csv_result_table.writerow(
                 [var_D_text, var_I_text, format_out.number(pearson),
                  format_out.number(singr), is_significant_singr] + \
-                [format_out.number(item) for item in specific_contingency_table['thresholds_var_D']] + \
-                [format_out.number(item) for item in specific_contingency_table['thresholds_var_I']] + \
+                [format_out.number(item) for item in thresholds_to_list(specific_contingency_table['thresholds_var_D'])] + \
+                [format_out.number(item) for item in thresholds_to_list(specific_contingency_table['thresholds_var_I'])] + \
                 ([''] + [
                 env.config_run.settings['var_I_category_labels']['below'],
                 env.config_run.settings['var_I_category_labels']['normal'],
@@ -146,8 +147,8 @@ def composite_analysis(station):
             csv_result_table.writerow(
                 [var_D_text, var_I_text, format_out.number(pearson),
                  format_out.number(singr), is_significant_singr] + \
-                [format_out.number(item) for item in specific_contingency_table['thresholds_var_D']] + \
-                [format_out.number(item) for item in specific_contingency_table['thresholds_var_I']] + \
+                [format_out.number(item) for item in thresholds_to_list(specific_contingency_table['thresholds_var_D'])] + \
+                [format_out.number(item) for item in thresholds_to_list(specific_contingency_table['thresholds_var_I'])] + \
                 ([''] + [
                 env.config_run.settings['var_I_category_labels']['below3'],
                 env.config_run.settings['var_I_category_labels']['below2'],

@@ -67,6 +67,22 @@ def thresholds_dictionary(func):
     return wrapper_func
 
 
+def thresholds_to_list(thresholds):
+    """Return a ordered thresholds list from
+    dictionary thresholds.
+    """
+    if env.config_run.settings['class_category_analysis'] == 3:
+        return [thresholds['below'],
+                thresholds['above']]
+    if env.config_run.settings['class_category_analysis'] == 7:
+        return [thresholds['below3'],
+                thresholds['below2'],
+                thresholds['below1'],
+                thresholds['above1'],
+                thresholds['above2'],
+                thresholds['above3']]
+
+
 def get_thresholds(station, variable, thresholds_input=None):
     """Calculate and return thresholds of dependent or
     independent variable, the type of threshold as
@@ -139,7 +155,7 @@ def get_thresholds(station, variable, thresholds_input=None):
             p50 = numpy.percentile(variable.specific_values_cleaned, 50)
             std_deviation = numpy.std(variable.specific_values_cleaned)
 
-            return [p50 - std_dev_values[0] * std_deviation,
+            return [p50 + std_dev_values[0] * std_deviation,
                     p50 + std_dev_values[1] * std_deviation]
 
         if env.config_run.settings['class_category_analysis'] == 7:
@@ -163,9 +179,9 @@ def get_thresholds(station, variable, thresholds_input=None):
             p50 = numpy.percentile(variable.specific_values_cleaned, 50)
             std_deviation = numpy.std(variable.specific_values_cleaned)
 
-            return [p50 - std_dev_values[0] * std_deviation,
-                    p50 - std_dev_values[1] * std_deviation,
-                    p50 - std_dev_values[2] * std_deviation,
+            return [p50 + std_dev_values[0] * std_deviation,
+                    p50 + std_dev_values[1] * std_deviation,
+                    p50 + std_dev_values[2] * std_deviation,
                     p50 + std_dev_values[3] * std_deviation,
                     p50 + std_dev_values[4] * std_deviation,
                     p50 + std_dev_values[5] * std_deviation]
