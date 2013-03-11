@@ -11,6 +11,8 @@ Changelog
 news
 ++++
 
+- Now the standard deviation in thresholds by below (for 3 or 7 categories) need
+  specify the negative values, e.g: sd-2.1, sd-1.2, sd-0.5, sd0.6, sd0.9, sd1.3
 - Defined internal calculation_mode_series for var D and I in 'default' value
   and check it when is chose by the user
 - New options in runfile: calculation_mode_series_D and calculation_mode_series_I,
@@ -49,6 +51,7 @@ news
 fixes
 +++++
 
+- Fixed the standard deviation by below for thresholds
 - Change the mode to entry forecast_date in runfile, this fixed problems with
   format entries that are auto-convert from sheets application
 - Fixed input validation for var I with particular values
