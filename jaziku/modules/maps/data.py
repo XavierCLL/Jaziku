@@ -76,7 +76,7 @@ def climate_data_for_maps(station):
                         csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
                         csv_file.writerow([_('CODE'), _('LAT'), _('LON'), _('PEARSON')] + \
                                           env.var_D.get_generic_labels(upper=True) + \
-                                          [_('INDEX'), _('SUM')])
+                                          [_('SUM'), _('INDEX'), _('INDEX LOCATION')])
                         open_file.close()
                         del csv_file
 
@@ -108,7 +108,7 @@ def climate_data_for_maps(station):
                             csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
                             csv_file.writerow([_('CODE'), _('LAT'), _('LON'), _('PEARSON')] + \
                                               env.var_D.get_generic_labels(upper=True) + \
-                                              [_('INDEX'), _('SUM')])
+                                              [_('SUM'), _('INDEX'), _('INDEX LOCATION')])
                             open_file.close()
                             del csv_file
 
@@ -182,7 +182,6 @@ def climate_data_for_maps(station):
                                      'normal':station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][1],
                                      'above': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][2]}
                         index = calculate_index(3, values_CT)
-
                     if env.config_run.settings['class_category_analysis'] == 7:
                         values_CT = {'below3': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][0],
                                      'below2': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][1],
@@ -203,8 +202,9 @@ def climate_data_for_maps(station):
                                            format_out.number(values_CT['below']),
                                            format_out.number(values_CT['normal']),
                                            format_out.number(values_CT['above']),
+                                           format_out.number(sum([float(value_CT) for value_CT in values_CT.values()])),
                                            format_out.number(index['value']),
-                                           format_out.number(sum([float(value_CT) for value_CT in values_CT.values()]))])
+                                           env.globals_vars.generic_labels(index['location'])])
                     if env.config_run.settings['class_category_analysis'] == 7:
                         csv_file.writerow([station.code, format_out.number(station.lat), format_out.number(station.lon),
                                            format_out.number(station.pearson_list[lag][month - 1]),
@@ -215,8 +215,9 @@ def climate_data_for_maps(station):
                                            format_out.number(values_CT['above1']),
                                            format_out.number(values_CT['above2']),
                                            format_out.number(values_CT['above3']),
+                                           format_out.number(sum([float(value_CT) for value_CT in values_CT.values()])),
                                            format_out.number(index['value']),
-                                           format_out.number(sum([float(value_CT) for value_CT in values_CT.values()]))])
+                                           env.globals_vars.generic_labels(index['location'])])
                     open_file.close()
                     del csv_file
 
@@ -228,7 +229,6 @@ def climate_data_for_maps(station):
                                          'normal':station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][1],
                                          'above': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][2]}
                             index = calculate_index(3, values_CT)
-
                         if env.config_run.settings['class_category_analysis'] == 7:
                             values_CT = {'below3': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][0],
                                          'below2': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][1],
@@ -249,8 +249,9 @@ def climate_data_for_maps(station):
                                                format_out.number(values_CT['below']),
                                                format_out.number(values_CT['normal']),
                                                format_out.number(values_CT['above']),
+                                               format_out.number(sum([float(value_CT) for value_CT in values_CT.values()])),
                                                format_out.number(index['value']),
-                                               format_out.number(sum([float(value_CT) for value_CT in values_CT.values()]))])
+                                               env.globals_vars.generic_labels(index['location'])])
                         if env.config_run.settings['class_category_analysis'] == 7:
                             csv_file.writerow([station.code, format_out.number(station.lat), format_out.number(station.lon),
                                                format_out.number(station.pearson_list[lag][month - 1][day]),
@@ -261,8 +262,9 @@ def climate_data_for_maps(station):
                                                format_out.number(values_CT['above1']),
                                                format_out.number(values_CT['above2']),
                                                format_out.number(values_CT['above3']),
+                                               format_out.number(sum([float(value_CT) for value_CT in values_CT.values()])),
                                                format_out.number(index['value']),
-                                               format_out.number(sum([float(value_CT) for value_CT in values_CT.values()]))])
+                                               env.globals_vars.generic_labels(index['location'])])
                         open_file.close()
                         del csv_file
 
