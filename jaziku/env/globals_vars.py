@@ -89,7 +89,7 @@ STATE_OF_DATA = None
 #==============================================================================
 # generic labels
 
-def generic_labels(id=False):
+def generic_labels(key_label=False):
     from jaziku.env.config_run import settings
     if settings['class_category_analysis'] == 3:
         labels = {'below':_(u'below'),
@@ -103,11 +103,11 @@ def generic_labels(id=False):
                   'above1':_(u'weak above'),
                   'above2':_(u'moderate above'),
                   'above3':_(u'strong above')}
-    if id is False:
+    if key_label is False:
         return labels
 
-    if id in labels:
-        return labels[id]
+    if key_label in labels:
+        return labels[key_label]
 
     return None
 

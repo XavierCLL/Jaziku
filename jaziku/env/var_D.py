@@ -51,16 +51,17 @@ INTERNAL_UNITS = {
     'RUNOFF':       'm^3/s'
 }
 
-# calculation mode series for internal independent variable
+# available calculation mode series for internal dependent variable
+# the fist element is by default (options: ['mean', 'accumulate'],)
 CALCULATION_MODE_SERIES = {
-    'PPT':          'totalize',
-    'NDPPT':        'totalize',
-    'TMIN':         'mean',
-    'TMAX':         'mean',
-    'TEMP':         'mean',
-    'PATM':         'mean',
-    'RH':           'mean',
-    'RUNOFF':       'mean'
+    'PPT':          ['mean', 'accumulate'],
+    'NDPPT':        ['mean', 'accumulate'],
+    'TMIN':         ['mean'],
+    'TMAX':         ['mean'],
+    'TEMP':         ['mean'],
+    'PATM':         ['mean'],
+    'RH':           ['mean'],
+    'RUNOFF':       ['mean'],
 }
 
 # variable use for set units for var D, known and unknown for jaziku
