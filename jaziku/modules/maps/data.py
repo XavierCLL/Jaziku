@@ -20,6 +20,7 @@
 
 import os
 import csv
+from math import isnan
 
 from jaziku import env
 from jaziku.core.analysis_interval import get_range_analysis_interval
@@ -133,7 +134,9 @@ def climate_data_for_maps(station):
             elif values['above'] > values['below']:
                 return {'value':values['above'],
                         'location':'above'}
-            return float('NaN')
+
+            return {'value':float('NaN'),
+                    'location':None}
 
         if category == 7:
             B = max([values['below3'], values['below2'], values['below1']])
@@ -141,6 +144,10 @@ def climate_data_for_maps(station):
             new_values = {'below':B, 'normal':values['normal'], 'above':A}
             # get index based on algorithm of 3 categories
             index_3cat = calculate_index(3, new_values)
+
+            # check if is nan
+            if isnan(index_3cat['value']):
+                return index_3cat
 
             # find index location for 7 categories
             if index_3cat['location'] == 'below':
@@ -185,11 +192,6 @@ def climate_data_for_maps(station):
                                      'above2': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][5],
                                      'above3': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][6]}
                         index = calculate_index(7, values_CT)
-
-                        print values_CT
-                        print index
-                        print
-                        print
 
                     # write new row in file
                     csv_name = env.globals_vars.maps_files_climate[env.config_run.settings['analysis_interval']][lag][month - 1][category_var_I]
