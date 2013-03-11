@@ -205,8 +205,8 @@ def configuration_run():
         settings["type_var_D"] = colored.green(env.var_D.TYPE_SERIES) + " ({0})".format(env.var_D.units)
 
     # ------------------------
-    # calculation_mode_series_D
-    settings["calculation_mode_series_D"] = env.config_run.settings['calculation_mode_series_D']
+    # mode_calculation_series_D
+    settings["mode_calculation_series_D"] = env.config_run.settings['mode_calculation_series_D']
 
     # ------------------------
     # limits var D below
@@ -260,8 +260,8 @@ def configuration_run():
         settings["type_var_I"] = colored.green(env.var_I.TYPE_SERIES) + " ({0})".format(env.var_I.units)
 
     # ------------------------
-    # calculation_mode_series_I
-    settings["calculation_mode_series_I"] = env.config_run.settings['calculation_mode_series_I']
+    # mode_calculation_series_I
+    settings["mode_calculation_series_I"] = env.config_run.settings['mode_calculation_series_I']
 
     # ------------------------
     # path_to_file_var_I

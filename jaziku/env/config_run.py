@@ -128,7 +128,7 @@ list_of_all_settings = [
 
     # this is the mode of series calculation
     #   input: 'default', 'accumulate', 'mean'
-    'calculation_mode_series_D',
+    'mode_calculation_series_D',
 
     # limits below and above for dependence variable
     #   input: 'default', none or float (below; above)
@@ -152,7 +152,7 @@ list_of_all_settings = [
 
     # this is the mode of series calculation
     #   input: 'default', 'accumulate', 'mean'
-    'calculation_mode_series_I',
+    'mode_calculation_series_I',
 
     # path
     #   input: string or 'internal'
