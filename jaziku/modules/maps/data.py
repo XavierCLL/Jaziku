@@ -124,19 +124,44 @@ def climate_data_for_maps(station):
         # below-normal-above
         if category == 3:
             # select index
-            if (values['N'] >= values['B'] and values['N'] >= values['A']) or values['B'] == values['A']:
-                return 0
-            elif values['B'] > values['A']:
-                return -values['B']
-            elif values['A'] > values['B']:
-                return values['A']
+            if (values['normal'] >= values['below'] and values['normal'] >= values['above']) or values['below'] == values['above']:
+                return {'value':0,
+                        'location':'normal'}
+            elif values['below'] > values['above']:
+                return {'value':-values['below'],
+                        'location':'below'}
+            elif values['above'] > values['below']:
+                return {'value':values['above'],
+                        'location':'above'}
             return float('NaN')
 
         if category == 7:
-            B = max([values['B3'], values['B2'], values['B1']])
-            A = max([values['A3'], values['A2'], values['A1']])
-            new_values = {'B':B, 'N':values['N'], 'A':A}
-            return calculate_index(3, new_values)
+            B = max([values['below3'], values['below2'], values['below1']])
+            A = max([values['above3'], values['above2'], values['above1']])
+            new_values = {'below':B, 'normal':values['normal'], 'above':A}
+            # get index based on algorithm of 3 categories
+            index_3cat = calculate_index(3, new_values)
+
+            # find index location for 7 categories
+            if index_3cat['location'] == 'below':
+                if values['below3'] == -index_3cat['value']:
+                    location = 'below3'
+                if values['below2'] == -index_3cat['value']:
+                    location = 'below2'
+                if values['below1'] == -index_3cat['value']:
+                    location = 'below1'
+            if index_3cat['location'] == 'above':
+                if values['above3'] == index_3cat['value']:
+                    location = 'above3'
+                if values['above2'] == index_3cat['value']:
+                    location = 'above2'
+                if values['above1'] == index_3cat['value']:
+                    location = 'above1'
+            if index_3cat['location'] == 'normal':
+                location = 'normal'
+
+            return {'value':index_3cat['value'],
+                    'location':location}
 
     for lag in env.config_run.settings['lags']:
 
@@ -146,20 +171,25 @@ def climate_data_for_maps(station):
             if env.globals_vars.STATE_OF_DATA in [1, 3]:
                 for category_var_I in range(env.config_run.settings['class_category_analysis']):
                     if env.config_run.settings['class_category_analysis'] == 3:
-                        values_CT = {'B': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][0],
-                                     'N': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][1],
-                                     'A': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][2]}
-                        p_index = calculate_index(3, values_CT)
+                        values_CT = {'below': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][0],
+                                     'normal':station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][1],
+                                     'above': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][2]}
+                        index = calculate_index(3, values_CT)
 
                     if env.config_run.settings['class_category_analysis'] == 7:
-                        values_CT = {'B3': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][0],
-                                     'B2': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][1],
-                                     'B1': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][2],
-                                     'N':  station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][3],
-                                     'A1': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][4],
-                                     'A2': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][5],
-                                     'A3': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][6]}
-                        p_index = calculate_index(7, values_CT)
+                        values_CT = {'below3': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][0],
+                                     'below2': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][1],
+                                     'below1': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][2],
+                                     'normal': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][3],
+                                     'above1': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][4],
+                                     'above2': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][5],
+                                     'above3': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][6]}
+                        index = calculate_index(7, values_CT)
+
+                        print values_CT
+                        print index
+                        print
+                        print
 
                     # write new row in file
                     csv_name = env.globals_vars.maps_files_climate[env.config_run.settings['analysis_interval']][lag][month - 1][category_var_I]
@@ -168,22 +198,22 @@ def climate_data_for_maps(station):
                     if env.config_run.settings['class_category_analysis'] == 3:
                         csv_file.writerow([station.code, format_out.number(station.lat), format_out.number(station.lon),
                                            format_out.number(station.pearson_list[lag][month - 1]),
-                                           format_out.number(values_CT['B']),
-                                           format_out.number(values_CT['N']),
-                                           format_out.number(values_CT['A']),
-                                           format_out.number(p_index),
+                                           format_out.number(values_CT['below']),
+                                           format_out.number(values_CT['normal']),
+                                           format_out.number(values_CT['above']),
+                                           format_out.number(index['value']),
                                            format_out.number(sum([float(value_CT) for value_CT in values_CT.values()]))])
                     if env.config_run.settings['class_category_analysis'] == 7:
                         csv_file.writerow([station.code, format_out.number(station.lat), format_out.number(station.lon),
                                            format_out.number(station.pearson_list[lag][month - 1]),
-                                           format_out.number(values_CT['B3']),
-                                           format_out.number(values_CT['B2']),
-                                           format_out.number(values_CT['B1']),
-                                           format_out.number(values_CT['N']),
-                                           format_out.number(values_CT['A1']),
-                                           format_out.number(values_CT['A2']),
-                                           format_out.number(values_CT['A3']),
-                                           format_out.number(p_index),
+                                           format_out.number(values_CT['below3']),
+                                           format_out.number(values_CT['below2']),
+                                           format_out.number(values_CT['below1']),
+                                           format_out.number(values_CT['normal']),
+                                           format_out.number(values_CT['above1']),
+                                           format_out.number(values_CT['above2']),
+                                           format_out.number(values_CT['above3']),
+                                           format_out.number(index['value']),
                                            format_out.number(sum([float(value_CT) for value_CT in values_CT.values()]))])
                     open_file.close()
                     del csv_file
@@ -192,20 +222,20 @@ def climate_data_for_maps(station):
                 for day in range(len(get_range_analysis_interval())):
                     for category_var_I in range(env.config_run.settings['class_category_analysis']):
                         if env.config_run.settings['class_category_analysis'] == 3:
-                            values_CT = {'B': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][0],
-                                         'N': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][1],
-                                         'A': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][2]}
-                            p_index = calculate_index(3, values_CT)
+                            values_CT = {'below': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][0],
+                                         'normal':station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][1],
+                                         'above': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][2]}
+                            index = calculate_index(3, values_CT)
 
                         if env.config_run.settings['class_category_analysis'] == 7:
-                            values_CT = {'B3': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][0],
-                                         'B2': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][1],
-                                         'B1': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][2],
-                                         'N':  station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][3],
-                                         'A1': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][4],
-                                         'A2': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][5],
-                                         'A3': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][6]}
-                            p_index = calculate_index(7, values_CT)
+                            values_CT = {'below3': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][0],
+                                         'below2': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][1],
+                                         'below1': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][2],
+                                         'normal': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][3],
+                                         'above1': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][4],
+                                         'above2': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][5],
+                                         'above3': station.contingency_tables[lag][month - 1][day]['in_percentage'][category_var_I][6]}
+                            index = calculate_index(7, values_CT)
 
                         # write new row in file
                         csv_name = env.globals_vars.maps_files_climate[env.config_run.settings['analysis_interval']][lag][month - 1][day][category_var_I]
@@ -214,27 +244,27 @@ def climate_data_for_maps(station):
                         if env.config_run.settings['class_category_analysis'] == 3:
                             csv_file.writerow([station.code, format_out.number(station.lat), format_out.number(station.lon),
                                                format_out.number(station.pearson_list[lag][month - 1][day]),
-                                               format_out.number(values_CT['B']),
-                                               format_out.number(values_CT['N']),
-                                               format_out.number(values_CT['A']),
-                                               format_out.number(p_index),
+                                               format_out.number(values_CT['below']),
+                                               format_out.number(values_CT['normal']),
+                                               format_out.number(values_CT['above']),
+                                               format_out.number(index['value']),
                                                format_out.number(sum([float(value_CT) for value_CT in values_CT.values()]))])
                         if env.config_run.settings['class_category_analysis'] == 7:
                             csv_file.writerow([station.code, format_out.number(station.lat), format_out.number(station.lon),
                                                format_out.number(station.pearson_list[lag][month - 1][day]),
-                                               format_out.number(values_CT['B3']),
-                                               format_out.number(values_CT['B2']),
-                                               format_out.number(values_CT['B1']),
-                                               format_out.number(values_CT['N']),
-                                               format_out.number(values_CT['A1']),
-                                               format_out.number(values_CT['A2']),
-                                               format_out.number(values_CT['A3']),
-                                               format_out.number(p_index),
+                                               format_out.number(values_CT['below3']),
+                                               format_out.number(values_CT['below2']),
+                                               format_out.number(values_CT['below1']),
+                                               format_out.number(values_CT['normal']),
+                                               format_out.number(values_CT['above1']),
+                                               format_out.number(values_CT['above2']),
+                                               format_out.number(values_CT['above3']),
+                                               format_out.number(index['value']),
                                                format_out.number(sum([float(value_CT) for value_CT in values_CT.values()]))])
                         open_file.close()
                         del csv_file
 
-
+# TODO v0.6.0
 def forecast_data_for_maps(station):
     """
     Create maps data csv file for plotting for each trimester, phenomenon and
@@ -337,7 +367,7 @@ def forecast_data_for_maps(station):
 
     for lag in env.config_run.settings['lags']:
 
-        p_index = calculate_index()
+        index = calculate_index()
 
         # write new row in file
         csv_name = env.globals_vars.maps_files_forecast[env.config_run.settings['analysis_interval']][forecast_date_formatted][lag]
@@ -350,7 +380,7 @@ def forecast_data_for_maps(station):
                            format_out.number(station.prob_decrease_var_D[lag]),
                            format_out.number(station.prob_normal_var_D[lag]),
                            format_out.number(station.prob_exceed_var_D[lag]),
-                           format_out.number(p_index),
+                           format_out.number(index),
                            format_out.number(sum([station.prob_decrease_var_D[lag],
                                                   station.prob_normal_var_D[lag],
                                                   station.prob_exceed_var_D[lag]]))])
