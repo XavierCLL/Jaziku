@@ -127,7 +127,7 @@ list_of_all_settings = [
     'type_var_D',
 
     # this is the mode of series calculation
-    #   input: 'default', 'totalize', 'mean'
+    #   input: 'default', 'accumulate', 'mean'
     'calculation_mode_series_D',
 
     # limits below and above for dependence variable
@@ -151,7 +151,7 @@ list_of_all_settings = [
     'type_var_I',
 
     # this is the mode of series calculation
-    #   input: 'default', 'totalize', 'mean'
+    #   input: 'default', 'accumulate', 'mean'
     'calculation_mode_series_I',
 
     # path

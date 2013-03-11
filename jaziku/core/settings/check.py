@@ -94,22 +94,23 @@ def configuration_run():
     # calculation_mode_series_D
     if env.config_run.settings['calculation_mode_series_D'] == 'default':
         if env.var_D.TYPE_SERIES in env.var_D.CALCULATION_MODE_SERIES:
-            env.config_run.settings['calculation_mode_series_D'] = env.var_D.CALCULATION_MODE_SERIES[env.var_D.TYPE_SERIES]
+            env.config_run.settings['calculation_mode_series_D'] = env.var_D.CALCULATION_MODE_SERIES[env.var_D.TYPE_SERIES][0]
         else:
-            env.config_run.settings['calculation_mode_series_D'] = 'totalize'
+            env.config_run.settings['calculation_mode_series_D'] = 'mean'
         env.globals_vars.input_settings["calculation_mode_series_D"] = env.config_run.settings['calculation_mode_series_D']
-    elif env.config_run.settings['calculation_mode_series_D'] in ['totalize', 'mean']:
-        if env.var_D.TYPE_SERIES in env.var_D.CALCULATION_MODE_SERIES and \
-            not env.var_D.CALCULATION_MODE_SERIES[env.var_D.TYPE_SERIES] == env.config_run.settings['calculation_mode_series_D']:
-            console.msg_error_configuration('calculation_mode_series_D',
-                                            _("For {0} the calculation_mode_series is '{1}', but\n"
-                                              "this should be '{2}' due the type of series.")
-                                            .format(env.var_D.TYPE_SERIES, env.config_run.settings['calculation_mode_series_D'],
-                                                    env.var_D.CALCULATION_MODE_SERIES[env.var_D.TYPE_SERIES]))
+    elif env.config_run.settings['calculation_mode_series_D'] in ['accumulate', 'mean']:
+        if env.var_D.TYPE_SERIES in env.var_D.CALCULATION_MODE_SERIES:
+            if env.config_run.settings['calculation_mode_series_D'] not in env.var_D.CALCULATION_MODE_SERIES[env.var_D.TYPE_SERIES]:
+                console.msg_error_configuration('calculation_mode_series_D',
+                    _("For {0} the 'calculation_mode_series_D' set as '{1}', but\n"
+                      "this series not accept this mode to calculate the series.\n"
+                      "For this series the options are: {2}")
+                        .format(env.var_D.TYPE_SERIES, env.config_run.settings['calculation_mode_series_D'],
+                                env.var_D.CALCULATION_MODE_SERIES[env.var_D.TYPE_SERIES]))
         env.globals_vars.input_settings["calculation_mode_series_D"] = colored.green(env.config_run.settings['calculation_mode_series_D'])
     else:
         console.msg_error_configuration('calculation_mode_series_D', _("The calculation_mode_series_D is wrong, the options are:\n"
-                                                                       "default, totalize or mean"))
+                                                                       "default, accumulate or mean"))
 
     # ------------------------
     # limits var D
@@ -165,22 +166,23 @@ def configuration_run():
     # calculation_mode_series_I
     if env.config_run.settings['calculation_mode_series_I'] == 'default':
         if env.var_I.TYPE_SERIES in env.var_I.CALCULATION_MODE_SERIES:
-            env.config_run.settings['calculation_mode_series_I'] = env.var_I.CALCULATION_MODE_SERIES[env.var_I.TYPE_SERIES]
+            env.config_run.settings['calculation_mode_series_I'] = env.var_I.CALCULATION_MODE_SERIES[env.var_I.TYPE_SERIES][0]
         else:
-            env.config_run.settings['calculation_mode_series_I'] = 'totalize'
+            env.config_run.settings['calculation_mode_series_I'] = 'mean'
         env.globals_vars.input_settings["calculation_mode_series_I"] = env.config_run.settings['calculation_mode_series_I']
-    elif env.config_run.settings['calculation_mode_series_I'] in ['totalize', 'mean']:
-        if env.var_I.TYPE_SERIES in env.var_I.CALCULATION_MODE_SERIES and \
-                not env.var_I.CALCULATION_MODE_SERIES[env.var_I.TYPE_SERIES] == env.config_run.settings['calculation_mode_series_I']:
-            console.msg_error_configuration('calculation_mode_series_I',
-                                            _("For {0} the calculation_mode_series is '{1}', but\n"
-                                              "this should be '{2}' due the type of series.")
-                                            .format(env.var_I.TYPE_SERIES, env.config_run.settings['calculation_mode_series_I'],
-                                                    env.var_I.CALCULATION_MODE_SERIES[env.var_I.TYPE_SERIES]))
+    elif env.config_run.settings['calculation_mode_series_I'] in ['accumulate', 'mean']:
+        if env.var_I.TYPE_SERIES in env.var_I.CALCULATION_MODE_SERIES:
+            if env.config_run.settings['calculation_mode_series_I'] not in env.var_I.CALCULATION_MODE_SERIES[env.var_I.TYPE_SERIES]:
+                console.msg_error_configuration('calculation_mode_series_I',
+                    _("For {0} the 'calculation_mode_series_I' set as '{1}', but\n"
+                      "this series not accept this mode to calculate the series.\n"
+                      "For {0} series the options are: {2}")
+                        .format(env.var_I.TYPE_SERIES, env.config_run.settings['calculation_mode_series_I'],
+                                env.var_I.CALCULATION_MODE_SERIES[env.var_I.TYPE_SERIES]))
         env.globals_vars.input_settings["calculation_mode_series_I"] = colored.green(env.config_run.settings['calculation_mode_series_I'])
     else:
         console.msg_error_configuration('calculation_mode_series_I', _("The calculation_mode_series_I is wrong, the options are:\n"
-                                                                       "default, totalize or mean"))
+                                                                       "default, accumulate or mean"))
 
     # ------------------------
     # limits var I
