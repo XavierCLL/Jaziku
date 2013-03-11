@@ -80,9 +80,9 @@ INTERNAL_UNITS = {
     'AREA_WHWP':    'anomaly scaled 10e6 km^2'
 }
 
-# available calculation mode series for internal independent variable
+# available mode calculation series for internal independent variable
 # the fist element is by default (options: ['mean', 'accumulate'],)
-CALCULATION_MODE_SERIES = {
+MODE_CALCULATION_SERIES = {
     'ONI1':         ['mean'],
     'ONI2':         ['mean'],
     'SOI':          ['mean'],

@@ -76,8 +76,8 @@ def configuration_run(stop_in=None):
     console.msg("  Var D options:", color='cyan')
     print "   {0} ---------------- {1}".format("type var D", settings["type_var_D"])
     if stop_in == "type_var_D": return
-    print "   {0} - {1}".format("calculation mode series D", settings["calculation_mode_series_D"])
-    if stop_in == "calculation_mode_series_D": return
+    print "   {0} - {1}".format("mode calculation series D", settings["mode_calculation_series_D"])
+    if stop_in == "mode_calculation_series_D": return
     print "   {0} -------------- {1}".format("limits var D", settings["limits_var_D"])
     if stop_in == "limits_var_D": return
     print "   {0} ---------- {1}".format("thresholds var D", settings["thresholds_var_D"])
@@ -86,8 +86,8 @@ def configuration_run(stop_in=None):
     console.msg("  Var I options:", color='cyan')
     print "   {0} ---------------- {1}".format("type var I", settings["type_var_I"])
     if stop_in == "type_var_I": return
-    print "   {0} - {1}".format("calculation mode series I", settings["calculation_mode_series_I"])
-    if stop_in == "calculation_mode_series_I": return
+    print "   {0} - {1}".format("mode calculation series I", settings["mode_calculation_series_I"])
+    if stop_in == "mode_calculation_series_I": return
     print "   {0} -------- {1}".format("path to file var I", settings["path_to_file_var_I"])
     if stop_in == "path_to_file_var_I": return
     print "   {0} -------------- {1}".format("limits var I", settings["limits_var_I"])

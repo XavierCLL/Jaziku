@@ -51,9 +51,9 @@ INTERNAL_UNITS = {
     'RUNOFF':       'm^3/s'
 }
 
-# available calculation mode series for internal dependent variable
+# available mode calculation series for internal dependent variable
 # the fist element is by default (options: ['mean', 'accumulate'],)
-CALCULATION_MODE_SERIES = {
+MODE_CALCULATION_SERIES = {
     'PPT':          ['mean', 'accumulate'],
     'NDPPT':        ['mean', 'accumulate'],
     'TMIN':         ['mean'],
