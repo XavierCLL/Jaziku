@@ -103,5 +103,5 @@ def make_ncl_file(grid, base_path_file, globals_vars):
         open_ncl_file.close()
 
         return ncl_file
-    except Exception, e:
-        print e
+    except Exception as error:
+        print error

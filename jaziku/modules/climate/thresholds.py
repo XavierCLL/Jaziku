@@ -50,6 +50,9 @@ def percentiles(values, percentile_values):
 
 # decorator
 def thresholds_to_dict_format(func):
+    """Format the thresholds to defined dictionary for
+    more easy to use inside code.
+    """
     def wrapper_func(*args, **kwargs):
         thresholds = func(*args, **kwargs)
         if isinstance(thresholds, dict):
@@ -70,6 +73,13 @@ def thresholds_to_dict_format(func):
 
 # decorator
 def validate_thresholds(variable, force=False):
+    """Decorator function for validate thresholds calculated or
+     assigned in its limits established
+
+    :param variable: variable to validate
+    :param force: this force the validation of thresholds, if the limits
+    can't not set or are undefined show error and exit.
+    """
     def decorator(func):
         def wrapper_func(*args, **kwargs):
             thresholds = func(*args, **kwargs)
@@ -94,12 +104,12 @@ def validate_thresholds(variable, force=False):
                         .format(env.var_[variable.type].TYPE_SERIES))
             # check thresholds if are within limits of variable
             for key, threshold in thresholds.items():
-                if not validation.is_the_value_within_limits(threshold, variable):
-                    console.msg_error(_("If you use standard deviation (sd) as thresholds\n"
-                                        "and if series ({0}) is a external type, you need\n"
-                                        "defined the limits for this variable, because Jaziku\n"
-                                        "check the (sd) thresholds calculated are within limits.")
-                    .format(env.var_[variable.type].TYPE_SERIES))
+                try:
+                    validation.is_the_value_within_limits(threshold, variable)
+                except ValueError as error:
+                    console.msg_error(_("The threshold calculated or assigned to '{0}'\n"
+                                        "for the series {1}, is outside its limits defined.\n\n{2}")
+                    .format(env.globals_vars.generic_labels(key), env.var_[variable.type].TYPE_SERIES, error))
         return wrapper_func
     return decorator
 
@@ -238,9 +248,9 @@ def get_thresholds(station, variable, thresholds_input=None):
                 validation.is_the_value_within_limits(threshold, variable)
 
             return thresholds_input
-        except Exception, e:
+        except Exception as error:
             console.msg_error(_("Problems with the thresholds for var {0}:"
-                                "\n\n{1}").format(variable.type, e))
+                                "\n\n{1}").format(variable.type, error))
 
     ## get defined thresholds on env.config_run and variable
     if thresholds_input is None:

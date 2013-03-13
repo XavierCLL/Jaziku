@@ -116,10 +116,10 @@ def configuration_run():
             env.config_run.settings['process_period'] = {'start': args_period_start,
                                                          'end': args_period_end}
             settings["process_period"] = colored.green("{0}-{1}".format(args_period_start, args_period_end))
-        except Exception, e:
+        except Exception as error:
             console.msg_error_configuration('process_period',
                 _("The period must be: year_start-year_end (ie. 1980-2008)\n"
-                  "or 'maximum' for take the process period maximum possible.\n\n{0}").format(e))
+                  "or 'maximum' for take the process period maximum possible.\n\n{0}").format(error))
 
     # ------------------------
     # analog_year
