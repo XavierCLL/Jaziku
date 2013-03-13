@@ -59,6 +59,8 @@ news
 fixes
 +++++
 
+- Check if don't have any common period between series, show error message
+  if common period is empty
 - Fixed the standard deviation by below for thresholds
 - Change the mode to entry forecast_date in runfile, this fixed problems with
   format entries that are auto-convert from sheets application
