@@ -63,13 +63,13 @@ def is_the_value_within_limits(value, variable):
         if value < limit_below:
             raise ValueError(_("Error validating the value '{0}' it isn't within\n"
                                 "limits ({1} to {2}) defined for the var {3} ({4}).")
-            .format(round(value, 3), limit_below, limit_above, variable.type, variable.type_series))
+            .format(round(value, 4), limit_below, limit_above, variable.type, variable.type_series))
     if limit_above is not None:
         # check by above
         if value > limit_above:
             raise ValueError(_("Error validating the value '{0}' it isn't within\n"
                                 "limits ({1} to {2}) defined for the var {3} ({4}).")
-            .format(round(value, 3), limit_below, limit_above, variable.type, variable.type_series))
+            .format(round(value, 4), limit_below, limit_above, variable.type, variable.type_series))
 
     return True
 

@@ -161,7 +161,7 @@ def get_thresholds(station, variable, thresholds_input=None):
         if variable.type == 'I':
             internal_thresholds = env.var_I.get_internal_thresholds()
             if internal_thresholds is None:
-                console.msg_error(_("the thresholds of var {0} were defined as "
+                console.msg_error(_("the thresholds of var {0} ({1}) were defined as "
                                     "'default'\nbut this variable ({1}) no internal thresholds defined")
                 .format(variable.type, env.var_I.TYPE_SERIES))
             return get_thresholds(station, variable, internal_thresholds)
@@ -173,16 +173,16 @@ def get_thresholds(station, variable, thresholds_input=None):
         percentile_values = [format_in.to_float(value) for value in percentile_values]
 
         if False in [(0 <= value <= 100) for value in percentile_values]:
-            console.msg_error(_("the thresholds of var {0} were defined as "
-                                "percentile\nbut are outside of range 0-100:\n{1}")
-            .format(variable.type, thresholds_input))
+            console.msg_error(_("the thresholds of var {0} ({1}) were defined as "
+                                "percentile\nbut are outside of range 0-100:\n\n{2}")
+            .format(variable.type, env.var_[variable.type].TYPE_SERIES, thresholds_input))
 
         percentile_values_sort = list(percentile_values)
         percentile_values_sort.sort()
         if not percentile_values_sort == percentile_values:
-            console.msg_error(_("the percentile values of var {0} must have "
-                                "rising values:\n{1}")
-            .format(variable.type, thresholds_input))
+            console.msg_error(_("the percentile values of var {0} ({1}) must have "
+                                "rising values:\n\n{2}")
+            .format(variable.type, env.var_[variable.type].TYPE_SERIES, thresholds_input))
         return percentiles(variable.specific_values_cleaned, percentile_values)
 
     @validate_thresholds(variable, force=True)
@@ -193,10 +193,10 @@ def get_thresholds(station, variable, thresholds_input=None):
 
         # check if all values of std deviation are float
         if False in [isinstance(value, float) for value in std_dev_values]:
-            console.msg_error(_("thresholds of var {0} were defined as "
+            console.msg_error(_("thresholds of var {0} ({1}) were defined as "
                                 "N standard deviation (sdN)\n but the value N is "
-                                "invalid number (float or integer)\n{1}")
-                .format(variable.type, std_dev_values))
+                                "invalid number (float or integer)\n\n{1}")
+                .format(variable.type, env.var_[variable.type].TYPE_SERIES, std_dev_values))
 
         if env.config_run.settings['class_category_analysis'] == 3:
 
@@ -208,21 +208,13 @@ def get_thresholds(station, variable, thresholds_input=None):
 
         if env.config_run.settings['class_category_analysis'] == 7:
 
-            # check is the std deviations below values are rising
-            std_dev_values_below_sort = list(std_dev_values[0:3])
+            # check is the std deviations values are rising
+            std_dev_values_below_sort = list(std_dev_values)
             std_dev_values_below_sort.sort()
-            if not std_dev_values_below_sort == std_dev_values[0:3]:
-                console.msg_error(_("the sdt deviation values (sdN) by below (first 3) in\n"
-                                    "thresholds of var {0} must have rising values:\n{1}")
-                .format(variable.type, std_dev_values))
-
-            # check is the std deviations above values are rising
-            std_dev_values_above_sort = list(std_dev_values[3::])
-            std_dev_values_above_sort.sort()
-            if not std_dev_values_above_sort == std_dev_values[3::]:
-                console.msg_error(_("the sdt deviation values (sdN) by above (last 3) in\n"
-                                    "thresholds of var {0} must have rising values:\n{1}")
-                .format(variable.type, std_dev_values))
+            if not std_dev_values_below_sort == std_dev_values:
+                console.msg_error(_("the sdt deviation values (sdN) for the thresholds\n"
+                                    "of var {0} ({1}), must have rising values:\n\n{2}")
+                .format(variable.type, env.var_[variable.type].TYPE_SERIES, std_dev_values))
 
             p50 = numpy.percentile(variable.specific_values_cleaned, 50)
             std_deviation = numpy.std(variable.specific_values_cleaned)
@@ -240,17 +232,17 @@ def get_thresholds(station, variable, thresholds_input=None):
         thresholds_input_sort = list(thresholds_input)
         thresholds_input_sort.sort()
         if not thresholds_input_sort == thresholds_input:
-            console.msg_error(_("the thresholds values of var {0} must have "
-                                "rising values:\n{1}")
-            .format(variable.type, thresholds_input))
+            console.msg_error(_("the thresholds values of var {0} ({1}) must have "
+                                "rising values:\n\n{2}")
+            .format(variable.type, env.var_[variable.type].TYPE_SERIES, thresholds_input))
         try:
             for threshold in thresholds_input:
                 validation.is_the_value_within_limits(threshold, variable)
 
             return thresholds_input
         except Exception as error:
-            console.msg_error(_("Problems with the thresholds for var {0}:"
-                                "\n\n{1}").format(variable.type, error))
+            console.msg_error(_("Problems with the thresholds for var {0} ({1}):"
+                                "\n\n{2}").format(variable.type, env.var_[variable.type].TYPE_SERIES, error))
 
     ## get defined thresholds on env.config_run and variable
     if thresholds_input is None:
@@ -289,8 +281,8 @@ def get_thresholds(station, variable, thresholds_input=None):
         return thresholds_with_particular_values(thresholds_input)
 
     # unrecognizable thresholds
-    console.msg_error(_("unrecognizable thresholds '{0}' for var {1}")
-        .format(thresholds_input, variable.type))
+    console.msg_error(_("unrecognizable thresholds '{0}' for var {1} ({2})")
+        .format(thresholds_input, variable.type, env.var_[variable.type].TYPE_SERIES))
 
 
 def thresholds_by_default_for_var_D(station, variable):
@@ -342,8 +334,8 @@ def thresholds_by_default_for_var_D(station, variable):
     # return thresholds without analog year
     internal_thresholds = env.var_D.get_internal_thresholds()
     if internal_thresholds is None:
-        console.msg_error(_("the thresholds of var {0} were defined as "
-                            "'default'\nbut this variable ({1}) no internal thresholds defined")
+        console.msg_error(_("the thresholds of var {0} ({1}) were defined as 'default'\n"
+                            "but this variable ({1}) haven't internal thresholds defined.")
         .format(variable.type, env.var_D.TYPE_SERIES))
     return get_thresholds(station, variable, internal_thresholds)
 
