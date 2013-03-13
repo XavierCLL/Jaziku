@@ -30,6 +30,7 @@ def configuration_run():
 
     # ------------------------
     # class_category_analysis
+
     env.config_run.settings['class_category_analysis'] = format_in.to_int(env.config_run.settings['class_category_analysis'])
 
     if env.config_run.settings['class_category_analysis'] not in [3,7]:
@@ -92,6 +93,7 @@ def configuration_run():
 
     # ------------------------
     # mode_calculation_series_D
+
     if env.config_run.settings['mode_calculation_series_D'] == 'default':
         if env.var_D.TYPE_SERIES in env.var_D.MODE_CALCULATION_SERIES:
             env.config_run.settings['mode_calculation_series_D'] = env.var_D.MODE_CALCULATION_SERIES[env.var_D.TYPE_SERIES][0]
@@ -163,7 +165,23 @@ def configuration_run():
     env.config_run.settings['limits_var_D']['ready'] = False
 
     # ------------------------
+    # thresholds var_D
+
+    if env.config_run.settings["thresholds_var_D"] == "default":
+        if env.config_run.settings["type_var_D"] not in env.var_D.INTERNAL_TYPES:
+            console.msg_error_configuration('thresholds_var_D',
+                                            _("The thresholds can't be define as 'default' if the\n"
+                                              "type of dependent variable not is valid internal type."))
+    else:
+        if len(env.config_run.settings["thresholds_var_D"]) != env.config_run.settings['class_category_analysis']-1:
+            console.msg_error_configuration('thresholds_var_D',
+                                            _("The thresholds for {0} categories must have {1} thresholds,\n"
+                                              "or 'default' for use thresholds by default in internal variables.")
+                                            .format(env.config_run.settings['class_category_analysis'], env.config_run.settings['class_category_analysis']-1))
+
+    # ------------------------
     # mode_calculation_series_I
+
     if env.config_run.settings['mode_calculation_series_I'] == 'default':
         if env.var_I.TYPE_SERIES in env.var_I.MODE_CALCULATION_SERIES:
             env.config_run.settings['mode_calculation_series_I'] = env.var_I.MODE_CALCULATION_SERIES[env.var_I.TYPE_SERIES][0]
@@ -258,12 +276,17 @@ def configuration_run():
     # ------------------------
     # thresholds var_I
 
-    if not env.config_run.settings["path_to_file_var_I"] == "internal" and \
-       env.config_run.settings["type_var_I"] not in env.var_I.INTERNAL_TYPES:
-        if env.config_run.settings["thresholds_var_I"] == "default":
+    if env.config_run.settings["thresholds_var_I"] == "default":
+       if env.config_run.settings["type_var_I"] not in env.var_I.INTERNAL_TYPES:
             console.msg_error_configuration('thresholds_var_I',
                 _("The thresholds can't be define as 'default' if the\n"
                   "type of independent variable not is valid internal type."))
+    else:
+        if len(env.config_run.settings["thresholds_var_I"]) != env.config_run.settings['class_category_analysis']-1:
+            console.msg_error_configuration('thresholds_var_I',
+                _("The thresholds for {0} categories must have {1} thresholds,\n"
+                  "or 'default' for use thresholds by default in internal variables.")
+            .format(env.config_run.settings['class_category_analysis'], env.config_run.settings['class_category_analysis']-1))
 
     # ------------------------
     # check the 9 forecast values and forecast date

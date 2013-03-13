@@ -58,16 +58,16 @@ def read_runfile():
 
     for line_in_run_file in runfile:
 
+        # if line is null o empty, e.g. empty but with tabs or spaces
+        if not line_in_run_file or not line_in_run_file[0].strip() or line_in_run_file == []:
+            continue
+
         if line_in_run_file[0].strip() not in ['forecast_var_I_lag_0','forecast_var_I_lag_1','forecast_var_I_lag_2']:
             # trim all items in line_in_run_file and clean empty items
             line_in_run_file = [i.strip() for i in line_in_run_file if i != '']
         else:
             # trim all items in line_in_run_file and NOT clean empty items
             line_in_run_file = [i.strip() for i in line_in_run_file]
-
-        # if line is null o empty, e.g. empty but with tabs or spaces
-        if not line_in_run_file or not line_in_run_file[0].strip() or line_in_run_file == []:
-            continue
 
         # is the first line, start read configuration run
         if not in_config_run and not in_grids_list and not in_station_list:
