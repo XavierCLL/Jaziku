@@ -31,12 +31,11 @@ from jaziku.utils import console
 
 
 def pre_process():
-    """
-    Show message and prepare directory
+    """Show message and prepare directory
     """
 
     print _("\n\n"
-            "############### CLIMATE AND FORECAST PROCESS ################\n"
+            "################# CLIMATE AND FORECAST PROCESS #################\n"
             "# Climate Module, here are calculated contingency tables,      #\n"
             "# correlations and parametric tests of interest.               #\n"
             "#                                                              #\n"
@@ -59,8 +58,7 @@ def pre_process():
               "   could be mixed or replaced of old output."), color='yellow')
 
 def process(station):
-    """
-    In climate process, it calculate the relationship between the dependent and independent
+    """In climate process, it calculate the relationship between the dependent and independent
     variable which is generally determined by the joint probability distribution, but that being
     unknown is replaced by the contingency table. To calculate the contingency table the data
     set of the dependent and independent variable is divided into three categories and are found
