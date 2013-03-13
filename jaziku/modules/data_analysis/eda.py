@@ -1349,7 +1349,7 @@ def outliers(stations_list):
                     values_var_I = values_var_I[0]
 
                 # get the mean of all values of var I in analysis interval in the corresponding period of outlier (var_D)
-                value_var_I = array.mean(values_var_I)
+                value_var_I = array.mean(values_var_I)  # TODO v0.6.0: and accumulate??
 
                 # get categorize of phenomenon for the value_var_I
                 category_of_phenomenon = get_label_of_var_I_category(value_var_I, station)
