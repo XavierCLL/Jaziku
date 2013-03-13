@@ -252,8 +252,8 @@ def read_stations(lines_of_stations):
             #station.file_I = env.config_run.get['path_to_file_var_I']
             station.var_I.set_file(env.config_run.settings['path_to_file_var_I'])
 
-        except Exception, e:
-            console.msg_error_line_stations(station, e)
+        except Exception as error:
+            console.msg_error_line_stations(station, error)
 
         stations.append(station)
 

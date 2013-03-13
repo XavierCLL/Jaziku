@@ -94,7 +94,7 @@ def read_var_D(station):
             row[0] = row[0].replace('/', '-')
             row[1] = row[1].replace(',', '.')
 
-        except Exception, e:
+        except Exception:
             console.msg_error(_(
                 "Reading from file '{0}' in line: {1}\n\n"
                 "this could be caused by wrong line or garbage "
@@ -153,9 +153,9 @@ def read_var_D(station):
                 # set values of dependent variable
                 var_D.append(value)
 
-        except Exception, e:
+        except Exception as error:
             console.msg_error(_("Reading from file '{0}' in line: {1}\n\n{2}")
-            .format(station.var_D.file_name, csv_file_D.line_num, e))
+            .format(station.var_D.file_name, csv_file_D.line_num, error))
 
         if first:
             first = False
@@ -212,7 +212,7 @@ def read_var_I(station):
         try:
             row[0] = row[0].replace('/', '-')
             row[1] = row[1].replace(',', '.')
-        except Exception, e:
+        except Exception:
             console.msg_error(_(
                 "Reading from file '{0}' in line: {1}\n\n"
                 "this could be caused by wrong line or garbage "
@@ -267,9 +267,9 @@ def read_var_I(station):
                 # set values of independent variable
                 var_I.append(value)
 
-        except Exception, e:
+        except Exception as error:
             console.msg_error(_("Reading from file '{0}' in line: {1}\n\n{2}")
-            .format(station.var_I.file_name, csv_file_I.line_num, e))
+            .format(station.var_I.file_name, csv_file_I.line_num, error))
 
         if first:
             first = False
