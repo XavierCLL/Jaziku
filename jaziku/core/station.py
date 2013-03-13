@@ -30,8 +30,7 @@ from jaziku.core.variable import Variable
 
 
 class Station(object):
-    """
-    Generic station class for save several variables, configuration and
+    """Generic station class for save several variables, configuration and
     properties for each station
     """
 
@@ -47,20 +46,26 @@ class Station(object):
 
 
     def calculate_common_and_process_period(self):
-        """
-        Calculate common period (interception) in years of dates from
+        """Calculate common period (interception) in years of dates from
         dependent and independent variable. And the process period is the
         common period below + 1 year and common period above - 1 year.
 
-        :return by reference:
-            STATION.common_period [[  date ,  var_D ,  var_I ],... ]
-            STATION.process_period {'start','end'}
+        Return by reference:
+
+        :ivar STATION.common_period: [[  date ,  var_D ,  var_I ],... ]
+        :ivar STATION.process_period: {'start','end'}
         """
 
         # interceptions values of date_D and date_I (with python set functions wuau!!)
         common_date = list(set(self.var_D.date) & set(self.var_I.date))
         # sort common date
         common_date.sort()
+
+        # check if common_date is empty
+        if not common_date:
+            console.msg_error(_("The two series don't have any common period,\n"
+                                "Jaziku need at least 3 year of common period\n"
+                                "between the two series."))
 
         # initialized variable common_period
         # format list: [[  date ,  var_D ,  var_I ],... ]
@@ -90,9 +95,9 @@ class Station(object):
         if len(common_date) < 36:
             console.msg(_("Calculating the common period ................. "), newline=False)
 
-            console.msg_error(_("The common period calculated {0}-{1} has not at "
-                                "least 3 years.").format(common_date[0].year,
-                common_date[-1].year))
+            console.msg_error(_("The common period calculated {0}-{1}. Jaziku need\n"
+                                "at least 3 year of common period between the two series.")
+                .format(common_date[0].year, common_date[-1].year))
 
         # calculate the process period
         self.process_period = {'start': self.common_period[0][0].year + 1,
