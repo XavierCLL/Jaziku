@@ -11,6 +11,9 @@ Changelog
 news
 ++++
 
+- New type of thresholds: 'percentage', jaziku now accept percentage as
+  thresholds (e.g. 10%, 20%, 45%...) for 3 or 7 categories, this values
+  are calculate based on that 100% is the mean of all values of time series
 - New validation decorator function for validate the thresholds calculated
   using for this the limits of this variable, for some thresholds as standard
   deviations (sd) this is a requirement and the limits for this variable

@@ -153,8 +153,9 @@ def get_thresholds(station, variable, thresholds_input=None):
     :rtype: dict
     """
 
-    # first clean specific values of null and empty elements
-    variable.specific_values_cleaned = array.clean(variable.specific_values)
+    # -------------------------------------------------------------------------
+    # definition of different method for calculation thresholds
+
 
     def thresholds_by_default():
         """thresholds by default of var D or var I"""
@@ -167,6 +168,7 @@ def get_thresholds(station, variable, thresholds_input=None):
                                     "'default'\nbut this variable ({1}) no internal thresholds defined")
                 .format(variable.type, env.var_I.TYPE_SERIES))
             return get_thresholds(station, variable, internal_thresholds)
+
 
     @validate_thresholds(variable)
     @thresholds_to_dict_format
@@ -187,6 +189,7 @@ def get_thresholds(station, variable, thresholds_input=None):
             .format(variable.type, env.var_[variable.type].TYPE_SERIES, thresholds_input))
         return percentiles(variable.specific_values_cleaned, percentile_values)
 
+
     @validate_thresholds(variable, force=True)
     @thresholds_to_dict_format
     def thresholds_with_std_deviation(std_dev_values):
@@ -196,8 +199,8 @@ def get_thresholds(station, variable, thresholds_input=None):
         # check if all values of std deviation are float
         if False in [isinstance(value, float) for value in std_dev_values]:
             console.msg_error(_("thresholds of var {0} ({1}) were defined as "
-                                "N standard deviation (sdN)\n but the value N is "
-                                "invalid number (float or integer)\n\n{1}")
+                                "N standard deviation (sdN)\nbut the value N is "
+                                "invalid number (float or integer)\n\n{2}")
                 .format(variable.type, env.var_[variable.type].TYPE_SERIES, std_dev_values))
 
         if env.config_run.settings['class_category_analysis'] == 3:
@@ -228,6 +231,45 @@ def get_thresholds(station, variable, thresholds_input=None):
                     p50 + std_dev_values[4] * std_deviation,
                     p50 + std_dev_values[5] * std_deviation]
 
+
+    @validate_thresholds(variable)
+    @thresholds_to_dict_format
+    def thresholds_with_percentage(percentage_values):
+
+        percentage_values = [format_in.to_float(value) for value in percentage_values]
+
+        # check if all values of percentage are float
+        if False in [isinstance(value, float) for value in percentage_values]:
+            console.msg_error(_("thresholds of var {0} ({1}) were defined as "
+                                "N percentage (N%)\nbut the value N is "
+                                "invalid number (float or integer)\n\n{2}")
+            .format(variable.type, env.var_[variable.type].TYPE_SERIES, percentage_values))
+
+        # check is the percentage values are rising
+        percentage_values_sort = list(percentage_values)
+        percentage_values_sort.sort()
+        if not percentage_values_sort == percentage_values:
+            console.msg_error(_("the percentage values (N%) for the thresholds\n"
+                                "of var {0} ({1}), must have rising values:\n\n{2}")
+            .format(variable.type, env.var_[variable.type].TYPE_SERIES, percentage_values))
+
+        _100percent = array.mean(variable.specific_values_cleaned)
+
+        if env.config_run.settings['class_category_analysis'] == 3:
+
+            return [_100percent*percentage_values[0]/100.0,
+                    _100percent*percentage_values[1]/100.0]
+
+        if env.config_run.settings['class_category_analysis'] == 7:
+
+            return [_100percent*percentage_values[0]/100.0,
+                    _100percent*percentage_values[1]/100.0,
+                    _100percent*percentage_values[2]/100.0,
+                    _100percent*percentage_values[3]/100.0,
+                    _100percent*percentage_values[4]/100.0,
+                    _100percent*percentage_values[5]/100.0]
+
+
     @validate_thresholds(variable)
     @thresholds_to_dict_format
     def thresholds_with_particular_values(thresholds_input):
@@ -245,6 +287,13 @@ def get_thresholds(station, variable, thresholds_input=None):
         except Exception as error:
             console.msg_error(_("Problems with the thresholds for var {0} ({1}):"
                                 "\n\n{2}").format(variable.type, env.var_[variable.type].TYPE_SERIES, error))
+
+
+    # -------------------------------------------------------------------------
+    # detect and calculate thresholds
+
+    # first clean specific values of null and empty elements
+    variable.specific_values_cleaned = array.clean(variable.specific_values)
 
     ## get defined thresholds on env.config_run and variable
     if thresholds_input is None:
@@ -277,6 +326,11 @@ def get_thresholds(station, variable, thresholds_input=None):
         if not False in [threshold[0:2] in ['sd','SD'] for threshold in thresholds_input]:
             std_dev_values = [threshold[2::] for threshold in thresholds_input]
             return thresholds_with_std_deviation(std_dev_values)
+
+        # if are defined as percentage - NN%
+        if not False in [threshold[-1::] == "%" for threshold in thresholds_input]:
+            percentage_values = [threshold[0:-1] for threshold in thresholds_input]
+            return thresholds_with_percentage(percentage_values)
 
     # if are defined as particular values
     if not False in [isinstance(threshold,(int, float)) for threshold in thresholds_input]:
