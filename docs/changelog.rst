@@ -20,7 +20,8 @@ news
 - Defined internal mode_calculation_series for var D and I in 'default' value
   and check it when is chose by the user
 - New options in runfile: mode_calculation_series_D and mode_calculation_series_I,
-  these are the options to calculate the series: accumulate or mean
+  these are the options to calculate the series: accumulate or mean, and
+  adjust all result with this change.
 - Updated thresholds for var D for 3 and 7 categories (ATTENTION: this change
   modify several results)
 - Updated thresholds for var I for 3 and 7 categories (ATTENTION: this change

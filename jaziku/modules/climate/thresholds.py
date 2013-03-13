@@ -55,6 +55,7 @@ def thresholds_to_dict_format(func):
     """
     def wrapper_func(*args, **kwargs):
         thresholds = func(*args, **kwargs)
+
         if isinstance(thresholds, dict):
             # it is when it is called twice
             return thresholds
@@ -110,6 +111,7 @@ def validate_thresholds(variable, force=False):
                     console.msg_error(_("The threshold calculated or assigned to '{0}'\n"
                                         "for the series {1}, is outside its limits defined.\n\n{2}")
                     .format(env.globals_vars.generic_labels(key), env.var_[variable.type].TYPE_SERIES, error))
+            return thresholds
         return wrapper_func
     return decorator
 

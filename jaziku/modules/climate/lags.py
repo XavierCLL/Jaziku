@@ -104,7 +104,7 @@ def calculate_lags(station, makes_files=True):
             for month in range(1, 13):
                 if makes_files:
                     csv_name = os.path.join(dir_lag[lag],
-                        _('Mean_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_'
+                        _('Time_series_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_'
                           '({6}-{7}).csv')
                         .format(lag, month, station.code,
                             station.name, station.var_D.type_series,
@@ -120,22 +120,38 @@ def calculate_lags(station, makes_files=True):
                     open_file = open(csv_name, 'w')
                     csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
+                    # print headers
+                    csv_file.writerow([_('DATE'), _('VAR_D'), _('VAR_I')])
+                    csv_file.writerow(['', env.config_run.settings['mode_calculation_series_D'],
+                                       env.config_run.settings['mode_calculation_series_I']])
+
+
                 iter_year = station.process_period['start']
 
                 # iteration for years from first-year +1 to end-year -1 inside
                 # range common_period
                 while iter_year <= station.process_period['end']:
 
-                    # get values and calculate mean_var_D
-                    mean_var_D = array.mean(get_values_in_range_analysis_interval(station,'D', iter_year, month))
+                    # calculate time series
+                    if env.config_run.settings['mode_calculation_series_D'] == 'mean':
+                        # get values and calculate mean_var_D
+                        mean_var_D = array.mean(get_values_in_range_analysis_interval(station,'D', iter_year, month))
+                    if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
+                        # get values and calculate mean_var_D
+                        mean_var_D = sum(array.clean(get_values_in_range_analysis_interval(station,'D', iter_year, month)))
 
                     # SPECIAL CASE 1: when var_I is ONI1, ONI2 or CAR, don't calculate trimesters because the ONI and CAR
                     # series was calculated by trimesters from original source
                     if station.var_I.type_series in ['ONI1', 'ONI2', 'CAR']:
                         mean_var_I = get_values_in_range_analysis_interval(station,'I', iter_year, month, lag=lag)[0]
                     else:
-                        # get values and calculate mean_var_I
-                        mean_var_I = array.mean(get_values_in_range_analysis_interval(station,'I', iter_year, month, lag=lag))
+                        # calculate time series
+                        if env.config_run.settings['mode_calculation_series_I'] == 'mean':
+                            # get values and calculate mean_var_I
+                            mean_var_I = array.mean(get_values_in_range_analysis_interval(station,'I', iter_year, month, lag=lag))
+                        if env.config_run.settings['mode_calculation_series_I'] == 'accumulate':
+                            # get values and calculate mean_var_I
+                            mean_var_I = sum(array.clean(get_values_in_range_analysis_interval(station,'I', iter_year, month, lag=lag)))
 
                     # add line in list: Lag_X
                     vars()['Lag_' + str(lag)].append([date(iter_year, month, 1), mean_var_D, mean_var_I])
@@ -163,7 +179,7 @@ def calculate_lags(station, makes_files=True):
             for month in range(1, 13):
                 if makes_files:
                     csv_name = os.path.join(dir_lag[lag],
-                        _('Mean_lag_{0}_{1}days_month_{2}_{3}_'
+                        _('Time_series_lag_{0}_{1}days_month_{2}_{3}_'
                           '{4}_{5}_{6}_({7}-{8}).csv')
                         .format(lag, env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL,
                             month, station.code,
@@ -180,6 +196,11 @@ def calculate_lags(station, makes_files=True):
                     open_file = open(csv_name, 'w')
                     csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
+                    # print headers
+                    csv_file.writerow([_('DATE'), _('VAR_D'), _('VAR_I')])
+                    csv_file.writerow(['', env.config_run.settings['mode_calculation_series_D'],
+                                       env.config_run.settings['mode_calculation_series_I']])
+
                 #days_for_this_month = monthrange(iter_year, month)[1]
 
                 for day in get_range_analysis_interval():
@@ -195,16 +216,26 @@ def calculate_lags(station, makes_files=True):
                             iter_year += relativedelta(years= +1)
                             continue
 
-                        # get values and calculate mean_var_D
-                        mean_var_D = array.mean(get_values_in_range_analysis_interval(station,'D', iter_year, month, day, lag))
+                        # calculate time series
+                        if env.config_run.settings['mode_calculation_series_D'] == 'mean':
+                            # get values and calculate mean_var_D
+                            mean_var_D = array.mean(get_values_in_range_analysis_interval(station,'D', iter_year, month, day, lag))
+                        if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
+                            # get values and calculate mean_var_D
+                            mean_var_D = sum(array.clean(get_values_in_range_analysis_interval(station,'D', iter_year, month, day, lag)))
 
                         # SPECIAL CASE 1: when var_I is ONI1, ONI2 or CAR, don't calculate trimesters because the ONI and CAR
                         # series was calculated by trimesters from original source
                         if station.var_I.type_series in ['ONI1', 'ONI2', 'CAR']:
                             mean_var_I = get_values_in_range_analysis_interval(station,'I', iter_year, month, day, lag)[0]
                         else:
-                            # get values and calculate mean_var_I
-                            mean_var_I = array.mean(get_values_in_range_analysis_interval(station,'I', iter_year, month, day, lag))
+                            # calculate time series
+                            if env.config_run.settings['mode_calculation_series_I'] == 'mean':
+                                # get values and calculate mean_var_I
+                                mean_var_I = array.mean(get_values_in_range_analysis_interval(station,'I', iter_year, month, day, lag))
+                            if env.config_run.settings['mode_calculation_series_I'] == 'accumulate':
+                                # get values and calculate mean_var_I
+                                mean_var_I = sum(array.clean(get_values_in_range_analysis_interval(station,'I', iter_year, month, day, lag)))
 
                         # add line in list: Lag_X
                         vars()['Lag_' + str(lag)].append([date(iter_year, month, day), mean_var_D, mean_var_I])
