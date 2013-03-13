@@ -1347,9 +1347,15 @@ def outliers(stations_list):
                 if env.var_I.is_monthly() and env.var_I.TYPE_SERIES in ['ONI1', 'ONI2', 'CAR']:
                     # take the first month (in this case, it is the mean of trimester)
                     values_var_I = values_var_I[0]
-
-                # get the mean of all values of var I in analysis interval in the corresponding period of outlier (var_D)
-                value_var_I = array.mean(values_var_I)  # TODO v0.6.0: and accumulate??
+                else:
+                    # get the mean or sum (based on mode_calculation_series_I) of all values of var I
+                    # in analysis interval in the corresponding period of outlier (var_D)
+                    if env.config_run.settings['mode_calculation_series_I'] == 'mean':
+                        # get values and calculate mean_var_I
+                        value_var_I = array.mean(values_var_I)
+                    if env.config_run.settings['mode_calculation_series_I'] == 'accumulate':  # TODO v0.6.0: check (and accumulate??)
+                        # get values and calculate mean_var_I
+                        value_var_I = sum(array.clean(values_var_I))
 
                 # get categorize of phenomenon for the value_var_I
                 category_of_phenomenon = get_label_of_var_I_category(value_var_I, station)
@@ -1437,7 +1443,7 @@ def outliers(stations_list):
 
     # print header
     header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), _('WHISKERS BELOW'),
-              _('WHISKERS ABOVE'), _('# OUTLIERS'),'']
+              _('WHISKERS ABOVE'), _('NUM OUTLIERS'),'']
 
     header_outliers = [_('DATE'), _('VALUE'), _('PHEN_CAT')]
 
