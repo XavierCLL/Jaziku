@@ -11,6 +11,10 @@ Changelog
 news
 ++++
 
+- New validation decorator function for validate the thresholds calculated
+  using for this the limits of this variable, for some thresholds as standard
+  deviations (sd) this is a requirement and the limits for this variable
+  need to be set (not none).
 - Now the standard deviation in thresholds by below (for 3 or 7 categories) need
   specify the negative values, e.g: sd-2.1, sd-1.2, sd-0.5, sd0.6, sd0.9, sd1.3
 - Defined internal mode_calculation_series for var D and I in 'default' value

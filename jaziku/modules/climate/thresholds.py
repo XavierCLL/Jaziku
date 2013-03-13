@@ -48,9 +48,10 @@ def percentiles(values, percentile_values):
         raise ValueError("the 'percentile_values' should be a list with 2 or 6 values")
 
 
-def thresholds_dictionary(func):
-    def wrapper_func(*args):
-        thresholds = func(*args)
+# decorator
+def thresholds_to_dict_format(func):
+    def wrapper_func(*args, **kwargs):
+        thresholds = func(*args, **kwargs)
         if isinstance(thresholds, dict):
             # it is when it is called twice
             return thresholds
@@ -65,6 +66,42 @@ def thresholds_dictionary(func):
                     'above2': thresholds[4],
                     'above3': thresholds[5]}
     return wrapper_func
+
+
+# decorator
+def validate_thresholds(variable, force=False):
+    def decorator(func):
+        def wrapper_func(*args, **kwargs):
+            thresholds = func(*args, **kwargs)
+            # check ------------------
+            # error if limits of variable are none, if defined thresholds
+            # as standard deviation are need defined limits
+            if force:
+                if env.config_run.settings['limits_var_'+variable.type]['below'] is None or \
+                   env.config_run.settings['limits_var_'+variable.type]['above'] is None:
+
+                    # if the variable is a internal variable
+                    if env.var_[variable.type].TYPE_SERIES in env.var_[variable.type].INTERNAL_TYPES:
+                        # get default limits for internal variable
+                        env.config_run.settings['limits_var_'+variable.type]['below'] = 'default'
+                        env.config_run.settings['limits_var_'+variable.type]['above'] = 'default'
+                        validation.set_limits(variable)
+                    else:
+                        console.msg_error(_("If you use standard deviation (sd) as thresholds\n"
+                                            "and if series ({0}) is a external type, you need\n"
+                                            "defined the limits for this variable, because Jaziku\n"
+                                            "check the (sd) thresholds calculated are within limits.")
+                        .format(env.var_[variable.type].TYPE_SERIES))
+            # check thresholds if are within limits of variable
+            for key, threshold in thresholds.items():
+                if not validation.is_the_value_within_limits(threshold, variable):
+                    console.msg_error(_("If you use standard deviation (sd) as thresholds\n"
+                                        "and if series ({0}) is a external type, you need\n"
+                                        "defined the limits for this variable, because Jaziku\n"
+                                        "check the (sd) thresholds calculated are within limits.")
+                    .format(env.var_[variable.type].TYPE_SERIES))
+        return wrapper_func
+    return decorator
 
 
 def thresholds_to_list(thresholds):
@@ -107,7 +144,6 @@ def get_thresholds(station, variable, thresholds_input=None):
     # first clean specific values of null and empty elements
     variable.specific_values_cleaned = array.clean(variable.specific_values)
 
-    @thresholds_dictionary
     def thresholds_by_default():
         """thresholds by default of var D or var I"""
         if variable.type == 'D':
@@ -120,7 +156,8 @@ def get_thresholds(station, variable, thresholds_input=None):
                 .format(variable.type, env.var_I.TYPE_SERIES))
             return get_thresholds(station, variable, internal_thresholds)
 
-    @thresholds_dictionary
+    @validate_thresholds(variable)
+    @thresholds_to_dict_format
     def thresholds_with_percentiles(percentile_values):
 
         percentile_values = [format_in.to_float(value) for value in percentile_values]
@@ -138,7 +175,8 @@ def get_thresholds(station, variable, thresholds_input=None):
             .format(variable.type, thresholds_input))
         return percentiles(variable.specific_values_cleaned, percentile_values)
 
-    @thresholds_dictionary
+    @validate_thresholds(variable, force=True)
+    @thresholds_to_dict_format
     def thresholds_with_std_deviation(std_dev_values):
 
         std_dev_values = [format_in.to_float(value) for value in std_dev_values]
@@ -186,7 +224,8 @@ def get_thresholds(station, variable, thresholds_input=None):
                     p50 + std_dev_values[4] * std_deviation,
                     p50 + std_dev_values[5] * std_deviation]
 
-    @thresholds_dictionary
+    @validate_thresholds(variable)
+    @thresholds_to_dict_format
     def thresholds_with_particular_values(thresholds_input):
         thresholds_input_sort = list(thresholds_input)
         thresholds_input_sort.sort()
@@ -225,12 +264,12 @@ def get_thresholds(station, variable, thresholds_input=None):
     # if are defined as percentile or standard deviation (all str instance)
     if not False in [isinstance(threshold,str) for threshold in thresholds_input]:
 
-        # if are defined as percentile
+        # if are defined as percentile - pNN
         if not False in [threshold[0:1] in ['p','P'] for threshold in thresholds_input]:
             percentile_values = [threshold[1::] for threshold in thresholds_input]
             return thresholds_with_percentiles(percentile_values)
 
-        # if are defined as standard deviation
+        # if are defined as standard deviation - sdNN
         if not False in [threshold[0:2] in ['sd','SD'] for threshold in thresholds_input]:
             std_dev_values = [threshold[2::] for threshold in thresholds_input]
             return thresholds_with_std_deviation(std_dev_values)
