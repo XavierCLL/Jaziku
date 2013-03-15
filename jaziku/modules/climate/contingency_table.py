@@ -255,14 +255,14 @@ def get_specific_contingency_table(station, lag, month, day=None):
     # -------------------------------------------------------------------------
     ## Calculating contingency table with values in percent
     if env.config_run.settings['class_category_analysis'] == 3:
-        tertile_size = station.size_time_series / 3.0
-        contingency_table_tertile_size = matrix(contingency_table) * tertile_size
-        sum_per_column_CTts = contingency_table_tertile_size.sum(axis=1)
+        percentile_size = station.size_time_series / 3.0
+        contingency_table_percentile_size = matrix(contingency_table) * percentile_size
+        sum_per_column_CTts = contingency_table_percentile_size.sum(axis=1)
 
     if env.config_run.settings['class_category_analysis'] == 7:
-        tertile_size = station.size_time_series / 7.0  # TODO v0.6: check
-        contingency_table_tertile_size = matrix(contingency_table) * tertile_size
-        sum_per_column_CTts = contingency_table_tertile_size.sum(axis=1)
+        percentile_size = station.size_time_series / 7.0
+        contingency_table_percentile_size = matrix(contingency_table) * percentile_size
+        sum_per_column_CTts = contingency_table_percentile_size.sum(axis=1)
 
     # -------------------------------------------------------------------------
     # threshold_problem is global variable for detect problem with
@@ -294,7 +294,7 @@ def get_specific_contingency_table(station, lag, month, day=None):
     for item_CT in range(env.config_run.settings['class_category_analysis']):
         with console.redirectStdStreams():
             contingency_table_percent.\
-                append((contingency_table_tertile_size[item_CT] * 100 / float(sum_per_column_CTts[item_CT])).tolist()[0])
+                append((contingency_table_percentile_size[item_CT] * 100 / float(sum_per_column_CTts[item_CT])).tolist()[0])
 
     # Contingency table percent to print in result table and graphics (reduce the number of decimals)
     contingency_table_percent_formatted = []
