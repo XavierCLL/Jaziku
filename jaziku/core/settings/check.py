@@ -167,16 +167,11 @@ def configuration_run():
     # ------------------------
     # thresholds var_D
 
-    if env.config_run.settings["thresholds_var_D"] == "default":
-        if env.config_run.settings["type_var_D"] not in env.var_D.INTERNAL_TYPES:
-            console.msg_error_configuration('thresholds_var_D',
-                                            _("The thresholds can't be define as 'default' if the\n"
-                                              "type of dependent variable not is valid internal type."))
-    else:
-        if len(env.config_run.settings["thresholds_var_D"]) != env.config_run.settings['class_category_analysis']-1:
+    if not env.config_run.settings["thresholds_var_D"] == "default" and \
+       len(env.config_run.settings["thresholds_var_D"]) != env.config_run.settings['class_category_analysis']-1:
             console.msg_error_configuration('thresholds_var_D',
                                             _("The thresholds for {0} categories must have {1} thresholds,\n"
-                                              "or 'default' for use thresholds by default in internal variables.")
+                                              "or 'default' for use thresholds by default defined for this variable.")
                                             .format(env.config_run.settings['class_category_analysis'], env.config_run.settings['class_category_analysis']-1))
 
     # ------------------------
@@ -276,16 +271,11 @@ def configuration_run():
     # ------------------------
     # thresholds var_I
 
-    if env.config_run.settings["thresholds_var_I"] == "default":
-       if env.config_run.settings["type_var_I"] not in env.var_I.INTERNAL_TYPES:
-            console.msg_error_configuration('thresholds_var_I',
-                _("The thresholds can't be define as 'default' if the\n"
-                  "type of independent variable not is valid internal type."))
-    else:
-        if len(env.config_run.settings["thresholds_var_I"]) != env.config_run.settings['class_category_analysis']-1:
+    if not env.config_run.settings["thresholds_var_I"] == "default" and \
+       len(env.config_run.settings["thresholds_var_I"]) != env.config_run.settings['class_category_analysis']-1:
             console.msg_error_configuration('thresholds_var_I',
                 _("The thresholds for {0} categories must have {1} thresholds,\n"
-                  "or 'default' for use thresholds by default in internal variables.")
+                  "or 'default' for use thresholds by default defined for this variable.")
             .format(env.config_run.settings['class_category_analysis'], env.config_run.settings['class_category_analysis']-1))
 
     # ------------------------

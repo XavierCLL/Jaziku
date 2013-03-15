@@ -11,6 +11,9 @@ Changelog
 news
 ++++
 
+- Reimplemented the thresholds by default, now can use 'default' in
+  thresholds for particular type for and 3 or 7 categories and adjust
+  thresholds for several variables
 - Reimplemented the check of probability_forecast_values from input
   forecast_var_I_lag_N for 3 and 7 categories for make the forecast_contingency_table
 - New type of thresholds: 'percentage', jaziku now accept percentage as
