@@ -72,9 +72,9 @@ def is_valid_null(value):
         return True
     else:
         try:
-            if int(float(value)) in VALID_NULL: # TODO: delete deprecated valid null
+            if isinstance(value,(float,int)) and isnan(value):
                 return True
-            if isnan(value):
+            if int(float(value)) in VALID_NULL: # TODO: delete deprecated valid null
                 return True
         except:
             return False

@@ -182,6 +182,10 @@ def is_monthly():
 def set_FREQUENCY_DATA(new_freq_data, check=True):
     global FREQUENCY_DATA
     global TYPE_SERIES
+
+    if new_freq_data not in ['daily','monthly']:
+        raise
+
     if FREQUENCY_DATA is None or check is False:
         FREQUENCY_DATA = new_freq_data
     else:
