@@ -44,17 +44,17 @@ def pre_process():
 
     # reset forecast_var_I_lag_N
     if env.config_run.settings['class_category_analysis'] == 3:
-        for lag in ['0','1','2']:
-            env.config_run.settings['forecast_var_I_lag_'+lag] \
+        for lag in [str(lag) for lag in env.globals_vars.ALL_LAGS]:
+
+            env.globals_vars.probability_forecast_values[lag] \
                 = {'below':env.config_run.settings['forecast_var_I_lag_'+lag][0],
                    'normal':env.config_run.settings['forecast_var_I_lag_'+lag][1],
                    'above':env.config_run.settings['forecast_var_I_lag_'+lag][2]}
 
     if env.config_run.settings['class_category_analysis'] == 7:
-        for lag in ['0','1','2']:
-            env.config_run.settings['forecast_var_I_lag_'+lag] \
-                = [None if value == '' else value for value in env.config_run.settings['forecast_var_I_lag_'+lag]]
-            env.config_run.settings['forecast_var_I_lag_'+lag] \
+        for lag in [str(lag) for lag in env.globals_vars.ALL_LAGS]:
+
+            env.globals_vars.probability_forecast_values[lag] \
                 = {'below3':env.config_run.settings['forecast_var_I_lag_'+lag][0],
                    'below2':env.config_run.settings['forecast_var_I_lag_'+lag][1],
                    'below1':env.config_run.settings['forecast_var_I_lag_'+lag][2],
@@ -62,6 +62,19 @@ def pre_process():
                    'above1':env.config_run.settings['forecast_var_I_lag_'+lag][4],
                    'above2':env.config_run.settings['forecast_var_I_lag_'+lag][5],
                    'above3':env.config_run.settings['forecast_var_I_lag_'+lag][6]}
+
+            if env.globals_vars.forecast_contingency_table['type'] == '3x7':
+                for tag in ['below3', 'below2', 'below1']:
+                    if env.globals_vars.probability_forecast_values[lag][tag] != '':
+                        env.globals_vars.probability_forecast_values[lag]['below'] = tag
+                    else:
+                        del env.globals_vars.probability_forecast_values[lag][tag]
+                for tag in ['above3', 'above2', 'above1']:
+                    if env.globals_vars.probability_forecast_values[lag][tag] != '':
+                        env.globals_vars.probability_forecast_values[lag]['above'] = tag
+                    else:
+                        del env.globals_vars.probability_forecast_values[lag][tag]
+
 
 def process(station):
     """

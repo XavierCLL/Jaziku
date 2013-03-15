@@ -166,6 +166,16 @@ DATA_ANALYSIS_DIR = None
 threshold_problem = []
 
 #==============================================================================
+# this is the probability_forecast_values for forecast process to use in
+# the forecast_contingency_table.
+# probability_forecast_values:
+#   3x3 -> [lags]['below','normal','above']
+#   3x7 -> [lags]['below3','normal','above2',  'below'='below3','above'='above2]  # e.g. values in 'below3','normal','above2'
+#   7x7 -> [lags]['below3','below2','below1','normal','above1','above2','above3']
+
+probability_forecast_values = {'type': None}
+
+#==============================================================================
 # this is the forecast_contingency_table for forecast process
 # type = '3x3' '3x7' '7x7'
 

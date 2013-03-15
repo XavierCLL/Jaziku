@@ -23,7 +23,7 @@ from clint.textui import colored
 
 from jaziku import env
 from jaziku.core import analysis_interval
-from jaziku.utils import console, format_out, format_in
+from jaziku.utils import console, format_out, format_in, array
 
 
 def configuration_run():
@@ -289,55 +289,52 @@ def configuration_run():
             .format(env.config_run.settings['class_category_analysis'], env.config_run.settings['class_category_analysis']-1))
 
     # ------------------------
-    # check the 9 forecast values and forecast date
+    # check the probability_forecast_values and forecast date
 
     # if forecast_process is activated
     if env.config_run.settings['forecast_process']:
 
-        ## check and reset the 9 values for forecast process
-        try:
-            env.config_run.settings['forecast_var_I_lag_0'] = [format_in.to_float(item) for item in env.config_run.settings['forecast_var_I_lag_0']]
-            if env.config_run.settings['class_category_analysis'] == 3 and not len(env.config_run.settings['forecast_var_I_lag_0']) == 3:
-                raise
-        except:
-            console.msg_error_configuration('forecast_var_I_lag_0',
-                                            _("The 'forecast_var_I_lag_0' should be a three valid\n"
-                                              "values (int or float) in different row."))
-        try:
-            env.config_run.settings['forecast_var_I_lag_1'] = [format_in.to_float(item) for item in env.config_run.settings['forecast_var_I_lag_1']]
-            if env.config_run.settings['class_category_analysis'] == 3 and not len(env.config_run.settings['forecast_var_I_lag_1']) == 3:
-                raise
-        except:
-            console.msg_error_configuration('forecast_var_I_lag_1',
-                                            _("The 'forecast_var_I_lag_1' should be a three valid\n"
-                                              "values (int or float) in different row."))
-        try:
-            env.config_run.settings['forecast_var_I_lag_2'] = [format_in.to_float(item) for item in env.config_run.settings['forecast_var_I_lag_2']]
-            if env.config_run.settings['class_category_analysis'] == 3 and not len(env.config_run.settings['forecast_var_I_lag_2']) == 3:
-                raise
-        except:
-            console.msg_error_configuration('forecast_var_I_lag_2',
-                                            _("The 'forecast_var_I_lag_2' should be a three valid\n"
-                                              "values (int or float) in different row."))
+        # ------------------------
+        ## check and reset the values for forecast process, 3x3, 3x7 or 7x7
+        for lag in [str(lag) for lag in env.globals_vars.ALL_LAGS]:
+            try:
+                env.config_run.settings['forecast_var_I_lag_'+lag] \
+                    = [format_in.to_float(item) for item in env.config_run.settings['forecast_var_I_lag_'+lag]]
+                if env.config_run.settings['class_category_analysis'] == 3:
+                    # check if all values are valid (float or int)
+                    if False in [isinstance(value, (float, int)) for value in array.clean(env.config_run.settings['forecast_var_I_lag_'+lag])]:
+                        raise ValueError('3')
+                    # check if amount of values is correct
+                    if len(array.clean(env.config_run.settings['forecast_var_I_lag_'+lag])) == 3:
+                        env.globals_vars.forecast_contingency_table['type'] = '3x3'
+                        env.config_run.settings['forecast_var_I_lag_'+lag] = array.clean(env.config_run.settings['forecast_var_I_lag_'+lag])
+                        env.globals_vars.input_settings['forecast_var_I_lag_'+lag] = env.config_run.settings['forecast_var_I_lag_'+lag]
+                    else:
+                        raise ValueError('3')
+                if env.config_run.settings['class_category_analysis'] == 7:
+                    # check if all values are valid (float or int)
+                    if False in [isinstance(value, (float, int)) for value in array.clean(env.config_run.settings['forecast_var_I_lag_'+lag])]:
+                        raise ValueError('3 or 7')
+                    # check if amount of values is correct
+                    if len(array.clean(env.config_run.settings['forecast_var_I_lag_'+lag])) == 3:
+                        env.globals_vars.forecast_contingency_table['type'] = '3x7'
+                    elif len(array.clean(env.config_run.settings['forecast_var_I_lag_'+lag])) == 7:
+                        env.globals_vars.forecast_contingency_table['type'] = '7x7'
+                    else:
+                        raise ValueError('3 or 7')
+            except ValueError as error:
+                console.msg_error_configuration('forecast_var_I_lag_'+lag,
+                                                _("The 'forecast_var_I_lag_{0}' should be a {1} valid\n"
+                                                  "values (int or float).").format(lag, error))
 
-        # check sum of forecast_var_I_lag_0
-        if not (99 < sum([value for value in env.config_run.settings['forecast_var_I_lag_0'] if value != '']) < 101):
-            console.msg_error_configuration('forecast_var_I_lag_0',
-                _("The sum for the 3 values of phenomenon for lag 0\n"
-                  "in 'forecast options' in runfile must be\nequal to 100."))
+            # check that sum of all values in forecast_var_I_lag_N is equal to 100 (+-1)
+            if not (99 < sum(array.clean(env.config_run.settings['forecast_var_I_lag_'+lag])) < 101):
+                console.msg_error_configuration('forecast_var_I_lag_'+lag,
+                                                _("The sum for the values of 'forecast_var_I_lag_{0}'\n"
+                                                  "in 'forecast options' in runfile, must be\nequal to 100.")
+                                                .format(lag))
 
-        # check sum of forecast_var_I_lag_1
-        if not (99 < sum([value for value in env.config_run.settings['forecast_var_I_lag_1'] if value != '']) < 101):
-            console.msg_error_configuration('forecast_var_I_lag_1',
-                _("The sum for the 3 values of phenomenon for lag 1\n"
-                  "in 'forecast options' in runfile must be\nequal to 100."))
-
-        # check sum of forecast_var_I_lag_2
-        if not (99 < sum([value for value in env.config_run.settings['forecast_var_I_lag_2'] if value != '']) < 101):
-            console.msg_error_configuration('forecast_var_I_lag_2',
-                _("The sum for the 3 values of phenomenon for lag 2\n"
-                  "in 'forecast options' in runfile must be\nequal to 100."))
-
+        # ------------------------
         ## forecast date
         try:
             if isinstance(env.config_run.settings['forecast_date'], list):
