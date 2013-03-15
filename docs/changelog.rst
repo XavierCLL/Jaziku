@@ -11,6 +11,8 @@ Changelog
 news
 ++++
 
+- Reimplemented the check of probability_forecast_values from input
+  forecast_var_I_lag_N for 3 and 7 categories for make the forecast_contingency_table
 - New type of thresholds: 'percentage', jaziku now accept percentage as
   thresholds (e.g. 10%, 20%, 45%...) for 3 or 7 categories, this values
   are calculate based on that 100% is the mean of all values of time series
