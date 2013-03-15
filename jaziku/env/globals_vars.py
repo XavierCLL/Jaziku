@@ -68,11 +68,13 @@ def is_valid_null(value):
     else return False
     """
 
-    if isnan(value) or value in ['nan', 'NaN', 'NAN']:
+    if value in ['nan', 'NaN', 'NAN']:
         return True
     else:
         try:
             if int(float(value)) in VALID_NULL: # TODO: delete deprecated valid null
+                return True
+            if isnan(value):
                 return True
         except:
             return False
@@ -163,3 +165,8 @@ DATA_ANALYSIS_DIR = None
 # because "nan"  character could not be calculate.
 threshold_problem = []
 
+#==============================================================================
+# this is the forecast_contingency_table for forecast process
+# type = '3x3' '3x7' '7x7'
+
+forecast_contingency_table = {'type': None}
