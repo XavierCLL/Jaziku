@@ -57,7 +57,7 @@ def prepare_all_stations(stations_list):
 
     console.msg(_("   var_D ({0}):").format(env.var_D.TYPE_SERIES), newline=False)
     if env.config_run.settings['thresholds_var_D'] == 'default':
-        thresholds_D = env.var_D.get_internal_thresholds()
+        thresholds_D = env.var_D.get_default_thresholds()
     else:
         thresholds_D = env.config_run.settings['thresholds_var_D']
     if isinstance(thresholds_D, list):
@@ -65,7 +65,7 @@ def prepare_all_stations(stations_list):
 
     console.msg(_("   var_I ({0}):").format(env.var_I.TYPE_SERIES), newline=False)
     if env.config_run.settings['thresholds_var_I'] == 'default':
-        thresholds_I = env.var_I.get_internal_thresholds()
+        thresholds_I = env.var_I.get_default_thresholds()
     else:
         thresholds_I = env.config_run.settings['thresholds_var_I']
     if isinstance(thresholds_I, list):

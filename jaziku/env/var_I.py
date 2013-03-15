@@ -176,57 +176,38 @@ INTERNAL_LIMITS = {
 #   threshold_below* < normal < threshold_above*
 
 # thresholds when class_category_analysis is 3
-INTERNAL_THRESHOLDS_3_CATEGORIES = {
-    'ONI1':         {'daily': None, 'monthly': [-0.5,0.5], 'normal_inclusive': False},
-    'ONI2':         {'daily': None, 'monthly': [-0.5,0.5], 'normal_inclusive': False},
-    'SOI':          {'daily': None, 'monthly': [-0.9,0.9], 'normal_inclusive': True},
-    'SOI_TROUP':    {'daily': None, 'monthly': [-8,8], 'normal_inclusive': True},
+THRESHOLDS_3_CATEGORIES = {
+    ## thresholds by default
+    'default':      {'daily': ['p33','p66'], 'monthly': ['p33','p66'], 'normal_inclusive': True},
+    ## thresholds by type of internal series  (if was not defined here, will use thresholds by default)
+    'ONI1':         {'daily': [-0.5,0.5], 'monthly': [-0.5,0.5], 'normal_inclusive': False},
+    'ONI2':         {'daily': [-0.5,0.5], 'monthly': [-0.5,0.5], 'normal_inclusive': False},
+    'SOI':          {'daily': [-0.9,0.9], 'monthly': [-0.9,0.9], 'normal_inclusive': True},
+    'SOI_TROUP':    {'daily': [-8,8], 'monthly': [-8,8], 'normal_inclusive': True},
     #'MEI':          {'daily': None, 'monthly': ['p33','p66']},
-    'OLR':          {'daily': None, 'monthly': [-0.1,0.2], 'normal_inclusive': True},
-    'W200':         {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': True},
-    'W850w':        {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': True},
-    'W850c':        {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': True},
-    'W850e':        {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': True},
-    'SST12':        {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': False},
-    'SST3':         {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': False},
-    'SST4':         {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': False},
-    'SST34':        {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': False},
-    'ASST12':       {'daily': None, 'monthly': ['sd-0.4','sd0.4'], 'normal_inclusive': True},
-    'ASST3':        {'daily': None, 'monthly': ['sd-0.4','sd0.4'], 'normal_inclusive': True},
-    'ASST4':        {'daily': None, 'monthly': ['sd-0.4','sd0.4'], 'normal_inclusive': True},
-    'ASST34':       {'daily': None, 'monthly': ['sd-0.4','sd0.4'], 'normal_inclusive': True},
-    'ARH':          {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': True},
-    'QBO':          {'daily': None, 'monthly': [-4,4], 'normal_inclusive': True},
-    'NAO':          {'daily': None, 'monthly': [-1,1], 'normal_inclusive': True},
-    'CAR':          {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': True},
-    'AREA_WHWP':    {'daily': None, 'monthly': ['p33','p66'], 'normal_inclusive': True}
+    'OLR':          {'daily': [-0.1,0.2], 'monthly': [-0.1,0.2], 'normal_inclusive': True},
+    'ASST12':       {'daily': ['sd-0.4','sd0.4'], 'monthly': ['sd-0.4','sd0.4'], 'normal_inclusive': True},
+    'ASST3':        {'daily': ['sd-0.4','sd0.4'], 'monthly': ['sd-0.4','sd0.4'], 'normal_inclusive': True},
+    'ASST4':        {'daily': ['sd-0.4','sd0.4'], 'monthly': ['sd-0.4','sd0.4'], 'normal_inclusive': True},
+    'ASST34':       {'daily': ['sd-0.4','sd0.4'], 'monthly': ['sd-0.4','sd0.4'], 'normal_inclusive': True},
+    'QBO':          {'daily': [-4,4], 'monthly': [-4,4], 'normal_inclusive': True},
+    'NAO':          {'daily': [-1,1], 'monthly': [-1,1], 'normal_inclusive': True},
 }
 
 # thresholds when class_category_analysis is 7
-INTERNAL_THRESHOLDS_7_CATEGORIES = {
-    'ONI1':         {'daily': None, 'monthly': [-1.5,-1,-0.5,0.5,1,1.5], 'normal_inclusive':False},
-    'ONI2':         {'daily': None, 'monthly': [-1.5,-1,-0.5,0.5,1,1.5], 'normal_inclusive': False},
-    'SOI':          {'daily': None, 'monthly': [-2.86,-1.61,-1,1,1.61,2.86], 'normal_inclusive':True},
-    'SOI_TROUP':    {'daily': None, 'monthly': [-22.99,-12.99,-8,8,12.99,22.99], 'normal_inclusive':True},
+THRESHOLDS_7_CATEGORIES = {
+    ## thresholds by default
+    'default':      {'daily': ['p11','p22','p33','p66','p77','p88'], 'monthly': ['p11','p22','p33','p66','p77','p88'], 'normal_inclusive': True},
+    ## thresholds by type of internal series  (if was not defined here, will use thresholds by default)
+    'ONI1':         {'daily': [-1.5,-1,-0.5,0.5,1,1.5], 'monthly': [-1.5,-1,-0.5,0.5,1,1.5], 'normal_inclusive':False},
+    'ONI2':         {'daily': [-1.5,-1,-0.5,0.5,1,1.5], 'monthly': [-1.5,-1,-0.5,0.5,1,1.5], 'normal_inclusive': False},
+    'SOI':          {'daily': [-2.86,-1.61,-1,1,1.61,2.86], 'monthly': [-2.86,-1.61,-1,1,1.61,2.86], 'normal_inclusive':True},
+    'SOI_TROUP':    {'daily': [-22.99,-12.99,-8,8,12.99,22.99], 'monthly': [-22.99,-12.99,-8,8,12.99,22.99], 'normal_inclusive':True},
     #'MEI':          {'daily': None, 'monthly': None, 'normal_inclusive':True},
-    'OLR':          {'daily': None, 'monthly': None, 'normal_inclusive':True},
-    'W200':         {'daily': None, 'monthly': None, 'normal_inclusive':True},
-    'W850w':        {'daily': None, 'monthly': None, 'normal_inclusive':True},
-    'W850c':        {'daily': None, 'monthly': None, 'normal_inclusive':True},
-    'W850e':        {'daily': None, 'monthly': None, 'normal_inclusive':True},
-    'SST12':        {'daily': None, 'monthly': None, 'normal_inclusive':False},
-    'SST3':         {'daily': None, 'monthly': None, 'normal_inclusive':False},
-    'SST4':         {'daily': None, 'monthly': None, 'normal_inclusive':False},
-    'SST34':        {'daily': None, 'monthly': None, 'normal_inclusive':False},
-    'ASST12':       {'daily': None, 'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'normal_inclusive':True},
-    'ASST3':        {'daily': None, 'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'normal_inclusive':True},
-    'ASST4':        {'daily': None, 'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'normal_inclusive':True},
-    'ASST34':       {'daily': None, 'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'normal_inclusive':True},
-    'ARH':          {'daily': None, 'monthly': None, 'normal_inclusive':True},
-    'QBO':          {'daily': None, 'monthly': None, 'normal_inclusive':True},
-    'NAO':          {'daily': None, 'monthly': None, 'normal_inclusive':True},
-    'CAR':          {'daily': None, 'monthly': None, 'normal_inclusive':True},
-    'AREA_WHWP':    {'daily': None, 'monthly': None, 'normal_inclusive':True}
+    'ASST12':       {'daily': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'normal_inclusive':True},
+    'ASST3':        {'daily': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'normal_inclusive':True},
+    'ASST4':        {'daily': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'normal_inclusive':True},
+    'ASST34':       {'daily': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'normal_inclusive':True},
 }
 
 # namefiles of internal independent variables for each type
@@ -296,18 +277,21 @@ def get_internal_limits():
     else:
         return [None,None]
 
-def get_internal_thresholds():
+def get_default_thresholds():
+    from jaziku.env import config_run
     global FREQUENCY_DATA
     global TYPE_SERIES
 
-    from jaziku.env import config_run
-    if config_run.settings['class_category_analysis'] == 3:
-        if TYPE_SERIES in INTERNAL_THRESHOLDS_3_CATEGORIES:
-            return INTERNAL_THRESHOLDS_3_CATEGORIES[TYPE_SERIES][FREQUENCY_DATA]
-    if config_run.settings['class_category_analysis'] == 7:
-        if TYPE_SERIES in INTERNAL_THRESHOLDS_7_CATEGORIES:
-            return INTERNAL_THRESHOLDS_7_CATEGORIES[TYPE_SERIES][FREQUENCY_DATA]
-    return None
+    thresholds_by_category = {3:THRESHOLDS_3_CATEGORIES,
+                              7:THRESHOLDS_7_CATEGORIES}
+
+    THRESHOLDS = thresholds_by_category[config_run.settings['class_category_analysis']]
+
+    if TYPE_SERIES in THRESHOLDS and \
+       THRESHOLDS[TYPE_SERIES][FREQUENCY_DATA] != 'default':
+        return THRESHOLDS[TYPE_SERIES][FREQUENCY_DATA]
+    else:
+        return THRESHOLDS['default'][FREQUENCY_DATA]
 
 def is_daily():
     global FREQUENCY_DATA
@@ -329,9 +313,9 @@ def is_normal_inclusive():
 
     if TYPE_SERIES in INTERNAL_LIMITS:
         if config_run.settings['class_category_analysis'] == 3:
-            return INTERNAL_THRESHOLDS_3_CATEGORIES[TYPE_SERIES]['normal_inclusive']
+            return THRESHOLDS_3_CATEGORIES[TYPE_SERIES]['normal_inclusive']
         if config_run.settings['class_category_analysis'] == 7:
-            return INTERNAL_THRESHOLDS_7_CATEGORIES[TYPE_SERIES]['normal_inclusive']
+            return THRESHOLDS_7_CATEGORIES[TYPE_SERIES]['normal_inclusive']
     else:
         return True # default case when the type series is particular
 

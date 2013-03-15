@@ -162,7 +162,7 @@ def get_thresholds(station, variable, thresholds_input=None):
         if variable.type == 'D':
             return thresholds_by_default_for_var_D(station, variable)
         if variable.type == 'I':
-            internal_thresholds = env.var_I.get_internal_thresholds()
+            internal_thresholds = env.var_I.get_default_thresholds()
             if internal_thresholds is None:
                 console.msg_error(_("the thresholds of var {0} ({1}) were defined as "
                                     "'default'\nbut this variable ({1}) no internal thresholds defined")
@@ -388,7 +388,7 @@ def thresholds_by_default_for_var_D(station, variable):
                                     station.process_period['end']), color='yellow', newline=False)
 
     # return thresholds without analog year
-    internal_thresholds = env.var_D.get_internal_thresholds()
+    internal_thresholds = env.var_D.get_default_thresholds()
     if internal_thresholds is None:
         console.msg_error(_("the thresholds of var {0} ({1}) were defined as 'default'\n"
                             "but this variable ({1}) haven't internal thresholds defined.")
