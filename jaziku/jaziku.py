@@ -123,14 +123,14 @@ def main():
     settings.main(stations_list)
 
     # -------------------------------------------------------------------------
-    # PRE-PROCESS: PREPARE DATA OF ALL STATIONS
-
-    stations.prepare_all_stations(stations_list)
-
-    # -------------------------------------------------------------------------
     # DATA ANALYSIS
     # env.config_run.get['data_analysis']
     if env.config_run.settings['data_analysis']:
+
+        # PRE-PROCESS: prepare data for all stations for data analysis process
+        stations.prepare_all_stations(stations_list,
+                                      prepare_data_for_data_analysis=True,
+                                      prepare_data_for_climate_forecast=False)
 
         # main process for data analysis
         data_analysis.main(stations_list)
@@ -141,6 +141,12 @@ def main():
 
     # climate
     if env.config_run.settings['climate_process']:
+
+        # PRE-PROCESS: prepare data for all stations for climate (and forecast) process
+        stations.prepare_all_stations(stations_list,
+                                      prepare_data_for_data_analysis=False,
+                                      prepare_data_for_climate_forecast=True)
+
         climate.pre_process()
 
     # forecast
