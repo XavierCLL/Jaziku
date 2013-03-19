@@ -1268,14 +1268,14 @@ def outliers(stations_list):
             return station_copy
 
         ## prepare station for special case
-        if env.var_D.is_daily() and env.var_I.is_daily():
-            if env.config_run.settings['analysis_interval'] == "trimester":
+        if env.var_D.is_daily() and env.var_I.is_daily() and env.config_run.settings['analysis_interval'] == "trimester":
                 station_copy = clone_and_transform_station(station, convert_var_D_to_monthly=True, convert_var_I_to_monthly=True)
                 calculate_lags(station_copy, makes_files=False)
-        elif env.var_D.is_daily() and env.var_I.is_monthly():
-            if env.config_run.settings['analysis_interval'] == "trimester":
+        elif env.var_D.is_daily() and env.var_I.is_monthly() and env.config_run.settings['analysis_interval'] == "trimester":
                 station_copy = clone_and_transform_station(station, convert_var_D_to_monthly=True, convert_var_I_to_monthly=False)
                 calculate_lags(station_copy, makes_files=False)
+        else:
+            calculate_lags(station, makes_files=False)
 
         outliers_list = []
 
@@ -1312,7 +1312,7 @@ def outliers(stations_list):
                 # date of outlier
                 outlier_date = station.var_D.date_in_process_period[index]
 
-                if env.var_D.is_daily() and env.var_I.is_daily():
+                if original_freq_data_var_D == 'daily' and original_freq_data_var_I == 'daily':
                     if env.config_run.settings['analysis_interval'] == "trimester":
                         # get I values for outliers date
                         station.var_I.specific_values = lags.get_specific_values(station_copy, 'var_I', 0, outlier_date.month)
@@ -1326,7 +1326,7 @@ def outliers(stations_list):
                         # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                         values_var_I = get_values_in_range_analysis_interval(station, 'I', outlier_date.year, outlier_date.month, day, 0)
 
-                elif env.var_D.is_daily() and env.var_I.is_monthly():
+                elif original_freq_data_var_D == 'daily' and original_freq_data_var_I == 'monthly':
                     if env.config_run.settings['analysis_interval'] == "trimester":
                         # get I values for outliers date
                         station.var_I.specific_values = lags.get_specific_values(station_copy, 'var_I', 0, outlier_date.month)
@@ -1340,7 +1340,7 @@ def outliers(stations_list):
                         # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                         values_var_I = get_values_in_range_analysis_interval(station, 'I', outlier_date.year, outlier_date.month, day, 0)
 
-                elif env.var_D.is_monthly() and env.var_I.is_monthly():
+                elif original_freq_data_var_D == 'monthly' and original_freq_data_var_I == 'monthly':
                     # get I values for outliers date
                     station.var_I.specific_values = lags.get_specific_values(station, 'var_I', 0, outlier_date.month)
                     # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
@@ -1348,7 +1348,7 @@ def outliers(stations_list):
 
                 # SPECIAL CASE 1: when var_I is ONI1, ONI2 or CAR, don't calculate trimesters because the ONI and CAR
                 # series was calculated by trimesters from original source
-                if env.var_I.is_monthly() and env.var_I.TYPE_SERIES in ['ONI1', 'ONI2', 'CAR']:
+                if original_freq_data_var_I == 'monthly' and env.var_I.TYPE_SERIES in ['ONI1', 'ONI2', 'CAR']:
                     # take the first month (in this case, it is the mean of trimester)
                     values_var_I = values_var_I[0]
 

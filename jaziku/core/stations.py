@@ -133,11 +133,7 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
             console.msg(_("done"), color='green')
 
     if prepare_data_for_data_analysis:
-        # lags
-        console.msg(_("Calculate lags .......................................... "), newline=False)
-        for station in stations_list:
-            calculate_lags(station, makes_files=False)
-        console.msg(_("done"), color='green')
+
         # statistics for data analysis
         console.msg(_("Statistics of data for data analysis module ............. "), newline=False)
         for station in stations_list:
