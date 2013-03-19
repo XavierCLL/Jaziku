@@ -19,6 +19,7 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 import gettext
+from jaziku.modules.climate.lags import calculate_lags
 
 from jaziku import env
 from jaziku.core import analysis_interval
@@ -40,6 +41,7 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
 
     if prepare_data_for_data_analysis or \
       (prepare_data_for_climate_forecast and not env.config_run.settings['data_analysis']):
+
         # Read vars
         console.msg(_("Reading var D and var I of all stations ................. "), newline=False)
         for station in stations_list:
@@ -131,13 +133,17 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
             console.msg(_("done"), color='green')
 
     if prepare_data_for_data_analysis:
+        # lags
+        console.msg(_("Calculate lags .......................................... "), newline=False)
+        for station in stations_list:
+            calculate_lags(station, makes_files=False)
+        console.msg(_("done"), color='green')
         # statistics for data analysis
-        if env.config_run.settings['data_analysis']:
-            console.msg(_("Statistics of data for data analysis module ............. "), newline=False)
-            for station in stations_list:
-                station.var_D.do_some_statistic_of_data()
-                station.var_I.do_some_statistic_of_data()
-            console.msg(_("done"), color='green')
+        console.msg(_("Statistics of data for data analysis module ............. "), newline=False)
+        for station in stations_list:
+            station.var_D.do_some_statistic_of_data()
+            station.var_I.do_some_statistic_of_data()
+        console.msg(_("done"), color='green')
 
     console.msg('')
     console.msg(gettext.ngettext(
