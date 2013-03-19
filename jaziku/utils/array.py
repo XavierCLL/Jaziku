@@ -19,6 +19,7 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 from math import isnan
+from jaziku import env
 
 from jaziku.env import globals_vars
 
@@ -76,8 +77,12 @@ def minimum(values):
         return min(values)
 
 def clean(values):
-    """
-    Clean the list of empty elements and valid nulls
+    """Clean the list of empty elements and valid nulls
+
+    :param values: values to clean
+    :type values: list
+
+    :rtype: list
     """
 
     # delete empty elements in row
@@ -87,3 +92,24 @@ def clean(values):
     values = [ value for value in values if not globals_vars.is_valid_null(value) ]
 
     return values
+
+
+def check_nulls(values):
+    """Return the number and percentage of valid null values inside array.
+
+    :param values: values to check the nulls
+    :type values: list
+
+    :ivar number_of_nulls: number of nulls
+    :ivar percentage_of_nulls: percentage of nulls inside values (0-100)
+    :rtype: (int, float)
+    """
+
+    number_of_nulls = 0
+    for value in values:
+        if env.globals_vars.is_valid_null(value):
+            number_of_nulls += 1
+
+    percentage_of_nulls = (number_of_nulls / float((len(values))))*100
+
+    return number_of_nulls, percentage_of_nulls

@@ -56,8 +56,8 @@ def thresholds_to_dict_format(func):
     def wrapper_func(*args, **kwargs):
         thresholds = func(*args, **kwargs)
 
-        if isinstance(thresholds, dict):
-            # it is when it is called twice
+        if not isinstance(thresholds, list):
+            # it is when it is called twice or is false
             return thresholds
         if env.config_run.settings['class_category_analysis'] == 3:
             return {'below': thresholds[0],
@@ -84,6 +84,9 @@ def validate_thresholds(variable, force=False):
     def decorator(func):
         def wrapper_func(*args, **kwargs):
             thresholds = func(*args, **kwargs)
+            if not isinstance(thresholds, dict):
+                # it is when it is called twice or is false
+                return thresholds
             # check ------------------
             # error if limits of variable are none, if defined thresholds
             # as standard deviation are need defined limits
@@ -158,16 +161,88 @@ def get_thresholds(station, variable, thresholds_input=None):
 
 
     def thresholds_by_default():
-        """thresholds by default of var D or var I"""
+        """thresholds by default of var D or var I, with or without analog year"""
+
         if variable.type == 'D':
-            return thresholds_by_default_for_var_D(station, variable)
+            # check if analog_year is defined
+            if env.config_run.settings['analog_year']:
+                # return thresholds with analog year
+                thresholds_with_analog_year = thresholds_with_analog_year_for_var_D(station, variable)
+
+                # check if all thresholds are valid (not 'nan')
+                if thresholds_with_analog_year is False:
+                    console.msg(_("\n > WARNING: Thresholds calculated with analog year for var_D are wrong,\n"
+                                  "   using default thresholds instead"), color='yellow')
+                    console.msg(_("\nWill use thresholds by default for var_D "), color='cyan')
+                    env.config_run.settings['analog_year'] = False
+                    # -> continue thresholds without analog year
+                else:
+                    # return thresholds with analog year
+                    return thresholds_with_analog_year
+
+            # return thresholds without analog year
+            default_thresholds = env.var_D.get_default_thresholds()
+            if default_thresholds is None:
+                console.msg_error(_("the thresholds of var {0} ({1}) were defined as 'default'\n"
+                                    "but this variable ({1}) haven't internal thresholds defined.")
+                .format(variable.type, env.var_D.TYPE_SERIES))
+            return get_thresholds(station, variable, default_thresholds)
+
         if variable.type == 'I':
-            internal_thresholds = env.var_I.get_default_thresholds()
-            if internal_thresholds is None:
+            default_thresholds = env.var_I.get_default_thresholds()
+            if default_thresholds is None:
                 console.msg_error(_("the thresholds of var {0} ({1}) were defined as "
-                                    "'default'\nbut this variable ({1}) no internal thresholds defined")
+                                    "'default'\nbut this variable ({1}) haven't internal thresholds defined")
                 .format(variable.type, env.var_I.TYPE_SERIES))
-            return get_thresholds(station, variable, internal_thresholds)
+            return get_thresholds(station, variable, default_thresholds)
+
+
+    @validate_thresholds(variable)
+    @thresholds_to_dict_format
+    def thresholds_with_analog_year_for_var_D(station, variable):
+
+        # check if analog_year is inside in process period
+        if station.process_period['start'] <= env.config_run.settings['analog_year'] <= station.process_period['end']:
+
+            _iter_date = date(env.config_run.settings['analog_year'], 1, 1)
+            specific_values_with_analog_year = []
+            # get all raw values of var D only in analog year
+            while _iter_date <= date(env.config_run.settings['analog_year'], 12, 31):
+                specific_values_with_analog_year.append(variable.data[variable.date.index(_iter_date)])
+                if env.var_[variable.type].is_daily():
+                    _iter_date += relativedelta(days=1)
+                if env.var_[variable.type].is_monthly():
+                    _iter_date += relativedelta(months=1)
+
+            # check
+            number_of_nulls, percentage_of_nulls = array.check_nulls(specific_values_with_analog_year)
+            if percentage_of_nulls >= 60:
+                return False
+
+            # clean list of nulls
+            specific_values_with_analog_year = array.clean(specific_values_with_analog_year)
+
+            if env.config_run.settings['class_category_analysis'] == 3:
+                return [numpy.percentile(specific_values_with_analog_year, 33),
+                        numpy.percentile(specific_values_with_analog_year, 66)]
+            if env.config_run.settings['class_category_analysis'] == 7:
+                return [numpy.percentile(specific_values_with_analog_year, 11),
+                        numpy.percentile(specific_values_with_analog_year, 22),
+                        numpy.percentile(specific_values_with_analog_year, 33),
+                        numpy.percentile(specific_values_with_analog_year, 66),
+                        numpy.percentile(specific_values_with_analog_year, 77),
+                        numpy.percentile(specific_values_with_analog_year, 88)]
+
+        else:
+
+            console.msg(_("\n > WARNING: The analog year ({0}) for this\n"
+                          "   station is outside of process period {1} to\n"
+                          "   {2}. The process continue but using the\n"
+                          "   default thresholds .........................")
+                        .format(env.config_run.settings['analog_year'],
+                                station.process_period['start'],
+                                station.process_period['end']), color='yellow', newline=False)
+            return False
 
 
     @validate_thresholds(variable)
@@ -308,11 +383,10 @@ def get_thresholds(station, variable, thresholds_input=None):
         return thresholds_by_default()
 
     # check if analog_year is defined but thresholds aren't equal to "default"
-    if env.config_run.settings['analog_year']:
-        if station.first_iter:
-            console.msg(_("\n > WARNING: You have defined the analog year,\n"
-                          "   but the thresholds of var D must be\n"
-                          "   'default' for use the analog year .........."), color='yellow', newline=False)
+    if env.config_run.settings['analog_year'] and variable.type == 'D':  # todo v0.6: really need?
+        console.msg_error(_("You have defined the analog year,\n"
+                            "but the thresholds of var D must be\n"
+                            "'default' for use the analog year."), color='yellow', newline=False)
 
     # if are defined as percentile or standard deviation (all str instance)
     if not False in [isinstance(threshold,str) for threshold in thresholds_input]:
@@ -339,59 +413,3 @@ def get_thresholds(station, variable, thresholds_input=None):
     # unrecognizable thresholds
     console.msg_error(_("unrecognizable thresholds '{0}' for var {1} ({2})")
         .format(thresholds_input, variable.type, env.var_[variable.type].TYPE_SERIES))
-
-
-def thresholds_by_default_for_var_D(station, variable):
-
-    # check if analog_year is defined
-    if env.config_run.settings['analog_year']:  # TODO v0.6.0
-        # check if analog_year is inside in process period
-        if station.process_period['start'] <= env.config_run.settings['analog_year'] <= station.process_period['end']:
-
-            _iter_date = date(env.config_run.settings['analog_year'], 1, 1)
-            specific_values_with_analog_year = []
-            # get all raw values of var D only in analog year, ignoring null values
-            while _iter_date <= date(env.config_run.settings['analog_year'], 12, 31):
-                if not env.globals_vars.is_valid_null(variable.data[variable.date.index(_iter_date)]):
-                    specific_values_with_analog_year.append(variable.data[variable.date.index(_iter_date)])
-                if env.var_[variable.type].is_daily():
-                    _iter_date += relativedelta(days=1)
-                if env.var_[variable.type].is_monthly():
-                    _iter_date += relativedelta(months=1)
-
-            if env.config_run.settings['class_category_analysis'] == 3:
-                thresholds = {'below': numpy.percentile(specific_values_with_analog_year, 33),
-                              'above': numpy.percentile(specific_values_with_analog_year, 66)}
-            if env.config_run.settings['class_category_analysis'] == 7:
-                # TODO v0.6:
-                raise ValueError("TODO")
-
-            # check if all thresholds are valid (not 'nan')
-            if True in [math.isnan(threshold) for threshold in thresholds]:
-                if station.first_iter:
-                    console.msg(_("\n > WARNING: Thresholds calculated with analog year for var_D are wrong,\n"
-                                  "   using default thresholds instead"), color='yellow'),
-            else:
-                # return thresholds with analog year
-                if station.first_iter:
-                    console.msg(_("\n   Using thresholds with analog year for var_D "), color='cyan'),
-
-                return thresholds
-        else:
-            if station.first_iter:
-                console.msg(_("\n > WARNING: The analog year ({0}) for this\n"
-                              "   station is outside of process period {1} to\n"
-                              "   {2}. The process continue but using the\n"
-                              "   default thresholds .........................")
-                            .format(env.config_run.settings['analog_year'],
-                                    station.process_period['start'],
-                                    station.process_period['end']), color='yellow', newline=False)
-
-    # return thresholds without analog year
-    internal_thresholds = env.var_D.get_default_thresholds()
-    if internal_thresholds is None:
-        console.msg_error(_("the thresholds of var {0} ({1}) were defined as 'default'\n"
-                            "but this variable ({1}) haven't internal thresholds defined.")
-        .format(variable.type, env.var_D.TYPE_SERIES))
-    return get_thresholds(station, variable, internal_thresholds)
-

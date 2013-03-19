@@ -84,6 +84,9 @@ def process(station):
     # inform the period to process
     console.msg(_("Period to process: {0}-{1}").format(station.process_period['start'], station.process_period['end']), color='cyan')
 
+    if env.config_run.settings['analog_year']:
+        console.msg(_("Will use thresholds with analog year for var_D "), color='cyan')
+
     # -------------------------------------------------------------------------
     # prepare files
 
