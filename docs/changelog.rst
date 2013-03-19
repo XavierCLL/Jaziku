@@ -11,6 +11,8 @@ Changelog
 news
 ++++
 
+- Reimplemented and check code for analog year for and 3 or 7 categories
+  and adjust using new functions
 - Reimplemented the thresholds by default, now can use 'default' in
   thresholds for particular type for and 3 or 7 categories and adjust
   thresholds for several variables

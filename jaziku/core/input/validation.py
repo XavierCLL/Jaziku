@@ -144,21 +144,6 @@ def set_limits(variable):
 #==============================================================================
 # VALIDATION OF NULL VALUES FOR DEPENDENT AND INDEPENDENT VARIABLE
 
-
-def count_null_values(values):
-    """
-    Return the number of valid null values of array
-
-    :return:
-        number of nulls (int)
-    """
-    null_counter = 0
-    for value in values:
-        if env.globals_vars.is_valid_null(value):
-            null_counter += 1
-
-    return null_counter
-
 def check_consistent_data(station):
     """
     Check if the data are consistent for var D and I, this is that the
@@ -200,10 +185,10 @@ def check_consistent_data(station):
     console.msg("   {0} - {1}:".format(station.code, station.name))
 
     # var D
-    console.msg(_("      var D: {0} null of {1}:").format(station.var_D.null_values_in_process_period,
+    console.msg(_("      var D: {0} null of {1}:").format(station.var_D.nulls_in_process_period,
                                                           len(station.var_D.data_in_process_period)), newline=False)
     # check var D
-    if  station.var_D.null_values_in_process_period / float(len(station.var_D.data_in_process_period)) >= 0.15:
+    if  station.var_D.nulls_in_process_period / float(len(station.var_D.data_in_process_period)) >= 0.15:
         console.msg_error(_("the number of null values is greater than 15% of total\n"
                             "of values inside common period, therefore, for Jaziku\n"
                             "the data are not consistent for process."))
@@ -211,10 +196,10 @@ def check_consistent_data(station):
     console.msg(_("ok"), color='green')
 
     # var I
-    console.msg(_("      var I: {0} null of {1}:").format(station.var_I.null_values_in_process_period,
+    console.msg(_("      var I: {0} null of {1}:").format(station.var_I.nulls_in_process_period,
         len(station.var_I.data_in_process_period)), newline=False)
     # check var I
-    if  station.var_I.null_values_in_process_period / float(len(station.var_I.data_in_process_period)) >= 0.15:
+    if  station.var_I.nulls_in_process_period / float(len(station.var_I.data_in_process_period)) >= 0.15:
         console.msg_error(_("the number of null values is greater than 15% of total\n"
                             "of values inside common period, therefore, for Jaziku\n"
                             "the data are not consistent for process."))

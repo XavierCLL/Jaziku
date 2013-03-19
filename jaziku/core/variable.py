@@ -26,7 +26,6 @@ from scipy.stats.stats import tstd, variation, skew, kurtosis
 
 from jaziku import env
 from jaziku.core.input import vars
-from jaziku.core.input import validation
 from jaziku.utils import console, array
 
 
@@ -287,7 +286,7 @@ class Variable(object):
             VARIABLE.data_in_process_period (list)
             VARIABLE.data_filtered_in_process_period (list)
             VARIABLE.date_in_process_period (list)
-            VARIABLE.null_values_in_process_period (int)
+            VARIABLE.nulls_in_process_period (int)
         """
         start_date_var = date(station.process_period['start'], 1, 1)
         if (self.type == 'D' and env.var_D.is_daily()) or (self.type == 'I' and env.var_I.is_daily()):
@@ -302,7 +301,8 @@ class Variable(object):
         self.date_in_process_period = self.date[self.date.index(start_date_var):\
                                       self.date.index(end_date_var) + 1]
         # nulls inside the process period
-        self.null_values_in_process_period = validation.count_null_values(self.data_in_process_period)
+        self.nulls_in_process_period, \
+        self.percentage_of_nulls_in_process_period = array.check_nulls(self.data_in_process_period)
 
         # delete all valid nulls and clean
         self.data_filtered_in_process_period = array.clean(self.data_in_process_period)

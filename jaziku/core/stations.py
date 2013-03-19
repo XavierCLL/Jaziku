@@ -19,7 +19,6 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 import gettext
-from jaziku.modules.climate.lags import calculate_lags
 
 from jaziku import env
 from jaziku.core import analysis_interval
