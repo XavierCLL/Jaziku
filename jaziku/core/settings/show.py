@@ -106,8 +106,8 @@ def configuration_run(stop_in=None):
         print "   {0} ------ {1}".format("forecast var I lag 2", settings["forecast_var_I_lag_2"])
         if stop_in == "forecast_var_I_lag_2": return
 
-    console.msg("  Maps options:", color='cyan')
     if env.config_run.settings['maps']:
+        console.msg("  Maps options:", color='cyan')
         print "   {0} --------------- {1}".format("overlapping", settings["overlapping"])
         if stop_in == "overlapping": return
         print "   {0} ------------ {1}".format("marks stations", settings["marks_stations"])
