@@ -245,10 +245,10 @@ def composite_analysis(station):
                 pearson_list_day = []
                 is_sig_risk_analysis_list_day = []
                 range_analysis_interval = get_range_analysis_interval()
-                for day in range_analysis_interval:
+                for idx_day, day in enumerate(range_analysis_interval):
                     # get the contingency tables and thresholds
 
-                    specific_contingency_table = station.contingency_tables[lag][month-1][day]
+                    specific_contingency_table = station.contingency_tables[lag][month-1][idx_day]
 
                     # this is for calculate date for print in result table
                     # this depend on range analysis interval and lags (var_I)
@@ -258,7 +258,7 @@ def composite_analysis(station):
                     # for print text date in result table
                     var_D_text = format_out.month_in_initials(date_now.month - 1) + " " + str(day)
                     var_I_text = format_out.month_in_initials((date_now - relativedelta(days=(range_analysis_interval[1] - 1) * lag)).month - 1)\
-                                 + " " + str(range_analysis_interval[range_analysis_interval.index(day) - lag])
+                                 + " " + str(range_analysis_interval[idx_day - lag])
 
                     pearson, is_sig_risk_analysis_list = main_process()  # <-
 

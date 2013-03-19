@@ -159,9 +159,9 @@ def climate_graphs(station):
 
             if env.globals_vars.STATE_OF_DATA in [2, 4]:
 
-                for day in get_range_analysis_interval():
+                for idx_day, day in enumerate(get_range_analysis_interval()):
 
-                    specific_contingency_table = station.contingency_tables[lag][month][day]
+                    specific_contingency_table = station.contingency_tables[lag][month][idx_day]
 
                     title_period = format_out.month_in_initials(month - 1) + " " + str(day)
                     filename_period = format_out.month_in_initials(month - 1) + "_" + str(day)
