@@ -159,14 +159,20 @@ def get_thresholds(station, variable, thresholds_input=None):
     # -------------------------------------------------------------------------
     # definition of different method for calculation thresholds
 
-
-    def check_nulls(values, limit_percentage_of_nulls=20):
+    def check_nulls(values, limit_percentage_of_nulls=20, force=False):
         # check nulls
         number_of_nulls, percentage_of_nulls = array.check_nulls(values)
         if percentage_of_nulls > limit_percentage_of_nulls:
-            console.msg_error(_("Error calculating thresholds for var {0} ({1}),\n"
-                                "one of the time series have more of 20% of nulls."))
-
+            if force:
+                console.msg_error(_("Error calculating thresholds for var {0} ({1}),\n"
+                                    "one of the time series have {2}% of nulls, more than\n"
+                                    "{3}% of permissive nulls.")
+                .format(variable.type, env.var_[variable.type].TYPE_SERIES, round(percentage_of_nulls,1), limit_percentage_of_nulls))
+            else:
+                console.msg(_("\n > WARNING: calculating thresholds for var {0} ({1}),\n"
+                              "   one of the time series have {2}% of nulls, more than\n"
+                              "   {3}% of permissive nulls.")
+                .format(variable.type, env.var_[variable.type].TYPE_SERIES, round(percentage_of_nulls,1), limit_percentage_of_nulls), color='yellow')
 
     def thresholds_by_default():
         """thresholds by default of var D or var I, with or without analog year"""
@@ -209,8 +215,14 @@ def get_thresholds(station, variable, thresholds_input=None):
                 if env.var_[variable.type].is_monthly():
                     _iter_date += relativedelta(months=1)
 
-            # check
-            check_nulls(specific_values_with_analog_year)
+            # check nulls
+            number_of_nulls, percentage_of_nulls = array.check_nulls(specific_values_with_analog_year)
+            if percentage_of_nulls > 25:
+                console.msg_error(_("Error calculating thresholds for var {0} ({1}) using analog year,\n"
+                                    "the series for analog year {2} have {3}% of nulls, more than\n"
+                                    "25% of permissive nulls.")
+                .format(variable.type, env.var_[variable.type].TYPE_SERIES,
+                        env.config_run.settings['analog_year'], percentage_of_nulls))
 
             # clean list of nulls
             specific_values_with_analog_year = array.clean(specific_values_with_analog_year)
@@ -227,10 +239,10 @@ def get_thresholds(station, variable, thresholds_input=None):
                         numpy.percentile(specific_values_with_analog_year, 88)]
         else:
             console.msg_error(_("The analog year ({0}) for this station\n"
-                          "is outside of process period {1} to {2}.")
-                        .format(env.config_run.settings['analog_year'],
-                                station.process_period['start'],
-                                station.process_period['end']), color='yellow', newline=False)
+                                "is outside of process period {1} to {2}.")
+                                .format(env.config_run.settings['analog_year'],
+                                        station.process_period['start'],
+                                        station.process_period['end']))
 
 
     @validate_thresholds(variable)
@@ -355,6 +367,16 @@ def get_thresholds(station, variable, thresholds_input=None):
     # -------------------------------------------------------------------------
     # detect and calculate thresholds
 
+    # check
+    number_of_nulls, percentage_of_nulls = array.check_nulls(variable.specific_values)
+    if percentage_of_nulls > 20:
+        console.msg(_("\n > WARNING: calculating thresholds for var {0} ({1}),\n"
+                      "   one of the time series have {2}% of nulls, more than\n"
+                      "   20% of permissive nulls. Jaziku continue but the series\n"
+                      "   could not be consistent, recommended enable 'consistent_data'\n"
+                      "   inside runfile.")
+                    .format(variable.type, env.var_[variable.type].TYPE_SERIES, percentage_of_nulls), color='yellow')
+
     # first clean specific values of null and empty elements
     variable.specific_values_cleaned = array.clean(variable.specific_values)
 
@@ -374,7 +396,7 @@ def get_thresholds(station, variable, thresholds_input=None):
     if env.config_run.settings['analog_year'] and variable.type == 'D':  # todo v0.6: really need?
         console.msg_error(_("You have defined the analog year,\n"
                             "but the thresholds of var D must be\n"
-                            "'default' for use the analog year."), color='yellow', newline=False)
+                            "'default' for use the analog year."))
 
     # if are defined as percentile or standard deviation (all str instance)
     if not False in [isinstance(threshold,str) for threshold in thresholds_input]:
