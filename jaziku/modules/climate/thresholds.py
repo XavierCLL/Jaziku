@@ -160,6 +160,14 @@ def get_thresholds(station, variable, thresholds_input=None):
     # definition of different method for calculation thresholds
 
 
+    def check_nulls(values, limit_percentage_of_nulls=20):
+        # check nulls
+        number_of_nulls, percentage_of_nulls = array.check_nulls(values)
+        if percentage_of_nulls > limit_percentage_of_nulls:
+            console.msg_error(_("Error calculating thresholds for var {0} ({1}),\n"
+                                "one of the time series have more of 20% of nulls."))
+
+
     def thresholds_by_default():
         """thresholds by default of var D or var I, with or without analog year"""
 
@@ -167,26 +175,15 @@ def get_thresholds(station, variable, thresholds_input=None):
             # check if analog_year is defined
             if env.config_run.settings['analog_year']:
                 # return thresholds with analog year
-                thresholds_with_analog_year = thresholds_with_analog_year_for_var_D(station, variable)
-
-                # check if all thresholds are valid (not 'nan')
-                if thresholds_with_analog_year is False:
-                    console.msg(_("\n > WARNING: Thresholds calculated with analog year for var_D are wrong,\n"
-                                  "   using default thresholds instead"), color='yellow')
-                    console.msg(_("\nWill use thresholds by default for var_D "), color='cyan')
-                    env.config_run.settings['analog_year'] = False
-                    # -> continue thresholds without analog year
-                else:
-                    # return thresholds with analog year
-                    return thresholds_with_analog_year
-
-            # return thresholds without analog year
-            default_thresholds = env.var_D.get_default_thresholds()
-            if default_thresholds is None:
-                console.msg_error(_("the thresholds of var {0} ({1}) were defined as 'default'\n"
-                                    "but this variable ({1}) haven't internal thresholds defined.")
-                .format(variable.type, env.var_D.TYPE_SERIES))
-            return get_thresholds(station, variable, default_thresholds)
+                return thresholds_with_analog_year_for_var_D()
+            else:
+                # return thresholds without analog year
+                default_thresholds = env.var_D.get_default_thresholds()
+                if default_thresholds is None:
+                    console.msg_error(_("the thresholds of var {0} ({1}) were defined as 'default'\n"
+                                        "but this variable ({1}) haven't internal thresholds defined.")
+                    .format(variable.type, env.var_D.TYPE_SERIES))
+                return get_thresholds(station, variable, default_thresholds)
 
         if variable.type == 'I':
             default_thresholds = env.var_I.get_default_thresholds()
@@ -199,11 +196,9 @@ def get_thresholds(station, variable, thresholds_input=None):
 
     @validate_thresholds(variable)
     @thresholds_to_dict_format
-    def thresholds_with_analog_year_for_var_D(station, variable):
-
+    def thresholds_with_analog_year_for_var_D():
         # check if analog_year is inside in process period
         if station.process_period['start'] <= env.config_run.settings['analog_year'] <= station.process_period['end']:
-
             _iter_date = date(env.config_run.settings['analog_year'], 1, 1)
             specific_values_with_analog_year = []
             # get all raw values of var D only in analog year
@@ -215,9 +210,7 @@ def get_thresholds(station, variable, thresholds_input=None):
                     _iter_date += relativedelta(months=1)
 
             # check
-            number_of_nulls, percentage_of_nulls = array.check_nulls(specific_values_with_analog_year)
-            if percentage_of_nulls >= 60:
-                return False
+            check_nulls(specific_values_with_analog_year)
 
             # clean list of nulls
             specific_values_with_analog_year = array.clean(specific_values_with_analog_year)
@@ -232,17 +225,12 @@ def get_thresholds(station, variable, thresholds_input=None):
                         numpy.percentile(specific_values_with_analog_year, 66),
                         numpy.percentile(specific_values_with_analog_year, 77),
                         numpy.percentile(specific_values_with_analog_year, 88)]
-
         else:
-
-            console.msg(_("\n > WARNING: The analog year ({0}) for this\n"
-                          "   station is outside of process period {1} to\n"
-                          "   {2}. The process continue but using the\n"
-                          "   default thresholds .........................")
+            console.msg_error(_("The analog year ({0}) for this station\n"
+                          "is outside of process period {1} to {2}.")
                         .format(env.config_run.settings['analog_year'],
                                 station.process_period['start'],
                                 station.process_period['end']), color='yellow', newline=False)
-            return False
 
 
     @validate_thresholds(variable)
