@@ -110,6 +110,6 @@ def check_nulls(values):
         if env.globals_vars.is_valid_null(value):
             number_of_nulls += 1
 
-    percentage_of_nulls = (number_of_nulls / float((len(values))))*100
+    percentage_of_nulls = round((number_of_nulls / float((len(values))))*100, 1)
 
     return number_of_nulls, percentage_of_nulls
