@@ -159,20 +159,6 @@ def get_thresholds(station, variable, thresholds_input=None):
     # -------------------------------------------------------------------------
     # definition of different method for calculation thresholds
 
-    def check_nulls(values, limit_percentage_of_nulls=20, force=False):
-        # check nulls
-        number_of_nulls, percentage_of_nulls = array.check_nulls(values)
-        if percentage_of_nulls > limit_percentage_of_nulls:
-            if force:
-                console.msg_error(_("Error calculating thresholds for var {0} ({1}),\n"
-                                    "one of the time series have {2}% of nulls, more than\n"
-                                    "{3}% of permissive nulls.")
-                .format(variable.type, env.var_[variable.type].TYPE_SERIES, round(percentage_of_nulls,1), limit_percentage_of_nulls))
-            else:
-                console.msg(_("\n > WARNING: calculating thresholds for var {0} ({1}),\n"
-                              "   one of the time series have {2}% of nulls, more than\n"
-                              "   {3}% of permissive nulls.")
-                .format(variable.type, env.var_[variable.type].TYPE_SERIES, round(percentage_of_nulls,1), limit_percentage_of_nulls), color='yellow')
 
     def thresholds_by_default():
         """thresholds by default of var D or var I, with or without analog year"""
