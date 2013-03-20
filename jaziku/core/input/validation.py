@@ -185,8 +185,9 @@ def check_consistent_data(station):
     console.msg("   {0} - {1}:".format(station.code, station.name))
 
     # var D
-    console.msg(_("      var D: {0} null of {1}:").format(station.var_D.nulls_in_process_period,
-                                                          len(station.var_D.data_in_process_period)), newline=False)
+    console.msg(_("      var D: {0} ({1}%) nulls of {2}:")
+                .format(station.var_D.nulls_in_process_period, station.var_D.percentage_of_nulls_in_process_period,
+                        len(station.var_D.data_in_process_period)), newline=False)
     # check var D
     if  station.var_D.nulls_in_process_period / float(len(station.var_D.data_in_process_period)) >= 0.15:
         console.msg_error(_("the number of null values is greater than 15% of total\n"
@@ -196,8 +197,9 @@ def check_consistent_data(station):
     console.msg(_("ok"), color='green')
 
     # var I
-    console.msg(_("      var I: {0} null of {1}:").format(station.var_I.nulls_in_process_period,
-        len(station.var_I.data_in_process_period)), newline=False)
+    console.msg(_("      var I: {0} ({1}%) nulls of {2}:")
+                .format(station.var_I.nulls_in_process_period, station.var_I.percentage_of_nulls_in_process_period,
+                        len(station.var_I.data_in_process_period)), newline=False)
     # check var I
     if  station.var_I.nulls_in_process_period / float(len(station.var_I.data_in_process_period)) >= 0.15:
         console.msg_error(_("the number of null values is greater than 15% of total\n"
