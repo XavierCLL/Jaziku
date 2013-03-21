@@ -189,7 +189,7 @@ def check_consistent_data(station):
                 .format(station.var_D.nulls_in_process_period, station.var_D.percentage_of_nulls_in_process_period,
                         len(station.var_D.data_in_process_period)), newline=False)
     # check var D
-    if  station.var_D.nulls_in_process_period / float(len(station.var_D.data_in_process_period)) >= 0.15:
+    if  station.var_D.nulls_in_process_period / float(len(station.var_D.data_in_process_period)) > 0.15:
         console.msg_error(_("the number of null values is greater than 15% of total\n"
                             "of values inside common period, therefore, for Jaziku\n"
                             "the data are not consistent for process."))
@@ -201,7 +201,7 @@ def check_consistent_data(station):
                 .format(station.var_I.nulls_in_process_period, station.var_I.percentage_of_nulls_in_process_period,
                         len(station.var_I.data_in_process_period)), newline=False)
     # check var I
-    if  station.var_I.nulls_in_process_period / float(len(station.var_I.data_in_process_period)) >= 0.15:
+    if  station.var_I.nulls_in_process_period / float(len(station.var_I.data_in_process_period)) > 0.15:
         console.msg_error(_("the number of null values is greater than 15% of total\n"
                             "of values inside common period, therefore, for Jaziku\n"
                             "the data are not consistent for process."))
