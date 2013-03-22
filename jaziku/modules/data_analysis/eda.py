@@ -1321,9 +1321,9 @@ def outliers(stations_list):
                     # get the corresponding start day of analysis interval
                     day = locate_day_in_analysis_interval(outlier_date.day)
                     # get I values for outliers date
-                    station.var_I.specific_values = lags.get_specific_values(station, 'var_I', 0, outlier_date.month, day)
+                    station.var_I.specific_values = lags.get_specific_values(station_copy, 'var_I', 0, outlier_date.month, day)
                     # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
-                    values_var_I = get_values_in_range_analysis_interval(station, 'I', outlier_date.year, outlier_date.month, day, 0)
+                    values_var_I = get_values_in_range_analysis_interval(station_copy, 'I', outlier_date.year, outlier_date.month, day, 0)
 
                 # SPECIAL CASE 1: when var_I is ONI1, ONI2 or CAR, don't calculate trimesters because the ONI and CAR
                 # series was calculated by trimesters from original source
