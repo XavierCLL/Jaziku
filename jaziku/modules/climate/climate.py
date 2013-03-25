@@ -27,7 +27,7 @@ from jaziku.modules.climate.lags import calculate_lags
 from jaziku.modules.climate.contingency_table import get_contingency_tables
 from jaziku.modules.climate.graphs import climate_graphs
 from jaziku.modules.maps.data import climate_data_for_maps
-from jaziku.utils import console
+from jaziku.utils import console, output
 
 
 def pre_process():
@@ -87,14 +87,10 @@ def process(station):
     # console message
     console.msg(_("Processing climate ............................ "), newline=False)
 
-    # create directory for output files
-    if not os.path.isdir(env.globals_vars.CLIMATE_DIR):
-        os.makedirs(env.globals_vars.CLIMATE_DIR)
-
     station.climate_dir \
         = os.path.join(env.globals_vars.CLIMATE_DIR, _('stations'), station.code + '_' + station.name)   # 'results'
-    if not os.path.isdir(station.climate_dir):
-        os.makedirs(station.climate_dir)
+
+    output.make_dirs(station.climate_dir)
 
     # -------------------------------------------------------------------------
     # process

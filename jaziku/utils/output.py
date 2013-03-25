@@ -33,11 +33,12 @@ def make_dirs(_dir):
             console.msg_error(_("Problems creating the directory: {0}\n"
                                 "\n{1}").format(_dir, error), False)
 
+
 def prepare_dirs():
     from jaziku.utils import query
     # -------------------------------------------------------------------------
     # main output directory
-    console.msg(_("\nOutput directory for save all results:"), newline=False)
+    console.msg(_("\nDirectory where to save all results:"), newline=False)
     console.msg(env.globals_vars.OUTPUT_DIR, color='cyan')
     make_dirs(env.globals_vars.OUTPUT_DIR)
 

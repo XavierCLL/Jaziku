@@ -25,7 +25,7 @@ from jaziku import env
 from jaziku.core.analysis_interval import get_range_analysis_interval
 from jaziku.modules.forecast.graphs import forecast_graphs
 from jaziku.modules.maps.data import forecast_data_for_maps
-from jaziku.utils import console
+from jaziku.utils import console, output
 
 
 def pre_process():
@@ -85,13 +85,9 @@ def process(station):
 
     console.msg(_("   making forecast for date: ")+env.config_run.settings['forecast_date']['text'], color="cyan", newline=False)
 
-    # create directory for output files
-    if not os.path.isdir(env.globals_vars.FORECAST_DIR):
-        os.makedirs(env.globals_vars.FORECAST_DIR)
-
     station.forecast_dir = os.path.join(env.globals_vars.FORECAST_DIR, _('stations'), station.code + '_' + station.name)   # 'results'
-    if not os.path.isdir(station.forecast_dir):
-        os.makedirs(station.forecast_dir)
+
+    output.make_dirs(station.forecast_dir)
 
     prob_decrease_var_D = {}
     prob_normal_var_D = {}

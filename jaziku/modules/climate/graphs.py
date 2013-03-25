@@ -30,7 +30,7 @@ from Image import open as img_open
 
 from jaziku import env
 from jaziku.core.analysis_interval import get_range_analysis_interval
-from jaziku.utils import  watermarking, format_out
+from jaziku.utils import  watermarking, format_out, output
 from jaziku.utils.matrix import column
 
 
@@ -48,8 +48,7 @@ def climate_graphs(station):
         = os.path.join(station.climate_dir, graphics_dir, _('composite_analysis'))
 
     # create dir
-    if not os.path.isdir(graphics_dir_ca):
-        os.makedirs(graphics_dir_ca)
+    output.make_dirs(graphics_dir_ca)
 
     def create_chart():
         ## graphics options for plot:
@@ -141,8 +140,7 @@ def climate_graphs(station):
     for lag in env.config_run.settings['lags']:
 
         # create dir for lag
-        if not os.path.isdir(os.path.join(graphics_dir_ca, _('lag_{0}').format(lag))):
-            os.makedirs(os.path.join(graphics_dir_ca, _('lag_{0}').format(lag)))
+        output.make_dirs(os.path.join(graphics_dir_ca, _('lag_{0}').format(lag)))
 
         image_open_list = list()
 

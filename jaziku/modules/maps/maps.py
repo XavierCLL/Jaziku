@@ -27,7 +27,7 @@ from jaziku import env
 from jaziku.modules.maps import interpolation
 from jaziku.modules.maps.grid import search_and_set_internal_grid, set_particular_grid
 from jaziku.modules.maps.ncl import make_ncl_file
-from jaziku.utils import console, watermarking, format_out
+from jaziku.utils import console, watermarking, format_out, output
 from jaziku.modules.maps.grid import Grid
 
 
@@ -317,8 +317,7 @@ def maps(grid):
                             base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
 
                             # make dir with the name of grid
-                            if not os.path.isdir(base_path):
-                                os.makedirs(base_path)
+                            output.make_dirs(base_path)
 
                             base_file = _(u'Map_lag_{0}_{1}_{2}')\
                                 .format(lag, format_out.trimester_in_initials(month - 1), phenomenon[category])
@@ -358,8 +357,7 @@ def maps(grid):
                                 base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
 
                                 # make dir with the name of grid
-                                if not os.path.isdir(base_path):
-                                    os.makedirs(base_path)
+                                output.make_dirs(base_path)
 
                                 base_file = _(u'Map_lag_{0}_{1}_{2}')\
                                     .format(lag,
@@ -427,8 +425,7 @@ def maps(grid):
                             grid.grid_name)
 
                         # make dir with the name of grid
-                        if not os.path.isdir(base_path):
-                            os.makedirs(base_path)
+                        output.make_dirs(base_path)
 
                         base_file = _(u'Map_correlation_lag_{0}_{1}').format(lag, format_out.trimester_in_initials(month - 1))
 
@@ -471,8 +468,7 @@ def maps(grid):
                                 grid.grid_name)
 
                             # make dir with the name of grid
-                            if not os.path.isdir(base_path):
-                                os.makedirs(base_path)
+                            output.make_dirs(base_path)
 
                             base_file = _(u'Map_correlation_lag_{0}_{1}')\
                             .format(lag, format_out.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day]))
@@ -529,8 +525,7 @@ def maps(grid):
                     base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
 
                     # make dir with the name of grid
-                    if not os.path.isdir(base_path):
-                        os.makedirs(base_path)
+                    output.make_dirs(base_path)
 
                     base_file = _(u'Map_lag_{0}_{1}').format(lag, forecast_date)
 

@@ -24,7 +24,7 @@ from math import isnan
 
 from jaziku import env
 from jaziku.core.analysis_interval import get_range_analysis_interval
-from jaziku.utils import format_out
+from jaziku.utils import format_out, output
 
 
 def climate_data_for_maps(station):
@@ -49,8 +49,7 @@ def climate_data_for_maps(station):
                 env.globals_vars.analysis_interval_i18n,
                 _('lag_{0}').format(lag))
 
-            if not os.path.isdir(maps_data_lag):
-                os.makedirs(maps_data_lag)
+            output.make_dirs(maps_data_lag)
 
             # all months in year 1->12
             month_list = []
@@ -61,8 +60,7 @@ def climate_data_for_maps(station):
                     for category_label in env.config_run.settings['var_I_category_labels'].values():
                         maps_data_for_category_label = os.path.join(maps_data_lag, category_label)
 
-                        if not os.path.isdir(maps_data_for_category_label):
-                            os.makedirs(maps_data_for_category_label)
+                        output.make_dirs(maps_data_for_category_label)
 
                         csv_name \
                             = os.path.join(maps_data_for_category_label, _(u'Map_Data_lag_{0}_trim_{1}_{2}.csv')
@@ -91,8 +89,7 @@ def climate_data_for_maps(station):
                         for category_label in env.config_run.settings['var_I_category_labels'].values():
                             maps_data_for_category_label = os.path.join(maps_data_lag, category_label)
 
-                            if not os.path.isdir(maps_data_for_category_label):
-                                os.makedirs(maps_data_for_category_label)
+                            output.make_dirs(maps_data_for_category_label)
 
                             csv_name \
                                 = os.path.join(maps_data_for_category_label, _(u'Map_Data_lag_{0}_{1}_{2}.csv')
@@ -295,8 +292,7 @@ def forecast_data_for_maps(station):
                     env.globals_vars.analysis_interval_i18n,
                     format_out.trimester_in_initials(env.config_run.settings['forecast_date']['month'] - 1))
 
-                if not os.path.isdir(maps_dir):
-                    os.makedirs(maps_dir)
+                output.make_dirs(maps_dir)
 
                 # write the headers in file
                 csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}_{1}.csv')
@@ -326,8 +322,7 @@ def forecast_data_for_maps(station):
                     env.globals_vars.analysis_interval_i18n,
                     forecast_date_formatted)
 
-                if not os.path.isdir(maps_dir):
-                    os.makedirs(maps_dir)
+                output.make_dirs(maps_dir)
 
                 # write the headers in file
                 csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}_{1}.csv')

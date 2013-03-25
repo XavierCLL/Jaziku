@@ -43,4 +43,4 @@ arguments.add_argument('-f','--force', action='store_true', default=False,
 
 # set path for save the results
 arguments.add_argument('-o','--output', type=str,  default=False,
-                       help=_('set path for save the results'), required=False)
+                       help=_('set absolute path where to save all results'), required=False)

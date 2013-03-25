@@ -26,7 +26,7 @@ from dateutil.relativedelta import relativedelta
 
 from jaziku import env
 from jaziku.core.analysis_interval import get_values_in_range_analysis_interval, get_range_analysis_interval
-from jaziku.utils import  array, format_out
+from jaziku.utils import  array, format_out, output
 
 
 def get_specific_values(station, var, lag, month, day=None):
@@ -97,8 +97,7 @@ def calculate_lags(station, makes_files=True):
         for lag in env.config_run.settings['lags']:
 
             if makes_files:
-                if not os.path.isdir(dir_lag[lag]):
-                    os.makedirs(dir_lag[lag])
+                output.make_dirs(dir_lag[lag])
 
             # all months in year 1->12
             for month in range(1, 13):
@@ -172,8 +171,7 @@ def calculate_lags(station, makes_files=True):
 
         for lag in env.config_run.settings['lags']:
             if makes_files:
-                if not os.path.isdir(dir_lag[lag]):
-                    os.makedirs(dir_lag[lag])
+                output.make_dirs(dir_lag[lag])
 
             # all months in year 1->12
             for month in range(1, 13):

@@ -39,7 +39,7 @@ from jaziku.core.analysis_interval import get_values_in_range_analysis_interval,
 from jaziku.modules.climate import lags
 from jaziku.modules.climate.contingency_table import get_label_of_var_I_category
 from jaziku.modules.climate.lags import  calculate_lags
-from jaziku.utils import  console, format_out, watermarking, array
+from jaziku.utils import  console, format_out, watermarking, array, output
 
 
 def main(stations_list):
@@ -70,8 +70,7 @@ def main(stations_list):
     global shapiro_wilks_dir
     shapiro_wilks_dir = os.path.join(eda_dir, _('Descriptive_Statistic'))
 
-    if not os.path.isdir(shapiro_wilks_dir):
-        os.makedirs(shapiro_wilks_dir)
+    output.make_dirs(shapiro_wilks_dir)
 
     file_descriptive_statistics_var_D\
     = os.path.join(shapiro_wilks_dir, _('Descriptive_Statistics_{0}.csv').format(env.var_D.TYPE_SERIES))
@@ -185,8 +184,7 @@ def main(stations_list):
     global distribution_test_dir
     distribution_test_dir = os.path.join(eda_dir, _('Distribution_Test'))
 
-    if not os.path.isdir(distribution_test_dir):
-        os.makedirs(distribution_test_dir)
+    output.make_dirs(distribution_test_dir)
 
     # -------------------------------------------------------------------------
     # SCATTER PLOTS OF SERIES
@@ -234,8 +232,7 @@ def main(stations_list):
     global outliers_dir
     outliers_dir = os.path.join(eda_dir, _('Outliers'))
 
-    if not os.path.isdir(outliers_dir):
-        os.makedirs(outliers_dir)
+    output.make_dirs(outliers_dir)
 
     console.msg(_("Outliers ............................................. "), newline=False)
     #with console.redirectStdStreams():  #TODO maybe this no need activade, need when check thresholds
@@ -292,8 +289,7 @@ def descriptive_statistic_graphs(stations_list):
     # directory for save graphs of descriptive statistic
     graphs_dir = os.path.join(shapiro_wilks_dir, _('Graphs_for_{0}').format(env.var_D.TYPE_SERIES))
 
-    if not os.path.isdir(graphs_dir):
-        os.makedirs(graphs_dir)
+    output.make_dirs(graphs_dir)
 
     #for type, var in [[env.config_run.get['type_var_D'],'var_D'], [env.config_run.get['type_var_I'],'var_I']]:
     for graph in [_('vs_Stations'), _('vs_Altitude')]:
@@ -394,8 +390,7 @@ def graphs_inspection_of_series(stations_list):
 
     graphs_dir = os.path.join(shapiro_wilks_dir, _('Graphs_Inspection_of_Series'))
 
-    if not os.path.isdir(graphs_dir):
-        os.makedirs(graphs_dir)
+    output.make_dirs(graphs_dir)
 
 
     for station in stations_list:
@@ -403,8 +398,7 @@ def graphs_inspection_of_series(stations_list):
 
         station_image_path = os.path.join(graphs_dir, station.code +'-'+station.name)
 
-        if not os.path.isdir(station_image_path):
-            os.makedirs(station_image_path)
+        output.make_dirs(station_image_path)
 
         list_graphs = [[station.var_D,'D'], [station.var_I,'I']]
 
@@ -570,8 +564,7 @@ def climatology(stations_list):
 
     graphs_dir = os.path.join(shapiro_wilks_dir, _('Graphs_Inspection_of_Series'))
 
-    if not os.path.isdir(graphs_dir):
-        os.makedirs(graphs_dir)
+    output.make_dirs(graphs_dir)
 
     # climatology table file
     open_file_climatology_table\
@@ -638,8 +631,7 @@ def climatology(stations_list):
 
         station_climatology_path = os.path.join(graphs_dir, station.code +'-'+station.name, _('Climatology'))
 
-        if not os.path.isdir(station_climatology_path):
-            os.makedirs(station_climatology_path)
+        output.make_dirs(station_climatology_path)
 
         x = range(1, 13)
         x_labels = [format_out.month_in_initials(i) for i in range(12)]
@@ -1077,8 +1069,7 @@ def frequency_histogram(stations_list):
 
     frequency_histogram_dir = os.path.join(distribution_test_dir, _('Frequency_histogram'))
 
-    if not os.path.isdir(frequency_histogram_dir):
-        os.makedirs(frequency_histogram_dir)
+    output.make_dirs(frequency_histogram_dir)
 
     for station in stations_list:
 
@@ -1205,8 +1196,7 @@ def outliers(stations_list):
 
             outliers_per_stations_dir = os.path.join(outliers_dir, _("Outliers_per_station"))
 
-            if not os.path.isdir(outliers_per_stations_dir):
-                os.makedirs(outliers_per_stations_dir)
+            output.make_dirs(outliers_per_stations_dir)
 
             name_graph = _("Outliers")+"_{0}_{1}_{2}_({3}-{4})".format(station.code, station.name,
             env.var_D.TYPE_SERIES, station.process_period['start'], station.process_period['end'])
