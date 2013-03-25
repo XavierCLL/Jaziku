@@ -11,6 +11,9 @@ Changelog
 news
 ++++
 
+- New option in argument: -o --output dir, where 'dir' is the absolute and particular
+  directory to save all results that makes Jaziku (this option is optional, default path
+  for save result is the same where is the runfile)
 - Reimplemented and check code for analog year for and 3 or 7 categories
   and adjust using new functions
 - Reimplemented the thresholds by default, now can use 'default' in

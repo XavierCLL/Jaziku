@@ -39,4 +39,8 @@ arguments.add_argument('runfile', type=str,
 
 # enable/disable force all ask to default answer for continue
 arguments.add_argument('-f','--force', action='store_true', default=False,
-    help=_('force all ask to default answer for continue'), required=False)
+                       help=_('force all ask to default answer for continue'), required=False)
+
+# set path for save the results
+arguments.add_argument('-o','--output', type=str,  default=False,
+                       help=_('set path for save the results'), required=False)
