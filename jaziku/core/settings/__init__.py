@@ -27,7 +27,6 @@ def main(stations_list):
 
     import sys
 
-    from jaziku.env import globals_vars
     from jaziku.utils import  console, query
 
     # -------------------------------------------------------------------------
@@ -47,11 +46,9 @@ def main(stations_list):
     # -------------------------------------------------------------------------
     # CONTINUE TO RUN
 
-    if not globals_vars.ARGS.force:
+    query_check_continue = query.yes_no(_("\nPlease check the configuration to run, continue?"))
 
-        query_check_continue = query.yes_no(_("\nPlease check the configuration to run, continue?"))
-
-        if not query_check_continue:
-            console.msg(_("\nexit"),color='red')
-            console.msg_footer()
-            sys.exit()
+    if not query_check_continue:
+        console.msg(_("\nexit"),color='red')
+        console.msg_footer()
+        sys.exit()

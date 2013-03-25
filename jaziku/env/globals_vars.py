@@ -53,7 +53,7 @@ ARGS = None
 # absolute directory to save all result,
 # this is absolute directory where is the runfile + filename of runfile,
 # this variable is set in jaziku.py
-WORK_DIR = None
+OUTPUT_DIR = None
 
 #==============================================================================
 # valid nulls
@@ -114,7 +114,7 @@ def generic_labels(key_label=False):
     return None
 
 #==============================================================================
-# maps #TODO: is now static fix it!
+# maps #TODO v0.6.0: is now static fix it!
 
 # maps files for climate:
 maps_files_climate = {'5days': None, '10days': None, '15days': None, 'trimester': None}

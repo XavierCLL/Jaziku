@@ -40,18 +40,11 @@ def main(stations_list):
             "# are reported and the primary statistical time series.        #\n"
             "################################################################\n")
 
-    # data analysis dir output result
-    env.globals_vars.DATA_ANALYSIS_DIR\
-        = os.path.join(env.globals_vars.WORK_DIR, _('Jaziku_Data_Analysis'))   # 'results'
-
     print _("Saving the result for data analysis in:")
-    print "   " + colored.cyan(os.path.relpath(env.globals_vars.DATA_ANALYSIS_DIR, os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile))))
-
-    if os.path.isdir(env.globals_vars.DATA_ANALYSIS_DIR):
-        console.msg(
-            _("\n > WARNING: the output directory for data analysis process\n"
-              "   is already exist, Jaziku continue but the results\n"
-              "   could be mixed or replaced of old output."), color='yellow')
+    if env.globals_vars.ARGS.output:
+        print "   " + colored.cyan(env.globals_vars.DATA_ANALYSIS_DIR)
+    else:
+        print "   " + colored.cyan(os.path.relpath(env.globals_vars.DATA_ANALYSIS_DIR, os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile))))
 
     # -------------------------------------------------------------------------
     # Exploratory data analysis process

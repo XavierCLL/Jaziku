@@ -49,7 +49,7 @@ from modules.climate import climate
 from modules.forecast import forecast
 from modules.data_analysis import data_analysis
 from modules.maps import maps
-from utils import console
+from utils import console, output
 
 
 #==============================================================================
@@ -88,13 +88,9 @@ def main():
     # READ RUNFILE
     # reading configuration run, list of grids and stations from runfile
 
-    # absolute directory to save all result,
-    # this is absolute directory where is the runfile + filename of runfile
-    env.globals_vars.WORK_DIR = os.path.abspath(os.path.splitext(env.globals_vars.ARGS.runfile)[0])
-
     # test if runfile exist
     if not os.path.isfile(env.globals_vars.ARGS.runfile):
-        console.msg_error(_("[runfile] no such file or directory: {0}".format(env.globals_vars.ARGS.runfile)),False)
+        console.msg_error(_("[runfile] no such file or directory: {0}".format(env.globals_vars.ARGS.runfile)), False)
 
     # read all settings and all stations from runfile
     stations_list = runfile.read_runfile()
@@ -123,8 +119,24 @@ def main():
     settings.main(stations_list)
 
     # -------------------------------------------------------------------------
+    # DEFINED OUTPUT DIRECTORY FOR SAVE RESULTS
+
+    if env.globals_vars.ARGS.output:
+        # absolute directory to save all results defined in arguments
+        env.globals_vars.OUTPUT_DIR = os.path.abspath(env.globals_vars.ARGS.output)
+    else:
+        # absolute directory to save all results,
+        # this is absolute directory where is the runfile + filename of runfile
+        env.globals_vars.OUTPUT_DIR = os.path.abspath(os.path.splitext(env.globals_vars.ARGS.runfile)[0])
+
+    # -------------------------------------------------------------------------
+    # PREPARE ALL OUTPUT DIRECTORIES FOR SAVE RESULTS
+
+    output.prepare_dirs()
+
+    # -------------------------------------------------------------------------
     # DATA ANALYSIS
-    # env.config_run.get['data_analysis']
+
     if env.config_run.settings['data_analysis']:
 
         # PRE-PROCESS: prepare data for all stations for data analysis process

@@ -18,37 +18,61 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
+import shutil
+from clint.textui import colored
 
+from jaziku import env
+from jaziku.utils import console
+from jaziku.utils.output import make_dirs
 
-def yes_no(question, default="yes"):
-    """
-    Ask a yes/no question via raw_input() and return their answer.
+def true(): return True
+def false(): return False
 
-    "question" is a string that is presented to the user.
-    "default" is the presumed answer if the user just hits <Enter>.
-        It must be "yes" (the default), "no" or None (meaning
-        an answer is required of the user).
+def base_query(question, prompt, options, default, wrong_ans):
 
-    The "answer" return value is one of "yes" or "no".
-    """
-    valid = {"yes":True, "y":True, "YES":True, "Y":True,
-             "no":False, "n":False, "NO":False, "N":False}
-    if default == None:
-        prompt = " [y/n] "
-    elif default == "yes":
-        prompt = " [Y/n] "
-    elif default == "no":
-        prompt = " [y/N] "
-    else:
-        raise ValueError("invalid default answer: '%s'" % default)
+    if not default in options:
+        raise ValueError("invalid default answer: {0}".format(default))
 
     while True:
-        sys.stdout.write(question + prompt)
-        choice = raw_input().lower()
-        if default is not None and choice == '':
-            return valid[default]
-        elif choice in valid:
-            return valid[choice]
+        console.msg(question + colored.yellow(prompt), newline=False)
+
+        if env.globals_vars.ARGS.force:
+            print default
+            return options[default]()
         else:
-            sys.stdout.write(_("Please respond with 'y' or 'n'.\n"))
+            choice = raw_input().lower()
+            if choice in options:
+                return options[choice]()
+            else:
+                console.msg(wrong_ans)
+
+
+def yes_no(question, default="y"):
+
+    options = {"yes":true, "y":true, "YES":true, "Y":true,
+               "no":false, "n":false, "NO":false, "N":false}
+
+    prompt = " [y/n]"
+
+    wrong_ans = _("Please respond with 'y' or 'n'")
+
+    return base_query(question, prompt, options, default, wrong_ans)
+
+
+def directory(question, dirs, default="m"):
+
+    def replace():
+        for _dir in dirs:
+            # delete
+            shutil.rmtree(_dir, ignore_errors=True)
+            # create
+            make_dirs(_dir)
+        return True
+
+    options = {"r":replace, "R":replace, "m":true, "M":true, "c":false, "C":false}
+
+    prompt = " [r/m/c]"
+
+    wrong_ans = _("   Please respond with 'r', 'm' or 'c'")
+
+    return base_query(question, prompt, options, default, wrong_ans)

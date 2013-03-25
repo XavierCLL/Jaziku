@@ -44,18 +44,12 @@ def pre_process():
             "# tables and the probability of the independent variable.      #\n"
             "################################################################\n")
 
-    # climate dir output result
-    env.globals_vars.CLIMATE_DIR\
-        = os.path.join(env.globals_vars.WORK_DIR, _('Jaziku_Climate'))   # 'results'
-
     print _("Saving the result for climate in:")
-    print "   " + colored.cyan(os.path.relpath(env.globals_vars.CLIMATE_DIR, os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile))))
+    if env.globals_vars.ARGS.output:
+        print "   " + colored.cyan(env.globals_vars.CLIMATE_DIR)
+    else:
+        print "   " + colored.cyan(os.path.relpath(env.globals_vars.CLIMATE_DIR, os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile))))
 
-    if os.path.isdir(env.globals_vars.CLIMATE_DIR):
-        console.msg(
-            _("\n > WARNING: the output directory for climate process\n"
-              "   is already exist, Jaziku continue but the results\n"
-              "   could be mixed or replaced of old output."), color='yellow')
 
 def process(station):
     """In climate process, it calculate the relationship between the dependent and independent
