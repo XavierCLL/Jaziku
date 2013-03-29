@@ -267,7 +267,7 @@ def get_thresholds(station, variable, thresholds_input=None):
         if env.config_run.settings['class_category_analysis'] == 3:
 
             p50 = numpy.percentile(variable.specific_values_cleaned, 50)
-            std_deviation = numpy.std(variable.specific_values_cleaned)
+            std_deviation = numpy.std(variable.specific_values_cleaned, ddof=1)
 
             return [p50 + std_dev_values[0] * std_deviation,
                     p50 + std_dev_values[1] * std_deviation]
@@ -283,7 +283,7 @@ def get_thresholds(station, variable, thresholds_input=None):
                 .format(variable.type, env.var_[variable.type].TYPE_SERIES, std_dev_values))
 
             p50 = numpy.percentile(variable.specific_values_cleaned, 50)
-            std_deviation = numpy.std(variable.specific_values_cleaned)
+            std_deviation = numpy.std(variable.specific_values_cleaned, ddof=1)
 
             return [p50 + std_dev_values[0] * std_deviation,
                     p50 + std_dev_values[1] * std_deviation,

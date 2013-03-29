@@ -21,8 +21,8 @@
 import os
 from datetime import date
 from dateutil.relativedelta import relativedelta
-from numpy import median, average, var
-from scipy.stats.stats import tstd, variation, skew, kurtosis
+from numpy import median, average, var, std
+from scipy.stats.stats import variation, skew, kurtosis
 
 from jaziku import env
 from jaziku.core.input import vars
@@ -329,7 +329,7 @@ class Variable(object):
         # median
         self.median = median(self.data_filtered_in_process_period)
         # std deviation
-        self.std_dev = tstd(self.data_filtered_in_process_period)
+        self.std_dev = std(self.data_filtered_in_process_period, ddof=1)
         # skewness
         self.skewness = skew(self.data_filtered_in_process_period, bias=False)
         # variance
