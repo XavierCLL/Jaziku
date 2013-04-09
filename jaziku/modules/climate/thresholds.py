@@ -344,6 +344,21 @@ def get_thresholds(station, variable, thresholds_input=None):
             for threshold in thresholds_input:
                 validation.is_the_value_within_limits(threshold, variable)
 
+            # specific behavior for temperatures
+            if env.var_[variable.type].TYPE_SERIES in ['TMIN', 'TMAX', 'TEMP']:
+                p50 = numpy.percentile(variable.specific_values_cleaned, 50)
+
+                if env.config_run.settings['class_category_analysis'] == 3:
+                    return [p50 + thresholds_input[0],
+                            p50 + thresholds_input[1]]
+                if env.config_run.settings['class_category_analysis'] == 7:
+                    return [p50 + thresholds_input[0],
+                            p50 + thresholds_input[1],
+                            p50 + thresholds_input[2],
+                            p50 + thresholds_input[3],
+                            p50 + thresholds_input[4],
+                            p50 + thresholds_input[5]]
+
             return thresholds_input
         except Exception as error:
             console.msg_error(_("Problems with the thresholds for var {0} ({1}):"
