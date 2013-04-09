@@ -149,6 +149,10 @@ def get_specific_contingency_table(station, lag, month, day=None):
         station.var_D.specific_values = lags.get_specific_values(station, 'var_D', lag, month, day)
         station.var_I.specific_values = lags.get_specific_values(station, 'var_I', lag, month, day)
 
+    if lag == 1 and month == 8 and day == 1:
+        print 'hereeeeee'
+
+
     # calculate thresholds as defined by the user in station file for var D
     thresholds_var_D = get_thresholds(station, station.var_D)
 
@@ -166,31 +170,56 @@ def get_specific_contingency_table(station, lag, month, day=None):
                              [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]]
 
     if env.config_run.settings['class_category_analysis'] == 3:
-        def __matrix_row_var_D(column_var_I):
-            if station.var_D.specific_values[index] <= thresholds_var_D['below']:
-                contingency_table[column_var_I][0] += 1
-            if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
-                contingency_table[column_var_I][1] += 1
-            if station.var_D.specific_values[index] >= thresholds_var_D['above']:
-                contingency_table[column_var_I][2] += 1
+        if env.var_D.is_normal_inclusive():
+            def __matrix_row_var_D(column_var_I):
+                if station.var_D.specific_values[index] < thresholds_var_D['below']:
+                    contingency_table[column_var_I][0] += 1
+                if thresholds_var_D['below'] <= station.var_D.specific_values[index] <= thresholds_var_D['above']:
+                    contingency_table[column_var_I][1] += 1
+                if station.var_D.specific_values[index] > thresholds_var_D['above']:
+                    contingency_table[column_var_I][2] += 1
+        else:
+            def __matrix_row_var_D(column_var_I):
+                if station.var_D.specific_values[index] <= thresholds_var_D['below']:
+                    contingency_table[column_var_I][0] += 1
+                if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
+                    contingency_table[column_var_I][1] += 1
+                if station.var_D.specific_values[index] >= thresholds_var_D['above']:
+                    contingency_table[column_var_I][2] += 1
 
     if env.config_run.settings['class_category_analysis'] == 7:
-        def __matrix_row_var_D(column_var_I):
-            if station.var_D.specific_values[index] <= thresholds_var_D['below3']:
-                contingency_table[column_var_I][0] += 1
-            if thresholds_var_D['below3'] < station.var_D.specific_values[index] <= thresholds_var_D['below2']:
-                contingency_table[column_var_I][1] += 1
-            if thresholds_var_D['below2'] < station.var_D.specific_values[index] <= thresholds_var_D['below1']:
-                contingency_table[column_var_I][2] += 1
-            if thresholds_var_D['below1'] < station.var_D.specific_values[index] < thresholds_var_D['above1']:
-                contingency_table[column_var_I][3] += 1
-            if thresholds_var_D['above1'] <= station.var_D.specific_values[index] < thresholds_var_D['above2']:
-                contingency_table[column_var_I][4] += 1
-            if thresholds_var_D['above2'] <= station.var_D.specific_values[index] < thresholds_var_D['above3']:
-                contingency_table[column_var_I][5] += 1
-            if station.var_D.specific_values[index] >= thresholds_var_D['above3']:
-                contingency_table[column_var_I][6] += 1
-
+        if env.var_D.is_normal_inclusive():
+            def __matrix_row_var_D(column_var_I):
+                if station.var_D.specific_values[index] < thresholds_var_D['below3']:
+                    contingency_table[column_var_I][0] += 1
+                if thresholds_var_D['below3'] <= station.var_D.specific_values[index] < thresholds_var_D['below2']:
+                    contingency_table[column_var_I][1] += 1
+                if thresholds_var_D['below2'] <= station.var_D.specific_values[index] < thresholds_var_D['below1']:
+                    contingency_table[column_var_I][2] += 1
+                if thresholds_var_D['below1'] <= station.var_D.specific_values[index] <= thresholds_var_D['above1']:
+                    contingency_table[column_var_I][3] += 1
+                if thresholds_var_D['above1'] < station.var_D.specific_values[index] <= thresholds_var_D['above2']:
+                    contingency_table[column_var_I][4] += 1
+                if thresholds_var_D['above2'] < station.var_D.specific_values[index] <= thresholds_var_D['above3']:
+                    contingency_table[column_var_I][5] += 1
+                if station.var_D.specific_values[index] > thresholds_var_D['above3']:
+                    contingency_table[column_var_I][6] += 1
+        else:
+            def __matrix_row_var_D(column_var_I):
+                if station.var_D.specific_values[index] <= thresholds_var_D['below3']:
+                    contingency_table[column_var_I][0] += 1
+                if thresholds_var_D['below3'] < station.var_D.specific_values[index] <= thresholds_var_D['below2']:
+                    contingency_table[column_var_I][1] += 1
+                if thresholds_var_D['below2'] < station.var_D.specific_values[index] <= thresholds_var_D['below1']:
+                    contingency_table[column_var_I][2] += 1
+                if thresholds_var_D['below1'] < station.var_D.specific_values[index] < thresholds_var_D['above1']:
+                    contingency_table[column_var_I][3] += 1
+                if thresholds_var_D['above1'] <= station.var_D.specific_values[index] < thresholds_var_D['above2']:
+                    contingency_table[column_var_I][4] += 1
+                if thresholds_var_D['above2'] <= station.var_D.specific_values[index] < thresholds_var_D['above3']:
+                    contingency_table[column_var_I][5] += 1
+                if station.var_D.specific_values[index] >= thresholds_var_D['above3']:
+                    contingency_table[column_var_I][6] += 1
 
     if env.var_I.is_normal_inclusive():
         # default case
@@ -220,7 +249,6 @@ def get_specific_contingency_table(station, lag, month, day=None):
                     __matrix_row_var_D(5)
                 if var_I > thresholds_var_I['above3']:
                     __matrix_row_var_D(6)
-
 
     else:
         # SPECIAL CASE 2: for some variables, for set the category of phenomenon for the normal case the thresholds are exclude (< >)
