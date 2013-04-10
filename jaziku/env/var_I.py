@@ -182,8 +182,8 @@ THRESHOLDS_3_CATEGORIES = {
     ## thresholds by type of internal series  (if was not defined here, will use thresholds by default)
     'ONI1':         {'daily': [-0.5,0.5], 'monthly': [-0.5,0.5], 'normal_inclusive': False},
     'ONI2':         {'daily': [-0.5,0.5], 'monthly': [-0.5,0.5], 'normal_inclusive': False},
-    'SOI':          {'daily': [-0.9,0.9], 'monthly': [-0.9,0.9], 'normal_inclusive': True},
-    'SOI_TROUP':    {'daily': [-8,8], 'monthly': [-8,8], 'normal_inclusive': True},
+    'SOI':          {'daily': [-1,1], 'monthly': [-1,1], 'normal_inclusive': False},
+    'SOI_TROUP':    {'daily': [-8,8], 'monthly': [-8,8], 'normal_inclusive': False},
     #'MEI':          {'daily': None, 'monthly': ['p33','p66']},
     'OLR':          {'daily': [-0.1,0.2], 'monthly': [-0.1,0.2], 'normal_inclusive': True},
     'ASST12':       {'daily': ['sd-0.4','sd0.4'], 'monthly': ['sd-0.4','sd0.4'], 'normal_inclusive': True},
@@ -201,8 +201,8 @@ THRESHOLDS_7_CATEGORIES = {
     ## thresholds by type of internal series  (if was not defined here, will use thresholds by default)
     'ONI1':         {'daily': [-1.5,-1,-0.5,0.5,1,1.5], 'monthly': [-1.5,-1,-0.5,0.5,1,1.5], 'normal_inclusive':False},
     'ONI2':         {'daily': [-1.5,-1,-0.5,0.5,1,1.5], 'monthly': [-1.5,-1,-0.5,0.5,1,1.5], 'normal_inclusive': False},
-    'SOI':          {'daily': [-2.86,-1.61,-1,1,1.61,2.86], 'monthly': [-2.86,-1.61,-1,1,1.61,2.86], 'normal_inclusive':True},
-    'SOI_TROUP':    {'daily': [-22.99,-12.99,-8,8,12.99,22.99], 'monthly': [-22.99,-12.99,-8,8,12.99,22.99], 'normal_inclusive':True},
+    'SOI':          {'daily': [-2.86,-1.62,-1,1,1.62,2.86], 'monthly': [-2.86,-1.62,-1,1,1.62,2.86], 'normal_inclusive':False},
+    'SOI_TROUP':    {'daily': [-23,-13,-8,8,13,23], 'monthly': [-23,-13,-8,8,13,23], 'normal_inclusive':False},
     #'MEI':          {'daily': None, 'monthly': None, 'normal_inclusive':True},
     'ASST12':       {'daily': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'normal_inclusive':True},
     'ASST3':        {'daily': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'normal_inclusive':True},
