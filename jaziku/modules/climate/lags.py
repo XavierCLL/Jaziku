@@ -124,7 +124,6 @@ def calculate_lags(station, makes_files=True):
                     csv_file.writerow(['', env.config_run.settings['mode_calculation_series_D'],
                                        env.config_run.settings['mode_calculation_series_I']])
 
-
                 iter_year = station.process_period['start']
 
                 # iteration for years from first-year +1 to end-year -1 inside
