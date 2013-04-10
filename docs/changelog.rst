@@ -76,7 +76,8 @@ fixes
   format entries that are auto-convert from sheets application
 - Fixed input validation for var I with particular values
 - Fix crash detecting languages function when the OS in not defined default locale
-
+- Check when use special internal variables (ONI1, ONI2, CAR) these series have trimester values
+  in this case only can use trimester for analysis interval
 
 0.5.2a (**2013-02-13**)
 -----------------------

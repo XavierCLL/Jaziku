@@ -149,10 +149,6 @@ def get_specific_contingency_table(station, lag, month, day=None):
         station.var_D.specific_values = lags.get_specific_values(station, 'var_D', lag, month, day)
         station.var_I.specific_values = lags.get_specific_values(station, 'var_I', lag, month, day)
 
-    if lag == 1 and month == 8 and day == 1:
-        print 'hereeeeee'
-
-
     # calculate thresholds as defined by the user in station file for var D
     thresholds_var_D = get_thresholds(station, station.var_D)
 

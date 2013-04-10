@@ -279,6 +279,17 @@ def configuration_run():
             .format(env.config_run.settings['class_category_analysis'], env.config_run.settings['class_category_analysis']-1))
 
     # ------------------------
+    # check when use special internal variables (ONI1, ONI2, CAR) these series have trimester values
+    # in this case only can use trimester for analysis interval
+
+    if env.config_run.settings['analysis_interval'] != "trimester" and env.config_run.settings["type_var_I"] in ['ONI1', 'ONI2', 'CAR']:
+        console.msg_error_configuration('analysis_interval',
+                                        _("For the internals variables: ONI1, ONI2 or CAR you need\n"
+                                          "defined 'analysis_interval' as 'trimester' because these\n"
+                                          "time series have trimester values")
+                                        .format(env.var_D.TYPE_SERIES))
+
+    # ------------------------
     # check the probability_forecast_values and forecast date
 
     # if forecast_process is activated
