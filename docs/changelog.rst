@@ -78,6 +78,8 @@ fixes
 - Fix crash detecting languages function when the OS in not defined default locale
 - Check when use special internal variables (ONI1, ONI2, CAR) these series have trimester values
   in this case only can use trimester for analysis interval
+- Adjust values when two thresholds are equal and if the value to evaluate is the same value too,
+  put the value in the middle of category in contingency table
 
 0.5.2a (**2013-02-13**)
 -----------------------
