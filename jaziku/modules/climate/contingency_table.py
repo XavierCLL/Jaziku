@@ -155,6 +155,21 @@ def get_specific_contingency_table(station, lag, month, day=None):
     # calculate thresholds as defined by the user in station file for var I
     thresholds_var_I = get_thresholds(station, station.var_I)
 
+    # adjust values when two thresholds are equal and if the value to evaluate is the same value too,
+    # put the value in the middle of category in contingency table
+    if env.config_run.settings['class_category_analysis'] == 3:
+        thresholds_idx = ['below', 'above']
+    if env.config_run.settings['class_category_analysis'] == 7:
+        thresholds_idx = ['below3', 'below2','below1', 'above1', 'above2', 'above3']
+    epsilon = 1e-10
+    for thres_idx in range(len(thresholds_idx)-1):
+        if thresholds_var_D[thresholds_idx[thres_idx]] == thresholds_var_D[thresholds_idx[thres_idx+1]]:
+            thresholds_var_D[thresholds_idx[thres_idx]] -= epsilon
+            thresholds_var_D[thresholds_idx[thres_idx+1]] += epsilon
+        if thresholds_var_I[thresholds_idx[thres_idx]] == thresholds_var_I[thresholds_idx[thres_idx+1]]:
+            thresholds_var_I[thresholds_idx[thres_idx]] -= epsilon
+            thresholds_var_I[thresholds_idx[thres_idx+1]] += epsilon
+
     # -------------------------------------------------------------------------
     ## Calculating contingency table with absolute values
     if env.config_run.settings['class_category_analysis'] == 3:
