@@ -1325,7 +1325,7 @@ def outliers(stations_list):
                 # in analysis interval in the corresponding period of outlier (var_D)
                 if env.config_run.settings['mode_calculation_series_I'] == 'mean':
                     value_var_I = array.mean(values_var_I)
-                if env.config_run.settings['mode_calculation_series_I'] == 'accumulate':  # TODO v0.6.0: check (and accumulate??)
+                if env.config_run.settings['mode_calculation_series_I'] == 'accumulate':
                     value_var_I = sum(array.clean(values_var_I))
 
                 # get categorize of phenomenon for the value_var_I
