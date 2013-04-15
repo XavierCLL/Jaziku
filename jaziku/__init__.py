@@ -2,6 +2,7 @@
 
 import sys
 import platform
+from matplotlib import use
 
 # TODO:
 #from jaziku import main
@@ -13,6 +14,13 @@ import platform
 
 #__version__ = ('.'.join((str(each) for each in VERSION[:3])) +
 #               '.'.join(VERSION[3:]))
+
+# initialize matplotlib backend in raster graphics (png)
+
+try:
+    use("AGG", warn=False, force=True)
+except TypeError:
+    use("AGG", warn=False)  # for old version of matplotlib
 
 __platform__ = platform.system()
 __license__ = 'GPLv3'
