@@ -5,7 +5,10 @@ import platform
 from matplotlib import use
 
 # initialize matplotlib backend in raster graphics (png)
-use("AGG", warn=False, force=True)
+try:
+    use("AGG", warn=False, force=True)
+except TypeError:
+    use("AGG", warn=False)  # for old version of matplotlib
 
 #VERSION = (1, 4, 0, 'b')
 
