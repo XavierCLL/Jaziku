@@ -311,13 +311,16 @@ def is_normal_inclusive():
     global TYPE_SERIES
     from jaziku.env import config_run
 
-    if TYPE_SERIES in INTERNAL_LIMITS:
-        if config_run.settings['class_category_analysis'] == 3:
+    if config_run.settings['class_category_analysis'] == 3:
+        if TYPE_SERIES in THRESHOLDS_3_CATEGORIES:
             return THRESHOLDS_3_CATEGORIES[TYPE_SERIES]['normal_inclusive']
-        if config_run.settings['class_category_analysis'] == 7:
+        else:
+            return THRESHOLDS_3_CATEGORIES['default']['normal_inclusive']
+    if config_run.settings['class_category_analysis'] == 7:
+        if TYPE_SERIES in THRESHOLDS_7_CATEGORIES:
             return THRESHOLDS_7_CATEGORIES[TYPE_SERIES]['normal_inclusive']
-    else:
-        return True # default case when the type series is particular
+        else:
+            return THRESHOLDS_7_CATEGORIES['default']['normal_inclusive']
 
 def set_FREQUENCY_DATA(new_freq_data, check=True):
     global FREQUENCY_DATA

@@ -70,7 +70,7 @@ def configuration_run(stop_in=None):
         if x == 0:
             print "   {0} ----- {1}".format("var I category labels", label)
         else:
-            print "                             {0}".format(label)
+            print "                               {0}".format(label)
     if stop_in == "var_I_category_labels": return
 
     console.msg("  Var D options:", color='cyan')
