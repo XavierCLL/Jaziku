@@ -70,7 +70,7 @@ def configuration_run():
                     = [unicode(label, 'utf-8') for label in env.config_run.settings['var_I_category_labels']]
             else:
                 console.msg_error_configuration('var_I_category_labels',
-                                                _("The 'var_I_category_labels' {0} not is valid,\n"
+                                                _("The 'var_I_category_labels' is not valid,\n"
                                                   "this should be 3 labels in different rows."))
 
 
@@ -83,7 +83,7 @@ def configuration_run():
                     = [unicode(label, 'utf-8') for label in env.config_run.settings['var_I_category_labels']]
             else:
                 console.msg_error_configuration('var_I_category_labels',
-                                                _("The 'var_I_category_labels' {0} not is valid,\n"
+                                                _("The 'var_I_category_labels' is not valid,\n"
                                                   "this should be 7 labels in different rows."))
     @var_I_category_labels_dictionary
     def format_labels(labels_list):
