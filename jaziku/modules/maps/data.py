@@ -35,19 +35,15 @@ def climate_data_for_maps(station):
 
     # -------------------------------------------------------------------------
     # create maps plots files for climate process, only once
-    if env.globals_vars.maps_files_climate[env.config_run.settings['analysis_interval']] is None:
+    if not env.globals_vars.maps_files_climate:
         # create and define csv output file for maps climate
-
-        env.globals_vars.maps_files_climate[env.config_run.settings['analysis_interval']] = {}  # [lag][month][phenomenon]
 
         # define maps data files and directories
         for lag in env.config_run.settings['lags']:
 
             maps_dir = os.path.join(env.globals_vars.CLIMATE_DIR, _('maps'))
 
-            maps_data_lag = os.path.join(maps_dir,
-                env.globals_vars.analysis_interval_i18n,
-                _('lag_{0}').format(lag))
+            maps_data_lag = os.path.join(maps_dir, _('lag_{0}').format(lag))
 
             output.make_dirs(maps_data_lag)
 
@@ -58,6 +54,7 @@ def climate_data_for_maps(station):
                 if env.globals_vars.STATE_OF_DATA in [1, 3]:
                     categories_list = []
                     for category_label in env.config_run.settings['var_I_category_labels'].values():
+                        category_label = category_label.strip().replace(' ','_')
                         maps_data_for_category_label = os.path.join(maps_data_lag, category_label)
 
                         output.make_dirs(maps_data_for_category_label)
@@ -87,6 +84,7 @@ def climate_data_for_maps(station):
                         categories_list = []
 
                         for category_label in env.config_run.settings['var_I_category_labels'].values():
+                            category_label = category_label.strip().replace(' ','_')
                             maps_data_for_category_label = os.path.join(maps_data_lag, category_label)
 
                             output.make_dirs(maps_data_for_category_label)
@@ -115,7 +113,7 @@ def climate_data_for_maps(station):
 
                     month_list.append(day_list)
 
-            env.globals_vars.maps_files_climate[env.config_run.settings['analysis_interval']][lag] = month_list
+            env.globals_vars.maps_files_climate[lag] = month_list
 
     def calculate_index(category, values):
 
@@ -190,7 +188,7 @@ def climate_data_for_maps(station):
                         index = calculate_index(7, values_CT)
 
                     # write new row in file
-                    csv_name = env.globals_vars.maps_files_climate[env.config_run.settings['analysis_interval']][lag][month - 1][category_var_I]
+                    csv_name = env.globals_vars.maps_files_climate[lag][month - 1][category_var_I]
                     open_file = open(csv_name, 'a')
                     csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
                     if env.config_run.settings['class_category_analysis'] == 3:
@@ -237,7 +235,7 @@ def climate_data_for_maps(station):
                             index = calculate_index(7, values_CT)
 
                         # write new row in file
-                        csv_name = env.globals_vars.maps_files_climate[env.config_run.settings['analysis_interval']][lag][month - 1][idx_day][category_var_I]
+                        csv_name = env.globals_vars.maps_files_climate[lag][month - 1][idx_day][category_var_I]
                         open_file = open(csv_name, 'a')
                         csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
                         if env.config_run.settings['class_category_analysis'] == 3:
@@ -281,7 +279,7 @@ def forecast_data_for_maps(station):
         forecast_date_formatted = format_out.month_in_initials(env.config_run.settings['forecast_date']['month'] - 1) \
                                   + "_" + str(env.config_run.settings['forecast_date']['day'])
 
-    if forecast_date_formatted not in env.globals_vars.maps_files_forecast[env.config_run.settings['analysis_interval']]:
+    if not env.globals_vars.maps_files_forecast:
 
         if env.globals_vars.STATE_OF_DATA in [1, 3]:
             lags_list = {}
@@ -289,7 +287,6 @@ def forecast_data_for_maps(station):
             for lag in env.config_run.settings['lags']:
 
                 maps_dir = os.path.join(env.globals_vars.FORECAST_DIR, _('maps'),
-                    env.globals_vars.analysis_interval_i18n,
                     format_out.trimester_in_initials(env.config_run.settings['forecast_date']['month'] - 1))
 
                 output.make_dirs(maps_dir)
@@ -311,7 +308,7 @@ def forecast_data_for_maps(station):
                 del csv_file
 
                 lags_list[lag] = csv_name
-            env.globals_vars.maps_files_forecast[env.config_run.settings['analysis_interval']][forecast_date_formatted] = lags_list
+            env.globals_vars.maps_files_forecast[forecast_date_formatted] = lags_list
 
         if env.globals_vars.STATE_OF_DATA in [2, 4]:
             lags_list = {}
@@ -341,7 +338,7 @@ def forecast_data_for_maps(station):
                 del csv_file
 
                 lags_list[lag] = csv_name
-            env.globals_vars.maps_files_forecast[env.config_run.settings['analysis_interval']][forecast_date_formatted] = lags_list
+            env.globals_vars.maps_files_forecast[forecast_date_formatted] = lags_list
 
     def calculate_index():
         # select index
@@ -369,7 +366,7 @@ def forecast_data_for_maps(station):
         index = calculate_index()
 
         # write new row in file
-        csv_name = env.globals_vars.maps_files_forecast[env.config_run.settings['analysis_interval']][forecast_date_formatted][lag]
+        csv_name = env.globals_vars.maps_files_forecast[forecast_date_formatted][lag]
         open_file = open(csv_name, 'a')
         csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
         csv_file.writerow([station.code,
