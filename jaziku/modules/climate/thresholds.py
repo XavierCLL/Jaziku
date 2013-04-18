@@ -370,7 +370,7 @@ def get_thresholds(station, variable, thresholds_input=None):
 
     # check
     number_of_nulls, percentage_of_nulls = array.check_nulls(variable.specific_values)
-    if percentage_of_nulls > 20:
+    if percentage_of_nulls > 20 and station.first_iter:
         console.msg(_("\n > WARNING: calculating thresholds for var {0} ({1}),\n"
                       "   one of the time series have {2}% of nulls, more than\n"
                       "   20% of permissive nulls. Jaziku continue but the series\n"

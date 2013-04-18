@@ -65,7 +65,7 @@ def configuration_run(stop_in=None):
     if stop_in == "graphics": return
     print "   {0} ---------------------- {1}".format("maps", settings["maps"])
     if stop_in == "maps": return
-    if stop_in == "var_I_category_labels": return
+
     for x, label in enumerate(settings["var_I_category_labels"]):
         if x == 0:
             print "   {0} ----- {1}".format("var I category labels", label)
