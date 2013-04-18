@@ -73,7 +73,6 @@ def configuration_run():
                                                 _("The 'var_I_category_labels' is not valid,\n"
                                                   "this should be 3 labels in different rows."))
 
-
     if env.config_run.settings['class_category_analysis'] == 7:
         if env.config_run.settings['var_I_category_labels'] == "default":
             env.config_run.settings['var_I_category_labels'] = env.globals_vars.generic_labels()
@@ -85,6 +84,7 @@ def configuration_run():
                 console.msg_error_configuration('var_I_category_labels',
                                                 _("The 'var_I_category_labels' is not valid,\n"
                                                   "this should be 7 labels in different rows."))
+
     @var_I_category_labels_dictionary
     def format_labels(labels_list):
         return labels_list

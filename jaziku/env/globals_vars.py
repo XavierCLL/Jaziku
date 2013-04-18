@@ -114,14 +114,16 @@ def generic_labels(key_label=False):
     return None
 
 #==============================================================================
-# maps #TODO v0.6.0: is now static fix it!
+# maps
 
 # maps files for climate:
-maps_files_climate = {'5days': None, '10days': None, '15days': None, 'trimester': None}
+maps_files_climate = {}  # [lag][month][var_I_labels]
 # maps files for correlation:
-maps_files_correlation = {'5days': None, '10days': None, '15days': None, 'trimester': None}
+#maps_files_correlation = {'5days': None, '10days': None, '15days': None, 'trimester': None}  # [lag][month][var_I_labels]
+maps_files_correlation = {}  # [lag][month][var_I_labels]
 # maps files for forecast:
-maps_files_forecast = {'5days': {}, '10days': {}, '15days': {}, 'trimester': {}}
+#maps_files_forecast = {'5days': {}, '10days': {}, '15days': {}, 'trimester': {}}  # [lag][month][var_I_labels]
+maps_files_forecast = {}  # [lag][month][var_I_labels]
 
 #==============================================================================
 # graphics properties
