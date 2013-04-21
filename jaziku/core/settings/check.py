@@ -357,6 +357,12 @@ def configuration_run():
                                             .format(forecast_month))
 
         if isinstance(env.config_run.settings['forecast_date'], list):
+            if env.config_run.settings['analysis_interval'] == 'trimester':
+                console.msg_error_configuration('forecast_date',
+                                                _("The 'analysis_interval' is by trimester but the 'forecast_date'\n"
+                                                  "have the month and start day, please define only the start month\n"
+                                                  "for trimester for the forecast date."))
+
             if not isinstance(env.config_run.settings['forecast_date'][1], (float, int)):
                 console.msg_error_configuration('forecast_date',
                                                 _("The day for forecast process '{0}' is invalid, \n"
