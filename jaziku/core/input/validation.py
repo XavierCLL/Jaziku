@@ -102,11 +102,16 @@ def set_limits(variable):
     if input_limit_below is not None:
         # defined limit by below
         if input_limit_below == "default":
-            limit_below = limits_by_default[0]
+            # check if limit by default have valid value
+            if limits_by_default is None:
+                limit_below = None
+            else:
+                limit_below = limits_by_default[0]
             if limit_below is None:
-                console.msg_error(_("The type '{0}' for var {1} hasn't limits by default\n"
-                                    "use a internal valid type or defined the limits in the runfile")
-                .format(variable.type_series, variable.type))
+                console.msg_error(_("The type '{0}' for var {1} hasn't limits by default for\n"
+                                    "data {2}, use a internal valid type and/or valid data frequency\n"
+                                    "or defined the particular limits in the runfile")
+                .format(variable.type_series, variable.type, env.var_[variable.type].FREQUENCY_DATA))
         else:
             limit_below = format_in.to_float(input_limit_below)
             if limit_below is None:
@@ -118,11 +123,16 @@ def set_limits(variable):
     if input_limit_above is not None:
         # defined limit by above
         if input_limit_above == "default":
-            limit_above = limits_by_default[1]
+            # check if limit by default have valid value
+            if limits_by_default is None:
+                limit_above = None
+            else:
+                limit_above = limits_by_default[1]
             if limit_above is None:
-                console.msg_error(_("The type '{0}' for var {1} hasn't limits by default\n"
-                                    "use a internal valid type or defined the limits in the runfile")
-                .format(variable.type_series, variable.type))
+                console.msg_error(_("The type '{0}' for var {1} hasn't limits by default for\n"
+                                    "data {2}, use a internal valid type and/or valid data frequency\n"
+                                    "or defined the particular limits in the runfile")
+                .format(variable.type_series, variable.type, env.var_[variable.type].FREQUENCY_DATA))
         else:
             limit_above = format_in.to_float(input_limit_above)
             if limit_above is None:
