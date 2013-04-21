@@ -385,6 +385,13 @@ def configuration_run():
                 + ' ' + str(env.config_run.settings['forecast_date']['day'])
 
         else:
+            if env.config_run.settings['analysis_interval'] != 'trimester':
+                console.msg_error_configuration('forecast_date',
+                                                _("The 'analysis_interval' is {0} but the 'forecast_date'\n"
+                                                  "only have the month, please define the month and start day\n"
+                                                  "for {0} (in different row) for the forecast date.")
+                                                .format(env.config_run.settings['analysis_interval']))
+
             env.config_run.settings['forecast_date'] = {'month':forecast_month}
 
             env.config_run.settings['forecast_date']['text'] \
