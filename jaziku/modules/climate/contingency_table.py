@@ -332,9 +332,28 @@ def get_specific_contingency_table(station, lag, month, day=None):
     contingency_table_percent = []
     for item_CT in range(env.config_run.settings['class_category_analysis']):
         with console.redirectStdStreams():
-            contingency_table_percent.\
-                append((contingency_table_percentile_size[item_CT] * 100 / float(sum_per_column_CTts[item_CT])).tolist()[0])
+            if env.config_run.settings['class_category_analysis'] == 3:
+                # the contingency table in percentage for 3 categories is calculate using the total
+                # value as sum by column of contingency table in values
+                contingency_table_percent.\
+                    append((contingency_table_percentile_size[item_CT] * 100 / float(sum_per_column_CTts[item_CT])).tolist()[0])
 
+            if env.config_run.settings['class_category_analysis'] == 7:
+                # the contingency table in percentage for 7 categories is calculate using the total
+                # value as sum by category (i.e. below1, below2 and below3) and not by column
+
+                # below 1,2,3
+                if item_CT in [0,1,2]:
+                    total_by_category =  float(sum_per_column_CTts[0])+float(sum_per_column_CTts[1])+float(sum_per_column_CTts[2])
+                # normal
+                if item_CT in [3]:
+                    total_by_category =  float(sum_per_column_CTts[3])
+                # above 1,2,3
+                if item_CT in [4,5,6]:
+                    total_by_category =  float(sum_per_column_CTts[4])+float(sum_per_column_CTts[5])+float(sum_per_column_CTts[6])
+
+                contingency_table_percent.\
+                    append((contingency_table_percentile_size[item_CT] * 100 / total_by_category).tolist()[0])
     # Contingency table percent to print in result table and graphics (reduce the number of decimals)
     contingency_table_percent_formatted = []
     if env.config_run.settings['class_category_analysis'] == 3:
