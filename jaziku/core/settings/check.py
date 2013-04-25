@@ -319,6 +319,14 @@ def configuration_run():
                     # check if amount of values is correct
                     if len(array.clean(env.config_run.settings['forecast_var_I_lag_'+lag])) == 3:
                         env.globals_vars.forecast_contingency_table['type'] = '3x7'
+                        # complete arrays if is needed for the last items with ''
+                        for idx in range(7):
+                            try:
+                                env.config_run.settings['forecast_var_I_lag_'+lag][idx]
+                            except:
+                                env.config_run.settings['forecast_var_I_lag_'+lag].append('')
+                        env.globals_vars.input_settings['forecast_var_I_lag_'+lag] = env.config_run.settings['forecast_var_I_lag_'+lag]
+
                     elif len(array.clean(env.config_run.settings['forecast_var_I_lag_'+lag])) == 7:
                         env.globals_vars.forecast_contingency_table['type'] = '7x7'
                     else:
