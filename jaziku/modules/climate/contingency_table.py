@@ -171,7 +171,9 @@ def get_specific_contingency_table(station, lag, month, day=None):
             thresholds_var_I[thresholds_idx[thres_idx+1]] += epsilon
 
     # -------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     ## Calculating contingency table with absolute values
+
     if env.config_run.settings['class_category_analysis'] == 3:
         # matrix 3x3
         contingency_table = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
@@ -292,16 +294,37 @@ def get_specific_contingency_table(station, lag, month, day=None):
                     __matrix_row_var_D(6)
 
     # -------------------------------------------------------------------------
-    ## Calculating contingency table with values in percent
-    if env.config_run.settings['class_category_analysis'] == 3:
-        percentile_size = station.size_time_series / 3.0
-        contingency_table_percentile_size = matrix(contingency_table) * percentile_size
-        sum_per_column_CTts = contingency_table_percentile_size.sum(axis=1)
+    # -------------------------------------------------------------------------
+    ## Calculating contingency table with values in percentage
+
+    # contingency_table[varI][varD]
+    # sum of column of all values in each category of var I
+    sum_per_column_CT = matrix(contingency_table).sum(axis=1)
+    # converting in list
+    sum_per_column_CT = [float(x) for x in sum_per_column_CT]
+    # check if all analysis interval have valid values (not NaN values):
+    # the sum of years in process period should be equal to all values in contingency table
+    # or is the same as the number of values in any series time
+    years_in_process_period = station.process_period['end'] - station.process_period['start'] + 1
+    if sum(sum_per_column_CT) != years_in_process_period:
+        if day:
+            console.msg(_(" > WARNING: One of the analysis interval have all NaN values\n"
+                          "   for the lag {0}, month {1} and day {2}.").format(lag,month,day), color="yellow")
+        else:
+            console.msg(_(" > WARNING: One of the analysis interval have all NaN values\n"
+                      "   for the lag {0} and month {1} .").format(lag,month), color="yellow")
+    # multiply each column (varI) of the contingency_table (CT) for its respective value of sum_per_column_CT (threshold size (TS))
+    table_CTxTS = [(column*sum_per_column_CT[i]).tolist()[0] for i,column in enumerate(matrix(contingency_table))]
+    # sum per column of the before table CTxTS and convert to python 2d list
+    sum_per_column_table_CTxTS =  [x[0] for x in matrix(table_CTxTS).sum(axis=1).tolist()]
 
     if env.config_run.settings['class_category_analysis'] == 7:
-        percentile_size = station.size_time_series / 7.0
-        contingency_table_percentile_size = matrix(contingency_table) * percentile_size
-        sum_per_column_CTts = contingency_table_percentile_size.sum(axis=1)
+        # for 7 categories the sum of var I is by categories [below*=sb+mb+wb, normal=n, above*=wa+ma+sa]
+        sum_per_column_table_CTxTS = [sum(sum_per_column_table_CTxTS[0:3])]*3 + \
+                                     [sum_per_column_table_CTxTS[3]] + \
+                                     [sum(sum_per_column_table_CTxTS[4::])]*3
+
+    contingency_table_in_percentage = [(column/sum_per_column_table_CTxTS[i]*100).tolist()[0] for i,column in enumerate(matrix(table_CTxTS))]
 
     # -------------------------------------------------------------------------
     # threshold_problem is global variable for detect problem with
@@ -311,69 +334,52 @@ def get_specific_contingency_table(station, lag, month, day=None):
     # table, jaziku continue but the graphics will not be created
     # because "nan"  character could not be calculate.
 
-    if env.config_run.settings['class_category_analysis'] == 3:
-        labels = ['below','normal','above']
-    if env.config_run.settings['class_category_analysis'] == 7:
-        labels = ['below3','below2','below1','normal','above1','above2','above3']
+    # todo 0.6
+    # if env.config_run.settings['class_category_analysis'] == 3:
+    #     labels = ['below','normal','above']
+    # if env.config_run.settings['class_category_analysis'] == 7:
+    #     labels = ['below3','below2','below1','normal','above1','above2','above3']
+    #
+    # for index, label in enumerate(labels):
+    #     if float(sum_per_column_table_CTxTS[index]) == 0 and not env.globals_vars.threshold_problem[index]:
+    #         console.msg(
+    #             _(u"\n\n > WARNING: The thresholds defined for var I\n"
+    #               u"   are not suitable for compound analysis of\n"
+    #               u"   variable '{0}' with relation to '{1}' inside\n"
+    #               u"   category '{2}'. Therefore, the graphics\n"
+    #               u"   will not be created.")
+    #             .format(env.var_D.TYPE_SERIES, env.var_I.TYPE_SERIES, env.config_run.settings['var_I_category_labels'][label]), color='yellow')
+    #         env.globals_vars.threshold_problem[index] = True
 
-    for index, label in enumerate(labels):
-        if float(sum_per_column_CTts[index]) == 0 and not env.globals_vars.threshold_problem[index]:
-            console.msg(
-                _(u"\n\n > WARNING: The thresholds defined for var I\n"
-                  u"   are not suitable for compound analysis of\n"
-                  u"   variable '{0}' with relation to '{1}' inside\n"
-                  u"   category '{2}'. Therefore, the graphics\n"
-                  u"   will not be created.")
-                .format(env.var_D.TYPE_SERIES, env.var_I.TYPE_SERIES, env.config_run.settings['var_I_category_labels'][label]), color='yellow')
-            env.globals_vars.threshold_problem[index] = True
 
     # -------------------------------------------------------------------------
-    # Calculating contingency table percent
-    contingency_table_percent = []
-    for item_CT in range(env.config_run.settings['class_category_analysis']):
-        with console.redirectStdStreams():
-            if env.config_run.settings['class_category_analysis'] == 3:
-                # the contingency table in percentage for 3 categories is calculate using the total
-                # value as sum by column of contingency table in values
-                contingency_table_percent.\
-                    append((contingency_table_percentile_size[item_CT] * 100 / float(sum_per_column_CTts[item_CT])).tolist()[0])
+    # -------------------------------------------------------------------------
+    # Calculating contingency table percent with values formatted for outputs
 
-            if env.config_run.settings['class_category_analysis'] == 7:
-                # the contingency table in percentage for 7 categories is calculate using the total
-                # value as sum by category (i.e. below1, below2 and below3) and not by column
-
-                # below 1,2,3
-                if item_CT in [0,1,2]:
-                    total_by_category =  float(sum_per_column_CTts[0])+float(sum_per_column_CTts[1])+float(sum_per_column_CTts[2])
-                # normal
-                if item_CT in [3]:
-                    total_by_category =  float(sum_per_column_CTts[3])
-                # above 1,2,3
-                if item_CT in [4,5,6]:
-                    total_by_category =  float(sum_per_column_CTts[4])+float(sum_per_column_CTts[5])+float(sum_per_column_CTts[6])
-
-                contingency_table_percent.\
-                    append((contingency_table_percentile_size[item_CT] * 100 / total_by_category).tolist()[0])
-    # Contingency table percent to print in result table and graphics (reduce the number of decimals)
-    contingency_table_percent_formatted = []
+    contingency_table_in_percentage_formatted = []
     if env.config_run.settings['class_category_analysis'] == 3:
-        for row in contingency_table_percent:
-            contingency_table_percent_formatted.append([format_out.number(row[0], 1),
-                                                        format_out.number(row[1], 1),
-                                                        format_out.number(row[2], 1)])
+        for row in contingency_table_in_percentage:
+            contingency_table_in_percentage_formatted.append(
+                [format_out.number(row[0], 1),
+                format_out.number(row[1], 1),
+                format_out.number(row[2], 1)])
     if env.config_run.settings['class_category_analysis'] == 7:
-        for row in contingency_table_percent:
-            contingency_table_percent_formatted.append([format_out.number(row[0], 1),
-                                                        format_out.number(row[1], 1),
-                                                        format_out.number(row[2], 1),
-                                                        format_out.number(row[3], 1),
-                                                        format_out.number(row[4], 1),
-                                                        format_out.number(row[5], 1),
-                                                        format_out.number(row[6], 1)])
+        for row in contingency_table_in_percentage:
+            contingency_table_in_percentage_formatted.append(
+                [format_out.number(row[0], 1),
+                format_out.number(row[1], 1),
+                format_out.number(row[2], 1),
+                format_out.number(row[3], 1),
+                format_out.number(row[4], 1),
+                format_out.number(row[5], 1),
+                format_out.number(row[6], 1)])
+
+    # -------------------------------------------------------------------------
+    # save and return
 
     specific_contingency_table = {'in_values':contingency_table,
-                                  'in_percentage':contingency_table_percent,
-                                  'in_percentage_formatted':contingency_table_percent_formatted,
+                                  'in_percentage':contingency_table_in_percentage,
+                                  'in_percentage_formatted':contingency_table_in_percentage_formatted,
                                   'thresholds_var_D':thresholds_var_D,
                                   'thresholds_var_I':thresholds_var_I}
 
