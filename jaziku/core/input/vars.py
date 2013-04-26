@@ -58,7 +58,13 @@ def read_var_D(station):
               "Can't open file '{2}' for var D, \nplease check filename and check that its path is relative\n"
               "(to runfile) or absolute.").format(station.code, station.name, station.var_D.file_path))
 
-    open_file_D = open(station.var_D.file_path, 'r')
+    # Check is file is not empty
+    if os.path.getsize(station.var_D.file_path) == 0:
+        console.msg_error(
+            _("Reading the station: {0} - {1}\n"
+              "The file '{2}' is empty").format(station.code, station.name, station.var_D.file_path))
+
+    open_file_D = open(station.var_D.file_path, 'rU')
 
     # The series accept three delimiters: spaces (' '), tabulation ('\t') or semi-colon (';')
     # this check which delimiter is using this file
@@ -73,7 +79,7 @@ def read_var_D(station):
         delimiter = ';'
     open_file_D.seek(0)
 
-    csv_file_D = csv.reader(open_file_D, delimiter=env.globals_vars.INPUT_CSV_DELIMITER)
+    csv_file_D = csv.reader(open_file_D, delimiter=delimiter)
 
     # csv_file_D = csv.reader(fo, delimiter = '\t')
     # csv_file_D.write(data.replace('\x00', ''))
@@ -183,7 +189,20 @@ def read_var_I(station):
     date_I = []
     var_I = []
 
-    open_file_I = open(station.var_I.file_path, 'r')
+    # check first if file exist
+    if not os.path.isfile(station.var_I.file_path):
+        console.msg_error(
+            _("Reading the station: {0} - {1}\n"
+              "Can't open file '{2}' for var I, \nplease check filename and check that its path is relative\n"
+              "(to runfile) or absolute.").format(station.code, station.name, station.var_I.file_path))
+
+    # Check is file is not empty
+    if os.path.getsize(station.var_I.file_path) == 0:
+        console.msg_error(
+            _("Reading the station: {0} - {1}\n"
+              "The file '{2}' is empty").format(station.code, station.name, station.var_I.file_path))
+
+    open_file_I = open(station.var_I.file_path, 'rU')
 
     # The series accept three delimiters: spaces (' '), tabulation ('\t') or semi-colon (';')
     # this check which delimiter is using this file
@@ -196,7 +215,7 @@ def read_var_I(station):
         delimiter = ';'
     open_file_I.seek(0)
 
-    csv_file_I = csv.reader(open_file_I, delimiter=env.globals_vars.INPUT_CSV_DELIMITER)
+    csv_file_I = csv.reader(open_file_I, delimiter=delimiter)
     first = True
     # Read line to line file_I, validation and save var_I
     for row in csv_file_I:
