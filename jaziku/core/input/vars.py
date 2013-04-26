@@ -73,7 +73,7 @@ def read_var_D(station):
         delimiter = ';'
     open_file_D.seek(0)
 
-    csv_file_D = csv.reader(open_file_D, delimiter=delimiter)
+    csv_file_D = csv.reader(open_file_D, delimiter=env.globals_vars.INPUT_CSV_DELIMITER)
 
     # csv_file_D = csv.reader(fo, delimiter = '\t')
     # csv_file_D.write(data.replace('\x00', ''))
@@ -196,7 +196,7 @@ def read_var_I(station):
         delimiter = ';'
     open_file_I.seek(0)
 
-    csv_file_I = csv.reader(open_file_I, delimiter=delimiter)
+    csv_file_I = csv.reader(open_file_I, delimiter=env.globals_vars.INPUT_CSV_DELIMITER)
     first = True
     # Read line to line file_I, validation and save var_I
     for row in csv_file_I:
