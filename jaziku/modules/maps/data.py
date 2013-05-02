@@ -27,10 +27,81 @@ from jaziku.core.analysis_interval import get_range_analysis_interval
 from jaziku.utils import format_out, output
 
 
-def climate_data_for_maps(station):
+def calculate_index(category, values):
+    """Calculate the index based on values and the category, the index value
+    is the maximum value predominating the values near to normal.
+
+    The index value is calculated as follows: If the maximum value is by
+    below, the index is negative of this value; if the maximum value is normal,
+    the index is zero; if the maximum value is by above, the index is the
+    same value. If there are two equal maximums values (i.g. below and above),
+    the index is normal (zero), in 7 categories if there are two maximums by
+    below or by above, selected the value near to normal.
+
+    :param category: Category to calculate the index (3 or 7)
+    :type category: int
+    :param values: Values
+    :type values: dict
+
+    :return: {'value': index, 'position': position of index}
+    :rtype: dict
     """
-    Create maps data csv file for plotting for each trimester, phenomenon and lag,
-    each file contain all stations processed.
+
+    # below-normal-above
+    if category == 3:
+        # select index
+        if (values['normal'] >= values['below'] and values['normal'] >= values['above']) or values['below'] == values['above']:
+            return {'value':0,
+                    'position':'normal'}
+        elif values['below'] > values['above']:
+            return {'value':-values['below'],
+                    'position':'below'}
+        elif values['above'] > values['below']:
+            return {'value':values['above'],
+                    'position':'above'}
+
+        return {'value':float('NaN'),
+                'position':None}
+
+    if category == 7:
+        B = max([values['below3'], values['below2'], values['below1']])
+        A = max([values['above3'], values['above2'], values['above1']])
+        new_values = {'below':B, 'normal':values['normal'], 'above':A}
+        # get index based on algorithm of 3 categories
+        index_3cat = calculate_index(3, new_values)
+
+        # check if is nan
+        if isnan(index_3cat['value']):
+            return index_3cat
+
+        # find index position for 7 categories
+        if index_3cat['position'] == 'below':
+            if values['below3'] == -index_3cat['value']:
+                position = 'below3'
+            if values['below2'] == -index_3cat['value']:
+                position = 'below2'
+            if values['below1'] == -index_3cat['value']:
+                position = 'below1'
+        if index_3cat['position'] == 'above':
+            if values['above3'] == index_3cat['value']:
+                position = 'above3'
+            if values['above2'] == index_3cat['value']:
+                position = 'above2'
+            if values['above1'] == index_3cat['value']:
+                position = 'above1'
+        if index_3cat['position'] == 'normal':
+            position = 'normal'
+
+        return {'value':index_3cat['value'],
+                'position':position}
+
+
+def climate_data_for_maps(station):
+    """Create maps data csv file (one by lag) for climate with all information required
+    for make particular maps, this included stations names, latitude, longitude, the
+    probabilities values, the index, the position the index and others. This file
+    contain all stations processed but this function process one station each time
+    and the data is added in the end of file.
     """
 
     # -------------------------------------------------------------------------
@@ -71,7 +142,7 @@ def climate_data_for_maps(station):
                         csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
                         csv_file.writerow([_('CODE'), _('LAT'), _('LON'), _('PEARSON')] + \
                                           env.var_D.get_generic_labels(upper=True) + \
-                                          [_('SUM'), _('INDEX'), _('INDEX LOCATION')])
+                                          [_('SUM'), _('INDEX'), _('INDEX POSITION')])
                         open_file.close()
                         del csv_file
 
@@ -103,7 +174,7 @@ def climate_data_for_maps(station):
                             csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
                             csv_file.writerow([_('CODE'), _('LAT'), _('LON'), _('PEARSON')] + \
                                               env.var_D.get_generic_labels(upper=True) + \
-                                              [_('SUM'), _('INDEX'), _('INDEX LOCATION')])
+                                              [_('SUM'), _('INDEX'), _('INDEX POSITION')])
                             open_file.close()
                             del csv_file
 
@@ -114,56 +185,6 @@ def climate_data_for_maps(station):
                     month_list.append(day_list)
 
             env.globals_vars.maps_files_climate[lag] = month_list
-
-    def calculate_index(category, values):
-
-        # below-normal-above
-        if category == 3:
-            # select index
-            if (values['normal'] >= values['below'] and values['normal'] >= values['above']) or values['below'] == values['above']:
-                return {'value':0,
-                        'location':'normal'}
-            elif values['below'] > values['above']:
-                return {'value':-values['below'],
-                        'location':'below'}
-            elif values['above'] > values['below']:
-                return {'value':values['above'],
-                        'location':'above'}
-
-            return {'value':float('NaN'),
-                    'location':None}
-
-        if category == 7:
-            B = max([values['below3'], values['below2'], values['below1']])
-            A = max([values['above3'], values['above2'], values['above1']])
-            new_values = {'below':B, 'normal':values['normal'], 'above':A}
-            # get index based on algorithm of 3 categories
-            index_3cat = calculate_index(3, new_values)
-
-            # check if is nan
-            if isnan(index_3cat['value']):
-                return index_3cat
-
-            # find index location for 7 categories
-            if index_3cat['location'] == 'below':
-                if values['below3'] == -index_3cat['value']:
-                    location = 'below3'
-                if values['below2'] == -index_3cat['value']:
-                    location = 'below2'
-                if values['below1'] == -index_3cat['value']:
-                    location = 'below1'
-            if index_3cat['location'] == 'above':
-                if values['above3'] == index_3cat['value']:
-                    location = 'above3'
-                if values['above2'] == index_3cat['value']:
-                    location = 'above2'
-                if values['above1'] == index_3cat['value']:
-                    location = 'above1'
-            if index_3cat['location'] == 'normal':
-                location = 'normal'
-
-            return {'value':index_3cat['value'],
-                    'location':location}
 
     for lag in env.config_run.settings['lags']:
 
@@ -199,7 +220,7 @@ def climate_data_for_maps(station):
                                            format_out.number(values_CT['above']),
                                            format_out.number(sum([float(value_CT) for value_CT in values_CT.values()])),
                                            format_out.number(index['value']),
-                                           env.globals_vars.generic_labels(index['location'])])
+                                           env.globals_vars.generic_labels(index['position'])])
                     if env.config_run.settings['class_category_analysis'] == 7:
                         csv_file.writerow([station.code, format_out.number(station.lat), format_out.number(station.lon),
                                            format_out.number(station.pearson_list[lag][month - 1]),
@@ -212,7 +233,7 @@ def climate_data_for_maps(station):
                                            format_out.number(values_CT['above3']),
                                            format_out.number(sum([float(value_CT) for value_CT in values_CT.values()])),
                                            format_out.number(index['value']),
-                                           env.globals_vars.generic_labels(index['location'])])
+                                           env.globals_vars.generic_labels(index['position'])])
                     open_file.close()
                     del csv_file
 
@@ -246,7 +267,7 @@ def climate_data_for_maps(station):
                                                format_out.number(values_CT['above']),
                                                format_out.number(sum([float(value_CT) for value_CT in values_CT.values()])),
                                                format_out.number(index['value']),
-                                               env.globals_vars.generic_labels(index['location'])])
+                                               env.globals_vars.generic_labels(index['position'])])
                         if env.config_run.settings['class_category_analysis'] == 7:
                             csv_file.writerow([station.code, format_out.number(station.lat), format_out.number(station.lon),
                                                format_out.number(station.pearson_list[lag][month - 1][idx_day]),
@@ -259,16 +280,19 @@ def climate_data_for_maps(station):
                                                format_out.number(values_CT['above3']),
                                                format_out.number(sum([float(value_CT) for value_CT in values_CT.values()])),
                                                format_out.number(index['value']),
-                                               env.globals_vars.generic_labels(index['location'])])
+                                               env.globals_vars.generic_labels(index['position'])])
                         open_file.close()
                         del csv_file
 
-# TODO v0.6.0
+
 def forecast_data_for_maps(station):
+    """Create maps data csv file (one by lag) for climate with all information required
+    for make particular maps, this included stations names, latitude, longitude, the
+    probabilities values, the index, the position the index and others. This file
+    contain all stations processed but this function process one station each time
+    and the data is added in the end of file.
     """
-    Create maps data csv file for plotting for each trimester, phenomenon and
-    lag, each file contain all stations processed.
-    """
+
     # -------------------------------------------------------------------------
     # create maps plots files for forecast process, only once
 
@@ -279,6 +303,7 @@ def forecast_data_for_maps(station):
         forecast_date_formatted = format_out.month_in_initials(env.config_run.settings['forecast_date']['month'] - 1) \
                                   + "_" + str(env.config_run.settings['forecast_date']['day'])
 
+    # run only the first time
     if not env.globals_vars.maps_files_forecast:
 
         if env.globals_vars.STATE_OF_DATA in [1, 3]:
@@ -300,10 +325,9 @@ def forecast_data_for_maps(station):
 
                 open_file = open(csv_name, 'w')
                 csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
-                csv_file.writerow([_('code'), _('lat'), _('lon'),
-                                   _('forecast_date'), _('prob_decrease_var_D'),
-                                   _('prob_normal_var_D'), _('prob_exceed_var_D'),
-                                   _('index'), _('sum')])
+                csv_file.writerow([_('CODE'), _('LAT'), _('LON'),_('FORECAST_DATE')] +\
+                                   env.var_D.get_generic_labels(upper=True) + \
+                                   [_('SUM'), _('INDEX'), _('INDEX POSITION')])
                 open_file.close()
                 del csv_file
 
@@ -330,55 +354,51 @@ def forecast_data_for_maps(station):
 
                 open_file = open(csv_name, 'w')
                 csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
-                csv_file.writerow([_('code'), _('lat'), _('lon'),
-                                   _('forecast_date'), _('prob_decrease_var_D'),
-                                   _('prob_normal_var_D'), _('prob_exceed_var_D'),
-                                   _('index'), _('sum')])
+                csv_file.writerow([_('CODE'), _('LAT'), _('LON'),_('FORECAST_DATE')] +\
+                                   env.var_D.get_generic_labels(upper=True) + \
+                                   [_('SUM'), _('INDEX'), _('INDEX POSITION')])
                 open_file.close()
                 del csv_file
 
                 lags_list[lag] = csv_name
             env.globals_vars.maps_files_forecast[forecast_date_formatted] = lags_list
 
-    def calculate_index():
-        # select index
-        if station.prob_decrease_var_D[lag] > station.prob_normal_var_D[lag]:
-            if station.prob_decrease_var_D[lag] > station.prob_exceed_var_D[lag]:
-                p_index = -station.prob_decrease_var_D[lag]
-            elif station.prob_exceed_var_D[lag] > station.prob_normal_var_D[lag]:
-                p_index = station.prob_exceed_var_D[lag]
-            elif station.prob_decrease_var_D[lag] == station.prob_normal_var_D[lag]:
-                p_index = 0
-            else:
-                p_index = station.prob_decrease_var_D[lag]
-        else:
-            if station.prob_normal_var_D[lag] == station.prob_exceed_var_D[lag]:
-                p_index = 0
-            elif station.prob_normal_var_D[lag] > station.prob_exceed_var_D[lag]:
-                p_index = 0
-            else:
-                p_index = station.prob_exceed_var_D[lag]
-
-        return p_index
-
+    # process station by lag
     for lag in env.config_run.settings['lags']:
 
-        index = calculate_index()
+        index = calculate_index(env.config_run.settings['class_category_analysis'], station.prob_var_D[lag])
 
         # write new row in file
         csv_name = env.globals_vars.maps_files_forecast[forecast_date_formatted][lag]
         open_file = open(csv_name, 'a')
         csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
-        csv_file.writerow([station.code,
-                           format_out.number(station.lat, 4),
-                           format_out.number(station.lon, 4),
-                           forecast_date_formatted,
-                           format_out.number(station.prob_decrease_var_D[lag]),
-                           format_out.number(station.prob_normal_var_D[lag]),
-                           format_out.number(station.prob_exceed_var_D[lag]),
-                           format_out.number(index),
-                           format_out.number(sum([station.prob_decrease_var_D[lag],
-                                                  station.prob_normal_var_D[lag],
-                                                  station.prob_exceed_var_D[lag]]))])
+
+        if env.config_run.settings['class_category_analysis'] == 3:
+            csv_file.writerow([station.code,
+                               format_out.number(station.lat, 4),
+                               format_out.number(station.lon, 4),
+                               forecast_date_formatted.replace('_',' '),
+                               format_out.number(station.prob_var_D[lag]['below']),
+                               format_out.number(station.prob_var_D[lag]['normal']),
+                               format_out.number(station.prob_var_D[lag]['above']),
+                               format_out.number(sum(station.prob_var_D[lag].values())),
+                               format_out.number(index['value']),
+                               env.globals_vars.generic_labels(index['position'])])
+
+        if env.config_run.settings['class_category_analysis'] == 7:
+            csv_file.writerow([station.code,
+                               format_out.number(station.lat, 4),
+                               format_out.number(station.lon, 4),
+                               forecast_date_formatted.replace('_',' '),
+                               format_out.number(station.prob_var_D[lag]['below3']),
+                               format_out.number(station.prob_var_D[lag]['below2']),
+                               format_out.number(station.prob_var_D[lag]['below1']),
+                               format_out.number(station.prob_var_D[lag]['normal']),
+                               format_out.number(station.prob_var_D[lag]['above1']),
+                               format_out.number(station.prob_var_D[lag]['above2']),
+                               format_out.number(station.prob_var_D[lag]['above3']),
+                               format_out.number(sum(station.prob_var_D[lag].values())),
+                               format_out.number(index['value']),
+                               env.globals_vars.generic_labels(index['position'])])
         open_file.close()
         del csv_file

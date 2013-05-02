@@ -18,7 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-import math
 import numpy
 from datetime import date
 from dateutil.relativedelta import relativedelta
