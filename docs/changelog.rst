@@ -11,6 +11,7 @@ Changelog
 news
 ++++
 
+- Adjust climate, correlation and forecast maps for 7 categories
 - Adjust, for 3 and 7 categories, the method to calculate the contingency table in
   percentage base on threshold size
 - New option in argument: -o --output dir, where 'dir' is the absolute and particular

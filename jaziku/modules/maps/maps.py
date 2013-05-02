@@ -283,10 +283,10 @@ def maps(grid):
         # TODO: test if convert worked
 
         # delete files
-        os.remove(os.path.abspath(base_path_file) + ".INC")
-        os.remove(os.path.abspath(base_path_file) + ".ncl")
-        os.remove(os.path.abspath(base_path_file) + ".tsv")
-        os.remove(os.path.abspath(base_path_file) + "_stations.tsv")
+        #os.remove(os.path.abspath(base_path_file) + ".INC")
+        #os.remove(os.path.abspath(base_path_file) + ".ncl")
+        #os.remove(os.path.abspath(base_path_file) + ".tsv")
+        #os.remove(os.path.abspath(base_path_file) + "_stations.tsv")
 
         del matrix
 

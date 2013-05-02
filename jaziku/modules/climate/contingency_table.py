@@ -302,55 +302,37 @@ def get_specific_contingency_table(station, lag, month, day=None):
     sum_per_column_CT = matrix(contingency_table).sum(axis=1)
     # converting in list
     sum_per_column_CT = [float(x) for x in sum_per_column_CT]
-    # check if all analysis interval have valid values (not NaN values):
-    # the sum of years in process period should be equal to all values in contingency table
-    # or is the same as the number of values in any series time
-    years_in_process_period = station.process_period['end'] - station.process_period['start'] + 1
-    if sum(sum_per_column_CT) != years_in_process_period:
-        if day:
-            console.msg(_(" > WARNING: One of the analysis interval have all NaN values\n"
-                          "   for the lag {0}, month {1} and day {2}.").format(lag,month,day), color="yellow")
-        else:
-            console.msg(_(" > WARNING: One of the analysis interval have all NaN values\n"
-                      "   for the lag {0} and month {1} .").format(lag,month), color="yellow")
-    # multiply each column (varI) of the contingency_table (CT) for its respective value of sum_per_column_CT (threshold size (TS))
-    table_CTxTS = [(column*sum_per_column_CT[i]).tolist()[0] for i,column in enumerate(matrix(contingency_table))]
-    # sum per column of the before table CTxTS and convert to python 2d list
-    sum_per_column_table_CTxTS =  [x[0] for x in matrix(table_CTxTS).sum(axis=1).tolist()]
 
     if env.config_run.settings['class_category_analysis'] == 7:
         # for 7 categories the sum of var I is by categories [below*=sb+mb+wb, normal=n, above*=wa+ma+sa]
-        sum_per_column_table_CTxTS = [sum(sum_per_column_table_CTxTS[0:3])]*3 + \
-                                     [sum_per_column_table_CTxTS[3]] + \
-                                     [sum(sum_per_column_table_CTxTS[4::])]*3
+        sum_per_column_CT = [sum(sum_per_column_CT[0:3])]*3 + \
+                            [sum_per_column_CT[3]] + \
+                            [sum(sum_per_column_CT[4::])]*3
 
-    contingency_table_in_percentage = [(column/sum_per_column_table_CTxTS[i]*100).tolist()[0] for i,column in enumerate(matrix(table_CTxTS))]
+    # calculate the percentage of contingency table evaluating each value with the sum value of its respective category
+    contingency_table_in_percentage \
+        = [(column/sum_per_column_CT[i]*100).tolist()[0] for i,column in enumerate(matrix(contingency_table))]
 
     # -------------------------------------------------------------------------
     # threshold_problem is global variable for detect problem with
     # threshold of independent variable, if a problem is detected
     # show message and print "nan" (this mean null value for
     # division by zero) in contingency tabla percent in result
-    # table, jaziku continue but the graphics will not be created
-    # because "nan"  character could not be calculate.
+    # table, jaziku show warning message and continue the process.
 
-    # todo 0.6
-    # if env.config_run.settings['class_category_analysis'] == 3:
-    #     labels = ['below','normal','above']
-    # if env.config_run.settings['class_category_analysis'] == 7:
-    #     labels = ['below3','below2','below1','normal','above1','above2','above3']
-    #
-    # for index, label in enumerate(labels):
-    #     if float(sum_per_column_table_CTxTS[index]) == 0 and not env.globals_vars.threshold_problem[index]:
-    #         console.msg(
-    #             _(u"\n\n > WARNING: The thresholds defined for var I\n"
-    #               u"   are not suitable for compound analysis of\n"
-    #               u"   variable '{0}' with relation to '{1}' inside\n"
-    #               u"   category '{2}'. Therefore, the graphics\n"
-    #               u"   will not be created.")
-    #             .format(env.var_D.TYPE_SERIES, env.var_I.TYPE_SERIES, env.config_run.settings['var_I_category_labels'][label]), color='yellow')
-    #         env.globals_vars.threshold_problem[index] = True
+    if env.config_run.settings['class_category_analysis'] == 7:
+        sum_per_column_CT = [sum_per_column_CT[0], sum_per_column_CT[3], sum_per_column_CT[6]]
 
+    for index, label in enumerate(['below','normal','above']):
+        if float(sum_per_column_CT[index]) == 0 and not env.globals_vars.threshold_problem[index]:
+            console.msg(
+                _(u"\n\n > WARNING: The thresholds defined for var I\n"
+                  u"   are not suitable for compound analysis of\n"
+                  u"   variable '{0}' with relation to '{1}' inside\n"
+                  u"   category '{2}'. The process continue but\n"
+                  u"   is recommended review the thresholds .")
+                .format(env.var_D.TYPE_SERIES, env.var_I.TYPE_SERIES, label), color='yellow')
+            env.globals_vars.threshold_problem[index] = True
 
     # -------------------------------------------------------------------------
     # -------------------------------------------------------------------------

@@ -19,6 +19,7 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+from numpy import matrix
 from clint.textui import colored
 
 from jaziku import env
@@ -29,6 +30,9 @@ from jaziku.utils import console, output
 
 
 def pre_process():
+    """Show message and prepare directory
+    """
+
     # directory for the forecast results
     env.globals_vars.FORECAST_DIR \
         = os.path.join(env.globals_vars.OUTPUT_DIR, _('Jaziku_Forecast'))   # 'results'
@@ -41,24 +45,20 @@ def pre_process():
 
     # reset forecast_var_I_lag_N
     if env.config_run.settings['class_category_analysis'] == 3:
-        for lag in [str(lag) for lag in env.globals_vars.ALL_LAGS]:
+        for lag in env.globals_vars.ALL_LAGS:
 
-            env.globals_vars.probability_forecast_values[lag] \
-                = {'below':env.config_run.settings['forecast_var_I_lag_'+lag][0],
-                   'normal':env.config_run.settings['forecast_var_I_lag_'+lag][1],
-                   'above':env.config_run.settings['forecast_var_I_lag_'+lag][2]}
+            env.globals_vars.probability_forecast_values[lag] = {}
+            for idx, tag in enumerate(['below', 'normal', 'above']):
+                env.globals_vars.probability_forecast_values[lag][tag] \
+                    = env.config_run.settings['forecast_var_I_lag_'+str(lag)][idx]
 
     if env.config_run.settings['class_category_analysis'] == 7:
-        for lag in [str(lag) for lag in env.globals_vars.ALL_LAGS]:
+        for lag in env.globals_vars.ALL_LAGS:
 
-            env.globals_vars.probability_forecast_values[lag] \
-                = {'below3':env.config_run.settings['forecast_var_I_lag_'+lag][0],
-                   'below2':env.config_run.settings['forecast_var_I_lag_'+lag][1],
-                   'below1':env.config_run.settings['forecast_var_I_lag_'+lag][2],
-                   'normal':env.config_run.settings['forecast_var_I_lag_'+lag][3],
-                   'above1':env.config_run.settings['forecast_var_I_lag_'+lag][4],
-                   'above2':env.config_run.settings['forecast_var_I_lag_'+lag][5],
-                   'above3':env.config_run.settings['forecast_var_I_lag_'+lag][6]}
+            env.globals_vars.probability_forecast_values[lag] = {}
+            for idx, tag in enumerate(['below3', 'below2','below1', 'normal', 'above1', 'above2', 'above3']):
+                env.globals_vars.probability_forecast_values[lag][tag] \
+                    = env.config_run.settings['forecast_var_I_lag_'+str(lag)][idx]
 
             if env.globals_vars.forecast_contingency_table['type'] == '3x7':
                 for tag in ['below3', 'below2', 'below1']:
@@ -74,10 +74,13 @@ def pre_process():
 
 
 def process(station):
-    """
-    In forecast process the aim is predict the forecast given a phenomenon phase that
+    """In forecast process the aim is predict the forecast given a phenomenon phase that
     represents the independent variable, the dependent variable is affected, yielding results in
     terms of decreased, increased or normal trend in its regime.
+
+    Return by reference:
+
+    :ivar STATION.prob_var_D[lag][tag]: probabilities of var D
     """
 
     # console message
@@ -89,54 +92,72 @@ def process(station):
 
     output.make_dirs(station.forecast_dir)
 
-    prob_decrease_var_D = {}
-    prob_normal_var_D = {}
-    prob_exceed_var_D = {}
+    prob_var_D = {}
 
     for lag in env.config_run.settings['lags']:
 
-        items_CT = {'a': 0, 'b': 0, 'c': 0, 'd': 0, 'e': 0, 'f': 0, 'g': 0, 'h': 0, 'i': 0}
-        order_CT = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
+        prob_var_D[lag] = {}
 
-        # TODO v0.6.0: complete for 7 categories
-
+        # get the contingency table for this lag and the specific forecast date set in runfile,
+        # if 'risk_analysis' is enabled, check first if the value for the forecast date is significant
+        # else put zero value
         if env.globals_vars.STATE_OF_DATA in [1, 3]:
-            _iter = 0
-            for column in range(3):
-                for row in range(3):
-                    if not env.config_run.settings['risk_analysis'] or\
-                       station.is_sig_risk_analysis[lag][env.config_run.settings['forecast_date']['month'] - 1][_iter] == _('yes'):
-                        items_CT[order_CT[_iter]] \
-                            = station.contingency_tables[lag][env.config_run.settings['forecast_date']['month'] - 1]['in_percentage'][column][row] / 100.0
-                        _iter += 1
+            CT_for_forecast_date = station.contingency_tables[lag][env.config_run.settings['forecast_date']['month'] - 1]['in_percentage']
+
+            # TODO 0.6 error?
+            #console.msg_error(_("There aren't enough values in the categories of the contingency\n"
+            #                    "table for to do forecast results.\n"))
 
         if env.globals_vars.STATE_OF_DATA in [2, 4]:
             month = env.config_run.settings['forecast_date']['month']
             day = get_range_analysis_interval().index(env.config_run.settings['forecast_date']['day'])
-            _iter = 0
-            for column in range(3):
-                for row in range(3):
-                    if not env.config_run.settings['risk_analysis'] or\
-                       station.is_sig_risk_analysis[lag][month - 1][day][_iter] == _('yes'):
-                        items_CT[order_CT[_iter]]\
-                            = station.contingency_tables[lag][month - 1][day]['in_percentage'][column][row] / 100.0
-                        _iter += 1
+            CT_for_forecast_date = station.contingency_tables[lag][month - 1][day]['in_percentage']
 
-        prob_decrease_var_D[lag] = (items_CT['a'] * env.config_run.settings['forecast_var_I_lag_'+str(lag)]['below']) +\
-                                   (items_CT['d'] * env.config_run.settings['forecast_var_I_lag_'+str(lag)]['normal']) +\
-                                   (items_CT['g'] * env.config_run.settings['forecast_var_I_lag_'+str(lag)]['above'])
+        # convert from percentage to 0-1
+        CT_for_forecast_date = (matrix(CT_for_forecast_date)/100.0).tolist()
 
-        prob_normal_var_D[lag] = (items_CT['b'] * env.config_run.settings['forecast_var_I_lag_'+str(lag)]['below']) +\
-                                 (items_CT['e'] * env.config_run.settings['forecast_var_I_lag_'+str(lag)]['normal']) +\
-                                 (items_CT['h'] * env.config_run.settings['forecast_var_I_lag_'+str(lag)]['above'])
+        # when there are 3 categories
+        if env.globals_vars.forecast_contingency_table['type'] == '3x3':
+            for idx_varD, tag in enumerate(['below', 'normal', 'above']):
+                prob_var_D[lag][tag] = \
+                    (CT_for_forecast_date[0][idx_varD] * env.globals_vars.probability_forecast_values[lag]['below']) +\
+                    (CT_for_forecast_date[1][idx_varD] * env.globals_vars.probability_forecast_values[lag]['normal']) +\
+                    (CT_for_forecast_date[2][idx_varD] * env.globals_vars.probability_forecast_values[lag]['above'])
 
-        prob_exceed_var_D[lag] = (items_CT['c'] * env.config_run.settings['forecast_var_I_lag_'+str(lag)]['below']) +\
-                                 (items_CT['f'] * env.config_run.settings['forecast_var_I_lag_'+str(lag)]['normal']) +\
-                                 (items_CT['i'] * env.config_run.settings['forecast_var_I_lag_'+str(lag)]['above'])
+        # when there are 7 categories but only 3 values for the categories in forecast options
+        if env.globals_vars.forecast_contingency_table['type'] == '3x7':
+            tags = ['below3', 'below2','below1', 'normal', 'above1', 'above2', 'above3']
+            forecast_position_selected_below = env.globals_vars.probability_forecast_values[lag]['below']
+            forecast_var_I_selected_below = env.globals_vars.probability_forecast_values[lag][forecast_position_selected_below]
 
-    station.prob_decrease_var_D = prob_decrease_var_D
-    station.prob_normal_var_D = prob_normal_var_D
-    station.prob_exceed_var_D = prob_exceed_var_D
+            forecast_var_I_selected_normal = env.globals_vars.probability_forecast_values[lag]['normal']
+
+            forecast_position_selected_above = env.globals_vars.probability_forecast_values[lag]['above']
+            forecast_var_I_selected_above = env.globals_vars.probability_forecast_values[lag][forecast_position_selected_above]
+
+            for idx_varD, tag in enumerate(['below3', 'below2','below1', 'normal', 'above1', 'above2', 'above3']):
+                prob_var_D[lag][tag] = \
+                    (CT_for_forecast_date[tags.index(forecast_position_selected_below)][idx_varD] * forecast_var_I_selected_below) +\
+                    (CT_for_forecast_date[3][idx_varD] * forecast_var_I_selected_normal) +\
+                    (CT_for_forecast_date[tags.index(forecast_position_selected_above)][idx_varD] * forecast_var_I_selected_above)
+
+        # when there are 7 categories and 7 values for the categories in forecast options
+        if env.globals_vars.forecast_contingency_table['type'] == '7x7':
+            for idx_varD, tag in enumerate(['below3', 'below2','below1', 'normal', 'above1', 'above2', 'above3']):
+                prob_var_D[lag][tag] = \
+                    (CT_for_forecast_date[0][idx_varD] * env.globals_vars.probability_forecast_values[lag]['below3']) +\
+                    (CT_for_forecast_date[1][idx_varD] * env.globals_vars.probability_forecast_values[lag]['below2']) +\
+                    (CT_for_forecast_date[2][idx_varD] * env.globals_vars.probability_forecast_values[lag]['below1']) +\
+                    (CT_for_forecast_date[3][idx_varD] * env.globals_vars.probability_forecast_values[lag]['normal']) +\
+                    (CT_for_forecast_date[4][idx_varD] * env.globals_vars.probability_forecast_values[lag]['above1']) +\
+                    (CT_for_forecast_date[5][idx_varD] * env.globals_vars.probability_forecast_values[lag]['above2']) +\
+                    (CT_for_forecast_date[6][idx_varD] * env.globals_vars.probability_forecast_values[lag]['above3'])
+
+    station.prob_var_D = prob_var_D
+
+    #station.prob_decrease_var_D = prob_below_var_D #TODO 0.6: replace
+    #station.prob_normal_var_D = prob_normal_var_D
+    #station.prob_exceed_var_D = prob_above_var_D
 
     if not env.globals_vars.threshold_problem[0] and not env.globals_vars.threshold_problem[1] and\
        not env.globals_vars.threshold_problem[2] and env.config_run.settings['graphics']:
