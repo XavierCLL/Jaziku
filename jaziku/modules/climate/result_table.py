@@ -44,6 +44,10 @@ def composite_analysis(station):
     """
 
     pearson_list = {}
+
+    # is_sig_risk_analysis:
+    #  [lag][trimester][var_I][var_D]
+    #  [lag][month][day][var_I][var_D]
     is_sig_risk_analysis = {}
 
     def main_process():
@@ -51,7 +55,7 @@ def composite_analysis(station):
         # test:
         # is significance risk analysis?
 
-        is_sig_risk_analysis = []
+        is_sig_risk_analysis = []  # [var_I][var_D]
 
         contingency_table_matrix = matrix(specific_contingency_table['in_values'])
         sum_per_row = contingency_table_matrix.sum(axis=0).tolist()[0]
@@ -97,7 +101,7 @@ def composite_analysis(station):
 
         # calculate the correlation of contingency table
         chi_cdf = 1 - p_value
-        corr_CT = ((chi_cdf ** 2) / (station.size_time_series * 2.0)) ** 0.5
+        corr_CT = ((chi_cdf ** 2) / (station.size_time_series*(env.config_run.settings['class_category_analysis'] - 1))) ** 0.5
 
         # test:
         # Is significant the contingency table?
