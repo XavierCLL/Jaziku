@@ -192,11 +192,11 @@ def configuration_run():
                            ')'
 
     # ------------------------
-    # var_I_category_labels
-    if env.config_run.settings['var_I_category_labels'] == "default":
-        settings["var_I_category_labels"] = [env.config_run.settings['var_I_category_labels']]
+    # categories_labels_var_I
+    if env.config_run.settings['categories_labels_var_I'] == "default":
+        settings["categories_labels_var_I"] = [env.config_run.settings['categories_labels_var_I']]
     else:
-        settings["var_I_category_labels"] = ["'"+label+"'" for label in env.config_run.settings['var_I_category_labels']]
+        settings["categories_labels_var_I"] = ["'"+label+"'" for label in env.config_run.settings['categories_labels_var_I']]
 
     ## VAR D OPTIONS
     # ------------------------

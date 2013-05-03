@@ -66,12 +66,12 @@ def configuration_run(stop_in=None):
     print "   {0} ---------------------- {1}".format("maps", settings["maps"])
     if stop_in == "maps": return
 
-    for x, label in enumerate(settings["var_I_category_labels"]):
+    for x, label in enumerate(settings["categories_labels_var_I"]):
         if x == 0:
             print "   {0} ----- {1}".format("var I category labels", label)
         else:
             print "                               {0}".format(label)
-    if stop_in == "var_I_category_labels": return
+    if stop_in == "categories_labels_var_I": return
 
     console.msg("  Var D options:", color='cyan')
     print "   {0} ---------------- {1}".format("type var D", settings["type_var_D"])

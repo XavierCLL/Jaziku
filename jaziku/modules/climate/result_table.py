@@ -128,9 +128,9 @@ def composite_analysis(station):
                 [format_out.number(item) for item in thresholds_to_list(specific_contingency_table['thresholds_var_D'])] + \
                 [format_out.number(item) for item in thresholds_to_list(specific_contingency_table['thresholds_var_I'])] + \
                 ([''] + [
-                env.config_run.settings['var_I_category_labels']['below'],
-                env.config_run.settings['var_I_category_labels']['normal'],
-                env.config_run.settings['var_I_category_labels']['above']])*3 + \
+                env.config_run.settings['categories_labels_var_I']['below'],
+                env.config_run.settings['categories_labels_var_I']['normal'],
+                env.config_run.settings['categories_labels_var_I']['above']])*3 + \
                 [format_out.number(test_stat), format_out.number(crit_value),
                  is_significant_CT, format_out.number(corr_CT)])
             # second/third and fourth line for value
@@ -154,13 +154,13 @@ def composite_analysis(station):
                 [format_out.number(item) for item in thresholds_to_list(specific_contingency_table['thresholds_var_D'])] + \
                 [format_out.number(item) for item in thresholds_to_list(specific_contingency_table['thresholds_var_I'])] + \
                 ([''] + [
-                env.config_run.settings['var_I_category_labels']['below3'],
-                env.config_run.settings['var_I_category_labels']['below2'],
-                env.config_run.settings['var_I_category_labels']['below1'],
-                env.config_run.settings['var_I_category_labels']['normal'],
-                env.config_run.settings['var_I_category_labels']['above1'],
-                env.config_run.settings['var_I_category_labels']['above2'],
-                env.config_run.settings['var_I_category_labels']['above3']])*3 + \
+                env.config_run.settings['categories_labels_var_I']['below3'],
+                env.config_run.settings['categories_labels_var_I']['below2'],
+                env.config_run.settings['categories_labels_var_I']['below1'],
+                env.config_run.settings['categories_labels_var_I']['normal'],
+                env.config_run.settings['categories_labels_var_I']['above1'],
+                env.config_run.settings['categories_labels_var_I']['above2'],
+                env.config_run.settings['categories_labels_var_I']['above3']])*3 + \
                 [format_out.number(test_stat), format_out.number(crit_value),
                  is_significant_CT, format_out.number(corr_CT)])
             # second/third and fourth line for value
