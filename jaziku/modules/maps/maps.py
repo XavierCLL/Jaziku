@@ -32,9 +32,20 @@ from jaziku.utils import console, watermarking, format_out, output
 from jaziku.modules.maps.grid import Grid
 
 
-def check_basic_requirements_for_maps():
+def pre_process():
+    """Check basic requirements for make maps
+    """
 
-    console.msg(_("\nChecking basic requirements for maps:"), newline=False)
+    print _("\n\n"
+        "############################# MAPS  ############################\n"
+        "# Map Process, here is made the Kriging interpolation on the   #\n"
+        "# results of historical scenarios and forecasts most probable  #\n"
+        "# of the dependent variable, also interpolation of linear      #\n"
+        "# correlations.                                                #\n"
+        "################################################################")
+
+
+    console.msg(_("\nChecking basic requirements for make maps:"), newline=False)
 
     ## NCL
 
@@ -69,9 +80,8 @@ def check_basic_requirements_for_maps():
     console.msg(_("done"), color='green')
 
 
-def maps(grid):
-    """
-    In Maps, jaziku in order to predict variable values in sites not sampled, through Kriging
+def process(grid):
+    """In Maps, jaziku in order to predict variable values in sites not sampled, through Kriging
     spatial interpolation method displays the general trends and spatial continuity of affectation
     scenarios results of Climate and Forecast Modules
     """

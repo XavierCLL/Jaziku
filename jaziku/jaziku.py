@@ -205,20 +205,12 @@ def main():
     # process to create maps
     if env.config_run.settings['maps']:
 
-        print _("\n\n"
-                "######################### MAPS PROCESS #########################\n"
-                "# Map Process, here is made the Kriging interpolation on the   #\n"
-                "# results of historical scenarios and forecasts most probable  #\n"
-                "# of the dependent variable, also interpolation of linear      #\n"
-                "# correlations.                                                #\n"
-                "################################################################")
-
         # first check requirements
-        maps.check_basic_requirements_for_maps()
+        maps.pre_process()
 
         for grid in maps.Grid.all_grids:
             # process all maps for this grid
-            maps.maps(grid)
+            maps.process(grid)
 
         for grid in maps.Grid.all_grids:
             console.msg(gettext.ngettext(

@@ -97,8 +97,7 @@ def process(station):
 
     calculate_lags(station)
 
-    # size_time_series: is the size of values in the time of series
-    # this is too the
+    # size_time_series: is the number o years of the process period
     station.size_time_series = (len(station.common_period) / 12) - 2
 
     # get all contingency tables for this station
