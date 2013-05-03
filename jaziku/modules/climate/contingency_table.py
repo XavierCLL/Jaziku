@@ -29,7 +29,7 @@ from jaziku.modules.climate.thresholds import get_thresholds
 
 
 def get_label_of_var_I_category(value, station):
-    """Calculate, for a particular 'value', the var I category label based on 'var_I_category_labels'
+    """Calculate, for a particular 'value', the var I category label based on 'categories_labels_var_I'
     and thresholds of var I, evaluate where is the 'value' inside the thresholds and return
     the correspondent label for this position.
 
@@ -59,54 +59,54 @@ def get_label_of_var_I_category(value, station):
 
         if env.config_run.settings['class_category_analysis'] == 3:
             if value < thresholds_var_I['below']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['below']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['below']
             elif value > thresholds_var_I['above']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['above']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['above']
             else:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['normal']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['normal']
 
         if env.config_run.settings['class_category_analysis'] == 7:
             if value < thresholds_var_I['below3']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['below3']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['below3']
             elif thresholds_var_I['below3'] <= value < thresholds_var_I['below2']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['below2']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['below2']
             elif thresholds_var_I['below2'] <= value < thresholds_var_I['below1']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['below1']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['below1']
             elif thresholds_var_I['below1'] <= value <= thresholds_var_I['above1']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['normal']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['normal']
             elif thresholds_var_I['above1'] < value <= thresholds_var_I['above2']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['above1']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['above1']
             elif thresholds_var_I['above2'] < value <= thresholds_var_I['above3']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['above2']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['above2']
             elif value > thresholds_var_I['above3']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['above3']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['above3']
     else:
         # SPECIAL CASE 2: for some variables, for set the category of phenomenon for the normal case the thresholds are exclude (< >)
         # please see env/var_I file
 
         if env.config_run.settings['class_category_analysis'] == 3:
             if value <= thresholds_var_I['below']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['below']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['below']
             elif value >= thresholds_var_I['above']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['above']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['above']
             else:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['normal']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['normal']
 
         if env.config_run.settings['class_category_analysis'] == 7:
             if value <= thresholds_var_I['below3']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['below3']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['below3']
             elif thresholds_var_I['below3'] < value <= thresholds_var_I['below2']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['below2']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['below2']
             elif thresholds_var_I['below2'] < value <= thresholds_var_I['below1']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['below1']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['below1']
             elif thresholds_var_I['below1'] < value < thresholds_var_I['above1']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['normal']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['normal']
             elif thresholds_var_I['above1'] <= value < thresholds_var_I['above2']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['above1']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['above1']
             elif thresholds_var_I['above2'] <= value < thresholds_var_I['above3']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['above2']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['above2']
             elif value >= thresholds_var_I['above3']:
-                label_of_var_I_category = env.config_run.settings['var_I_category_labels']['above3']
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['above3']
 
     return label_of_var_I_category
 

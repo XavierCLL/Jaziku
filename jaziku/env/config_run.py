@@ -118,7 +118,7 @@ list_of_all_settings = [
     # if is 7 categories should be 7 labels
     #   input: string or 'default'
     #   access: {'below','normal','above'} or {'below3','below2','below1','normal','above1','above2','above3'}
-    'var_I_category_labels',
+    'categories_labels_var_I',
 
     ## VAR D OPTIONS
 
@@ -202,8 +202,7 @@ list_of_all_settings = [
 ]
 
 def init():
-    """
-    Initialize all settings variables in None
+    """Initialize all settings variables in None
     """
     for settings_item in list_of_all_settings:
         settings[settings_item] = None

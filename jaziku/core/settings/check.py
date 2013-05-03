@@ -39,9 +39,9 @@ def configuration_run():
               "this should be '3' or '7'.").format(env.config_run.settings['class_category_analysis']))
 
     # ------------------------
-    # var_I_category_labels
+    # categories_labels_var_I
 
-    def var_I_category_labels_dictionary(func):
+    def categories_labels_var_I_dictionary(func):
         def wrapper_func(*args):
             labels_list = func(*args)
             if isinstance(labels_list, dict):
@@ -62,34 +62,34 @@ def configuration_run():
         return wrapper_func
 
     if env.config_run.settings['class_category_analysis'] == 3:
-        if env.config_run.settings['var_I_category_labels'] == "default":
-            env.config_run.settings['var_I_category_labels'] = env.globals_vars.generic_labels()
+        if env.config_run.settings['categories_labels_var_I'] == "default":
+            env.config_run.settings['categories_labels_var_I'] = env.globals_vars.generic_labels()
         else:
-            if len(env.config_run.settings['var_I_category_labels']) == 3:
-                env.config_run.settings['var_I_category_labels']\
-                    = [unicode(label, 'utf-8') for label in env.config_run.settings['var_I_category_labels']]
+            if len(env.config_run.settings['categories_labels_var_I']) == 3:
+                env.config_run.settings['categories_labels_var_I']\
+                    = [unicode(label, 'utf-8') for label in env.config_run.settings['categories_labels_var_I']]
             else:
-                console.msg_error_configuration('var_I_category_labels',
-                                                _("The 'var_I_category_labels' is not valid,\n"
+                console.msg_error_configuration('categories_labels_var_I',
+                                                _("The 'categories_labels_var_I' is not valid,\n"
                                                   "this should be 3 labels in different rows."))
 
     if env.config_run.settings['class_category_analysis'] == 7:
-        if env.config_run.settings['var_I_category_labels'] == "default":
-            env.config_run.settings['var_I_category_labels'] = env.globals_vars.generic_labels()
+        if env.config_run.settings['categories_labels_var_I'] == "default":
+            env.config_run.settings['categories_labels_var_I'] = env.globals_vars.generic_labels()
         else:
-            if len(env.config_run.settings['var_I_category_labels']) == 7:
-                env.config_run.settings['var_I_category_labels'] \
-                    = [unicode(label, 'utf-8') for label in env.config_run.settings['var_I_category_labels']]
+            if len(env.config_run.settings['categories_labels_var_I']) == 7:
+                env.config_run.settings['categories_labels_var_I'] \
+                    = [unicode(label, 'utf-8') for label in env.config_run.settings['categories_labels_var_I']]
             else:
-                console.msg_error_configuration('var_I_category_labels',
-                                                _("The 'var_I_category_labels' is not valid,\n"
+                console.msg_error_configuration('categories_labels_var_I',
+                                                _("The 'categories_labels_var_I' is not valid,\n"
                                                   "this should be 7 labels in different rows."))
 
-    @var_I_category_labels_dictionary
+    @categories_labels_var_I_dictionary
     def format_labels(labels_list):
         return labels_list
 
-    env.config_run.settings['var_I_category_labels'] = format_labels(env.config_run.settings['var_I_category_labels'])
+    env.config_run.settings['categories_labels_var_I'] = format_labels(env.config_run.settings['categories_labels_var_I'])
 
     # ------------------------
     # mode_calculation_series_D

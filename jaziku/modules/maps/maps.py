@@ -133,19 +133,19 @@ def process(grid):
     base_matrix.fill(env.globals_vars.VALID_NULL[1])
 
     if env.config_run.settings['class_category_analysis'] == 3:
-        var_I_category_labels_list \
-            = [env.config_run.settings['var_I_category_labels']['below'],
-               env.config_run.settings['var_I_category_labels']['normal'],
-               env.config_run.settings['var_I_category_labels']['above']]
+        categories_labels_var_I_list \
+            = [env.config_run.settings['categories_labels_var_I']['below'],
+               env.config_run.settings['categories_labels_var_I']['normal'],
+               env.config_run.settings['categories_labels_var_I']['above']]
     if env.config_run.settings['class_category_analysis'] == 7:
-        var_I_category_labels_list \
-            = [env.config_run.settings['var_I_category_labels']['below3'],
-               env.config_run.settings['var_I_category_labels']['below2'],
-               env.config_run.settings['var_I_category_labels']['below1'],
-               env.config_run.settings['var_I_category_labels']['normal'],
-               env.config_run.settings['var_I_category_labels']['above1'],
-               env.config_run.settings['var_I_category_labels']['above2'],
-               env.config_run.settings['var_I_category_labels']['above3']]
+        categories_labels_var_I_list \
+            = [env.config_run.settings['categories_labels_var_I']['below3'],
+               env.config_run.settings['categories_labels_var_I']['below2'],
+               env.config_run.settings['categories_labels_var_I']['below1'],
+               env.config_run.settings['categories_labels_var_I']['normal'],
+               env.config_run.settings['categories_labels_var_I']['above1'],
+               env.config_run.settings['categories_labels_var_I']['above2'],
+               env.config_run.settings['categories_labels_var_I']['above3']]
 
     def process_map():
         # add counter of maps created in this grid
@@ -326,7 +326,7 @@ def process(grid):
             for month in range(1, 13):
 
                 if env.config_run.settings['analysis_interval'] == 'trimester':
-                    for var_I_idx, label in enumerate(var_I_category_labels_list):
+                    for var_I_idx, label in enumerate(categories_labels_var_I_list):
                         label = label.strip().replace(' ','_')
                         # show only once
                         if lag == env.config_run.settings['lags'][0] and month == 1 and var_I_idx == 0:
@@ -363,7 +363,7 @@ def process(grid):
                     range_analysis_interval = get_range_analysis_interval()
 
                     for day in range(len(range_analysis_interval)):
-                        for var_I_idx, label in enumerate(var_I_category_labels_list):
+                        for var_I_idx, label in enumerate(categories_labels_var_I_list):
                             label = label.strip().replace(' ','_')
                             # show only once
                             if lag == env.config_run.settings['lags'][0] and month == 1 and var_I_idx == 0 and day == 0:
