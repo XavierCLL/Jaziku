@@ -28,8 +28,7 @@ from jaziku.utils import  console, format_in
 
 
 def read_runfile():
-    """
-    Read all settings and all stations from runfile
+    """Read all settings and all stations from runfile
 
     :return:
         stations class list
@@ -114,7 +113,9 @@ def read_runfile():
                     in_station_list = True
                 else:
                     console.msg_error(_(
-                        "error read line in 'CONFIGURATION RUN' in runfile, line {0}:\n{1}")
+                        "error read line in 'CONFIGURATION RUN' in runfile,\n"
+                        "unknown option in line {0}:\n\n"
+                        "{1}")
                     .format(runfile.line_num, line_in_run_file[0]), False)
 
         # read GRIDS LIST
@@ -208,8 +209,7 @@ def read_runfile():
 
 
 def read_stations(lines_of_stations):
-    """
-    Read raw line of stations and make a list class stations
+    """Read raw line of stations and make a list class stations
     with all parameters in runfile for each station.
 
     :return:

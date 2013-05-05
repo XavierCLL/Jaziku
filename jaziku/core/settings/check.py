@@ -94,7 +94,7 @@ def configuration_run():
     # ------------------------
     # relevant_climate_categories_var_I
 
-    labels = env.globals_vars.generic_labels(trans=False)
+    labels = env.globals_vars.generic_labels(translated=False)
 
     if not env.config_run.settings['relevant_climate_categories_var_I'] == "all":
         if len(env.config_run.settings['relevant_climate_categories_var_I']) != 2:

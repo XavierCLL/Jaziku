@@ -91,10 +91,10 @@ STATE_OF_DATA = None
 #==============================================================================
 # generic labels
 
-def generic_labels(key_label=False, trans=True):
+def generic_labels(key_label=False, include_normal=True, translated=True):
     from jaziku.env.config_run import settings
     if settings['class_category_analysis'] == 3:
-        if trans:
+        if translated:
             labels = {'below':_(u'below'),
                       'normal':_(u'normal'),
                       'above':_(u'above')}
@@ -103,7 +103,7 @@ def generic_labels(key_label=False, trans=True):
                       'normal':'normal',
                       'above':'above'}
     if settings['class_category_analysis'] == 7:
-        if trans:
+        if translated:
             labels = {'below3':_(u'strong below'),
                       'below2':_(u'moderate below'),
                       'below1':_(u'weak below'),
@@ -119,6 +119,10 @@ def generic_labels(key_label=False, trans=True):
                       'above1':'weak above',
                       'above2':'moderate above',
                       'above3':'strong above'}
+
+    if include_normal is False:
+        del labels['normal']
+
     if key_label is False:
         return labels
 
