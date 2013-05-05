@@ -11,6 +11,10 @@ Changelog
 news
 ++++
 
+- New option in runfile relevant_climate_categories_var_I, with this option
+  the user can choose the relevant climate categories of var I for only make
+  graphics with these two categories selected or all categories
+- Rename the option in runfile var_I_category_labels to categories_labels_var_I
 - Adjust climate, correlation and forecast maps for 7 categories
 - Adjust, for 3 and 7 categories, the method to calculate the contingency table in
   percentage base on threshold size

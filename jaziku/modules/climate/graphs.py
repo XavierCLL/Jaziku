@@ -108,7 +108,7 @@ def climate_graphs(station):
         #            ('var Dep Below', 'var Dep Normal', 'var Dep Above'),
         #             shadow = True, fancybox = True)
 
-        # table in graphic
+        # table in graphic TODO 0.6
         colLabels = (env.config_run.settings['phen_below_label'], env.config_run.settings['phen_normal_label'],
                      env.config_run.settings['phen_above_label'])
 
