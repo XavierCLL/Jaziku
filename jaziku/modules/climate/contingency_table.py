@@ -310,8 +310,9 @@ def get_specific_contingency_table(station, lag, month, day=None):
                             [sum(sum_per_column_CT[4::])]*3
 
     # calculate the percentage of contingency table evaluating each value with the sum value of its respective category
-    contingency_table_in_percentage \
-        = [(column/sum_per_column_CT[i]*100).tolist()[0] for i,column in enumerate(matrix(contingency_table))]
+    with console.redirectStdStreams():
+        contingency_table_in_percentage \
+            = [(column/sum_per_column_CT[i]*100).tolist()[0] for i,column in enumerate(matrix(contingency_table))]
 
     # -------------------------------------------------------------------------
     # threshold_problem is global variable for detect problem with
