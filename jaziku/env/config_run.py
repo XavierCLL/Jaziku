@@ -120,6 +120,18 @@ list_of_all_settings = [
     #   access: {'below','normal','above'} or {'below3','below2','below1','normal','above1','above2','above3'}
     'categories_labels_var_I',
 
+    # with this option the user can choose the relevant climate categories of var I
+    # for only make graphics with these two categories selected or all categories
+    # general options:
+    #   input: all, default (=all)
+    # 3 categories:
+    #   input:  'below', 'normal', 'above' (two combined words, in different row)
+    #   access: ['below','normal','above']
+    # 7 categories:
+    #   input:  'strong below', 'moderate below', 'weak below', 'normal', 'weak above', 'moderate above', 'strong above' (two combined words, in different row)
+    #   access: ['below3','below2','below1','normal','above1','above2', 'above3']
+    'relevant_climate_categories_var_I',
+
     ## VAR D OPTIONS
 
     # type for dependence variable (jaziku used this only input, USE: env.var_D.TYPE_SERIES)

@@ -91,20 +91,34 @@ STATE_OF_DATA = None
 #==============================================================================
 # generic labels
 
-def generic_labels(key_label=False):
+def generic_labels(key_label=False, trans=True):
     from jaziku.env.config_run import settings
     if settings['class_category_analysis'] == 3:
-        labels = {'below':_(u'below'),
-                  'normal':_(u'normal'),
-                  'above':_(u'above')}
+        if trans:
+            labels = {'below':_(u'below'),
+                      'normal':_(u'normal'),
+                      'above':_(u'above')}
+        else:
+            labels = {'below':'below',
+                      'normal':'normal',
+                      'above':'above'}
     if settings['class_category_analysis'] == 7:
-        labels = {'below3':_(u'strong below'),
-                  'below2':_(u'moderate below'),
-                  'below1':_(u'weak below'),
-                  'normal':_(u'normal'),
-                  'above1':_(u'weak above'),
-                  'above2':_(u'moderate above'),
-                  'above3':_(u'strong above')}
+        if trans:
+            labels = {'below3':_(u'strong below'),
+                      'below2':_(u'moderate below'),
+                      'below1':_(u'weak below'),
+                      'normal':_(u'normal'),
+                      'above1':_(u'weak above'),
+                      'above2':_(u'moderate above'),
+                      'above3':_(u'strong above')}
+        else:
+            labels = {'below3':'strong below',
+                      'below2':'moderate below',
+                      'below1':'weak below',
+                      'normal':'normal',
+                      'above1':'weak above',
+                      'above2':'moderate above',
+                      'above3':'strong above'}
     if key_label is False:
         return labels
 

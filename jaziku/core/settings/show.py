@@ -73,6 +73,9 @@ def configuration_run(stop_in=None):
             print "                               {0}".format(label)
     if stop_in == "categories_labels_var_I": return
 
+    print "   {0} - {1}".format("relevant_climate_categ...", settings["relevant_climate_categories_var_I"])
+    if stop_in == "relevant_climate_categories_var_I": return
+
     console.msg("  Var D options:", color='cyan')
     print "   {0} ---------------- {1}".format("type var D", settings["type_var_D"])
     if stop_in == "type_var_D": return

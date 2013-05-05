@@ -38,9 +38,6 @@ def configuration_run():
                 "consistent_data": colored.red(_("disabled")),
                 "risk_analysis": colored.red(_("disabled")),
                 "graphics": colored.red(_("disabled")),
-                "phen_below_label": "-",
-                "phen_normal_label": "-",
-                "phen_above_label": "-",
                 "maps": colored.red(_("disabled")),
                 "marks_stations": colored.green(_("enabled")),
                 "overlapping": None,
@@ -197,6 +194,14 @@ def configuration_run():
         settings["categories_labels_var_I"] = [env.config_run.settings['categories_labels_var_I']]
     else:
         settings["categories_labels_var_I"] = ["'"+label+"'" for label in env.config_run.settings['categories_labels_var_I']]
+
+    # ------------------------
+    # relevant_climate_categories_var_I
+    if env.config_run.settings['relevant_climate_categories_var_I'] in ["default", "all"]:
+        env.config_run.settings['relevant_climate_categories_var_I'] = "all"
+        settings["relevant_climate_categories_var_I"] = "all"
+    else:
+        settings["relevant_climate_categories_var_I"] = colored.green(env.config_run.settings['relevant_climate_categories_var_I'])
 
     ## VAR D OPTIONS
     # ------------------------
