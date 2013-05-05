@@ -68,7 +68,7 @@ def configuration_run(stop_in=None):
 
     for x, label in enumerate(settings["categories_labels_var_I"]):
         if x == 0:
-            print "   {0} ----- {1}".format("categories labels var I", label)
+            print "   {0} --- {1}".format("categories labels var I", label)
         else:
             print "                               {0}".format(label)
     if stop_in == "categories_labels_var_I": return

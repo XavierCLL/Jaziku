@@ -11,6 +11,8 @@ Changelog
 news
 ++++
 
+- Changed the division when there are more of one options in some configuration in runfile,
+  changed from comma separated to different row
 - New option in runfile relevant_climate_categories_var_I, with this option
   the user can choose the relevant climate categories of var I for only make
   graphics with these two categories selected or all categories

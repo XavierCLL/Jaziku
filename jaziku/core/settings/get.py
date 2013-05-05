@@ -108,15 +108,15 @@ def configuration_run():
         env.config_run.settings['process_period'] = False
     else:
         try:
-            args_period_start = int(env.config_run.settings['process_period'].split('-')[0])
-            args_period_end = int(env.config_run.settings['process_period'].split('-')[1])
+            args_period_start = int(env.config_run.settings['process_period'][0])
+            args_period_end = int(env.config_run.settings['process_period'][1])
             env.config_run.settings['process_period'] = {'start': args_period_start,
                                                          'end': args_period_end}
             settings["process_period"] = colored.green("{0}-{1}".format(args_period_start, args_period_end))
-        except Exception as error:
+        except:
             console.msg_error_configuration('process_period',
-                _("The period must be: year_start-year_end (ie. 1980-2008)\n"
-                  "or 'maximum' for take the process period maximum possible.\n\n{0}").format(error))
+                _("The period must be: start_year and end_year (in different row)\n"
+                  "or 'maximum' for take the process period maximum possible by station."))
 
     # ------------------------
     # analog_year
@@ -131,19 +131,19 @@ def configuration_run():
     # lags
     if env.config_run.settings['lags'] in ['default', 'all']:
         env.config_run.settings['lags'] = env.globals_vars.ALL_LAGS
-        settings["lags"] = ','.join(map(str, env.config_run.settings['lags']))
+        settings["lags"] = env.config_run.settings['lags']
     else:
         try:
-            lags = []
-            for lag in str(env.config_run.settings['lags']).split(","):
-                lag = int(float(lag))
+            if isinstance(env.config_run.settings['lags'], (float, int)):
+                env.config_run.settings['lags'] = [int(env.config_run.settings['lags'])]
+            else:
+                env.config_run.settings['lags'] = [int(float(lag)) for lag in env.config_run.settings['lags']]
+            for lag in env.config_run.settings['lags']:
                 if lag not in [0, 1, 2]:
                     raise
-                lags.append(lag)
-            env.config_run.settings['lags'] = lags
         except:
-            console.msg_error_configuration('lags', _("The lags may be: 0, 1 and/or 2 (comma separated), 'all' or 'default'"))
-        settings["lags"] = colored.green(','.join(map(str, env.config_run.settings['lags'])))
+            console.msg_error_configuration('lags', _("The lags may be: 0, 1 and/or 2 (in different row), 'all' or 'default'"))
+        settings["lags"] = colored.green(env.config_run.settings['lags'])
 
     # ------------------------
     # languages
@@ -173,16 +173,17 @@ def configuration_run():
             env.config_run.settings['maps'] = {'climate': True, 'forecast': True, 'correlation': True}
         else:
             try:
-                input_maps_list = env.config_run.settings['maps'].split(",")
+                if not isinstance(env.config_run.settings['maps'], list):
+                    env.config_run.settings['maps'] = [env.config_run.settings['maps']]
+                input_maps_list = [_map.strip() for _map in env.config_run.settings['maps']]
                 env.config_run.settings['maps'] = {'climate': False, 'forecast': False, 'correlation': False}
                 for map_to_run in input_maps_list:
-                    map_to_run = map_to_run.strip()
                     if map_to_run not in ['climate', 'forecast', 'correlation']:
                         raise
                     env.config_run.settings['maps'][map_to_run] = True
             except:
                 console.msg_error_configuration('maps',_("the maps options are: 'climate', 'forecast', "
-                                                         "'correlation' (comma separated), or 'all'."))
+                                                         "'correlation' (in different row), or 'all'."))
 
         settings["maps"] = colored.green(_("enabled")) + ' (' + \
                            (', '.join(map(str, [m for m in env.config_run.settings['maps'] if env.config_run.settings['maps'][m]]))) + \
