@@ -129,9 +129,9 @@ def configuration_run():
 
     # ------------------------
     # lags
-    if env.config_run.settings['lags'] in ['default', 'all']:
+    if env.config_run.settings['lags'] == 'all':
         env.config_run.settings['lags'] = env.globals_vars.ALL_LAGS
-        settings["lags"] = env.config_run.settings['lags']
+        settings["lags"] = ', '.join(map(str, env.config_run.settings['lags']))
     else:
         try:
             if isinstance(env.config_run.settings['lags'], (float, int)):
@@ -143,7 +143,7 @@ def configuration_run():
                     raise
         except:
             console.msg_error_configuration('lags', _("The lags may be: 0, 1 and/or 2 (in different row), 'all' or 'default'"))
-        settings["lags"] = colored.green(env.config_run.settings['lags'])
+        settings["lags"] = colored.green(', '.join(map(str, env.config_run.settings['lags'])))
 
     # ------------------------
     # languages
@@ -198,11 +198,12 @@ def configuration_run():
 
     # ------------------------
     # relevant_climate_categories_var_I
-    if env.config_run.settings['relevant_climate_categories_var_I'] in ["default", "all"]:
-        env.config_run.settings['relevant_climate_categories_var_I'] = "all"
+    if env.config_run.settings['relevant_climate_categories_var_I'] == "all":
         settings["relevant_climate_categories_var_I"] = "all"
     else:
-        settings["relevant_climate_categories_var_I"] = colored.green(env.config_run.settings['relevant_climate_categories_var_I'])
+        # clean ' character
+        env.config_run.settings['relevant_climate_categories_var_I'] = [s.replace("'","") for s in env.config_run.settings['relevant_climate_categories_var_I']]
+        settings["relevant_climate_categories_var_I"] = colored.green(', '.join(env.config_run.settings['relevant_climate_categories_var_I']))
 
     ## VAR D OPTIONS
     # ------------------------

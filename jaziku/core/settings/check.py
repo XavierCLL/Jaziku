@@ -100,7 +100,7 @@ def configuration_run():
         if len(env.config_run.settings['relevant_climate_categories_var_I']) != 2:
             console.msg_error_configuration('relevant_climate_categories_var_I',
                                             _("The 'relevant_climate_categories_var_I' should be\n"
-                                              "'default', 'all' or two valid labels for {0} categories\n"
+                                              "'all' or two valid labels for {0} categories\n"
                                               "(in different row), such as:\n\n{1}")
                                             .format(env.config_run.settings['class_category_analysis'], labels.values()))
         _list = []
