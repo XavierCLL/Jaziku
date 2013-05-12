@@ -124,7 +124,7 @@ def climate_data_for_maps(station):
 
                 if env.globals_vars.STATE_OF_DATA in [1, 3]:
                     categories_list = []
-                    for category_label in env.config_run.settings['categories_labels_var_I'].values():
+                    for category_label in env.config_run.get_categories_labels_var_I_list():
                         category_label = category_label.strip().replace(' ','_')
                         maps_data_for_category_label = os.path.join(maps_data_lag, category_label)
 
@@ -154,7 +154,7 @@ def climate_data_for_maps(station):
                     for day in get_range_analysis_interval():
                         categories_list = []
 
-                        for category_label in env.config_run.settings['categories_labels_var_I'].values():
+                        for category_label in env.config_run.get_categories_labels_var_I_list():
                             category_label = category_label.strip().replace(' ','_')
                             maps_data_for_category_label = os.path.join(maps_data_lag, category_label)
 

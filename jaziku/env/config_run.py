@@ -228,3 +228,24 @@ def init():
 #        all[config_name].value = value
 #    else:
 #        raise ValueError("not in standard configurations")
+
+
+#==============================================================================
+# SOME FUNCTIONS
+
+def get_categories_labels_var_I_list():
+    if settings['class_category_analysis'] == 3:
+        return \
+            [settings['categories_labels_var_I']['below'],
+             settings['categories_labels_var_I']['normal'],
+             settings['categories_labels_var_I']['above']]
+    if settings['class_category_analysis'] == 7:
+        return \
+            [settings['categories_labels_var_I']['below3'],
+             settings['categories_labels_var_I']['below2'],
+             settings['categories_labels_var_I']['below1'],
+             settings['categories_labels_var_I']['normal'],
+             settings['categories_labels_var_I']['above1'],
+             settings['categories_labels_var_I']['above2'],
+             settings['categories_labels_var_I']['above3']]
+    return None
