@@ -47,6 +47,11 @@ def calculate_index(category, values):
     :rtype: dict
     """
 
+    # first check if all values are zero
+    if not False in [value==0 for value in values.values()]:
+        return {'value':float('NaN'),
+                'position':None}
+
     # below-normal-above
     if category == 3:
         # select index
@@ -125,6 +130,7 @@ def climate_data_for_maps(station):
                 if env.globals_vars.STATE_OF_DATA in [1, 3]:
                     categories_list = []
                     for category_label in env.config_run.get_categories_labels_var_I_list():
+                        _category_label = category_label
                         category_label = category_label.strip().replace(' ','_')
                         maps_data_for_category_label = os.path.join(maps_data_lag, category_label)
 
@@ -137,12 +143,22 @@ def climate_data_for_maps(station):
                         if os.path.isfile(csv_name):
                             os.remove(csv_name)
 
+                        # special label 'SUM' for below* and above for 7 categories
+                        _list = env.config_run.settings['categories_labels_var_I']
+                        if env.config_run.settings['class_category_analysis'] == 7 and \
+                           _list.keys()[_list.values().index(_category_label)] != "normal":
+                            sum_header = _('SUM (partial)')
+                            del _list
+                        else:
+                            sum_header = _('SUM')
+                            del _list
+
                         # write header
                         open_file = open(csv_name, 'w')
                         csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
                         csv_file.writerow([_('CODE'), _('LAT'), _('LON'), _('PEARSON')] + \
                                           env.var_D.get_generic_labels(upper=True) + \
-                                          [_('SUM'), _('INDEX'), _('INDEX POSITION')])
+                                          [sum_header, _('INDEX'), _('INDEX POSITION')])
                         open_file.close()
                         del csv_file
 
@@ -155,6 +171,7 @@ def climate_data_for_maps(station):
                         categories_list = []
 
                         for category_label in env.config_run.get_categories_labels_var_I_list():
+                            _category_label = category_label
                             category_label = category_label.strip().replace(' ','_')
                             maps_data_for_category_label = os.path.join(maps_data_lag, category_label)
 
@@ -169,12 +186,22 @@ def climate_data_for_maps(station):
                             if os.path.isfile(csv_name):
                                 os.remove(csv_name)
 
+                            # special label 'SUM' for below* and above for 7 categories
+                            _list = env.config_run.settings['categories_labels_var_I']
+                            if env.config_run.settings['class_category_analysis'] == 7 and \
+                               _list.keys()[_list.values().index(_category_label)] != "normal":
+                                sum_header = _('SUM (partial)')
+                                del _list
+                            else:
+                                sum_header = _('SUM')
+                                del _list
+
                             # write header
                             open_file = open(csv_name, 'w')
                             csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
                             csv_file.writerow([_('CODE'), _('LAT'), _('LON'), _('PEARSON')] + \
                                               env.var_D.get_generic_labels(upper=True) + \
-                                              [_('SUM'), _('INDEX'), _('INDEX POSITION')])
+                                              [sum_header, _('INDEX'), _('INDEX POSITION')])
                             open_file.close()
                             del csv_file
 
