@@ -88,10 +88,6 @@ def process(station):
 
     console.msg(_("   making forecast for date: ")+env.config_run.settings['forecast_date']['text'], color="cyan", newline=False)
 
-    station.forecast_dir = os.path.join(env.globals_vars.FORECAST_DIR, _('stations'), station.code + '_' + station.name)   # 'results'
-
-    output.make_dirs(station.forecast_dir)
-
     prob_var_D = {}
 
     for lag in env.config_run.settings['lags']:
@@ -161,6 +157,10 @@ def process(station):
 
     if not env.globals_vars.threshold_problem[0] and not env.globals_vars.threshold_problem[1] and\
        not env.globals_vars.threshold_problem[2] and env.config_run.settings['graphics']:
+        # settings directories to save forecast graphics
+        station.forecast_dir = os.path.join(env.globals_vars.FORECAST_DIR, _('stations'), station.code + '_' + station.name)   # 'results'
+        output.make_dirs(station.forecast_dir)
+        # do graphics for forecast
         with console.redirectStdStreams():
             forecast_graphs(station)
     else:
