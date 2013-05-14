@@ -30,7 +30,8 @@ def configuration_run(stop_in=None):
     if stop_in != None:
         settings[stop_in] = '?'
 
-    print _("\nConfiguration run:")
+    ## CONFIGURATION RUN SECTION
+    print _("\nCONFIGURATION RUN:")
 
     console.msg("  Modules:", color='cyan')
     print "   {0} ------------- {1}".format("data analysis", settings["data_analysis"])
@@ -63,8 +64,6 @@ def configuration_run(stop_in=None):
     console.msg("  Output options:", color='cyan')
     print "   {0} ------------------ {1}".format("graphics", settings["graphics"])
     if stop_in == "graphics": return
-    print "   {0} ---------------------- {1}".format("maps", settings["maps"])
-    if stop_in == "maps": return
 
     for x, label in enumerate(settings["categories_labels_var_I"]):
         if x == 0:
@@ -109,8 +108,14 @@ def configuration_run(stop_in=None):
         print "   {0} ------ {1}".format("forecast var I lag 2", settings["forecast_var_I_lag_2"])
         if stop_in == "forecast_var_I_lag_2": return
 
+    ## MAPS SECTION
+    print _("\nMAPS:")
+
+    console.msg("  Maps options:", color='cyan')
+    print "   {0} ---------------------- {1}".format("maps", settings["maps"])
+    if stop_in == "maps": return
+
     if env.config_run.settings['maps']:
-        console.msg("  Maps options:", color='cyan')
         print "   {0} --------------- {1}".format("overlapping", settings["overlapping"])
         if stop_in == "overlapping": return
         print "   {0} ------------ {1}".format("marks stations", settings["marks_stations"])
