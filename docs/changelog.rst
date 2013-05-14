@@ -11,6 +11,7 @@ Changelog
 news
 ++++
 
+- Reform and reorganize the runfile
 - Changed the division when there are more of one options in some configuration in runfile,
   changed from comma separated to different row
 - New option in runfile relevant_climate_categories_var_I, with this option

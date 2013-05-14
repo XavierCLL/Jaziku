@@ -38,8 +38,9 @@ def read_runfile():
     """
 
     in_config_run = False
-    in_station_list = False
+    in_maps = False
     in_grids_list = False
+    in_station_list = False
 
     grid = None
     lines_of_stations = []
@@ -52,63 +53,70 @@ def read_runfile():
     # open runfile as csv
     runfile = csv.reader(runfile, delimiter=env.globals_vars.INPUT_CSV_DELIMITER)
 
+    def set_settings(runfile, line):
+        # check if this settings was defined
+        if not len(line) >= 2:
+            console.msg_error(_(
+                "error reading the settings line in runfile,"
+                " line {0}:\n{1}, no was defined.")
+            .format(runfile.line_num, line[0]), False)
+        # in this case, for python 'disable' is None,
+        # then let default value (it is 'None')
+        if line[1] == "disable":
+            env.config_run.settings[line[0]] = False
+        elif line[1] == "enable":
+            env.config_run.settings[line[0]] = True
+        else:
+            if len(line) == 2:
+                # save value of this settings as simple item
+                try:
+                    env.config_run.settings[line[0]] = format_in.to_float(line[1])
+                except:
+                    env.config_run.settings[line[0]] = line[1]
+            else: # >2
+                # save values of this settings as list
+                try:
+                    env.config_run.settings[line[0]] = [format_in.to_float(item) for item in line[1::]]
+                except:
+                    env.config_run.settings[line[0]] = [item for item in line[1::]]
+
     # -------------------------------------------------------------------------
     # read line by line the RUNFILE
 
-    for line_in_run_file in runfile:
+    for line_in_runfile in runfile:
 
         # if line is null o empty, e.g. empty but with tabs or spaces
-        if not line_in_run_file or not line_in_run_file[0].strip() or line_in_run_file == []:
+        if not line_in_runfile or not line_in_runfile[0].strip() or line_in_runfile == []:
             continue
 
-        if line_in_run_file[0].strip() not in ['forecast_var_I_lag_0','forecast_var_I_lag_1','forecast_var_I_lag_2']:
-            # trim all items in line_in_run_file and clean empty items
-            line_in_run_file = [i.strip() for i in line_in_run_file if i != '']
+        if line_in_runfile[0].strip() not in ['forecast_var_I_lag_0','forecast_var_I_lag_1','forecast_var_I_lag_2']:
+            # trim all items in line_in_runfile and clean empty items
+            line_in_runfile = [i.strip() for i in line_in_runfile if i != '']
         else:
-            # trim all items in line_in_run_file and NOT clean empty items
-            line_in_run_file = [i.strip() for i in line_in_run_file]
+            # trim all items in line_in_runfile and NOT clean empty items
+            line_in_runfile = [i.strip() for i in line_in_runfile]
 
         # is the first line, start read configuration run
-        if not in_config_run and not in_grids_list and not in_station_list:
-            if line_in_run_file[1] == "CONFIGURATION RUN":
+        if not in_config_run and not in_maps and not in_grids_list and not in_station_list:
+            if line_in_runfile[1] == "CONFIGURATION RUN":
                 in_config_run = True
                 continue
 
         # read CONFIGURATION RUN
         if in_config_run:
-            if line_in_run_file[0].startswith("#") and not line_in_run_file[0] == "####################":
+            # skip line if start with # but if this is not a starts the next section
+            if line_in_runfile[0].startswith("#") and not \
+                (len(line_in_runfile) >= 2 and line_in_runfile[1] == "MAPS"):
                 continue
 
-            if not len(line_in_run_file) >= 2:
-                console.msg_error(_(
-                    "error read line in 'CONFIGURATION RUN' in runfile,"
-                    " line {0}:\n{1}, no was defined.")
-                .format(runfile.line_num, line_in_run_file[0]), False)
-
-            if line_in_run_file[0] in env.config_run.settings:
-                # in this case, for python 'disable' is None,
-                # then let default value (it is 'None')
-                if line_in_run_file[1] == "disable":
-                    env.config_run.settings[line_in_run_file[0]] = False
-                elif line_in_run_file[1] == "enable":
-                    env.config_run.settings[line_in_run_file[0]] = True
-                else:
-                    if len(line_in_run_file) == 2:
-                        try:
-                            env.config_run.settings[line_in_run_file[0]] = format_in.to_float(line_in_run_file[1])
-                        except:
-                            env.config_run.settings[line_in_run_file[0]] = line_in_run_file[1]
-                    else: # >2
-                        try:
-                            env.config_run.settings[line_in_run_file[0]] = [format_in.to_float(item) for item in line_in_run_file[1::]]
-                        except:
-                            env.config_run.settings[line_in_run_file[0]] = [item for item in line_in_run_file[1::]]
+            if line_in_runfile[0] in env.config_run.settings:
+                # set this line as settings and save in env.config_run.settings
+                set_settings(runfile, line_in_runfile)
             else:
-                if line_in_run_file[1] == "GRIDS LIST":
+                if len(line_in_runfile) >= 2 and line_in_runfile[1] == "MAPS":
                     in_config_run = False
-                    in_grids_list = True
-                    continue
-                elif line_in_run_file[1] == "STATIONS LIST":
+                    in_maps = True
+                elif len(line_in_runfile) >= 2 and line_in_runfile[1] == "STATIONS LIST":
                     in_config_run = False
                     in_station_list = True
                 else:
@@ -116,43 +124,76 @@ def read_runfile():
                         "error read line in 'CONFIGURATION RUN' in runfile,\n"
                         "unknown option in line {0}:\n\n"
                         "{1}")
-                    .format(runfile.line_num, line_in_run_file[0]), False)
+                    .format(runfile.line_num, line_in_runfile[0]), False)
+
+        # read MAPS
+        if in_maps:
+            # skip line if start with # but if this is not a starts the next section
+            if line_in_runfile[0].startswith("#") and not \
+                (line_in_runfile[0].startswith("## GRID DEFINITION") or \
+                (len(line_in_runfile) >= 2 and line_in_runfile[1] == "STATIONS LIST")):
+                continue
+
+            if line_in_runfile[0] in env.config_run.settings:
+                # set this line as settings and save in env.config_run.settings
+                set_settings(runfile, line_in_runfile)
+            else:
+                if line_in_runfile[0].startswith("## GRID DEFINITION"):
+                    in_maps = False
+                    in_grids_list = True
+                elif len(line_in_runfile) >= 2 and line_in_runfile[1] == "STATIONS LIST":
+                    in_maps = False
+                    in_station_list = True
+                else:
+                    console.msg_error(_(
+                        "error read line in 'MAPS' in runfile,\n"
+                        "unknown option in line {0}:\n\n"
+                        "{1}")
+                    .format(runfile.line_num, line_in_runfile[0]), False)
 
         # read GRIDS LIST
         if in_grids_list:
-            if line_in_run_file[0].startswith("#") and not line_in_run_file[0] == "####################":
+            # create instances of Grid
+            if line_in_runfile[0].startswith("## GRID DEFINITION"):
                 if grid:
+                    # delete old instance if exists
                     del grid
                 grid = Grid()
                 continue
 
-            if line_in_run_file[0] in Grid.fields:
-                if len(line_in_run_file) == 1:
-                    setattr(Grid.all_grids[-1], line_in_run_file[0], None)
-                if len(line_in_run_file) == 2:
+            # skip line if start with # but if this is not a starts the next section
+            if line_in_runfile[0].startswith("#") and not \
+                (len(line_in_runfile) >= 2 and line_in_runfile[1] == "STATIONS LIST"):
+                continue
+
+            if line_in_runfile[0] in Grid.fields:
+                if len(line_in_runfile) == 1:
+                    setattr(Grid.all_grids[-1], line_in_runfile[0], None)
+                if len(line_in_runfile) == 2:
                     try:
-                        setattr(Grid.all_grids[-1], line_in_run_file[0], format_in.to_float(line_in_run_file[1]))
+                        setattr(Grid.all_grids[-1], line_in_runfile[0], format_in.to_float(line_in_runfile[1]))
                     except:
-                        setattr(Grid.all_grids[-1], line_in_run_file[0], line_in_run_file[1])
-                if len(line_in_run_file) == 3:
+                        setattr(Grid.all_grids[-1], line_in_runfile[0], line_in_runfile[1])
+                if len(line_in_runfile) == 3:
                     try:
-                        setattr(Grid.all_grids[-1], line_in_run_file[0], [format_in.to_float(line_in_run_file[1]),
-                                                                          format_in.to_float(line_in_run_file[2])])
+                        setattr(Grid.all_grids[-1], line_in_runfile[0], [format_in.to_float(line_in_runfile[1]),
+                                                                          format_in.to_float(line_in_runfile[2])])
                     except:
-                        setattr(Grid.all_grids[-1], line_in_run_file[0], [line_in_run_file[1], line_in_run_file[2]])
+                        setattr(Grid.all_grids[-1], line_in_runfile[0], [line_in_runfile[1], line_in_runfile[2]])
             else:
-                if line_in_run_file[1] == "STATIONS LIST":
+                if len(line_in_runfile) >= 2 and line_in_runfile[1] == "STATIONS LIST":
                     in_grids_list = False
                     in_station_list = True
                 else:
                     console.msg_error(_("error read line in 'GRIDS LIST' in runfile, line {0}:\n{1}")
-                    .format(runfile.line_num, line_in_run_file[0]), False)
+                    .format(runfile.line_num, line_in_runfile[0]), False)
 
         # read STATIONS LIST
         if in_station_list:
-            if line_in_run_file[0].startswith("#") and not line_in_run_file[0] == "####################":
+            # skip line if start with #
+            if line_in_runfile[0].startswith("#"):
                 continue
-            lines_of_stations.append([line_in_run_file, runfile.line_num])
+            lines_of_stations.append([line_in_runfile, runfile.line_num])
 
     runfile_open.close()
     del runfile
