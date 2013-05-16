@@ -23,7 +23,11 @@ from clint.textui import colored
 
 from jaziku import env
 from jaziku.core import analysis_interval
+from jaziku.modules.maps import maps
+from jaziku.modules.maps.grid import search_and_set_internal_grid, set_particular_grid
 from jaziku.utils import console, format_out, format_in, array
+
+# TODO: merge with get.py
 
 
 def configuration_run():
@@ -67,8 +71,8 @@ def configuration_run():
                     = [unicode(label, 'utf-8') for label in env.config_run.settings['categories_labels_var_I']]
             else:
                 console.msg_error_configuration('categories_labels_var_I',
-                                                _("The 'categories_labels_var_I' is not valid,\n"
-                                                  "this should be 3 labels in different rows."))
+                    _("The 'categories_labels_var_I' is not valid,\n"
+                      "this should be 3 labels in different column."))
 
     if env.config_run.settings['class_category_analysis'] == 7:
         if env.config_run.settings['categories_labels_var_I'] == "default":
@@ -79,8 +83,8 @@ def configuration_run():
                     = [unicode(label, 'utf-8') for label in env.config_run.settings['categories_labels_var_I']]
             else:
                 console.msg_error_configuration('categories_labels_var_I',
-                                                _("The 'categories_labels_var_I' is not valid,\n"
-                                                  "this should be 7 labels in different rows."))
+                    _("The 'categories_labels_var_I' is not valid,\n"
+                      "this should be 7 labels in different column."))
 
     # ------------------------
     # categories_labels_var_I
@@ -99,18 +103,18 @@ def configuration_run():
     if not env.config_run.settings['relevant_climate_categories_var_I'] == "all":
         if len(env.config_run.settings['relevant_climate_categories_var_I']) != 2:
             console.msg_error_configuration('relevant_climate_categories_var_I',
-                                            _("The 'relevant_climate_categories_var_I' should be\n"
-                                              "'all' or two valid labels for {0} categories\n"
-                                              "(in different row), such as:\n\n{1}")
-                                            .format(env.config_run.settings['class_category_analysis'], labels.values()))
+                _("The 'relevant_climate_categories_var_I' should be\n"
+                  "'all' or two valid labels for {0} categories\n"
+                  "(in different row), such as:\n\n{1}")
+                .format(env.config_run.settings['class_category_analysis'], labels.values()))
         _list = []
         for _label in env.config_run.settings['relevant_climate_categories_var_I']:
             if _label not in labels.values():
                 console.msg_error_configuration('relevant_climate_categories_var_I',
-                                                _("The '{0}' in 'relevant_climate_categories_var_I'\n"
-                                                  "not is a valid label for {1} categories, should be\n"
-                                                  "one of these:\n\n{2}")
-                                                .format(_label, env.config_run.settings['class_category_analysis'], labels.values()))
+                    _("The '{0}' in 'relevant_climate_categories_var_I'\n"
+                      "not is a valid label for {1} categories, should be\n"
+                      "one of these:\n\n{2}")
+                    .format(_label, env.config_run.settings['class_category_analysis'], labels.values()))
 
             # reformat the relevant_climate_categories_var_I
             _list.append(labels.keys()[labels.values().index(_label)])
@@ -196,9 +200,9 @@ def configuration_run():
     if not env.config_run.settings["thresholds_var_D"] == "default" and \
        len(env.config_run.settings["thresholds_var_D"]) != env.config_run.settings['class_category_analysis']-1:
             console.msg_error_configuration('thresholds_var_D',
-                                            _("The thresholds for {0} categories must have {1} thresholds,\n"
-                                              "or 'default' for use thresholds by default defined for this variable.")
-                                            .format(env.config_run.settings['class_category_analysis'], env.config_run.settings['class_category_analysis']-1))
+                _("The thresholds for {0} categories must have {1} thresholds,\n"
+                  "or 'default' for use thresholds by default defined for this variable.")
+                .format(env.config_run.settings['class_category_analysis'], env.config_run.settings['class_category_analysis']-1))
 
     # ------------------------
     # mode_calculation_series_I
@@ -310,10 +314,10 @@ def configuration_run():
 
     if env.config_run.settings['analysis_interval'] != "trimester" and env.config_run.settings["type_var_I"] in ['ONI1', 'ONI2', 'CAR']:
         console.msg_error_configuration('analysis_interval',
-                                        _("For the internals variables: ONI1, ONI2 or CAR you need\n"
-                                          "defined 'analysis_interval' as 'trimester' because these\n"
-                                          "time series have trimester values")
-                                        .format(env.var_D.TYPE_SERIES))
+            _("For the internals variables: ONI1, ONI2 or CAR you need\n"
+              "defined 'analysis_interval' as 'trimester' because these\n"
+              "time series have trimester values")
+            .format(env.var_D.TYPE_SERIES))
 
     # ------------------------
     # check the probability_forecast_values and forecast date
@@ -359,15 +363,15 @@ def configuration_run():
                         raise ValueError('3 or 7')
             except ValueError as error:
                 console.msg_error_configuration('forecast_var_I_lag_'+lag,
-                                                _("The 'forecast_var_I_lag_{0}' should be a {1} valid\n"
-                                                  "values (int or float).").format(lag, error))
+                    _("The 'forecast_var_I_lag_{0}' should be a {1} valid\n"
+                      "values (int or float).").format(lag, error))
 
             # check that sum of all values in forecast_var_I_lag_N is equal to 100 (+-1)
             if not (99 < sum(array.clean(env.config_run.settings['forecast_var_I_lag_'+lag])) < 101):
                 console.msg_error_configuration('forecast_var_I_lag_'+lag,
-                                                _("The sum for the values of 'forecast_var_I_lag_{0}'\n"
-                                                  "in 'forecast options' in runfile, must be\nequal to 100.")
-                                                .format(lag))
+                    _("The sum for the values of 'forecast_var_I_lag_{0}'\n"
+                      "in 'forecast options' in runfile, must be\nequal to 100.")
+                    .format(lag))
 
         # ------------------------
         ## forecast date
@@ -380,45 +384,45 @@ def configuration_run():
                 forecast_month = env.config_run.settings['forecast_date']
         except:
             console.msg_error_configuration('forecast_date',
-                                            _("The month for forecast '{0}' is invalid, "
-                                              "must be a integer: month or month;day")
-                                            .format(env.config_run.settings['forecast_date']))
+                _("The month for forecast '{0}' is invalid, "
+                  "must be a integer: month or month;day")
+                .format(env.config_run.settings['forecast_date']))
 
         if not (1 <= forecast_month <= 12):
             console.msg_error_configuration('forecast_date',
-                                            _("The month for forecast '{0}' is invalid, "
-                                              "must be a valid month number (1-12)")
-                                            .format(forecast_month))
+                _("The month for forecast '{0}' is invalid, "
+                  "must be a valid month number (1-12)")
+                .format(forecast_month))
 
         if isinstance(env.config_run.settings['forecast_date'], list):
             if env.config_run.settings['analysis_interval'] == 'trimester':
                 console.msg_error_configuration('forecast_date',
-                                                _("The 'analysis_interval' is by trimester but the 'forecast_date'\n"
-                                                  "have the month and start day, please define only the start month\n"
-                                                  "for trimester for the forecast date."))
+                    _("The 'analysis_interval' is by trimester but the 'forecast_date'\n"
+                      "have the month and start day, please define only the start month\n"
+                      "for trimester for the forecast date."))
 
             if not isinstance(env.config_run.settings['forecast_date'][1], (float, int)):
                 console.msg_error_configuration('forecast_date',
-                                                _("The day for forecast process '{0}' is invalid, \n"
-                                                  "must be a valid day number (1-31)")
-                                                .format(env.config_run.settings['forecast_date'][1]))
+                    _("The day for forecast process '{0}' is invalid, \n"
+                      "must be a valid day number (1-31)")
+                    .format(env.config_run.settings['forecast_date'][1]))
             if not (1 <= env.config_run.settings['forecast_date'][1] <= 31):
                 console.msg_error_configuration('forecast_date',
-                                                _("The day for forecast process '{0}' is invalid, \n"
-                                                  "must be a valid day number (1-31)")
-                                                .format(env.config_run.settings['forecast_date'][1]))
+                    _("The day for forecast process '{0}' is invalid, \n"
+                      "must be a valid day number (1-31)")
+                    .format(env.config_run.settings['forecast_date'][1]))
 
             forecast_day = int(env.config_run.settings['forecast_date'][1])
             env.config_run.settings['forecast_date'] = {'month':forecast_month,'day':forecast_day}
 
             if env.config_run.settings['forecast_date']['day'] not in analysis_interval.get_range_analysis_interval():
                 console.msg_error_configuration('forecast_date',
-                                                _("Start day (month/day) for forecast process '{0}'\nis invalid, "
-                                                  "must be a valid start day based on\nrange analysis "
-                                                  "interval, the valid start days for\n{1} are: {2}")
-                                                .format(env.config_run.settings['forecast_date']['day'],
-                                                        env.globals_vars.analysis_interval_i18n,
-                                                        analysis_interval.get_range_analysis_interval()))
+                    _("Start day (month/day) for forecast process '{0}'\nis invalid, "
+                      "must be a valid start day based on\nrange analysis "
+                      "interval, the valid start days for\n{1} are: {2}")
+                    .format(env.config_run.settings['forecast_date']['day'],
+                            env.globals_vars.analysis_interval_i18n,
+                            analysis_interval.get_range_analysis_interval()))
 
             env.config_run.settings['forecast_date']['text'] \
                 = format_out.month_in_initials(env.config_run.settings['forecast_date']['month']-1) \
@@ -427,10 +431,10 @@ def configuration_run():
         else:
             if env.config_run.settings['analysis_interval'] != 'trimester':
                 console.msg_error_configuration('forecast_date',
-                                                _("The 'analysis_interval' is {0} but the 'forecast_date'\n"
-                                                  "only have the month, please define the month and start day\n"
-                                                  "for {0} (in different row) for the forecast date.")
-                                                .format(env.config_run.settings['analysis_interval']))
+                    _("The 'analysis_interval' is {0} but the 'forecast_date'\n"
+                      "only have the month, please define the month and start day\n"
+                      "for {0} (in different row) for the forecast date.")
+                    .format(env.config_run.settings['analysis_interval']))
 
             env.config_run.settings['forecast_date'] = {'month':forecast_month}
 
@@ -441,8 +445,104 @@ def configuration_run():
 
 
 def grids_list():
-    # TODO
-    pass
+    """Initialize all grids with its properties defined in runfile
+    """
+    # init the input_settings for show all grids in console
+    env.globals_vars.input_settings["grid"] = []
+    env.globals_vars.input_settings["shape_path"] = []
+    env.globals_vars.input_settings["latitude"] = []
+    env.globals_vars.input_settings["longitude"] = []
+    env.globals_vars.input_settings["grid_resolution"] = []
+    env.globals_vars.input_settings["semivariogram_type"] = []
+    env.globals_vars.input_settings["radiuses"] = []
+    env.globals_vars.input_settings["max_neighbours"] = []
+
+    for grid in maps.Grid.all_grids:
+        ## grid
+        # set name_grid, country and grid_path
+        if isinstance(grid.grid, list):
+            if len(grid.grid) == 1:
+                grid.grid_name = grid.grid_fullname = grid.country = grid.grid[0]
+            else:
+                grid.grid_name = grid.grid[0]
+                grid.grid_fullname = grid.grid[0] + " (" + grid.grid[1] + ")"
+                grid.country = grid.grid[1]
+            if grid.shape_path == "internal":
+                grid.grid_path = os.path.join(grid.grid[1], grid.grid[0])
+        else:
+            grid.grid_name = grid.grid_fullname = grid.country = grid.grid
+            if grid.shape_path == "internal":
+                grid.grid_path = os.path.join(grid.grid, grid.grid)
+
+        env.globals_vars.input_settings["grid"].append(colored.green(grid.grid_fullname))
+
+        ## shape_path
+        # check if grid defined path to shape else search and set internal shape, lat and lon of grid
+        if grid.shape_path == "internal":
+            try:
+                search_and_set_internal_grid(grid)
+            except ValueError as error:
+                console.msg_error_configuration("grid","\n"+str(error), stop_in_grid=grid.num)
+            env.globals_vars.input_settings["shape_path"].append("internal")
+        else:
+            try:
+                set_particular_grid(grid)
+            except ValueError as error:
+                console.msg_error_configuration("shape_path","\n"+str(error), stop_in_grid=grid.num)
+            env.globals_vars.input_settings["shape_path"].append(grid.shape_path)
+
+        ## latitude
+        if not grid.latitude == "internal":
+            if isinstance(grid.latitude, list) and len(grid.latitude) == 2 and not False in [isinstance(x, (int, float)) for x in grid.latitude]:
+                grid.minlat = format_in.to_float(grid.latitude[0])
+                grid.maxlat = format_in.to_float(grid.latitude[1])
+            else:
+                console.msg_error_configuration("latitude",
+                    _("The latitude values are wrong, these must be\n"
+                      "decimal degrees, and two values: minlat and maxlat\n"
+                      "in different column."), stop_in_grid=grid.num)
+        else:
+            if not grid.is_internal:
+                console.msg_error_configuration("latitude",
+                    _("Can't defined 'latitude' as 'internal' if 'shape_path'\n"
+                      "was not defined as 'internal'.\n"), stop_in_grid=grid.num)
+        if grid.minlat >= grid.maxlat or\
+           - 90 > grid.minlat > 90 or \
+           - 90 > grid.maxlat > 90:
+            console.msg_error_configuration("latitude",
+                _("The latitude values are wrong, the minlat must be\n"
+                  "less to maxlat and their values must be between\n"
+                  "-90 to 90."), stop_in_grid=grid.num)
+
+        env.globals_vars.input_settings["latitude"].append('{0} | {1}'.format(grid.minlat, grid.maxlat))
+
+        ## longitude
+        if not grid.longitude == "internal":
+            if isinstance(grid.longitude, list) and len(grid.longitude) == 2 and not False in [isinstance(x, (int, float)) for x in grid.longitude]:
+                grid.minlon = format_in.to_float(grid.longitude[0])
+                grid.maxlon = format_in.to_float(grid.longitude[1])
+            else:
+                console.msg_error_configuration("longitude",
+                    _("The longitude values are wrong, these must be\n"
+                      "decimal degrees, and two values: minlon and maxlon\n"
+                      "in different column."), stop_in_grid=grid.num)
+        else:
+            if not grid.is_internal:
+                console.msg_error_configuration("longitude",
+                    _("Can't defined 'longitude' as 'internal' if 'shape_path'\n"
+                      "was not defined as 'internal'.\n"), stop_in_grid=grid.num)
+        if grid.minlon >= grid.maxlon or\
+           - 180 > grid.minlon > 180 or \
+           - 180 > grid.maxlon > 180:
+            console.msg_error_configuration("longitude",
+                _("The longitude values are wrong, the minlon must be\n"
+                  "less to maxlon and their values must be between\n"
+                  "-180 to 180."), stop_in_grid=grid.num)
+
+        env.globals_vars.input_settings["longitude"].append('{0} | {1}'.format(grid.minlon, grid.maxlon))
+
+        ## set the  mainly variables for grid
+        grid.grid_properties()
 
 
 def stations_list(stations_list):
@@ -470,14 +570,14 @@ def stations_list(stations_list):
     for station in stations_list:
         if station.code in list_codes and not station.name in list_names:
             console.msg(_("WARNING:"), color='yellow')
-            console.msg(_("   The code {0} of the station {1} is repeat\n"
+            console.msg(_("   The code '{0}' of the station '{1}' is repeat\n"
                           "   with other stations, is recommend that the code and name\n"
                           "   of stations be different. This is only a recommendation,\n"
                           "   you can continue.").format(station.code, station.name), color='yellow')
             return
         elif not station.code in list_codes and station.name in list_names:
             console.msg(_("WARNING:"), color='yellow')
-            console.msg(_("   The name {0} of the station with code {1} is repeat\n"
+            console.msg(_("   The name '{0}' of the station with code '{1}' is repeat\n"
                           "   with other stations, is recommend that the code and name\n"
                           "   of stations be different. This is only a recommendation,\n"
                           "   you can continue.").format(station.name, station.code), color='yellow')

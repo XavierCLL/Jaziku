@@ -58,7 +58,7 @@ def read_runfile():
         if not len(line) >= 2:
             console.msg_error(_(
                 "error reading the settings line in runfile,"
-                " line {0}:\n{1}, no was defined.")
+                " line {0}:\n'{1}', no was defined.")
             .format(runfile.line_num, line[0]), False)
         # in this case, for python 'disable' is None,
         # then let default value (it is 'None')
@@ -167,19 +167,22 @@ def read_runfile():
                 continue
 
             if line_in_runfile[0] in Grid.fields:
+                # check if this settings was defined
                 if len(line_in_runfile) == 1:
-                    setattr(Grid.all_grids[-1], line_in_runfile[0], None)
+                    console.msg_error(_(
+                        "error reading the settings line in runfile,"
+                        " line {0}:\n'{1}' no was defined.")
+                    .format(runfile.line_num, line_in_runfile[0]), False)
                 if len(line_in_runfile) == 2:
                     try:
                         setattr(Grid.all_grids[-1], line_in_runfile[0], format_in.to_float(line_in_runfile[1]))
                     except:
                         setattr(Grid.all_grids[-1], line_in_runfile[0], line_in_runfile[1])
-                if len(line_in_runfile) == 3:
+                if len(line_in_runfile) >= 3:
                     try:
-                        setattr(Grid.all_grids[-1], line_in_runfile[0], [format_in.to_float(line_in_runfile[1]),
-                                                                          format_in.to_float(line_in_runfile[2])])
+                        setattr(Grid.all_grids[-1], line_in_runfile[0], [format_in.to_float(item) for item in line_in_runfile[1::]])
                     except:
-                        setattr(Grid.all_grids[-1], line_in_runfile[0], [line_in_runfile[1], line_in_runfile[2]])
+                        setattr(Grid.all_grids[-1], line_in_runfile[0], [item for item in line_in_runfile[1::]])
             else:
                 if len(line_in_runfile) >= 2 and line_in_runfile[1] == "STATIONS LIST":
                     in_grids_list = False

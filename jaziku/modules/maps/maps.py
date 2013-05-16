@@ -26,9 +26,8 @@ from subprocess import call
 from jaziku import env
 from jaziku.core.analysis_interval import get_range_analysis_interval
 from jaziku.modules.maps import interpolation
-from jaziku.modules.maps.grid import search_and_set_internal_grid, set_particular_grid
 from jaziku.modules.maps.ncl import make_ncl_file
-from jaziku.utils import console, watermarking, format_out, output
+from jaziku.utils import console, watermarking, format_out, output, format_in
 from jaziku.modules.maps.grid import Grid
 
 
@@ -89,40 +88,9 @@ def process(grid):
     # restart counter
     Grid.maps_created_in_grid = 0
 
-    # set name_grid, country and grid_path
-    if isinstance(grid.grid, list):
-        if len(grid.grid) == 1:
-            grid.grid_name = grid.grid_fullname = grid.country = grid.grid[0]
-        else:
-            grid.grid_name = grid.grid[0]
-            grid.grid_fullname = grid.grid[0] + " (" + grid.grid[1] + ")"
-            grid.country = grid.grid[1]
-        if not grid.shape_path:
-            grid.grid_path = os.path.join(grid.grid[1], grid.grid[0])
-    else:
-        grid.grid_name = grid.grid_fullname = grid.country = grid.grid
-        if not grid.shape_path:
-            grid.grid_path = os.path.join(grid.grid, grid.grid)
-
     print "\n################# {0}: {1}".format(_("MAP"), grid.grid_fullname)
 
-    # check if grid defined path to shape else search and set internal shape, lat and lon of grid
-    if not grid.shape_path:
-        search_and_set_internal_grid(grid)
-    else:
-        set_particular_grid(grid)
-
-    # check the latitude and longitude
-    if grid.minlat >= grid.maxlat or\
-       grid.minlon >= grid.maxlon or\
-       - 90 > grid.minlat > 90 or\
-       - 180 > grid.minlat > 180:
-        console.msg_error(_("The latitude and/or longitude are wrong,\n"
-                            "these must be decimal degrees."), False)
-
-    # set variables for grid
-    grid.grid_properties()
-
+    # show the mainly properties
     grid.print_grid_properties()
 
     ## Matrix with real data and null value for empty value
@@ -148,8 +116,8 @@ def process(grid):
                 continue
 
             # get lat and lon from Map_Data
-            latitude = float(line[1].replace(',', '.'))
-            longitude = float(line[2].replace(',', '.'))
+            latitude = format_in.to_float(line[1])
+            longitude = format_in.to_float(line[2])
 
             # get index from Map_Data
             if grid.if_running["correlation"]:
