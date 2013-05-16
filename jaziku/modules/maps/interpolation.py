@@ -34,7 +34,7 @@ def ordinary_kriging(base_grid, inc_file):
         grid = SugarboxGrid(base_grid.lat_size, base_grid.lon_size, 1)
         data = load_cont_property(os.path.abspath(inc_file.encode('utf-8')), env.globals_vars.VALID_NULL[1], size)
 
-        semivariogram = CovarianceModel(type=base_grid.semivariogram_type,
+        semivariogram = CovarianceModel(type=base_grid.num_semivariogram_type,
                                      ranges=(base_grid.radiuses[0] / 2,
                                              base_grid.radiuses[1] / 2, 1), sill=1)
 

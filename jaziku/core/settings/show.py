@@ -20,15 +20,22 @@
 
 from jaziku import env
 from jaziku.utils import console
+from jaziku.modules.maps import maps
 
 
-def configuration_run(stop_in=None):
+def configuration_run(stop_in=None, stop_in_grid=None):
 
     # load input settings saved
     settings = env.globals_vars.input_settings
 
     if stop_in != None:
-        settings[stop_in] = '?'
+        if stop_in_grid != None:
+            try:
+                settings[stop_in][stop_in_grid] = '?'
+            except:
+                settings[stop_in].append('?')
+        else:
+            settings[stop_in] = '?'
 
     ## CONFIGURATION RUN SECTION
     print _("\nCONFIGURATION RUN:")
@@ -122,6 +129,24 @@ def configuration_run(stop_in=None):
         if stop_in == "marks_stations": return
         print "   {0} ------------ {1}".format("shape boundary", settings["shape_boundary"])
         if stop_in == "shape_boundary": return
+        for idx_grid in range(len(maps.Grid.all_grids)):
+            console.msg("  Grid definition #{0}:".format(idx_grid+1), color='cyan')
+            print "   {0} ---------------------- {1}".format("grid", settings["grid"][idx_grid])
+            if stop_in == "grid" and idx_grid == stop_in_grid: return
+            print "   {0} ---------------- {1}".format("shape path", settings["shape_path"][idx_grid])
+            if stop_in == "shape_path" and idx_grid == stop_in_grid: return
+            print "   {0} ------------------ {1}".format("latitude", settings["latitude"][idx_grid])
+            if stop_in == "latitude" and idx_grid == stop_in_grid: return
+            print "   {0} ----------------- {1}".format("longitude", settings["longitude"][idx_grid])
+            if stop_in == "longitude" and idx_grid == stop_in_grid: return
+            print "   {0} ----------- {1}".format("grid resolution", settings["grid_resolution"][idx_grid])
+            if stop_in == "grid_resolution" and idx_grid == stop_in_grid: return
+            print "   {0} -------- {1}".format("semivariogram type", settings["semivariogram_type"][idx_grid])
+            if stop_in == "semivariogram_type" and idx_grid == stop_in_grid: return
+            print "   {0} ------------------ {1}".format("radiuses", settings["radiuses"][idx_grid])
+            if stop_in == "radiuses" and idx_grid == stop_in_grid: return
+            print "   {0} ------------ {1}".format("max neighbours", settings["max_neighbours"][idx_grid])
+            if stop_in == "max_neighbours" and idx_grid == stop_in_grid: return
 
     # Print some warnings and notifications
 

@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-from jaziku.core.settings import get, check, show
+from jaziku.core.settings import get, check_and_set, show
 
 def main(stations_list):
     """
@@ -37,11 +37,13 @@ def main(stations_list):
     # -------------------------------------------------------------------------
     # PRINT AND CHECK SETTINGS
 
-    check.configuration_run()
+    check_and_set.configuration_run()
+
+    check_and_set.grids_list()
 
     show.configuration_run()
 
-    check.stations_list(stations_list)
+    check_and_set.stations_list(stations_list)
 
     # -------------------------------------------------------------------------
     # CONTINUE TO RUN

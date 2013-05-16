@@ -4,7 +4,6 @@
 Changelog
 =========
 
-
 0.6.0 (**2013-02-xx**)
 ----------------------
 
@@ -12,6 +11,8 @@ news
 ++++
 
 - Reform and reorganize the runfile
+- Now Jaziku first check and set the grids list before process and show the configurations
+  of all grids in configuration run message
 - Changed the division when there are more of one options in some configuration in runfile,
   changed from comma separated to different row
 - New option in runfile relevant_climate_categories_var_I, with this option
