@@ -167,29 +167,6 @@ def configuration_run():
         settings["graphics"] = colored.green(_("enabled"))
 
     # ------------------------
-    # maps
-    if env.config_run.settings['maps']:
-        if env.config_run.settings['maps'] == "all":
-            env.config_run.settings['maps'] = {'climate': True, 'forecast': True, 'correlation': True}
-        else:
-            try:
-                if not isinstance(env.config_run.settings['maps'], list):
-                    env.config_run.settings['maps'] = [env.config_run.settings['maps']]
-                input_maps_list = [_map.strip() for _map in env.config_run.settings['maps']]
-                env.config_run.settings['maps'] = {'climate': False, 'forecast': False, 'correlation': False}
-                for map_to_run in input_maps_list:
-                    if map_to_run not in ['climate', 'forecast', 'correlation']:
-                        raise
-                    env.config_run.settings['maps'][map_to_run] = True
-            except:
-                console.msg_error_configuration('maps',_("the maps options are: 'climate', 'forecast', "
-                                                         "'correlation' (in different row), or 'all'."))
-
-        settings["maps"] = colored.green(_("enabled")) + ' (' + \
-                           (', '.join(map(str, [m for m in env.config_run.settings['maps'] if env.config_run.settings['maps'][m]]))) + \
-                           ')'
-
-    # ------------------------
     # categories_labels_var_I
     if env.config_run.settings['categories_labels_var_I'] == "default":
         settings["categories_labels_var_I"] = [env.config_run.settings['categories_labels_var_I']]
@@ -251,7 +228,6 @@ def configuration_run():
             settings["limits_var_D"] += _('default')
         else:
             settings["limits_var_D"] += colored.green(env.config_run.settings['limits_var_D']['above'])
-
 
     # ------------------------
     # thresholds var D
@@ -335,6 +311,28 @@ def configuration_run():
 
     ## MAPS OPTIONS
     # ------------------------
+    # maps
+    if env.config_run.settings['maps']:
+        if env.config_run.settings['maps'] == "all":
+            env.config_run.settings['maps'] = {'climate': True, 'forecast': True, 'correlation': True}
+        else:
+            try:
+                if not isinstance(env.config_run.settings['maps'], list):
+                    env.config_run.settings['maps'] = [env.config_run.settings['maps']]
+                input_maps_list = [_map.strip() for _map in env.config_run.settings['maps']]
+                env.config_run.settings['maps'] = {'climate': False, 'forecast': False, 'correlation': False}
+                for map_to_run in input_maps_list:
+                    if map_to_run not in ['climate', 'forecast', 'correlation']:
+                        raise
+                    env.config_run.settings['maps'][map_to_run] = True
+            except:
+                console.msg_error_configuration('maps',_("the maps options are: 'climate', 'forecast', "
+                                                         "'correlation' (in different row), or 'all'."))
+
+        settings["maps"] = colored.green(_("enabled")) + ' (' + \
+                           (', '.join(map(str, [m for m in env.config_run.settings['maps'] if env.config_run.settings['maps'][m]]))) + \
+                           ')'
+
     # maps settings
     if env.config_run.settings['maps']:
 
