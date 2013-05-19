@@ -24,6 +24,7 @@
 # http://matplotlib.sourceforge.net/api/pyplot_api.html
 
 import os
+import copy
 from numpy import array
 from matplotlib import pyplot
 from Image import open as img_open
@@ -92,9 +93,9 @@ def climate_graphs(station):
             # number of categories activated
             num_categ = len(env.config_run.settings['relevant_climate_categories_var_I'])
 
-            _CT = specific_contingency_table['in_percentage']
-            _CT_p = specific_contingency_table['in_percentage_formatted']
-            _CL_I = env.config_run.get_categories_labels_var_I_list()
+            _CT = copy.deepcopy(specific_contingency_table['in_percentage'])
+            _CT_p = copy.deepcopy(specific_contingency_table['in_percentage_formatted'])
+            _CL_I = copy.deepcopy(env.config_run.get_categories_labels_var_I_list())
 
             # delete columns (var I) deactivated, in reversed order is needed
             # because if any element is delete in the first columns, the side of
