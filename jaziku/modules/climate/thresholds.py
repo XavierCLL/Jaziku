@@ -112,7 +112,7 @@ def validate_thresholds(variable, force=False):
                 except ValueError as error:
                     console.msg_error(_("The threshold calculated or assigned to '{0}'\n"
                                         "for the series {1}, is outside its limits defined.\n\n{2}")
-                    .format(env.globals_vars.generic_labels(key), env.var_[variable.type].TYPE_SERIES, error))
+                    .format(env.globals_vars.categories(key), env.var_[variable.type].TYPE_SERIES, error))
             return thresholds
         return wrapper_func
     return decorator

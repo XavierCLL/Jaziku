@@ -247,7 +247,7 @@ def climate_data_for_maps(station):
                                            format_out.number(values_CT['above']),
                                            format_out.number(sum([float(value_CT) for value_CT in values_CT.values()])),
                                            format_out.number(index['value']),
-                                           env.globals_vars.generic_labels(index['position'])])
+                                           env.globals_vars.categories(index['position'])])
                     if env.config_run.settings['class_category_analysis'] == 7:
                         csv_file.writerow([station.code, format_out.number(station.lat), format_out.number(station.lon),
                                            format_out.number(station.pearson_list[lag][month - 1]),
@@ -260,7 +260,7 @@ def climate_data_for_maps(station):
                                            format_out.number(values_CT['above3']),
                                            format_out.number(sum([float(value_CT) for value_CT in values_CT.values()])),
                                            format_out.number(index['value']),
-                                           env.globals_vars.generic_labels(index['position'])])
+                                           env.globals_vars.categories(index['position'])])
                     open_file.close()
                     del csv_file
 
@@ -294,7 +294,7 @@ def climate_data_for_maps(station):
                                                format_out.number(values_CT['above']),
                                                format_out.number(sum([float(value_CT) for value_CT in values_CT.values()])),
                                                format_out.number(index['value']),
-                                               env.globals_vars.generic_labels(index['position'])])
+                                               env.globals_vars.categories(index['position'])])
                         if env.config_run.settings['class_category_analysis'] == 7:
                             csv_file.writerow([station.code, format_out.number(station.lat), format_out.number(station.lon),
                                                format_out.number(station.pearson_list[lag][month - 1][idx_day]),
@@ -307,7 +307,7 @@ def climate_data_for_maps(station):
                                                format_out.number(values_CT['above3']),
                                                format_out.number(sum([float(value_CT) for value_CT in values_CT.values()])),
                                                format_out.number(index['value']),
-                                               env.globals_vars.generic_labels(index['position'])])
+                                               env.globals_vars.categories(index['position'])])
                         open_file.close()
                         del csv_file
 
@@ -410,7 +410,7 @@ def forecast_data_for_maps(station):
                                format_out.number(station.prob_var_D[lag]['above']),
                                format_out.number(sum(station.prob_var_D[lag].values())),
                                format_out.number(index['value']),
-                               env.globals_vars.generic_labels(index['position'])])
+                               env.globals_vars.categories(index['position'])])
 
         if env.config_run.settings['class_category_analysis'] == 7:
             csv_file.writerow([station.code,
@@ -426,6 +426,6 @@ def forecast_data_for_maps(station):
                                format_out.number(station.prob_var_D[lag]['above3']),
                                format_out.number(sum(station.prob_var_D[lag].values())),
                                format_out.number(index['value']),
-                               env.globals_vars.generic_labels(index['position'])])
+                               env.globals_vars.categories(index['position'])])
         open_file.close()
         del csv_file

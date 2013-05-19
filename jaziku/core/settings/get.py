@@ -178,7 +178,7 @@ def configuration_run():
     if env.config_run.settings['relevant_climate_categories_var_I'] == "all":
         settings["relevant_climate_categories_var_I"] = "all"
     else:
-        # convert to list if there is a one category
+        # convert to list if there is one category
         if not isinstance(env.config_run.settings['relevant_climate_categories_var_I'], list):
             l = []; l.append(env.config_run.settings['relevant_climate_categories_var_I'])
             env.config_run.settings['relevant_climate_categories_var_I'] = l
