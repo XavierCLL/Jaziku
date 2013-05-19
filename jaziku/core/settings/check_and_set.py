@@ -64,7 +64,7 @@ def configuration_run():
 
     if env.config_run.settings['class_category_analysis'] == 3:
         if env.config_run.settings['categories_labels_var_I'] == "default":
-            env.config_run.settings['categories_labels_var_I'] = env.globals_vars.generic_labels()
+            env.config_run.settings['categories_labels_var_I'] = env.globals_vars.categories()
         else:
             if len(env.config_run.settings['categories_labels_var_I']) == 3:
                 env.config_run.settings['categories_labels_var_I']\
@@ -76,7 +76,7 @@ def configuration_run():
 
     if env.config_run.settings['class_category_analysis'] == 7:
         if env.config_run.settings['categories_labels_var_I'] == "default":
-            env.config_run.settings['categories_labels_var_I'] = env.globals_vars.generic_labels()
+            env.config_run.settings['categories_labels_var_I'] = env.globals_vars.categories()
         else:
             if len(env.config_run.settings['categories_labels_var_I']) == 7:
                 env.config_run.settings['categories_labels_var_I'] \
@@ -98,7 +98,7 @@ def configuration_run():
     # ------------------------
     # relevant_climate_categories_var_I
 
-    labels = env.globals_vars.generic_labels(translated=False)
+    labels = env.globals_vars.categories(translated=False)
 
     if not env.config_run.settings['relevant_climate_categories_var_I'] == "all":
         # check

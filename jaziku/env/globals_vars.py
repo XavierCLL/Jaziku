@@ -89,9 +89,9 @@ analysis_interval_i18n = None
 STATE_OF_DATA = None
 
 #==============================================================================
-# generic labels
+# categories of var I
 
-def generic_labels(key_label=False, include_normal=True, translated=True):
+def categories(key_label=False, include_normal=True, translated=True, as_list=False):
     from jaziku.env.config_run import settings
     if settings['class_category_analysis'] == 3:
         if translated:
@@ -123,13 +123,36 @@ def generic_labels(key_label=False, include_normal=True, translated=True):
     if include_normal is False:
         del labels['normal']
 
-    if key_label is False:
-        return labels
-
     if key_label in labels:
-        return labels[key_label]
+            return labels[key_label]
 
-    return None
+    if as_list is True:
+        if include_normal is True:
+            if settings['class_category_analysis'] == 3:
+                return [labels['below'],
+                        labels['normal'],
+                        labels['above']]
+            if settings['class_category_analysis'] == 7:
+                return [labels['below3'],
+                        labels['below2'],
+                        labels['below1'],
+                        labels['normal'],
+                        labels['above1'],
+                        labels['above2'],
+                        labels['above3']]
+        else:
+            if settings['class_category_analysis'] == 3:
+                return [labels['below'],
+                        labels['above']]
+            if settings['class_category_analysis'] == 7:
+                return [labels['below3'],
+                        labels['below2'],
+                        labels['below1'],
+                        labels['above1'],
+                        labels['above2'],
+                        labels['above3']]
+    else:
+        return labels
 
 #==============================================================================
 # maps

@@ -107,6 +107,7 @@ def process(station):
 
     if not env.globals_vars.threshold_problem[0] and not env.globals_vars.threshold_problem[1] and\
        not env.globals_vars.threshold_problem[2] and env.config_run.settings['graphics']:
+        # do graphics for climate
         climate_graphs(station)
     else:
         console.msg(_("\n   continue without make graphics ............. "), color='cyan', newline=False)

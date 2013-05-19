@@ -32,3 +32,16 @@ def column(matrix, i):
     """
 
     return [row[i] for row in matrix]
+
+
+def transpose(matrix):
+    """Return transpose of matrix
+
+    :param matrix: matrix in 2d dimension
+    :type matrix: list
+
+    :return: transpose of matrix
+    :rtype: list
+    """
+
+    return map(list, zip(*matrix))
