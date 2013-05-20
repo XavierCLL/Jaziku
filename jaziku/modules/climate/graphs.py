@@ -129,7 +129,7 @@ def climate_graphs(station):
 
             dpi = 75.0
             image_height = 375
-            image_width_by_num_categ = {1:375, 2:375, 3:450}
+            image_width_by_num_categ = {1:375, 2:375, 3:430}
             image_width = image_width_by_num_categ[num_categ]
             fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
             #fig = pyplot.figure()
@@ -167,8 +167,7 @@ def climate_graphs(station):
             auto_label(var_D_normal)
             auto_label(var_D_above)
 
-            rowLabels = env.var_D.get_generic_labels()
-            #rowLabels = env.globals_vars.categories(as_list=True) #TODO 0.6
+            rowLabels = env.globals_vars.categories(as_list=True)
 
             # Add a table at the bottom of the axes
             table = ax.table(
@@ -185,6 +184,9 @@ def climate_graphs(station):
                 cell.set_fontsize(12)
                 cell.set_height(0.06)
 
+            x_text_position = {1:0.155, 2:0.08, 3:0.01}
+            fig.text(x_text_position[num_categ], 0.1, _('Var D'), fontsize=12, rotation='vertical')
+
             ## Save image
             image_dir_save \
                 = os.path.join(graphics_dir_ca, _('lag_{0}').format(lag),
@@ -195,8 +197,8 @@ def climate_graphs(station):
             ax.grid(True, color='gray')
             fig.tight_layout()
 
-            left_by_num_categ = {1:0.345, 2:0.28, 3:0.23}
-            right_by_num_categ = {1:0.655, 2:0.87, 3:0.98}
+            left_by_num_categ = {1:0.345, 2:0.27, 3:0.173}
+            right_by_num_categ = {1:0.655, 2:0.86, 3:0.98}
             #pyplot.subplots_adjust(bottom=0.25, left=0.22, right=0.97)
             pyplot.subplots_adjust(bottom=0.18, top=0.85, left=left_by_num_categ[num_categ], right=right_by_num_categ[num_categ])
 
