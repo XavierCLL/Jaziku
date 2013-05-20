@@ -324,16 +324,17 @@ def get_specific_contingency_table(station, lag, month, day=None):
     if env.config_run.settings['class_category_analysis'] == 7:
         sum_per_column_CT = [sum_per_column_CT[0], sum_per_column_CT[3], sum_per_column_CT[6]]
 
-    for index, label in enumerate(['below','normal','above']):
-        if float(sum_per_column_CT[index]) == 0 and not env.globals_vars.threshold_problem[index]:
-            console.msg(
-                _(u"\n\n > WARNING: The thresholds defined for var I\n"
-                  u"   are not suitable for compound analysis of\n"
-                  u"   variable '{0}' with relation to '{1}' inside\n"
-                  u"   category '{2}'. The process continue but\n"
-                  u"   is recommended review the thresholds .")
-                .format(env.var_D.TYPE_SERIES, env.var_I.TYPE_SERIES, label), color='yellow')
-            env.globals_vars.threshold_problem[index] = True
+    # todo 0.6
+    # for index, label in enumerate(['below','normal','above']):
+    #     if float(sum_per_column_CT[index]) == 0 and not env.globals_vars.threshold_problem[index]:
+    #         console.msg(
+    #             _(u"\n\n > WARNING: The thresholds defined for var I\n"
+    #               u"   are not suitable for compound analysis of\n"
+    #               u"   variable '{0}' with relation to '{1}' inside\n"
+    #               u"   category '{2}'. The process continue but\n"
+    #               u"   is recommended review the thresholds .")
+    #             .format(env.var_D.TYPE_SERIES, env.var_I.TYPE_SERIES, label), color='yellow')
+    #         env.globals_vars.threshold_problem[index] = True
 
     # -------------------------------------------------------------------------
     # -------------------------------------------------------------------------

@@ -101,15 +101,14 @@ def configuration_run():
     labels = env.globals_vars.categories(translated=False)
 
     if not env.config_run.settings['relevant_climate_categories_var_I'] == "all":
-        # check
+        # check dimension
         if len(env.config_run.settings['relevant_climate_categories_var_I']) not in [1,2]:
             console.msg_error_configuration('relevant_climate_categories_var_I',
                 _("The 'relevant_climate_categories_var_I' should be\n"
                   "'all' one or two valid labels for {0} categories\n"
                   "(in different row), such as:\n\n{1}")
                 .format(env.config_run.settings['class_category_analysis'], labels.values()))
-        # convert all values of 'relevant_climate_categories_var_I' to respective keys
-        _list = []
+        # check if are valid labels
         for _label in env.config_run.settings['relevant_climate_categories_var_I']:
             if _label not in labels.values():
                 console.msg_error_configuration('relevant_climate_categories_var_I',
@@ -117,11 +116,6 @@ def configuration_run():
                       "not is a valid label for {1} categories, should be\n"
                       "one of these:\n\n{2}")
                     .format(_label, env.config_run.settings['class_category_analysis'], labels.values()))
-
-            # reformat the relevant_climate_categories_var_I
-            _list.append(labels.keys()[labels.values().index(_label)])
-
-        env.config_run.settings['relevant_climate_categories_var_I'] = _list
 
     # ------------------------
     # mode_calculation_series_D
