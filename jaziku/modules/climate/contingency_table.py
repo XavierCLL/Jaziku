@@ -321,10 +321,12 @@ def get_specific_contingency_table(station, lag, month, day=None):
     # division by zero) in contingency tabla percent in result
     # table, jaziku show warning message and continue the process.
 
+    # convert 7 categories in 3 blocks: BELOW, NORMAL and ABOVE
     if env.config_run.settings['class_category_analysis'] == 7:
         sum_per_column_CT = [sum_per_column_CT[0], sum_per_column_CT[3], sum_per_column_CT[6]]
 
-    for index, label in enumerate(['below','normal','above']):
+    # iterate and check for each 3 blocks: BELOW, NORMAL and ABOVE
+    for index, label in enumerate([_('below'),_('normal'),_('above')]):
         if float(sum_per_column_CT[index]) == 0 and not station.threshold_problem[index]:
             console.msg(
                 _(u"\n > WARNING: The thresholds defined for var I\n"
@@ -383,7 +385,8 @@ def get_contingency_tables(station):
         [lag][month/trimester][day].
     """
     # init threshold problem for this station
-    station.threshold_problem = [False]*env.config_run.settings['class_category_analysis']
+    # for 3 and 7 categories there are 3 blocks: BELOW, NORMAL and ABOVE
+    station.threshold_problem = [False]*3
 
     # [lag][month][phenomenon][data(0,1,2)]
     # [lag][month][day][phenomenon][data(0,1,2)]
