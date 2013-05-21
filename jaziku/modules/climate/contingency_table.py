@@ -324,17 +324,16 @@ def get_specific_contingency_table(station, lag, month, day=None):
     if env.config_run.settings['class_category_analysis'] == 7:
         sum_per_column_CT = [sum_per_column_CT[0], sum_per_column_CT[3], sum_per_column_CT[6]]
 
-    # todo 0.6
-    # for index, label in enumerate(['below','normal','above']):
-    #     if float(sum_per_column_CT[index]) == 0 and not env.globals_vars.threshold_problem[index]:
-    #         console.msg(
-    #             _(u"\n\n > WARNING: The thresholds defined for var I\n"
-    #               u"   are not suitable for compound analysis of\n"
-    #               u"   variable '{0}' with relation to '{1}' inside\n"
-    #               u"   category '{2}'. The process continue but\n"
-    #               u"   is recommended review the thresholds .")
-    #             .format(env.var_D.TYPE_SERIES, env.var_I.TYPE_SERIES, label), color='yellow')
-    #         env.globals_vars.threshold_problem[index] = True
+    for index, label in enumerate(['below','normal','above']):
+        if float(sum_per_column_CT[index]) == 0 and not station.threshold_problem[index]:
+            console.msg(
+                _(u"\n > WARNING: The thresholds defined for var I\n"
+                  u"   are not suitable in some time series for \n"
+                  u"   compound analysis of '{0}' with relation to\n"
+                  u"   '{1}' inside the block category '{2}'.\n"
+                  u"   Is recommended review the thresholds .......")
+                .format(env.var_D.TYPE_SERIES, env.var_I.TYPE_SERIES, label.upper()), color='yellow', newline=False)
+            station.threshold_problem[index] = True
 
     # -------------------------------------------------------------------------
     # -------------------------------------------------------------------------
@@ -383,6 +382,8 @@ def get_contingency_tables(station):
         all contingencies tables within a list
         [lag][month/trimester][day].
     """
+    # init threshold problem for this station
+    station.threshold_problem = [False]*env.config_run.settings['class_category_analysis']
 
     # [lag][month][phenomenon][data(0,1,2)]
     # [lag][month][day][phenomenon][data(0,1,2)]

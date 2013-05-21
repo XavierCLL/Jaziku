@@ -63,9 +63,6 @@ def process(station):
     possible categories of the independent variable.
     """
 
-    # init threshold problem values
-    env.globals_vars.threshold_problem = [False]*env.config_run.settings['class_category_analysis']
-
     # -------------------------------------------------------------------------
     # inform some characteristic to process
 
@@ -105,8 +102,7 @@ def process(station):
 
     result_table.composite_analysis(station)
 
-    if not env.globals_vars.threshold_problem[0] and not env.globals_vars.threshold_problem[1] and\
-       not env.globals_vars.threshold_problem[2] and env.config_run.settings['graphics']:
+    if env.config_run.settings['graphics']:
         # do graphics for climate
         climate_graphs(station)
     else:
