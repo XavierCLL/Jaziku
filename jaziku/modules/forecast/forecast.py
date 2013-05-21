@@ -155,8 +155,7 @@ def process(station):
     #station.prob_normal_var_D = prob_normal_var_D
     #station.prob_exceed_var_D = prob_above_var_D
 
-    if not env.globals_vars.threshold_problem[0] and not env.globals_vars.threshold_problem[1] and\
-       not env.globals_vars.threshold_problem[2] and env.config_run.settings['graphics']:
+    if env.config_run.settings['graphics']:
         # settings directories to save forecast graphics
         station.forecast_dir = os.path.join(env.globals_vars.FORECAST_DIR, _('stations'), station.code + '_' + station.name)   # 'results'
         output.make_dirs(station.forecast_dir)

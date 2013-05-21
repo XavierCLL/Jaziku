@@ -200,15 +200,6 @@ FORECAST_DIR = None
 DATA_ANALYSIS_DIR = None
 
 #==============================================================================
-# threshold_problem is global variable for detect problem with
-# threshold of independent variable, if a problem is detected
-# show message and print "nan" (this mean null value for
-# division by zero) in contingency tabla percent in result
-# table, jaziku continue but the graphics will not be created
-# because "nan"  character could not be calculate.
-threshold_problem = []
-
-#==============================================================================
 # this is the probability_forecast_values for forecast process to use in
 # the forecast_contingency_table.
 # probability_forecast_values:
