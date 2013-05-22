@@ -146,17 +146,13 @@ def process(station):
 
     station.prob_var_D = prob_var_D
 
-    #station.prob_decrease_var_D = prob_below_var_D #TODO 0.6: replace
-    #station.prob_normal_var_D = prob_normal_var_D
-    #station.prob_exceed_var_D = prob_above_var_D
-
     if env.config_run.settings['graphics']:
         # settings directories to save forecast graphics
         station.forecast_dir = os.path.join(env.globals_vars.FORECAST_DIR, _('stations'), station.code + '_' + station.name)   # 'results'
         output.make_dirs(station.forecast_dir)
         # do graphics for forecast
-        #with console.redirectStdStreams(): #todo 0.6
-        forecast_graphs(station)
+        with console.redirectStdStreams():
+            forecast_graphs(station)
     else:
         console.msg(_("\n   continue without make graphics ............. "), color='cyan', newline=False)
 
