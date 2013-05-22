@@ -37,7 +37,7 @@ def forecast_graphs(station):
      for independent variable for the composite analysis.
     """
     # defined the size of the image
-    image_height = 240
+    image_height = 220
     image_width = 310
 
     image_open_list = []
@@ -78,7 +78,56 @@ def forecast_graphs(station):
                           station.prob_var_D[lag]['normal'],
                           station.prob_var_D[lag]['above']]
 
-            explode = (0.03, 0.03, 0.03)
+            # assign value for piece of pie
+            def autopct_funt(pct):
+                total = sum(values_pie)
+                val = pct * total / 100.0
+                return '{p:1.1f}%\n({v:1.2f})'.format(p=pct, v=val)
+
+            if True in [isnan(value) for value in values_pie]:
+                # this append when there are NaN values in contingency table in percentage for this series
+                fig.text(0.5, 0.4, _("For this time series there aren't suitable\n"
+                                     "probabilities, because there are thresholds\n"
+                                     "problems in contingency table, or the series data."), fontsize=10, ha='center')
+            else:
+                ax = fig.add_subplot(111)
+                pie_plot = ax.pie(values_pie, colors=colours, autopct='%1.1f%%', shadow=True)
+                pyplot.legend(tuple(pie_plot[0]), labels, loc=(0.96,0.41), borderaxespad=-3, shadow=False, fancybox=True, fontsize=9, labelspacing=0.2)
+
+            #pyplot.subplots_adjust(bottom=0.025, top=0.76, left=0.22, right=0.78)
+            pyplot.subplots_adjust(bottom=-0.04, top=0.78, left=0.06, right=0.65)
+
+            # dir and name of image
+            image_dir_save \
+                = os.path.join(station.forecast_dir, _('prob_of_{0}_lag_{1}_{2}_({3}-{4}).png')
+                    .format(station.var_D.type_series, lag, filename_date_graphic,
+                            station.process_period['start'], station.process_period['end']))
+
+        # -------------------------------------------------------------------------
+        # climate graphics for 7 categories
+        if env.config_run.settings['class_category_analysis'] == 7:
+            # Options for graphics pie
+            dpi = 75.0
+            fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
+
+            fig.suptitle(unicode(_('Probability forecasted of {0} under {1}\n{2} ({3})\nlag {4} - {5} - ({6}-{7})')
+                .format(station.var_D.type_series, station.var_I.type_series, station.name, station.code, lag, title_date_graphic,
+                        station.process_period['start'], station.process_period['end']),
+                        'utf-8'), fontsize=13)
+
+            # colors for paint pie: *below, normal , *above
+            colours = ['#DD4620', '#DD8620','#DDC620', '#62AD29', '#60C7F1', '#6087F1', '#6047F1']
+
+            labels = (_('Strong decrease'), _('Moderate decrease'), _('Weak decrease'), _('Normal'),
+                      _('Weak exceed'), _('Moderate exceed'), _('Strong exceed'))
+
+            values_pie = [station.prob_var_D[lag]['below3'],
+                          station.prob_var_D[lag]['below2'],
+                          station.prob_var_D[lag]['below1'],
+                          station.prob_var_D[lag]['normal'],
+                          station.prob_var_D[lag]['above1'],
+                          station.prob_var_D[lag]['above2'],
+                          station.prob_var_D[lag]['above3']]
 
             # assign value for piece of pie
             def autopct_funt(pct):
@@ -93,15 +142,17 @@ def forecast_graphs(station):
                                      "problems in contingency table, or the series data."), fontsize=10, ha='center')
             else:
                 ax = fig.add_subplot(111)
-                ax.pie(values_pie, colors=colours, explode=explode, labels=labels, autopct='%1.1f%%', shadow=True)
+                pie_plot = ax.pie(values_pie, colors=colours, autopct='%1.1f%%', shadow=True)
+                pyplot.legend(tuple(pie_plot[0]), labels, loc=(0.96,0.28), borderaxespad=-3, shadow=False, fancybox=True, fontsize=9, labelspacing=0.2)
 
-            pyplot.subplots_adjust(bottom=0.025, top=0.76, left=0.22, right=0.78)
+            pyplot.subplots_adjust(bottom=-0.04, top=0.78, left=-0.01, right=0.58)
 
             # dir and name of image
             image_dir_save \
                 = os.path.join(station.forecast_dir, _('prob_of_{0}_lag_{1}_{2}_({3}-{4}).png')
                     .format(station.var_D.type_series, lag, filename_date_graphic,
                             station.process_period['start'], station.process_period['end']))
+
 
         # save image
         pyplot.savefig(image_dir_save, dpi=dpi)
