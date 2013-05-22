@@ -333,7 +333,8 @@ def get_specific_contingency_table(station, lag, month, day=None):
                   u"   are not suitable in some time series for \n"
                   u"   compound analysis of '{0}' with relation to\n"
                   u"   '{1}' inside the block category '{2}'.\n"
-                  u"   Is recommended review the thresholds .......")
+                  u"   Is recommended review the thresholds\n"
+                  u"   of two variables, or the series data .......")
                 .format(env.var_D.TYPE_SERIES, env.var_I.TYPE_SERIES, label.upper()), color='yellow', newline=False)
             station.threshold_problem[index] = True
 

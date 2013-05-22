@@ -263,7 +263,7 @@ def climate_graphs(station):
                     station.process_period['end'], lag, title_period), 'utf-8'), fontsize=14)
 
             # label for axis Y
-            ax.set_ylabel(_('probability (%)')) # TODO 0.6: for 7 categories this is not a probability
+            ax.set_ylabel(_('probability (%)'))
             #  adjust the max leaving min unchanged in Y
             ax.set_ylim(ymin=0, ymax=100)
             #  adjust the max leaving min unchanged in X

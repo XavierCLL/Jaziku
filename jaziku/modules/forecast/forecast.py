@@ -99,11 +99,6 @@ def process(station):
         # else put zero value
         if env.globals_vars.STATE_OF_DATA in [1, 3]:
             CT_for_forecast_date = station.contingency_tables[lag][env.config_run.settings['forecast_date']['month'] - 1]['in_percentage']
-
-            # TODO 0.6 error?
-            #console.msg_error(_("There aren't enough values in the categories of the contingency\n"
-            #                    "table for to do forecast results.\n"))
-
         if env.globals_vars.STATE_OF_DATA in [2, 4]:
             month = env.config_run.settings['forecast_date']['month']
             day = get_range_analysis_interval().index(env.config_run.settings['forecast_date']['day'])
@@ -160,8 +155,8 @@ def process(station):
         station.forecast_dir = os.path.join(env.globals_vars.FORECAST_DIR, _('stations'), station.code + '_' + station.name)   # 'results'
         output.make_dirs(station.forecast_dir)
         # do graphics for forecast
-        with console.redirectStdStreams():
-            forecast_graphs(station)
+        #with console.redirectStdStreams(): #todo 0.6
+        forecast_graphs(station)
     else:
         console.msg(_("\n   continue without make graphics ............. "), color='cyan', newline=False)
 
