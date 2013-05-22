@@ -24,6 +24,7 @@
 # http://matplotlib.sourceforge.net/api/pyplot_api.html
 
 import os
+from math import isnan
 from matplotlib import pyplot
 from Image import open as img_open
 
@@ -32,10 +33,12 @@ from jaziku.utils import  watermarking, format_out
 
 
 def forecast_graphs(station):
+    """Generate pie charts and mosaics of probability for 3 or 7 categories
+     for independent variable for the composite analysis.
     """
-    Generate pie charts and mosaics of probability for below, normal and
-    above for independent variable for the composite analysis.
-    """
+    # defined the size of the image
+    image_height = 240
+    image_width = 310
 
     image_open_list = []
 
@@ -54,62 +57,74 @@ def forecast_graphs(station):
                 .format(format_out.month_in_initials(env.config_run.settings['forecast_date']['month'] - 1),
                         env.config_run.settings['forecast_date']['day'])
 
-        ## Options for graphics pie
-        # make a square figure and axes
-        pyplot.figure(figsize=(5, 5))
-        # colors for paint pie: below, normal , above
-        colours = ['#DD4620', '#62AD29', '#6087F1']
+        # -------------------------------------------------------------------------
+        # climate graphics for 3 categories
+        if env.config_run.settings['class_category_analysis'] == 3:
+            # Options for graphics pie
+            dpi = 75.0
+            fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
 
-        labels = (_('Decrease'), _('Normal'), _('Exceed'))
-        values_pie = [station.prob_decrease_var_D[lag],
-                      station.prob_normal_var_D[lag],
-                      station.prob_exceed_var_D[lag]]
+            fig.suptitle(unicode(_('Probability forecasted of {0} under {1}\n{2} ({3})\nlag {4} - {5} - ({6}-{7})')
+                .format(station.var_D.type_series, station.var_I.type_series, station.name, station.code, lag, title_date_graphic,
+                        station.process_period['start'], station.process_period['end']),
+                        'utf-8'), fontsize=13)
 
-        explode = (0.03, 0.03, 0.03)
+            # colors for paint pie: below, normal , above
+            colours = ['#DD4620', '#62AD29', '#6087F1']
 
-        # assign value for piece of pie
-        def autopct_funt(pct):
-            total = sum(values_pie)
-            val = pct * total / 100.0
-            return '{p:1.1f}%\n({v:1.2f})'.format(p=pct, v=val)
+            labels = (_('Decrease'), _('Normal'), _('Exceed'))
 
-        pyplot.pie(values_pie, colors=colours, explode=explode, labels=labels,
-            autopct='%1.1f%%', shadow=True)  # '%1.1f%%'
+            values_pie = [station.prob_var_D[lag]['below'],
+                          station.prob_var_D[lag]['normal'],
+                          station.prob_var_D[lag]['above']]
 
-        pyplot.title(unicode(_('Probability forecasted of {0} - {1}\n{2} - lag {3} - {4} - ({5}-{6})')
-            .format(station.var_D.type_series, station.name, station.var_I.type_series, lag, title_date_graphic,
-                    station.process_period['start'], station.process_period['end']),
-                    'utf-8'), fontsize=13)
+            explode = (0.03, 0.03, 0.03)
 
-        ## Save image
-        # pyplot.subplot(111)
-        image_dir_save \
-            = os.path.join(station.forecast_dir, _('prob_of_{0}_lag_{1}_{2}_({3}-{4}).png')
-                .format(station.var_D.type_series, lag, filename_date_graphic,
-                        station.process_period['start'], station.process_period['end']))
+            # assign value for piece of pie
+            def autopct_funt(pct):
+                total = sum(values_pie)
+                val = pct * total / 100.0
+                return '{p:1.1f}%\n({v:1.2f})'.format(p=pct, v=val)
+
+            if True in [isnan(value) for value in values_pie]:
+                # this append when there are NaN values in contingency table in percentage for this series
+                fig.text(0.5, 0.4, _("For this time series there aren't suitable\n"
+                                     "probabilities, because there are thresholds\n"
+                                     "problems in contingency table, or the series data."), fontsize=10, ha='center')
+            else:
+                ax = fig.add_subplot(111)
+                ax.pie(values_pie, colors=colours, explode=explode, labels=labels, autopct='%1.1f%%', shadow=True)
+
+            pyplot.subplots_adjust(bottom=0.025, top=0.76, left=0.22, right=0.78)
+
+            # dir and name of image
+            image_dir_save \
+                = os.path.join(station.forecast_dir, _('prob_of_{0}_lag_{1}_{2}_({3}-{4}).png')
+                    .format(station.var_D.type_series, lag, filename_date_graphic,
+                            station.process_period['start'], station.process_period['end']))
 
         # save image
-        pyplot.savefig(image_dir_save, dpi=75)
-
+        pyplot.savefig(image_dir_save, dpi=dpi)
         pyplot.clf()
-
         # save dir image for mosaic
         image_open_list.append(image_dir_save)
 
+
+    # -------------------------------------------------------------------------
     ## Create mosaic
 
     if len(env.config_run.settings['lags']) != 1:
-        # definition height and width of individual image
-        # image_height = 375
-        image_width = 375
+
         mosaic_dir_save \
             = os.path.join(station.forecast_dir, _('mosaic_prob_of_{0}_{1}_({3}-{4}).png')
                 .format(station.var_D.type_series, lag, filename_date_graphic,
                         station.process_period['start'], station.process_period['end']))
         # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
         # http://www.classical-webdesigns.co.uk/resources/pixelinchconvert.html
-        pyplot.figure(figsize=(3.75 * len(env.config_run.settings['lags']), 3.75))
-        pyplot.savefig(mosaic_dir_save, dpi=100)
+        #pyplot.figure(figsize=(3.75 * len(env.config_run.settings['lags']), 3.75))
+        dpi = 100.0
+        mosaic_plots = pyplot.figure(figsize=((image_width * len(env.config_run.settings['lags'])) / dpi, image_height / dpi))
+        mosaic_plots.savefig(mosaic_dir_save, dpi=dpi)
         mosaic = img_open(mosaic_dir_save)
         for lag_iter in range(len(env.config_run.settings['lags'])):
             mosaic.paste(img_open(image_open_list[lag_iter]), (image_width * lag_iter, 0))
@@ -117,10 +132,8 @@ def forecast_graphs(station):
         mosaic.save(mosaic_dir_save)
         # stamp logo
         watermarking.logo(mosaic_dir_save)
-
-        pyplot.clf()
-
         # clear and delete all instances of graphs created by pyplot
+        pyplot.clf()
         pyplot.close('all')
 
     # apply stamp logo
