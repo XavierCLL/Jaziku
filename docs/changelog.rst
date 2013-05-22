@@ -19,10 +19,12 @@ news
   the user can choose the relevant climate categories of var I for only make
   graphics with these two categories selected or all categories
 - Rename the option in runfile var_I_category_labels to categories_labels_var_I
-- Adjust climate, correlation and forecast maps for 7 categories
+- Adjust climate, correlation and forecast maps for 3 and 7 categories
 - Several adjust and fixes for the images of climate and forecast module
 - Adjust the images of climate module for output bars and the tables based on the
   relevant_climate_categories_var_I
+- The graphics of climate module now make and show the NaN values when one or more
+  blocks (as below, normal of above) of the contingency table have not values
 - Adjust, for 3 and 7 categories, the method to calculate the contingency table in
   percentage base on threshold size
 - New option in argument: -o --output dir, where 'dir' is the absolute and particular
