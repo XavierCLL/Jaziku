@@ -86,7 +86,7 @@ def clean(values):
     """
 
     # delete empty elements in row
-    values = [e for e in values if e]
+    values = [e for e in values if e or e == 0]
 
     # delete all valid nulls
     values = [ value for value in values if not globals_vars.is_valid_null(value) ]
