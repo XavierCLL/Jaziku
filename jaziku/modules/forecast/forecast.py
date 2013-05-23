@@ -136,14 +136,22 @@ def process(station):
         if env.globals_vars.forecast_contingency_table['type'] == '7x7':
             for idx_varD, tag in enumerate(['below3', 'below2','below1', 'normal', 'above1', 'above2', 'above3']):
                 prob_var_D[lag][tag] = \
-                    (CT_for_forecast_date[0][idx_varD] * env.globals_vars.probability_forecast_values[lag]['below3']) +\
-                    (CT_for_forecast_date[1][idx_varD] * env.globals_vars.probability_forecast_values[lag]['below2']) +\
-                    (CT_for_forecast_date[2][idx_varD] * env.globals_vars.probability_forecast_values[lag]['below1']) +\
-                    (CT_for_forecast_date[3][idx_varD] * env.globals_vars.probability_forecast_values[lag]['normal']) +\
-                    (CT_for_forecast_date[4][idx_varD] * env.globals_vars.probability_forecast_values[lag]['above1']) +\
-                    (CT_for_forecast_date[5][idx_varD] * env.globals_vars.probability_forecast_values[lag]['above2']) +\
-                    (CT_for_forecast_date[6][idx_varD] * env.globals_vars.probability_forecast_values[lag]['above3'])
+                    ((CT_for_forecast_date[0][idx_varD] +
+                      CT_for_forecast_date[1][idx_varD] +
+                      CT_for_forecast_date[2][idx_varD]) * \
+                     (env.globals_vars.probability_forecast_values[lag]['below3'] +
+                      env.globals_vars.probability_forecast_values[lag]['below2'] +
+                      env.globals_vars.probability_forecast_values[lag]['below1'])) + \
+                    (CT_for_forecast_date[3][idx_varD] * \
+                     env.globals_vars.probability_forecast_values[lag]['normal']) + \
+                    ((CT_for_forecast_date[4][idx_varD] +
+                      CT_for_forecast_date[5][idx_varD] +
+                      CT_for_forecast_date[6][idx_varD]) * \
+                     (env.globals_vars.probability_forecast_values[lag]['above1'] +
+                      env.globals_vars.probability_forecast_values[lag]['above2'] +
+                      env.globals_vars.probability_forecast_values[lag]['above3']))
 
+    # save the calculated forecast values in station class
     station.prob_var_D = prob_var_D
 
     if env.config_run.settings['graphics']:
