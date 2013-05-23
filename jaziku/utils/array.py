@@ -85,7 +85,7 @@ def clean(values):
     :rtype: list
     """
 
-    # delete empty elements in row
+    # delete empty elements in row, but not elements with zeros
     values = [e for e in values if e or e == 0]
 
     # delete all valid nulls
