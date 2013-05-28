@@ -86,7 +86,7 @@ def process(station):
     # console message
     console.msg(_("Processing forecast:"))
 
-    console.msg(_("   making forecast for date: ")+env.config_run.settings['forecast_date']['text'], color="cyan", newline=False)
+    console.msg(_("   making forecast for date: ")+env.config_run.settings['forecast_date']['text']+' ...', color="cyan", newline=False)
 
     prob_var_D = {}
 

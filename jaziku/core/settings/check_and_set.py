@@ -390,6 +390,7 @@ def configuration_run():
                   "must be a valid month number (1-12)")
                 .format(forecast_month))
 
+        # forecast date by days
         if isinstance(env.config_run.settings['forecast_date'], list):
             if env.config_run.settings['analysis_interval'] == 'trimester':
                 console.msg_error_configuration('forecast_date',
@@ -421,10 +422,11 @@ def configuration_run():
                             analysis_interval.get_range_analysis_interval()))
 
             env.config_run.settings['forecast_date']['text'] \
-                = format_out.month_in_initials(env.config_run.settings['forecast_date']['month']-1) \
-                + ' ' + str(env.config_run.settings['forecast_date']['day'])
+                = "{0} {1}".format(format_out.month_in_initials(env.config_run.settings['forecast_date']['month'] - 1),
+                                   env.config_run.settings['forecast_date']['day'])
 
         else:
+            # forecast date by month
             if env.config_run.settings['analysis_interval'] != 'trimester':
                 console.msg_error_configuration('forecast_date',
                     _("The 'analysis_interval' is {0} but the 'forecast_date'\n"
@@ -434,8 +436,9 @@ def configuration_run():
 
             env.config_run.settings['forecast_date'] = {'month':forecast_month}
 
-            env.config_run.settings['forecast_date']['text'] \
-                = format_out.month_in_initials(env.config_run.settings['forecast_date']['month']-1)
+            env.config_run.settings['forecast_date']['text'] = _("trim {0} ({1})")\
+                .format(env.config_run.settings['forecast_date']['month'],
+                        format_out.trimester_in_initials(env.config_run.settings['forecast_date']['month'] - 1))
 
         env.globals_vars.input_settings["forecast_date"] = colored.green(env.config_run.settings['forecast_date']['text'])
 
