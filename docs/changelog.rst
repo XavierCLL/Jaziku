@@ -27,6 +27,8 @@ news
   blocks (as below, normal of above) of the contingency table have not values
 - Adjust, for 3 and 7 categories, the method to calculate the contingency table in
   percentage base on threshold size
+- New pie chart for forecast module only for 7 categories that use deterministic
+  values based on thresholds for the forecast date
 - New option in argument: -o --output dir, where 'dir' is the absolute and particular
   directory to save all results that makes Jaziku (this option is optional, default path
   for save result is the same where is the runfile)
