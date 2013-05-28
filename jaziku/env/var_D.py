@@ -42,7 +42,7 @@ INTERNAL_TYPES = [
 # Units for types of dependent variable, known for jaziku
 INTERNAL_UNITS = {
     'PPT':          'mm',
-    'NDPPT':        '#',
+    'NDPPT':        _('days'),
     'TMIN':         'Celsius',
     'TMAX':         'Celsius',
     'TEMP':         'Celsius',
