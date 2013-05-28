@@ -31,7 +31,8 @@ from Image import open as img_open
 from jaziku import env
 from jaziku.modules.climate import lags
 from jaziku.modules.climate.thresholds import get_thresholds
-from jaziku.utils import  watermarking, format_out, output
+from jaziku.utils import  watermarking, output
+from jaziku.utils.text import slugify
 
 
 def forecast_graphs(station):
@@ -51,19 +52,6 @@ def forecast_graphs(station):
 
     for lag in env.config_run.settings['lags']:
 
-        if env.globals_vars.STATE_OF_DATA in [1, 3]:
-            title_date_graphic = _("trim {0} ({1})").format(env.config_run.settings['forecast_date']['month'],
-                format_out.trimester_in_initials(env.config_run.settings['forecast_date']['month'] - 1))
-            filename_date_graphic = _("trim_{0}").format(env.config_run.settings['forecast_date']['month'])
-
-        if env.globals_vars.STATE_OF_DATA in [2, 4]:
-            title_date_graphic = "{0} {1}"\
-                .format(format_out.month_in_initials(env.config_run.settings['forecast_date']['month'] - 1),
-                        env.config_run.settings['forecast_date']['day'])
-            filename_date_graphic = "{0}_{1}"\
-                .format(format_out.month_in_initials(env.config_run.settings['forecast_date']['month'] - 1),
-                        env.config_run.settings['forecast_date']['day'])
-
         # -------------------------------------------------------------------------
         # climate graphics for 3 categories
         if env.config_run.settings['class_category_analysis'] == 3:
@@ -72,7 +60,7 @@ def forecast_graphs(station):
             fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
 
             fig.suptitle(unicode(_('Probability forecasts of {0} / {1}\n{2} ({3})\nlag {4} - {5} - ({6}-{7})')
-                .format(station.var_D.type_series, station.var_I.type_series, station.name, station.code, lag, title_date_graphic,
+                .format(station.var_D.type_series, station.var_I.type_series, station.name, station.code, lag, env.config_run.settings['forecast_date']['text'],
                         station.process_period['start'], station.process_period['end']),
                         'utf-8'), fontsize=13)
 
@@ -112,7 +100,7 @@ def forecast_graphs(station):
             # dir and name of image
             image_dir_save \
                 = os.path.join(station.forecast_dir, _('prob_of_{0}_lag_{1}_{2}_({3}-{4}).png')
-                    .format(station.var_D.type_series, lag, filename_date_graphic,
+                    .format(station.var_D.type_series, lag, slugify(env.config_run.settings['forecast_date']['text']),
                             station.process_period['start'], station.process_period['end']))
 
         # -------------------------------------------------------------------------
@@ -123,7 +111,7 @@ def forecast_graphs(station):
             fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
 
             fig.suptitle(unicode(_('Probability forecasts of {0} / {1}\n{2} ({3})\nlag {4} - {5} - ({6}-{7})')
-                .format(station.var_D.type_series, station.var_I.type_series, station.name, station.code, lag, title_date_graphic,
+                .format(station.var_D.type_series, station.var_I.type_series, station.name, station.code, lag, env.config_run.settings['forecast_date']['text'],
                         station.process_period['start'], station.process_period['end']),
                         'utf-8'), fontsize=13)
 
@@ -168,7 +156,7 @@ def forecast_graphs(station):
             output.make_dirs(os.path.join(station.forecast_dir, _('probabilistic')))
             image_dir_save \
                 = os.path.join(station.forecast_dir, _('probabilistic'), _('prob_of_{0}_lag_{1}_{2}_({3}-{4}).png')
-                    .format(station.var_D.type_series, lag, filename_date_graphic,
+                    .format(station.var_D.type_series, lag, slugify(env.config_run.settings['forecast_date']['text']),
                             station.process_period['start'], station.process_period['end']))
 
         # save image
@@ -183,17 +171,18 @@ def forecast_graphs(station):
 
     if len(env.config_run.settings['lags']) != 1:
 
+        filename = _('mosaic_prob_of_{0}_under_{1}_{2}_({3}-{4}).png')\
+                    .format(station.var_D.type_series, station.var_I.type_series,
+                            slugify(env.config_run.settings['forecast_date']['text']),
+                            station.process_period['start'], station.process_period['end'])
+
         if env.config_run.settings['class_category_analysis'] == 3:
             mosaic_dir_save \
-                = os.path.join(station.forecast_dir, _('mosaic_prob_of_{0}_{1}_({3}-{4}).png')
-                    .format(station.var_D.type_series, lag, filename_date_graphic,
-                            station.process_period['start'], station.process_period['end']))
+                = os.path.join(station.forecast_dir, filename)
         if env.config_run.settings['class_category_analysis'] == 7:
             output.make_dirs(os.path.join(station.forecast_dir, _('probabilistic')))
             mosaic_dir_save \
-                = os.path.join(station.forecast_dir, _('probabilistic'), _('mosaic_prob_of_{0}_{1}_({3}-{4}).png')
-                    .format(station.var_D.type_series, lag, filename_date_graphic,
-                            station.process_period['start'], station.process_period['end']))
+                = os.path.join(station.forecast_dir, _('probabilistic'), filename)
 
         # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
         # http://www.classical-webdesigns.co.uk/resources/pixelinchconvert.html
@@ -232,7 +221,7 @@ def forecast_graphs(station):
             fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
 
             fig.suptitle(unicode(_('Deterministic forecasts of {0} / {1}\n{2} ({3})\nlag {4} - {5} - ({6}-{7})')
-                .format(station.var_D.type_series, station.var_I.type_series, station.name, station.code, lag, title_date_graphic,
+                .format(station.var_D.type_series, station.var_I.type_series, station.name, station.code, lag, env.config_run.settings['forecast_date']['text'],
                         station.process_period['start'], station.process_period['end']),
                         'utf-8'), fontsize=13)
 
@@ -303,7 +292,7 @@ def forecast_graphs(station):
             output.make_dirs(os.path.join(station.forecast_dir, _('deterministic')))
             image_dir_save \
                 = os.path.join(station.forecast_dir, _('deterministic'), _('Determ_of_{0}_lag_{1}_{2}_({3}-{4}).png')
-                    .format(station.var_D.type_series, lag, filename_date_graphic,
+                    .format(station.var_D.type_series, lag, slugify(env.config_run.settings['forecast_date']['text']),
                             station.process_period['start'], station.process_period['end']))
             # save image
             pyplot.savefig(image_dir_save, dpi=dpi)
@@ -316,11 +305,13 @@ def forecast_graphs(station):
 
         if len(env.config_run.settings['lags']) != 1:
 
-            output.make_dirs(os.path.join(station.forecast_dir, _('deterministic')))
+            filename = _('mosaic_determ_of_{0}_under_{1}_{2}_({3}-{4}).png')\
+                    .format(station.var_D.type_series, station.var_I.type_series,
+                            slugify(env.config_run.settings['forecast_date']['text']),
+                            station.process_period['start'], station.process_period['end'])
             mosaic_dir_save \
-                = os.path.join(station.forecast_dir, _('deterministic'), _('mosaic_determ_of_{0}_{1}_({3}-{4}).png')
-                    .format(station.var_D.type_series, lag, filename_date_graphic,
-                            station.process_period['start'], station.process_period['end']))
+                = os.path.join(station.forecast_dir, _('deterministic'), filename)
+            output.make_dirs(os.path.join(station.forecast_dir, _('deterministic')))
 
             # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
             # http://www.classical-webdesigns.co.uk/resources/pixelinchconvert.html
