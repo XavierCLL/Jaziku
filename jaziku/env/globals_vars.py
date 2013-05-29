@@ -124,7 +124,9 @@ def categories(key_label=False, include_normal=True, translated=True, as_list=Fa
         del labels['normal']
 
     if key_label in labels:
-            return labels[key_label]
+        return labels[key_label]
+    elif key_label is None:
+        return float('nan')
 
     if as_list is True:
         if include_normal is True:
