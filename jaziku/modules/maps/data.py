@@ -25,6 +25,7 @@ from math import isnan
 from jaziku import env
 from jaziku.core.analysis_interval import get_range_analysis_interval
 from jaziku.utils import format_out, output
+from jaziku.utils.text import slugify
 
 
 def calculate_index(category, values):
@@ -323,25 +324,20 @@ def forecast_data_for_maps(station):
     # -------------------------------------------------------------------------
     # create maps plots files for forecast process, only once
 
-    # select text for forecast date
-    if env.globals_vars.STATE_OF_DATA in [1, 3]:
-        forecast_date_formatted = format_out.trimester_in_initials(env.config_run.settings['forecast_date']['month'] - 1)
-    if env.globals_vars.STATE_OF_DATA in [2, 4]:
-        forecast_date_formatted = format_out.month_in_initials(env.config_run.settings['forecast_date']['month'] - 1) \
-                                  + "_" + str(env.config_run.settings['forecast_date']['day'])
-
     # run only the first time
     if not env.globals_vars.maps_files_forecast:
+
+        maps_dir = os.path.join(
+                    env.globals_vars.FORECAST_DIR, _('maps'),
+                    env.globals_vars.analysis_interval_i18n,
+                    slugify(env.config_run.settings['forecast_date']['text']))
+
+        output.make_dirs(maps_dir)
 
         if env.globals_vars.STATE_OF_DATA in [1, 3]:
             lags_list = {}
             # define maps data files and directories
             for lag in env.config_run.settings['lags']:
-
-                maps_dir = os.path.join(env.globals_vars.FORECAST_DIR, _('maps'),
-                    format_out.trimester_in_initials(env.config_run.settings['forecast_date']['month'] - 1))
-
-                output.make_dirs(maps_dir)
 
                 # write the headers in file
                 csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}_{1}.csv')
@@ -359,22 +355,16 @@ def forecast_data_for_maps(station):
                 del csv_file
 
                 lags_list[lag] = csv_name
-            env.globals_vars.maps_files_forecast[forecast_date_formatted] = lags_list
+            env.globals_vars.maps_files_forecast[env.config_run.settings['forecast_date']['text']] = lags_list
 
         if env.globals_vars.STATE_OF_DATA in [2, 4]:
             lags_list = {}
             # define maps data files and directories
             for lag in env.config_run.settings['lags']:
 
-                maps_dir = os.path.join(env.globals_vars.FORECAST_DIR, _('maps'),
-                    env.globals_vars.analysis_interval_i18n,
-                    forecast_date_formatted)
-
-                output.make_dirs(maps_dir)
-
                 # write the headers in file
                 csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}_{1}.csv')
-                .format(lag, forecast_date_formatted))
+                .format(lag, slugify(env.config_run.settings['forecast_date']['text'])))
 
                 if os.path.isfile(csv_name):
                     os.remove(csv_name)
@@ -388,7 +378,7 @@ def forecast_data_for_maps(station):
                 del csv_file
 
                 lags_list[lag] = csv_name
-            env.globals_vars.maps_files_forecast[forecast_date_formatted] = lags_list
+            env.globals_vars.maps_files_forecast[env.config_run.settings['forecast_date']['text']] = lags_list
 
     # process station by lag
     for lag in env.config_run.settings['lags']:
@@ -396,7 +386,7 @@ def forecast_data_for_maps(station):
         index = calculate_index(env.config_run.settings['class_category_analysis'], station.prob_var_D[lag])
 
         # write new row in file
-        csv_name = env.globals_vars.maps_files_forecast[forecast_date_formatted][lag]
+        csv_name = env.globals_vars.maps_files_forecast[env.config_run.settings['forecast_date']['text']][lag]
         open_file = open(csv_name, 'a')
         csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
@@ -404,7 +394,7 @@ def forecast_data_for_maps(station):
             csv_file.writerow([station.code,
                                format_out.number(station.lat, 4),
                                format_out.number(station.lon, 4),
-                               forecast_date_formatted.replace('_',' '),
+                               env.config_run.settings['forecast_date']['text'],
                                format_out.number(station.prob_var_D[lag]['below']),
                                format_out.number(station.prob_var_D[lag]['normal']),
                                format_out.number(station.prob_var_D[lag]['above']),
@@ -416,7 +406,7 @@ def forecast_data_for_maps(station):
             csv_file.writerow([station.code,
                                format_out.number(station.lat, 4),
                                format_out.number(station.lon, 4),
-                               forecast_date_formatted.replace('_',' '),
+                               env.config_run.settings['forecast_date']['text'],
                                format_out.number(station.prob_var_D[lag]['below3']),
                                format_out.number(station.prob_var_D[lag]['below2']),
                                format_out.number(station.prob_var_D[lag]['below1']),

@@ -103,9 +103,12 @@ def calculate_lags(station, makes_files=True):
             for month in range(1, 13):
                 if makes_files:
                     csv_name = os.path.join(dir_lag[lag],
-                        _('Time_Series_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_'
-                          '({6}-{7}).csv')
-                        .format(lag, month, station.code,
+                        _('Time_Series_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_{6}_'
+                          '({7}-{8}).csv')
+                        .format(
+                            lag, month,
+                            format_out.trimester_in_initials(month - 1),
+                            station.code,
                             station.name, station.var_D.type_series,
                             station.var_I.type_series,
                             station.process_period['start'],
@@ -176,9 +179,10 @@ def calculate_lags(station, makes_files=True):
             for month in range(1, 13):
                 if makes_files:
                     csv_name = os.path.join(dir_lag[lag],
-                        _('Time_Series_lag_{0}_{1}days_month_{2}_{3}_'
+                        _('Time_Series_lag_{0}_{1}_month_{2}_{3}_'
                           '{4}_{5}_{6}_({7}-{8}).csv')
-                        .format(lag, env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL,
+                        .format(
+                            lag, env.globals_vars.analysis_interval_i18n,
                             month, station.code,
                             station.name, station.var_D.type_series,
                             station.var_I.type_series,
