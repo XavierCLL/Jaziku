@@ -238,7 +238,7 @@ def process(grid):
         # trim png created
         image_file = os.path.join(os.path.abspath(base_path_file) + ".png").replace(" ", r"\ ")
 
-        call(["convert", image_file, "-trim", image_file], shell=False)
+        call(["convert", image_file, "-trim", "-border", 4, "-bordercolor", "white", image_file], shell=False)
 
         # stamp logo
         watermarking.logo(os.path.abspath(base_path_file) + ".png")
