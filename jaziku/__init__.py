@@ -4,6 +4,9 @@ import sys
 import platform
 from matplotlib import use
 
+# init and define _()
+from i18n import i18n
+
 # initialize matplotlib backend in raster graphics (png)
 try:
     use("AGG", warn=False, force=True)
