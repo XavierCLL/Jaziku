@@ -96,13 +96,18 @@ def process(station):
 
         # get the contingency table for this lag and the specific forecast date set in runfile,
         # if 'risk_analysis' is enabled, check first if the value for the forecast date is significant
-        # else put zero value
+        # else put zero value. If the forecast type is 3x7 get the special contingency table in percentage
+        # only with values in selected categories
+        if env.globals_vars.forecast_contingency_table['type'] == '3x7':
+            in_percentage = 'in_percentage_3x7'
+        else:
+            in_percentage = 'in_percentage'
         if env.globals_vars.STATE_OF_DATA in [1, 3]:
-            CT_for_forecast_date = station.contingency_tables[lag][env.config_run.settings['forecast_date']['month'] - 1]['in_percentage']
+            CT_for_forecast_date = station.contingency_tables[lag][env.config_run.settings['forecast_date']['month'] - 1][in_percentage]
         if env.globals_vars.STATE_OF_DATA in [2, 4]:
             month = env.config_run.settings['forecast_date']['month']
             day = get_range_analysis_interval().index(env.config_run.settings['forecast_date']['day'])
-            CT_for_forecast_date = station.contingency_tables[lag][month - 1][day]['in_percentage']
+            CT_for_forecast_date = station.contingency_tables[lag][month - 1][day][in_percentage]
 
         # convert from percentage to 0-1
         CT_for_forecast_date = (matrix(CT_for_forecast_date)/100.0).tolist()

@@ -314,6 +314,27 @@ def get_specific_contingency_table(station, lag, month, day=None):
         contingency_table_in_percentage \
             = [(column/sum_per_column_CT[i]*100).tolist()[0] for i,column in enumerate(matrix(contingency_table))]
 
+    # special case when the forecast type is 3x7, clear columns of the var I with zeros of
+    # the contingency table in absolute values for not selected categories defined in runfile
+    # for forecast type 3x7
+    if env.globals_vars.forecast_contingency_table['type'] == '3x7':
+        # init list 7x7 with zeros
+        contingency_table_cp = [[0]*7]*7
+        tags = ['below3', 'below2', 'below1', 'normal', 'above1', 'above2', 'above3']
+        for idx_var_I in range(7):
+            # only set the real values for columns of var I for selected categories
+            # in below, and above selected and normal
+            if tags.index(env.globals_vars.probability_forecast_values[lag]['below']) == idx_var_I or \
+               idx_var_I == 3 or \
+               tags.index(env.globals_vars.probability_forecast_values[lag]['above']) == idx_var_I:
+                contingency_table_cp[idx_var_I] = contingency_table[idx_var_I]
+
+        sum_per_column_CT_3x7 = matrix(contingency_table_cp).sum(axis=1)
+        sum_per_column_CT_3x7 = [float(x) for x in sum_per_column_CT_3x7]
+        with console.redirectStdStreams():
+            contingency_table_in_percentage_3x7 \
+                = [(column/sum_per_column_CT_3x7[i]*100).tolist()[0] for i,column in enumerate(matrix(contingency_table_cp))]
+
     # -------------------------------------------------------------------------
     # threshold_problem is global variable for detect problem with
     # threshold of independent variable, if a problem is detected
@@ -368,6 +389,10 @@ def get_specific_contingency_table(station, lag, month, day=None):
                                   'in_percentage_formatted':contingency_table_in_percentage_formatted,
                                   'thresholds_var_D':thresholds_var_D,
                                   'thresholds_var_I':thresholds_var_I}
+
+    # added the special contingency table in percentage for 3x7
+    if env.globals_vars.forecast_contingency_table['type'] == '3x7':
+        specific_contingency_table['in_percentage_3x7'] = contingency_table_in_percentage_3x7
 
     return specific_contingency_table
 
