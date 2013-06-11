@@ -214,8 +214,8 @@ begin
   gres@pmTickMarkDisplayMode = "Always"
   gres@mpProjection  = "Mercator"
   gres@mpLimitMode   = "LatLon"
-  gres@tmXBLabelFontHeightF        = 0.008
-  gres@tmYLLabelFontHeightF        = 0.008
+  gres@tmXBLabelFontHeightF        = 0.011
+  gres@tmYLLabelFontHeightF        = 0.011
 
   gres@mpMinLatF     = minlat
   gres@mpMaxLatF     = maxlat

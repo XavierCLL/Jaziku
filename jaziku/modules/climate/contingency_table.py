@@ -319,7 +319,7 @@ def get_specific_contingency_table(station, lag, month, day=None):
     # for forecast type 3x7
     if env.globals_vars.forecast_contingency_table['type'] == '3x7':
         # init list 7x7 with zeros
-        contingency_table_cp = [[0]*7]*7
+        contingency_table_3x7 = [[0]*7]*7
         tags = ['below3', 'below2', 'below1', 'normal', 'above1', 'above2', 'above3']
         for idx_var_I in range(7):
             # only set the real values for columns of var I for selected categories
@@ -327,13 +327,13 @@ def get_specific_contingency_table(station, lag, month, day=None):
             if tags.index(env.globals_vars.probability_forecast_values[lag]['below']) == idx_var_I or \
                idx_var_I == 3 or \
                tags.index(env.globals_vars.probability_forecast_values[lag]['above']) == idx_var_I:
-                contingency_table_cp[idx_var_I] = contingency_table[idx_var_I]
+                contingency_table_3x7[idx_var_I] = contingency_table[idx_var_I]
 
-        sum_per_column_CT_3x7 = matrix(contingency_table_cp).sum(axis=1)
+        sum_per_column_CT_3x7 = matrix(contingency_table_3x7).sum(axis=1)
         sum_per_column_CT_3x7 = [float(x) for x in sum_per_column_CT_3x7]
         with console.redirectStdStreams():
             contingency_table_in_percentage_3x7 \
-                = [(column/sum_per_column_CT_3x7[i]*100).tolist()[0] for i,column in enumerate(matrix(contingency_table_cp))]
+                = [(column/sum_per_column_CT_3x7[i]*100).tolist()[0] for i,column in enumerate(matrix(contingency_table_3x7))]
 
     # -------------------------------------------------------------------------
     # threshold_problem is global variable for detect problem with
