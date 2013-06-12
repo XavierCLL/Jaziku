@@ -155,10 +155,9 @@ def set_limits(variable):
 # VALIDATION OF NULL VALUES FOR DEPENDENT AND INDEPENDENT VARIABLE
 
 def check_consistent_data(station):
-    """
-    Check if the data are consistent for var D and I, this is that the
-    amount of null value not exceed in 15% of the total number of values
-    inside process period
+    """Check if the data are consistent for var D and I, this is that the amount
+    of null value not exceed in NN% (defined in runfile in consistent_data options)
+    of the total number of values inside process period
     """
 
     # -------------------------------------------------------------------------
@@ -190,6 +189,8 @@ def check_consistent_data(station):
 #        values_in_common_period \
 #            = station.var_I.data[station.var_I.date.index(start_date) - date_minus:station.var_I.date.index(end_date) + date_plus + 1]
 
+    # transform of percentage of validation to 0 -> 1
+    value_of_validation = env.config_run.settings['consistent_data']/100.0
 
     # station for check
     console.msg("   {0} - {1}:".format(station.code, station.name))
@@ -199,10 +200,11 @@ def check_consistent_data(station):
                 .format(station.var_D.nulls_in_process_period, station.var_D.percentage_of_nulls_in_process_period,
                         len(station.var_D.data_in_process_period)), newline=False)
     # check var D
-    if  station.var_D.nulls_in_process_period / float(len(station.var_D.data_in_process_period)) > 0.15:
-        console.msg_error(_("the number of null values is greater than 15% of total\n"
+    if  station.var_D.nulls_in_process_period / float(len(station.var_D.data_in_process_period)) > value_of_validation:
+        console.msg_error(_("The number of null values is greater than {0}% of total\n"
                             "of values inside common period, therefore, for Jaziku\n"
-                            "the data are not consistent for process."))
+                            "the data are not consistent for process. You can disable\n"
+                            "this check in the option 'consistent_data' of runfile.").format(value_of_validation*100.0))
 
     console.msg(_("ok"), color='green')
 
@@ -211,10 +213,11 @@ def check_consistent_data(station):
                 .format(station.var_I.nulls_in_process_period, station.var_I.percentage_of_nulls_in_process_period,
                         len(station.var_I.data_in_process_period)), newline=False)
     # check var I
-    if  station.var_I.nulls_in_process_period / float(len(station.var_I.data_in_process_period)) > 0.15:
-        console.msg_error(_("the number of null values is greater than 15% of total\n"
+    if  station.var_I.nulls_in_process_period / float(len(station.var_I.data_in_process_period)) > value_of_validation:
+        console.msg_error(_("The number of null values is greater than {0}% of total\n"
                             "of values inside common period, therefore, for Jaziku\n"
-                            "the data are not consistent for process."))
+                            "the data are not consistent for process. You can disable\n"
+                            "this check in the option 'consistent_data' of runfile.").format(value_of_validation*100.0))
 
     console.msg(_("ok"), color='green')
 
