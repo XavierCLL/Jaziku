@@ -87,6 +87,22 @@ def configuration_run():
                       "this should be 7 labels in different column."))
 
     # ------------------------
+    # consistent_data
+
+    if env.config_run.settings['consistent_data'] is not False:
+        try:
+            env.config_run.settings['consistent_data'] = format_in.to_float(env.config_run.settings['consistent_data'])
+            if env.config_run.settings['consistent_data'] < 0 or \
+               env.config_run.settings['consistent_data'] > 100 or\
+               env.config_run.settings['consistent_data'] is True:
+                raise
+        except:
+            console.msg_error_configuration('consistent_data',
+                    _("The 'consistent_data' is not valid,\n"
+                      "this should be 'disable', 'default' or\n"
+                      "valid percentage between 0 to 100."))
+
+    # ------------------------
     # categories_labels_var_I
 
     @categories_labels_var_I_dictionary

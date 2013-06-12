@@ -152,8 +152,13 @@ def configuration_run():
     ## CHECK OPTIONS
     # ------------------------
     # consistent_data
-    if env.config_run.settings['consistent_data']:
-        settings["consistent_data"] = colored.green(_("enabled"))
+    if env.config_run.settings['consistent_data'] == "default":
+        env.config_run.settings['consistent_data'] = 15
+        settings["consistent_data"] = "15%"
+    elif isinstance(env.config_run.settings['consistent_data'], (int,float)) and \
+         env.config_run.settings['consistent_data'] is not True:
+        settings["consistent_data"] = colored.green(str(env.config_run.settings['consistent_data'])+'%')
+
 
     # ------------------------
     # risk_analysis

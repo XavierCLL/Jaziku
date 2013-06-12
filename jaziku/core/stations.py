@@ -93,7 +93,7 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
             station.var_I.data_and_null_in_process_period(station)
         console.msg(_("done"), color='green')
 
-        if env.config_run.settings['consistent_data']:
+        if env.config_run.settings['consistent_data'] is not False:
             console.msg(_("Check if the data are consistent for var_D and var_I:"))
             for station in stations_list:
                 validation.check_consistent_data(station)

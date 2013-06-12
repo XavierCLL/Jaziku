@@ -18,6 +18,9 @@ news
 - New option in runfile relevant_climate_categories_var_I, with this option
   the user can choose the relevant climate categories of var I for only make
   graphics with these two categories selected or all categories
+- The 'consistent_data' option in the runfile is a percentage maximum allow of numbers of
+  nulls of the var_D and/or var_I of each station, now can set 'default' (=15%) or with
+  custom value by user (percentage from 0 to 100)
 - Rename the option in runfile var_I_category_labels to categories_labels_var_I
 - Adjust climate, correlation and forecast maps for 3 and 7 categories
 - Several adjust and fixes for the images of climate and forecast module
