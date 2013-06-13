@@ -84,7 +84,6 @@ def is_valid_null(value):
 # analysis_interval
 ALL_ANALYSIS_INTERVALS = ["5days", "10days", "15days", "trimester"]
 NUM_DAYS_OF_ANALYSIS_INTERVAL = None
-analysis_interval_i18n = None
 
 STATE_OF_DATA = None
 
