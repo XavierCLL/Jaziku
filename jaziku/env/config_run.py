@@ -70,6 +70,10 @@ list_of_all_settings = [
     #   input/access: "5days", "10days", "15days" or "trimester"
     'analysis_interval',
 
+    # NOT IN RUNFILE
+    # analysis interval translated
+    'analysis_interval_i18n',
+
     # defines how many categories to process
     #   input: int (3 or 7)
     'class_category_analysis',
@@ -142,6 +146,10 @@ list_of_all_settings = [
     #   input: 'default', 'accumulate', 'mean'
     'mode_calculation_series_D',
 
+    # NOT IN RUNFILE
+    # mode of series calculation translated
+    'mode_calculation_series_D_i18n',
+
     # limits below and above for dependence variable
     #   input: 'default', none or float (below; above)
     #   access: {'below','above'}
@@ -165,6 +173,10 @@ list_of_all_settings = [
     # this is the mode of series calculation
     #   input: 'default', 'accumulate', 'mean'
     'mode_calculation_series_I',
+
+    # NOT IN RUNFILE
+    # mode of series calculation translated
+    'mode_calculation_series_I_i18n',
 
     # path
     #   input: string or 'internal'

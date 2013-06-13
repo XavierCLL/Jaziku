@@ -124,8 +124,8 @@ def calculate_lags(station, makes_files=True):
 
                     # print headers
                     csv_file.writerow([_('DATE'), _('VAR_D'), _('VAR_I')])
-                    csv_file.writerow(['', env.config_run.settings['mode_calculation_series_D'],
-                                       env.config_run.settings['mode_calculation_series_I']])
+                    csv_file.writerow(['', env.config_run.settings['mode_calculation_series_D_i18n'],
+                                       env.config_run.settings['mode_calculation_series_I_i18n']])
 
                 iter_year = station.process_period['start']
 
@@ -182,7 +182,7 @@ def calculate_lags(station, makes_files=True):
                         _('Time_Series_lag_{0}_{1}_month_{2}_{3}_'
                           '{4}_{5}_{6}_({7}-{8}).csv')
                         .format(
-                            lag, env.globals_vars.analysis_interval_i18n,
+                            lag, env.config_run.settings['analysis_interval_i18n'],
                             month, station.code,
                             station.name, station.var_D.type_series,
                             station.var_I.type_series,
@@ -199,8 +199,8 @@ def calculate_lags(station, makes_files=True):
 
                     # print headers
                     csv_file.writerow([_('DATE'), _('VAR_D'), _('VAR_I')])
-                    csv_file.writerow(['', env.config_run.settings['mode_calculation_series_D'],
-                                       env.config_run.settings['mode_calculation_series_I']])
+                    csv_file.writerow(['', env.config_run.settings['mode_calculation_series_D_i18n'],
+                                       env.config_run.settings['mode_calculation_series_I_i18n']])
 
                 #days_for_this_month = monthrange(iter_year, month)[1]
 

@@ -156,6 +156,10 @@ def configuration_run():
         console.msg_error_configuration('mode_calculation_series_D', _("The mode_calculation_series_D is wrong, the options are:\n"
                                                                        "default, accumulate or mean"))
 
+    mode_calculation_series_i18n = [_('accumulate'), _('mean')]
+    env.config_run.settings['mode_calculation_series_D_i18n']\
+        = mode_calculation_series_i18n[['accumulate', 'mean'].index(env.config_run.settings['mode_calculation_series_D'])]
+
     # ------------------------
     # limits var D
 
@@ -238,6 +242,9 @@ def configuration_run():
     else:
         console.msg_error_configuration('mode_calculation_series_I', _("The mode_calculation_series_I is wrong, the options are:\n"
                                                                        "default, accumulate or mean"))
+
+    env.config_run.settings['mode_calculation_series_I_i18n']\
+        = mode_calculation_series_i18n[['accumulate', 'mean'].index(env.config_run.settings['mode_calculation_series_I'])]
 
     # ------------------------
     # limits var I
@@ -434,7 +441,7 @@ def configuration_run():
                       "must be a valid start day based on\nrange analysis "
                       "interval, the valid start days for\n{1} are: {2}")
                     .format(env.config_run.settings['forecast_date']['day'],
-                            env.globals_vars.analysis_interval_i18n,
+                            env.config_run.settings['analysis_interval_i18n'],
                             analysis_interval.get_range_analysis_interval()))
 
             env.config_run.settings['forecast_date']['text'] \

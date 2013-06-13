@@ -329,7 +329,7 @@ def forecast_data_for_maps(station):
 
         maps_dir = os.path.join(
                     env.globals_vars.FORECAST_DIR, _('maps'),
-                    env.globals_vars.analysis_interval_i18n,
+                    env.config_run.settings['analysis_interval_i18n'],
                     slugify(env.config_run.settings['forecast_date']['text']))
 
         output.make_dirs(maps_dir)
