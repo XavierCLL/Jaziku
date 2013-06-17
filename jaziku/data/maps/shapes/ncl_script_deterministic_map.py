@@ -302,11 +302,17 @@ begin
   nlon_of_stations=dimsizes(lon_of_stations)
 
   polyres               = True          ; poly marker mods desired
-  polyres@gsMarkerIndex = 16            ; choose circle as polymarker
+  ;polyres@gsMarkerIndex = 16            ; choose circle as polymarker
   polyres@gsMarkerSizeF = 0.009          ; select size to avoid streaking
   polyres@gsMarkerThicknessF = 1
 
   do i=0,number_of_stations-1
+     if (index_positions_of_stations(i) .eq. "nan") then
+        polyres@gsMarkerIndex = 4            ; choose circle as polymarker
+     else
+        polyres@gsMarkerIndex = 16            ; choose circle as polymarker
+     end if
+
      polyres@gsMarkerColor = get_color(index_positions_of_stations(i))  ; choose color
      gsn_polymarker(wks,map,lon_of_stations(i),lat_of_stations(i),polyres)
   end do
@@ -318,7 +324,7 @@ begin
   lgres                    = True
   lgres@lgAutoManage       = True
   lgres@lgItemType = "Markers"
-  lgres@lgMarkerIndexes = 4            ; choose circle as polymarker
+  lgres@lgMarkerIndexes = 16            ; choose circle as polymarker
   lgres@lgMonoMarkerIndex = False
   lgres@lgMarkerSizeF = 0.008          ; select size to avoid streaking
   lgres@lgMarkerThicknessF = 0.8
