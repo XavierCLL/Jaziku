@@ -26,9 +26,10 @@ from subprocess import call
 from jaziku import env
 from jaziku.core.analysis_interval import get_range_analysis_interval
 from jaziku.modules.maps import interpolation
-from jaziku.modules.maps.ncl import make_ncl_file
-from jaziku.utils import console, watermarking, format_out, output, format_in
+from jaziku.modules.maps.ncl import make_ncl_probabilistic_map, make_ncl_deterministic_map
 from jaziku.modules.maps.grid import Grid
+from jaziku.utils import console, watermarking, format_out, output, format_in
+from jaziku.utils.text import slugify
 
 
 def pre_process():
@@ -82,7 +83,15 @@ def pre_process():
 def process(grid):
     """In Maps, jaziku in order to predict variable values in sites not sampled, through Kriging
     spatial interpolation method displays the general trends and spatial continuity of affectation
-    scenarios results of Climate and Forecast Modules
+    scenarios results of Climate and Forecast Modules.
+
+    Graphs two types of maps:
+        Probabilistic map: First make grid of dimension of map, put all station inside grid,
+        after interpolate the grid values and graphs it with NCL
+
+        Deterministic maps: only for 7 categories and climate and forecast (no correlation) maps,
+        this map graphs the position of index (inside of the 7 categories) by each station, and
+        graphs this station as color point, not graphs interpolation values.
     """
 
     # restart counter
@@ -121,94 +130,101 @@ def process(grid):
 
             # get index from Map_Data
             if grid.if_running["correlation"]:
-                index = float(line[3].replace(',', '.'))  # get pearson value
+                index = format_in.to_float(line[3])  # get pearson value
+                index_position = None  # get index position
             if grid.if_running["climate"] or grid.if_running["forecast"]:
                 if env.config_run.settings['class_category_analysis'] == 3:
-                    index = float(line[8].replace(',', '.'))  # get index value
+                    index = format_in.to_float(line[8])  # get index value
+                    index_position = line[9]  # get index position
                 if env.config_run.settings['class_category_analysis'] == 7:
-                    index = float(line[12].replace(',', '.'))  # get index value
+                    index = format_in.to_float(line[12])  # get index value
+                    index_position = line[13]  # get index position
 
-            # set the index value on matrix
-            matrix, point_state = grid.set_point_on_grid(matrix, latitude, longitude, index)
+            if map_type == _("probabilistic"):
+                # set the index value on matrix
 
-            marks_stations.append([latitude, longitude, index])
+                matrix, point_state = grid.set_point_on_grid(matrix, latitude, longitude, index)
 
-            if point_state == "nan" and message_warning:
-                console.msg(
-                    _("\n > WARNING: The point lat:{lat} lon:{lon}\n"
-                      "   of the station code: {code} was not added\n"
-                      "   because the value of index is 'nan' (null) .").
-                    format(lat=latitude, lon=longitude, code=line[0]), color='yellow', newline=False)
-            if point_state == "point not added" and message_warning:
-                console.msg(
-                    _("\n > WARNING: The point lat:{lat} lon:{lon}\n"
-                      "   of the station code: {code} was not added\n"
-                      "   because the point is outside of the grid ...").
-                    format(lat=latitude, lon=longitude, code=line[0]), color='yellow', newline=False)
-            if point_state in [_("average"), _("maximum"), _("minimum")] and message_warning:
-                console.msg(
-                    _("\n > WARNING: for the point lat:{lat} lon:{lon}\n"
-                      "   Jaziku detect overlapping of two values, Jaziku\n"
-                      "   will put the {state} value .................").
-                    format(lat=latitude, lon=longitude, state=point_state), color='yellow', newline=False)
-            if point_state == _("neither") and message_warning:
-                console.msg(
-                    _("\n > WARNING: for the point lat:{lat} lon:{lon}\n"
-                      "   Jaziku detect overlapping of two values, Jaziku\n"
-                      "   will not put the {state} values ............").
-                    format(lat=latitude, lon=longitude, state=point_state), color='yellow', newline=False)
+                if point_state == "nan" and message_warning:
+                    console.msg(
+                        _("\n > WARNING: The point lat:{lat} lon:{lon}\n"
+                          "   of the station code: {code} was not added\n"
+                          "   because the value of index is 'nan' (null) .").
+                        format(lat=latitude, lon=longitude, code=line[0]), color='yellow', newline=False)
+                if point_state == "point not added" and message_warning:
+                    console.msg(
+                        _("\n > WARNING: The point lat:{lat} lon:{lon}\n"
+                          "   of the station code: {code} was not added\n"
+                          "   because the point is outside of the grid ...").
+                        format(lat=latitude, lon=longitude, code=line[0]), color='yellow', newline=False)
+                if point_state in [_("average"), _("maximum"), _("minimum")] and message_warning:
+                    console.msg(
+                        _("\n > WARNING: for the point lat:{lat} lon:{lon}\n"
+                          "   Jaziku detect overlapping of two values, Jaziku\n"
+                          "   will put the {state} value .................").
+                        format(lat=latitude, lon=longitude, state=point_state), color='yellow', newline=False)
+                if point_state == _("neither") and message_warning:
+                    console.msg(
+                        _("\n > WARNING: for the point lat:{lat} lon:{lon}\n"
+                          "   Jaziku detect overlapping of two values, Jaziku\n"
+                          "   will not put the {state} values ............").
+                        format(lat=latitude, lon=longitude, state=point_state), color='yellow', newline=False)
+
+            marks_stations.append([latitude, longitude, index, index_position])
 
         open_file.close()
         del csv_file
 
-        # save matrix for interpolation
-        open_file = open(inc_file, 'wb')
-        open_file.write("Cont_data" + '\n')
+        if map_type == _("probabilistic"):
 
-        # convert matrix (column per column) to linear values
-        matrix_vector = numpy.asarray(matrix.T).reshape(-1)
+            # save matrix for interpolation
+            open_file = open(inc_file, 'wb')
+            open_file.write("Cont_data" + '\n')
 
-        # save values to .INC file
-        for value in matrix_vector:
-            if int(value) == env.globals_vars.VALID_NULL[1]:
-                open_file.write(str(int(value)) + '\n')
-            else:
-                open_file.write(str(value) + '\n')
-        open_file.write('/')
-        open_file.close()
+            # convert matrix (column per column) to linear values
+            matrix_vector = numpy.asarray(matrix.T).reshape(-1)
 
-        # make ordinary kriging interpolation with HPGL
-        matrix_interpolation = interpolation.ordinary_kriging(grid, inc_file)
+            # save values to .INC file
+            for value in matrix_vector:
+                if int(value) == env.globals_vars.VALID_NULL[1]:
+                    open_file.write(str(int(value)) + '\n')
+                else:
+                    open_file.write(str(value) + '\n')
+            open_file.write('/')
+            open_file.close()
 
-        # if all values are identical, change the last value for that ncl plot the color of value
-        def are_all_values_identical_2d(L):
-            return all(len(set(i)) <= 1 for i in L)
+            # make ordinary kriging interpolation with HPGL
+            matrix_interpolation = interpolation.ordinary_kriging(grid, inc_file)
 
-        if are_all_values_identical_2d(matrix_interpolation):
-            matrix_interpolation[-1][-1] -= 5
+            # if all values are identical, change the last value for that ncl plot the color of value
+            def are_all_values_identical_2d(L):
+                return all(len(set(i)) <= 1 for i in L)
 
-        # TODO: test if interpolation worked
+            if are_all_values_identical_2d(matrix_interpolation):
+                matrix_interpolation[-1][-1] -= 5
 
-        #matrix_interpolation = np.matrix(matrix_interpolation)
+            # TODO: test if interpolation worked
 
-        #matrix_interpolation_vector = np.asarray(matrix_interpolation.T).reshape(-1)
+            #matrix_interpolation = np.matrix(matrix_interpolation)
 
-        # save .TSV interpolation file for NCL
-        interpolation_file = open(tsv_interpolation_file, 'wb')
-        tsv_file = csv.writer(interpolation_file, delimiter='\t')
-        tsv_file.writerow([_('lat'), _('lon'), _('value')])
+            #matrix_interpolation_vector = np.asarray(matrix_interpolation.T).reshape(-1)
 
-        for lon_index, lon_value in enumerate(grid.lon_coordinates):
-            for lat_index, lat_value in enumerate(grid.lat_coordinates):
-                tsv_file.writerow([lat_value, lon_value, matrix_interpolation[lat_index][lon_index]])
+            # save .TSV interpolation file for NCL
+            interpolation_file = open(tsv_interpolation_file, 'wb')
+            tsv_file = csv.writer(interpolation_file, delimiter='\t')
+            tsv_file.writerow([_('lat'), _('lon'), _('value')])
 
-        interpolation_file.close()
-        del tsv_file
+            for lon_index, lon_value in enumerate(grid.lon_coordinates):
+                for lat_index, lat_value in enumerate(grid.lat_coordinates):
+                    tsv_file.writerow([lat_value, lon_value, matrix_interpolation[lat_index][lon_index]])
+
+            interpolation_file.close()
+            del tsv_file
 
         # save .TSV stations file for NCL (marks_stations)
         stations_file = open(tsv_stations_file, 'wb')
         tsv_file = csv.writer(stations_file, delimiter='\t')
-        tsv_file.writerow([_('lat'), _('lon'), _('value')])
+        tsv_file.writerow([_('lat'), _('lon'), _('index'), _('index position')])
 
         for mark_station in marks_stations:
             tsv_file.writerow(mark_station)
@@ -219,7 +235,10 @@ def process(grid):
         # make ncl file for map
         base_path_file = os.path.join(base_path, base_file)
         # make and write ncl file for ncl process
-        ncl_file = make_ncl_file(grid, base_path_file, env.globals_vars)
+        if map_type == _("probabilistic"):
+            ncl_file = make_ncl_probabilistic_map(grid, base_path_file, env.globals_vars)
+        if map_type == _("deterministic"):
+            ncl_file = make_ncl_deterministic_map(grid, base_path_file, env.globals_vars)
         devnull = os.open(os.devnull, os.O_WRONLY)
 
         ## COLORMAP
@@ -253,7 +272,7 @@ def process(grid):
 
         del matrix
 
-    grid.if_running = {}
+    grid.if_running = {"climate":False, "correlation":False, "forecast":False}
 
     # -------------------------------------------------------------------------
     # Process maps for CLIMATE
@@ -261,105 +280,120 @@ def process(grid):
     if env.config_run.settings['maps']['climate']:
 
         grid.if_running["climate"] = True
-        grid.if_running["correlation"] = False
-        grid.if_running["forecast"] = False
 
-        print _("Processing maps for climate:")
+        if env.config_run.settings['class_category_analysis'] == 3:
+            types_of_maps = [_("probabilistic")]
+        if env.config_run.settings['class_category_analysis'] == 7:
+            types_of_maps = [_("probabilistic"), _("deterministic")]
 
-        # console message
-        if env.config_run.settings['analysis_interval'] == 'trimester':
-            console.msg("                {0} ..................... ".format(env.config_run.settings['analysis_interval']), newline=False)
-        else:
-            console.msg("                {0}\t....................... ".format(env.config_run.settings['analysis_interval']), newline=False)
+        for map_type in types_of_maps:
 
-        # walking file by file of maps directory and make interpolation and map for each file
-        for lag in env.config_run.settings['lags']:
+            print _("Processing maps for {map_type} climate:").format(map_type=map_type)
 
-            # all months in year 1->12
-            for month in range(1, 13):
+            # console message
+            if env.config_run.settings['analysis_interval'] == 'trimester':
+                console.msg("                {0} ..................... ".format(env.config_run.settings['analysis_interval']), newline=False)
+            else:
+                console.msg("                {0}\t....................... ".format(env.config_run.settings['analysis_interval']), newline=False)
 
-                if env.config_run.settings['analysis_interval'] == 'trimester':
-                    for var_I_idx, label in enumerate(env.config_run.get_categories_labels_var_I_list()):
-                        label = label.strip().replace(' ','_')
-                        # show only once
-                        if lag == env.config_run.settings['lags'][0] and month == 1 and var_I_idx == 0:
-                            message_warning = True
-                        else:
-                            message_warning = False
+            # walking file by file of maps directory and make interpolation and map for each file
+            for lag in env.config_run.settings['lags']:
 
-                        # file where saved points for plot map
-                        file_map_points = env.globals_vars.maps_files_climate[lag][month - 1][var_I_idx]
+                # all months in year 1->12
+                for month in range(1, 13):
 
-                        # save matrix for interpolation
-                        base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
-
-                        # make dir with the name of grid
-                        output.make_dirs(base_path)
-
-                        base_file = _(u'Map_lag_{0}_{1}_{2}')\
-                            .format(lag, format_out.trimester_in_initials(month - 1), label)
-
-                        grid.date = format_out.trimester_in_initials(month - 1)
-                        grid.lag = lag
-
-                        # file for interpolation
-                        inc_file = os.path.join(base_path, base_file + ".INC")
-
-                        # save file for NCL
-                        tsv_interpolation_file = os.path.join(base_path, base_file + ".tsv")
-                        tsv_stations_file = os.path.join(base_path, base_file + "_stations.tsv")
-
-                        process_map()
-
-                else:
-                    # range based on analysis interval
-                    range_analysis_interval = get_range_analysis_interval()
-
-                    for day in range(len(range_analysis_interval)):
+                    if env.config_run.settings['analysis_interval'] == 'trimester':
                         for var_I_idx, label in enumerate(env.config_run.get_categories_labels_var_I_list()):
                             label = label.strip().replace(' ','_')
                             # show only once
-                            if lag == env.config_run.settings['lags'][0] and month == 1 and var_I_idx == 0 and day == 0:
+                            if lag == env.config_run.settings['lags'][0] and month == 1 and var_I_idx == 0:
                                 message_warning = True
                             else:
                                 message_warning = False
 
                             # file where saved points for plot map
-                            file_map_points = env.globals_vars.maps_files_climate[lag][month - 1][day][var_I_idx]
+                            file_map_points = env.globals_vars.maps_files_climate[lag][month - 1][var_I_idx]
 
                             # save matrix for interpolation
                             base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
+                            if env.config_run.settings['class_category_analysis'] == 7:
+                                base_path = os.path.join(base_path, map_type)
 
                             # make dir with the name of grid
                             output.make_dirs(base_path)
 
                             base_file = _(u'Map_lag_{0}_{1}_{2}')\
-                                .format(lag,
-                                        format_out.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day]),
-                                        label)
+                                .format(lag, format_out.trimester_in_initials(month - 1), label)
 
-                            grid.date = format_out.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day])
+                            grid.date = format_out.trimester_in_initials(month - 1)
                             grid.lag = lag
 
-                            # file for interpolation
-                            inc_file = os.path.join(base_path, base_file + ".INC")
+                            if map_type == _("probabilistic"):
+                                # file for interpolation
+                                inc_file = os.path.join(base_path, base_file + ".INC")
 
-                            # save file for NCL
-                            tsv_interpolation_file = os.path.join(base_path, base_file + ".tsv")
+                                # save file for NCL
+                                tsv_interpolation_file = os.path.join(base_path, base_file + ".tsv")
+
+                            # file where saved stations with lat, lon, index and index_position
                             tsv_stations_file = os.path.join(base_path, base_file + "_stations.tsv")
 
                             process_map()
 
-        console.msg(_("done"), color='green')
+                    else:
+                        # range based on analysis interval
+                        range_analysis_interval = get_range_analysis_interval()
+
+                        for day in range(len(range_analysis_interval)):
+                            for var_I_idx, label in enumerate(env.config_run.get_categories_labels_var_I_list()):
+                                label = label.strip().replace(' ','_')
+                                # show only once
+                                if lag == env.config_run.settings['lags'][0] and month == 1 and var_I_idx == 0 and day == 0:
+                                    message_warning = True
+                                else:
+                                    message_warning = False
+
+                                # file where saved points for plot map
+                                file_map_points = env.globals_vars.maps_files_climate[lag][month - 1][day][var_I_idx]
+
+                                # save matrix for interpolation
+                                base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
+                                if env.config_run.settings['class_category_analysis'] == 7:
+                                    base_path = os.path.join(base_path, map_type)
+
+                                # make dir with the name of grid
+                                output.make_dirs(base_path)
+
+                                base_file = _(u'Map_lag_{0}_{1}_{2}')\
+                                    .format(lag,
+                                            format_out.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day]),
+                                            label)
+
+                                grid.date = format_out.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day])
+                                grid.lag = lag
+
+                                if map_type == _("probabilistic"):
+                                    # file for interpolation
+                                    inc_file = os.path.join(base_path, base_file + ".INC")
+
+                                    # save file for NCL
+                                    tsv_interpolation_file = os.path.join(base_path, base_file + ".tsv")
+
+                                # file where saved stations with lat, lon, index and index_position
+                                tsv_stations_file = os.path.join(base_path, base_file + "_stations.tsv")
+
+                                process_map()
+
+            console.msg(_("done"), color='green')
+        grid.if_running["climate"] = False
 
     # -------------------------------------------------------------------------
     # Process maps for CORRELATION
 
     if env.config_run.settings['maps']['correlation']:
 
-        grid.if_running["climate"] = False
         grid.if_running["correlation"] = True
-        grid.if_running["forecast"] = False
+        map_type = _("probabilistic")
 
         print _("Processing maps for correlation:")
 
@@ -434,7 +468,7 @@ def process(grid):
 
                         # save matrix for interpolation
                         base_path = os.path.join(env.globals_vars.CLIMATE_DIR, _('maps'),
-                            env.globals_vars.analysis_interval_i18n,
+                            env.config_run.settings['analysis_interval_i18n'],
                             _('lag_{0}').format(lag),
                             _('Correlation'),
                             grid.grid_name)
@@ -457,6 +491,7 @@ def process(grid):
 
                         process_map()
 
+        grid.if_running["correlation"] = False
         console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
@@ -464,50 +499,58 @@ def process(grid):
 
     if env.config_run.settings['forecast_process'] and  env.config_run.settings['maps']['forecast']:
 
-        grid.if_running["climate"] = False
-        grid.if_running["correlation"] = False
         grid.if_running["forecast"] = True
 
-        print _("Processing maps for forecast:")
+        if env.config_run.settings['class_category_analysis'] == 3:
+            types_of_maps = [_("probabilistic")]
+        if env.config_run.settings['class_category_analysis'] == 7:
+            types_of_maps = [_("probabilistic"), _("deterministic")]
 
-        # console message
-        if env.config_run.settings['analysis_interval'] == 'trimester':
-            console.msg("                {0} ..................... ".format(env.config_run.settings['analysis_interval']), newline=False)
-        else:
-            console.msg("                {0}\t....................... ".format(env.config_run.settings['analysis_interval']), newline=False)
+        for map_type in types_of_maps:
 
-        # walking file by file of maps directory and make interpolation and map for each file
-        for forecast_date in env.globals_vars.maps_files_forecast:
+            print _("Processing maps for {map_type} forecast:").format(map_type=map_type)
 
-            for lag in env.config_run.settings['lags']:
-                # show only once
-                if lag == env.config_run.settings['lags'][0]:
-                    message_warning = True
-                else:
-                    message_warning = False
+            # console message
+            console.msg("                {0}\t....................... ".format(env.config_run.settings['forecast_date']['text']), newline=False)
 
-                # file where saved points for plot map
-                file_map_points = env.globals_vars.maps_files_forecast[forecast_date][lag]
-                # save matrix for interpolation
-                base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
+            # walking file by file of maps directory and make interpolation and map for each file
+            for forecast_date in env.globals_vars.maps_files_forecast:
 
-                # make dir with the name of grid
-                output.make_dirs(base_path)
+                for lag in env.config_run.settings['lags']:
+                    # show only once
+                    if lag == env.config_run.settings['lags'][0]:
+                        message_warning = True
+                    else:
+                        message_warning = False
 
-                base_file = _(u'Map_lag_{0}_{1}').format(lag, forecast_date)
+                    # file where saved points for plot map
+                    file_map_points = env.globals_vars.maps_files_forecast[forecast_date][lag]
+                    # save matrix for interpolation
+                    base_path = os.path.join(os.path.dirname(file_map_points), grid.grid_name)
+                    if env.config_run.settings['class_category_analysis'] == 7:
+                        base_path = os.path.join(base_path, map_type)
 
-                grid.date = forecast_date
-                grid.lag = lag
+                    # make dir with the name of grid
+                    output.make_dirs(base_path)
 
-                # file for interpolation
-                inc_file = os.path.join(base_path, base_file + ".INC")
+                    base_file = _(u'Map_lag_{0}_{1}').format(lag, slugify(forecast_date))
 
-                # save file for NCL
-                tsv_interpolation_file = os.path.join(base_path, base_file + ".tsv")
-                tsv_stations_file = os.path.join(base_path, base_file + "_stations.tsv")
+                    grid.date = forecast_date
+                    grid.lag = lag
 
-                process_map()
+                    if map_type == _("probabilistic"):
+                        # file for interpolation
+                        inc_file = os.path.join(base_path, base_file + ".INC")
 
-        console.msg(_("done"), color='green')
+                        # save file for NCL
+                        tsv_interpolation_file = os.path.join(base_path, base_file + ".tsv")
+
+                    # file where saved stations with lat, lon, index and index_position
+                    tsv_stations_file = os.path.join(base_path, base_file + "_stations.tsv")
+
+                    process_map()
+
+            console.msg(_("done"), color='green')
+        grid.if_running["forecast"] = False
 
     del base_matrix
