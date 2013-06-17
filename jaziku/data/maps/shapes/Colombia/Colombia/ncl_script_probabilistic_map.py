@@ -309,19 +309,31 @@ begin
     lines_stations = asciiread(fname,-1,"string")
 
     delim = str_get_tab()
-    lat_stations = stringtofloat(str_get_field(lines_stations(1:),1,delim))
-    lon_stations = stringtofloat(str_get_field(lines_stations(1:),2,delim))
-    ;idx_stations = stringtofloat(str_get_field(lines_stations(1:),3,delim))
+    lat_of_stations = stringtofloat(str_get_field(lines_stations(1:),1,delim))
+    lon_of_stations = stringtofloat(str_get_field(lines_stations(1:),2,delim))
+    index_of_stations = stringtofloat(str_get_field(lines_stations(1:),3,delim))
+    index_positions_of_stations = str_get_field(lines_stations(1:),4,delim)
 
-    lat_stations@long_name = "latitude"
-    lat_stations!0="lat"
-    lat_stations&lat=lat_stations
-    nlat_stations=dimsizes(lat_stations)
+    number_of_stations = dimsizes(index_of_stations)
 
-    lon_stations@long_name = "longitude"
-    lon_stations!0="lon"
-    lon_stations&lon=lon_stations
-    nlon_stations=dimsizes(lon_stations)
+    lat_of_stations@long_name = "latitude"
+    lat_of_stations!0="lat"
+    lat_of_stations&lat=lat_of_stations
+    nlat_of_stations=dimsizes(lat_of_stations)
+
+    lon_of_stations@long_name = "longitude"
+    lon_of_stations!0="lon"
+    lon_of_stations&lon=lon_of_stations
+    nlon_of_stations=dimsizes(lon_of_stations)
+
+    ;clean stations points with 'nan' values
+    do i=0,number_of_stations-1
+        if (index_positions_of_stations(i) .eq. "nan") then
+            ;gsn_polymarker(wks,map,lon_of_stations(i),lat_of_stations(i),polyres)
+            lat_of_stations(i) = -999
+            lon_of_stations(i) = -999
+        end if
+    end do
 
     polyres               = True          ; poly marker mods desired
     polyres@gsMarkerIndex = 4            ; choose circle as polymarker

@@ -105,6 +105,7 @@ fixes
 - Adjust values when two thresholds are equal and if the value to evaluate is the same value too,
   put the value in the middle of category in contingency table
 - Fixed initialize matplotlib backend in raster graphics for old version of matplotlib
+- Clean stations points with 'nan' values for probabilistic maps
 
 0.5.2a (**2013-02-13**)
 -----------------------
