@@ -136,6 +136,8 @@ def make_ncl_deterministic_map(grid, base_path_file, globals_vars):
         else:
             map_properties.date = grid.date
 
+        map_properties.date = "Jun 10"
+
         if grid.if_running["climate"]:
             map_properties.title = _('''"Scenario of affectation of the variable {typeVarD}~C~    under variations of {typeVarI} to lag {lag} in {date}"''')\
                      .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date)
@@ -145,11 +147,11 @@ def make_ncl_deterministic_map(grid, base_path_file, globals_vars):
                      .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date)
 
         if grid.if_running["forecast"]:
-            if env.config_run.settings['analysis_interval'] == 'trimester':
+            if env.config_run.settings['analysis_interval'] != 'trimester':
                 map_properties.title = _('''"   Affectation forecast of the variable {typeVarD}~C~under variations of {typeVarI} to lag {lag} in {date}"''')\
                          .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date)
             else:
-                map_properties.title = _('''"Affectation forecast of the variable {typeVarD}~C~  under variations of {typeVarI} to lag {lag} in {date}"''')\
+                map_properties.title = _('''"Affectation forecast of the variable {typeVarD}~C~under variations of {typeVarI} to lag {lag} in {date}"''')\
                          .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date)
 
         ### get ncl file in raw
