@@ -6,9 +6,10 @@ minlat=7.545
 minlon=-74.32
 maxlon=-72.722
 # set True or False if this region need particular ncl script
-need_particular_ncl_script = False
+need_particular_ncl_script_probabilistic_map = False
+need_particular_ncl_script_deterministic_map = False
 # set other properties of ncl script for this map
-particular_properties_map = {"tiMainFontHeightF":0.031,  # main font height
+particular_properties_probabilistic_map = {"tiMainFontHeightF":0.031,  # main font height
                              "lbTitleFontHeightF":0.022,  # colorbar title font height
                              "space_label_title":30,  # number of space between label title in colorbar
                              "lbLabelFontHeightF":0.013}  # colorbar mark font height

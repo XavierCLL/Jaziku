@@ -6,4 +6,5 @@ minlat=4.513
 minlon=-74.752
 maxlon=-71.8
 # set True or False if this region need particular ncl script
-need_particular_ncl_script = False
+need_particular_ncl_script_probabilistic_map = False
+need_particular_ncl_script_deterministic_map = False

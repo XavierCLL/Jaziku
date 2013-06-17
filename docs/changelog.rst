@@ -18,6 +18,9 @@ news
 - New option in runfile relevant_climate_categories_var_I, with this option
   the user can choose the relevant climate categories of var I for only make
   graphics with these two categories selected or all categories
+- New deterministic maps only for 7 categories and climate and forecast (no correlation) maps,
+  this map graphs the position of index (inside of the 7 categories) by each station, and
+  graphs this station as color point, not graphs interpolation values.
 - The 'consistent_data' option in the runfile is a percentage maximum allow of numbers of
   nulls of the var_D and/or var_I of each station, now can set 'default' (=15%) or with
   custom value by user (percentage from 0 to 100)

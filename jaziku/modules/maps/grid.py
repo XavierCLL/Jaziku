@@ -256,12 +256,18 @@ def search_and_set_internal_grid(grid):
                 grid.minlon = internal_grid.minlon
                 grid.maxlon = internal_grid.maxlon
 
-            grid.need_particular_ncl_script = internal_grid.need_particular_ncl_script
+            grid.need_particular_ncl_script_probabilistic_map = internal_grid.need_particular_ncl_script_probabilistic_map
+            grid.need_particular_ncl_script_deterministic_map = internal_grid.need_particular_ncl_script_deterministic_map
 
             try:
-                grid.particular_properties_map = internal_grid.particular_properties_map
+                grid.particular_properties_probabilistic_map = internal_grid.particular_properties_probabilistic_map
             except:
-                grid.particular_properties_map = {}
+                grid.particular_properties_probabilistic_map = {}
+
+            try:
+                grid.particular_properties_deterministic_map = internal_grid.particular_properties_deterministic_map
+            except:
+                grid.particular_properties_deterministic_map = {}
         else:
             raise
     except:
@@ -307,12 +313,20 @@ def set_particular_grid(grid):
         if not grid.maxlon:
             grid.maxlon = particular_grid.maxlon
 
-        grid.need_particular_ncl_script = particular_grid.need_particular_ncl_script
+        grid.need_particular_ncl_script_probabilistic_map = particular_grid.need_particular_ncl_script_probabilistic_map
+        grid.need_particular_ncl_script_deterministic_map = particular_grid.need_particular_ncl_script_deterministic_map
 
         try:
-            grid.particular_properties_map = particular_grid.particular_properties_map
+            grid.particular_properties_probabilistic_map = particular_grid.particular_properties_probabilistic_map
         except:
-            grid.particular_properties_map = {}
+            grid.particular_properties_probabilistic_map = {}
+
+        try:
+            grid.particular_properties_deterministic_map = particular_grid.particular_properties_deterministic_map
+        except:
+            grid.particular_properties_deterministic_map = {}
     else:
-            grid.particular_properties_map = {}
-            grid.need_particular_ncl_script = False
+        grid.particular_properties_probabilistic_map = {}
+        grid.particular_properties_deterministic_map = {}
+        grid.need_particular_ncl_script_probabilistic_map = False
+        grid.need_particular_ncl_script_deterministic_map = False

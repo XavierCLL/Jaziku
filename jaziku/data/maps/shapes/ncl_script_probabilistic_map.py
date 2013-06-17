@@ -25,9 +25,9 @@ from jaziku import env
 
 def code(map_properties):
 
-#  if particular_properties_map not defined in {region}.py, these are the default values:
-    if map_properties.particular_properties_map == {}:
-        map_properties.particular_properties_map = {"tiMainFontHeightF": 0.021, # main font height
+#  if particular_properties_probabilistic_map not defined in {region}.py, these are the default values:
+    if map_properties.particular_properties_probabilistic_map == {}:
+        map_properties.particular_properties_probabilistic_map = {"tiMainFontHeightF": 0.023, # main font height
                                                     "lbTitleFontHeightF": 0.015, # colorbar title font height
                                                     "space_label_title": 25, # number of space between label title in colorbar
                                                     "lbLabelFontHeightF": 0.0095}  # colorbar mark font height
@@ -42,12 +42,12 @@ def code(map_properties):
         'label_marks_stations': _('Stations'),
         'save_map': os.path.abspath(map_properties.base_path_file),
         'title': map_properties.title,
-        'label_title': _("Below") + " " * map_properties.particular_properties_map["space_label_title"] +\
-                       _("Normal") + " " * map_properties.particular_properties_map["space_label_title"] +\
+        'label_title': _("Below") + " " * map_properties.particular_properties_probabilistic_map["space_label_title"] +\
+                       _("Normal") + " " * map_properties.particular_properties_probabilistic_map["space_label_title"] +\
                        _("Above"),
-        'tiMainFontHeightF': map_properties.particular_properties_map["tiMainFontHeightF"],
-        'lbTitleFontHeightF': map_properties.particular_properties_map["lbTitleFontHeightF"],
-        'lbLabelFontHeightF': map_properties.particular_properties_map["lbLabelFontHeightF"],
+        'tiMainFontHeightF': map_properties.particular_properties_probabilistic_map["tiMainFontHeightF"],
+        'lbTitleFontHeightF': map_properties.particular_properties_probabilistic_map["lbTitleFontHeightF"],
+        'lbLabelFontHeightF': map_properties.particular_properties_probabilistic_map["lbLabelFontHeightF"],
         'color_bar_title_on': map_properties.color_bar_title_on,
         'color_bar_levels': map_properties.color_bar_levels,
         'color_bar_step': map_properties.color_bar_step,
