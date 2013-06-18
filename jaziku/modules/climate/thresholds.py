@@ -393,7 +393,7 @@ def get_thresholds(station, variable, thresholds_input=None):
         return thresholds_by_default()
 
     # check if analog_year is defined but thresholds aren't equal to "default"
-    if env.config_run.settings['analog_year'] and variable.type == 'D':  # todo v0.6: really need?
+    if env.config_run.settings['analog_year'] and variable.type == 'D':  # todo, maybe don't need, for check in the future
         console.msg_error(_("You have defined the analog year,\n"
                             "but the thresholds of var D must be\n"
                             "'default' for use the analog year."))
