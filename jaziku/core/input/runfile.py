@@ -284,9 +284,9 @@ def read_stations(lines_of_stations):
 
             station.code = line_station[0]
             station.name = unicode(line_station[1], 'utf-8')
-            station.lat = line_station[2].replace(',', '.')
-            station.lon = line_station[3].replace(',', '.')
-            station.alt = line_station[4].replace(',', '.')
+            station.lat = format_in.to_float(line_station[2])
+            station.lon = format_in.to_float(line_station[3])
+            station.alt = format_in.to_float(line_station[4])
 
             station.var_D.type_series = env.var_D.TYPE_SERIES
             #station.file_D = open(line_station[5], 'rb')

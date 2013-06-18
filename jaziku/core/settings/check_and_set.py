@@ -529,8 +529,8 @@ def grids_list():
                     _("Can't defined 'latitude' as 'internal' if 'shape_path'\n"
                       "was not defined as 'internal'.\n"), stop_in_grid=grid.num)
         if grid.minlat >= grid.maxlat or\
-           - 90 > grid.minlat > 90 or \
-           - 90 > grid.maxlat > 90:
+           grid.minlat < -90 or grid.minlat > 90 or \
+           grid.maxlat < -90 or grid.maxlat > 90:
             console.msg_error_configuration("latitude",
                 _("The latitude values are wrong, the minlat must be\n"
                   "less to maxlat and their values must be between\n"
@@ -554,8 +554,8 @@ def grids_list():
                     _("Can't defined 'longitude' as 'internal' if 'shape_path'\n"
                       "was not defined as 'internal'.\n"), stop_in_grid=grid.num)
         if grid.minlon >= grid.maxlon or\
-           - 180 > grid.minlon > 180 or \
-           - 180 > grid.maxlon > 180:
+           grid.minlon < -180 or grid.minlon > 180 or \
+           grid.minlon < -180 or grid.maxlon > 180:
             console.msg_error_configuration("longitude",
                 _("The longitude values are wrong, the minlon must be\n"
                   "less to maxlon and their values must be between\n"
@@ -607,6 +607,27 @@ def stations_list(stations_list):
         else:
             list_codes.append(station.code)
             list_names.append(station.name)
+
+    # -------------------------------------------------------------------------
+    # check the latitude, longitude and altitude for each stations
+
+    if env.config_run.settings['maps']:
+        for station in stations_list:
+
+            if station.lat < -90 or station.lat > 90:
+                console.msg_error_line_stations(station,
+                    _("The latitude values are wrong, must be between\n"
+                      "-90 to 90."))
+
+            if station.lon < -180 or station.lon > 180:
+                console.msg_error_line_stations(station,
+                    _("The longitude values are wrong, must be between\n"
+                      "-180 to 180."))
+
+            if station.alt < -1000 or station.alt > 10000:
+                console.msg_error_line_stations(station,
+                    _("The altitude values are wrong, must be between\n"
+                      "-1000 to 10000."))
 
     # finish, check all good
     console.msg(_("done"), color='green')
