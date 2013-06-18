@@ -306,9 +306,12 @@ begin
   polyres@gsMarkerSizeF = 0.009          ; select size to avoid streaking
   polyres@gsMarkerThicknessF = 1
 
+  are_there_nan = False
+
   do i=0,number_of_stations-1
      if (index_positions_of_stations(i) .eq. "nan") then
         polyres@gsMarkerIndex = 4            ; choose circle as polymarker
+        are_there_nan = True
      else
         polyres@gsMarkerIndex = 16            ; choose circle as polymarker
      end if
@@ -413,9 +416,9 @@ begin
   ;txres@txFont = "helvetica"
   txres@txJust = "CenterLeft"
 
-  yleg = new(num_thresholds,float)
+  yleg = new(num_thresholds+1,float)
   yleg(0) = 0.567
-  do i = 1, num_thresholds-1
+  do i = 1, num_thresholds
     yleg(i) = yleg(i-1) - 0.022
   end do
 
@@ -427,14 +430,24 @@ begin
   legend_colors = colors(::-1)
 
   gsres               = True
+  gsres@gsMarkerIndex = 16
+  gsres@gsMarkerThicknessF = 1
+  gsres@gsMarkerSizeF = 0.009
 
-  do i = 0, num_thresholds-1
-    gsres@gsMarkerIndex = 16
-    gsres@gsMarkerColor      = get_color(legend_colors(i))
-    gsres@gsMarkerThicknessF = 1
-    gsres@gsMarkerSizeF = 0.009
-    gsn_polymarker_ndc(wks,xleg,yleg(i),gsres)
-    gsn_text_ndc(wks,legend_labels(i),xtxt,ytxt(i),txres)
+  do i = 0, num_thresholds
+    if (i.ne.num_thresholds) then
+      gsres@gsMarkerColor = get_color(legend_colors(i))
+      gsn_polymarker_ndc(wks,xleg,yleg(i),gsres)
+      gsn_text_ndc(wks,legend_labels(i),xtxt,ytxt(i),txres)
+    else
+      ;this is for 'nan' legend
+      if are_there_nan then
+        gsres@gsMarkerIndex = 4
+        gsres@gsMarkerColor = 1
+        gsn_polymarker_ndc(wks,xleg,yleg(i),gsres)
+        gsn_text_ndc(wks,"nan",xtxt,ytxt(i),txres)
+      end if
+    end if
   end do
 
   ;*****************************************
