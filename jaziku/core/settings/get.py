@@ -156,7 +156,7 @@ def configuration_run():
         env.config_run.settings['consistent_data'] = 15
         settings["consistent_data"] = "15%"
     elif isinstance(env.config_run.settings['consistent_data'], (int,float)) and \
-         env.config_run.settings['consistent_data'] is not True:
+         env.config_run.settings['consistent_data'] not in [True, False]:
         settings["consistent_data"] = colored.green(str(env.config_run.settings['consistent_data'])+'%')
 
 

@@ -71,6 +71,7 @@ news
   and convert variables in prepare data function (before run anything)
   (ATTENTION: this change modify several results mainly in EDA module)
 - Replace 'forecasting' to 'forecast' string in code and in results
+- Now check the values of latitude, longitude and altitude for each stations
 - [code] Refactoring config_run, this is where save all variable
   of configuration run settings
 - [code] Refactoring globals_vars in new environment dir
