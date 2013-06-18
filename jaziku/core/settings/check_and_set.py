@@ -469,6 +469,11 @@ def configuration_run():
 def grids_list():
     """Initialize all grids with its properties defined in runfile
     """
+
+    # not check the grids list when maps options is disable
+    if not env.config_run.settings['maps']:
+        return
+
     # init the input_settings for show all grids in console
     env.globals_vars.input_settings["grid"] = []
     env.globals_vars.input_settings["shape_path"] = []
