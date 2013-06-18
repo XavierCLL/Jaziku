@@ -149,25 +149,25 @@ def process(grid):
                     console.msg(
                         _("\n > WARNING: The point lat:{lat} lon:{lon}\n"
                           "   of the station code: {code} was not added\n"
-                          "   because the value of index is 'nan' (null) .").
+                          "   because the value of index is 'nan' (null).").
                         format(lat=latitude, lon=longitude, code=line[0]), color='yellow', newline=False)
                 if point_state == "point not added" and message_warning:
                     console.msg(
                         _("\n > WARNING: The point lat:{lat} lon:{lon}\n"
                           "   of the station code: {code} was not added\n"
-                          "   because the point is outside of the grid ...").
+                          "   because the point is outside of the grid.").
                         format(lat=latitude, lon=longitude, code=line[0]), color='yellow', newline=False)
                 if point_state in [_("average"), _("maximum"), _("minimum")] and message_warning:
                     console.msg(
                         _("\n > WARNING: for the point lat:{lat} lon:{lon}\n"
-                          "   Jaziku detect overlapping of two values, Jaziku\n"
-                          "   will put the {state} value .................").
+                          "   Jaziku detect overlapping of two values, it\n"
+                          "   will put the {state} value.").
                         format(lat=latitude, lon=longitude, state=point_state), color='yellow', newline=False)
                 if point_state == _("neither") and message_warning:
                     console.msg(
                         _("\n > WARNING: for the point lat:{lat} lon:{lon}\n"
                           "   Jaziku detect overlapping of two values, Jaziku\n"
-                          "   will not put the {state} values ............").
+                          "   will not put the {state} values.").
                         format(lat=latitude, lon=longitude, state=point_state), color='yellow', newline=False)
 
             marks_stations.append([latitude, longitude, index, index_position])
@@ -288,13 +288,10 @@ def process(grid):
 
         for map_type in types_of_maps:
 
-            print _("Processing maps for {map_type} climate:").format(map_type=map_type)
+            print _("Processing {map_type} maps for climate:").format(map_type=map_type)
 
             # console message
-            if env.config_run.settings['analysis_interval'] == 'trimester':
-                console.msg("                {0} ..................... ".format(env.config_run.settings['analysis_interval']), newline=False)
-            else:
-                console.msg("                {0}\t....................... ".format(env.config_run.settings['analysis_interval']), newline=False)
+            console.msg("   {0} ... ".format(env.config_run.settings['analysis_interval']), newline=False)
 
             # walking file by file of maps directory and make interpolation and map for each file
             for lag in env.config_run.settings['lags']:
@@ -398,10 +395,7 @@ def process(grid):
         print _("Processing maps for correlation:")
 
         # console message
-        if env.config_run.settings['analysis_interval'] == 'trimester':
-            console.msg("                {0} ..................... ".format(env.config_run.settings['analysis_interval']), newline=False)
-        else:
-            console.msg("                {0}\t....................... ".format(env.config_run.settings['analysis_interval']), newline=False)
+        console.msg("   {0} ... ".format(env.config_run.settings['analysis_interval']), newline=False)
 
         # walking file by file of maps directory and make interpolation and map for each file
         for lag in env.config_run.settings['lags']:
@@ -508,10 +502,10 @@ def process(grid):
 
         for map_type in types_of_maps:
 
-            print _("Processing maps for {map_type} forecast:").format(map_type=map_type)
+            print _("Processing {map_type} maps for forecast:").format(map_type=map_type)
 
             # console message
-            console.msg("                {0}\t....................... ".format(env.config_run.settings['forecast_date']['text']), newline=False)
+            console.msg("   {0} ... ".format(env.config_run.settings['forecast_date']['text']), newline=False)
 
             # walking file by file of maps directory and make interpolation and map for each file
             for forecast_date in env.globals_vars.maps_files_forecast:
