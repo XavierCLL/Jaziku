@@ -31,7 +31,7 @@ PROG_NAME = "jaziku"
 
 VERSION = "0.6.0"
 
-VERSION_DATE = "10/03/2013"
+VERSION_DATE = "19/06/2013"
 
 # absolute directory where is installed Jaziku in your system,
 # this variable is set in jaziku.py
@@ -94,22 +94,22 @@ def categories(key_label=False, include_normal=True, translated=True, as_list=Fa
     from jaziku.env.config_run import settings
     if settings['class_category_analysis'] == 3:
         if translated:
-            labels = {'below':_(u'below'),
-                      'normal':_(u'normal'),
-                      'above':_(u'above')}
+            labels = {'below':unicode(_('below'), 'utf-8'),
+                      'normal':unicode(_('normal'), 'utf-8'),
+                      'above':unicode(_('above'), 'utf-8')}
         else:
             labels = {'below':'below',
                       'normal':'normal',
                       'above':'above'}
     if settings['class_category_analysis'] == 7:
         if translated:
-            labels = {'below3':_(u'strong below'),
-                      'below2':_(u'moderate below'),
-                      'below1':_(u'weak below'),
-                      'normal':_(u'normal'),
-                      'above1':_(u'weak above'),
-                      'above2':_(u'moderate above'),
-                      'above3':_(u'strong above')}
+            labels = {'below3':unicode(_('strong below'), 'utf-8'),
+                      'below2':unicode(_('moderate below'), 'utf-8'),
+                      'below1':unicode(_('weak below'), 'utf-8'),
+                      'normal':unicode(_('normal'), 'utf-8'),
+                      'above1':unicode(_('weak above'), 'utf-8'),
+                      'above2':unicode(_('moderate above'), 'utf-8'),
+                      'above3':unicode(_('strong above'), 'utf-8')}
         else:
             labels = {'below3':'strong below',
                       'below2':'moderate below',

@@ -86,9 +86,9 @@ def forecast_graphs(station):
 
             if True in [isnan(value) for value in values_pie]:
                 # this append when there are NaN values in contingency table in percentage for this series
-                fig.text(0.5, 0.4, _("For this time series there aren't suitable\n"
+                fig.text(0.5, 0.4, unicode(_("For this time series there aren't suitable\n"
                                      "probabilities, because there are thresholds\n"
-                                     "problems in contingency table, or the series data."), fontsize=10, ha='center')
+                                     "problems in contingency table, or the series data."), 'utf-8'), fontsize=10, ha='center')
             else:
                 ax = fig.add_subplot(111)
                 pie_plot = ax.pie(values_pie, colors=colours, autopct='%1.1f%%', shadow=True)
@@ -142,9 +142,9 @@ def forecast_graphs(station):
 
             if True in [isnan(value) for value in values_pie]:
                 # this append when there are NaN values in contingency table in percentage for this series
-                fig.text(0.5, 0.4, _("For this time series there aren't suitable\n"
+                fig.text(0.5, 0.4, unicode(_("For this time series there aren't suitable\n"
                                      "probabilities, because there are thresholds\n"
-                                     "problems in contingency table, or the series data."), fontsize=10, ha='center')
+                                     "problems in contingency table, or the series data."), 'utf-8'), fontsize=10, ha='center')
             else:
                 ax = fig.add_subplot(111)
                 pie_plot = ax.pie(values_pie, colors=colours, autopct='%1.1f%%', shadow=True)
@@ -274,9 +274,9 @@ def forecast_graphs(station):
 
             if True in [isnan(value) for value in values_pie]:
                 # this append when there are NaN values in contingency table in percentage for this series
-                fig.text(0.5, 0.4, _("For this time series there aren't suitable\n"
+                fig.text(0.5, 0.4, unicode(_("For this time series there aren't suitable\n"
                                      "probabilities, because there are thresholds\n"
-                                     "problems in contingency table, or the series data."), fontsize=10, ha='center')
+                                     "problems in contingency table, or the series data."), 'utf-8'), fontsize=10, ha='center')
             else:
                 ax = fig.add_subplot(111)
                 pie_plot = ax.pie(values_pie, colors=colours, autopct='%1.1f%%', shadow=True)
