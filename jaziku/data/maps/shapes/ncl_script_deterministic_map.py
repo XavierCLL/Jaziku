@@ -47,7 +47,7 @@ def code(map_properties):
         'legend_units': env.var_D.units,
         'mode_calculation_series': env.config_run.settings['mode_calculation_series_D_i18n'],
         'analysis_interval': env.config_run.settings['analysis_interval_i18n'],
-        'name': map_properties.name,
+        'name': '''"{0}"'''.format(map_properties.name),
         'subtitle': map_properties.subtitle,
     }
 
@@ -456,7 +456,7 @@ begin
   txres             = True                         ; Text resources desired
   txres@txFontColor = (/"(/0.00, 0.00, 0.00/)"/)
   txres@txFontHeightF = 0.011
-  subtitles(wks,map,"{name}","{subtitle}","Deterministic",txres)
+  subtitles(wks,map,{name},{subtitle},"Deterministic",txres)
 
   pres = True
   maximize_output(wks,pres)

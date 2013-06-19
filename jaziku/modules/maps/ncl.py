@@ -115,7 +115,7 @@ def make_ncl_deterministic_map(grid, base_path_file, globals_vars):
         map_properties.shape = os.path.join(grid.shape_path, grid.grid_name + ".shp")
         map_properties.base_path_file = base_path_file
         map_properties.name = grid.grid_name
-        map_properties.subtitle = ''
+        map_properties.subtitle = grid.subtitle
         map_properties.colormap = "Colors-7-Categories"
         map_properties.minlat = grid.minlat
         map_properties.maxlat = grid.maxlat
