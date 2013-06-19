@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-24 12:39-0500\n"
-"PO-Revision-Date: 2013-01-24 12:41-0500\n"
+"POT-Creation-Date: 2013-06-19 11:55-0500\n"
+"PO-Revision-Date: 2013-06-19 12:08-0500\n"
 "Last-Translator: Xavier Corredor Llano <xavier.corredor.llano@gmail.com>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -17,43 +17,1018 @@ msgstr ""
 "X-Generator: Lokalize 1.5\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: data/maps/shapes/Colombia/Colombia/ncl.py:33
-#: data/maps/shapes/Colombia/ncl.py:42 data/maps/shapes/ncl.py:42
-#: modules/data_analysis/eda.py:344 modules/data_analysis/eda.py:1388
+#: data/maps/shapes/ncl_script_probabilistic_map.py:42
+#: data/maps/shapes/ncl_script_deterministic_map.py:37
+#: data/maps/shapes/Colombia/Colombia/ncl_script_probabilistic_map.py:33
+#: modules/data_analysis/eda.py:341 modules/data_analysis/eda.py:1364
 msgid "Stations"
 msgstr "Estaciones"
 
-#: data/maps/shapes/Colombia/Colombia/ncl.py:36
-#: data/maps/shapes/Colombia/ncl.py:45 data/maps/shapes/ncl.py:45
+#: data/maps/shapes/ncl_script_probabilistic_map.py:45
+#: data/maps/shapes/Colombia/Colombia/ncl_script_probabilistic_map.py:36
 msgid "Below"
-msgstr "Por debajo"
+msgstr "Debajo"
 
-#: data/maps/shapes/Colombia/Colombia/ncl.py:37
-#: data/maps/shapes/Colombia/ncl.py:46 data/maps/shapes/ncl.py:46
-#: modules/forecasting/graphs.py:60
+#: data/maps/shapes/ncl_script_probabilistic_map.py:46
+#: data/maps/shapes/Colombia/Colombia/ncl_script_probabilistic_map.py:37
+#: modules/forecast/graphs.py:71 modules/forecast/graphs.py:122
 msgid "Normal"
 msgstr "Normal"
 
-#: data/maps/shapes/Colombia/Colombia/ncl.py:38
-#: data/maps/shapes/Colombia/ncl.py:47 data/maps/shapes/ncl.py:47
+#: data/maps/shapes/ncl_script_probabilistic_map.py:47
+#: data/maps/shapes/Colombia/Colombia/ncl_script_probabilistic_map.py:38
 msgid "Above"
-msgstr "Por encima"
+msgstr "Encima"
 
-#: i18n/i18n.py:98
+#: data/maps/shapes/ncl_script_deterministic_map.py:52
+msgid "Deterministic"
+msgstr "Deterministico"
+
+#: i18n/i18n.py:99
 msgid "'{0}' language not available."
 msgstr "'{0}' idioma no disponible."
 
-#: i18n/i18n.py:109
+#: i18n/i18n.py:110
 msgid " (system language)"
-msgstr "(idioma del sistema)"
+msgstr " (idioma del sistema)"
 
-#: i18n/i18n.py:118
+#: i18n/i18n.py:119
 msgid " (language '{0}' has not was translated yet)"
 msgstr " (idioma '{0}' no se ha traducido aún)"
 
-#: i18n/i18n.py:123
+#: i18n/i18n.py:124
 msgid " (other languages were not detected)"
 msgstr " (otros idiomas no se detectaron)"
+
+#: core/input/runfile.py:60
+msgid ""
+"error reading the settings line in runfile, line {0}:\n"
+"'{1}', no was defined."
+msgstr ""
+"error leyendo la configuración en el runfile, linea {0}:\n"
+"'{1}', no se ha definido."
+
+#: core/input/runfile.py:124
+msgid ""
+"error read line in 'CONFIGURATION RUN' in runfile,\n"
+"unknown option in line {0}:\n"
+"\n"
+"{1}"
+msgstr ""
+"error de lectura en 'CONFIGURATION RUN' en el runfile, linea {0}:\n"
+"opción desconocida en la linea {0}:\n"
+"\n"
+"{1}"
+
+#: core/input/runfile.py:149
+msgid ""
+"error read line in 'MAPS' in runfile,\n"
+"unknown option in line {0}:\n"
+"\n"
+"{1}"
+msgstr ""
+"error de lectura en 'MAPS' en el runfile,\n"
+"opción desconocida en la linea {0}:\n"
+"\n"
+"{1}"
+
+#: core/input/runfile.py:173
+msgid ""
+"error reading the settings line in runfile, line {0}:\n"
+"'{1}' no was defined."
+msgstr ""
+"error de lectura en la configuración del runfile, linea {0}:\n"
+"'{1}' no se ha definido."
+
+#: core/input/runfile.py:191
+msgid ""
+"error read line in 'GRIDS LIST' in runfile, line {0}:\n"
+"{1}"
+msgstr ""
+"error de lectura en 'GRIDS LIST' ' en el runfile, linea {0}:\n"
+"{1}"
+
+#: core/input/runfile.py:282
+msgid ""
+"Problems with the numbers of parameters inside\n"
+"the stations list need for run climate process.\n"
+msgstr ""
+"Problemas con el numero de parámetros dentro\n"
+"de la lista de estaciones necesario para correr clima.\n"
+
+#: core/input/validation.py:64 core/input/validation.py:70
+msgid ""
+"Error validating the value '{0}' it isn't within\n"
+"limits ({1} to {2}) defined for the var {3} ({4})."
+msgstr ""
+"Error validando el valor '{0}' no está dentro de los\n"
+"limites ({1} a {2}) definidos para la var {3} ({4})."
+
+#: core/input/validation.py:111 core/input/validation.py:132
+msgid ""
+"The type '{0}' for var {1} hasn't limits by default for\n"
+"data {2}, use a internal valid type and/or valid data frequency\n"
+"or defined the particular limits in the runfile"
+msgstr ""
+"El tipo '{0}' para var {1} no tiene limites por defecto para\n"
+"datos {2}, use un tipo de var interno valido y/o una frecuencia\n"
+"de datos valido o defina unos limites particulares en el runfile"
+
+#: core/input/validation.py:118 core/input/validation.py:139
+msgid "The limit '{0}' for var {1} is not valid limit"
+msgstr "El limite '{0}' para la var {1} no es un limite valido"
+
+#: core/input/validation.py:199
+msgid "      var D: {0} ({1}%) nulls of {2}:"
+msgstr "      var D: {0} ({1}%) nulos de {2}:"
+
+#: core/input/validation.py:204 core/input/validation.py:217
+#, python-format
+msgid ""
+"The number of null values is greater than {0}% of total\n"
+"of values inside common period, therefore, for Jaziku\n"
+"the data are not consistent for process. You can disable\n"
+"this check in the option 'consistent_data' of runfile."
+msgstr ""
+"El numero de valores nulos es más que el {0}% del total\n"
+"de valores dentro del periodo común, por consiguiente, para\n"
+"Jaziku los datos no son consistentes para ser procesados. Puede\n"
+"deshabilitar esta verificación en la opción 'consistent_data' del runfile."
+
+#: core/input/validation.py:209 core/input/validation.py:222
+msgid "ok"
+msgstr "ok"
+
+#: core/input/validation.py:212
+msgid "      var I: {0} ({1}%) nulls of {2}:"
+msgstr "      var I: {0} ({1}%) nulos de {2}:"
+
+#: core/input/vars.py:57
+msgid ""
+"Reading the station: {0} - {1}\n"
+"Can't open file '{2}' for var D, \n"
+"please check filename and check that its path is relative\n"
+"(to runfile) or absolute."
+msgstr ""
+"Leyendo la estación: {0} - {1}\n"
+"No se puede abrir el archivo '{2}' para la var D, \n"
+"por favor comprobar el nombre del archivo y verificar\n"
+"que su ruta sea relativa (al runfile) o absoluta."
+
+#: core/input/vars.py:64 core/input/vars.py:202
+msgid ""
+"Reading the station: {0} - {1}\n"
+"The file '{2}' is empty"
+msgstr ""
+"Leyendo la estación: {0} - {1}\n"
+"El archivo '{2}' está vacio"
+
+#: core/input/vars.py:105 core/input/vars.py:236
+msgid ""
+"Reading from file '{0}' in line: {1}\n"
+"\n"
+"this could be caused by wrong line or garbage character,\n"
+"please check manually, fix it and run again."
+msgstr ""
+"Leyendo del archivo '{0}' en la linea: {1}\n"
+"\n"
+"ésto puede ser debido a una linea mala o que tenga caracteres \n"
+"desconocidos, por favor revisa manualmente esa linea, verifique\n"
+"y ejecute de nuevo."
+
+#: core/input/vars.py:119
+msgid ""
+"Problems settings the frequency data for the station\n"
+"with code '{0}' and name '{1}':\n"
+"\n"
+msgstr ""
+"Problemas de configuración en la frecuencia de los datos\n"
+"para la estación con código '{0}' y nombre '{1}':\n"
+"\n"
+
+#: core/input/vars.py:133
+msgid ""
+"Reading var D from file '{0}' in line: {1}\n"
+"\n"
+"Jaziku detected missing value for date: {2}"
+msgstr ""
+"Leyendo var D desde el archivo '{0}' en la linea: {1}\n"
+"\n"
+"Jaziku detectó un valor perdido para la fecha: {2}"
+
+#: core/input/vars.py:145
+msgid ""
+"Reading var D from file '{0}' in line: {1}\n"
+"\n"
+"Jaziku detected missing value for date: {2}-{3}"
+msgstr ""
+"Leyendo var D desde el archivo '{0}' en la linea: {1}\n"
+"\n"
+"Jaziku detectó un valor perdido para la fecha: {2}-{3}"
+
+#: core/input/vars.py:163 core/input/vars.py:290
+msgid ""
+"Reading from file '{0}' in line: {1}\n"
+"\n"
+"{2}"
+msgstr ""
+"Leyendo del archivo '{0}' en la linea: {1}\n"
+"\n"
+"{2}"
+
+#: core/input/vars.py:195
+msgid ""
+"Reading the station: {0} - {1}\n"
+"Can't open file '{2}' for var I, \n"
+"please check filename and check that its path is relative\n"
+"(to runfile) or absolute."
+msgstr ""
+"Leyendo la estación: {0} - {1}\n"
+"No se puede abrir el archivo '{2}' para la var I, \n"
+"por favor comprobar el nombre del archivo y verifique\n"
+"que la ruta sea relativa (al runfile) o absoluta."
+
+#: core/input/vars.py:260
+msgid ""
+"Reading var I from file '{0}' in line: {1}\n"
+"\n"
+"Jaziku detected missing value for date: {2}"
+msgstr ""
+"Leyendo var I desde el archivo '{0}' en la linea: {1}\n"
+"\n"
+"Jaziku detectó un valor perdido para la fecha: {2}"
+
+#: core/input/vars.py:272
+msgid ""
+"Reading var I from file '{0}' in line: {1}\n"
+"\n"
+"Jaziku detected missing value for date: {2}-{3}"
+msgstr ""
+"Leyendo var I desde el archivo '{0}' en la linea: {1}\n"
+"\n"
+"Jaziku detectó un valor perdido para la fecha: {2}-{3}"
+
+#: core/input/arg.py:32
+msgid ""
+"Jaziku is statistical inference software for the\n"
+"teleconnections analysis"
+msgstr ""
+"Jaziku es un software de inferencia estadística\n"
+"para el análisis de teleconexiones"
+
+#: core/input/arg.py:38
+msgid "path absolute or relative to configuration run file"
+msgstr "ruta absoluta o relativa al archivo de corrida"
+
+#: core/input/arg.py:42
+msgid "force all ask to default answer for continue"
+msgstr ""
+"forzar todas las preguntas con una respuesta por default para continuar"
+
+#: core/input/arg.py:46
+msgid "set absolute path where to save all results"
+msgstr "establecer la ruta absoluta donde se guardan los resultados"
+
+#: core/stations.py:34
+msgid ""
+"\n"
+"\n"
+"############ PREPARE ALL STATIONS FOR DATA ANALYSIS ############\n"
+msgstr ""
+"\n"
+"\n"
+"####### PREPARAR TODAS LAS ESTACIONES PARA ANÁLISIS DE DATOS #######\n"
+
+#: core/stations.py:38
+msgid ""
+"\n"
+"\n"
+"####### PREPARE ALL STATIONS FOR CLIMATE/FORECAST PROCESS ######\n"
+msgstr ""
+"\n"
+"\n"
+"##### PREPARAR TODAS LAS ESTACIONES PARA CLIMA/PRONOSTICO #####\n"
+
+#: core/stations.py:45
+msgid "Reading var D and var I of all stations ................. "
+msgstr "Leyendo var D y var I de todas las estaciones ......... "
+
+#: core/stations.py:49 core/stations.py:87 core/stations.py:94
+#: core/stations.py:104 core/stations.py:109 core/stations.py:125
+#: core/stations.py:132 core/stations.py:141
+#: core/settings/check_and_set.py:638 core/analysis_interval.py:108
+#: core/analysis_interval.py:120 core/analysis_interval.py:126
+#: modules/climate/climate.py:113 modules/maps/maps.py:80
+#: modules/maps/maps.py:388 modules/maps/maps.py:493 modules/maps/maps.py:551
+#: modules/forecast/forecast.py:174 modules/data_analysis/eda.py:154
+#: modules/data_analysis/eda.py:160 modules/data_analysis/eda.py:170
+#: modules/data_analysis/eda.py:178 modules/data_analysis/eda.py:199
+#: modules/data_analysis/eda.py:219 modules/data_analysis/eda.py:227
+#: modules/data_analysis/eda.py:248
+msgid "done"
+msgstr "hecho"
+
+#: core/stations.py:52 core/stations.py:67
+msgid "   var_D ({0}):"
+msgstr "   var_D ({0}):"
+
+#: core/stations.py:54 core/stations.py:60
+msgid "has data daily"
+msgstr "tiene datos diarios"
+
+#: core/stations.py:56 core/stations.py:62
+msgid "has data monthly"
+msgstr "tiene datos mensuales"
+
+#: core/stations.py:58 core/stations.py:75
+msgid "   var_I ({0}):"
+msgstr "   var_I ({0}):"
+
+#: core/stations.py:65
+msgid "Thresholds to use (for {0} categories):"
+msgstr "Umbrales a usar (para {0} categorías):"
+
+#: core/stations.py:84
+msgid "Calculate common and process period for each stations ... "
+msgstr "Calcular el periodo común y a procesar para cada estación ... "
+
+#: core/stations.py:90
+msgid "Prepare data, date and null in process period ........... "
+msgstr "Preparar datos, fechas y nulos para el periodo a procesar .... "
+
+#: core/stations.py:97
+msgid "Check if the data are consistent for var_D and var_I:"
+msgstr "Comprabar si los datos son consistentes para var_D y var_I:"
+
+#: core/stations.py:102
+msgid "Set state of data ....................................... "
+msgstr "Configurar el estado de los datos .................. "
+
+#: core/stations.py:107
+msgid "Check analysis interval ................................. "
+msgstr "Comprobar el intervalo de análisis ................... "
+
+#: core/stations.py:115
+msgid "Adjust data of all variables if is needed:"
+msgstr "Ajustar datos de todas las variables si es necesario:"
+
+#: core/stations.py:118
+msgid "   data not need to be adjusted"
+msgstr "   los datos no necesitan ser ajustados"
+
+#: core/stations.py:122
+msgid "Re-calculate common and process period for each stations  "
+msgstr "Re-calcular el periodo común y a procesar para cada estación  "
+
+#: core/stations.py:128
+msgid "Re-prepare data, date and null in process period ........ "
+msgstr "Re-preparar los datos, fechas y nulos para el periodo a procesar .... "
+
+#: core/stations.py:137
+msgid "Statistics of data for data analysis module ............. "
+msgstr "Estadísticas de datos para análisis de datos .......... "
+
+#: core/stations.py:145
+msgid "{0} station prepared."
+msgstr "{0} estación preparada."
+
+#: core/stations.py:146
+msgid "{0} stations prepared."
+msgstr "{0} estaciones preparadas."
+
+#: core/settings/check_and_set.py:42
+msgid ""
+"The 'class_category_analysis' {0} not is valid,\n"
+"this should be '3' or '7'."
+msgstr ""
+
+#: core/settings/check_and_set.py:74
+msgid ""
+"The 'categories_labels_var_I' is not valid,\n"
+"this should be 3 labels in different column."
+msgstr ""
+
+#: core/settings/check_and_set.py:86
+msgid ""
+"The 'categories_labels_var_I' is not valid,\n"
+"this should be 7 labels in different column."
+msgstr ""
+
+#: core/settings/check_and_set.py:101
+msgid ""
+"The 'consistent_data' is not valid,\n"
+"this should be 'disable', 'default' or\n"
+"valid percentage between 0 to 100."
+msgstr ""
+
+#: core/settings/check_and_set.py:123
+msgid ""
+"The 'relevant_climate_categories_var_I' should be\n"
+"'all' one or two valid labels for {0} categories\n"
+"(in different row), such as:\n"
+"\n"
+"{1}"
+msgstr ""
+
+#: core/settings/check_and_set.py:131
+msgid ""
+"The '{0}' in 'relevant_climate_categories_var_I'\n"
+"not is a valid label for {1} categories, should be\n"
+"one of these:\n"
+"\n"
+"{2}"
+msgstr ""
+
+#: core/settings/check_and_set.py:149
+msgid ""
+"For {0} the 'mode_calculation_series_D' set as '{1}', but\n"
+"this series not accept this mode to calculate the series.\n"
+"For this series the options are: {2}"
+msgstr ""
+
+#: core/settings/check_and_set.py:156
+#, fuzzy
+msgid ""
+"The mode_calculation_series_D is wrong, the options are:\n"
+"default, accumulate or mean"
+msgstr ""
+"El marks_stations es incorrecto, las opciones son:\n"
+"disable, enable o default."
+
+#: core/settings/check_and_set.py:159
+msgid "accumulate"
+msgstr "acumulado"
+
+#: core/settings/check_and_set.py:159 modules/data_analysis/eda.py:771
+#: modules/data_analysis/eda.py:959
+msgid "mean"
+msgstr "media"
+
+#: core/settings/check_and_set.py:174 core/settings/check_and_set.py:195
+msgid ""
+"{0} not is valid internal type for dependent variable if you\n"
+"defined LIMIT VAR D BELOW/ABOVE as 'default'. If you want\n"
+"define a particular type for dependent variable, you must define\n"
+"as real values (or 'none') the LIMIT VAR D BELOW/ABOVE"
+msgstr ""
+"{0} no es un tipo de variable dependiente interna valida si\n"
+"definió LIMIT VAR D BELOW/ABOVE como 'default'. Si usted desea\n"
+"definir un tipo particular de variable dependiente, debe definir\n"
+"los limites LIMIT VAR D BELOW/ABOVE como valores reales (o 'none')"
+
+#: core/settings/check_and_set.py:186 core/settings/check_and_set.py:207
+msgid ""
+"Problem with particular range validation for dependent\n"
+"variable: '{0}' this must be a valid number, 'none' or 'default'."
+msgstr ""
+"Problema con el rango particular de validación para la variable\n"
+"dependiente: '{0}' éste debe de ser un numero valido, 'none' o 'default'."
+
+#: core/settings/check_and_set.py:219 core/settings/check_and_set.py:326
+msgid ""
+"The thresholds for {0} categories must have {1} thresholds,\n"
+"or 'default' for use thresholds by default defined for this variable."
+msgstr ""
+
+#: core/settings/check_and_set.py:236
+msgid ""
+"For {0} the 'mode_calculation_series_I' set as '{1}', but\n"
+"this series not accept this mode to calculate the series.\n"
+"For {0} series the options are: {2}"
+msgstr ""
+
+#: core/settings/check_and_set.py:243
+#, fuzzy
+msgid ""
+"The mode_calculation_series_I is wrong, the options are:\n"
+"default, accumulate or mean"
+msgstr ""
+"El marks_stations es incorrecto, las opciones son:\n"
+"disable, enable o default."
+
+#: core/settings/check_and_set.py:260 core/settings/check_and_set.py:280
+msgid ""
+"{0} not is valid internal type for independent variable if you\n"
+"defined LIMIT VAR I BELOW/ABOVE as 'default'. If you want\n"
+"define a particular type for independent variable, you must define\n"
+"as real values (or 'none') the LIMIT VAR I BELOW/ABOVE"
+msgstr ""
+"{0} no es un tipo de variable independiente interna valida si\n"
+"definió LIMIT VAR I BELOW/ABOVE como 'default'. Si usted desea\n"
+"definir un tipo particular de variable independiente, debe definir\n"
+"los limites LIMIT VAR I BELOW/ABOVE como valores reales (o 'none')"
+
+#: core/settings/check_and_set.py:272 core/settings/check_and_set.py:292
+msgid ""
+"Problem with particular range validation for independent\n"
+"variable: '{0}' this must be a valid number, 'none' or 'default'."
+msgstr ""
+"Problema con el rango particular de validación para la variable\n"
+"independiente: '{0}' éste debe de ser un numero valido, 'none' o 'default'."
+
+#: core/settings/check_and_set.py:307
+msgid ""
+"The 'path_to_file_var_I' is defined as 'internal' but the\n"
+"type of independent variable '{0}' not is a valid internal\n"
+"type. Please change type I to valid internal type, or define\n"
+"a valid path to file var I."
+msgstr ""
+"El 'path_to_file_var_I' está definido como 'internal' pero el\n"
+"el tipo de la variable independiente '{0}' no es un tipo de\n"
+"variable interno valido. Por favor, cambie el tipo de la var_I\n"
+"a un tipo interno valido, o defina una ruta al archivo var_I \n"
+"valido."
+
+#: core/settings/check_and_set.py:314
+#, fuzzy
+msgid ""
+"Can't open file '{0}' for var I,\n"
+"please check filename and check that its path is relative (to runfile) or\n"
+"absolute. If you want run var I with internals files\n"
+"of jaziku you need set 'PATH TO FILE VAR I' as 'internal'"
+msgstr ""
+"No se puede abrir el archivo '{0}' para la var I, \n"
+"por favor comprobar el nombre del archivo y verificar\n"
+"que su ruta sea relativa (al runfile) o absoluta.\n"
+"Si quiere correr var I con archivos internos de jaziku\n"
+"necesita de asignar a 'PATH TO FILE VAR I' como 'internal'"
+
+#: core/settings/check_and_set.py:336
+msgid ""
+"For the internals variables: ONI1, ONI2 or CAR you need\n"
+"defined 'analysis_interval' as 'trimester' because these\n"
+"time series have trimester values"
+msgstr ""
+
+#: core/settings/check_and_set.py:385
+msgid ""
+"The 'forecast_var_I_lag_{0}' should be a {1} valid\n"
+"values (int or float)."
+msgstr ""
+
+#: core/settings/check_and_set.py:391
+#, fuzzy
+msgid ""
+"The sum for the values of 'forecast_var_I_lag_{0}'\n"
+"in 'forecast options' in runfile, must be\n"
+"equal to 100."
+msgstr ""
+"La suma para los 3 valores del fenómeno para el\n"
+"rezago 0 en 'forecasting options' en el runfile\n"
+"deben ser iguales a 100"
+
+#: core/settings/check_and_set.py:406
+#, fuzzy
+msgid ""
+"The month for forecast '{0}' is invalid, must be a integer: month or month;"
+"day"
+msgstr ""
+"El trimestre del pronostico '{0}' no es valido, debe ser un numero entero"
+
+#: core/settings/check_and_set.py:412
+#, fuzzy
+msgid ""
+"The month for forecast '{0}' is invalid, must be a valid month number (1-12)"
+msgstr ""
+"El mes para el proceso del pronóstico '{0}' no es valido,\n"
+"debe ser un numero de mes valido (1-12)"
+
+#: core/settings/check_and_set.py:420
+msgid ""
+"The 'analysis_interval' is by trimester but the 'forecast_date'\n"
+"have the month and start day, please define only the start month\n"
+"for trimester for the forecast date."
+msgstr ""
+
+#: core/settings/check_and_set.py:426 core/settings/check_and_set.py:431
+#, fuzzy
+msgid ""
+"The day for forecast process '{0}' is invalid, \n"
+"must be a valid day number (1-31)"
+msgstr ""
+"El mes para el proceso del pronóstico '{0}' no es valido,\n"
+"debe ser un numero de mes valido (1-12)"
+
+#: core/settings/check_and_set.py:440
+#, fuzzy
+msgid ""
+"Start day (month/day) for forecast process '{0}'\n"
+"is invalid, must be a valid start day based on\n"
+"range analysis interval, the valid start days for\n"
+"{1} are: {2}"
+msgstr ""
+"El día de inicio (mes/día) para el proceso del pronóstico '{0}'\n"
+"es invalido, debe de ser un día de inicio valido basado en el\n"
+"intervalos de rango de análisis, los días de inicio validos para\n"
+"{1} son: {2}"
+
+#: core/settings/check_and_set.py:455
+msgid ""
+"The 'analysis_interval' is {0} but the 'forecast_date'\n"
+"only have the month, please define the month and start day\n"
+"for {0} (in different row) for the forecast date."
+msgstr ""
+
+#: core/settings/check_and_set.py:462 modules/climate/graphs.py:359
+msgid "trim {0} ({1})"
+msgstr "trim {0} ({1})"
+
+#: core/settings/check_and_set.py:528
+#, fuzzy
+msgid ""
+"The latitude values are wrong, these must be\n"
+"decimal degrees, and two values: minlat and maxlat\n"
+"in different column."
+msgstr ""
+"La latitud y/o longitud están incorrectas,\n"
+"estos deben ser grados decimales."
+
+#: core/settings/check_and_set.py:534
+msgid ""
+"Can't defined 'latitude' as 'internal' if 'shape_path'\n"
+"was not defined as 'internal'.\n"
+msgstr ""
+
+#: core/settings/check_and_set.py:540
+msgid ""
+"The latitude values are wrong, the minlat must be\n"
+"less to maxlat and their values must be between\n"
+"-90 to 90."
+msgstr ""
+
+#: core/settings/check_and_set.py:553
+msgid ""
+"The longitude values are wrong, these must be\n"
+"decimal degrees, and two values: minlon and maxlon\n"
+"in different column."
+msgstr ""
+
+#: core/settings/check_and_set.py:559
+msgid ""
+"Can't defined 'longitude' as 'internal' if 'shape_path'\n"
+"was not defined as 'internal'.\n"
+msgstr ""
+
+#: core/settings/check_and_set.py:565
+msgid ""
+"The longitude values are wrong, the minlon must be\n"
+"less to maxlon and their values must be between\n"
+"-180 to 180."
+msgstr ""
+
+#: core/settings/check_and_set.py:577
+msgid ""
+"\n"
+"Checking the stations list:"
+msgstr ""
+"\n"
+"Comprobando la lista de estaciones:"
+
+#: core/settings/check_and_set.py:588
+msgid ""
+"The combination of the code and name of the station can't repeat,\n"
+"many result will be replaced with the same code-name of station."
+msgstr ""
+"La combinación del código con el nombre de la estación\n"
+"no se pueden repetir, muchos resultados podrían ser\n"
+"reemplazados con el mismo código-nombre de la estación."
+
+#: core/settings/check_and_set.py:599 core/settings/check_and_set.py:606
+msgid "WARNING:"
+msgstr "ADVERTENCIA:"
+
+#: core/settings/check_and_set.py:600
+msgid ""
+"   The code '{0}' of the station '{1}' is repeat\n"
+"   with other stations, is recommend that the code and name\n"
+"   of stations be different. This is only a recommendation,\n"
+"   you can continue."
+msgstr ""
+"   El código '{0}' de la estación '{1}' esta repetido\n"
+"   con otra estación, es recomendado que el código\n"
+"   y el nombre de la estaciones sean diferentes. Solo\n"
+"   es una recomendación, puede continuar."
+
+#: core/settings/check_and_set.py:607
+msgid ""
+"   The name '{0}' of the station with code '{1}' is repeat\n"
+"   with other stations, is recommend that the code and name\n"
+"   of stations be different. This is only a recommendation,\n"
+"   you can continue."
+msgstr ""
+"   El nombre '{0}' de la estación con código '{1}'\n"
+"   esta repetido con otra estación, es recomendado que\n"
+"   el código y el nombre de la estaciones sean diferentes.\n"
+"   Solo es una recomendación, puede continuar."
+
+#: core/settings/check_and_set.py:624
+#, fuzzy
+msgid ""
+"The latitude values are wrong, must be between\n"
+"-90 to 90."
+msgstr ""
+"La latitud y/o longitud están incorrectas,\n"
+"estos deben ser grados decimales."
+
+#: core/settings/check_and_set.py:629
+msgid ""
+"The longitude values are wrong, must be between\n"
+"-180 to 180."
+msgstr ""
+
+#: core/settings/check_and_set.py:634
+#, fuzzy
+msgid ""
+"The altitude values are wrong, must be between\n"
+"-1000 to 10000."
+msgstr ""
+"La latitud y/o longitud están incorrectas,\n"
+"estos deben ser grados decimales."
+
+#: core/settings/get.py:31 core/settings/get.py:32 core/settings/get.py:33
+#: core/settings/get.py:34 core/settings/get.py:35 core/settings/get.py:38
+#: core/settings/get.py:39 core/settings/get.py:40 core/settings/get.py:41
+#: core/settings/get.py:44 core/settings/get.py:382 core/settings/get.py:383
+msgid "disabled"
+msgstr "desactivado"
+
+#: core/settings/get.py:42 core/settings/get.py:52 core/settings/get.py:60
+#: core/settings/get.py:68 core/settings/get.py:166 core/settings/get.py:172
+#: core/settings/get.py:341 core/settings/get.py:350 core/settings/get.py:369
+msgid "enabled"
+msgstr "activado"
+
+#: core/settings/get.py:54
+msgid ""
+"'data_analysis' variable in runfile is wrong,\n"
+"this must be 'enable' or 'disable'"
+msgstr ""
+"La variable 'data_analysis' en el runfile es\n"
+"incorrecta, éste debe ser 'enable' o 'disable'"
+
+#: core/settings/get.py:62
+msgid ""
+"'climate_process' variable in runfile is wrong,\n"
+"this must be 'enable' or 'disable'"
+msgstr ""
+"La variable 'climate_process' en el runfile es\n"
+"incorrecta, éste debe ser 'enable' o 'disable'"
+
+#: core/settings/get.py:70
+#, fuzzy
+msgid ""
+"'forecast_process' variable in runfile is wrong,\n"
+"this must be 'enable' or 'disable'"
+msgstr ""
+"La variable 'forecasting_process' en el runfile es\n"
+"incorrecta, éste debe ser 'enable' o 'disable'"
+
+#: core/settings/get.py:78
+msgid ""
+"The 'analysis_interval' defined in runfile {0} is invalid,\n"
+"must be one of these: {1}"
+msgstr ""
+"El intervalo de análisis {0} definido en el runfile es invalido,\n"
+"debería ser uno de estos: {1}"
+
+#: core/settings/get.py:92
+msgid "5days"
+msgstr "5dias"
+
+#: core/settings/get.py:92
+msgid "10days"
+msgstr "10dias"
+
+#: core/settings/get.py:92
+msgid "15days"
+msgstr "15dias"
+
+#: core/settings/get.py:92
+msgid "trimester"
+msgstr "trimestre"
+
+#: core/settings/get.py:118
+#, fuzzy
+msgid ""
+"The period must be: start_year and end_year (in different row)\n"
+"or 'maximum' for take the process period maximum possible by station."
+msgstr ""
+"El periodo debe ser: año_inicial-año_final (ej 1980-2008)\n"
+"o 'maximum' para tomar el periodo máximo posible.\n"
+"\n"
+"{0}"
+
+#: core/settings/get.py:145
+msgid "The lags may be: 0, 1 and/or 2 (in different row), 'all' or 'default'"
+msgstr ""
+"Los rezagos deben ser: 0, 1 y/o 2 (en diferentes columnas), 'all' o 'default'"
+
+#: core/settings/get.py:212 core/settings/get.py:226 core/settings/get.py:237
+#: core/settings/get.py:244 core/settings/get.py:274 core/settings/get.py:288
+#: core/settings/get.py:299 core/settings/get.py:306
+msgid "default"
+msgstr "predeterminado"
+
+#: core/settings/get.py:215
+#, fuzzy
+msgid ""
+"Problem with particular range validation for dependent\n"
+"variable: '{0}' this must be a valid number: <below>;<above>,\n"
+"'none' or 'default'."
+msgstr ""
+"Problema con el rango particular de validación para la variable\n"
+"dependiente: '{0}' éste debe de ser un numero valido, 'none' o 'default'."
+
+#: core/settings/get.py:277
+#, fuzzy
+msgid ""
+"Problem with particular range validation for independent\n"
+"variable: '{0}' this must be a valid number: <below>;<above>,\n"
+"'none' or 'default'."
+msgstr ""
+"Problema con el rango particular de validación para la variable\n"
+"independiente: '{0}' éste debe de ser un numero valido, 'none' o 'default'."
+
+#: core/settings/get.py:338
+#, fuzzy
+msgid ""
+"the maps options are: 'climate', 'forecast', 'correlation' (in different "
+"row), or 'all'."
+msgstr ""
+"las opciones para 'maps' son: 'climate', 'forecasting', "
+"'correlation' (separados por coma), o 'all'."
+
+#: core/settings/get.py:355
+msgid ""
+"The marks_stations is wrong, the options are:\n"
+"disable, enable or default."
+msgstr ""
+"El marks_stations es incorrecto, las opciones son:\n"
+"disable, enable o default."
+
+#: core/settings/get.py:364
+msgid ""
+"The overlapping solution is wrong, the options are:\n"
+"default, average, maximum, minimum or neither"
+msgstr ""
+"La solución de solapamiento es incorrecta, las opciones son:\n"
+"default, average, maximum, minimum o neither"
+
+#: core/settings/get.py:373
+msgid ""
+"The shape_boundary is wrong, the options are:\n"
+"disable, enable or default."
+msgstr ""
+"El shape_boundary es incorrecto, las opciones son:\n"
+"disable, enable o default."
+
+#: core/settings/get.py:380
+msgid ""
+"\n"
+"Climate process is disable, then forecast and maps\n"
+"process will be disabled."
+msgstr ""
+"\n"
+"El proceso de clima esta desactivado, por consiguiente el\n"
+"proceso de pronóstico y mapas serán desactivados."
+
+#: core/settings/__init__.py:51
+msgid ""
+"\n"
+"Please check the configuration to run, continue?"
+msgstr ""
+"\n"
+"Por favor revise la configuración de corrida, ¿desea continuar? "
+
+#: core/settings/__init__.py:54 utils/output.py:81
+msgid ""
+"\n"
+"exit"
+msgstr ""
+"\n"
+"saliendo"
+
+#: core/settings/show.py:41
+msgid ""
+"\n"
+"CONFIGURATION RUN:"
+msgstr ""
+"\n"
+"CONFIGURACIÓN DE LA CORRIDA:"
+
+#: core/settings/show.py:119
+msgid ""
+"\n"
+"MAPS:"
+msgstr ""
+"\n"
+"MAPAS:"
+
+#: core/settings/show.py:157
+msgid ""
+"\n"
+" > You are using internal files for independent\n"
+"   variable defined as {0} which has data from\n"
+"   {1} to {2} and the source of data was\n"
+"   obtained in {3}.\n"
+"   url: {4}"
+msgstr ""
+"\n"
+" > Esta usando los archivos internos para la variable\n"
+"   independiente definido como {0} el cual tiene datos\n"
+"   desde {1} hasta {2} y la fuente de los datos fue\n"
+"   obtenido en {3}.\n"
+"   url: {4}"
+
+#: core/settings/show.py:170
+msgid ""
+"\n"
+" > WARNING: you are using one or more limits as\n"
+"   'none' value, this means that series values\n"
+"   will not be checked if they are valid in\n"
+"   its limits coherent. This option is not\n"
+"   recommended, use it with precaution"
+msgstr ""
+"\n"
+" > ADVERTENCIA: Usted está usando uno o ambos limites\n"
+"   como 'none', esto significa que los valores de las\n"
+"   series no serán revisadas si éstas son validas en sus\n"
+"   limites lógicos. Ésta opción no esta recomendada,\n"
+"   úsela con mucha precaución"
+
+#: core/variable.py:135 core/variable.py:203
+msgid ""
+"Reading var {0} from file '{1}':\n"
+"don't have the minimum data required (november and december)\n"
+"for the first year ({2}) of the series."
+msgstr ""
+"Leyendo var {0} desde el archivo '{1}':\n"
+"no tiene los datos mínimos requeridos (noviembre y diciembre)\n"
+"para el primer año ({2}) de la serie."
+
+#: core/variable.py:166 core/variable.py:233
+msgid ""
+"Reading var {0} from file '{1}':\n"
+"don't have the minimum data required (january and february)\n"
+"for the last year ({2}) of the series."
+msgstr ""
+"Leyendo var {0} desde el archivo '{1}':\n"
+"no tiene los datos mínimos requeridos (enero y febrero)\n"
+"para el ultimo año ({2}) de la serie."
+
+#: core/station.py:66
+msgid ""
+"The two series don't have any common period,\n"
+"Jaziku need at least 3 year of common period\n"
+"between the two series."
+msgstr ""
+
+#: core/station.py:75
+msgid ""
+"\n"
+"Calculating the process period ................ "
+msgstr ""
+"\n"
+"Calculando el periodo del proceso .................. "
+
+#: core/station.py:77
+msgid ""
+"The period defined in argument {0}-{1} is outside in the\n"
+"maximum possible period for this station: {2}-{3}."
+msgstr ""
+"El periodo definido en el argumento {0}-{1} esta por fuera\n"
+"del máximo periodo posible para esta estación: {2}-{3}."
+
+#: core/station.py:96
+msgid "Calculating the common period ................. "
+msgstr "Calculando el periodo común .......... "
+
+#: core/station.py:98
+#, fuzzy
+msgid ""
+"The common period calculated {0}-{1}. Jaziku need\n"
+"at least 3 year of common period between the two series."
+msgstr "El periodo común calculado {0}-{1} no tiene por lo menos 3 años."
+
+#: core/analysis_interval.py:92
+msgid ""
+"The var_D of stations have data monthly, but you define\n"
+"in runfile the analysis interval as '{0}', this must be,\n"
+"in this case, as 'trimester' or use data daily."
+msgstr ""
+"La var_D de las estaciones tiene datos mensuales, pero usted definió\n"
+"en el runfile el intervalo de análisis como '{0}', este debe ser, para este\n"
+"caso, como 'trimester' o use datos diarios."
+
+#: core/analysis_interval.py:101 core/analysis_interval.py:122
+msgid "   Converting var I of all stations to data monthly ..... "
+msgstr ""
+"   Convirtiendo la var I de todas las estaciones a datos mensuales ... "
+
+#: core/analysis_interval.py:116
+msgid "   Converting var D of all stations to data monthly ..... "
+msgstr ""
+"   Convirtiendo la var D de todas las estaciones a datos mensuales ... "
 
 #: utils/console.py:74
 msgid ""
@@ -101,1122 +1076,376 @@ msgstr ""
 msgid "Reading the station from the runfile in line {0}:\n"
 msgstr "Leyendo la estación desde el runfile en la linea {0}:\n"
 
-#: utils/console.py:125
+#: utils/console.py:131
 msgid "The Configuration run from the runfile in line {0}:\n"
 msgstr "La configuración de corrida desde el runfile en la linea {0}:\n"
 
-#: utils/console.py:130
+#: utils/console.py:136
 msgid "Error in configuration run from the runfile:\n"
 msgstr "Error en la configuración de corrida desde el runfile:\n"
 
-#: utils/settings_run.py:32 utils/settings_run.py:33 utils/settings_run.py:34
-#: utils/settings_run.py:35 utils/settings_run.py:36 utils/settings_run.py:39
-#: utils/settings_run.py:40 utils/settings_run.py:41 utils/settings_run.py:45
-#: utils/settings_run.py:48 utils/settings_run.py:288
-#: utils/settings_run.py:289
-msgid "disabled"
-msgstr "desactivado"
+#: utils/query.py:57
+msgid "Please respond with 'y' or 'n'"
+msgstr "Por favor responder con 'y' o 'n'"
 
-#: utils/settings_run.py:46 utils/settings_run.py:55 utils/settings_run.py:61
-#: utils/settings_run.py:67 utils/settings_run.py:196
-#: utils/settings_run.py:199 utils/settings_run.py:203
-#: utils/settings_run.py:258 utils/settings_run.py:277
-msgid "enabled"
-msgstr "activado"
+#: utils/query.py:76
+msgid "   Please respond with 'r', 'm' or 'c'"
+msgstr "   Por favor responder con 'r', 'm' o 'c'"
 
-#: utils/settings_run.py:57
+#: utils/output.py:33
 msgid ""
-"'data_analysis' variable in runfile is wrong,\n"
-"this must be 'enable' or 'disable'"
-msgstr ""
-"La variable 'data_analysis' en el runfile es\n"
-"incorrecta, éste debe ser 'enable' o 'disable'"
-
-#: utils/settings_run.py:63
-msgid ""
-"'climate_process' variable in runfile is wrong,\n"
-"this must be 'enable' or 'disable'"
-msgstr ""
-"La variable 'climate_process' en el runfile es\n"
-"incorrecta, éste debe ser 'enable' o 'disable'"
-
-#: utils/settings_run.py:69
-msgid ""
-"'forecasting_process' variable in runfile is wrong,\n"
-"this must be 'enable' or 'disable'"
-msgstr ""
-"La variable 'forecasting_process' en el runfile es\n"
-"incorrecta, éste debe ser 'enable' o 'disable'"
-
-#: utils/settings_run.py:75
-msgid ""
-"The 'analysis_interval' defined in runfile {0} is invalid,\n"
-"must be one of these: {1}"
-msgstr ""
-"El intervalo de análisis {0} definido en el runfile es invalido,\n"
-"debería ser uno de estos: {1}"
-
-#: utils/settings_run.py:89
-msgid "5days"
-msgstr "5dias"
-
-#: utils/settings_run.py:89
-msgid "10days"
-msgstr "10dias"
-
-#: utils/settings_run.py:89
-msgid "15days"
-msgstr "15dias"
-
-#: utils/settings_run.py:89
-msgid "trimester"
-msgstr "trimestre"
-
-#: utils/settings_run.py:110
-msgid ""
-"The period must be: year_start-year_end (ie. 1980-2008)\n"
-"or 'maximum' for take the process period maximum possible.\n"
+"Problems creating the directory: {0}\n"
 "\n"
-"{0}"
+"{1}"
 msgstr ""
-"El periodo debe ser: año_inicial-año_final (ej 1980-2008)\n"
-"o 'maximum' para tomar el periodo máximo posible.\n"
+"Problemas creando el directorio: {0}\n"
 "\n"
-"{0}"
+"{1}"
 
-#: utils/settings_run.py:131
-msgid "The lags may be: 0, 1 and/or 2 (comma separated), 'all' or 'default'"
-msgstr ""
-"Los rezagos deben ser: 0, 1 y/o 2 (separados por coma), 'all' o 'default'"
-
-#: utils/settings_run.py:143 utils/settings_run.py:150
-#: utils/settings_run.py:155 utils/settings_run.py:159
-#: utils/settings_run.py:174 utils/settings_run.py:181
-#: utils/settings_run.py:186 utils/settings_run.py:190
-msgid "default"
-msgstr "predeterminado"
-
-#: utils/settings_run.py:209
-msgid "var_I_below"
-msgstr "var_I_por_debajo"
-
-#: utils/settings_run.py:216
-msgid "var_I_normal"
-msgstr "var_I_normal"
-
-#: utils/settings_run.py:223
-msgid "var_I_above"
-msgstr "var_I_por_encima"
-
-#: utils/settings_run.py:252
-msgid ""
-"the maps options are: 'climate', 'forecasting', 'correlation' (comma "
-"separated), or 'all'."
-msgstr ""
-"las opciones para 'maps' son: 'climate', 'forecasting', "
-"'correlation' (separados por coma), o 'all'."
-
-#: utils/settings_run.py:263
-msgid ""
-"The marks_stations is wrong, the options are:\n"
-"disable, enable or default."
-msgstr ""
-"El marks_stations es incorrecto, las opciones son:\n"
-"disable, enable o default."
-
-#: utils/settings_run.py:272
-msgid ""
-"The overlapping solution is wrong, the options are:\n"
-"default, average, maximum, minimum or neither"
-msgstr ""
-"La solución de solapamiento es incorrecta, las opciones son:\n"
-"default, average, maximum, minimum o neither"
-
-#: utils/settings_run.py:281
-msgid ""
-"The shape_boundary is wrong, the options are:\n"
-"disable, enable or default."
-msgstr ""
-"El shape_boundary es incorrecto, las opciones son:\n"
-"disable, enable o default."
-
-#: utils/settings_run.py:286
+#: utils/output.py:41
 msgid ""
 "\n"
-"Climate process is disable, then forecasting and maps\n"
-"process will be disabled."
+"Directory where to save all results:"
 msgstr ""
 "\n"
-"El proceso de clima esta desactivado, por consiguiente el\n"
-"proceso de pronóstico y mapas serán desactivados."
+"Directorio donde se guardarán todos los resultados:"
 
-#: utils/settings_run.py:302
-msgid ""
-"\n"
-"Configuration run:"
-msgstr ""
-"\n"
-"Configuración de la corrida:"
+#: utils/output.py:53
+msgid "Jaziku_Data_Analysis"
+msgstr "Jaziku_Análisis_de_Datos"
 
-#: utils/settings_run.py:400
-msgid ""
-"\n"
-" > You are using internal files for independent\n"
-"   variable defined as {0} which has data from\n"
-"   {1} to {2} and the source of data was\n"
-"   obtained in {3}.\n"
-"   url: {4}"
-msgstr ""
-"\n"
-" > Esta usando los archivos internos para la variable\n"
-"   independiente definido como {0} el cual tiene datos\n"
-"   desde {1} hasta {2} y la fuente de los datos fue\n"
-"   obtenido en {3}.\n"
-"   url: {4}"
+#: utils/output.py:60
+msgid "Jaziku_Climate"
+msgstr "Jaziku_Clima"
 
-#: utils/settings_run.py:413
-msgid ""
-"\n"
-" > WARNING: you are using one or more limits as\n"
-"   'none' value, this means that series values\n"
-"   will not be checked if they are valid in\n"
-"   its limits coherent. This option is not\n"
-"   recommended, use it with precaution"
-msgstr ""
-"\n"
-" > ADVERTENCIA: Usted está usando uno o ambos limites\n"
-"   como 'none', esto significa que los valores de las\n"
-"   series no serán revisadas si éstas son validas en sus\n"
-"   limites lógicos. Ésta opción no esta recomendada,\n"
-"   úsela con mucha precaución"
+#: utils/output.py:67 modules/forecast/forecast.py:38
+msgid "Jaziku_Forecast"
+msgstr "Jaziku_Pronostico"
 
-#: utils/settings_run.py:433 utils/settings_run.py:453
-msgid ""
-"{0} not is valid internal type for dependent variable if you\n"
-"defined LIMIT VAR D BELOW/ABOVE as 'default'. If you want\n"
-"define a particular type for dependent variable, you must define\n"
-"as real values (or 'none') the LIMIT VAR D BELOW/ABOVE"
-msgstr ""
-"{0} no es un tipo de variable dependiente interna valida si\n"
-"definió LIMIT VAR D BELOW/ABOVE como 'default'. Si usted desea\n"
-"definir un tipo particular de variable dependiente, debe definir\n"
-"los limites LIMIT VAR D BELOW/ABOVE como valores reales (o 'none')"
+#: utils/output.py:72
+msgid " > WARNING: the following output directories already exist:"
+msgstr " > ADVERTENCIA: los siguientes directorios ya existen:"
 
-#: utils/settings_run.py:445 utils/settings_run.py:465
-msgid ""
-"Problem with particular range validation for dependent\n"
-"variable: '{0}' this must be a valid number, 'none' or 'default'."
-msgstr ""
-"Problema con el rango particular de validación para la variable\n"
-"dependiente: '{0}' éste debe de ser un numero valido, 'none' o 'default'."
+#: utils/output.py:77
+msgid "   What do you like to do? [r]eplace, [m]erge or [c]ancel"
+msgstr "   ¿Qué desea hacer? [r]emplazar, [m]ezclar o [c]ancelar"
 
-#: utils/settings_run.py:480 utils/settings_run.py:500
-msgid ""
-"{0} not is valid internal type for independent variable if you\n"
-"defined LIMIT VAR I BELOW/ABOVE as 'default'. If you want\n"
-"define a particular type for independent variable, you must define\n"
-"as real values (or 'none') the LIMIT VAR I BELOW/ABOVE"
-msgstr ""
-"{0} no es un tipo de variable independiente interna valida si\n"
-"definió LIMIT VAR I BELOW/ABOVE como 'default'. Si usted desea\n"
-"definir un tipo particular de variable independiente, debe definir\n"
-"los limites LIMIT VAR I BELOW/ABOVE como valores reales (o 'none')"
-
-#: utils/settings_run.py:492 utils/settings_run.py:512
-msgid ""
-"Problem with particular range validation for independent\n"
-"variable: '{0}' this must be a valid number, 'none' or 'default'."
-msgstr ""
-"Problema con el rango particular de validación para la variable\n"
-"independiente: '{0}' éste debe de ser un numero valido, 'none' o 'default'."
-
-#: utils/settings_run.py:525
-msgid ""
-"The 'path_to_file_var_I' is defined as 'internal' but the\n"
-"type of independent variable '{0}' not is a valid internal\n"
-"type. Please change type I to valid internal type, or define\n"
-"a valid path to file var I."
-msgstr ""
-"El 'path_to_file_var_I' está definido como 'internal' pero el\n"
-"el tipo de la variable independiente '{0}' no es un tipo de\n"
-"variable interno valido. Por favor, cambie el tipo de la var_I\n"
-"a un tipo interno valido, o defina una ruta al archivo var_I \n"
-"valido."
-
-#: utils/settings_run.py:532
-msgid ""
-"Can't open file '{0}' for var I, \n"
-"please check filename and check that its path is relative (to runfile) or\n"
-"absolute. If you want run var I with internals files\n"
-"of jaziku you need set 'PATH TO FILE VAR I' as 'internal'"
-msgstr ""
-"No se puede abrir el archivo '{0}' para la var I, \n"
-"por favor comprobar el nombre del archivo y verificar\n"
-"que su ruta sea relativa (al runfile) o absoluta.\n"
-"Si quiere correr var I con archivos internos de jaziku\n"
-"necesita de asignar a 'PATH TO FILE VAR I' como 'internal'"
-
-#: utils/settings_run.py:543 utils/settings_run.py:547
-msgid ""
-"The thresholds can't be define as 'default' if the\n"
-"type of independent variable not is valid internal type."
-msgstr ""
-"Los umbrales no pueden ser definidos como 'default'\n"
-"si el tipo de la variable independiente no es un tipo\n"
-"interno valido."
-
-#: utils/settings_run.py:561
-msgid ""
-"The sum for the 3 values of phenomenon for lag 0\n"
-"in 'forecasting options' in runfile must be\n"
-"equal to 100."
-msgstr ""
-"La suma para los 3 valores del fenómeno para el\n"
-"rezago 0 en 'forecasting options' en el runfile\n"
-"deben ser iguales a 100"
-
-#: utils/settings_run.py:570
-msgid ""
-"The sum for the 3 values of phenomenon for lag 1\n"
-"in 'forecasting options' in runfile must be\n"
-"equal to 100."
-msgstr ""
-"La suma para los 3 valores del fenómeno para el\n"
-"rezago 1 en 'forecasting options' en el runfile\n"
-"deben ser iguales a 100"
-
-#: utils/settings_run.py:579
-msgid ""
-"The sum for the 3 values of phenomenon for lag 2\n"
-"in 'forecasting options' in runfile must be\n"
-"equal to 100."
-msgstr ""
-"La suma para los 3 valores del fenómeno para el\n"
-"rezago 2 en 'forecasting options' en el runfile\n"
-"deben ser iguales a 100"
-
-#: utils/settings_run.py:585
-msgid ""
-"\n"
-"Checking the stations list:"
-msgstr ""
-"\n"
-"Comprobando la lista de estaciones:"
-
-#: utils/settings_run.py:596
-msgid ""
-"The combination of the code and name of the station can't repeat,\n"
-"many result will be replaced with the same code-name of station."
-msgstr ""
-"La combinación del código con el nombre de la estación\n"
-"no se pueden repetir, muchos resultados podrían ser\n"
-"reemplazados con el mismo código-nombre de la estación."
-
-#: utils/settings_run.py:607 utils/settings_run.py:614
-msgid "WARNING:"
-msgstr "ADVERTENCIA:"
-
-#: utils/settings_run.py:608
-msgid ""
-"   The code {0} of the station {1} is repeat\n"
-"   with other stations, is recommend that the code and name\n"
-"   of stations be different. This is only a recommendation,\n"
-"   you can continue."
-msgstr ""
-"   El código {0} de la estación {1} esta repetido\n"
-"   con otra estación, es recomendado que el código\n"
-"   y el nombre de la estaciones sean diferentes. Solo\n"
-"   es una recomendación, puede continuar."
-
-#: utils/settings_run.py:615
-msgid ""
-"   The name {0} of the station with code {1} is repeat\n"
-"   with other stations, is recommend that the code and name\n"
-"   of stations be different. This is only a recommendation,\n"
-"   you can continue."
-msgstr ""
-"   El nombre {0} de la estación con código {1}\n"
-"   esta repetido con otra estación, es recomendado que\n"
-"   el código y el nombre de la estaciones sean diferentes.\n"
-"   Solo es una recomendación, puede continuar."
-
-#: utils/settings_run.py:625 modules/input/input_check.py:83
-#: modules/forecasting/forecasting.py:136 modules/climate/climate.py:73
-#: modules/maps/maps.py:67 modules/maps/maps.py:380 modules/maps/maps.py:491
-#: modules/maps/maps.py:548 modules/variable.py:109
-#: modules/data_analysis/data_analysis.py:56 modules/data_analysis/eda.py:154
-#: modules/data_analysis/eda.py:160 modules/data_analysis/eda.py:170
-#: modules/data_analysis/eda.py:178 modules/data_analysis/eda.py:200
-#: modules/data_analysis/eda.py:220 modules/data_analysis/eda.py:228
-#: modules/data_analysis/eda.py:250
-msgid "done"
-msgstr "hecho"
-
-#: utils/settings_run.py:658
-msgid "Please respond with 'y' or 'n'.\n"
-msgstr "Por favor responder con 'y' o 'n'.\n"
-
-#: utils/settings_run.py:664
-msgid ""
-"\n"
-"Please check the configuration to run, continue?"
-msgstr ""
-"\n"
-"Por favor revise la configuración de corrida, ¿desea continuar? "
-
-#: utils/settings_run.py:667
-msgid ""
-"\n"
-"exit"
-msgstr ""
-"\n"
-"saliendo"
-
-#: utils/globals_vars.py:85 utils/globals_vars.py:87
+#: utils/format_out.py:37 utils/format_out.py:39
 msgid "NDJ"
 msgstr "NDE"
 
-#: utils/globals_vars.py:85 utils/globals_vars.py:87
+#: utils/format_out.py:37 utils/format_out.py:39
 msgid "DJF"
 msgstr "DEF"
 
-#: utils/globals_vars.py:85
+#: utils/format_out.py:37
 msgid "JFM"
 msgstr "EFM"
 
-#: utils/globals_vars.py:85
+#: utils/format_out.py:37
 msgid "FMA"
 msgstr "FMA"
 
-#: utils/globals_vars.py:85
+#: utils/format_out.py:37
 msgid "MAM"
 msgstr "MAM"
 
-#: utils/globals_vars.py:86
+#: utils/format_out.py:38
 msgid "AMJ"
 msgstr "AMJ"
 
-#: utils/globals_vars.py:86
+#: utils/format_out.py:38
 msgid "MJJ"
 msgstr "MJJ"
 
-#: utils/globals_vars.py:86
+#: utils/format_out.py:38
 msgid "JJA"
 msgstr "JJA"
 
-#: utils/globals_vars.py:86
+#: utils/format_out.py:38
 msgid "JAS"
 msgstr "JAS"
 
-#: utils/globals_vars.py:86
+#: utils/format_out.py:38
 msgid "ASO"
 msgstr "ASO"
 
-#: utils/globals_vars.py:87
+#: utils/format_out.py:39
 msgid "SON"
 msgstr "SON"
 
-#: utils/globals_vars.py:87
+#: utils/format_out.py:39
 msgid "OND"
 msgstr "OND"
 
-#: utils/globals_vars.py:93 utils/globals_vars.py:95
+#: utils/format_out.py:47 utils/format_out.py:49
 msgid "Nov"
 msgstr "Nov"
 
-#: utils/globals_vars.py:93 utils/globals_vars.py:95
+#: utils/format_out.py:47 utils/format_out.py:49
 msgid "Dec"
 msgstr "Dec"
 
-#: utils/globals_vars.py:93
+#: utils/format_out.py:47
 msgid "Jan"
 msgstr "Ene"
 
-#: utils/globals_vars.py:93
+#: utils/format_out.py:47
 msgid "Feb"
 msgstr "Feb"
 
-#: utils/globals_vars.py:93
+#: utils/format_out.py:47
 msgid "Mar"
 msgstr "Mar"
 
-#: utils/globals_vars.py:94
+#: utils/format_out.py:48
 msgid "Apr"
 msgstr "Abr"
 
-#: utils/globals_vars.py:94
+#: utils/format_out.py:48
 msgid "May"
 msgstr "May"
 
-#: utils/globals_vars.py:94
+#: utils/format_out.py:48
 msgid "Jun"
 msgstr "Jun"
 
-#: utils/globals_vars.py:94
+#: utils/format_out.py:48
 msgid "Jul"
 msgstr "Jul"
 
-#: utils/globals_vars.py:94
+#: utils/format_out.py:48
 msgid "Aug"
 msgstr "Ago"
 
-#: utils/globals_vars.py:95
+#: utils/format_out.py:49
 msgid "Sep"
 msgstr "Sep"
 
-#: utils/globals_vars.py:95
+#: utils/format_out.py:49
 msgid "Oct"
 msgstr "Oct"
 
-#: modules/input/input_validation.py:69
+#: env/var_D.py:45
+msgid "days"
+msgstr "dias"
+
+#: env/var_D.py:208
+#, fuzzy
 msgid ""
-"exception validation in dependent variable:\n"
-"The value {0} is out of range {1} to {2} for {3}.\n"
+"The frequency data '{0}' for the var D is different\n"
+"for the others stations before assigned as '{2}'.\n"
 "\n"
-"{4}"
+"Jaziku requires that all stations for var D\n"
+"have identical frequency data."
 msgstr ""
-"error en la validación de la variable dependiente:\n"
-"El valor {0} esta fuera del rango {1} a {2} para {3}.\n"
-"\n"
-"{4}"
-
-#: modules/input/input_validation.py:83 modules/input/input_validation.py:89
-#: modules/input/input_validation.py:95 modules/input/input_validation.py:365
-#: modules/input/input_validation.py:370 modules/input/input_validation.py:375
-msgid "{0} not valid in particular limits defined in runfile"
-msgstr "{0} no es un limite particular valido definido en el runfile"
-
-#: modules/input/input_validation.py:115 modules/input/input_validation.py:129
-msgid "precipitation not valid"
-msgstr "precipitación no valida"
-
-#: modules/input/input_validation.py:134
-msgid ""
-"validation: (NDPPT) number of days with rain must have\n"
-"data monthly"
-msgstr ""
-"validando: (NDPPT) numero de días con lluvia debe tener\n"
-"datos mensuales"
-
-#: modules/input/input_validation.py:173 modules/input/input_validation.py:187
-msgid "minimum temperature not valid"
-msgstr "temperatura mínima no valida"
-
-#: modules/input/input_validation.py:204 modules/input/input_validation.py:218
-msgid "maximum temperature not valid"
-msgstr "temperatura máxima no valida"
-
-#: modules/input/input_validation.py:235 modules/input/input_validation.py:248
-msgid "medium temperature not valid"
-msgstr "temperatura media no valida"
-
-#: modules/input/input_validation.py:264
-msgid "atmosfere pressure not valid"
-msgstr "presión atmosférica no valida"
-
-#: modules/input/input_validation.py:280
-#, python-format
-msgid "% of relative humidity not valid"
-msgstr "% de humedad relativa no valida"
-
-#: modules/input/input_validation.py:296
-msgid "Runoff not valid"
-msgstr "Runoff no válido"
-
-#: modules/input/input_validation.py:351
-msgid ""
-"exception validation in independent variable:\n"
-"The value {0} is out of range {1} to {2} for {3}.\n"
-"\n"
-"{4}"
-msgstr ""
-"error en la validación de la variable independiente:\n"
-"El valor {0} esta fuera del rango {1} a {2} para {3}.\n"
-"\n"
-"{4}"
-
-#: modules/input/input_validation.py:393 modules/input/input_validation.py:409
-msgid "Oceanic Nino Index not valid"
-msgstr "Indice oceánico del niño no valido"
-
-#: modules/input/input_validation.py:425
-msgid "Index of the Southern Oscillation NOAA not valid"
-msgstr "Indice de la oscilación del sur NOAA no valido"
-
-#: modules/input/input_validation.py:441
-msgid "Index of the Southern Oscillation TROUP not valid"
-msgstr "Indice de la oscilación del sur TROUP no valido"
-
-#: modules/input/input_validation.py:457
-msgid "Multivariate ENSO index not valid"
-msgstr "Indice multivariado del ENSO no valido"
-
-#: modules/input/input_validation.py:473
-msgid "Radiation wavelength Long tropical not valid"
-msgstr "Radiación tropical de onda larga no valida"
-
-#: modules/input/input_validation.py:489
-msgid "Anomaly index of wind to 200 hpa not valid"
-msgstr "Indice de la anomalía del viento a 200 hpa no valida"
-
-#: modules/input/input_validation.py:505
-msgid "Anomaly index of wind to 850 hpa west not valid"
-msgstr "Indice de la anomalía del viento a 850 hpa oeste no valida"
-
-#: modules/input/input_validation.py:522
-msgid "Anomaly index of wind to 850 hpa center not valid"
-msgstr "Indice de la anomalía del viento a 850 hpa central no valida"
-
-#: modules/input/input_validation.py:538
-msgid "Anomaly index of wind to 850 hpa east not valid"
-msgstr "Indice de la anomalía del viento a 850 hpa este no valida"
-
-#: modules/input/input_validation.py:554
-msgid "Sea surface temperature not valid"
-msgstr "Temperatura superficial del mar no valida"
-
-#: modules/input/input_validation.py:570 modules/input/input_validation.py:586
-#: modules/input/input_validation.py:602 modules/input/input_validation.py:618
-msgid "Anomaly sea surface temperature not valid"
-msgstr "Anomalía de la temperatura superficial del mar no valida"
-
-#: modules/input/input_validation.py:634
-msgid "% Amazon relative humidity not valid"
-msgstr "% humedad relativa de la Amazonia no valida"
-
-#: modules/input/input_validation.py:650
-msgid "North Atlantic Oscillation index not valid"
-msgstr "Indice de la oscilación del Atlántico norte no valida"
-
-#: modules/input/input_validation.py:666
-msgid "Quasibienal Oscillation Index not valid"
-msgstr "Indice de la oscilacion quasibienal no valida"
-
-#: modules/input/input_validation.py:682
-msgid "Caribbean (CAR) Index not valid"
-msgstr "Indice del caribe (CAR) no valido"
-
-#: modules/input/input_validation.py:698
-msgid "Monthly anomaly of the ocean surface area ocean region not valid"
-msgstr ""
-"Anomalía mensual de la región de la superficie del area oceánica no valida"
-
-#: modules/input/input_check.py:47
-msgid "Check if var {0} are consistent"
-msgstr "Comprobar si la var {0} es consistente "
-
-#: modules/input/input_check.py:75
-msgid "({0} null of {1})\t"
-msgstr "({0} nulos de {1})\t"
-
-#: modules/input/input_check.py:79
-#, python-format
-msgid ""
-"the number of null values is greater than 15% of total\n"
-"of values inside common period, therefore, for Jaziku\n"
-"the data are not consistent for process."
-msgstr ""
-"el numero de valores nulos is más que el 15% del total\n"
-"de valores dentro del periodo común, por consiguiente, para\n"
-"Jaziku los datos no son consistentes para ser procesados."
-
-#: modules/input/input_runfile.py:79
-msgid ""
-"error read line in 'CONFIGURATION RUN' in runfile, line {0}:\n"
-"{1}, no was defined."
-msgstr ""
-"error de lectura en 'CONFIGURATION RUN' en el runfile, linea {0}:\n"
-"{1}, no se ha definido."
-
-#: modules/input/input_runfile.py:105
-msgid ""
-"error read line in 'CONFIGURATION RUN' in runfile, line {0}:\n"
-"{1}"
-msgstr ""
-"error de lectura en 'CONFIGURATION RUN' en el runfile, linea {0}:\n"
-"{1}"
-
-#: modules/input/input_runfile.py:135
-msgid ""
-"error read line in 'GRIDS LIST' in runfile, line {0}:\n"
-"{1}"
-msgstr ""
-"error de lectura en 'GRIDS LIST' ' en el runfile, linea {0}:\n"
-"{1}"
-
-#: modules/input/input_runfile.py:169
-msgid ""
-"Problems with the 9 probability values for forecasting process\n"
-"defined in runfile, these must be a numbers, please check it."
-msgstr ""
-"Problemas con los 9 valores de probabilidad para el proceso\n"
-"de pronostico definido en el runfile, éstos deben de ser números,\n"
-"por favor verifiquelos."
-
-#: modules/input/input_runfile.py:242
-msgid ""
-"Problems with the numbers of parameters inside\n"
-"the stations list need for run climate process.\n"
-msgstr ""
-"Problemas con el numero de parámetros dentro\n"
-"de la lista de estaciones necesario para correr clima.\n"
-
-#: modules/input/input_arg.py:32
-msgid ""
-"Jaziku is statistical inference software for the\n"
-"teleconnections analysis"
-msgstr ""
-"Jaziku es un software de inferencia estadística\n"
-"para el análisis de teleconexiones"
-
-#: modules/input/input_arg.py:38
-msgid "path absolute or relative to configuration run file"
-msgstr "ruta absoluta o relativa al archivo de corrida"
-
-#: modules/input/input_arg.py:42
-msgid "force all ask to default answer for continue"
-msgstr ""
-"forzar todas las preguntas con una respuesta por default para continuar"
-
-#: modules/input/input_vars.py:52
-msgid ""
-"Reading the station: {0} - {1}\n"
-"Can't open file '{2}' for var D, \n"
-"please check filename and check that its path is relative\n"
-"(to runfile) or absolute."
-msgstr ""
-"Leyendo la estación: {0} - {1}\n"
-"No se puede abrir el archivo '{2}' para la var D, \n"
-"por favor comprobar el nombre del archivo y verificar\n"
-"que su ruta sea relativa (al runfile) o absoluta."
-
-#: modules/input/input_vars.py:94 modules/input/input_vars.py:207
-msgid ""
-"Reading from file '{0}' in line: {1}\n"
-"\n"
-"this could be caused by wrong line or garbage character,\n"
-"please check manually, fix it and run again."
-msgstr ""
-"Leyendo del archivo '{0}' en la linea: {1}\n"
-"\n"
-"ésto puede ser debido a una linea mala o que tenga caracteres \n"
-"desconocidos, por favor revisa manualmente esa linea, reparelo \n"
-"y ejecute de nuevo."
-
-#: modules/input/input_vars.py:118
-msgid ""
-"Reading var D from file '{0}' in line: {1}\n"
-"\n"
-"Jaziku detected missing value for date: {2}"
-msgstr ""
-"Leyendo var D desde el archivo '{0}' en la linea: {1}\n"
-"\n"
-"Jaziku detectó un valor perdido para la fecha: {2}"
-
-#: modules/input/input_vars.py:130
-msgid ""
-"Reading var D from file '{0}' in line: {1}\n"
-"\n"
-"Jaziku detected missing value for date: {2}-{3}"
-msgstr ""
-"Leyendo var D desde el archivo '{0}' en la linea: {1}\n"
-"\n"
-"Jaziku detectó un valor perdido para la fecha: {2}-{3}"
-
-#: modules/input/input_vars.py:149 modules/input/input_vars.py:259
-msgid ""
-"Reading from file '{0}' in line: {1}\n"
-"\n"
-"{2}"
-msgstr ""
-"Leyendo del archivo '{0}' en la linea: {1}\n"
-"\n"
-"{2}"
-
-#: modules/input/input_vars.py:231
-msgid ""
-"Reading var I from file '{0}' in line: {1}\n"
-"\n"
-"Jaziku detected missing value for date: {2}"
-msgstr ""
-"Leyendo var I desde el archivo '{0}' en la linea: {1}\n"
-"\n"
-"Jaziku detectó un valor perdido para la fecha: {2}"
-
-#: modules/input/input_vars.py:243
-msgid ""
-"Reading var I from file '{0}' in line: {1}\n"
-"\n"
-"Jaziku detected missing value for date: {2}-{3}"
-msgstr ""
-"Leyendo var I desde el archivo '{0}' en la linea: {1}\n"
-"\n"
-"Jaziku detectó un valor perdido para la fecha: {2}-{3}"
-
-#: modules/forecasting/forecasting.py:36
-msgid "Processing forecasting ........................ "
-msgstr "Procesando pronóstico ................................. "
-
-#: modules/forecasting/forecasting.py:45
-msgid ""
-"Trimester forecasting '{0}' is invalid, must be a month valid number (1-12)"
-msgstr ""
-"El trimestre del pronostico '{0}' no es valido, debe ser un numero de mes "
-"valido (1-12)"
-
-#: modules/forecasting/forecasting.py:56
-msgid ""
-"Month or day for calculate forecasting '{0}' is invalid, \n"
-"must be month/day or month-day (e.g. 03/11)"
-msgstr ""
-"El mes o el dia para el calculo del pronóstico  '{0}' no es valido,\n"
-"debe ser mes/dia o mes-dia (ejemplo 03/11)"
-
-#: modules/forecasting/forecasting.py:61
-msgid ""
-"Month for forecasting process '{0}' is invalid, \n"
-"must be a month valid number (1-12)"
-msgstr ""
-"El mes para el proceso del pronóstico '{0}' no es valido,\n"
-"debe ser un numero de mes valido (1-12)"
-
-#: modules/forecasting/forecasting.py:66
-msgid ""
-"Start day (month/day) for forecasting process '{0}'\n"
-"is invalid, must be a valid start day based on\n"
-"range analysis interval, the valid start days for\n"
-"{1} are: {2}"
-msgstr ""
-"El día de inicio (mes/día) para el proceso del pronóstico '{0}'\n"
-"es invalido, debe de ser un día de inicio valido basado en el\n"
-"intervalos de rango de análisis, los días de inicio validos para\n"
-"{1} son: {2}"
-
-#: modules/forecasting/forecasting.py:76 modules/climate/climate.py:53
-msgid "stations"
-msgstr "estaciones"
-
-#: modules/forecasting/forecasting.py:94
-#: modules/forecasting/forecasting.py:106 modules/climate/result_table.py:64
-#: modules/climate/result_table.py:97 modules/climate/result_table.py:104
-msgid "yes"
-msgstr "si"
-
-#: modules/forecasting/forecasting.py:132 modules/climate/climate.py:69
-msgid ""
-"\n"
-"   continue without make graphics ............. "
-msgstr ""
-"\n"
-"   continua sin realizar gráficas ..................... "
-
-#: modules/forecasting/graphs.py:44 modules/climate/graphs.py:162
-msgid "trim {0} ({1})"
-msgstr "trim {0} ({1})"
-
-#: modules/forecasting/graphs.py:46 modules/climate/graphs.py:163
-msgid "trim_{0}"
-msgstr "trim_{0}"
-
-#: modules/forecasting/graphs.py:60
-msgid "Decrease"
-msgstr "Descenso"
-
-#: modules/forecasting/graphs.py:60
-msgid "Exceed"
-msgstr "Excedencia"
-
-#: modules/forecasting/graphs.py:76
-msgid ""
-"Probability forecasted of {0} - {1}\n"
-"{2} - lag {3} - {4} - ({5}-{6})"
-msgstr ""
-"Probabilidad pronosticada de {0} - {1}\n"
-"{2} - lag {3} - {4} - ({5}-{6})"
-
-#: modules/forecasting/graphs.py:84
-msgid "prob_of_{0}_lag_{1}_{2}_({3}-{4}).png"
-msgstr "prob_de_{0}_rez_{1}_{2}_({3}-{4}).png"
-
-#: modules/forecasting/graphs.py:103
-msgid "mosaic_prob_of_{0}_{1}_({3}-{4}).png"
-msgstr "mosaico_prob_de_{0}_{1}_({3}-{4}).png"
-
-#: modules/climate/lags.py:71 modules/climate/lags.py:72
-#: modules/climate/lags.py:73
-msgid "time_series"
-msgstr "series_de_tiempo"
-
-#: modules/climate/lags.py:71
-msgid "lag_0"
-msgstr "rezago_0"
-
-#: modules/climate/lags.py:72
-msgid "lag_1"
-msgstr "rezago_1"
-
-#: modules/climate/lags.py:73
-msgid "lag_2"
-msgstr "rezago_2"
-
-#: modules/climate/lags.py:89
-msgid "Mean_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv"
-msgstr "Media_rez_{0}_trim_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv"
-
-#: modules/climate/lags.py:148
-msgid "Mean_lag_{0}_{1}days_month_{2}_{3}_{4}_{5}_{6}_({7}-{8}).csv"
-msgstr "Media_rez_{0}_{1}dias_mes_{2}_{3}_{4}_{5}_{6}_({7}-{8}).csv"
-
-#: modules/climate/result_table.py:66 modules/climate/result_table.py:99
-#: modules/climate/result_table.py:106
-msgid "no"
-msgstr "no"
-
-#: modules/climate/result_table.py:145
-msgid "Result_Table_CA_lag_{0}_{1}_{2}_{3}_{4}_({5}-{6}).csv"
-msgstr "Tabla_de_Resultados_AC_rez_{0}_{1}_{2}_{3}_{4}_({5}-{6}).csv"
-
-#: modules/climate/result_table.py:157
-msgid "var_D"
-msgstr "var_D"
-
-#: modules/climate/result_table.py:157
-msgid "var_I"
-msgstr "var_I"
-
-#: modules/climate/result_table.py:157
-msgid "Pearson"
-msgstr "Pearson"
-
-#: modules/climate/result_table.py:157
-msgid "Sign Pearson"
-msgstr "Sign Pearson"
-
-#: modules/climate/result_table.py:158
-msgid "Is sign 'Sign Pearson'?"
-msgstr "¿Es significante la 'Sign Pearson'?"
-
-#: modules/climate/result_table.py:158
-msgid "threshold below (var D)"
-msgstr "umbral por debajo (var D)"
-
-#: modules/climate/result_table.py:159
-msgid "threshold above (var D)"
-msgstr "umbral por encima (var D)"
-
-#: modules/climate/result_table.py:159
-msgid "threshold below (var I)"
-msgstr "umbral por debajo (var I)"
-
-#: modules/climate/result_table.py:160
-msgid "threshold above (var I)"
-msgstr "umbral por encima (var I)"
-
-#: modules/climate/result_table.py:160
-msgid "Contingency Table (CT)"
-msgstr "Table de contingencia (TC)"
-
-#: modules/climate/result_table.py:161
-msgid "Contingency Table in %"
-msgstr "Table de contingencia en %"
-
-#: modules/climate/result_table.py:162
-msgid "is sig risk analysis?"
-msgstr "es sign el análisis de riesgo?"
-
-#: modules/climate/result_table.py:163
-msgid "Test Stat - Chi2"
-msgstr "Test Estadístico - Chi2"
-
-#: modules/climate/result_table.py:164
-msgid "Crit Value - Chi2"
-msgstr "Valor Critico - Chi2"
-
-#: modules/climate/result_table.py:164
-msgid "Is sig CT?"
-msgstr "es sig la TC?"
-
-#: modules/climate/result_table.py:164
-msgid "Correl CT"
-msgstr "Correl TC"
-
-#: modules/climate/result_table.py:178 modules/climate/result_table.py:179
-#: modules/climate/result_table.py:180 modules/climate/result_table.py:181
-#: modules/climate/result_table.py:182 modules/climate/result_table.py:183
-#: modules/climate/graphs.py:120
+"La estación con código '{0}' y nombre '{1}'\n"
+"tiene datos {2} pero otras estaciones tienen datos {3}.\n"
+"Jaziku requiere que todas las estaciones tengan la misma \n"
+"frecuencia en los datos. "
+
+#: env/var_D.py:216
 msgid "var D below"
-msgstr "var D por debajo"
+msgstr "var D debajo"
 
-#: modules/climate/result_table.py:178 modules/climate/result_table.py:179
-#: modules/climate/result_table.py:180 modules/climate/result_table.py:181
-#: modules/climate/result_table.py:182 modules/climate/result_table.py:183
-#: modules/climate/graphs.py:120
+#: env/var_D.py:216 env/var_D.py:217
 msgid "var D normal"
 msgstr "var D normal"
 
-#: modules/climate/result_table.py:178 modules/climate/result_table.py:179
-#: modules/climate/result_table.py:180 modules/climate/result_table.py:181
-#: modules/climate/result_table.py:182 modules/climate/result_table.py:183
-#: modules/climate/graphs.py:120
+#: env/var_D.py:216
 msgid "var D above"
-msgstr "var D por encima"
+msgstr "var D encima"
 
-#: modules/climate/contingency_table.py:75
+#: env/var_D.py:217
+msgid "var D strong below"
+msgstr "var D debajo fuerte"
+
+#: env/var_D.py:217
+msgid "var D moderate below"
+msgstr "var D debajo moderado"
+
+#: env/var_D.py:217
+msgid "var D weak below"
+msgstr "var D debajo débil"
+
+#: env/var_D.py:218
+msgid "var D weak above"
+msgstr "var D encima débil"
+
+#: env/var_D.py:218
+msgid "var D moderate above"
+msgstr "var D encima moderado"
+
+#: env/var_D.py:218
+msgid "var D strong above"
+msgstr "var D encima fuerte"
+
+#: env/var_I.py:336
+#, fuzzy
 msgid ""
+"The frequency data '{0}' for the var I is different\n"
+"for the others stations before assigned as '{2}'.\n"
 "\n"
-" > WARNING: Thresholds calculated with analog year for var_D are wrong,\n"
-"   using default thresholds instead"
+"Jaziku requires that all stations for var I\n"
+"have identical frequency data."
 msgstr ""
-"\n"
-" > ADVERTENCIA: Los umbrales calculados con el año análogo para la var D\n"
-"   son erróneos, usando umbrales predeterminados en su lugar"
+"La estación con código '{0}' y nombre '{1}'\n"
+"tiene datos {2} pero otras estaciones tienen datos {3}.\n"
+"Jaziku requiere que todas las estaciones tengan la misma \n"
+"frecuencia en los datos. "
 
-#: modules/climate/contingency_table.py:81
-msgid ""
-"\n"
-"   Using thresholds with analog year for var_D "
-msgstr ""
-"\n"
-"   Usando umbrales con año análogo para la var_D ......"
+#: env/globals_vars.py:97 modules/climate/result_table.py:210
+#: modules/climate/contingency_table.py:350
+msgid "below"
+msgstr "debajo"
 
-#: modules/climate/contingency_table.py:86
-msgid ""
-"\n"
-" > WARNING: The analog year ({0}) for this\n"
-"   station is outside of process period {1} to\n"
-"   {2}. The process continue but using the\n"
-"   default thresholds ........................."
-msgstr ""
-"\n"
-" > ADVERTENCIA: El año análogo ({0}) para esta\n"
-"   estación está por fuera del periodo a procesar\n"
-"   {1} a {2}. El proceso continua pero usando\n"
-"   los umbrales predeterminados ......................."
+#: env/globals_vars.py:98 env/globals_vars.py:109
+#: modules/climate/contingency_table.py:350
+msgid "normal"
+msgstr "normal"
 
-#: modules/climate/contingency_table.py:112
-msgid ""
-"thresholds of dependent variable were defined as N standard deviation\n"
-" but are outside of range, this values must be 1, 2 or 3:\n"
-"sd{0} sd{1}"
-msgstr ""
-"los umbrales de la variable independiente fueron definidos como la  "
-"desviación\n"
-"estándar N pero están fuera del rango, éstos valores deben ser 1, 2 o 3:\n"
-"sd{0} sd{1}"
+#: env/globals_vars.py:99 modules/climate/result_table.py:210
+#: modules/climate/contingency_table.py:350
+msgid "above"
+msgstr "encima"
 
-#: modules/climate/contingency_table.py:129
+#: env/globals_vars.py:106 modules/climate/result_table.py:225
+msgid "strong below"
+msgstr "debajo fuerte"
+
+#: env/globals_vars.py:107 modules/climate/result_table.py:225
+msgid "moderate below"
+msgstr "debajo moderado"
+
+#: env/globals_vars.py:108 modules/climate/result_table.py:225
+msgid "weak below"
+msgstr "debajo débil"
+
+#: env/globals_vars.py:110 modules/climate/result_table.py:226
+msgid "weak above"
+msgstr "encima débil"
+
+#: env/globals_vars.py:111 modules/climate/result_table.py:226
+msgid "moderate above"
+msgstr "encima moderado"
+
+#: env/globals_vars.py:112 modules/climate/result_table.py:226
+msgid "strong above"
+msgstr "encima fuerte"
+
+#: modules/climate/lags.py:91 modules/climate/lags.py:92
+#: modules/climate/lags.py:93
+msgid "time_series"
+msgstr "series_de_tiempo"
+
+#: modules/climate/lags.py:91
+msgid "lag_0"
+msgstr "rezago_0"
+
+#: modules/climate/lags.py:92
+msgid "lag_1"
+msgstr "rezago_1"
+
+#: modules/climate/lags.py:93
+msgid "lag_2"
+msgstr "rezago_2"
+
+#: modules/climate/lags.py:106
+msgid "Time_Series_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_{6}_({7}-{8}).csv"
+msgstr "Series_de_Tiempo_rezago_{0}_trim_{1}_{2}_{3}_{4}_{5}_{6}_({7}-{8}).csv"
+
+#: modules/climate/lags.py:126 modules/climate/lags.py:201
+#: modules/data_analysis/eda.py:1421
+msgid "DATE"
+msgstr "FECHA"
+
+#: modules/climate/lags.py:126 modules/climate/lags.py:201
+#: modules/climate/result_table.py:200 modules/climate/result_table.py:215
+msgid "VAR_D"
+msgstr "VAR_D"
+
+#: modules/climate/lags.py:126 modules/climate/lags.py:201
+#: modules/climate/result_table.py:200 modules/climate/result_table.py:215
+msgid "VAR_I"
+msgstr "VAR_I"
+
+#: modules/climate/lags.py:182
+msgid "Time_Series_lag_{0}_{1}_month_{2}_{3}_{4}_{5}_{6}_({7}-{8}).csv"
+msgstr "Series_de_Tiempo_rezago_{0}_{1}_mes_{2}_{3}_{4}_{5}_{6}_({7}-{8}).csv"
+
+#: modules/climate/result_table.py:74 modules/climate/result_table.py:109
+#: modules/climate/result_table.py:116
+msgid "yes"
+msgstr "si"
+
+#: modules/climate/result_table.py:76 modules/climate/result_table.py:111
+#: modules/climate/result_table.py:118
+msgid "no"
+msgstr "no"
+
+#: modules/climate/result_table.py:185
+msgid "Result_Table_CA_lag_{0}_{1}_{2}_{3}_{4}_({5}-{6}).csv"
+msgstr "Tabla_de_Resultados_AC_rezago_{0}_{1}_{2}_{3}_{4}_({5}-{6}).csv"
+
+#: modules/climate/result_table.py:200 modules/climate/result_table.py:215
+#: modules/maps/data.py:160 modules/maps/data.py:203
+msgid "PEARSON"
+msgstr "PEARSON"
+
+#: modules/climate/result_table.py:200 modules/climate/result_table.py:215
+msgid "SIGN. PEARSON"
+msgstr "SIGN. PEARSON"
+
+#: modules/climate/result_table.py:201 modules/climate/result_table.py:216
+msgid "IS SIGN 'SIGN PEARSON'?"
+msgstr "ES SIGN 'SIGN PEARSON'?"
+
+#: modules/climate/result_table.py:201 modules/climate/result_table.py:216
+msgid "THRESHOLDS VAR D"
+msgstr "UMBRALES VAR D"
+
+#: modules/climate/result_table.py:202 modules/climate/result_table.py:217
+msgid "THRESHOLDS VAR I"
+msgstr "UMBRALES VAR I"
+
+#: modules/climate/result_table.py:203 modules/climate/result_table.py:218
+msgid "CONTINGENCY TABLE (CT)"
+msgstr "TABLA DE CONTINGENCIA (TC)"
+
+#: modules/climate/result_table.py:204 modules/climate/result_table.py:219
+msgid "CONTINGENCY TABLE IN %"
+msgstr "TABLA DE CONTINGENCIA EN %"
+
+#: modules/climate/result_table.py:205 modules/climate/result_table.py:220
+msgid "IS SIGN RISK ANALYSIS?"
+msgstr "¿ES SIGN EL ANÁLISIS DE RIESGO?"
+
+#: modules/climate/result_table.py:206 modules/climate/result_table.py:221
+msgid "TEST STAT - CHI2"
+msgstr "TEST ESTAT - CHI2"
+
+#: modules/climate/result_table.py:206 modules/climate/result_table.py:221
+msgid "CRIT VALUE - Chi2"
+msgstr "VALOR CRITICO - Chi2"
+
+#: modules/climate/result_table.py:206 modules/climate/result_table.py:221
+msgid "IS SIGN CT?"
+msgstr "¿ES SIGN TC?"
+
+#: modules/climate/result_table.py:206 modules/climate/result_table.py:221
+msgid "CORREL CT"
+msgstr "CORREL TC"
+
 #: modules/climate/contingency_table.py:353
-msgid ""
-"thresholds could not were identified:\n"
-"{0} - {1}"
-msgstr ""
-"los umbrales no pudieron ser identificados:\n"
-"{0} - {1}"
-
-#: modules/climate/contingency_table.py:133
-#: modules/climate/contingency_table.py:177
-msgid ""
-"threshold below of dependent variable can't be greater than threshold "
-"above:\n"
-"{0} - {1}"
-msgstr ""
-"el umbral por debajo de la variable independiente no puede ser mayor que el "
-"umbral por encima:\n"
-"{0} - {1}"
-
-#: modules/climate/contingency_table.py:147
-msgid ""
-"Problem with thresholds of dependent variable:\n"
-"\n"
-"{0}"
-msgstr ""
-"Problema con los umbrales de la variable independiente:\n"
-"\n"
-"{0}"
-
-#: modules/climate/contingency_table.py:159
+#, fuzzy
 msgid ""
 "\n"
-" > WARNING: You have defined the analog year,\n"
-"   but the thresholds of var D must be\n"
-"   'default' for use the analog year .........."
-msgstr ""
-"\n"
-" > ADVERTENCIA: Ha definido el periodo análogo,\n"
-"   pero los umbrales de la var D deben ser\n"
-"   'default' para usar el periodo análogo ............."
-
-#: modules/climate/contingency_table.py:173
-msgid ""
-"thresholds of dependent variable were defined as percentile\n"
-"but are outside of range 0-100:\n"
-"{0} - {1}"
-msgstr ""
-"los umbrales de la variable independiente fueron definidos como percentiles\n"
-"pero están fuera del rango 0-100:\n"
-"{0} - {1}"
-
-#: modules/climate/contingency_table.py:196
-msgid "unrecognizable thresholds '{0}' and/or '{1}' for var D"
-msgstr "umbrales desconocidos '{0}' y/o '{1}' para la var D"
-
-#: modules/climate/contingency_table.py:335
-msgid ""
-"thresholds of independent variable were defined as N standard deviation\n"
-" but are outside of range, this values must be 1, 2 or 3:\n"
-"sd{0} sd{1}"
-msgstr ""
-"los umbrales de la variable independiente fueron definidos como la  "
-"desviación\n"
-"estándar N pero están fuera del rango, éstos valores deben ser 1, 2 o 3:\n"
-"sd{0} sd{1}"
-
-#: modules/climate/contingency_table.py:358
-#: modules/climate/contingency_table.py:392
-msgid ""
-"threshold below of independent variable can't be greater than threshold "
-"above:\n"
-"{0} - {1}"
-msgstr ""
-"el umbral por debajo de la variable independiente no puede ser mayor que el "
-"umbral por encima:\n"
-"{0} - {1}"
-
-#: modules/climate/contingency_table.py:367
-msgid ""
-"Problem with thresholds of independent variable:\n"
-"\n"
-"{0}"
-msgstr ""
-"Problemas con los umbrales de la variable independiente:\n"
-"\n"
-"{0}"
-
-#: modules/climate/contingency_table.py:387
-msgid ""
-"thresholds of independent variable were defined as percentile\n"
-"but are outside of range 0-100:\n"
-"{0} - {1}"
-msgstr ""
-"los umbrales del a variable independiente fueron definidos como percentiles\n"
-"pero están fuera del rango 0-100:\n"
-"{0} - {1}"
-
-#: modules/climate/contingency_table.py:411
-msgid "unrecognizable thresholds '{0}' and/or '{1}' for var I"
-msgstr "umbrales desconocidos '{0}' y/o '{1}' para la var I"
-
-#: modules/climate/contingency_table.py:551
-#: modules/climate/contingency_table.py:563
-#: modules/climate/contingency_table.py:575
-msgid ""
-"\n"
-"\n"
-" > WARNING: The thresholds selected '{0}' and '{1}'\n"
-"   are not suitable for compound analysis of\n"
-"   variable '{2}' with relation to '{3}' inside\n"
-"   category '{4}'. Therefore, the graphics\n"
-"   will not be created."
+" > WARNING: The thresholds defined for var I\n"
+"   are not suitable in some time series for \n"
+"   compound analysis of '{0}' with relation to\n"
+"   '{1}' inside the block category '{2}'.\n"
+"   Is recommended review the thresholds\n"
+"   of two variables, or the series data ......."
 msgstr ""
 "\n"
 "\n"
@@ -1225,9 +1454,215 @@ msgstr ""
 "   en relación a '{3}' dentro de la categoría '{4}'. \n"
 "   Por tal motivo, las gráficas no serán creadas."
 
-#: modules/climate/climate.py:46
+#: modules/climate/climate.py:37
+msgid ""
+"\n"
+"\n"
+"################# CLIMATE AND FORECAST PROCESS #################\n"
+"# Climate Module, here are calculated contingency tables,      #\n"
+"# correlations and parametric tests of interest.               #\n"
+"#                                                              #\n"
+"# Modulo forecasts, predictions are calculated here associated #\n"
+"# with the dependent variable as a function of contingency     #\n"
+"# tables and the probability of the independent variable.      #\n"
+"################################################################\n"
+msgstr ""
+"\n"
+"\n"
+"################ PROCESO DE CLIMA Y PRONOSTICO #################\n"
+"# En el modulo de Clima son calculados las tablas de           #\n"
+"# contingencia, la correlación y los test paramétricos de      #\n"
+"# interes.                                                     #\n"
+"#                                                              #\n"
+"# En el modulo de pronostico son calculadas las predicciones   #\n"
+"# asociadas con la variable dependiente como una función       #\n"
+"# de las tablas de contingencia y la probabilidad de la        #\n"
+"# variable independiente                                       #\n"
+"################################################################\n"
+
+#: modules/climate/climate.py:47
+msgid "Saving the result for climate in:"
+msgstr "Guardando los resultados para el clima en:"
+
+#: modules/climate/climate.py:71
+msgid "Results will be made by trimesters"
+msgstr "Los resultados se harán por trimestres"
+
+#: modules/climate/climate.py:73
+msgid "Results will be made every {} days"
+msgstr "Los resultados se harán cada {} días"
+
+#: modules/climate/climate.py:76
+msgid "Period to process: {0}-{1}"
+msgstr "Periodo a procesar: {0}-{1}"
+
+#: modules/climate/climate.py:79
+msgid "Will use thresholds with analog year for var_D "
+msgstr "Se usarán umbrales con año análogo para la var_D "
+
+#: modules/climate/climate.py:85
 msgid "Processing climate ............................ "
 msgstr "Procesando clima ...................................... "
+
+#: modules/climate/climate.py:88 modules/forecast/forecast.py:164
+msgid "stations"
+msgstr "estaciones"
+
+#: modules/climate/climate.py:109 modules/forecast/forecast.py:170
+msgid ""
+"\n"
+"   continue without make graphics ............. "
+msgstr ""
+"\n"
+"   continua sin realizar gráficas ..................... "
+
+#: modules/climate/thresholds.py:103
+msgid ""
+"If you use standard deviation (sd) as thresholds\n"
+"and if series ({0}) is a external type, you need\n"
+"defined the limits for this variable, because Jaziku\n"
+"check the (sd) thresholds calculated are within limits."
+msgstr ""
+
+#: modules/climate/thresholds.py:113
+msgid ""
+"The threshold calculated or assigned to '{0}'\n"
+"for the series {1}, is outside its limits defined.\n"
+"\n"
+"{2}"
+msgstr ""
+
+#: modules/climate/thresholds.py:174
+msgid ""
+"the thresholds of var {0} ({1}) were defined as 'default'\n"
+"but this variable ({1}) haven't internal thresholds defined."
+msgstr ""
+
+#: modules/climate/thresholds.py:182
+msgid ""
+"the thresholds of var {0} ({1}) were defined as 'default'\n"
+"but this variable ({1}) haven't internal thresholds defined"
+msgstr ""
+
+#: modules/climate/thresholds.py:206
+#, python-format
+msgid ""
+"Error calculating thresholds for var {0} ({1}) using analog year,\n"
+"the series for analog year {2} have {3}% of nulls, more than\n"
+"25% of permissive nulls."
+msgstr ""
+
+#: modules/climate/thresholds.py:226
+#, fuzzy
+msgid ""
+"The analog year ({0}) for this station\n"
+"is outside of process period {1} to {2}."
+msgstr ""
+"\n"
+" > ADVERTENCIA: El año análogo ({0}) para esta\n"
+"   estación está por fuera del periodo a procesar\n"
+"   {1} a {2}. El proceso continua pero usando\n"
+"   los umbrales predeterminados ......................."
+
+#: modules/climate/thresholds.py:240
+#, fuzzy
+msgid ""
+"the thresholds of var {0} ({1}) were defined as percentile\n"
+"but are outside of range 0-100:\n"
+"\n"
+"{2}"
+msgstr ""
+"los umbrales de la variable independiente fueron definidos como percentiles\n"
+"pero están fuera del rango 0-100:\n"
+"{0} - {1}"
+
+#: modules/climate/thresholds.py:247
+msgid ""
+"the percentile values of var {0} ({1}) must have rising values:\n"
+"\n"
+"{2}"
+msgstr ""
+
+#: modules/climate/thresholds.py:261
+#, fuzzy
+msgid ""
+"thresholds of var {0} ({1}) were defined as N standard deviation (sdN)\n"
+"but the value N is invalid number (float or integer)\n"
+"\n"
+"{2}"
+msgstr ""
+"los umbrales de la variable independiente fueron definidos como la  "
+"desviación\n"
+"estándar N pero están fuera del rango, éstos valores deben ser 1, 2 o 3:\n"
+"sd{0} sd{1}"
+
+#: modules/climate/thresholds.py:280
+msgid ""
+"the sdt deviation values (sdN) for the thresholds\n"
+"of var {0} ({1}), must have rising values:\n"
+"\n"
+"{2}"
+msgstr ""
+
+#: modules/climate/thresholds.py:303
+msgid ""
+"thresholds of var {0} ({1}) were defined as N percentage (N%)\n"
+"but the value N is invalid number (float or integer)\n"
+"\n"
+"{2}"
+msgstr ""
+
+#: modules/climate/thresholds.py:312
+msgid ""
+"the percentage values (N%) for the thresholds\n"
+"of var {0} ({1}), must have rising values:\n"
+"\n"
+"{2}"
+msgstr ""
+
+#: modules/climate/thresholds.py:339
+msgid ""
+"the thresholds values of var {0} ({1}) must have rising values:\n"
+"\n"
+"{2}"
+msgstr ""
+
+#: modules/climate/thresholds.py:363
+msgid ""
+"Problems with the thresholds for var {0} ({1}):\n"
+"\n"
+"{2}"
+msgstr ""
+"Problemas con los umbrales de la variable {0} ({1}):\n"
+"\n"
+"{2}"
+
+#: modules/climate/thresholds.py:373
+#, python-format
+msgid ""
+"\n"
+" > WARNING: calculating thresholds for var {0} ({1}),\n"
+"   one of the time series have {2}% of nulls, more than\n"
+"   20% of permissive nulls. Jaziku continue but the series\n"
+"   could not be consistent, recommended enable 'consistent_data'\n"
+"   inside runfile."
+msgstr ""
+
+#: modules/climate/thresholds.py:397
+#, fuzzy
+msgid ""
+"You have defined the analog year,\n"
+"but the thresholds of var D must be\n"
+"'default' for use the analog year."
+msgstr ""
+"\n"
+" > ADVERTENCIA: Ha definido el periodo análogo,\n"
+"   pero los umbrales de la var D deben ser\n"
+"   'default' para usar el periodo análogo ............."
+
+#: modules/climate/thresholds.py:424
+msgid "unrecognizable thresholds '{0}' for var {1} ({2})"
+msgstr "umbrales desconocidos '{0}' para la variable {1} ({2})"
 
 #: modules/climate/graphs.py:48
 msgid "graphics"
@@ -1237,7 +1672,7 @@ msgstr "graficas"
 msgid "composite_analysis"
 msgstr "analisis_compuestos"
 
-#: modules/climate/graphs.py:68
+#: modules/climate/graphs.py:140 modules/climate/graphs.py:260
 msgid ""
 "Composite analysis - {0} ({1})\n"
 "{2} - {3} - lag {6} - {7} - ({4}-{5})"
@@ -1245,25 +1680,33 @@ msgstr ""
 "Análisis compuesto - {0} ({1})\n"
 "{2} - {3} - rez {6} - {7} - ({4}-{5})"
 
-#: modules/climate/graphs.py:76
+#: modules/climate/graphs.py:146 modules/climate/graphs.py:266
 msgid "probability (%)"
 msgstr "probabilidad (%)"
 
-#: modules/climate/graphs.py:133 modules/climate/graphs.py:148
-#: modules/climate/graphs.py:149 modules/maps/data.py:50
-#: modules/maps/maps.py:424 modules/maps/maps.py:468
+#: modules/climate/graphs.py:188 modules/climate/graphs.py:316
+msgid "Var D"
+msgstr "Var D"
+
+#: modules/climate/graphs.py:192 modules/climate/graphs.py:320
+#: modules/climate/graphs.py:348 modules/maps/data.py:123
+#: modules/maps/maps.py:427 modules/maps/maps.py:470
 msgid "lag_{0}"
 msgstr "rezago_{0}"
 
-#: modules/climate/graphs.py:134
-msgid "ca_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png"
-msgstr "ac_rez_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png"
+#: modules/climate/graphs.py:193 modules/climate/graphs.py:321
+msgid "CA_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png"
+msgstr "AC_rezago_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png"
 
-#: modules/climate/graphs.py:185
+#: modules/climate/graphs.py:360
+msgid "trim_{0}"
+msgstr "trim_{0}"
+
+#: modules/climate/graphs.py:378
 msgid "mosaic_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png"
-msgstr "mosaico_rez_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png"
+msgstr "mosaico_rezago_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png"
 
-#: modules/maps/grid.py:69
+#: modules/maps/grid.py:76
 msgid ""
 "The grid_resolution '{0}' is wrong, the options are:\n"
 "'default' or valid number."
@@ -1271,189 +1714,173 @@ msgstr ""
 "El grid_resolution '{0}' es incorrecto, las opciones son:\n"
 "'default' o un numero valido."
 
-#: modules/maps/grid.py:100
+#: modules/maps/grid.py:110
 msgid "ordinary kriging"
 msgstr "kriging ordinario"
 
-#: modules/maps/grid.py:111
+#: modules/maps/grid.py:119
+#, fuzzy
 msgid ""
 "The semivariogram type '{0}' is wrong, the options are:\n"
-"default, spherical, exponential or gaussian"
+"default, {1}"
 msgstr ""
 "El tipo de semivariograma '{0}' es incorrecto, las opciones son:\n"
 "default, spherical, exponential o gaussian"
 
-#: modules/maps/grid.py:122
+#: modules/maps/grid.py:136
+#, fuzzy
 msgid ""
 "The radiuses '{0}' is wrong, the options are:\n"
-"'default' or radius1;radius2"
+"'auto' or radius1 and radius2 in different column."
 msgstr ""
 "El radiuses '{0}' es incorrecto, las opciones son:\n"
 "'default' or radius1;radius2"
 
-#: modules/maps/grid.py:131
+#: modules/maps/grid.py:148
+#, fuzzy
 msgid ""
 "The max_neighbours '{0}' is wrong, the options are:\n"
-"'default' or valid number"
+"'auto' or valid number"
 msgstr ""
 "El max_neighbours '{0}' es incorrecto, las opciones son:\n"
 "'default' o un numero valido."
 
-#: modules/maps/grid.py:143
-msgid "\"Analysis with analog year - {0}\""
-msgstr "\"An\"+aacute+\"lisis con a\"+ntilde+\"o an\"+aacute+\"logo - {0}\""
+#: modules/maps/grid.py:162
+msgid "\"Analysis with {0} as analog year\""
+msgstr "\"An\"+aacute+\"lisis con {0} como a\"+ntilde+\"o an\"+aacute+\"logo\""
 
-#: modules/maps/grid.py:148
+#: modules/maps/grid.py:167
 msgid "   Mesh size: {0}x{1}"
 msgstr "   Tamaño de malla: {0}x{1}"
 
-#: modules/maps/grid.py:151
+#: modules/maps/grid.py:170
 msgid "   Interpolation type: {0}"
 msgstr "   Tipo de interpolación: {0}"
 
-#: modules/maps/grid.py:156
+#: modules/maps/grid.py:175
 msgid "   Semivariogram type: spherical"
 msgstr "   Tipo de semivariograma: esférico"
 
-#: modules/maps/grid.py:158
+#: modules/maps/grid.py:177
 msgid "   Semivariogram type: exponential"
 msgstr "   Tipo de semivariograma: exponencial"
 
-#: modules/maps/grid.py:160
+#: modules/maps/grid.py:179
 msgid "   Semivariogram type: gaussian"
 msgstr "   Tipo de semivariograma: gaussiano"
 
-#: modules/maps/grid.py:163
+#: modules/maps/grid.py:182
 msgid "   Radiuses: {0} {1}"
 msgstr "   Radios: {0} {1}"
 
-#: modules/maps/grid.py:166
+#: modules/maps/grid.py:185
 msgid "   Max neighbours: {0}"
 msgstr "   Máximos vecinos: {0}"
 
-#: modules/maps/grid.py:202 modules/maps/maps.py:166
+#: modules/maps/grid.py:221 modules/maps/maps.py:160
 msgid "average"
 msgstr "promedio"
 
-#: modules/maps/grid.py:205 modules/maps/maps.py:166
+#: modules/maps/grid.py:224 modules/maps/maps.py:160
 msgid "maximum"
 msgstr "máximo"
 
-#: modules/maps/grid.py:208 modules/maps/maps.py:166
+#: modules/maps/grid.py:227 modules/maps/maps.py:160
 msgid "minimum"
 msgstr "mínimo"
 
-#: modules/maps/grid.py:210 modules/maps/maps.py:172
+#: modules/maps/grid.py:229 modules/maps/maps.py:166
 msgid "neither"
 msgstr "ninguno"
 
-#: modules/maps/grid.py:219
-msgid "   Setting internal grid"
-msgstr "   Estableciendo rejilla interna"
-
-#: modules/maps/grid.py:251
+#: modules/maps/grid.py:274
 msgid ""
+"The 'shape_path' was defined as 'internal' but\n"
+"jaziku can't set internal shape for '{0}',\n"
+"please check the 'grid' parameter in runfile;\n"
+"this must be a valid area/region and country name\n"
+"in different column or only country name. If you\n"
+"want know the list of available internal shapes,\n"
+"please check the manual.\n"
 "\n"
-"Can't set internal shape '{0}',\n"
-"please check the grid parameter; area,\n"
-"region and/or country name are wrong.\n"
+"For example: Colombia, Vaupes;Colombia, Caldas;Colombia.\n"
 msgstr ""
-"\n"
-"No se puede establecer el shape interno '{0}',\n"
-"por favor revise el parámetro 'grid'; el area,\n"
-"la region y/o el nombre del país están equivocados.\n"
 
-#: modules/maps/grid.py:258
-msgid "   Setting particular shape"
-msgstr "   Estableciendo un shape particular"
-
-#: modules/maps/grid.py:268
+#: modules/maps/grid.py:294
 msgid ""
 "Can't set particular shape, please check files in shape path\n"
-"this must be contain inside .shp .prj .sbn .sbx .shx"
+"this must be contain inside .shp .prj .sbn .sbx .shx\n"
+"and each file must be named with the same name defined\n"
+"for the 'grid' parameter.\n"
+"\n"
+"For example, if you define in 'grid' as 'region_A' \n"
+"the files inside shape_path directory must be named:\n"
+"region_A.shp, region_A.prj, region_A.sbn,\n"
+"region_A.sbx and region_A.shx."
 msgstr ""
-"No se puede establecer el shape particular,\n"
-"por favor revisar los archivos de la ruta del shape\n"
-"este debe contener dentro archivos .shp .prj .sbn .sbx .shx"
 
-#: modules/maps/data.py:46 modules/maps/data.py:216 modules/maps/data.py:247
-#: modules/maps/maps.py:422 modules/maps/maps.py:466
+#: modules/maps/data.py:121 modules/maps/data.py:331 modules/maps/maps.py:426
+#: modules/maps/maps.py:468
 msgid "maps"
 msgstr "mapas"
 
-#: modules/maps/data.py:68
+#: modules/maps/data.py:141
 msgid "Map_Data_lag_{0}_trim_{1}_{2}.csv"
-msgstr "Datos_del_Mapa_rez_{0}_trim_{1}_{2}.csv"
+msgstr "Datos_del_Mapa_rezago_{0}_trim_{1}_{2}.csv"
 
-#: modules/maps/data.py:77 modules/maps/data.py:109 modules/maps/data.py:232
-#: modules/maps/data.py:263
-msgid "code"
-msgstr "código"
+#: modules/maps/data.py:151 modules/maps/data.py:194
+msgid "SUM (partial)"
+msgstr "SUMA (parcial)"
 
-#: modules/maps/data.py:77 modules/maps/data.py:109 modules/maps/data.py:232
-#: modules/maps/data.py:263 modules/maps/maps.py:217 modules/maps/maps.py:229
-msgid "lat"
-msgstr "lat"
+#: modules/maps/data.py:154 modules/maps/data.py:197 modules/maps/data.py:353
+#: modules/maps/data.py:376
+msgid "SUM"
+msgstr "SUMA"
 
-#: modules/maps/data.py:77 modules/maps/data.py:109 modules/maps/data.py:232
-#: modules/maps/data.py:263 modules/maps/maps.py:217 modules/maps/maps.py:229
-msgid "lon"
-msgstr "lon"
+#: modules/maps/data.py:160 modules/maps/data.py:203 modules/maps/data.py:351
+#: modules/maps/data.py:374 modules/data_analysis/eda.py:88
+#: modules/data_analysis/eda.py:575 modules/data_analysis/eda.py:1128
+#: modules/data_analysis/eda.py:1418
+msgid "CODE"
+msgstr "CÓDIGO"
 
-#: modules/maps/data.py:77 modules/maps/data.py:109
-msgid "pearson"
-msgstr "pearson"
+#: modules/maps/data.py:160 modules/maps/data.py:203 modules/maps/data.py:351
+#: modules/maps/data.py:374 modules/data_analysis/eda.py:88
+#: modules/data_analysis/eda.py:575 modules/data_analysis/eda.py:1128
+#: modules/data_analysis/eda.py:1418
+msgid "LAT"
+msgstr "LAT"
 
-#: modules/maps/data.py:78 modules/maps/data.py:110
-msgid "var_below"
-msgstr "var_por_debajo"
+#: modules/maps/data.py:160 modules/maps/data.py:203 modules/maps/data.py:351
+#: modules/maps/data.py:374 modules/data_analysis/eda.py:88
+#: modules/data_analysis/eda.py:575 modules/data_analysis/eda.py:1128
+#: modules/data_analysis/eda.py:1418
+msgid "LON"
+msgstr "LON"
 
-#: modules/maps/data.py:78 modules/maps/data.py:110
-msgid "var_normal"
-msgstr "var_normal"
+#: modules/maps/data.py:162 modules/maps/data.py:205 modules/maps/data.py:353
+#: modules/maps/data.py:376
+msgid "INDEX"
+msgstr "INDICE"
 
-#: modules/maps/data.py:78 modules/maps/data.py:110
-msgid "var_above"
-msgstr "var_por_encima"
+#: modules/maps/data.py:162 modules/maps/data.py:205 modules/maps/data.py:353
+#: modules/maps/data.py:376
+msgid "INDEX POSITION"
+msgstr "POSICIÓN DEL INDICE"
 
-#: modules/maps/data.py:79 modules/maps/data.py:111
-msgid "p_index"
-msgstr "indice"
-
-#: modules/maps/data.py:79 modules/maps/data.py:111 modules/maps/data.py:235
-#: modules/maps/data.py:266
-msgid "sum"
-msgstr "suma"
-
-#: modules/maps/data.py:98
+#: modules/maps/data.py:182
 msgid "Map_Data_lag_{0}_{1}_{2}.csv"
-msgstr "Datos_del_Mapa_rez_{0}_{1}_{2}.csv"
+msgstr "Datos_del_Mapa_rezago_{0}_{1}_{2}.csv"
 
-#: modules/maps/data.py:224 modules/maps/data.py:255
+#: modules/maps/data.py:343 modules/maps/data.py:366
 msgid "Map_Data_lag_{0}_{1}.csv"
-msgstr "Datos_del_Mapa_rez_{0}_{1}.csv"
+msgstr "Datos_del_Mapa_rezago_{0}_{1}.csv"
 
-#: modules/maps/data.py:233 modules/maps/data.py:264
-msgid "forecasting_date"
-msgstr "fecha_pronostico"
+#: modules/maps/data.py:351 modules/maps/data.py:374
+msgid "FORECAST_DATE"
+msgstr "FECHA_DE_PRONÓSTICO"
 
-#: modules/maps/data.py:233 modules/maps/data.py:264
-msgid "prob_decrease_var_D"
-msgstr "prob_descenso_var_D"
-
-#: modules/maps/data.py:234 modules/maps/data.py:265
-msgid "prob_normal_var_D"
-msgstr "prob_normal_var_D"
-
-#: modules/maps/data.py:234 modules/maps/data.py:265
-msgid "prob_exceed_var_D"
-msgstr "prob_excedencia_var_D"
-
-#: modules/maps/data.py:235 modules/maps/data.py:266
-msgid "index"
-msgstr "indice"
-
-#: modules/maps/ncl.py:60
+#: modules/maps/ncl.py:59 modules/maps/ncl.py:142
 msgid ""
 "\"Scenario of affectation of the variable {typeVarD}~C~    under variations "
 "of {typeVarI} to lag {lag} in {date}\""
@@ -1461,7 +1888,7 @@ msgstr ""
 "\"   Escenario de afectaci\"+oacute+\"n de la variable {typeVarD}~C~bajo "
 "variaciones de {typeVarI} a {lag} rezagos para {date}\""
 
-#: modules/maps/ncl.py:68
+#: modules/maps/ncl.py:67 modules/maps/ncl.py:146
 msgid ""
 "\"Lineal correlation between the variable {typeVarI}~C~              and "
 "{typeVarD} to lag {lag} in {date}\""
@@ -1469,23 +1896,60 @@ msgstr ""
 "\"Correlaci\"+oacute+\"n lineal entre la variable {typeVarI}~C~      y "
 "{typeVarD} a {lag} rezagos para {date}\""
 
-#: modules/maps/ncl.py:76
+#: modules/maps/ncl.py:76 modules/maps/ncl.py:151
 msgid ""
-"\"Affectation forecasting of the variable {typeVarD}~C~   under variations "
-"of {typeVarI} to lag {lag} in {date}\""
+"\"   Affectation forecast of the variable {typeVarD}~C~under variations of "
+"{typeVarI} to lag {lag} in {date}\""
 msgstr ""
-"\"  Pron\"+oacute+\"stico de afectaci\"+oacute+\"n de la variable {typeVarD}"
+"\"   Pron\"+oacute+\"stico de afectaci\"+oacute+\"n de la variable {typeVarD}"
 "~C~bajo variaciones de {typeVarI} a {lag} rezagos para {date}\""
 
-#: modules/maps/maps.py:35
+#: modules/maps/ncl.py:79
+msgid ""
+"\"Affectation forecast of the variable {typeVarD}~C~  under variations of "
+"{typeVarI} to lag {lag} in {date}\""
+msgstr ""
+"\"Pron\"+oacute+\"stico de afectaci\"+oacute+\"n de la variable {typeVarD}"
+"~C~bajo variaciones de {typeVarI} a {lag} rezagos para {date}\""
+
+#: modules/maps/ncl.py:154
+msgid ""
+"\"Affectation forecast of the variable {typeVarD}~C~under variations of "
+"{typeVarI} to lag {lag} in {date}\""
+msgstr ""
+"\" Pron\"+oacute+\"stico de afectaci\"+oacute+\"n de la variable {typeVarD}"
+"~C~bajo variaciones de {typeVarI} a {lag} rezagos para {date}\""
+
+#: modules/maps/maps.py:39
 msgid ""
 "\n"
-"Checking basic requirements for maps:"
+"\n"
+"############################# MAPS  ############################\n"
+"# Map Process, here is made the Kriging interpolation on the   #\n"
+"# results of historical scenarios and forecasts most probable  #\n"
+"# of the dependent variable, also interpolation of linear      #\n"
+"# correlations.                                                #\n"
+"################################################################"
+msgstr ""
+"\n"
+"\n"
+"############################ MAPAS #############################\n"
+"# En el proceso de mapas es realizada la interpolación de      #\n"
+"# Kriging en los resultados de escenarios históricos y         #\n"
+"# pronósticos más probables de la variable dependiente,        #\n"
+"# también se realiza la interpolación de la correlación        #\n"
+"# lineal.                                                      #\n"
+"################################################################"
+
+#: modules/maps/maps.py:48
+msgid ""
+"\n"
+"Checking basic requirements for make maps:"
 msgstr ""
 "\n"
 "Comprobando los requisitos básicos para los mapas:"
 
-#: modules/maps/maps.py:41
+#: modules/maps/maps.py:54
 msgid ""
 "Jaziku can't execute the 'ncl' command for make maps,\n"
 "please check that ncl is include into PATH variable in your\n"
@@ -1495,7 +1959,7 @@ msgstr ""
 "por favor verifique que ncl este dentro de la variable PATH en susistema. "
 "Para más información leer: http://goo.gl/4dAeH"
 
-#: modules/maps/maps.py:47
+#: modules/maps/maps.py:60
 msgid ""
 "The NCARG_ROOT variable is not defined in your system,\n"
 "please defined NCARG_ROOT where you have installed NCL.\n"
@@ -1505,7 +1969,7 @@ msgstr ""
 "por favor defina NCARG_ROOT donde tiene instalado NCL.\n"
 "Para más información leer: http://goo.gl/4dAeH"
 
-#: modules/maps/maps.py:56
+#: modules/maps/maps.py:69
 msgid ""
 "The NCARG_ROOT variable is defined in your system,\n"
 "but there are problems for found nclscripts files,\n"
@@ -1517,7 +1981,7 @@ msgstr ""
 "por favor verifique la variable NCARG_ROOT en su sistema.\n"
 "Para más información leer: http://goo.gl/4dAeH"
 
-#: modules/maps/maps.py:63
+#: modules/maps/maps.py:76
 msgid ""
 "Jaziku can't execute the 'convert' command for transform image,\n"
 "please check that 'imagemagick' is installed in your system.\n"
@@ -1528,151 +1992,261 @@ msgstr ""
 "en su sistema. Para más información leer las instrucciones de\n"
 "instalación de Jaziku."
 
-#: modules/maps/maps.py:95
+#: modules/maps/maps.py:100
 msgid "MAP"
 msgstr "MAPA"
 
-#: modules/maps/maps.py:108
+#: modules/maps/maps.py:143 modules/maps/maps.py:178 modules/maps/maps.py:238
+#: modules/maps/maps.py:268 modules/maps/maps.py:289 modules/maps/maps.py:291
+#: modules/maps/maps.py:332 modules/maps/maps.py:376 modules/maps/maps.py:397
+#: modules/maps/maps.py:503 modules/maps/maps.py:505 modules/maps/maps.py:539
+#: modules/forecast/graphs.py:156 modules/forecast/graphs.py:158
+#: modules/forecast/graphs.py:183 modules/forecast/graphs.py:185
+msgid "probabilistic"
+msgstr "probabilistico"
+
+#: modules/maps/maps.py:150
 msgid ""
-"The latitude and/or longitude are wrong,\n"
-"these must be decimal degrees."
+"\n"
+" > WARNING: The point lat:{lat} lon:{lon}\n"
+"   of the station code: {code} was not added\n"
+"   because the value of index is 'nan' (null)."
 msgstr ""
-"La latitud y/o longitud están incorrectas,\n"
-"estos deben ser grados decimales."
+"\n"
+" > ADVERTENCIA: El punto lat:{lat} lon:{lon}\n"
+"   de la estación con código: {code} no fue añadido\n"
+"   porque el valor del indice es 'nan' (nulo)."
 
 #: modules/maps/maps.py:156
 msgid ""
 "\n"
 " > WARNING: The point lat:{lat} lon:{lon}\n"
 "   of the station code: {code} was not added\n"
-"   because the value of index is 'nan' (null) ."
+"   because the point is outside of the grid."
 msgstr ""
 "\n"
 " > ADVERTENCIA: El punto lat:{lat} lon:{lon}\n"
-"   de la estación con código: {code} no fue agregado\n"
-"   porque el valor del indice es 'nan' (nulo)."
+"   de la estación con código: {code} no fue añadido\n"
+"   porque el punto esta por fuera de la rejilla."
 
 #: modules/maps/maps.py:162
 msgid ""
 "\n"
-" > WARNING: The point lat:{lat} lon:{lon}\n"
-"   of the station code: {code} was not added\n"
-"   because the point is outside of the grid ..."
-msgstr ""
-"\n"
-" > ADVERTENCIA: El punto lat:{lat} lon:{lon}\n"
-"   de la estación con código: {code} no fue agregado\n"
-"   porque el punto esta por fuera de la rejilla."
-
-#: modules/maps/maps.py:168
-msgid ""
-"\n"
 " > WARNING: for the point lat:{lat} lon:{lon}\n"
-"   Jaziku detect overlapping of two values, Jaziku\n"
-"   will put the {state} value ................."
+"   Jaziku detect overlapping of two values, it\n"
+"   will put the {state} value."
 msgstr ""
 "\n"
 " > ADVERTENCIA: Para el punto lat:{lat} lon:{lon}\n"
 "   Jaziku detectó solapamiento de dos valores, Jaziku\n"
 "   pondrá el valor {state}."
 
-#: modules/maps/maps.py:174
+#: modules/maps/maps.py:168
 msgid ""
 "\n"
 " > WARNING: for the point lat:{lat} lon:{lon}\n"
 "   Jaziku detect overlapping of two values, Jaziku\n"
-"   will not put the {state} values ............"
+"   will not put the {state} values."
 msgstr ""
 "\n"
 " > ADVERTENCIA: Para el punto lat:{lat} lon:{lon}\n"
 "   Jaziku detectó solapamiento de dos valores, Jaziku\n"
 "   no pondrá {state} valor."
 
-#: modules/maps/maps.py:217 modules/maps/maps.py:229
+#: modules/maps/maps.py:215 modules/maps/maps.py:227
+msgid "lat"
+msgstr "lat"
+
+#: modules/maps/maps.py:215 modules/maps/maps.py:227
+msgid "lon"
+msgstr "lon"
+
+#: modules/maps/maps.py:215
 msgid "value"
 msgstr "valor"
 
-#: modules/maps/maps.py:285
-msgid "Processing maps for climate:"
-msgstr "Procesando mapas para clima:"
+#: modules/maps/maps.py:227
+msgid "index"
+msgstr "indice"
 
-#: modules/maps/maps.py:322 modules/maps/maps.py:363
+#: modules/maps/maps.py:227
+msgid "index position"
+msgstr "posición del indice"
+
+#: modules/maps/maps.py:240 modules/maps/maps.py:273 modules/maps/maps.py:291
+#: modules/maps/maps.py:505 modules/forecast/graphs.py:292
+#: modules/forecast/graphs.py:294 modules/forecast/graphs.py:313
+#: modules/forecast/graphs.py:314
+msgid "deterministic"
+msgstr "deterministico"
+
+#: modules/maps/maps.py:295
+msgid "Processing {map_type} maps for climate:"
+msgstr "Procesando mapas {map_type} para clima:"
+
+#: modules/maps/maps.py:326 modules/maps/maps.py:368
 msgid "Map_lag_{0}_{1}_{2}"
-msgstr "Mapa_rez_{0}_{1}_{2}"
+msgstr "Mapa_rezago_{0}_{1}_{2}"
 
-#: modules/maps/maps.py:391
+#: modules/maps/maps.py:399
 msgid "Processing maps for correlation:"
 msgstr "Procesando mapas para la correlación:"
 
-#: modules/maps/maps.py:425 modules/maps/maps.py:469
+#: modules/maps/maps.py:428 modules/maps/maps.py:471
 msgid "Correlation"
 msgstr "Correlación"
 
-#: modules/maps/maps.py:432 modules/maps/maps.py:476
+#: modules/maps/maps.py:434 modules/maps/maps.py:477
 msgid "Map_correlation_lag_{0}_{1}"
-msgstr "Mapa_de_correlacion_rez_{0}_{1}"
+msgstr "Mapa_de_correlacion_rezago_{0}_{1}"
 
-#: modules/maps/maps.py:502
-msgid "Processing maps for forecasting:"
-msgstr "Procesando mapas para pronóstico:"
+#: modules/maps/maps.py:509
+msgid "Processing {map_type} maps for forecast:"
+msgstr "Procesando mapas {map_type} para pronóstico:"
 
 #: modules/maps/maps.py:534
 msgid "Map_lag_{0}_{1}"
-msgstr "Mapa_rez_{0}_{1}"
+msgstr "Mapa_rezago_{0}_{1}"
 
-#: modules/variable.py:98
-msgid "Read and check (range validation) for var {0} ... "
-msgstr "Lectura y comprobación(rango de validación) var {0} ..... "
-
-#: modules/variable.py:112
-msgid "   the variable {0} has data daily"
-msgstr "   La variable {0} tiene datos diarios"
-
-#: modules/variable.py:114
-msgid "   the variable {0} has data monthly"
-msgstr "   La variable {0} tiene datos mensuales"
-
-#: modules/variable.py:146 modules/variable.py:214
-msgid ""
-"Reading var {0} from file '{1}':\n"
-"don't have the minimum data required (november and december)\n"
-"for the first year ({2}) of the series."
-msgstr ""
-"Leyendo var {0} desde el archivo '{1}':\n"
-"no tiene los datos mínimos requeridos (noviembre y diciembre)\n"
-"para el primer año ({2}) de la serie."
-
-#: modules/variable.py:177 modules/variable.py:244
-msgid ""
-"Reading var {0} from file '{1}':\n"
-"don't have the minimum data required (january and february)\n"
-"for the last year ({2}) of the series."
-msgstr ""
-"Leyendo var {0} desde el archivo '{1}':\n"
-"no tiene los datos mínimos requeridos (enero y febrero)\n"
-"para el ultimo año ({2}) de la serie."
-
-#: modules/data_analysis/data_analysis.py:36
+#: modules/forecast/forecast.py:40
 msgid ""
 "\n"
-"Reading var D and var I of all stations .............. "
+"Saving the result for forecast in:"
 msgstr ""
 "\n"
-"Leyendo var D y var I de todas las estaciones ......... "
+"Guardando los resultados para el pronóstico en:"
 
-#: modules/data_analysis/data_analysis.py:58
-msgid "   {0} station readed."
-msgstr "   {0} estación leída."
+#: modules/forecast/forecast.py:87
+msgid "Processing forecast:"
+msgstr "Procesando pronóstico:"
 
-#: modules/data_analysis/data_analysis.py:59
-msgid "   {0} stations readed."
-msgstr "   {0} estaciones leídas."
+#: modules/forecast/forecast.py:89
+msgid "   making forecast for date: "
+msgstr "   haciendo pronóstico para la fecha: "
 
-#: modules/data_analysis/eda.py:50
-msgid "################# EXPLORATORY DATA ANALYSIS:"
-msgstr "################# ANÁLISIS EXPLORATORIO DE DATOS:"
+#: modules/forecast/graphs.py:62 modules/forecast/graphs.py:113
+msgid ""
+"Probability forecasts of {0} / {1}\n"
+"{2} ({3})\n"
+"lag {4} - {5} - ({6}-{7})"
+msgstr ""
+"Probabilidad pronosticada de {0} - {1}\n"
+"{2} ({3})\n"
+"rez {4} - {5} - ({6}-{7})"
 
-#: modules/data_analysis/eda.py:53
+#: modules/forecast/graphs.py:71
+msgid "Decrease"
+msgstr "Descenso"
+
+#: modules/forecast/graphs.py:71
+msgid "Exceed"
+msgstr "Excedencia"
+
+#: modules/forecast/graphs.py:89 modules/forecast/graphs.py:145
+#: modules/forecast/graphs.py:277
+msgid ""
+"For this time series there aren't suitable\n"
+"probabilities, because there are thresholds\n"
+"problems in contingency table, or the series data."
+msgstr ""
+"Para esta serie de tiempo no hay probabilidades\n"
+"adecuadas, porque hay problemas de umbrales en\n"
+"la tabla de contingencia, o de la serie de datos."
+
+#: modules/forecast/graphs.py:102 modules/forecast/graphs.py:158
+msgid "prob_of_{0}_lag_{1}_{2}_({3}-{4}).png"
+msgstr "prob_de_{0}_rezago_{1}_{2}_({3}-{4}).png"
+
+#: modules/forecast/graphs.py:122
+msgid "Strong decrease"
+msgstr "Descenso fuerte"
+
+#: modules/forecast/graphs.py:122
+msgid "Moderate decrease"
+msgstr "Descenso moderado"
+
+#: modules/forecast/graphs.py:122
+msgid "Weak decrease"
+msgstr "Descenso débil"
+
+#: modules/forecast/graphs.py:123
+msgid "Weak exceed"
+msgstr "Excedencia débil"
+
+#: modules/forecast/graphs.py:123
+msgid "Moderate exceed"
+msgstr "Excedencia moderada"
+
+#: modules/forecast/graphs.py:123
+msgid "Strong exceed"
+msgstr "Excedencia fuerte"
+
+#: modules/forecast/graphs.py:174
+msgid "mosaic_prob_of_{0}_under_{1}_{2}_({3}-{4}).png"
+msgstr "mosaico_prob_de_{0}_bajo_{1}_{2}_({3}-{4}).png"
+
+#: modules/forecast/graphs.py:223
+msgid ""
+"Deterministic forecasts of {0} / {1}\n"
+"{2} ({3})\n"
+"lag {4} - {5} - ({6}-{7})"
+msgstr ""
+"Pronóstico determinístico de {0} / {1}\n"
+"{2} ({3})\n"
+"rez {4} - {5} - ({6}-{7})"
+
+#: modules/forecast/graphs.py:249
+msgid "< {0}"
+msgstr "< {0}"
+
+#: modules/forecast/graphs.py:250 modules/forecast/graphs.py:251
+#: modules/forecast/graphs.py:252 modules/forecast/graphs.py:253
+#: modules/forecast/graphs.py:254
+msgid "{0} to {1}"
+msgstr "{0} a {1}"
+
+#: modules/forecast/graphs.py:255
+msgid "> {0}"
+msgstr "> {0}"
+
+#: modules/forecast/graphs.py:294
+msgid "Determ_of_{0}_lag_{1}_{2}_({3}-{4}).png"
+msgstr "Determ_de_{0}_rezago_{1}_{2}_({3}-{4}).png"
+
+#: modules/forecast/graphs.py:308
+msgid "mosaic_determ_of_{0}_under_{1}_{2}_({3}-{4}).png"
+msgstr "mosaico_determ_de_{0}_bajo_{1}_{2}_({3}-{4}).png"
+
+#: modules/data_analysis/data_analysis.py:37
+msgid ""
+"\n"
+"\n"
+"#################### DATA ANALYSIS PROCESS #####################\n"
+"# Data analysis module, here is verified linearity, outliers   #\n"
+"# are reported and the primary statistical time series.        #\n"
+"################################################################\n"
+msgstr ""
+"\n"
+"\n"
+"################# PROCESO DE ANÁLISIS DE DATOS #################\n"
+"# En el modulo de análisis de datos es verificado la           #\n"
+"# linealidad, se reportan los datos atípicos y se hace una     #\n"
+"# estadística preliminar de las series de tiempo.              #\n"
+"################################################################\n"
+
+#: modules/data_analysis/data_analysis.py:43
+msgid "Saving the result for data analysis in:"
+msgstr "Guardando los resultados para el análisis de datos en:"
+
+#: modules/data_analysis/eda.py:51
+msgid ""
+"\n"
+"################# EXPLORATORY DATA ANALYSIS:"
+msgstr ""
+"\n"
+"################# ANÁLISIS EXPLORATORIO DE DATOS:"
+
+#: modules/data_analysis/eda.py:54
 msgid ""
 "\n"
 " > WARNING: The 'graphics' in 'output options' is disabled,\n"
@@ -1684,11 +2258,11 @@ msgstr ""
 "   todas las gráficas para el modulo EDA no se realizarán. Las gráficas\n"
 "   en el modulo de EDA representan la gran mayoría de los resultados.\n"
 
-#: modules/data_analysis/eda.py:64
+#: modules/data_analysis/eda.py:65
 msgid "Descriptive statistics ............................... "
 msgstr "Estadística descriptiva ............................... "
 
-#: modules/data_analysis/eda.py:70
+#: modules/data_analysis/eda.py:71
 msgid "Descriptive_Statistic"
 msgstr "Estadística_Descriptiva"
 
@@ -1696,33 +2270,18 @@ msgstr "Estadística_Descriptiva"
 msgid "Descriptive_Statistics_{0}.csv"
 msgstr "Estadísticas_Descriptivas_{0}.csv"
 
-#: modules/data_analysis/eda.py:88 modules/data_analysis/eda.py:581
-#: modules/data_analysis/eda.py:1136 modules/data_analysis/eda.py:1442
-msgid "CODE"
-msgstr "CÓDIGO"
-
-#: modules/data_analysis/eda.py:88 modules/data_analysis/eda.py:581
-#: modules/data_analysis/eda.py:1136 modules/data_analysis/eda.py:1442
+#: modules/data_analysis/eda.py:88 modules/data_analysis/eda.py:575
+#: modules/data_analysis/eda.py:1128 modules/data_analysis/eda.py:1418
 msgid "NAME"
 msgstr "NOMBRE"
 
-#: modules/data_analysis/eda.py:88 modules/data_analysis/eda.py:581
-#: modules/data_analysis/eda.py:1136 modules/data_analysis/eda.py:1442
-msgid "LAT"
-msgstr "LAT"
-
-#: modules/data_analysis/eda.py:88 modules/data_analysis/eda.py:581
-#: modules/data_analysis/eda.py:1136 modules/data_analysis/eda.py:1442
-msgid "LON"
-msgstr "LON"
-
-#: modules/data_analysis/eda.py:88 modules/data_analysis/eda.py:581
-#: modules/data_analysis/eda.py:1136 modules/data_analysis/eda.py:1442
+#: modules/data_analysis/eda.py:88 modules/data_analysis/eda.py:575
+#: modules/data_analysis/eda.py:1128 modules/data_analysis/eda.py:1418
 msgid "ALT"
 msgstr "ALT"
 
-#: modules/data_analysis/eda.py:88 modules/data_analysis/eda.py:581
-#: modules/data_analysis/eda.py:1136 modules/data_analysis/eda.py:1442
+#: modules/data_analysis/eda.py:88 modules/data_analysis/eda.py:575
+#: modules/data_analysis/eda.py:1128 modules/data_analysis/eda.py:1418
 msgid "PROCESS PERIOD"
 msgstr "PERIODO PROCESADO"
 
@@ -1790,11 +2349,11 @@ msgstr "Climatología .......................................... "
 msgid "Distribution_Test"
 msgstr "Test_de_Distribucion"
 
-#: modules/data_analysis/eda.py:195
+#: modules/data_analysis/eda.py:194
 msgid "Scatter plots of series .............................. "
 msgstr "Gráfico de dispersión de series ....................... "
 
-#: modules/data_analysis/eda.py:203
+#: modules/data_analysis/eda.py:202
 msgid ""
 "partial\n"
 " > WARNING: There is only one station for process\n"
@@ -1806,7 +2365,7 @@ msgstr ""
 "   las gráficas de dispersión de series necesita más\n"
 "   de una estación."
 
-#: modules/data_analysis/eda.py:207
+#: modules/data_analysis/eda.py:206
 msgid ""
 "partial\n"
 " > WARNING: The maximum limit for make the scatter plots\n"
@@ -1822,26 +2381,26 @@ msgstr ""
 "   runfiles con un máximo de 10 estaciones por runfile, y corra de\n"
 "   nuevo cada runfile."
 
-#: modules/data_analysis/eda.py:217
+#: modules/data_analysis/eda.py:216
 msgid "Frequency histogram .................................. "
 msgstr "Histogramas de frecuencia ............................. "
 
-#: modules/data_analysis/eda.py:225
+#: modules/data_analysis/eda.py:224
 msgid "Shapiro Wilks test ................................... "
 msgstr "Test de Shapiro Wilks ................................. "
 
-#: modules/data_analysis/eda.py:234 modules/data_analysis/eda.py:1190
-#: modules/data_analysis/eda.py:1195 modules/data_analysis/eda.py:1372
-#: modules/data_analysis/eda.py:1376 modules/data_analysis/eda.py:1381
-#: modules/data_analysis/eda.py:1384
+#: modules/data_analysis/eda.py:233 modules/data_analysis/eda.py:1201
+#: modules/data_analysis/eda.py:1206 modules/data_analysis/eda.py:1348
+#: modules/data_analysis/eda.py:1352 modules/data_analysis/eda.py:1357
+#: modules/data_analysis/eda.py:1360
 msgid "Outliers"
 msgstr "Atípicos"
 
-#: modules/data_analysis/eda.py:239
+#: modules/data_analysis/eda.py:237
 msgid "Outliers ............................................. "
 msgstr "Atípicos .............................................. "
 
-#: modules/data_analysis/eda.py:244
+#: modules/data_analysis/eda.py:242
 msgid ""
 "partial\n"
 " > WARNING: The maximum limit for make the box-plot of\n"
@@ -1858,63 +2417,63 @@ msgstr ""
 "   con un máximo de 50 estaciones por runfile, y corra de\n"
 "   nuevo cada runfile."
 
-#: modules/data_analysis/eda.py:286
+#: modules/data_analysis/eda.py:284
 msgid "Sizes_data"
 msgstr "Tamaño_de_datos"
 
-#: modules/data_analysis/eda.py:286
+#: modules/data_analysis/eda.py:284
 msgid "Maximums"
 msgstr "Máximos"
 
-#: modules/data_analysis/eda.py:286
+#: modules/data_analysis/eda.py:284
 msgid "Minimums"
 msgstr "Mínimos"
 
-#: modules/data_analysis/eda.py:286
+#: modules/data_analysis/eda.py:284
 msgid "Averages"
 msgstr "Medias"
 
-#: modules/data_analysis/eda.py:286
+#: modules/data_analysis/eda.py:284
 msgid "Medians"
 msgstr "Medianas"
 
-#: modules/data_analysis/eda.py:287
+#: modules/data_analysis/eda.py:285
 msgid "Std_deviations"
 msgstr "Desviación_Estd"
 
-#: modules/data_analysis/eda.py:287
+#: modules/data_analysis/eda.py:285
 msgid "skewness"
 msgstr "Sesgos"
 
-#: modules/data_analysis/eda.py:287
+#: modules/data_analysis/eda.py:285
 msgid "Kurtosis"
 msgstr "Curtosis"
 
-#: modules/data_analysis/eda.py:287
+#: modules/data_analysis/eda.py:285
 msgid "Coeff_variations"
 msgstr "Coef_de_variación"
 
-#: modules/data_analysis/eda.py:292
+#: modules/data_analysis/eda.py:290
 msgid "Graphs_for_{0}"
 msgstr "Gráfico_para_{0}"
 
-#: modules/data_analysis/eda.py:298 modules/data_analysis/eda.py:309
-#: modules/data_analysis/eda.py:334 modules/data_analysis/eda.py:343
-#: modules/data_analysis/eda.py:361
+#: modules/data_analysis/eda.py:295 modules/data_analysis/eda.py:306
+#: modules/data_analysis/eda.py:331 modules/data_analysis/eda.py:340
+#: modules/data_analysis/eda.py:358
 msgid "vs_Stations"
 msgstr "vs_Estaciones"
 
-#: modules/data_analysis/eda.py:298 modules/data_analysis/eda.py:311
-#: modules/data_analysis/eda.py:339 modules/data_analysis/eda.py:346
-#: modules/data_analysis/eda.py:366
+#: modules/data_analysis/eda.py:295 modules/data_analysis/eda.py:308
+#: modules/data_analysis/eda.py:336 modules/data_analysis/eda.py:343
+#: modules/data_analysis/eda.py:363
 msgid "vs_Altitude"
 msgstr "vs_Altitud"
 
-#: modules/data_analysis/eda.py:320
+#: modules/data_analysis/eda.py:317
 msgid "{0}_({1})_{2}"
 msgstr "{0}_{1}_{2}"
 
-#: modules/data_analysis/eda.py:328
+#: modules/data_analysis/eda.py:325
 msgid ""
 "{0} ({1})\n"
 "{2}"
@@ -1922,39 +2481,39 @@ msgstr ""
 "{0} ({1})\n"
 "{2}"
 
-#: modules/data_analysis/eda.py:347
+#: modules/data_analysis/eda.py:344
 msgid "Altitude (m)"
 msgstr "Altitud (m)"
 
-#: modules/data_analysis/eda.py:394 modules/data_analysis/eda.py:570
+#: modules/data_analysis/eda.py:391 modules/data_analysis/eda.py:565
 msgid "Graphs_Inspection_of_Series"
 msgstr "Gráfica_de_Inspección_de_Series"
 
-#: modules/data_analysis/eda.py:425
+#: modules/data_analysis/eda.py:420
 msgid "Station_{0}-{1}_({2}_vs_Time)"
 msgstr "Estación_{0}-{1}_({2}_vs_Tiempo)"
 
-#: modules/data_analysis/eda.py:429
+#: modules/data_analysis/eda.py:424
 msgid "_Station_{0}-{1}_({2}_vs_Time)_"
 msgstr "_Estación_{0}-{1}_({2}_vs_Tiempo)_"
 
-#: modules/data_analysis/eda.py:488
+#: modules/data_analysis/eda.py:483
 msgid "Time"
 msgstr "Tiempo"
 
-#: modules/data_analysis/eda.py:535
+#: modules/data_analysis/eda.py:530
 msgid "mosaic_station_{0}-{1}.png"
 msgstr "mosaico_estación_{0}-{1}.png"
 
-#: modules/data_analysis/eda.py:577
+#: modules/data_analysis/eda.py:571
 msgid "Climatology_table_{0}"
 msgstr "Tabla_de_climatología_{0}"
 
-#: modules/data_analysis/eda.py:638
+#: modules/data_analysis/eda.py:632
 msgid "Climatology"
 msgstr "Climatología"
 
-#: modules/data_analysis/eda.py:651
+#: modules/data_analysis/eda.py:644
 msgid ""
 "Multiyear climatology (monthly)\n"
 "{0} {1} - {2} ({3}-{4})"
@@ -1962,44 +2521,40 @@ msgstr ""
 "Climatología multianual (mensual)\n"
 "{0} {1} - {2} ({3}-{4})"
 
-#: modules/data_analysis/eda.py:657
+#: modules/data_analysis/eda.py:650
 msgid "Multiyear_climatology_(monthly)_{0}_{1}_{2}"
 msgstr "Climatología_multianual_(mensual)_{0}_{1}_{2}"
 
-#: modules/data_analysis/eda.py:667 modules/data_analysis/eda.py:722
-#: modules/data_analysis/eda.py:847 modules/data_analysis/eda.py:904
+#: modules/data_analysis/eda.py:660 modules/data_analysis/eda.py:715
+#: modules/data_analysis/eda.py:840 modules/data_analysis/eda.py:897
 msgid "Months"
 msgstr "Meses"
 
-#: modules/data_analysis/eda.py:672 modules/data_analysis/eda.py:852
+#: modules/data_analysis/eda.py:665 modules/data_analysis/eda.py:845
 msgid "[mean]"
 msgstr "[media]"
 
-#: modules/data_analysis/eda.py:712
+#: modules/data_analysis/eda.py:705
 msgid "Multiyear_climatology_(monthly+whiskers)_{0}_{1}_{2}"
 msgstr "Climatología_multianual_(mensual+barbas)_{0}_{1}_{2}"
 
-#: modules/data_analysis/eda.py:727 modules/data_analysis/eda.py:909
+#: modules/data_analysis/eda.py:720 modules/data_analysis/eda.py:902
 msgid "[min-mean-max]"
 msgstr "[min-media-max]"
 
-#: modules/data_analysis/eda.py:766
+#: modules/data_analysis/eda.py:759
 msgid "Multiyear_climatology_table_{0}_{1}_{2}.csv"
 msgstr "Tabla_climatología_multianual_{0}_{1}_{2}.csv"
 
-#: modules/data_analysis/eda.py:775 modules/data_analysis/eda.py:963
+#: modules/data_analysis/eda.py:768 modules/data_analysis/eda.py:956
 msgid "max"
 msgstr "max"
 
-#: modules/data_analysis/eda.py:778 modules/data_analysis/eda.py:966
-msgid "mean"
-msgstr "media"
-
-#: modules/data_analysis/eda.py:781 modules/data_analysis/eda.py:969
+#: modules/data_analysis/eda.py:774 modules/data_analysis/eda.py:962
 msgid "min"
 msgstr "min"
 
-#: modules/data_analysis/eda.py:829
+#: modules/data_analysis/eda.py:822
 msgid ""
 "Multiyear climatology (each {0} days)\n"
 "{1} {2} - {3} ({4}-{5})"
@@ -2007,35 +2562,35 @@ msgstr ""
 "Climatología multianual (cada {0} días)\n"
 "{1} {2} - {3} ({4}-{5})"
 
-#: modules/data_analysis/eda.py:836
+#: modules/data_analysis/eda.py:829
 msgid "Multiyear_climatology_({0}days)_{1}_{2}_{3}"
 msgstr "Climatología_multianual_({0}días)_{1}_{2}_{3}"
 
-#: modules/data_analysis/eda.py:893
+#: modules/data_analysis/eda.py:886
 msgid "Multiyear_climatology_({0}days+whiskers)_{1}_{2}_{3}"
 msgstr "Climatología_multianual_({0}días+barbas)_{1}_{2}_{3}"
 
-#: modules/data_analysis/eda.py:950
+#: modules/data_analysis/eda.py:943
 msgid "Multiyear_climatology_table_{0}days_{1}_{2}_{3}.csv"
 msgstr "Tabla_climatología_multianual_{0}días_{1}_{2}_{3}.csv"
 
-#: modules/data_analysis/eda.py:1025
+#: modules/data_analysis/eda.py:1018
 msgid "scatter_plots_of_series"
 msgstr "gráfico_de_dispersión_de_series"
 
-#: modules/data_analysis/eda.py:1029
+#: modules/data_analysis/eda.py:1022
 msgid "Scatter plots of series"
 msgstr "Gráfico de dispersión de series"
 
-#: modules/data_analysis/eda.py:1077
+#: modules/data_analysis/eda.py:1070
 msgid "Frequency_histogram"
 msgstr "Histograma_de_frecuencia"
 
-#: modules/data_analysis/eda.py:1091
+#: modules/data_analysis/eda.py:1083
 msgid "frequency_histogram_{0}_{1}_{2}"
 msgstr "histograma_de_frecuencia_{0}_{1}_{2}"
 
-#: modules/data_analysis/eda.py:1095
+#: modules/data_analysis/eda.py:1087
 msgid ""
 "Frequency histogram\n"
 "{0} {1} - {2} ({3}-{4})"
@@ -2043,139 +2598,70 @@ msgstr ""
 "Histograma de frecuencia\n"
 "{0} {1} - {2} ({3}-{4})"
 
-#: modules/data_analysis/eda.py:1104
+#: modules/data_analysis/eda.py:1096
 msgid "Frequency"
 msgstr "Frecuencia"
 
-#: modules/data_analysis/eda.py:1130
+#: modules/data_analysis/eda.py:1122
 msgid "shapiro_wilks_test_{0}.csv"
 msgstr "test_de_shapiro_wilks_{0}.csv"
 
-#: modules/data_analysis/eda.py:1147
+#: modules/data_analysis/eda.py:1139
 msgid "rejected"
 msgstr "rechazado"
 
-#: modules/data_analysis/eda.py:1149
+#: modules/data_analysis/eda.py:1141
 msgid "accepted"
 msgstr "aceptado"
 
-#: modules/data_analysis/eda.py:1185
+#: modules/data_analysis/eda.py:1197
 msgid "Outliers_per_station"
 msgstr "Atípicos_por_estacion"
 
-#: modules/data_analysis/eda.py:1201
+#: modules/data_analysis/eda.py:1212
 msgid "Station"
 msgstr "Estación"
 
-#: modules/data_analysis/eda.py:1425 modules/data_analysis/eda.py:1430
+#: modules/data_analysis/eda.py:1401 modules/data_analysis/eda.py:1406
 msgid "Outliers_table"
 msgstr "Tabla_atípicos"
 
-#: modules/data_analysis/eda.py:1442
+#: modules/data_analysis/eda.py:1418
 msgid "WHISKERS BELOW"
 msgstr "BARBAS POR DEBAJO"
 
-#: modules/data_analysis/eda.py:1443
+#: modules/data_analysis/eda.py:1419
 msgid "WHISKERS ABOVE"
 msgstr "BARBAS POR ENCIMA"
 
-#: modules/data_analysis/eda.py:1443
-msgid "# OUTLIERS"
-msgstr "# ATÍPICOS"
+#: modules/data_analysis/eda.py:1419
+msgid "NUM OUTLIERS"
+msgstr "NUM ATÍPICOS"
 
-#: modules/data_analysis/eda.py:1445
-msgid "DATE"
-msgstr "FECHA"
-
-#: modules/data_analysis/eda.py:1445
+#: modules/data_analysis/eda.py:1421
 msgid "VALUE"
 msgstr "VALOR"
 
-#: modules/data_analysis/eda.py:1445
+#: modules/data_analysis/eda.py:1421
 msgid "PHEN_CAT"
 msgstr "CATE_FENOM"
 
-#: modules/data_analysis/eda.py:1464
+#: modules/data_analysis/eda.py:1440
 msgid "OUTLIERS LIST:"
 msgstr "LISTA DE ATÍPICOS:"
 
-#: modules/station.py:73
-msgid ""
-"\n"
-"Calculating the process period ................ "
-msgstr ""
-"\n"
-"Calculando el periodo del proceso .................. "
-
-#: modules/station.py:75
-msgid ""
-"The period defined in argument {0}-{1} is outside in the\n"
-"maximum possible period for this station: {2}-{3}."
-msgstr ""
-"El periodo definido en el argumento {0}-{1} esta por fuera\n"
-"del máximo periodo posible para esta estación: {2}-{3}."
-
-#: modules/station.py:94
-msgid "Calculating the common period ................. "
-msgstr "Calculando el periodo común .......... "
-
-#: modules/station.py:96
-msgid "The common period calculated {0}-{1} has not at least 3 years."
-msgstr "El periodo común calculado {0}-{1} no tiene por lo menos 3 años."
-
-#: modules/station.py:168 modules/station.py:177
-msgid "Results will be made by trimesters"
-msgstr "Los resultados se harán por trimestres"
-
-#: modules/station.py:170 modules/analysis_interval.py:70
-msgid ""
-"The var_D of stations have data monthly, but you define\n"
-"in runfile the analysis interval as '{0}', this must be,\n"
-"in this case, as 'trimester' or use data daily."
-msgstr ""
-"La var_D de las estaciones tiene datos mensuales, pero usted definió\n"
-"en el runfile el intervalo de análisis como '{0}', este debe ser, para este\n"
-"caso, como 'trimester' o use datos diarios."
-
-#: modules/station.py:179
-msgid "Converting all var D to data monthly"
-msgstr "Convirtiendo toda la var D a datos mensuales"
-
-#: modules/station.py:183 modules/station.py:191
-msgid "Converting all var I to data monthly"
-msgstr "Convirtiendo toda la var I a datos mensuales"
-
-#: modules/station.py:188
-msgid "Results will be made every {} days"
-msgstr "Los resultados se harán cada {} días"
-
-#: modules/station.py:196
-msgid "Period to process: {0}-{1}"
-msgstr "Periodo a procesar: {0}-{1}"
-
-#: modules/analysis_interval.py:64
-msgid ""
-"The station with code '{0}' and name '{1}'\n"
-"have data {2} but other stations has data {3}. Jaziku\n"
-"requires that all stations have identical frequency data."
-msgstr ""
-"La estación con código '{0}' y nombre '{1}'\n"
-"tiene datos {2} pero otras estaciones tienen datos {3}.\n"
-"Jaziku requiere que todas las estaciones tengan la misma \n"
-"frecuencia en los datos. "
-
-#: jaziku.py:67
+#: jaziku.py:66
 msgid ""
 "You version of python is {0}, please use Jaziku with python v2.6 or v2.7"
 msgstr ""
 "La version de python que tienes es {0}, por favor usa Jaziku con python v2.6 "
 "o v2.7"
 
-#: jaziku.py:93
+#: jaziku.py:96
 msgid "[runfile] no such file or directory: {0}"
 msgstr "[runfile] no existe el archivo o directorio: {0}"
 
-#: jaziku.py:106
+#: jaziku.py:109
 msgid ""
 "\n"
 "############################ JAZIKU ############################\n"
@@ -2195,114 +2681,7 @@ msgstr ""
 "#           Copyright (C) 2011-2013 IDEAM - Colombia           #\n"
 "################################################################"
 
-#: jaziku.py:137
-msgid ""
-"\n"
-"\n"
-"#################### DATA ANALYSIS PROCESS #####################\n"
-"# Data analysis module, here is verified linearity, outliers   #\n"
-"# are reported and the primary statistical time series.        #\n"
-"################################################################\n"
-msgstr ""
-"\n"
-"\n"
-"################# PROCESO DE ANÁLISIS DE DATOS #################\n"
-"# En el modulo de análisis de datos es verificado la           #\n"
-"# linealidad, se reportan los datos atípicos y se hace una     #\n"
-"# estadística preliminar de las series de tiempo.              #\n"
-"################################################################\n"
-
-#: jaziku.py:145
-msgid "Jaziku_Data_Analysis"
-msgstr "Jaziku_Análisis_de_Datos"
-
-#: jaziku.py:147
-msgid "Saving the result for data analysis in:"
-msgstr "Guardando los resultados para el análisis de datos en:"
-
-#: jaziku.py:152
-msgid ""
-"\n"
-" > WARNING: the output directory for data analysis process\n"
-"   is already exist, Jaziku continue but the results\n"
-"   could be mixed or replaced of old output."
-msgstr ""
-"\n"
-" > ADVERTENCIA: El directorio de salida para análisis de datos\n"
-"   ya existe, Jaziku continua pero el resultado puede mezclarse\n"
-"   o sobrescribir la corrida anterior."
-
-#: jaziku.py:166
-msgid ""
-"\n"
-"\n"
-"############### CLIMATE AND FORECASTING PROCESS ################\n"
-"# Climate Module, here are calculated contingency tables,      #\n"
-"# correlations and parametric tests of interest.               #\n"
-"#                                                              #\n"
-"# Modulo forecasts, predictions are calculated here associated #\n"
-"# with the dependent variable as a function of contingency     #\n"
-"# tables and the probability of the independent variable.      #\n"
-"################################################################\n"
-msgstr ""
-"\n"
-"\n"
-"################ PROCESO DE CLIMA Y PRONOSTICO #################\n"
-"# En el modulo de Clima son calculados las tablas de           #\n"
-"# contingencia, la correlación y los test paramétricos de      #\n"
-"# interes.                                                     #\n"
-"#                                                              #\n"
-"# En el modulo de pronostico son calculadas las predicciones   #\n"
-"# asociadas con la variable dependiente como una función       #\n"
-"# de las tablas de contingencia y la probabilidad de la        #\n"
-"# variable independiente                                       #\n"
-"################################################################\n"
-
-#: jaziku.py:178
-msgid "Jaziku_Climate"
-msgstr "Jaziku_Clima"
-
-#: jaziku.py:180
-msgid "Saving the result for climate in:"
-msgstr "Guardando los resultados para el clima en:"
-
-#: jaziku.py:185
-msgid ""
-"\n"
-" > WARNING: the output directory for climate process\n"
-"   is already exist, Jaziku continue but the results\n"
-"   could be mixed or replaced of old output."
-msgstr ""
-"\n"
-" > ADVERTENCIA: El directorio de salida para el proceso del clima\n"
-"   ya existe, Jaziku continua pero el resultado puede mezclarse\n"
-"   o sobrescribir la corrida anterior."
-
-#: jaziku.py:193
-msgid "Jaziku_Forecasting"
-msgstr "Jaziku_Pronostico"
-
-#: jaziku.py:195
-msgid ""
-"\n"
-"Saving the result for forecasting in:"
-msgstr ""
-"\n"
-"Guardando los resultados para el pronóstico en:"
-
-#: jaziku.py:200
-msgid ""
-"\n"
-" > WARNING: the output directory for forecasting process\n"
-"   is already exist, Jaziku continue but the results\n"
-"   could be mixed or replaced of old output."
-msgstr ""
-"\n"
-" > ADVERTENCIA: El directorio de salida para el proceso del pronóstico\n"
-"   ya existe, Jaziku continua pero el resultado puede mezclarse\n"
-"   o sobrescribir la corrida anterior."
-
-#: jaziku.py:212
+#: jaziku.py:179
 msgid ""
 "\n"
 "################# STATION: {0} ({1})"
@@ -2310,7 +2689,7 @@ msgstr ""
 "\n"
 "################# ESTACIÓN: {0} ({1})"
 
-#: jaziku.py:221
+#: jaziku.py:192
 msgid ""
 "\n"
 "{0} station processed."
@@ -2318,7 +2697,7 @@ msgstr ""
 "\n"
 "{0} estación procesada."
 
-#: jaziku.py:222
+#: jaziku.py:193
 msgid ""
 "\n"
 "{0} stations processed."
@@ -2326,28 +2705,7 @@ msgstr ""
 "\n"
 "{0} estaciónes procesadas."
 
-#: jaziku.py:237
-msgid ""
-"\n"
-"\n"
-"######################### MAPS PROCESS #########################\n"
-"# Map Process, here is made the Kriging interpolation on the   #\n"
-"# results of historical scenarios and forecasts most probable  #\n"
-"# of the dependent variable, also interpolation of linear      #\n"
-"# correlations.                                                #\n"
-"################################################################"
-msgstr ""
-"\n"
-"\n"
-"############################ MAPAS #############################\n"
-"# En el proceso de mapas es realizada la interpolación de      #\n"
-"# Kriging en los resultados de escenarios históricos y         #\n"
-"# pronósticos más probables de la variable dependiente,        #\n"
-"# también se realiza la interpolación de la correlación        #\n"
-"# lineal.                                                      #\n"
-"################################################################"
-
-#: jaziku.py:254
+#: jaziku.py:217
 msgid ""
 "\n"
 "{0} map created for {1}"
@@ -2355,7 +2713,7 @@ msgstr ""
 "\n"
 "{0} mapa creado para {1}"
 
-#: jaziku.py:255
+#: jaziku.py:218
 msgid ""
 "\n"
 "{0} maps created for {1}"
@@ -2363,7 +2721,7 @@ msgstr ""
 "\n"
 "{0} mapas creados para {1}"
 
-#: jaziku.py:258
+#: jaziku.py:221
 msgid ""
 "\n"
 "Process completed!"
@@ -2371,9 +2729,398 @@ msgstr ""
 "\n"
 "Proceso completado!"
 
-#: jaziku.py:260
+#: jaziku.py:223
 msgid "Good bye :)"
 msgstr "Adiós :)"
+
+#~ msgid "var_I_below"
+#~ msgstr "var_I_por_debajo"
+
+#~ msgid "var_I_normal"
+#~ msgstr "var_I_normal"
+
+#~ msgid "var_I_above"
+#~ msgstr "var_I_por_encima"
+
+#~ msgid ""
+#~ "\n"
+#~ "Configuration run:"
+#~ msgstr ""
+#~ "\n"
+#~ "Configuración de la corrida:"
+
+#~ msgid ""
+#~ "The thresholds can't be define as 'default' if the\n"
+#~ "type of independent variable not is valid internal type."
+#~ msgstr ""
+#~ "Los umbrales no pueden ser definidos como 'default'\n"
+#~ "si el tipo de la variable independiente no es un tipo\n"
+#~ "interno valido."
+
+#~ msgid ""
+#~ "The sum for the 3 values of phenomenon for lag 1\n"
+#~ "in 'forecasting options' in runfile must be\n"
+#~ "equal to 100."
+#~ msgstr ""
+#~ "La suma para los 3 valores del fenómeno para el\n"
+#~ "rezago 1 en 'forecasting options' en el runfile\n"
+#~ "deben ser iguales a 100"
+
+#~ msgid ""
+#~ "The sum for the 3 values of phenomenon for lag 2\n"
+#~ "in 'forecasting options' in runfile must be\n"
+#~ "equal to 100."
+#~ msgstr ""
+#~ "La suma para los 3 valores del fenómeno para el\n"
+#~ "rezago 2 en 'forecasting options' en el runfile\n"
+#~ "deben ser iguales a 100"
+
+#~ msgid ""
+#~ "exception validation in dependent variable:\n"
+#~ "The value {0} is out of range {1} to {2} for {3}.\n"
+#~ "\n"
+#~ "{4}"
+#~ msgstr ""
+#~ "error en la validación de la variable dependiente:\n"
+#~ "El valor {0} esta fuera del rango {1} a {2} para {3}.\n"
+#~ "\n"
+#~ "{4}"
+
+#~ msgid "{0} not valid in particular limits defined in runfile"
+#~ msgstr "{0} no es un limite particular valido definido en el runfile"
+
+#~ msgid "precipitation not valid"
+#~ msgstr "precipitación no valida"
+
+#~ msgid ""
+#~ "validation: (NDPPT) number of days with rain must have\n"
+#~ "data monthly"
+#~ msgstr ""
+#~ "validando: (NDPPT) numero de días con lluvia debe tener\n"
+#~ "datos mensuales"
+
+#~ msgid "minimum temperature not valid"
+#~ msgstr "temperatura mínima no valida"
+
+#~ msgid "maximum temperature not valid"
+#~ msgstr "temperatura máxima no valida"
+
+#~ msgid "medium temperature not valid"
+#~ msgstr "temperatura media no valida"
+
+#~ msgid "atmosfere pressure not valid"
+#~ msgstr "presión atmosférica no valida"
+
+#~ msgid "% of relative humidity not valid"
+#~ msgstr "% de humedad relativa no valida"
+
+#~ msgid "Runoff not valid"
+#~ msgstr "Runoff no válido"
+
+#~ msgid ""
+#~ "exception validation in independent variable:\n"
+#~ "The value {0} is out of range {1} to {2} for {3}.\n"
+#~ "\n"
+#~ "{4}"
+#~ msgstr ""
+#~ "error en la validación de la variable independiente:\n"
+#~ "El valor {0} esta fuera del rango {1} a {2} para {3}.\n"
+#~ "\n"
+#~ "{4}"
+
+#~ msgid "Oceanic Nino Index not valid"
+#~ msgstr "Indice oceánico del niño no valido"
+
+#~ msgid "Index of the Southern Oscillation NOAA not valid"
+#~ msgstr "Indice de la oscilación del sur NOAA no valido"
+
+#~ msgid "Index of the Southern Oscillation TROUP not valid"
+#~ msgstr "Indice de la oscilación del sur TROUP no valido"
+
+#~ msgid "Multivariate ENSO index not valid"
+#~ msgstr "Indice multivariado del ENSO no valido"
+
+#~ msgid "Radiation wavelength Long tropical not valid"
+#~ msgstr "Radiación tropical de onda larga no valida"
+
+#~ msgid "Anomaly index of wind to 200 hpa not valid"
+#~ msgstr "Indice de la anomalía del viento a 200 hpa no valida"
+
+#~ msgid "Anomaly index of wind to 850 hpa west not valid"
+#~ msgstr "Indice de la anomalía del viento a 850 hpa oeste no valida"
+
+#~ msgid "Anomaly index of wind to 850 hpa center not valid"
+#~ msgstr "Indice de la anomalía del viento a 850 hpa central no valida"
+
+#~ msgid "Anomaly index of wind to 850 hpa east not valid"
+#~ msgstr "Indice de la anomalía del viento a 850 hpa este no valida"
+
+#~ msgid "Sea surface temperature not valid"
+#~ msgstr "Temperatura superficial del mar no valida"
+
+#~ msgid "Anomaly sea surface temperature not valid"
+#~ msgstr "Anomalía de la temperatura superficial del mar no valida"
+
+#~ msgid "% Amazon relative humidity not valid"
+#~ msgstr "% humedad relativa de la Amazonia no valida"
+
+#~ msgid "North Atlantic Oscillation index not valid"
+#~ msgstr "Indice de la oscilación del Atlántico norte no valida"
+
+#~ msgid "Quasibienal Oscillation Index not valid"
+#~ msgstr "Indice de la oscilacion quasibienal no valida"
+
+#~ msgid "Caribbean (CAR) Index not valid"
+#~ msgstr "Indice del caribe (CAR) no valido"
+
+#~ msgid "Monthly anomaly of the ocean surface area ocean region not valid"
+#~ msgstr ""
+#~ "Anomalía mensual de la región de la superficie del area oceánica no valida"
+
+#~ msgid "Check if var {0} are consistent"
+#~ msgstr "Comprobar si la var {0} es consistente "
+
+#~ msgid ""
+#~ "Problems with the 9 probability values for forecasting process\n"
+#~ "defined in runfile, these must be a numbers, please check it."
+#~ msgstr ""
+#~ "Problemas con los 9 valores de probabilidad para el proceso\n"
+#~ "de pronostico definido en el runfile, éstos deben de ser números,\n"
+#~ "por favor verifiquelos."
+
+#~ msgid "Processing forecasting ........................ "
+#~ msgstr "Procesando pronóstico ................................. "
+
+#~ msgid ""
+#~ "Trimester forecasting '{0}' is invalid, must be a month valid number "
+#~ "(1-12)"
+#~ msgstr ""
+#~ "El trimestre del pronostico '{0}' no es valido, debe ser un numero de mes "
+#~ "valido (1-12)"
+
+#~ msgid ""
+#~ "Month or day for calculate forecasting '{0}' is invalid, \n"
+#~ "must be month/day or month-day (e.g. 03/11)"
+#~ msgstr ""
+#~ "El mes o el dia para el calculo del pronóstico  '{0}' no es valido,\n"
+#~ "debe ser mes/dia o mes-dia (ejemplo 03/11)"
+
+#~ msgid "var_D"
+#~ msgstr "var_D"
+
+#~ msgid "var_I"
+#~ msgstr "var_I"
+
+#~ msgid "Pearson"
+#~ msgstr "Pearson"
+
+#~ msgid "Sign Pearson"
+#~ msgstr "Sign Pearson"
+
+#~ msgid "Is sign 'Sign Pearson'?"
+#~ msgstr "¿Es significante la 'Sign Pearson'?"
+
+#~ msgid "threshold below (var D)"
+#~ msgstr "umbral por debajo (var D)"
+
+#~ msgid "threshold above (var D)"
+#~ msgstr "umbral por encima (var D)"
+
+#~ msgid "threshold below (var I)"
+#~ msgstr "umbral por debajo (var I)"
+
+#~ msgid "threshold above (var I)"
+#~ msgstr "umbral por encima (var I)"
+
+#~ msgid "Contingency Table (CT)"
+#~ msgstr "Table de contingencia (TC)"
+
+#~ msgid "Contingency Table in %"
+#~ msgstr "Table de contingencia en %"
+
+#~ msgid "is sig risk analysis?"
+#~ msgstr "es sign el análisis de riesgo?"
+
+#~ msgid "Test Stat - Chi2"
+#~ msgstr "Test Estadístico - Chi2"
+
+#~ msgid "Crit Value - Chi2"
+#~ msgstr "Valor Critico - Chi2"
+
+#~ msgid "Is sig CT?"
+#~ msgstr "es sig la TC?"
+
+#~ msgid "Correl CT"
+#~ msgstr "Correl TC"
+
+#~ msgid ""
+#~ "\n"
+#~ " > WARNING: Thresholds calculated with analog year for var_D are wrong,\n"
+#~ "   using default thresholds instead"
+#~ msgstr ""
+#~ "\n"
+#~ " > ADVERTENCIA: Los umbrales calculados con el año análogo para la var D\n"
+#~ "   son erróneos, usando umbrales predeterminados en su lugar"
+
+#~ msgid ""
+#~ "thresholds could not were identified:\n"
+#~ "{0} - {1}"
+#~ msgstr ""
+#~ "los umbrales no pudieron ser identificados:\n"
+#~ "{0} - {1}"
+
+#~ msgid ""
+#~ "threshold below of dependent variable can't be greater than threshold "
+#~ "above:\n"
+#~ "{0} - {1}"
+#~ msgstr ""
+#~ "el umbral por debajo de la variable independiente no puede ser mayor que "
+#~ "el umbral por encima:\n"
+#~ "{0} - {1}"
+
+#~ msgid ""
+#~ "thresholds of independent variable were defined as N standard deviation\n"
+#~ " but are outside of range, this values must be 1, 2 or 3:\n"
+#~ "sd{0} sd{1}"
+#~ msgstr ""
+#~ "los umbrales de la variable independiente fueron definidos como la  "
+#~ "desviación\n"
+#~ "estándar N pero están fuera del rango, éstos valores deben ser 1, 2 o 3:\n"
+#~ "sd{0} sd{1}"
+
+#~ msgid ""
+#~ "threshold below of independent variable can't be greater than threshold "
+#~ "above:\n"
+#~ "{0} - {1}"
+#~ msgstr ""
+#~ "el umbral por debajo de la variable independiente no puede ser mayor que "
+#~ "el umbral por encima:\n"
+#~ "{0} - {1}"
+
+#~ msgid ""
+#~ "Problem with thresholds of independent variable:\n"
+#~ "\n"
+#~ "{0}"
+#~ msgstr ""
+#~ "Problemas con los umbrales de la variable independiente:\n"
+#~ "\n"
+#~ "{0}"
+
+#~ msgid ""
+#~ "thresholds of independent variable were defined as percentile\n"
+#~ "but are outside of range 0-100:\n"
+#~ "{0} - {1}"
+#~ msgstr ""
+#~ "los umbrales del a variable independiente fueron definidos como "
+#~ "percentiles\n"
+#~ "pero están fuera del rango 0-100:\n"
+#~ "{0} - {1}"
+
+#~ msgid "unrecognizable thresholds '{0}' and/or '{1}' for var I"
+#~ msgstr "umbrales desconocidos '{0}' y/o '{1}' para la var I"
+
+#~ msgid "   Setting internal grid"
+#~ msgstr "   Estableciendo rejilla interna"
+
+#~ msgid ""
+#~ "\n"
+#~ "Can't set internal shape '{0}',\n"
+#~ "please check the grid parameter; area,\n"
+#~ "region and/or country name are wrong.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "No se puede establecer el shape interno '{0}',\n"
+#~ "por favor revise el parámetro 'grid'; el area,\n"
+#~ "la region y/o el nombre del país están equivocados.\n"
+
+#~ msgid "   Setting particular shape"
+#~ msgstr "   Estableciendo un shape particular"
+
+#~ msgid ""
+#~ "Can't set particular shape, please check files in shape path\n"
+#~ "this must be contain inside .shp .prj .sbn .sbx .shx"
+#~ msgstr ""
+#~ "No se puede establecer el shape particular,\n"
+#~ "por favor revisar los archivos de la ruta del shape\n"
+#~ "este debe contener dentro archivos .shp .prj .sbn .sbx .shx"
+
+#~ msgid "code"
+#~ msgstr "código"
+
+#~ msgid "pearson"
+#~ msgstr "pearson"
+
+#~ msgid "var_below"
+#~ msgstr "var_por_debajo"
+
+#~ msgid "var_normal"
+#~ msgstr "var_normal"
+
+#~ msgid "var_above"
+#~ msgstr "var_por_encima"
+
+#~ msgid "p_index"
+#~ msgstr "indice"
+
+#~ msgid "sum"
+#~ msgstr "suma"
+
+#~ msgid "forecasting_date"
+#~ msgstr "fecha_pronostico"
+
+#~ msgid "prob_decrease_var_D"
+#~ msgstr "prob_descenso_var_D"
+
+#~ msgid "prob_normal_var_D"
+#~ msgstr "prob_normal_var_D"
+
+#~ msgid "prob_exceed_var_D"
+#~ msgstr "prob_excedencia_var_D"
+
+#~ msgid "Read and check (range validation) for var {0} ... "
+#~ msgstr "Lectura y comprobación(rango de validación) var {0} ..... "
+
+#~ msgid "   the variable {0} has data daily"
+#~ msgstr "   La variable {0} tiene datos diarios"
+
+#~ msgid "Converting all var D to data monthly"
+#~ msgstr "Convirtiendo toda la var D a datos mensuales"
+
+#~ msgid "Converting all var I to data monthly"
+#~ msgstr "Convirtiendo toda la var I a datos mensuales"
+
+#~ msgid ""
+#~ "\n"
+#~ " > WARNING: the output directory for data analysis process\n"
+#~ "   is already exist, Jaziku continue but the results\n"
+#~ "   could be mixed or replaced of old output."
+#~ msgstr ""
+#~ "\n"
+#~ " > ADVERTENCIA: El directorio de salida para análisis de datos\n"
+#~ "   ya existe, Jaziku continua pero el resultado puede mezclarse\n"
+#~ "   o sobrescribir la corrida anterior."
+
+#~ msgid ""
+#~ "\n"
+#~ " > WARNING: the output directory for climate process\n"
+#~ "   is already exist, Jaziku continue but the results\n"
+#~ "   could be mixed or replaced of old output."
+#~ msgstr ""
+#~ "\n"
+#~ " > ADVERTENCIA: El directorio de salida para el proceso del clima\n"
+#~ "   ya existe, Jaziku continua pero el resultado puede mezclarse\n"
+#~ "   o sobrescribir la corrida anterior."
+
+#~ msgid ""
+#~ "\n"
+#~ " > WARNING: the output directory for forecasting process\n"
+#~ "   is already exist, Jaziku continue but the results\n"
+#~ "   could be mixed or replaced of old output."
+#~ msgstr ""
+#~ "\n"
+#~ " > ADVERTENCIA: El directorio de salida para el proceso del pronóstico\n"
+#~ "   ya existe, Jaziku continua pero el resultado puede mezclarse\n"
+#~ "   o sobrescribir la corrida anterior."
 
 #~ msgid "Index of wind anomaly not valid"
 #~ msgstr "Indice de la anomalía del viento no valida"
@@ -2438,12 +3185,6 @@ msgstr "Adiós :)"
 #~ msgid "   Results will be made by trimesters"
 #~ msgstr "   Los resultados se harán por trimestres"
 
-#~ msgid "   Converting all var D to data monthly"
-#~ msgstr "   Convirtiendo toda la var D a datos mensuales"
-
-#~ msgid "   Converting all var I to data monthly"
-#~ msgstr "   Convirtiendo toda la var I a datos mensuales"
-
 #~ msgid "   Results will be made every {} days"
 #~ msgstr "   Los resultados se harán cada {} dias"
 
@@ -2488,10 +3229,6 @@ msgstr "Adiós :)"
 #~ "variabilidad climática y las principales variables \n"
 #~ "meteorológicas en la escala puntual.\n"
 
-#~ msgid "Trimester forecasting '{0}' is invalid, must be integer number"
-#~ msgstr ""
-#~ "El trimestre del pronostico '{0}' no es valido, debe ser un numero entero"
-
 #~ msgid "{0} not valid"
 #~ msgstr "{0} no válido"
 
@@ -2525,9 +3262,6 @@ msgstr "Adiós :)"
 #~ msgstr ""
 #~ "{0} no es un tipo de variable valida para la variable independiente si "
 #~ "usted ha definido LIMIT VAR I BELOW/ABOVE como 'default'."
-
-#~ msgid "Exploratory data analysis (EDA) .............. "
-#~ msgstr "Análisis Exploratorio de Datos (EDA) ............. "
 
 #~ msgid ""
 #~ "\n"
@@ -2624,9 +3358,6 @@ msgstr "Adiós :)"
 #~ msgid "Enable risk analysis for forecasting process"
 #~ msgstr "Habilitar el análisis de riesgo para el proceso de pronóstico"
 
-#~ msgid "disable check consistent data for var_D and var_I"
-#~ msgstr "desactivar la consistencia de los datos para var_D y var_I"
-
 #~ msgid "disable create graphics for climate and forecasting"
 #~ msgstr "desactivar la creación de gráficos para clima y pronóstico"
 
@@ -2661,9 +3392,6 @@ msgstr "Adiós :)"
 #~ msgid "var D Above"
 #~ msgstr "var D por encima"
 
-#~ msgid "Lag {0}"
-#~ msgstr "Rezago {0}"
-
 #~ msgid "var Dep Below"
 #~ msgstr "var Dep por debajo"
 
@@ -2673,14 +3401,8 @@ msgstr "Adiós :)"
 #~ msgid "var Dep Above"
 #~ msgstr "var Dep por encima"
 
-#~ msgid "var Ind below"
-#~ msgstr "var I por debajo"
-
 #~ msgid "var Ind normal"
 #~ msgstr "var I normal"
-
-#~ msgid "var Ind above"
-#~ msgstr "var I por encima"
 
 #~ msgid "Lag_"
 #~ msgstr "Rez_"

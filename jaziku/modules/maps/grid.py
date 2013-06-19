@@ -159,7 +159,7 @@ class Grid(object):
 
         ## set subtitle on maps
         if env.config_run.settings['analog_year']:
-            self.subtitle = _("\"Analysis with analog year for {0}\"").format(env.config_run.settings['analog_year'])
+            self.subtitle = _("\"Analysis with {0} as analog year\"").format(env.config_run.settings['analog_year'])
         else:
             self.subtitle = "\"\""
 
