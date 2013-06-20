@@ -23,19 +23,17 @@ import imp
 import math
 from  numpy import linspace
 
-from jaziku.utils import globals_vars, console, array
-from jaziku.modules.station import Station
+from jaziku import env
+from jaziku.utils import  console, array, format_in
+from jaziku.core.station import Station
 
-class Grid:
-    """
-    Generic grid class for storage several variables of each grid
+class Grid(object):
+    """Grid class for maps
     """
 
     fields = ["grid",
-              "minlat",
-              "maxlat",
-              "minlon",
-              "maxlon",
+              "latitude",
+              "longitude",
               "shape_path",
               "grid_resolution",
               "semivariogram_type",
@@ -48,26 +46,38 @@ class Grid:
     # all maps created in this grid
     maps_created_in_grid = 0
 
-    # counter grids processed
-    grids_processed = 0
+    # iterator of number of grids
+    iter_grid = 0
 
     def __init__(self):
-        self.__class__.all_grids.append(self)
-        Grid.grids_processed += 1
+        # append instance to static variable all_grids
+        Grid.all_grids.append(self)
+        # number of grid created
+        self.num = Grid.iter_grid
+        Grid.iter_grid += 1
+        # initialized lat and lon
+        self.minlat = None
+        self.maxlat = None
+        self.minlon = None
+        self.maxlon = None
 
     def  grid_properties(self):
-        """
-        Set values and default values for grid variables
+        """Set values and default values for grid variables
         """
 
         # set the radiuses for interpolation
-        if self.grid_resolution == "default":
+        if self.grid_resolution == "auto":
             # set grid resolution based in 70 division of grid for minimum side
             self.grid_resolution = min([abs(self.maxlat - self.minlat),
                                         abs(self.maxlon - self.minlon)]) / 80
-        elif not isinstance(self.grid_resolution, (int, float)):
-            console.msg_error(_("The grid_resolution '{0}' is wrong, the options are:\n"
-                                "'default' or valid number.").format(self.grid_resolution), False)
+        else:
+            if not isinstance(self.grid_resolution, (int, float)):
+                console.msg_error_configuration("grid_resolution",
+                    _("The grid_resolution '{0}' is wrong, the options are:\n"
+                    "'default' or valid number.").format(self.grid_resolution), stop_in_grid=self.num)
+            self.grid_resolution = format_in.to_float(self.grid_resolution)
+
+        env.globals_vars.input_settings["grid_resolution"].append(self.grid_resolution)
 
         # number of decimal from grid resolution
         self.decimal_resolution = len(str(self.grid_resolution).split('.')[1])
@@ -101,46 +111,55 @@ class Grid:
 
         # set the semivariogram type for interpolation
         #     0 – spherical, 1 – exponential, 2 – gaussian;
-        if self.semivariogram_type == "default" or self.semivariogram_type == "spherical":
-            self.semivariogram_type = 0
-        elif self.semivariogram_type == "exponential":
-            self.semivariogram_type = 1
-        elif self.semivariogram_type == "gaussian":
-            self.semivariogram_type = 2
-        else:
-            console.msg_error(_("The semivariogram type '{0}' is wrong, the options are:\n"
-                                "default, spherical, exponential or gaussian").format(self.semivariogram_type), False)
+        self.all_semivariogram_type = {'spherical':0, 'exponential':1, 'gaussian':2}
+        if self.semivariogram_type == "default":
+            self.semivariogram_type = 'spherical'
+        if self.semivariogram_type not in self.all_semivariogram_type:
+            console.msg_error_configuration("semivariogram_type",
+                _("The semivariogram type '{0}' is wrong, the options are:\n"
+                  "default, {1}").format(self.semivariogram_type, ', '.join(self.all_semivariogram_type.keys())),
+                stop_in_grid=self.num)
+
+        env.globals_vars.input_settings["semivariogram_type"].append(self.semivariogram_type)
+        self.num_semivariogram_type = self.all_semivariogram_type[self.semivariogram_type]
+
 
         # set the radiuses for interpolation
-        if self.radiuses == "default":
+        if self.radiuses == "auto":
             radius = max([self.lat_size, self.lon_size]) * 3
             self.radiuses = [radius, radius]
         else:
             try:
                 self.radiuses = [int(self.radiuses[0]), int(self.radiuses[1])]
             except:
-                console.msg_error(_("The radiuses '{0}' is wrong, the options are:\n"
-                                    "'default' or radius1;radius2").format(self.radiuses), False)
+                console.msg_error_configuration("radiuses",
+                    _("The radiuses '{0}' is wrong, the options are:\n"
+                      "'auto' or radius1 and radius2 in different column.").format(self.radiuses), stop_in_grid=self.num)
+
+        env.globals_vars.input_settings["radiuses"].append(', '.join([str(x) for x in self.radiuses]))
 
         # set the max_neighbours
-        if self.max_neighbours == "default":
+        if self.max_neighbours == "auto":
             self.max_neighbours = Station.stations_processed
         elif isinstance(self.max_neighbours, (int, float)):
             self.max_neighbours = int(self.max_neighbours)
         else:
-            console.msg_error(_("The max_neighbours '{0}' is wrong, the options are:\n"
-                                "'default' or valid number").format(self.max_neighbours), False)
+            console.msg_error_configuration("max_neighbours",
+                _("The max_neighbours '{0}' is wrong, the options are:\n"
+                  "'auto' or valid number").format(self.max_neighbours), stop_in_grid=self.num)
+
+        env.globals_vars.input_settings["max_neighbours"].append(self.max_neighbours)
 
         ## what do with data outside of boundary shape
         self.shape_mask = False
         # delete data outside of shape in mesh data
         # if grid_resolution is thin, the shape mask is better
-        if globals_vars.config_run['shape_boundary']:
+        if env.config_run.settings['shape_boundary']:
             self.shape_mask = True
 
         ## set subtitle on maps
-        if globals_vars.config_run['analog_year']:
-            self.subtitle = _("\"Analysis with analog year - {0}\"").format(globals_vars.config_run['analog_year'])
+        if env.config_run.settings['analog_year']:
+            self.subtitle = _("\"Analysis with {0} as analog year\"").format(env.config_run.settings['analog_year'])
         else:
             self.subtitle = "\"\""
 
@@ -152,11 +171,11 @@ class Grid:
 
         # the semivariogram type for interpolation
         #     0 – spherical, 1 – exponential, 2 – gaussian;
-        if self.semivariogram_type == 0:
+        if self.semivariogram_type == "spherical":
             console.msg(_("   Semivariogram type: spherical"), color='cyan')
-        if self.semivariogram_type == 1:
+        if self.semivariogram_type == "exponential":
             console.msg(_("   Semivariogram type: exponential"), color='cyan')
-        if self.semivariogram_type == 2:
+        if self.semivariogram_type == "gaussian":
             console.msg(_("   Semivariogram type: gaussian"), color='cyan')
 
         # print radiuses
@@ -196,17 +215,17 @@ class Grid:
 
         ## put value in the base matrix
         # first check if already exist value in this point on matrix (overlapping)
-        if int(matrix[lat_location, lon_location]) != globals_vars.VALID_NULL[1]:
-            if globals_vars.config_run['overlapping'] == "average":
+        if int(matrix[lat_location, lon_location]) != env.globals_vars.VALID_NULL[1]:
+            if env.config_run.settings['overlapping'] == "average":
                 matrix[lat_location, lon_location] = array.mean([matrix[lat_location, lon_location], value])
                 return matrix, _("average")
-            if globals_vars.config_run['overlapping'] == "maximum":
+            if env.config_run.settings['overlapping'] == "maximum":
                 matrix[lat_location, lon_location] = max([matrix[lat_location, lon_location], value])
                 return matrix, _("maximum")
-            if globals_vars.config_run['overlapping'] == "minimum":
+            if env.config_run.settings['overlapping'] == "minimum":
                 matrix[lat_location, lon_location] = min([matrix[lat_location, lon_location], value])
                 return matrix, _("minimum")
-            if globals_vars.config_run['overlapping'] == "neither":
+            if env.config_run.settings['overlapping'] == "neither":
                 return matrix, _("neither")
         else:
             matrix[lat_location, lon_location] = value
@@ -216,11 +235,10 @@ class Grid:
 
 def search_and_set_internal_grid(grid):
 
-    console.msg(_("   Setting internal grid"), color='yellow')
     grid.is_internal = True
 
-    grid.shape_path = os.path.join(globals_vars.JAZIKU_DIR, 'data', 'maps', 'shapes', grid.grid_path)
-    dir_to_list = os.path.join(globals_vars.JAZIKU_DIR, 'data', 'maps', 'shapes', grid.country)
+    grid.shape_path = os.path.join(env.globals_vars.JAZIKU_DIR, 'data', 'maps', 'shapes', grid.grid_path)
+    dir_to_list = os.path.join(env.globals_vars.JAZIKU_DIR, 'data', 'maps', 'shapes', grid.country)
 
     try:
         listdir = [name for name in os.listdir(dir_to_list) if os.path.isdir(os.path.join(dir_to_list, name))]
@@ -228,34 +246,42 @@ def search_and_set_internal_grid(grid):
         if grid.grid_name in listdir:
             internal_grid = imp.load_source("internal_grid", os.path.join(grid.shape_path, grid.grid_name + ".py"))
 
-            # set extreme lat and lon values from internal grid
-            # but if is defined by user will not reset
-            if not grid.minlat:
+            # set extreme lat and lon values when the 'latitude' or 'longitude'
+            # defined in runfile is equal to 'internal' with values inside
+            # python shape file
+            if grid.latitude == "internal":
                 grid.minlat = internal_grid.minlat
-            if not grid.maxlat:
                 grid.maxlat = internal_grid.maxlat
-            if not grid.minlon:
+            if grid.longitude == "internal":
                 grid.minlon = internal_grid.minlon
-            if not grid.maxlon:
                 grid.maxlon = internal_grid.maxlon
 
-            grid.need_particular_ncl_script = internal_grid.need_particular_ncl_script
+            grid.need_particular_ncl_script_probabilistic_map = internal_grid.need_particular_ncl_script_probabilistic_map
+            grid.need_particular_ncl_script_deterministic_map = internal_grid.need_particular_ncl_script_deterministic_map
 
             try:
-                grid.particular_properties_map = internal_grid.particular_properties_map
+                grid.particular_properties_probabilistic_map = internal_grid.particular_properties_probabilistic_map
             except:
-                grid.particular_properties_map = {}
+                grid.particular_properties_probabilistic_map = {}
+
+            try:
+                grid.particular_properties_deterministic_map = internal_grid.particular_properties_deterministic_map
+            except:
+                grid.particular_properties_deterministic_map = {}
         else:
             raise
     except:
-        console.msg_error(_("\nCan't set internal shape '{0}',\n"
-                            "please check the grid parameter; area,\n"
-                            "region and/or country name are wrong.\n").format(grid.grid_fullname), False)
-
+        raise ValueError(_("The 'shape_path' was defined as 'internal' but\n"
+                           "jaziku can't set internal shape for '{0}',\n"
+                           "please check the 'grid' parameter in runfile;\n"
+                           "this must be a valid area/region and country name\n"
+                           "in different column or only country name. If you\n"
+                           "want know the list of available internal shapes,\n"
+                           "please check the manual.\n\n"
+                           "For example: Colombia, Vaupes;Colombia, Caldas;Colombia.\n").format(grid.grid_fullname))
 
 def set_particular_grid(grid):
 
-    console.msg(_("   Setting particular shape"), color='yellow')
     grid.is_internal = False
 
     grid.shape_path = os.path.realpath(grid.shape_path)
@@ -265,8 +291,14 @@ def set_particular_grid(grid):
        not os.path.isfile(os.path.join(grid.shape_path, grid.grid_name + ".sbn")) or \
        not os.path.isfile(os.path.join(grid.shape_path, grid.grid_name + ".sbx")) or \
        not os.path.isfile(os.path.join(grid.shape_path, grid.grid_name + ".shx")):
-        console.msg_error(_("Can't set particular shape, please check files in shape path\n"
-                            "this must be contain inside .shp .prj .sbn .sbx .shx"))
+        raise ValueError(_("Can't set particular shape, please check files in shape path\n"
+                            "this must be contain inside .shp .prj .sbn .sbx .shx\n"
+                            "and each file must be named with the same name defined\n"
+                            "for the 'grid' parameter.\n\n"
+                            "For example, if you define in 'grid' as 'region_A' \n"
+                            "the files inside shape_path directory must be named:\n"
+                            "region_A.shp, region_A.prj, region_A.sbn,\n"
+                            "region_A.sbx and region_A.shx."))
 
     if os.path.isfile(os.path.join(grid.shape_path, grid.grid_name + ".py")):
         particular_grid = imp.load_source("particular_grid", os.path.join(grid.shape_path, grid.grid_name + ".py"))
@@ -281,12 +313,20 @@ def set_particular_grid(grid):
         if not grid.maxlon:
             grid.maxlon = particular_grid.maxlon
 
-        grid.need_particular_ncl_script = particular_grid.need_particular_ncl_script
+        grid.need_particular_ncl_script_probabilistic_map = particular_grid.need_particular_ncl_script_probabilistic_map
+        grid.need_particular_ncl_script_deterministic_map = particular_grid.need_particular_ncl_script_deterministic_map
 
         try:
-            grid.particular_properties_map = particular_grid.particular_properties_map
+            grid.particular_properties_probabilistic_map = particular_grid.particular_properties_probabilistic_map
         except:
-            grid.particular_properties_map = {}
+            grid.particular_properties_probabilistic_map = {}
+
+        try:
+            grid.particular_properties_deterministic_map = particular_grid.particular_properties_deterministic_map
+        except:
+            grid.particular_properties_deterministic_map = {}
     else:
-            grid.particular_properties_map = {}
-            grid.need_particular_ncl_script = False
+        grid.particular_properties_probabilistic_map = {}
+        grid.particular_properties_deterministic_map = {}
+        grid.need_particular_ncl_script_probabilistic_map = False
+        grid.need_particular_ncl_script_deterministic_map = False

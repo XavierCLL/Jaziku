@@ -18,634 +18,434 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-import os
 from numpy import matrix
-from scipy import stats
-import math
-from datetime import date
-from dateutil.relativedelta import relativedelta
 
-from jaziku.utils import globals_vars
+from jaziku import env
+from jaziku.core.analysis_interval import get_range_analysis_interval
 from jaziku.utils import format_out
 from jaziku.utils import console
-from jaziku.modules.input import input_validation
 from jaziku.modules.climate import lags
+from jaziku.modules.climate.thresholds import get_thresholds
 
 
-def get_thresholds_var_D(station):
-    """
-    Calculate and return threshold by below and above
-    of dependent variable, the type of threshold as
-    defined by the user in station file, these may be:
-    "default", "pNN" (percentile NN), "sdN" (standard
-    deviation N) and particular value.
-    """
+def get_label_of_var_I_category(value, station):
+    """Calculate, for a particular 'value', the var I category label based on 'categories_labels_var_I'
+    and thresholds of var I, evaluate where is the 'value' inside the thresholds and return
+    the correspondent label for this position.
 
-    # Calculate percentile "below" and "above"
-    def percentiles(below, above):
-
-        threshold_below_var_D = stats.scoreatpercentile(station.var_D_values, below)
-        threshold_above_var_D = stats.scoreatpercentile(station.var_D_values, above)
-        return threshold_below_var_D, threshold_above_var_D
-
-    # thresholds by below and by above of var D by default
-    def thresholds_by_default():
-        # check if analog_year is defined
-        if globals_vars.config_run['analog_year']:
-            # check if analog_year is inside in process period
-            if station.process_period['start'] <= globals_vars.config_run['analog_year'] <= station.process_period['end']:
-
-                _iter_date = date(globals_vars.config_run['analog_year'], 1, 1)
-                var_D_values_of_analog_year = []
-                # get all raw values of var D only in analog year, ignoring null values
-                while _iter_date <= date(globals_vars.config_run['analog_year'], 12, 31):
-                    if not globals_vars.is_valid_null(station.var_D.data[station.var_D.date.index(_iter_date)]):
-                        var_D_values_of_analog_year.append(station.var_D.data[station.var_D.date.index(_iter_date)])
-                    if station.var_D.frequency_data== "daily":
-                        _iter_date += relativedelta(days=1)
-                    if station.var_D.frequency_data== "monthly":
-                        _iter_date += relativedelta(months=1)
-                threshold_below_var_D = stats.scoreatpercentile(var_D_values_of_analog_year, 33)
-                threshold_above_var_D = stats.scoreatpercentile(var_D_values_of_analog_year, 66)
-
-                # check if thresholds are valid
-                if math.isnan(threshold_below_var_D) or math.isnan(threshold_above_var_D):
-                    if station.first_iter:
-                        console.msg(_("\n > WARNING: Thresholds calculated with analog year for var_D are wrong,\n"
-                                      "   using default thresholds instead"), color='yellow'),
-
-                    return percentiles(33, 66)
-                else:
-                    if station.first_iter:
-                        console.msg(_("\n   Using thresholds with analog year for var_D "), color='cyan'),
-
-                    return threshold_below_var_D, threshold_above_var_D
-            else:
-                if station.first_iter:
-                    console.msg(_("\n > WARNING: The analog year ({0}) for this\n"
-                                   "   station is outside of process period {1} to\n"
-                                   "   {2}. The process continue but using the\n"
-                                   "   default thresholds .........................")
-                    .format(globals_vars.config_run['analog_year'],
-                        station.process_period['start'],
-                        station.process_period['end']), color='yellow', newline=False)
-                return percentiles(33, 66)
-        else:
-            return percentiles(33, 66)
-
-    # thresholds by below and by above of var D with standard deviation
-    def thresholds_with_std_deviation(below, above):
-        values_without_nulls = []
-        for value in station.var_D_values:
-            if not globals_vars.is_valid_null(value):
-                values_without_nulls.append(value)
-
-        def func_standard_deviation(values):
-            avg = float((sum(values))) / len(values)
-            sums = 0
-            for value in values:
-                sums += (value - avg) ** 2
-            return (sums / (len(values) - 1)) ** 0.5
-
-        if below not in [1, 2, 3] or above not in [1, 2, 3]:
-            console.msg_error(_("thresholds of dependent variable were defined as "
-                                "N standard deviation\n but are outside of range, "
-                                "this values must be 1, 2 or 3:\nsd{0} sd{1}")
-            .format(below, above))
-        p50 = stats.scoreatpercentile(values_without_nulls, 50)
-        std_deviation = func_standard_deviation(values_without_nulls)
-
-        return p50 - below * std_deviation, p50 + above * std_deviation
-
-    # thresholds by below and by above of var D with particular values,
-    # these values validation with type of var D
-    def thresholds_with_particular_values(below, above):
-
-        try:
-            below = float(below)
-            above = float(above)
-        except:
-            console.msg_error(_("thresholds could not were identified:\n{0} - {1}")
-            .format(below, above))
-
-        if below > above:
-            console.msg_error(_("threshold below of dependent variable can't be "
-                                "greater than threshold above:\n{0} - {1}")
-            .format(below, above))
-        try:
-            threshold_below_var_D = input_validation.validation_var_D(station.var_D.type_series,
-                below,
-                None,
-                station.var_D.frequency_data)
-            threshold_above_var_D = input_validation.validation_var_D(station.var_D.type_series,
-                above,
-                None,
-                station.var_D.frequency_data)
-            return threshold_below_var_D, threshold_above_var_D
-        except Exception, e:
-            console.msg_error(_("Problem with thresholds of dependent "
-                                "variable:\n\n{0}").format(e))
-
-    ## now analysis threshold input in arguments
-    # if are define as default
-    if (globals_vars.config_run['threshold_below_var_D'] == "default" and
-        globals_vars.config_run['threshold_above_var_D'] == "default"):
-        return thresholds_by_default()
-
-    # check if analog_year is defined but thresholds aren't equal to "default"
-    if globals_vars.config_run['analog_year']:
-        if station.first_iter:
-            console.msg(_("\n > WARNING: You have defined the analog year,\n"
-                           "   but the thresholds of var D must be\n"
-                           "   'default' for use the analog year .........."), color='yellow', newline=False)
-
-    # if are define as percentile or standard deviation
-    if isinstance(globals_vars.config_run['threshold_below_var_D'], str) and\
-       isinstance(globals_vars.config_run['threshold_above_var_D'], str):
-
-        # if are define as percentile
-        if (''.join(list(globals_vars.config_run['threshold_below_var_D'])[0:1]) == "p" and
-            ''.join(list(globals_vars.config_run['threshold_above_var_D'])[0:1]) == "p"):
-            below = int(''.join(list(globals_vars.config_run['threshold_below_var_D'])[1::]))
-            above = int(''.join(list(globals_vars.config_run['threshold_above_var_D'])[1::]))
-            if not (0 <= below <= 100) or not (0 <= above <= 100):
-                console.msg_error(_("thresholds of dependent variable were defined as "
-                                    "percentile\nbut are outside of range 0-100:\n{0} - {1}")
-                .format(below, above))
-            if below > above:
-                console.msg_error(_("threshold below of dependent variable can't be "
-                                    "greater than threshold above:\n{0} - {1}")
-                .format(below, above))
-            return percentiles(below, above)
-
-        # if are define as standard deviation
-        if (''.join(list(globals_vars.config_run['threshold_below_var_D'])[0:2]) == "sd" and
-            ''.join(list(globals_vars.config_run['threshold_above_var_D'])[0:2]) == "sd"):
-            below = int(''.join(list(globals_vars.config_run['threshold_below_var_D'])[2::]))
-            above = int(''.join(list(globals_vars.config_run['threshold_above_var_D'])[2::]))
-            return thresholds_with_std_deviation(below, above)
-
-    # if are define as particular values
-    if isinstance(globals_vars.config_run['threshold_below_var_D'], (int, float)) and\
-       isinstance(globals_vars.config_run['threshold_above_var_D'], (int, float)):
-        return thresholds_with_particular_values(globals_vars.config_run['threshold_below_var_D'],
-                                                 globals_vars.config_run['threshold_above_var_D'])
-
-    # unrecognizable thresholds
-    console.msg_error(_("unrecognizable thresholds '{0}' and/or '{1}' for var D").
-                        format(globals_vars.config_run['threshold_below_var_D'],
-                               globals_vars.config_run['threshold_above_var_D']))
-
-
-def get_thresholds_var_I(station):
-    """
-    Calculate and return threshold by below and above
-    of independent variable, the type of threshold as
-    defined by the user in station file, these may be:
-    "default", "pNN" (percentile NN), "sdN" (standard
-    deviation N) and particular value.
-    """
-
-    # Calculate percentile "below" and "above"
-    def percentiles(below, above):
-
-        threshold_below_var_I = stats.scoreatpercentile(station.var_I_values, below)
-        threshold_above_var_I = stats.scoreatpercentile(station.var_I_values, above)
-        return threshold_below_var_I, threshold_above_var_I
-
-    # thresholds by below and by above of var I by default
-    def thresholds_by_default():
-
-        # thresholds for Oceanic Nino Index
-        def if_var_I_is_ONI1():
-            return -0.5, 0.5
-
-        # thresholds for Oceanic Nino Index
-        def if_var_I_is_ONI2():
-            return -0.5, 0.5
-
-        # thresholds for Index of the Southern Oscillation NOAA
-        def if_var_I_is_SOI():
-            return -0.9, 0.9
-
-        # thresholds for Index of the Southern Oscillation calculated between Tahití and Darwin
-        def if_var_I_is_SOI_TROUP():
-            return -8, 8
-
-        # thresholds for Multivariate ENSO index
-        def if_var_I_is_MEI():
-            return percentiles(33, 66)
-
-        # thresholds for Radiation wavelength Long tropical
-        def if_var_I_is_OLR():
-            return -0.1, 0.2
-
-        # thresholds for Index of wind anomaly to 200 hpa
-        def if_var_I_is_W200():
-            return percentiles(33, 66)
-
-        # thresholds for Index of wind anomaly to 850 hpa west
-        def if_var_I_is_W850w():
-            return percentiles(33, 66)
-
-        # thresholds for Index of wind anomaly to 850 hpa center
-        def if_var_I_is_W850c():
-            return percentiles(33, 66)
-
-        # thresholds for Index of wind anomaly to 850 hpa east
-        def if_var_I_is_W850e():
-            return percentiles(33, 66)
-
-        # thresholds for Sea surface temperature
-        def if_var_I_is_SST():
-            return percentiles(33, 66)
-
-        # thresholds for Anomaly Sea surface temperature
-        def if_var_I_is_ASST():
-            return percentiles(33, 66)
-
-        # thresholds for % Amazon relative humidity
-        def if_var_I_is_ARH():
-            return percentiles(33, 66)
-
-        # thresholds for quasibienal oscillation index
-        def if_var_I_is_QBO():
-            return -4, 4
-
-        # thresholds for North atlantic oscillation index
-        def if_var_I_is_NAO():
-            return -1, 1
-
-        # thresholds for Caribbean (CAR) Index
-        def if_var_I_is_CAR():
-            return percentiles(33, 66)
-
-        # thresholds for Monthly anomaly of the ocean surface area Ocean region
-        def if_var_I_is_AREA_WHWP():
-            return percentiles(33, 66)
-
-        # switch validation
-        select_threshold_var_I = {
-            "ONI1": if_var_I_is_ONI1,
-            "ONI2": if_var_I_is_ONI2,
-            "SOI": if_var_I_is_SOI,
-            "SOI_TROUP": if_var_I_is_SOI_TROUP,
-            #"MEI": if_var_I_is_MEI,
-            "OLR": if_var_I_is_OLR,
-            "W200": if_var_I_is_W200,
-            "W850w": if_var_I_is_W850w,
-            "W850c": if_var_I_is_W850c,
-            "W850e": if_var_I_is_W850e,
-            "SST12": if_var_I_is_SST,
-            "SST3": if_var_I_is_SST,
-            "SST4": if_var_I_is_SST,
-            "SST34": if_var_I_is_SST,
-            "ASST12": if_var_I_is_ASST,
-            "ASST3": if_var_I_is_ASST,
-            "ASST4": if_var_I_is_ASST,
-            "ASST34": if_var_I_is_ASST,
-            "ARH": if_var_I_is_ARH,
-            "QBO": if_var_I_is_QBO,
-            "NAO": if_var_I_is_NAO,
-            "CAR": if_var_I_is_CAR,
-            "AREA_WHWP": if_var_I_is_AREA_WHWP
-        }
-
-        threshold_below_var_I, threshold_above_var_I = select_threshold_var_I[station.var_I.type_series]()
-        return threshold_below_var_I, threshold_above_var_I
-
-    # thresholds by below and by above of var I with standard deviation
-    def thresholds_with_std_deviation(below, above):
-
-        values_without_nulls = []
-        for value in station.var_I_values:
-            if not globals_vars.is_valid_null(value):
-                values_without_nulls.append(value)
-
-        def func_standard_deviation(values):
-            avg = float((sum(values))) / len(values)
-            sums = 0
-            for value in values:
-                sums += (value - avg) ** 2
-            return (sums / (len(values) - 1)) ** 0.5
-
-        if below not in [1, 2, 3] or above not in [1, 2, 3]:
-            console.msg_error(_(
-                "thresholds of independent variable were defined as "
-                "N standard deviation\n but are outside of range, "
-                "this values must be 1, 2 or 3:\nsd{0} sd{1}")
-            .format(below, above))
-        p50 = stats.scoreatpercentile(values_without_nulls, 50)
-        std_deviation = func_standard_deviation(values_without_nulls)
-
-        return p50 - below * std_deviation, p50 + above * std_deviation
-
-    # thresholds by below and by above of var I with particular values,
-    # these values validation with type of var I
-    def thresholds_with_particular_values(below, above):
-
-        try:
-            below = float(below)
-            above = float(above)
-        except:
-            console.msg_error(_(
-                "thresholds could not were identified:\n{0} - {1}")
-            .format(below, above))
-
-        if below > above:
-            console.msg_error(_(
-                "threshold below of independent variable can't be "
-                "greater than threshold above:\n{0} - {1}")
-            .format(below, above))
-        try:
-            threshold_below_var_I = input_validation.validation_var_I(station.var_I.type_series, below)
-            threshold_above_var_I = input_validation.validation_var_I(station.var_I.type_series, above)
-            return threshold_below_var_I, threshold_above_var_I
-        except Exception, e:
-            console.msg_error(_(
-                "Problem with thresholds of independent "
-                "variable:\n\n{0}").format(e))
-
-    ## now analysis threshold input in arguments
-    # if are define as default
-    if (globals_vars.config_run['threshold_below_var_I'] == "default" and
-        globals_vars.config_run['threshold_above_var_I'] == "default"):
-        return thresholds_by_default()
-
-    # if are define as percentile or standard deviation
-    if isinstance(globals_vars.config_run['threshold_below_var_I'], str) and\
-       isinstance(globals_vars.config_run['threshold_above_var_I'], str):
-
-        # if are define as percentile
-        if (''.join(list(globals_vars.config_run['threshold_below_var_I'])[0:1]) == "p" and
-            ''.join(list(globals_vars.config_run['threshold_above_var_I'])[0:1]) == "p"):
-            below = float(''.join(list(globals_vars.config_run['threshold_below_var_I'])[1::]))
-            above = float(''.join(list(globals_vars.config_run['threshold_above_var_I'])[1::]))
-            if not (0 <= below <= 100) or not (0 <= above <= 100):
-                console.msg_error(_(
-                    "thresholds of independent variable were defined as "
-                    "percentile\nbut are outside of range 0-100:\n{0} - {1}")
-                .format(below, above))
-            if below > above:
-                console.msg_error(_(
-                    "threshold below of independent variable can't be "
-                    "greater than threshold above:\n{0} - {1}")
-                .format(below, above))
-            return percentiles(below, above)
-
-        # if are define as standard deviation
-        if (''.join(list(globals_vars.config_run['threshold_below_var_I'])[0:2]) == "sd" and
-            ''.join(list(globals_vars.config_run['threshold_above_var_I'])[0:2]) == "sd"):
-            below = int(''.join(list(globals_vars.config_run['threshold_below_var_I'])[2::]))
-            above = int(''.join(list(globals_vars.config_run['threshold_above_var_I'])[2::]))
-            return thresholds_with_std_deviation(below, above)
-
-    # if are define as particular values
-    if isinstance(globals_vars.config_run['threshold_below_var_I'], (int, float)) and\
-       isinstance(globals_vars.config_run['threshold_above_var_I'], (int, float)):
-        return thresholds_with_particular_values(globals_vars.config_run['threshold_below_var_I'],
-                                                 globals_vars.config_run['threshold_above_var_I'])
-
-    # unrecognizable thresholds
-    console.msg_error(_("unrecognizable thresholds '{0}' and/or '{1}' for var I").
-                        format(globals_vars.config_run['threshold_below_var_I'],
-                               globals_vars.config_run['threshold_above_var_I']))
-
-def get_category_of_phenomenon(value, station):
-    """
-    Calculate the category of phenomenon for independent variable based on label phenomenon,
-    evaluate where is the 'value' in the thresholds (by default or defined by user), this is
-    below, normal or above and return the label for this position.
-
-    For some variables for set the category of phenomenon the thresholds are inclusive,
-    for ('ONI1', 'ONI2', 'W850w', 'SST4', 'SST12', 'ASST3', 'ASST34', 'ASST4', 'ASST12'):
-        the value is not normal when { threshold below >= value >= threshold above }
+    For some variables, for set the category of phenomenon for the normal case the thresholds
+    are exclude (< >):
+    for ('ONI1', 'ONI2', 'W850w', 'SST4', 'SST12'):
+        the value is normal when { threshold below* < value < threshold above* }
     else:
-        the value is not normal when { threshold below > value > threshold above }
+        the value is normal when { threshold below* <= value <= threshold above* }
+
+    :param value: values for calculate the label
+    :type value: float
+    :param station: station of value
+    :type station: Station
+
+    :return: label
+    :rtype: str
     """
 
     # get thresholds of var I in the period of outlier
-    threshold_below_var_I, threshold_above_var_I = get_thresholds_var_I(station)
+    thresholds_var_I = get_thresholds(station, station.var_I)
 
-    # categorize the value of var I and get the category_of_phenomenon based in the label phenomenon
+    # categorize the value of var I and get the label_of_var_I_category based in the label phenomenon
 
-    # SPECIAL CASE 2: for some variables for set the category of phenomenon the thresholds are inclusive
-    if station.var_I.type_series in ['ONI1', 'ONI2', 'SST12', 'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34']:
-        if value <= threshold_below_var_I:
-            category_of_phenomenon = globals_vars.phenomenon_below
-        elif value >= threshold_above_var_I:
-            category_of_phenomenon = globals_vars.phenomenon_above
-        else:
-            category_of_phenomenon = globals_vars.phenomenon_normal
+    if env.var_I.is_normal_inclusive():
+        # default case
+
+        if env.config_run.settings['class_category_analysis'] == 3:
+            if value < thresholds_var_I['below']:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['below']
+            elif value > thresholds_var_I['above']:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['above']
+            else:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['normal']
+
+        if env.config_run.settings['class_category_analysis'] == 7:
+            if value < thresholds_var_I['below3']:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['below3']
+            elif thresholds_var_I['below3'] <= value < thresholds_var_I['below2']:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['below2']
+            elif thresholds_var_I['below2'] <= value < thresholds_var_I['below1']:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['below1']
+            elif thresholds_var_I['below1'] <= value <= thresholds_var_I['above1']:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['normal']
+            elif thresholds_var_I['above1'] < value <= thresholds_var_I['above2']:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['above1']
+            elif thresholds_var_I['above2'] < value <= thresholds_var_I['above3']:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['above2']
+            elif value > thresholds_var_I['above3']:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['above3']
     else:
-        if value < threshold_below_var_I:
-            category_of_phenomenon = globals_vars.phenomenon_below
-        elif value > threshold_above_var_I:
-            category_of_phenomenon = globals_vars.phenomenon_above
-        else:
-            category_of_phenomenon = globals_vars.phenomenon_normal
+        # SPECIAL CASE 2: for some variables, for set the category of phenomenon for the normal case the thresholds are exclude (< >)
+        # please see env/var_I file
 
-    return category_of_phenomenon
+        if env.config_run.settings['class_category_analysis'] == 3:
+            if value <= thresholds_var_I['below']:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['below']
+            elif value >= thresholds_var_I['above']:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['above']
+            else:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['normal']
+
+        if env.config_run.settings['class_category_analysis'] == 7:
+            if value <= thresholds_var_I['below3']:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['below3']
+            elif thresholds_var_I['below3'] < value <= thresholds_var_I['below2']:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['below2']
+            elif thresholds_var_I['below2'] < value <= thresholds_var_I['below1']:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['below1']
+            elif thresholds_var_I['below1'] < value < thresholds_var_I['above1']:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['normal']
+            elif thresholds_var_I['above1'] <= value < thresholds_var_I['above2']:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['above1']
+            elif thresholds_var_I['above2'] <= value < thresholds_var_I['above3']:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['above2']
+            elif value >= thresholds_var_I['above3']:
+                label_of_var_I_category = env.config_run.settings['categories_labels_var_I']['above3']
+
+    return label_of_var_I_category
 
 
-def get_contingency_table(station, lag, month, day=None):
-    """
-    Calculate and return the contingency table in absolute values,
+def get_specific_contingency_table(station, lag, month, day=None):
+    """Calculate and return the contingency table in absolute values,
     values in percent, values to print and thresholds by below and
-    above of dependent and independent variable.
+    above of dependent and independent variable for specific lag,
+    trimester(month) or month/day within the whole period to process.
+
+    If the `state of data` is 1 or 3, the month is the first
+    month of trimester.
+
+    If the `state of data` is 2 or 4, the month/day is the first
+    day of the fraction of `analysis interval`.
+
+    :param station: Stations instance
+    :type station: Station
+    :param lag: lag for calculate the contingency table
+    :type lag: int
+    :param month: month for calculate the contingency table
+    :type month: int
+    :param day: day for calculate the contingency table when is
+        data is daily
+    :type day: int
+
+    :return: specific_contingency_table dict:
+        {'in_values', 'in_percentage', 'in_percentage_formatted',
+        'thresholds_var_D', 'thresholds_var_I'}
+    :rtype: dict
     """
 
     if day is None:
         # get all values of var D and var I based on this lag and month
-        station.var_D_values = lags.get_lag_values(station, 'var_D', lag, month)
-        station.var_I_values = lags.get_lag_values(station, 'var_I', lag, month)
+        station.var_D.specific_values = lags.get_specific_values(station, 'var_D', lag, month)
+        station.var_I.specific_values = lags.get_specific_values(station, 'var_I', lag, month)
 
     if day is not None:
         # get all values of var D and var I based on this lag and month
-        station.var_D_values = lags.get_lag_values(station, 'var_D', lag, month, day)
-        station.var_I_values = lags.get_lag_values(station, 'var_I', lag, month, day)
+        station.var_D.specific_values = lags.get_specific_values(station, 'var_D', lag, month, day)
+        station.var_I.specific_values = lags.get_specific_values(station, 'var_I', lag, month, day)
 
     # calculate thresholds as defined by the user in station file for var D
-    threshold_below_var_D, threshold_above_var_D = get_thresholds_var_D(station)
+    thresholds_var_D = get_thresholds(station, station.var_D)
 
     # calculate thresholds as defined by the user in station file for var I
-    threshold_below_var_I, threshold_above_var_I = get_thresholds_var_I(station)
+    thresholds_var_I = get_thresholds(station, station.var_I)
 
-    # this is to print later in contingency table
-    thresholds_var_D_var_I = [format_out.number(threshold_below_var_D), format_out.number(threshold_above_var_D),
-                              format_out.number(threshold_below_var_I), format_out.number(threshold_above_var_I)]
+    # adjust values when two thresholds are equal and if the value to evaluate is the same value too,
+    # put the value in the middle of category in contingency table
+    if env.config_run.settings['class_category_analysis'] == 3:
+        thresholds_idx = ['below', 'above']
+    if env.config_run.settings['class_category_analysis'] == 7:
+        thresholds_idx = ['below3', 'below2','below1', 'above1', 'above2', 'above3']
+    epsilon = 1e-10
+    for thres_idx in range(len(thresholds_idx)-1):
+        if thresholds_var_D[thresholds_idx[thres_idx]] == thresholds_var_D[thresholds_idx[thres_idx+1]]:
+            thresholds_var_D[thresholds_idx[thres_idx]] -= epsilon
+            thresholds_var_D[thresholds_idx[thres_idx+1]] += epsilon
+        if thresholds_var_I[thresholds_idx[thres_idx]] == thresholds_var_I[thresholds_idx[thres_idx+1]]:
+            thresholds_var_I[thresholds_idx[thres_idx]] -= epsilon
+            thresholds_var_I[thresholds_idx[thres_idx+1]] += epsilon
 
+    # -------------------------------------------------------------------------
     # -------------------------------------------------------------------------
     ## Calculating contingency table with absolute values
 
-    contingency_table = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+    if env.config_run.settings['class_category_analysis'] == 3:
+        # matrix 3x3
+        contingency_table = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+    if env.config_run.settings['class_category_analysis'] == 7:
+        # matrix 7x7
+        contingency_table = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0],
+                             [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]]
 
-    # SPECIAL CASE 2: for some variables for set the category of phenomenon the thresholds are inclusive (<=, >=)
-    if station.var_I.type_series in ['ONI1', 'ONI2', 'SST12', 'SST3', 'SST4', 'SST34', 'ASST12', 'ASST3', 'ASST4', 'ASST34']:
-        for index, var_I in enumerate(station.var_I_values):
-            if var_I <= threshold_below_var_I:
-                if station.var_D_values[index] <= threshold_below_var_D:
-                    contingency_table[0][0] += 1
-                if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
-                    contingency_table[0][1] += 1
-                if station.var_D_values[index] >= threshold_above_var_D:
-                    contingency_table[0][2] += 1
-            if threshold_below_var_I < var_I < threshold_above_var_I:
-                if station.var_D_values[index] <= threshold_below_var_D:
-                    contingency_table[1][0] += 1
-                if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
-                    contingency_table[1][1] += 1
-                if station.var_D_values[index] >= threshold_above_var_D:
-                    contingency_table[1][2] += 1
-            if var_I >= threshold_above_var_I:
-                if station.var_D_values[index] <= threshold_below_var_D:
-                    contingency_table[2][0] += 1
-                if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
-                    contingency_table[2][1] += 1
-                if station.var_D_values[index] >= threshold_above_var_D:
-                    contingency_table[2][2] += 1
+    if env.config_run.settings['class_category_analysis'] == 3:
+        if env.var_D.is_normal_inclusive():
+            def __matrix_row_var_D(column_var_I):
+                if station.var_D.specific_values[index] < thresholds_var_D['below']:
+                    contingency_table[column_var_I][0] += 1
+                if thresholds_var_D['below'] <= station.var_D.specific_values[index] <= thresholds_var_D['above']:
+                    contingency_table[column_var_I][1] += 1
+                if station.var_D.specific_values[index] > thresholds_var_D['above']:
+                    contingency_table[column_var_I][2] += 1
+        else:
+            def __matrix_row_var_D(column_var_I):
+                if station.var_D.specific_values[index] <= thresholds_var_D['below']:
+                    contingency_table[column_var_I][0] += 1
+                if thresholds_var_D['below'] < station.var_D.specific_values[index] < thresholds_var_D['above']:
+                    contingency_table[column_var_I][1] += 1
+                if station.var_D.specific_values[index] >= thresholds_var_D['above']:
+                    contingency_table[column_var_I][2] += 1
+
+    if env.config_run.settings['class_category_analysis'] == 7:
+        if env.var_D.is_normal_inclusive():
+            def __matrix_row_var_D(column_var_I):
+                if station.var_D.specific_values[index] < thresholds_var_D['below3']:
+                    contingency_table[column_var_I][0] += 1
+                if thresholds_var_D['below3'] <= station.var_D.specific_values[index] < thresholds_var_D['below2']:
+                    contingency_table[column_var_I][1] += 1
+                if thresholds_var_D['below2'] <= station.var_D.specific_values[index] < thresholds_var_D['below1']:
+                    contingency_table[column_var_I][2] += 1
+                if thresholds_var_D['below1'] <= station.var_D.specific_values[index] <= thresholds_var_D['above1']:
+                    contingency_table[column_var_I][3] += 1
+                if thresholds_var_D['above1'] < station.var_D.specific_values[index] <= thresholds_var_D['above2']:
+                    contingency_table[column_var_I][4] += 1
+                if thresholds_var_D['above2'] < station.var_D.specific_values[index] <= thresholds_var_D['above3']:
+                    contingency_table[column_var_I][5] += 1
+                if station.var_D.specific_values[index] > thresholds_var_D['above3']:
+                    contingency_table[column_var_I][6] += 1
+        else:
+            def __matrix_row_var_D(column_var_I):
+                if station.var_D.specific_values[index] <= thresholds_var_D['below3']:
+                    contingency_table[column_var_I][0] += 1
+                if thresholds_var_D['below3'] < station.var_D.specific_values[index] <= thresholds_var_D['below2']:
+                    contingency_table[column_var_I][1] += 1
+                if thresholds_var_D['below2'] < station.var_D.specific_values[index] <= thresholds_var_D['below1']:
+                    contingency_table[column_var_I][2] += 1
+                if thresholds_var_D['below1'] < station.var_D.specific_values[index] < thresholds_var_D['above1']:
+                    contingency_table[column_var_I][3] += 1
+                if thresholds_var_D['above1'] <= station.var_D.specific_values[index] < thresholds_var_D['above2']:
+                    contingency_table[column_var_I][4] += 1
+                if thresholds_var_D['above2'] <= station.var_D.specific_values[index] < thresholds_var_D['above3']:
+                    contingency_table[column_var_I][5] += 1
+                if station.var_D.specific_values[index] >= thresholds_var_D['above3']:
+                    contingency_table[column_var_I][6] += 1
+
+    if env.var_I.is_normal_inclusive():
+        # default case
+
+        if env.config_run.settings['class_category_analysis'] == 3:
+            for index, var_I in enumerate(station.var_I.specific_values):
+                if var_I < thresholds_var_I['below']:
+                    __matrix_row_var_D(0)
+                if thresholds_var_I['below'] <= var_I <= thresholds_var_I['above']:
+                    __matrix_row_var_D(1)
+                if var_I > thresholds_var_I['above']:
+                    __matrix_row_var_D(2)
+
+        if env.config_run.settings['class_category_analysis'] == 7:
+            for index, var_I in enumerate(station.var_I.specific_values):
+                if var_I < thresholds_var_I['below3']:
+                    __matrix_row_var_D(0)
+                if thresholds_var_I['below3'] <= var_I < thresholds_var_I['below2']:
+                    __matrix_row_var_D(1)
+                if thresholds_var_I['below2'] <= var_I < thresholds_var_I['below1']:
+                    __matrix_row_var_D(2)
+                if thresholds_var_I['below1'] <= var_I <= thresholds_var_I['above1']:
+                    __matrix_row_var_D(3)
+                if thresholds_var_I['above1'] < var_I <= thresholds_var_I['above2']:
+                    __matrix_row_var_D(4)
+                if thresholds_var_I['above2'] < var_I <= thresholds_var_I['above3']:
+                    __matrix_row_var_D(5)
+                if var_I > thresholds_var_I['above3']:
+                    __matrix_row_var_D(6)
+
     else:
-        # normal case
-        for index, var_I in enumerate(station.var_I_values):
-            if var_I < threshold_below_var_I:
-                if station.var_D_values[index] <= threshold_below_var_D:
-                    contingency_table[0][0] += 1
-                if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
-                    contingency_table[0][1] += 1
-                if station.var_D_values[index] >= threshold_above_var_D:
-                    contingency_table[0][2] += 1
-            if threshold_below_var_I <= var_I <= threshold_above_var_I:
-                if station.var_D_values[index] <= threshold_below_var_D:
-                    contingency_table[1][0] += 1
-                if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
-                    contingency_table[1][1] += 1
-                if station.var_D_values[index] >= threshold_above_var_D:
-                    contingency_table[1][2] += 1
-            if var_I > threshold_above_var_I:
-                if station.var_D_values[index] <= threshold_below_var_D:
-                    contingency_table[2][0] += 1
-                if threshold_below_var_D < station.var_D_values[index] < threshold_above_var_D:
-                    contingency_table[2][1] += 1
-                if station.var_D_values[index] >= threshold_above_var_D:
-                    contingency_table[2][2] += 1
+        # SPECIAL CASE 2: for some variables, for set the category of phenomenon for the normal case the thresholds are exclude (< >)
+        # please see env/var_I file
+
+        if env.config_run.settings['class_category_analysis'] == 3:
+            for index, var_I in enumerate(station.var_I.specific_values):
+                if var_I <= thresholds_var_I['below']:
+                    __matrix_row_var_D(0)
+                if thresholds_var_I['below'] < var_I < thresholds_var_I['above']:
+                    __matrix_row_var_D(1)
+                if var_I >= thresholds_var_I['above']:
+                    __matrix_row_var_D(2)
+
+        if env.config_run.settings['class_category_analysis'] == 7:
+            for index, var_I in enumerate(station.var_I.specific_values):
+                if var_I <= thresholds_var_I['below3']:
+                    __matrix_row_var_D(0)
+                if thresholds_var_I['below3'] < var_I <= thresholds_var_I['below2']:
+                    __matrix_row_var_D(1)
+                if thresholds_var_I['below2'] < var_I <= thresholds_var_I['below1']:
+                    __matrix_row_var_D(2)
+                if thresholds_var_I['below1'] < var_I < thresholds_var_I['above1']:
+                    __matrix_row_var_D(3)
+                if thresholds_var_I['above1'] <= var_I < thresholds_var_I['above2']:
+                    __matrix_row_var_D(4)
+                if thresholds_var_I['above2'] <= var_I < thresholds_var_I['above3']:
+                    __matrix_row_var_D(5)
+                if var_I >= thresholds_var_I['above3']:
+                    __matrix_row_var_D(6)
 
     # -------------------------------------------------------------------------
-    ## Calculating contingency table with values in percent
-    tertile_size = station.size_time_series / 3.0
-    contingency_table_percent = matrix(contingency_table) * tertile_size
+    # -------------------------------------------------------------------------
+    ## Calculating contingency table with values in percentage
 
-    sum_per_column_percent = contingency_table_percent.sum(axis=1)
+    # contingency_table[varI][varD]
+    # sum of column of all values in each category of var I
+    sum_per_column_CT = matrix(contingency_table).sum(axis=1)
+    # converting in list
+    sum_per_column_CT = [float(x) for x in sum_per_column_CT]
+
+    if env.config_run.settings['class_category_analysis'] == 7:
+        # for 7 categories the sum of var I is by categories [below*=sb+mb+wb, normal=n, above*=wa+ma+sa]
+        sum_per_column_CT = [sum(sum_per_column_CT[0:3])]*3 + \
+                            [sum_per_column_CT[3]] + \
+                            [sum(sum_per_column_CT[4::])]*3
+
+    # calculate the percentage of contingency table evaluating each value with the sum value of its respective category
+    with console.redirectStdStreams():
+        contingency_table_in_percentage \
+            = [(column/sum_per_column_CT[i]*100).tolist()[0] for i,column in enumerate(matrix(contingency_table))]
+
+    # special case when the forecast type is 3x7, clear columns of the var I with zeros of
+    # the contingency table in absolute values for not selected categories defined in runfile
+    # for forecast type 3x7
+    if env.globals_vars.forecast_contingency_table['type'] == '3x7':
+        # init list 7x7 with zeros
+        contingency_table_3x7 = [[0]*7]*7
+        tags = ['below3', 'below2', 'below1', 'normal', 'above1', 'above2', 'above3']
+        for idx_var_I in range(7):
+            # only set the real values for columns of var I for selected categories
+            # in below, and above selected and normal
+            if tags.index(env.globals_vars.probability_forecast_values[lag]['below']) == idx_var_I or \
+               idx_var_I == 3 or \
+               tags.index(env.globals_vars.probability_forecast_values[lag]['above']) == idx_var_I:
+                contingency_table_3x7[idx_var_I] = contingency_table[idx_var_I]
+
+        sum_per_column_CT_3x7 = matrix(contingency_table_3x7).sum(axis=1)
+        sum_per_column_CT_3x7 = [float(x) for x in sum_per_column_CT_3x7]
+        with console.redirectStdStreams():
+            contingency_table_in_percentage_3x7 \
+                = [(column/sum_per_column_CT_3x7[i]*100).tolist()[0] for i,column in enumerate(matrix(contingency_table_3x7))]
 
     # -------------------------------------------------------------------------
     # threshold_problem is global variable for detect problem with
     # threshold of independent variable, if a problem is detected
     # show message and print "nan" (this mean null value for
     # division by zero) in contingency tabla percent in result
-    # table, jaziku continue but the graphics will not be created
-    # because "nan"  character could not be calculate.
+    # table, jaziku show warning message and continue the process.
 
-    # if threshold by below of independent variable is wrong
-    if float(sum_per_column_percent[0]) == 0 and not globals_vars.threshold_problem[0]:
-        console.msg(
-            _(u"\n\n > WARNING: The thresholds selected '{0}' and '{1}'\n"
-              u"   are not suitable for compound analysis of\n"
-              u"   variable '{2}' with relation to '{3}' inside\n"
-              u"   category '{4}'. Therefore, the graphics\n"
-              u"   will not be created.")
-            .format(globals_vars.config_run['threshold_below_var_I'], globals_vars.config_run['threshold_above_var_I'],
-                station.var_D.type_series, station.var_I.type_series, globals_vars.phenomenon_below), color='yellow')
-        globals_vars.threshold_problem[0] = True
+    # convert 7 categories in 3 blocks: BELOW, NORMAL and ABOVE
+    if env.config_run.settings['class_category_analysis'] == 7:
+        sum_per_column_CT = [sum_per_column_CT[0], sum_per_column_CT[3], sum_per_column_CT[6]]
 
-    # if threshold by below or above calculating normal phenomenon of independent variable is wrong
-    if float(sum_per_column_percent[1]) == 0 and not globals_vars.threshold_problem[1]:
-        console.msg(
-            _(u"\n\n > WARNING: The thresholds selected '{0}' and '{1}'\n"
-              u"   are not suitable for compound analysis of\n"
-              u"   variable '{2}' with relation to '{3}' inside\n"
-              u"   category '{4}'. Therefore, the graphics\n"
-              u"   will not be created.")
-            .format(globals_vars.config_run['threshold_below_var_I'], globals_vars.config_run['threshold_above_var_I'],
-                station.var_D.type_series, station.var_I.type_series, globals_vars.phenomenon_normal), color='yellow')
-        globals_vars.threshold_problem[1] = True
+    # iterate and check for each 3 blocks: BELOW, NORMAL and ABOVE
+    for index, label in enumerate([_('below'),_('normal'),_('above')]):
+        if float(sum_per_column_CT[index]) == 0 and not station.threshold_problem[index]:
+            console.msg(
+                _(u"\n > WARNING: The thresholds defined for var I\n"
+                  u"   are not suitable in some time series for \n"
+                  u"   compound analysis of '{0}' with relation to\n"
+                  u"   '{1}' inside the block category '{2}'.\n"
+                  u"   Is recommended review the thresholds\n"
+                  u"   of two variables, or the series data .......")
+                .format(env.var_D.TYPE_SERIES, env.var_I.TYPE_SERIES, label.upper()), color='yellow', newline=False)
+            station.threshold_problem[index] = True
 
-    # if threshold by above of independent variable is wrong
-    if float(sum_per_column_percent[2]) == 0 and not globals_vars.threshold_problem[2]:
-        console.msg(
-            _(u"\n\n > WARNING: The thresholds selected '{0}' and '{1}'\n"
-              u"   are not suitable for compound analysis of\n"
-              u"   variable '{2}' with relation to '{3}' inside\n"
-              u"   category '{4}'. Therefore, the graphics\n"
-              u"   will not be created.")
-            .format(globals_vars.config_run['threshold_below_var_I'], globals_vars.config_run['threshold_above_var_I'],
-                station.var_D.type_series, station.var_I.type_series, globals_vars.phenomenon_above), color='yellow')
-        globals_vars.threshold_problem[2] = True
+    # -------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
+    # Calculating contingency table percent with values formatted for outputs
 
-    try:
-        # not shows error if there are any problem with threshold
-        sys.stderr = open(os.devnull, 'w')
-        # Calculating contingency table percent
-        contingency_table_percent \
-            = [(contingency_table_percent[0] * 100 / float(sum_per_column_percent[0])).tolist()[0],
-               (contingency_table_percent[1] * 100 / float(sum_per_column_percent[1])).tolist()[0],
-               (contingency_table_percent[2] * 100 / float(sum_per_column_percent[2])).tolist()[0]]
-    except:
-        pass
+    contingency_table_in_percentage_formatted = []
+    if env.config_run.settings['class_category_analysis'] == 3:
+        for row in contingency_table_in_percentage:
+            contingency_table_in_percentage_formatted.append(
+                [format_out.number(row[0], 1),
+                format_out.number(row[1], 1),
+                format_out.number(row[2], 1)])
+    if env.config_run.settings['class_category_analysis'] == 7:
+        for row in contingency_table_in_percentage:
+            contingency_table_in_percentage_formatted.append(
+                [format_out.number(row[0], 1),
+                format_out.number(row[1], 1),
+                format_out.number(row[2], 1),
+                format_out.number(row[3], 1),
+                format_out.number(row[4], 1),
+                format_out.number(row[5], 1),
+                format_out.number(row[6], 1)])
 
-    # Contingency table percent to print in result table and graphics (reduce the number of decimals)
-    contingency_table_percent_print = []
-    for row in contingency_table_percent:
-        contingency_table_percent_print.append([format_out.number(row[0], 1),
-                                                format_out.number(row[1], 1),
-                                                format_out.number(row[2], 1)])
+    # -------------------------------------------------------------------------
+    # save and return
 
-    return contingency_table, contingency_table_percent,\
-           contingency_table_percent_print, thresholds_var_D_var_I
+    specific_contingency_table = {'in_values':contingency_table,
+                                  'in_percentage':contingency_table_in_percentage,
+                                  'in_percentage_formatted':contingency_table_in_percentage_formatted,
+                                  'thresholds_var_D':thresholds_var_D,
+                                  'thresholds_var_I':thresholds_var_I}
+
+    # added the special contingency table in percentage for 3x7
+    if env.globals_vars.forecast_contingency_table['type'] == '3x7':
+        specific_contingency_table['in_percentage_3x7'] = contingency_table_in_percentage_3x7
+
+    return specific_contingency_table
 
 
-def contingency_table(station):
+def get_contingency_tables(station):
+    """get all contingencies tables for all trimester or
+    all month/day for each lag.
+
+    :param station: station for get all contingencies tables
+    :type station: Station
+
+    Return by reference:
+
+    :ivar STATION.contingency_tables: get and set  to station
+        all contingencies tables within a list
+        [lag][month/trimester][day].
     """
-    Print the contingency table for each trimester and each lag
-    """
+    # init threshold problem for this station
+    # for 3 and 7 categories there are 3 blocks: BELOW, NORMAL and ABOVE
+    station.threshold_problem = [False]*3
 
     # [lag][month][phenomenon][data(0,1,2)]
     # [lag][month][day][phenomenon][data(0,1,2)]
-    contingencies_tables_percent = {}
+    contingency_tables = {}
     # defined if is first iteration
     station.first_iter = True
-    for lag in globals_vars.lags:
+    for lag in env.config_run.settings['lags']:
 
         tmp_month_list = []
         # all months in year 1->12
         for month in range(1, 13):
-            if station.state_of_data in [1, 3]:
+            if env.globals_vars.STATE_OF_DATA in [1, 3]:
 
-                contingency_table,\
-                contingency_table_percent,\
-                contingency_table_percent_print,\
-                thresholds_var_D_var_I = get_contingency_table(station, lag, month)
+                specific_contingency_table = get_specific_contingency_table(station, lag, month)
 
-                tmp_month_list.append(contingency_table_percent)
+                tmp_month_list.append(specific_contingency_table)
 
                 if station.first_iter:
                     station.first_iter = False
 
-            if station.state_of_data in [2, 4]:
+            if env.globals_vars.STATE_OF_DATA in [2, 4]:
                 tmp_day_list = []
-                for day in station.range_analysis_interval:
+                for day in get_range_analysis_interval():
 
-                    contingency_table,\
-                    contingency_table_percent,\
-                    contingency_table_percent_print,\
-                    thresholds_var_D_var_I = get_contingency_table(station, lag,
+                    specific_contingency_table = get_specific_contingency_table(station, lag,
                         month, day)
-                    tmp_day_list.append(contingency_table_percent)
+                    tmp_day_list.append(specific_contingency_table)
 
                     if station.first_iter:
                         station.first_iter = False
 
                 tmp_month_list.append(tmp_day_list)
 
-        contingencies_tables_percent[lag] = tmp_month_list
+        contingency_tables[lag] = tmp_month_list
 
-    station.contingencies_tables_percent = contingencies_tables_percent
+    station.contingency_tables = contingency_tables

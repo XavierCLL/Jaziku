@@ -4,14 +4,119 @@
 Changelog
 =========
 
-0.5.2a (**2013-02-13**)
+0.6.0 (**2013-06-19**)
 ----------------------
+
+news
+++++
+
+- Reform and reorganize the runfile
+- Now Jaziku first check and set the grids list before process and show the configurations
+  of all grids in configuration run message
+- Changed the division when there are more of one options in some configuration in runfile,
+  changed from comma separated to different row
+- New option in runfile relevant_climate_categories_var_I, with this option
+  the user can choose the relevant climate categories of var I for only make
+  graphics with these two categories selected or all categories
+- New deterministic maps only for 7 categories and climate and forecast (no correlation) maps,
+  this map graphs the position of index (inside of the 7 categories) by each station, and
+  graphs this station as color point, not graphs interpolation values.
+- The 'consistent_data' option in the runfile is a percentage maximum allow of numbers of
+  nulls of the var_D and/or var_I of each station, now can set 'default' (=15%) or with
+  custom value by user (percentage from 0 to 100)
+- Rename the option in runfile var_I_category_labels to categories_labels_var_I
+- Adjust climate, correlation and forecast maps for 3 and 7 categories
+- Several adjust and fixes for the images of climate and forecast module
+- Adjust the images of climate module for output bars and the tables based on the
+  relevant_climate_categories_var_I
+- The graphics of climate module now make and show the NaN values when one or more
+  blocks (as below, normal of above) of the contingency table have not values
+- Adjust, for 3 and 7 categories, the method to calculate the contingency table in
+  percentage base on threshold size
+- New pie chart for forecast module only for 7 categories that use deterministic
+  values based on thresholds for the forecast date
+- New option in argument: -o --output dir, where 'dir' is the absolute and particular
+  directory to save all results that makes Jaziku (this option is optional, default path
+  for save result is the same where is the runfile)
+- Reimplemented and check code for analog year for and 3 or 7 categories
+  and adjust using new functions
+- Reimplemented the thresholds by default, now can use 'default' in
+  thresholds for particular type for and 3 or 7 categories and adjust
+  thresholds for several variables
+- Reimplemented the check of probability_forecast_values from input
+  forecast_var_I_lag_N for 3 and 7 categories for make the forecast_contingency_table
+- New type of thresholds: 'percentage', jaziku now accept percentage as
+  thresholds (e.g. 10%, 20%, 45%...) for 3 or 7 categories, this values
+  are calculate based on that 100% is the mean of all values of time series
+- New validation decorator function for validate the thresholds calculated
+  using for this the limits of this variable, for some thresholds as standard
+  deviations (sd) this is a requirement and the limits for this variable
+  need to be set (not none).
+- Now the standard deviation in thresholds by below (for 3 or 7 categories) need
+  specify the negative values, e.g: sd-2.1, sd-1.2, sd-0.5, sd0.6, sd0.9, sd1.3
+- Defined internal mode_calculation_series for var D and I in 'default' value
+  and check it when is chose by the user
+- New options in runfile: mode_calculation_series_D and mode_calculation_series_I,
+  these are the options to calculate the series: accumulate or mean, and
+  adjust all result with this change.
+- Updated thresholds for var D for 3 and 7 categories (ATTENTION: this change
+  modify several results)
+- Updated thresholds for var I for 3 and 7 categories (ATTENTION: this change
+  modify several results)
+- have the possibility of define internal thresholds and limits for data
+  daily o monthly
+- Fixes input, check and format for 'forecast_date' option, now new input
+  format: month or month;day in runfile.
+- Make function that adjust data of all variables if is needed and check
+  and convert variables in prepare data function (before run anything)
+  (ATTENTION: this change modify several results mainly in EDA module)
+- Replace 'forecasting' to 'forecast' string in code and in results
+- Now check the values of latitude, longitude and altitude for each stations
+- [code] Refactoring config_run, this is where save all variable
+  of configuration run settings
+- [code] Refactoring globals_vars in new environment dir
+- [code] Api documentation
+- [code] Moved principal code files into 'core' directory
+- [code] Moved some variables of globals_vars to config_run.settings
+- [code] Check and prepare all stations before run any modules
+- [code] More reused code in input_runfile with new functions
+- [code] Organize get_month and get_trimester text function in format_out
+- [code] Organize thresholds functions
+- [code] Refactoring settings
+- [code] Refactoring format_in format_out
+- [code] Refactoring thresholds functions for different class_category_analysis
+- [code] Refactoring variables for var_D and var_I from globals_vars
+- [code] Refactoring limits and null values validations in core.input.validation.py
+- [code] Refactoring contingency_tables functions
+- [code] Refactoring result table functions and csv results
+- [code] Adjust and fixes the maps data for climate for 3 and 7 categories
+
+fixes
++++++
+
+- Check if don't have any common period between series, show error message
+  if common period is empty
+- Fixed the standard deviation by below for thresholds
+- Change the mode to entry forecast_date in runfile, this fixed problems with
+  format entries that are auto-convert from sheets application
+- Fixed input validation for var I with particular values
+- Fix crash detecting languages function when the OS in not defined default locale
+- Check when use special internal variables (ONI1, ONI2, CAR) these series have trimester values
+  in this case only can use trimester for analysis interval
+- Adjust values when two thresholds are equal and if the value to evaluate is the same value too,
+  put the value in the middle of category in contingency table
+- Fixed initialize matplotlib backend in raster graphics for old version of matplotlib
+- Clean stations points with 'nan' values for probabilistic maps
+
+0.5.2a (**2013-02-13**)
+-----------------------
 
 fixes
 +++++
 
 - Fix bug: enable "shape_boundary" option. Bug description: when "shape_boundary"
   option is enable the maps aren't cutting data outside of shape in mesh data.
+
 
 0.5.2 (**2013-01-24**)
 ----------------------
@@ -52,6 +157,7 @@ fixes
 - Fixes for 'special case' in categorize the outliers and calculate lags
 - Fixes when use particular value in thresholds for var D or I
 - Apply special case when are calculating the contingency table
+
 
 0.5.1 (**2012-12-05**)
 ----------------------
@@ -183,6 +289,7 @@ fixes
 - fix when cheking the numbers of parameters of stations list in runfile
 - other minor bugfixes
 
+
 0.4.1 (**2012-08-13**)
 ----------------------
 
@@ -215,6 +322,7 @@ fixes
 - fixes typos in messages warnings
 - fix translations in some string
 
+
 0.4.0 (**2012-06-29**)
 ----------------------
 
@@ -246,6 +354,7 @@ fixes
 
 - many fixies and comprobations of all features and changes
 - (especifig bug that affect 0.3 version) bug translation in phenomenon label
+
 
 0.3.0 (**2012-05-22**)
 ----------------------
@@ -290,6 +399,7 @@ fixes
 - fixed calculating pearson for data daily
 - fixed table order for calculate forecasting
   
+
 0.2.1 (**2012-03-24**)
 ----------------------
 
@@ -323,6 +433,7 @@ fixes
 - fix memory leak using pyplot library   
 - fix several strings messages, correct to translate after install, translation
   works now.
+
 
 0.1.0 initial version (**2011-11-03**)
 --------------------------------
