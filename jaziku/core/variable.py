@@ -21,15 +21,15 @@
 import os
 from datetime import date
 from dateutil.relativedelta import relativedelta
-from numpy import median, average, var
-from scipy.stats.stats import tstd, variation, skew, kurtosis
+from numpy import median, average, var, std
+from scipy.stats.stats import variation, skew, kurtosis
 
-from jaziku.modules.input import input_vars
-from jaziku.modules.input.input_check import count_null_values
-from jaziku.utils import console, array, globals_vars
+from jaziku import env
+from jaziku.core.input import vars
+from jaziku.utils import console, array
 
 
-class Variable():
+class Variable(object):
     """
     Class for save data raw, data dates, date filtered for dependent or
     independent variable of a station.
@@ -37,7 +37,6 @@ class Variable():
     :attributes:
         VARIABLE.type: type of variable 'D' (dependent) or 'I' (independent)
         VARIABLE.type_series: type of series (D or I), e.g. 'SOI'
-        VARIABLE.frequency_data: frequency of data series
         VARIABLE.file_name: the name of file of series
         VARIABLE.file_path: the absolute path where save the file of series
         VARIABLE.data: complete data of series
@@ -59,7 +58,7 @@ class Variable():
             self.file_name = os.path.basename(file)
             # if path to file is relative convert to absolute
             if not os.path.isabs(file):
-                self.file_path = os.path.abspath(os.path.join(os.path.dirname(globals_vars.ARGS.runfile),file))
+                self.file_path = os.path.abspath(os.path.join(os.path.dirname(env.globals_vars.ARGS.runfile),file))
             else:
                 self.file_path = os.path.abspath(file)
 
@@ -69,21 +68,22 @@ class Variable():
             # and notify if Jaziku are using the independent variable inside
             # located in plugins/var_I/
             if file == "internal":
-                self.file_name = globals_vars.internal_var_I_files[self.type_series]
-                self.file_path = os.path.join(globals_vars.JAZIKU_DIR, 'data', 'var_I', self.file_name)
+                if self.type_series in env.var_I.INTERNAL_FILES:
+                    self.file_name = env.var_I.INTERNAL_FILES[self.type_series]
+                    self.file_path = os.path.join(env.globals_vars.JAZIKU_DIR, 'data', 'var_I', self.file_name)
             else:
                 self.file_name = os.path.basename(file)
                 # if path to file is relative convert to absolute
                 if not os.path.isabs(file):
-                    self.file_path = os.path.abspath(os.path.join(os.path.dirname(globals_vars.ARGS.runfile),file))
+                    self.file_path = os.path.abspath(os.path.join(os.path.dirname(env.globals_vars.ARGS.runfile),file))
                 else:
                     self.file_path = os.path.abspath(file)
 
         # relative path to file
-        self.file_relpath = os.path.relpath(file, os.path.abspath(os.path.dirname(globals_vars.ARGS.runfile)))
+        self.file_relpath = os.path.relpath(file, os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile)))
 
 
-    def read_data_from_file(self, station, process=True, messages=True):
+    def read_data_from_file(self, station):
         """
         Read var I or var D from files, validated and check consistent.
 
@@ -94,24 +94,13 @@ class Variable():
 
         # -------------------------------------------------------------------------
         # Reading the variables from files and check based on range validation
-        if messages:
-            console.msg(_("Read and check (range validation) for var {0} ... ").format(self.type), newline=False)
-
-        if process:
-            if self.type == 'D':
-                input_vars.read_var_D(station)
-                self.fill_variable(station)
-            if self.type == 'I':
-                input_vars.read_var_I(station)
-                self.fill_variable(station)
-
-        if messages:
-            console.msg(_("done"), color='green')
-
-            if self.frequency_data == "daily":
-                console.msg(_("   the variable {0} has data daily").format(self.type), color='cyan')
-            if self.frequency_data== "monthly":
-                console.msg(_("   the variable {0} has data monthly").format(self.type), color='cyan')
+        # and fill variable if is needed
+        if self.type == 'D':
+            vars.read_var_D(station)
+            self.fill_variable(station)
+        if self.type == 'I':
+            vars.read_var_I(station)
+            self.fill_variable(station)
 
     def fill_variable(self, station):
         """
@@ -125,7 +114,7 @@ class Variable():
         values.
         """
 
-        if self.frequency_data == "daily":
+        if env.var_[self.type].is_daily():
 
             def below():
                 first_year = self.date[0].year
@@ -194,7 +183,7 @@ class Variable():
             # fill data above
             above()
 
-        if self.frequency_data== "monthly":
+        if env.var_[self.type].is_monthly():
 
             def below():
                 first_year = self.date[0].year
@@ -297,10 +286,10 @@ class Variable():
             VARIABLE.data_in_process_period (list)
             VARIABLE.data_filtered_in_process_period (list)
             VARIABLE.date_in_process_period (list)
-            VARIABLE.null_values_in_process_period (int)
+            VARIABLE.nulls_in_process_period (int)
         """
         start_date_var = date(station.process_period['start'], 1, 1)
-        if self.frequency_data== "daily":
+        if (self.type == 'D' and env.var_D.is_daily()) or (self.type == 'I' and env.var_I.is_daily()):
             end_date_var = date(station.process_period['end'], 12, 31)
         else:
             end_date_var = date(station.process_period['end'], 12, 1)
@@ -312,7 +301,8 @@ class Variable():
         self.date_in_process_period = self.date[self.date.index(start_date_var):\
                                       self.date.index(end_date_var) + 1]
         # nulls inside the process period
-        self.null_values_in_process_period = count_null_values(self.data_in_process_period)
+        self.nulls_in_process_period, \
+        self.percentage_of_nulls_in_process_period = array.check_nulls(self.data_in_process_period)
 
         # delete all valid nulls and clean
         self.data_filtered_in_process_period = array.clean(self.data_in_process_period)
@@ -339,7 +329,7 @@ class Variable():
         # median
         self.median = median(self.data_filtered_in_process_period)
         # std deviation
-        self.std_dev = tstd(self.data_filtered_in_process_period)
+        self.std_dev = std(self.data_filtered_in_process_period, ddof=1)
         # skewness
         self.skewness = skew(self.data_filtered_in_process_period, bias=False)
         # variance

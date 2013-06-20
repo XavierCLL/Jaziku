@@ -23,7 +23,7 @@ import os
 import sys
 from clint.textui import colored
 
-import globals_vars
+from jaziku.env import globals_vars
 
 #==============================================================================
 # PRINT FUNCTIONS
@@ -105,26 +105,32 @@ def msg_error_line_stations(station, text_error):
                 ' '.join(station.line_station) + "\n\n" + str(text_error))
 
 
-def msg_error_configuration(variable, text_error, show_settings=True):
-    """
-    Print error generic function occurred in configuration run.
+def msg_error_configuration(variable, text_error, show_settings=True, stop_in_grid=None):
+    """Print error generic function occurred in configuration run.
     """
     if show_settings:
-        from jaziku.utils import settings_run
-        settings_run.show(stop_in=variable)
+        from jaziku.core import settings
+        settings.show.configuration_run(stop_in=variable, stop_in_grid=stop_in_grid)
 
     runfile_open = open(globals_vars.ARGS.runfile, 'rb')
     runfile = (x.replace('\0', '') for x in runfile_open)
     runfile = csv.reader(runfile, delimiter=globals_vars.INPUT_CSV_DELIMITER)
 
+    stop_in_grid_counter = 0
+
     for num_line, line_in_run_file in enumerate(runfile):
         # if line is null o empty, e.g. empty but with tabs or spaces
         if not line_in_run_file or not line_in_run_file[0].strip() or line_in_run_file == []:
             continue
+
         if line_in_run_file[0] == variable:
+            # if the error is in any variable in grid, continue until find the correct grid
+            if stop_in_grid != stop_in_grid_counter:
+                stop_in_grid_counter += 1
+                continue
             msg_error(_("The Configuration run from the runfile in line {0}:\n")
-                      .format(num_line+1) + ' > ' +
-                      ' '.join(line_in_run_file) + "\n\n" + str(text_error), False)
+                      .format(num_line+1) + ' > ' + line_in_run_file[0] + ' = ' +
+                      ' '.join(line_in_run_file[1::]) + "\n\n" + str(text_error), False)
 
     # else
     msg_error(_("Error in configuration run from the runfile:\n")

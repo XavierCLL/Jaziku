@@ -25,9 +25,10 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from pylab import size
 
-from jaziku.utils import globals_vars
+from jaziku import env
+from jaziku.core.input import validation
 from jaziku.utils import  console
-from jaziku.modules.input import input_validation
+
 
 #==============================================================================
 # INPUT DATA PROCESSING
@@ -39,9 +40,13 @@ def read_var_D(station):
     Read dependent variable from file define in station list
     and check and validate value by value.
 
-    :return:
-        STATION.var_D.data
-        STATION.var_D.date
+    :param station: station instance
+    :type station: Station
+
+    Return by reference:
+
+    :ivar STATION.var_D.data: data read from file
+    :ivar STATION.var_D.date: date read from file
     """
     date_D = []
     var_D = []
@@ -53,13 +58,19 @@ def read_var_D(station):
               "Can't open file '{2}' for var D, \nplease check filename and check that its path is relative\n"
               "(to runfile) or absolute.").format(station.code, station.name, station.var_D.file_path))
 
-    open_file_D = open(station.var_D.file_path, 'r')
+    # Check is file is not empty
+    if os.path.getsize(station.var_D.file_path) == 0:
+        console.msg_error(
+            _("Reading the station: {0} - {1}\n"
+              "The file '{2}' is empty").format(station.code, station.name, station.var_D.file_path))
+
+    open_file_D = open(station.var_D.file_path, 'rU')
 
     # The series accept three delimiters: spaces (' '), tabulation ('\t') or semi-colon (';')
     # this check which delimiter is using this file
     test_line = open_file_D.readline()
-    if len(test_line.split(globals_vars.INPUT_CSV_DELIMITER)) >= 2:
-        delimiter = globals_vars.INPUT_CSV_DELIMITER
+    if len(test_line.split(env.globals_vars.INPUT_CSV_DELIMITER)) >= 2:
+        delimiter = env.globals_vars.INPUT_CSV_DELIMITER
     if len(test_line.split(' ')) >= 2:
         delimiter = ' '
     if len(test_line.split('\t')) >= 2:
@@ -89,7 +100,7 @@ def read_var_D(station):
             row[0] = row[0].replace('/', '-')
             row[1] = row[1].replace(',', '.')
 
-        except Exception, e:
+        except Exception:
             console.msg_error(_(
                 "Reading from file '{0}' in line: {1}\n\n"
                 "this could be caused by wrong line or garbage "
@@ -97,19 +108,23 @@ def read_var_D(station):
                 "run again.")
             .format(station.var_D.file_name, csv_file_D.line_num), False)
 
-        # check if var D is daily or month
+        # check if var D is daily or mstation.contingency_tablesonth
         if first:
-            if size(row[0].split("-")) == 3:
-                station.var_D.frequency_data= "daily"
-            else:
-                station.var_D.frequency_data= "monthly"
+            try:
+                if size(row[0].split("-")) == 3:
+                    env.var_D.set_FREQUENCY_DATA("daily")
+                else:
+                    env.var_D.set_FREQUENCY_DATA("monthly")
+            except ValueError as error:
+                console.msg_error(_("Problems settings the frequency data for the station\n"
+                                    "with code '{0}' and name '{1}':\n\n").format( station.code, station.name) + str(error))
 
         try:
             # delete garbage characters and convert format
             year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
             month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
 
-            if station.var_D.frequency_data== "daily":
+            if env.var_D.is_daily():
                 day = int(re.sub(r'[^\w]', '', row[0].split("-")[2]))
                 # check if the values are continuous
                 if not first and date(year, month, day) + relativedelta(days= -1) != date_D[-1]:
@@ -121,7 +136,7 @@ def read_var_D(station):
                         csv_file_D.line_num,
                         missing_date))
 
-            if station.var_D.frequency_data== "monthly":
+            if env.var_D.is_monthly():
                 day = 1
                 # check if the values are continuous
                 if not first and date(year, month, day) + relativedelta(months= -1) != date_D[-1]:
@@ -134,20 +149,19 @@ def read_var_D(station):
                         missing_date.year,
                         missing_date.month))
             value = float(row[1])
-            if globals_vars.is_valid_null(value):  # TODO: deprecated valid null
+            if env.globals_vars.is_valid_null(value):  # TODO: deprecated valid null
                 value = float('nan')
             # set date of dependent variable from file_D, column 1,
             # format: yyyy-mm-dd
             date_D.append(date(year, month, day))
-            # set values of dependent variable
-            var_D.append(input_validation.validation_var_D(station.var_D.type_series,
-                value,
-                date_D[-1],
-                station.var_D.frequency_data))
+            # check variable if is within limits
+            if validation.is_the_value_within_limits(value, station.var_D):
+                # set values of dependent variable
+                var_D.append(value)
 
-        except Exception, e:
+        except Exception as error:
             console.msg_error(_("Reading from file '{0}' in line: {1}\n\n{2}")
-            .format(station.var_D.file_name, csv_file_D.line_num, e), False)
+            .format(station.var_D.file_name, csv_file_D.line_num, error))
 
         if first:
             first = False
@@ -158,22 +172,37 @@ def read_var_D(station):
     station.var_D.data = var_D
     station.var_D.date = date_D
 
-    #return station
-
 
 def read_var_I(station):
     """
     Read independent variable from file define in station list
     and check and validate value by value.
 
-    :return:
-        STATION.var_I.data
-        STATION.var_I.date
+    :param station: station instance
+    :type station: Station
+
+    Return by reference:
+
+    :ivar STATION.var_I.data: data read from file
+    :ivar STATION.var_I.date: date read from file
     """
     date_I = []
     var_I = []
 
-    open_file_I = open(station.var_I.file_path, 'r')
+    # check first if file exist
+    if not os.path.isfile(station.var_I.file_path):
+        console.msg_error(
+            _("Reading the station: {0} - {1}\n"
+              "Can't open file '{2}' for var I, \nplease check filename and check that its path is relative\n"
+              "(to runfile) or absolute.").format(station.code, station.name, station.var_I.file_path))
+
+    # Check is file is not empty
+    if os.path.getsize(station.var_I.file_path) == 0:
+        console.msg_error(
+            _("Reading the station: {0} - {1}\n"
+              "The file '{2}' is empty").format(station.code, station.name, station.var_I.file_path))
+
+    open_file_I = open(station.var_I.file_path, 'rU')
 
     # The series accept three delimiters: spaces (' '), tabulation ('\t') or semi-colon (';')
     # this check which delimiter is using this file
@@ -202,7 +231,7 @@ def read_var_I(station):
         try:
             row[0] = row[0].replace('/', '-')
             row[1] = row[1].replace(',', '.')
-        except Exception, e:
+        except Exception:
             console.msg_error(_(
                 "Reading from file '{0}' in line: {1}\n\n"
                 "this could be caused by wrong line or garbage "
@@ -213,16 +242,16 @@ def read_var_I(station):
         # check if var I is daily or month
         if first:
             if size(row[0].split("-")) == 3:
-                station.var_I.frequency_data = "daily"
+                env.var_I.set_FREQUENCY_DATA("daily")
             else:
-                station.var_I.frequency_data = "monthly"
+                env.var_I.set_FREQUENCY_DATA("monthly")
 
         try:
             # delete garbage characters and convert format
             year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
             month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
 
-            if station.var_I.frequency_data == "daily":
+            if env.var_I.is_daily():
                 day = int(re.sub(r'[^\w]', '', row[0].split("-")[2]))
                 # check if the values are continuous
                 if not first and date(year, month, day) + relativedelta(days= -1) != date_I[-1]:
@@ -234,7 +263,7 @@ def read_var_I(station):
                         csv_file_I.line_num,
                         missing_date))
 
-            if station.var_I.frequency_data == "monthly":
+            if env.var_I.is_monthly():
                 day = 1
                 # check if the values are continuous
                 if not first and date(year, month, day) + relativedelta(months= -1) != date_I[-1]:
@@ -247,17 +276,19 @@ def read_var_I(station):
                         missing_date.year,
                         missing_date.month))
             value = float(row[1])
-            if globals_vars.is_valid_null(value):  # TODO: deprecated valid null
+            if env.globals_vars.is_valid_null(value):  # TODO: deprecated valid null
                 value = float('nan')
             # set date of independent variable from file_I, column 1,
             # format: yyyy-mm
             date_I.append(date(year, month, day))
-            # set values of independent variable
-            var_I.append(input_validation.validation_var_I(station.var_I.type_series, value))
+            # check variable if is within limits
+            if validation.is_the_value_within_limits(value, station.var_I):
+                # set values of independent variable
+                var_I.append(value)
 
-        except Exception, e:
+        except Exception as error:
             console.msg_error(_("Reading from file '{0}' in line: {1}\n\n{2}")
-            .format(station.var_I.file_name, csv_file_I.line_num, e), False)
+            .format(station.var_I.file_name, csv_file_I.line_num, error))
 
         if first:
             first = False
@@ -268,4 +299,3 @@ def read_var_I(station):
     station.var_I.data = var_I
     station.var_I.date = date_I
 
-    #return station

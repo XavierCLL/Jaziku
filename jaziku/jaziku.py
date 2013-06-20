@@ -33,24 +33,23 @@
 import sys
 import gc
 import os.path
-from clint.textui import colored
 from matplotlib import use
 
 # internationalization and init languages variable "_()"
 import gettext
 from i18n import i18n
 
-# local import
-from utils import console
-from utils import settings_run
-from utils import globals_vars
-from modules.station import Station
+# jaziku imports
+import env
+from core import settings
+from core import stations
+from core.input import runfile, arg
+from core.station import Station
+from modules.climate import climate
+from modules.forecast import forecast
 from modules.data_analysis import data_analysis
-from modules.input import input_arg
-from modules.input import input_runfile
 from modules.maps import maps
-from modules.maps.grid import Grid
-from modules.maps.maps import check_basic_requirements_for_maps
+from utils import console, output
 
 
 #==============================================================================
@@ -78,30 +77,31 @@ def main():
         use("AGG", warn=False)  # for old version of matplotlib
 
     #set the root directory where jaziku was installed
-    globals_vars.JAZIKU_DIR = os.path.dirname(os.path.realpath(__file__))
+    env.globals_vars.JAZIKU_DIR = os.path.dirname(os.path.realpath(__file__))
 
     # Parser and check arguments
-    globals_vars.ARGS = input_arg.arguments.parse_args()
+    env.globals_vars.ARGS = arg.arguments.parse_args()
+
+    # -------------------------------------------------------------------------
+    # Initialize all settings variables in None
+
+    env.config_run.init()
 
     # -------------------------------------------------------------------------
     # READ RUNFILE
     # reading configuration run, list of grids and stations from runfile
 
-    # absolute directory to save all result,
-    # this is absolute directory where is the runfile + filename of runfile
-    globals_vars.WORK_DIR = os.path.abspath(os.path.splitext(globals_vars.ARGS.runfile)[0])
-
     # test if runfile exist
-    if not os.path.isfile(globals_vars.ARGS.runfile):
-        console.msg_error(_("[runfile] no such file or directory: {0}".format(globals_vars.ARGS.runfile)),False)
+    if not os.path.isfile(env.globals_vars.ARGS.runfile):
+        console.msg_error(_("[runfile] no such file or directory: {0}".format(env.globals_vars.ARGS.runfile)), False)
 
     # read all settings and all stations from runfile
-    stations = input_runfile.read_runfile()
+    stations_list = runfile.read_runfile()
 
     # -------------------------------------------------------------------------
     # Setting language
 
-    globals_vars.config_run['language'] = i18n.set_language(globals_vars.config_run['language'])
+    i18n.set_language(env.config_run.settings['language'])
 
     # -------------------------------------------------------------------------
     # Start message
@@ -114,111 +114,79 @@ def main():
             "#                 Version {0} - {1}\t               #\n"
             "#           Copyright (C) 2011-2013 IDEAM - Colombia           #\n"
             "################################################################")\
-    .format(globals_vars.VERSION, globals_vars.VERSION_DATE)
+    .format(env.globals_vars.VERSION, env.globals_vars.VERSION_DATE)
 
     # -------------------------------------------------------------------------
-    # GET/SET SETTINGS
+    # GET/SET AND CHECK SETTINGS TO RUN
 
-    globals_vars.settings = settings_run.get()
+    settings.main(stations_list)
 
     # -------------------------------------------------------------------------
-    # PRINT AND CHECK SETTINGS, AND CONTINUE
+    # DEFINED OUTPUT DIRECTORY FOR SAVE RESULTS
 
-    settings_run.check()
+    if env.globals_vars.ARGS.output:
+        # absolute directory to save all results defined in arguments
+        env.globals_vars.OUTPUT_DIR = os.path.abspath(env.globals_vars.ARGS.output)
+    else:
+        # absolute directory to save all results,
+        # this is absolute directory where is the runfile + filename of runfile
+        env.globals_vars.OUTPUT_DIR = os.path.abspath(os.path.splitext(env.globals_vars.ARGS.runfile)[0])
 
-    settings_run.show()
+    # -------------------------------------------------------------------------
+    # PREPARE ALL OUTPUT DIRECTORIES FOR SAVE RESULTS
 
-    settings_run.check_station_list(stations)
-
-    settings_run.continue_run()
-
+    output.prepare_dirs()
 
     # -------------------------------------------------------------------------
     # DATA ANALYSIS
 
-    if globals_vars.config_run['data_analysis']:
-        print _("\n\n"
-                "#################### DATA ANALYSIS PROCESS #####################\n"
-                "# Data analysis module, here is verified linearity, outliers   #\n"
-                "# are reported and the primary statistical time series.        #\n"
-                "################################################################\n")
+    if env.config_run.settings['data_analysis']:
 
-        # data analysis dir output result
-        globals_vars.data_analysis_dir\
-            = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Data_Analysis'))   # 'results'
-
-        print _("Saving the result for data analysis in:")
-        print "   " + colored.cyan(os.path.relpath(globals_vars.data_analysis_dir, os.path.abspath(os.path.dirname(globals_vars.ARGS.runfile))))
-
-        if os.path.isdir(globals_vars.data_analysis_dir):
-            console.msg(
-                _("\n > WARNING: the output directory for data analysis process\n"
-                  "   is already exist, Jaziku continue but the results\n"
-                  "   could be mixed or replaced of old output."), color='yellow')
+        # PRE-PROCESS: prepare data for all stations for data analysis process
+        stations.prepare_all_stations(stations_list,
+                                      prepare_data_for_data_analysis=True,
+                                      prepare_data_for_climate_forecast=False)
 
         # main process for data analysis
-        data_analysis.main(stations)
+        data_analysis.main(stations_list)
 
 
     # -------------------------------------------------------------------------
-    # CLIMATE AND FORECASTING PRE-PROCESS
+    # CLIMATE AND FORECAST PRE-PROCESS
 
     # climate
-    if globals_vars.config_run['climate_process']:
+    if env.config_run.settings['climate_process']:
 
-        print _("\n\n"
-                "############### CLIMATE AND FORECASTING PROCESS ################\n"
-                "# Climate Module, here are calculated contingency tables,      #\n"
-                "# correlations and parametric tests of interest.               #\n"
-                "#                                                              #\n"
-                "# Modulo forecasts, predictions are calculated here associated #\n"
-                "# with the dependent variable as a function of contingency     #\n"
-                "# tables and the probability of the independent variable.      #\n"
-                "################################################################\n")
+        # PRE-PROCESS: prepare data for all stations for climate (and forecast) process
+        stations.prepare_all_stations(stations_list,
+                                      prepare_data_for_data_analysis=False,
+                                      prepare_data_for_climate_forecast=True)
 
-        # climate dir output result
-        globals_vars.climate_dir \
-            = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Climate'))   # 'results'
+        climate.pre_process()
 
-        print _("Saving the result for climate in:")
-        print "   " + colored.cyan(os.path.relpath(globals_vars.climate_dir, os.path.abspath(os.path.dirname(globals_vars.ARGS.runfile))))
-
-        if os.path.isdir(globals_vars.climate_dir):
-            console.msg(
-                _("\n > WARNING: the output directory for climate process\n"
-                  "   is already exist, Jaziku continue but the results\n"
-                  "   could be mixed or replaced of old output."), color='yellow')
-
-    # forecasting
-    if globals_vars.config_run['forecasting_process']:
-        # forecasting dir output result
-        globals_vars.forecasting_dir \
-            = os.path.join(globals_vars.WORK_DIR, _('Jaziku_Forecasting'))   # 'results'
-
-        print _("\nSaving the result for forecasting in:")
-        print "   " + colored.cyan(os.path.relpath(globals_vars.forecasting_dir, os.path.abspath(os.path.dirname(globals_vars.ARGS.runfile))))
-
-        if os.path.isdir(globals_vars.forecasting_dir):
-            console.msg(
-                _("\n > WARNING: the output directory for forecasting process\n"
-                  "   is already exist, Jaziku continue but the results\n"
-                  "   could be mixed or replaced of old output."), color='yellow')
+    # forecast
+    if env.config_run.settings['forecast_process']:
+        forecast.pre_process()
 
     # -------------------------------------------------------------------------
-    # CLIMATE AND FORECASTING MAIN PROCESS
+    # CLIMATE AND FORECAST MAIN PROCESS
 
-    if globals_vars.config_run['climate_process']:
+    if env.config_run.settings['climate_process']:
         # process each station from stations list
-        for station in stations:
+        for station in stations_list:
 
             # console message
             print _("\n################# STATION: {0} ({1})").format(station.name, station.code)
 
-            # pre_process: read, validated and check data
-            station.pre_process()
+            ## process climate and forecast for this station
+            # run climate process
+            if env.config_run.settings['climate_process']:
+                climate.process(station)
 
-            # process climate and forecasting for this station
-            station.process()
+            # run forecast process
+            if env.config_run.settings['forecast_process']:
+                # TODO: run forecast without climate¿?
+                forecast.process(station)
 
         console.msg(gettext.ngettext(
                     _("\n{0} station processed."),
@@ -226,7 +194,7 @@ def main():
                     Station.stations_processed).format(Station.stations_processed), color='green')
 
     # delete instance of stations for clean memory
-    del stations
+    del stations_list
     # force run garbage collector memory
     gc.collect()
 
@@ -235,28 +203,20 @@ def main():
     # MAPS PROCESS
 
     # process to create maps
-    if globals_vars.config_run['maps']:
-
-        print _("\n\n"
-                "######################### MAPS PROCESS #########################\n"
-                "# Map Process, here is made the Kriging interpolation on the   #\n"
-                "# results of historical scenarios and forecasts most probable  #\n"
-                "# of the dependent variable, also interpolation of linear      #\n"
-                "# correlations.                                                #\n"
-                "################################################################")
+    if env.config_run.settings['maps']:
 
         # first check requirements
-        check_basic_requirements_for_maps()
+        maps.pre_process()
 
-        for grid in Grid.all_grids:
+        for grid in maps.Grid.all_grids:
             # process all maps for this grid
-            maps.maps(grid)
+            maps.process(grid)
 
-        for grid in Grid.all_grids:
+        for grid in maps.Grid.all_grids:
             console.msg(gettext.ngettext(
                         _("\n{0} map created for {1}"),
                         _("\n{0} maps created for {1}"),
-                        Grid.maps_created_in_grid).format(Grid.maps_created_in_grid, grid.grid_fullname), color='green')
+                        maps.Grid.maps_created_in_grid).format(maps.Grid.maps_created_in_grid, grid.grid_fullname), color='green')
 
     console.msg(_("\nProcess completed!"), color='green')
 

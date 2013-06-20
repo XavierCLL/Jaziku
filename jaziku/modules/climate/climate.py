@@ -19,19 +19,40 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import sys
+from clint.textui import colored
 
-import result_table
-from lags import calculate_lags
-from contingency_table import contingency_table
-from graphs import climate_graphs
+from jaziku import env
+from jaziku.modules.climate import result_table
+from jaziku.modules.climate.lags import calculate_lags
+from jaziku.modules.climate.contingency_table import get_contingency_tables
+from jaziku.modules.climate.graphs import climate_graphs
 from jaziku.modules.maps.data import climate_data_for_maps
-from jaziku.utils import globals_vars
-from jaziku.utils import console
+from jaziku.utils import console, output
 
-def climate(station):
+
+def pre_process():
+    """Show message and prepare directory
     """
-    In climate process, it calculate the relationship between the dependent and independent
+
+    print _("\n\n"
+            "################# CLIMATE AND FORECAST PROCESS #################\n"
+            "# Climate Module, here are calculated contingency tables,      #\n"
+            "# correlations and parametric tests of interest.               #\n"
+            "#                                                              #\n"
+            "# Modulo forecasts, predictions are calculated here associated #\n"
+            "# with the dependent variable as a function of contingency     #\n"
+            "# tables and the probability of the independent variable.      #\n"
+            "################################################################\n")
+
+    print _("Saving the result for climate in:")
+    if env.globals_vars.ARGS.output:
+        print "   " + colored.cyan(env.globals_vars.CLIMATE_DIR)
+    else:
+        print "   " + colored.cyan(os.path.relpath(env.globals_vars.CLIMATE_DIR, os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile))))
+
+
+def process(station):
+    """In climate process, it calculate the relationship between the dependent and independent
     variable which is generally determined by the joint probability distribution, but that being
     unknown is replaced by the contingency table. To calculate the contingency table the data
     set of the dependent and independent variable is divided into three categories and are found
@@ -42,28 +63,47 @@ def climate(station):
     possible categories of the independent variable.
     """
 
+    # -------------------------------------------------------------------------
+    # inform some characteristic to process
+
+    # define if results will made by trimester or every n days
+    if env.globals_vars.STATE_OF_DATA in [1, 3] or env.config_run.settings['analysis_interval'] == "trimester":
+        console.msg(_("Results will be made by trimesters"), color='cyan')
+    else:
+        console.msg(_("Results will be made every {} days").format(env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL), color='cyan')
+
+    # inform the period to process
+    console.msg(_("Period to process: {0}-{1}").format(station.process_period['start'], station.process_period['end']), color='cyan')
+
+    if env.config_run.settings['analog_year']:
+        console.msg(_("Will use thresholds with analog year for var_D "), color='cyan')
+
+    # -------------------------------------------------------------------------
+    # prepare files
+
     # console message
     console.msg(_("Processing climate ............................ "), newline=False)
 
-    # create directory for output files
-    if not os.path.isdir(globals_vars.climate_dir):
-        os.makedirs(globals_vars.climate_dir)
-
     station.climate_dir \
-        = os.path.join(globals_vars.climate_dir, _('stations'), station.code + '_' + station.name)   # 'results'
-    if not os.path.isdir(station.climate_dir):
-        os.makedirs(station.climate_dir)
+        = os.path.join(env.globals_vars.CLIMATE_DIR, _('stations'), station.code + '_' + station.name)   # 'results'
+
+    output.make_dirs(station.climate_dir)
+
+    # -------------------------------------------------------------------------
+    # process
 
     calculate_lags(station)
 
+    # size_time_series: is the number o years of the process period
     station.size_time_series = (len(station.common_period) / 12) - 2
 
-    contingency_table(station)
+    # get all contingency tables for this station
+    get_contingency_tables(station)
 
     result_table.composite_analysis(station)
 
-    if not globals_vars.threshold_problem[0] and not globals_vars.threshold_problem[1] and\
-       not globals_vars.threshold_problem[2] and globals_vars.config_run['graphics']:
+    if env.config_run.settings['graphics']:
+        # do graphics for climate
         climate_graphs(station)
     else:
         console.msg(_("\n   continue without make graphics ............. "), color='cyan', newline=False)

@@ -24,24 +24,24 @@
 # http://matplotlib.sourceforge.net/api/pyplot_api.html
 
 import os
+import copy
+from math import isnan
 from numpy import array
 from matplotlib import pyplot
 from Image import open as img_open
 
-from jaziku.utils import globals_vars, watermarking
-from contingency_table import get_contingency_table
+from jaziku import env
+from jaziku.core.analysis_interval import get_range_analysis_interval
+from jaziku.utils import  watermarking, format_out, output
+from jaziku.utils.matrix import transpose
 
-
-def column(matrix, i):
-    """Return column i from matrix"""
-
-    return [row[i] for row in matrix]
+image_height = None
+image_width = None
 
 
 def climate_graphs(station):
-    """
-    Generate bar charts and mosaics of probability for below, normal and
-    above for independent variable for the composite analysis.
+    """Generate bar charts and mosaics of probability for labels in 3 or 7 categories
+    for independent variable for the composite analysis.
     """
 
     # main directory for save graphics
@@ -52,46 +52,14 @@ def climate_graphs(station):
         = os.path.join(station.climate_dir, graphics_dir, _('composite_analysis'))
 
     # create dir
-    if not os.path.isdir(graphics_dir_ca):
-        os.makedirs(graphics_dir_ca)
+    output.make_dirs(graphics_dir_ca)
 
     def create_chart():
-        ## graphics options for plot:
-        # the x locations for the groups
-        ind = array([0, 0.8, 1.6])
-        # the width of the bars
-        width = 0.2
+        global image_height
+        global image_width
 
-        pyplot.figure()
-
-        # graphics title
-        pyplot.title(unicode(_('Composite analysis - {0} ({1})\n{2} - {3} - '
-                            'lag {6} - {7} - ({4}-{5})')
-        .format(station.name, station.code, station.var_I.type_series,
-            station.var_D.type_series, station.process_period['start'],
-            station.process_period['end'], lag,
-            title_period), 'utf-8'))
-
-        # label for axis Y
-        pyplot.ylabel(_('probability (%)'))
-        #  adjust the max leaving min unchanged in Y
-        pyplot.ylim(ymin=0, ymax=100)
-        #  adjust the max leaving min unchanged in X
-        pyplot.xlim(xmin= -0.1, xmax=2.3)
-        # pyplot.xticks([0.3, 1.1, 1.9], ('var Ind Below', 'var Ind Normal', 'var Ind Above'),)
-        pyplot.xticks([])
-        # colors for paint bars and labels: below, normal , above
-        colours = ['#DD4620', '#62AD29', '#6087F1']
-        # assigning values for plot:
-        var_D_below = pyplot.bar(ind, column(contingency_table_percent, 0),
-            width, color=colours[0])
-        var_D_normal = pyplot.bar(ind + width, column(contingency_table_percent, 1),
-            width, color=colours[1])
-        var_D_above = pyplot.bar(ind + 2 * width, column(contingency_table_percent, 2),
-            width, color=colours[2])
-
-        # assign value for each bar
-        def auto_label(rects):
+        # function that assign value for each bar
+        def auto_label(rects, fontsize=12, rotation='horizontal'):
             # attach some text labels
             temp = []
             for rect in rects:
@@ -101,96 +69,322 @@ def climate_graphs(station):
 
             for rect in rects:
                 height = rect.get_height()
-                pyplot.text(rect.get_x() + rect.get_width() / 2.0, 0.015 * max_height +
-                                                                height, round(height, 1), ha='center', va='bottom')
+                if height != 0:
+                    if 95 <= height <= 100:
+                        adjust_h = - 12
+                    else:
+                        if rotation=='vertical':
+                            adjust_h = 0.5
+                        else:
+                            adjust_h = 0
 
-        auto_label(var_D_below)
-        auto_label(var_D_normal)
-        auto_label(var_D_above)
+                    pyplot.text(rect.get_x() + rect.get_width() / 2.0, 0.015 * max_height + height + adjust_h,
+                                round(height, 1), ha='center', va='bottom', fontsize=fontsize, rotation=rotation)
 
-        pyplot.subplots_adjust(bottom=0.15, left=0.22, right=0.97)
-        # pyplot.legend((var_D_below[0], var_D_normal[0], var_D_above[0]),
-        #            ('var Dep Below', 'var Dep Normal', 'var Dep Above'),
-        #             shadow = True, fancybox = True)
+        # -------------------------------------------------------------------------
+        # climate graphics for 3 categories
 
-        # table in graphic
-        colLabels = (globals_vars.phenomenon_below, globals_vars.phenomenon_normal,
-                     globals_vars.phenomenon_above)
+        # defined some variables that depended of 'class_category_analysis' and 'relevant_climate_categories_var_I'
+        if env.config_run.settings['class_category_analysis'] == 3:
 
-        rowLabels = [_('var D below'), _('var D normal'), _('var D above')]
+            ## graphics options for plot:
+            # the width of the bars
+            width = 0.18
 
-        contingency_table_percent_graph = [column(contingency_table_percent_print, 0),
-                                           column(contingency_table_percent_print, 1),
-                                           column(contingency_table_percent_print, 2)]
+            all_categories = env.globals_vars.categories(translated=False, as_list=True)
 
-        # Add a table at the bottom of the axes
-        pyplot.table(cellText=contingency_table_percent_graph,
-                     rowLabels=rowLabels, rowColours=colours,
-                     colLabels=colLabels, loc='bottom')
-        ## Save image
-        pyplot.subplot(111)
-        image_dir_save \
-            = os.path.join(graphics_dir_ca, _('lag_{0}').format(lag),
-                           _('ca_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
-                          .format(lag, filename_period, station.code, station.name, station.var_D.type_series,
-                                  station.var_I.type_series, station.process_period['start'], station.process_period['end']))
+            if env.config_run.settings['relevant_climate_categories_var_I'] == 'all':
+                relevant_climate_categories_var_I = all_categories
+            else:
+                relevant_climate_categories_var_I = env.config_run.settings['relevant_climate_categories_var_I']
+
+            enable_categories = [False] * env.config_run.settings['class_category_analysis']
+            for idx, category in enumerate(relevant_climate_categories_var_I):
+                enable_categories[all_categories.index(category)] = True
+
+            # number of categories activated
+            num_categ = len(relevant_climate_categories_var_I)
+
+            _CT = copy.deepcopy(specific_contingency_table['in_percentage'])
+            _CT_p = copy.deepcopy(specific_contingency_table['in_percentage_formatted'])
+            _CL_I = copy.deepcopy(env.config_run.get_categories_labels_var_I_list())
+
+            # delete columns (var I) deactivated, in reversed order is needed
+            # because if any element is delete in the first columns, the side of
+            # matrix is reduced and the index change for a column to right side
+            for idx, enable in reversed(list(enumerate(enable_categories))):
+                if not enable:
+                    del _CT[idx]
+                    del _CT_p[idx]
+                    del _CL_I[idx]
+
+            _var_D_values = transpose(_CT)
+            _colLabels = (_CL_I)
+            _table_values = transpose(_CT_p)
+
+
+            # the x locations for the groups
+            all_groups_distance = [0, width*3.5, width*7]
+            var_I_bars_groups_distance =  array(all_groups_distance[0:num_categ])
+
+            dpi = 75.0
+            image_height = 375
+            image_width_by_num_categ = {1:375, 2:375, 3:430}
+            image_width = image_width_by_num_categ[num_categ]
+            fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
+            #fig = pyplot.figure()
+
+            ax = fig.add_subplot(111)
+
+            # graphics title
+            fig.suptitle(unicode(_('Composite analysis - {0} ({1})\n{2} - {3} - lag {6} - {7} - ({4}-{5})').
+                format(station.name, station.code, station.var_D.type_series,
+                    station.var_I.type_series, station.process_period['start'],
+                    station.process_period['end'], lag, title_period), 'utf-8'), fontsize=14)
+
+            # label for axis Y
+            ax.set_ylabel(_('probability (%)'))
+            #  adjust the max leaving min unchanged in Y
+            ax.set_ylim(ymin=0, ymax=100)
+            #  adjust the max leaving min unchanged in X
+            ax.set_xlim(xmin= -(width/4), xmax=width*(num_categ*3+(num_categ-1)*0.5+0.25))
+            # pyplot.xticks([0.3, 1.1, 1.9], ('var Ind Below', 'var Ind Normal', 'var Ind Above'),)
+            ax.set_xticks([])
+            #ax.set_yticks(range(0,101,10))
+            # colors for paint bars and labels: below, normal , above
+            colours = ['#DD4620', '#62AD29', '#6087F1']
+
+            # convert NaN values in 0 for preserve plot bars
+            _var_D_values = [[0 if isnan(value) else value for value in l] for l in _var_D_values]
+
+            # create bars
+            var_D_below = pyplot.bar(var_I_bars_groups_distance, _var_D_values[0], width, color=colours[0])
+            var_D_normal = pyplot.bar(var_I_bars_groups_distance + width, _var_D_values[1], width, color=colours[1])
+            var_D_above = pyplot.bar(var_I_bars_groups_distance + 2 * width, _var_D_values[2], width, color=colours[2])
+
+            # assign value label for each bar
+            auto_label(var_D_below)
+            auto_label(var_D_normal)
+            auto_label(var_D_above)
+
+            rowLabels = env.globals_vars.categories(as_list=True)
+
+            # Add a table at the bottom of the axes
+            table = ax.table(
+                cellText=_table_values,
+                rowLabels=rowLabels,
+                rowColours=colours,
+                colLabels=_colLabels,
+                loc='bottom', cellLoc='center')
+
+            # set some properties to the table
+            table_props = table.properties()
+            table_cells = table_props['child_artists']
+            for cell in table_cells:
+                cell.set_fontsize(12)
+                cell.set_height(0.06)
+
+            x_text_position = {1:0.155, 2:0.08, 3:0.01}
+            fig.text(x_text_position[num_categ], 0.1, _('Var D'), fontsize=12, rotation='vertical')
+
+            ## Save image
+            image_dir_save \
+                = os.path.join(graphics_dir_ca, _('lag_{0}').format(lag),
+                               _('CA_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
+                              .format(lag, filename_period, station.code, station.name, station.var_D.type_series,
+                                      station.var_I.type_series, station.process_period['start'], station.process_period['end']))
+
+            ax.grid(True, color='gray')
+            fig.tight_layout()
+
+            left_by_num_categ = {1:0.345, 2:0.27, 3:0.173}
+            right_by_num_categ = {1:0.655, 2:0.86, 3:0.98}
+            #pyplot.subplots_adjust(bottom=0.25, left=0.22, right=0.97)
+            pyplot.subplots_adjust(bottom=0.18, top=0.85, left=left_by_num_categ[num_categ], right=right_by_num_categ[num_categ])
+
+        # -------------------------------------------------------------------------
+        # climate graphics for 7 categories
+
+        # defined some variables that depended of 'class_category_analysis' and 'relevant_climate_categories_var_I'
+        if env.config_run.settings['class_category_analysis'] == 7:
+
+            ## graphics options for plot:
+            # the width of the bars
+            width = 0.18
+
+            all_categories = env.globals_vars.categories(translated=False, as_list=True)
+
+            if env.config_run.settings['relevant_climate_categories_var_I'] == 'all':
+                relevant_climate_categories_var_I = all_categories
+            else:
+                relevant_climate_categories_var_I = env.config_run.settings['relevant_climate_categories_var_I']
+
+            enable_categories = [False] * env.config_run.settings['class_category_analysis']
+            for idx, category in enumerate(relevant_climate_categories_var_I):
+                enable_categories[all_categories.index(category)] = True
+
+            # number of categories activated
+            num_categ = len(relevant_climate_categories_var_I)
+
+            _CT = copy.deepcopy(specific_contingency_table['in_percentage'])
+            _CT_p = copy.deepcopy(specific_contingency_table['in_percentage_formatted'])
+            _CL_I = copy.deepcopy(env.config_run.get_categories_labels_var_I_list())
+
+            # delete columns (var I) deactivated, in reversed order is needed
+            # because if any element is delete in the first columns, the side of
+            # matrix is reduced and the index change for a column to right side
+            for idx, enable in reversed(list(enumerate(enable_categories))):
+                if not enable:
+                    del _CT[idx]
+                    del _CT_p[idx]
+                    del _CL_I[idx]
+
+            _var_D_values = transpose(_CT)
+            _colLabels = (_CL_I)
+            _table_values = transpose(_CT_p)
+
+            # the x locations for the groups
+            all_groups_distance = [0, width*7.5, width*15 , width*22.5, width*30, width*37.5, width*45]
+            var_I_bars_groups_distance =  array(all_groups_distance[0:num_categ])
+
+            dpi = 75.0
+            image_height = 500
+            image_width_by_num_categ = {1:375, 2:480, 7:950}
+            image_width = image_width_by_num_categ[num_categ]
+            fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
+            #fig = pyplot.figure()
+
+            ax = fig.add_subplot(111)
+
+            # graphics title
+            fig.suptitle(unicode(_('Composite analysis - {0} ({1})\n{2} - {3} - lag {6} - {7} - ({4}-{5})').
+                format(station.name, station.code, station.var_D.type_series,
+                    station.var_I.type_series, station.process_period['start'],
+                    station.process_period['end'], lag, title_period), 'utf-8'), fontsize=14)
+
+            # label for axis Y
+            ax.set_ylabel(_('probability (%)'))
+            #  adjust the max leaving min unchanged in Y
+            ax.set_ylim(ymin=0, ymax=100)
+            #  adjust the max leaving min unchanged in X
+            ax.set_xlim(xmin= -(width/4), xmax=width*(num_categ*7+(num_categ-1)*0.5+0.25))
+            # pyplot.xticks([0.3, 1.1, 1.9], ('var Ind Below', 'var Ind Normal', 'var Ind Above'),)
+            ax.set_xticks([])
+            #ax.set_yticks(range(0,101,10))
+            # colors for paint bars and labels: below, normal , above
+            colours = ['#DD4620', '#DD8620','#DDC620', '#62AD29', '#60C7F1', '#6087F1', '#6047F1']
+
+            # convert NaN values in 0 for preserve plot bars
+            _var_D_values = [[0 if isnan(value) else value for value in l] for l in _var_D_values]
+
+            # create bars
+            var_D_strong_below = pyplot.bar(var_I_bars_groups_distance, _var_D_values[0], width, color=colours[0])
+            var_D_moderate_below = pyplot.bar(var_I_bars_groups_distance + width, _var_D_values[1], width, color=colours[1])
+            var_D_weak_below = pyplot.bar(var_I_bars_groups_distance + width*2, _var_D_values[2], width, color=colours[2])
+            var_D_normal = pyplot.bar(var_I_bars_groups_distance + width*3, _var_D_values[3], width, color=colours[3])
+            var_D_weak_above = pyplot.bar(var_I_bars_groups_distance + width*4, _var_D_values[4], width, color=colours[4])
+            var_D_moderate_above = pyplot.bar(var_I_bars_groups_distance + width*5, _var_D_values[5], width, color=colours[5])
+            var_D_strong_above = pyplot.bar(var_I_bars_groups_distance + width*6, _var_D_values[6], width, color=colours[6])
+
+            # assign value label for each bar
+            fontsize_by_num_categ = {1:11, 2:11, 7:11}
+            auto_label(var_D_strong_below, fontsize=fontsize_by_num_categ[num_categ], rotation='vertical')
+            auto_label(var_D_moderate_below, fontsize=fontsize_by_num_categ[num_categ], rotation='vertical')
+            auto_label(var_D_weak_below, fontsize=fontsize_by_num_categ[num_categ], rotation='vertical')
+            auto_label(var_D_normal, fontsize=fontsize_by_num_categ[num_categ], rotation='vertical')
+            auto_label(var_D_weak_above, fontsize=fontsize_by_num_categ[num_categ], rotation='vertical')
+            auto_label(var_D_moderate_above, fontsize=fontsize_by_num_categ[num_categ], rotation='vertical')
+            auto_label(var_D_strong_above, fontsize=fontsize_by_num_categ[num_categ], rotation='vertical')
+
+            rowLabels = env.globals_vars.categories(as_list=True)
+
+            # Add a table at the bottom of the axes
+            table = ax.table(
+                cellText=_table_values,
+                rowLabels=rowLabels,
+                rowColours=colours,
+                colLabels=_colLabels,
+                loc='bottom', cellLoc='center')
+
+            # set some properties to the table
+            table_props = table.properties()
+            table_cells = table_props['child_artists']
+            for cell in table_cells:
+                cell.set_fontsize(11)
+                cell.set_height(0.05)
+
+            fig.text(0.005, 0.135, _('Var D'), fontsize=12, rotation='vertical')
+
+            ## Save image
+            image_dir_save \
+                = os.path.join(graphics_dir_ca, _('lag_{0}').format(lag),
+                               _('CA_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
+                              .format(lag, filename_period, station.code, station.name, station.var_D.type_series,
+                                      station.var_I.type_series, station.process_period['start'], station.process_period['end']))
+
+            ax.grid(True, color='gray')
+            fig.tight_layout()
+
+            left_by_num_categ = {1:0.37, 2:0.29, 7:0.148}
+            right_by_num_categ = {1:0.78, 2:0.88, 7:0.995}
+            top_by_num_categ = {1:0.89, 2:0.89, 7:0.9}
+            #pyplot.subplots_adjust(bottom=0.25, left=0.22, right=0.97)
+            pyplot.subplots_adjust(bottom=0.262, top=top_by_num_categ[num_categ], left=left_by_num_categ[num_categ], right=right_by_num_categ[num_categ])
 
         # save image
-        pyplot.savefig(image_dir_save, dpi=75)
+        pyplot.savefig(image_dir_save, dpi=dpi)
         pyplot.clf()
+        pyplot.close('all')
 
         # save dir image for mosaic
         image_open_list.append(image_dir_save)
 
-    for lag in globals_vars.lags:
+    # -------------------------------------------------------------------------
+    # main
+
+    for lag in env.config_run.settings['lags']:
 
         # create dir for lag
-        if not os.path.isdir(os.path.join(graphics_dir_ca, _('lag_{0}').format(lag))):
-            os.makedirs(os.path.join(graphics_dir_ca, _('lag_{0}').format(lag)))
+        output.make_dirs(os.path.join(graphics_dir_ca, _('lag_{0}').format(lag)))
 
         image_open_list = list()
 
         # all months in year 1->12
         for month in range(1, 13):
 
-            if station.state_of_data in [1, 3]:
-                contingency_table,\
-                contingency_table_percent,\
-                contingency_table_percent_print,\
-                thresholds_var_D_var_I = get_contingency_table(station, lag, month)
+            if env.globals_vars.STATE_OF_DATA in [1, 3]:
 
-                title_period = _("trim {0} ({1})").format(month, globals_vars.get_trimester_in_text(month - 1))
+                specific_contingency_table = station.contingency_tables[lag][month-1]
+
+                title_period = _("trim {0} ({1})").format(month, format_out.trimester_in_initials(month-1))
                 filename_period = _("trim_{0}").format(month)
                 create_chart()
 
-            if station.state_of_data in [2, 4]:
+            if env.globals_vars.STATE_OF_DATA in [2, 4]:
 
-                for day in station.range_analysis_interval:
+                for idx_day, day in enumerate(get_range_analysis_interval()):
 
-                    contingency_table,\
-                    contingency_table_percent,\
-                    contingency_table_percent_print,\
-                    thresholds_var_D_var_I = get_contingency_table(station, lag, month, day)
+                    specific_contingency_table = station.contingency_tables[lag][month-1][idx_day]
 
-                    title_period = globals_vars.get_month_in_text(month - 1) + " " + str(day)
-                    filename_period = globals_vars.get_month_in_text(month - 1) + "_" + str(day)
+                    title_period = format_out.month_in_initials(month-1) + " " + str(day)
+                    filename_period = format_out.month_in_initials(month-1) + "_" + str(day)
 
                     create_chart()
 
-        ## create mosaic
-        # definition height and width of individual image
-        image_height = 450
-        image_width = 600
+        # -------------------------------------------------------------------------
+        # mosaic
+
         mosaic_dir_save \
             = os.path.join(graphics_dir_ca, _('mosaic_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
-                          .format(lag, globals_vars.translate_analysis_interval, station.code, station.name,
+                          .format(lag, env.config_run.settings['analysis_interval_i18n'], station.code, station.name,
                                   station.var_D.type_series, station.var_I.type_series, station.process_period['start'],
                                   station.process_period['end']))
 
-        if station.state_of_data in [1, 3]:
+        if env.globals_vars.STATE_OF_DATA in [1, 3]:
             # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
-            mosaic_plots = pyplot.figure(figsize=((image_width * 3) / 100, (image_height * 4) / 100))
-            mosaic_plots.savefig(mosaic_dir_save, dpi=100)
+            dpi = 100.0
+            mosaic_plots = pyplot.figure(figsize=((image_width * 3) / dpi, (image_height * 4) / dpi))
+            mosaic_plots.savefig(mosaic_dir_save, dpi=dpi)
             mosaic = img_open(mosaic_dir_save)
             i = 0
             # add image in mosaic based on trimester, vertical(v) and horizontal(h)
@@ -199,16 +393,17 @@ def climate_graphs(station):
                     mosaic.paste(img_open(image_open_list[i]), (image_width * h, image_height * v))
                     i += 1
 
-        if station.state_of_data in [2, 4]:
+        if env.globals_vars.STATE_OF_DATA in [2, 4]:
             # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
-            mosaic_plots = pyplot.figure(figsize=((image_width * len(station.range_analysis_interval))
-                                             / 100, (image_height * 12) / 100))
-            mosaic_plots.savefig(mosaic_dir_save, dpi=100)
+            dpi = 100.0
+            mosaic_plots = pyplot.figure(figsize=((image_width * len(get_range_analysis_interval())) / dpi,
+                                                  (image_height * 12) / dpi))
+            mosaic_plots.savefig(mosaic_dir_save, dpi=dpi)
             mosaic = img_open(mosaic_dir_save)
             i = 0
             # add image in mosaic based on months(m) and days(d)
             for m in range(12):
-                for d in range(len(station.range_analysis_interval)):
+                for d in range(len(get_range_analysis_interval())):
                     mosaic.paste(img_open(image_open_list[i]), (image_width * d, image_height * m))
                     i += 1
 

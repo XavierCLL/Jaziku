@@ -19,30 +19,45 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from jaziku.utils import globals_vars
+from jaziku import env
+
+# this ncl code for generic regions
 
 def code(map_properties):
 
+#  if particular_properties_probabilistic_map not defined in {region}.py, these are the default values:
+    if map_properties.particular_properties_probabilistic_map == {}:
+        map_properties.particular_properties_probabilistic_map = {"tiMainFontHeightF": 0.023, # main font height
+                                                    "lbTitleFontHeightF": 0.015, # colorbar title font height
+                                                    "space_label_title": 25, # number of space between label title in colorbar
+                                                    "lbLabelFontHeightF": 0.0095}  # colorbar mark font height
+
     map_properties_vars = {
         'ncarg_root': os.environ.get('NCARG_ROOT'),
-        'jaziku_ncl_plugins': os.path.abspath(os.path.join(globals_vars.JAZIKU_DIR,'data','maps','ncl_plugins')),
+        'jaziku_ncl_plugins': os.path.abspath(os.path.join(env.globals_vars.JAZIKU_DIR,'data','maps','ncl_plugins')),
         'shape': map_properties.shape,
         'interpolation_file': os.path.abspath(map_properties.base_path_file) + '.tsv',
         'stations_file': os.path.abspath(map_properties.base_path_file) + '_stations.tsv',
-        'marks_stations': globals_vars.config_run['marks_stations'],
+        'marks_stations': env.config_run.settings['marks_stations'],
         'label_marks_stations': _('Stations'),
         'save_map': os.path.abspath(map_properties.base_path_file),
         'title': map_properties.title,
-        'below': _("Below"),
-        'normal': _("Normal"),
-        'above': _("Above"),
+        'label_title': _("Below") + " " * map_properties.particular_properties_probabilistic_map["space_label_title"] +\
+                       _("Normal") + " " * map_properties.particular_properties_probabilistic_map["space_label_title"] +\
+                       _("Above"),
+        'tiMainFontHeightF': map_properties.particular_properties_probabilistic_map["tiMainFontHeightF"],
+        'lbTitleFontHeightF': map_properties.particular_properties_probabilistic_map["lbTitleFontHeightF"],
+        'lbLabelFontHeightF': map_properties.particular_properties_probabilistic_map["lbLabelFontHeightF"],
         'color_bar_title_on': map_properties.color_bar_title_on,
         'color_bar_levels': map_properties.color_bar_levels,
         'color_bar_step': map_properties.color_bar_step,
         'colormap': map_properties.colormap,
+        'lat_size': map_properties.lat_size,
+        'lon_size': map_properties.lon_size,
         'name': '''"{0}"'''.format(map_properties.name),
         'subtitle': map_properties.subtitle,
-        'units': map_properties.units
+        'units': map_properties.units,
+        'enable_mask': map_properties.shape_mask
     }
 
     return '''
@@ -144,7 +159,7 @@ begin
   lat1 = f->y
 
   lnres                  = True
-  lnres@gsLineThicknessF = 0.3
+  lnres@gsLineThicknessF = 1
   lnres@gsLineColor      = (/"(/0.00, 0.00, 0.00/)"/)
 
   do i=0,numFeatures-1
@@ -173,7 +188,7 @@ begin
 
   minlat = min(lat)
   maxlat = max(lat)
-  minlon = min(lon)
+  minlon = min(lon)-0.0001
   maxlon = max(lon)+0.0001
 
   f = addfile("{shape}","r")
@@ -190,17 +205,17 @@ begin
   gres@mpPerimOn     = True
   gres@mpOutlineDrawOrder = "PostDraw"
   gres@mpFillOn               = True
-  gres@mpOceanFillColor       = 0
+  gres@mpOceanFillColor       = -1
   gres@mpLandFillColor        = -1
-  gres@mpInlandWaterFillColor = 0
-  gres@mpFillAreaSpecifiers   = (/"Venezuela","Brazil", "Peru","Ecuador","Panama"/)
-  gres@mpSpecifiedFillColors  = (/    0, 0, 0,  0, 0/)
+  gres@mpInlandWaterFillColor = -1
+  ;gres@mpFillAreaSpecifiers   = (/"Venezuela","Brazil", "Peru","Ecuador","Panama"/)
+  ;gres@mpSpecifiedFillColors  = (/    0, 0, 0,  0, 0/)
   gres@mpFillDrawOrder        = "Draw"
   gres@pmTickMarkDisplayMode = "Always"
   gres@mpProjection  = "Mercator"
   gres@mpLimitMode   = "LatLon"
-  gres@tmXBLabelFontHeightF        = 0.009
-  gres@tmYLLabelFontHeightF        = 0.009
+  gres@tmXBLabelFontHeightF        = 0.011
+  gres@tmYLLabelFontHeightF        = 0.011
 
   gres@mpMinLatF     = minlat
   gres@mpMaxLatF     = maxlat
@@ -213,12 +228,108 @@ begin
 end
 
 ;*****************************************
+;################## function shape mask
+;*****************************************
+
+undef("shape_mask")
+function shape_mask(lat,lon,idx)
+begin
+  MASK_INSIDE = False
+
+  minlat = min(lat)
+  maxlat = max(lat)
+  minlon = min(lon)
+  maxlon = max(lon)
+
+  nlat            = {lat_size}
+  nlon            = {lon_size}
+
+
+  data = new((/nlat,nlon/),float)
+  iter = 0
+  invlat = nlat-1
+
+  do ind_lon = 0, nlon - 1
+    do ind_lat = 0,nlat - 1
+      data(invlat-ind_lat,ind_lon) = idx(iter)
+      iter=iter+1
+    end do
+  end do
+
+  data@_FillValue = -9999
+
+;---Create dummy 1D lat/lon arrays
+  lat1d       = fspan(minlat,maxlat,nlat)
+  lon1d       = fspan(minlon,maxlon,nlon)
+  lat1d@units = "degrees_north"
+  lon1d@units = "degrees_east"
+
+;---Attach lat/lon coordinate array information.
+  data!0      = "lat"
+  data!1      = "lon"
+  data&lat    = lat1d
+  data&lon    = lon1d
+
+  f = addfile("{shape}","r")
+
+  mrb_lon = f->x
+  mrb_lat = f->y
+  nmrb    = dimsizes(mrb_lon)
+
+  min_mrb_lat = min(mrb_lat)
+  max_mrb_lat = max(mrb_lat)
+  min_mrb_lon = min(mrb_lon)
+  max_mrb_lon = max(mrb_lon)
+
+  if(MASK_INSIDE) then
+  ;---Start with data filled in.
+    data_mask = data
+  else
+  ;---Start with data all missing
+    data_mask = new(dimsizes(data),typeof(data),data@_FillValue)
+    copy_VarCoords(data,data_mask)
+  end if
+
+  ilt_mn = ind(min_mrb_lat.gt.lat1d)
+  ilt_mx = ind(max_mrb_lat.lt.lat1d)
+  iln_mn = ind(min_mrb_lon.gt.lon1d)
+  iln_mx = ind(max_mrb_lon.lt.lon1d)
+  ilt1   = ilt_mn(dimsizes(ilt_mn)-1)    ; Start of lat box
+  iln1   = iln_mn(dimsizes(iln_mn)-1)    ; Start of lon box
+  ilt2   = ilt_mx(0)                     ; End of lat box
+  iln2   = iln_mx(0)                     ; End of lon box
+
+  if(MASK_INSIDE) then
+  ;---Put missing values in the areas that we want masked.
+    do ilt=ilt1,ilt2
+      do iln=iln1,iln2
+        if(gc_inout(lat1d(ilt),lon1d(iln),mrb_lat,mrb_lon)) then
+          data_mask(ilt,iln) = data_mask@_FillValue
+        end if
+      end do
+    end do
+  else
+  ;---Put data back in the areas that we don't want masked.
+    do ilt=ilt1,ilt2
+      do iln=iln1,iln2
+        if(gc_inout(lat1d(ilt),lon1d(iln),mrb_lat,mrb_lon)) then
+          data_mask(ilt,iln) = data(ilt,iln)
+        end if
+      end do
+    end do
+  end if
+
+  return(data_mask)
+end
+
+;*****************************************
 ;################## MAIN
 ;*****************************************
 
 begin
 
   USE_RASTER = False
+  ENABLE_MASK = {enable_mask}
 
   wks_type = "png"
   ;wks_type@wkPaperSize = "A3"
@@ -278,26 +389,31 @@ begin
 
   res@lbBoxLinesOn                = False
   res@tiMainString                = {title}
-  res@tiMainFontHeightF           = 0.022
+  res@tiMainFontHeightF           = {tiMainFontHeightF}
   res@tiMainOffsetYF              = 0.03
   res@lbLabelAutoStride           = True
   res@lbPerimOn                   = False
   res@lbJustification             = "CenterCenter"
   res@lbOrientation               = "vertical"
-  res@lbLabelFontHeightF          = 0.011
+  res@lbLabelFontHeightF          = {lbLabelFontHeightF}
   res@lbTitleOn                   = {color_bar_title_on}
   res@lbTitlePosition             = "Left"
-  res@lbTitleString               = "{below}                                {normal}                                 {above}"
-  res@lbTitleFontHeightF          = 0.015
+  res@lbTitleString               = "{label_title}"
+  res@lbTitleFontHeightF          = {lbTitleFontHeightF}
   res@lbTitleDirection            = "Across"
   res@lbTitleAngleF               = 90
   res@lbLabelAutoStride           =   True
   ;res@cnLabelBarEndStyle          = "IncludeMinMaxLabels"
 
-  res@sfXArray                    = lon
-  res@sfYArray                    = lat
+  if(ENABLE_MASK) then
+    data_mask = shape_mask(lat, lon, idx)
+    contour = gsn_csm_contour(wks,data_mask,res)
+  else
+    res@sfXArray                    = lon
+    res@sfYArray                    = lat
+    contour = gsn_csm_contour(wks,idx,res)
+  end if
 
-  contour = gsn_csm_contour(wks,idx,res)
   overlay(map,contour)
   map = draw_outlines(wks, map, "{shape}")
 
@@ -309,26 +425,38 @@ begin
     lines_stations = asciiread(fname,-1,"string")
 
     delim = str_get_tab()
-    lat_stations = stringtofloat(str_get_field(lines_stations(1:),1,delim))
-    lon_stations = stringtofloat(str_get_field(lines_stations(1:),2,delim))
-    ;idx_stations = stringtofloat(str_get_field(lines_stations(1:),3,delim))
+    lat_of_stations = stringtofloat(str_get_field(lines_stations(1:),1,delim))
+    lon_of_stations = stringtofloat(str_get_field(lines_stations(1:),2,delim))
+    index_of_stations = stringtofloat(str_get_field(lines_stations(1:),3,delim))
+    index_positions_of_stations = str_get_field(lines_stations(1:),4,delim)
 
-    lat_stations@long_name = "latitude"
-    lat_stations!0="lat"
-    lat_stations&lat=lat_stations
-    nlat_stations=dimsizes(lat_stations)
+    number_of_stations = dimsizes(index_of_stations)
 
-    lon_stations@long_name = "longitude"
-    lon_stations!0="lon"
-    lon_stations&lon=lon_stations
-    nlon_stations=dimsizes(lon_stations)
+    lat_of_stations@long_name = "latitude"
+    lat_of_stations!0="lat"
+    lat_of_stations&lat=lat_of_stations
+    nlat_of_stations=dimsizes(lat_of_stations)
+
+    lon_of_stations@long_name = "longitude"
+    lon_of_stations!0="lon"
+    lon_of_stations&lon=lon_of_stations
+    nlon_of_stations=dimsizes(lon_of_stations)
+
+    ;clean stations points with 'nan' values
+    do i=0,number_of_stations-1
+        if (index_positions_of_stations(i) .eq. "nan") then
+            ;gsn_polymarker(wks,map,lon_of_stations(i),lat_of_stations(i),polyres)
+            lat_of_stations(i) = -999
+            lon_of_stations(i) = -999
+        end if
+    end do
 
     polyres               = True          ; poly marker mods desired
     polyres@gsMarkerIndex = 4            ; choose circle as polymarker
-    polyres@gsMarkerSizeF = 0.0028          ; select size to avoid streaking
+    polyres@gsMarkerSizeF = 0.0035          ; select size to avoid streaking
     polyres@gsMarkerColor = (/"(/0.00, 0.00, 0.00/)"/)   ; choose color
-    polyres@gsMarkerThicknessF = 0.7
-    dum1 = gsn_add_polymarker(wks,contour,lon_stations,lat_stations,polyres)  ; draw polymarkers
+    polyres@gsMarkerThicknessF = 0.8
+    dum1 = gsn_add_polymarker(wks,contour,lon_of_stations,lat_of_stations,polyres)  ; draw polymarkers
 
     ;*****************************************
     ; plotting legend of 'stations'
@@ -339,7 +467,7 @@ begin
     lgres@lgItemType = "Markers"
     lgres@lgMarkerIndexes = 4            ; choose circle as polymarker
     lgres@lgMonoMarkerIndex = False
-    lgres@lgMarkerSizeF = 0.003          ; select size to avoid streaking
+    lgres@lgMarkerSizeF = 0.0035          ; select size to avoid streaking
     lgres@lgMarkerThicknessF = 0.8
     lgres@lgLabelFontHeightF = .015            ; set the legend label font thickness
     lgres@vpWidthF           = 0.075           ; width of legend (NDC)

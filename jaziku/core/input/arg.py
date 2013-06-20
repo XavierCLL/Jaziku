@@ -18,17 +18,17 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-
 import argparse  # http://docs.python.org/py3k/library/argparse.html
 
-from jaziku.utils import globals_vars, console
+from jaziku import env
+from jaziku.utils import console
 
 #==============================================================================
 # PARSER AND CHECK ARGUMENTS
 
 # Create parser arguments
 arguments = argparse.ArgumentParser(
-                 prog=globals_vars.PROG_NAME,
+                 prog=env.globals_vars.PROG_NAME,
                  description=_("Jaziku is statistical inference software for the\nteleconnections analysis"),
                  epilog=console.msg_footer(text=True),
                  formatter_class=argparse.RawTextHelpFormatter)
@@ -39,4 +39,8 @@ arguments.add_argument('runfile', type=str,
 
 # enable/disable force all ask to default answer for continue
 arguments.add_argument('-f','--force', action='store_true', default=False,
-    help=_('force all ask to default answer for continue'), required=False)
+                       help=_('force all ask to default answer for continue'), required=False)
+
+# set path for save the results
+arguments.add_argument('-o','--output', type=str,  default=False,
+                       help=_('set absolute path where to save all results'), required=False)

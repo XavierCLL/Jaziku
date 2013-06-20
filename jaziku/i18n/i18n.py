@@ -58,8 +58,8 @@ languages = [name for name in os.listdir(LOCALE_DIR) if os.path.isdir(os.path.jo
 
 # init languages
 
-locale_language = locale.getdefaultlocale()[0][0:2]
 try:
+    locale_language = locale.getdefaultlocale()[0][0:2]
     lang = gettext.translation(APP_NAME, LOCALE_DIR,
         languages=[locale_language],
         codeset="utf-8")
@@ -83,6 +83,7 @@ def set_language(language):
     """
     #_ = language.ugettext
 
+    from jaziku.env import config_run
     from jaziku.utils import console
 
     if language and language != "autodetect":
@@ -125,5 +126,5 @@ def set_language(language):
             os.environ["LANG"] = "en"
             lang.install()
 
-    return settings_language
+    config_run.settings['language'] = settings_language
 

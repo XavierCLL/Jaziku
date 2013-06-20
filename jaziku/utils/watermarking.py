@@ -21,14 +21,14 @@
 import os
 from subprocess import call
 
-from jaziku.utils import console, globals_vars
+from jaziku.env import globals_vars
+from jaziku.utils import console
 
 
-def logo(image, gravity='southeast', dissolve=65):
+def logo(image, gravity='southeast', dissolve=100):
     """
     stamp logo of Jaziku
     """
-
 
     if not console.which('composite'):
         return 1
@@ -37,4 +37,4 @@ def logo(image, gravity='southeast', dissolve=65):
 
     image_dir = os.path.abspath(image)
 
-    call("composite -gravity {0} -dissolve {1} '{2}' '{3}' '{4}'".format(gravity, dissolve, watermarking_logo, image_dir, image_dir), shell=True)
+    call("composite -gravity {0} -dissolve {1} '{2}' '{3}' '{3}'".format(gravity, dissolve, watermarking_logo, image_dir), shell=True)
