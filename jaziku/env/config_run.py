@@ -129,10 +129,10 @@ list_of_all_settings = [
     # general options:
     #   input: all, default (=all)
     # 3 categories:
-    #   input:  'below', 'normal', 'above' (two combined words, in different row)
+    #   input:  'below', 'normal', 'above' (two combined words, in different column)
     #   access: ['below','normal','above']
     # 7 categories:
-    #   input:  'strong below', 'moderate below', 'weak below', 'normal', 'weak above', 'moderate above', 'strong above' (two combined words, in different row)
+    #   input:  'strong below', 'moderate below', 'weak below', 'normal', 'weak above', 'moderate above', 'strong above' (two combined words, in different column)
     #   access: ['below3','below2','below1','normal','above1','above2', 'above3']
     'relevant_climate_categories_var_I',
 

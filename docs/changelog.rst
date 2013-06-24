@@ -4,6 +4,16 @@
 Changelog
 =========
 
+0.6.1 (**2013-06-XX**)
+----------------------
+
+fixes
++++++
+
+- Fixed different names for deterministic and probabilistic maps
+- Fixed when checking the lags options set from runfile
+
+
 0.6.0 (**2013-06-19**)
 ----------------------
 

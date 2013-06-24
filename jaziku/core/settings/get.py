@@ -115,7 +115,7 @@ def configuration_run():
             settings["process_period"] = colored.green("{0}-{1}".format(args_period_start, args_period_end))
         except:
             console.msg_error_configuration('process_period',
-                _("The period must be: start_year and end_year (in different row)\n"
+                _("The period must be: start_year and end_year (in different column)\n"
                   "or 'maximum' for take the process period maximum possible by station."))
 
     # ------------------------
@@ -134,15 +134,22 @@ def configuration_run():
         settings["lags"] = ', '.join(map(str, env.config_run.settings['lags']))
     else:
         try:
-            if isinstance(env.config_run.settings['lags'], (float, int)):
-                env.config_run.settings['lags'] = [int(env.config_run.settings['lags'])]
+            if not isinstance(env.config_run.settings['lags'], list):
+                lags_list = [env.config_run.settings['lags']]
             else:
-                env.config_run.settings['lags'] = [int(float(lag)) for lag in env.config_run.settings['lags']]
+                lags_list = env.config_run.settings['lags']
+            for lag in lags_list:
+                if ',' in str(lag) or '.' in str(lag):
+                    if float(lag) != int(lag):
+                        raise
+
+            env.config_run.settings['lags'] = [int(float(lag)) for lag in lags_list]
+
             for lag in env.config_run.settings['lags']:
                 if lag not in [0, 1, 2]:
                     raise
         except:
-            console.msg_error_configuration('lags', _("The lags may be: 0, 1 and/or 2 (in different row), 'all' or 'default'"))
+            console.msg_error_configuration('lags', _("The lags may be: 0, 1 and/or 2 (in different column), 'all' or 'default'"))
         settings["lags"] = colored.green(', '.join(map(str, env.config_run.settings['lags'])))
 
     # ------------------------
@@ -336,7 +343,7 @@ def configuration_run():
                     env.config_run.settings['maps'][map_to_run] = True
             except:
                 console.msg_error_configuration('maps',_("the maps options are: 'climate', 'forecast', "
-                                                         "'correlation' (in different row), or 'all'."))
+                                                         "'correlation' (in different column), or 'all'."))
 
         settings["maps"] = colored.green(_("enabled")) + ' (' + \
                            (', '.join(map(str, [m for m in env.config_run.settings['maps'] if env.config_run.settings['maps'][m]]))) + \
