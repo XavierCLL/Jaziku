@@ -278,7 +278,7 @@ begin
 
   res@lbBoxLinesOn                = False
   res@tiMainString                = {title}
-  res@tiMainFontHeightF           = 0.022
+  res@tiMainFontHeightF           = 0.023
   res@tiMainOffsetYF              = 0.03
   res@lbLabelAutoStride           = True
   res@lbPerimOn                   = False
@@ -340,7 +340,7 @@ begin
     polyres@gsMarkerSizeF = 0.0028          ; select size to avoid streaking
     polyres@gsMarkerColor = (/"(/0.00, 0.00, 0.00/)"/)   ; choose color
     polyres@gsMarkerThicknessF = 0.7
-    dum1 = gsn_add_polymarker(wks,contour,lon_stations,lat_stations,polyres)  ; draw polymarkers
+    dum1 = gsn_add_polymarker(wks,contour,lon_of_stations,lat_of_stations,polyres)  ; draw polymarkers
 
     ;*****************************************
     ; plotting legend of 'stations'

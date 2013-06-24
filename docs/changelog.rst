@@ -12,6 +12,8 @@ fixes
 
 - Fixed different names for deterministic and probabilistic maps
 - Fixed when checking the lags options set from runfile
+- Delete variable to reset the forecast date for test
+- Fixed and adjust the internal Colombia shape for maps
 
 
 0.6.0 (**2013-06-19**)
