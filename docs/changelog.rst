@@ -14,6 +14,7 @@ fixes
 - Fixed when checking the lags options set from runfile
 - Delete variable to reset the forecast date for test
 - Fixed and adjust the internal Colombia shape for maps
+- Fixed internal thresholds for PPT in 3 categories
 
 
 0.6.0 (**2013-06-19**)

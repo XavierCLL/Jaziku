@@ -120,6 +120,7 @@ THRESHOLDS_3_CATEGORIES = {
     ## thresholds by default
     'default':      {'daily': ['p33','p66'], 'monthly': ['p33','p66'], 'normal_inclusive': True},
     ## thresholds by type of internal series  (if was not defined here, will use thresholds by default)
+    'PPT':          {'daily': ['90%','110%'], 'monthly': ['90%','110%'], 'normal_inclusive': True},
     'TMIN':         {'daily': [-1,1], 'monthly': [-1,1], 'normal_inclusive': True},
     'TMAX':         {'daily': [-1,1], 'monthly': [-1,1], 'normal_inclusive': True},
     'TEMP':         {'daily': [-1,1], 'monthly': [-1,1], 'normal_inclusive': True},
