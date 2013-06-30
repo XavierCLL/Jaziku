@@ -39,8 +39,8 @@ def configuration_run():
 
     if env.config_run.settings['class_category_analysis'] not in [3,7]:
         console.msg_error_configuration('class_category_analysis',
-            _("The 'class_category_analysis' {0} not is valid,\n"
-              "this should be '3' or '7'.").format(env.config_run.settings['class_category_analysis']))
+            _("The 'class_category_analysis' not is valid,\n"
+              "this should be 3 or 7.").format(env.config_run.settings['class_category_analysis']))
 
     def categories_labels_var_I_dictionary(func):
         def wrapper_func(*args):
@@ -121,8 +121,8 @@ def configuration_run():
         if len(env.config_run.settings['relevant_climate_categories_var_I']) not in [1,2]:
             console.msg_error_configuration('relevant_climate_categories_var_I',
                 _("The 'relevant_climate_categories_var_I' should be\n"
-                  "'all' one or two valid labels for {0} categories\n"
-                  "(in different row), such as:\n\n{1}")
+                  "'all' or one or two valid labels for {0} categories\n"
+                  "(in different column), such as:\n\n{1}")
                 .format(env.config_run.settings['class_category_analysis'], labels.values()))
         # check if are valid labels
         for _label in env.config_run.settings['relevant_climate_categories_var_I']:
@@ -147,13 +147,13 @@ def configuration_run():
             if env.config_run.settings['mode_calculation_series_D'] not in env.var_D.MODE_CALCULATION_SERIES[env.var_D.TYPE_SERIES]:
                 console.msg_error_configuration('mode_calculation_series_D',
                     _("For {0} the 'mode_calculation_series_D' set as '{1}', but\n"
-                      "this series not accept this mode to calculate the series.\n"
-                      "For this series the options are: {2}")
+                      "this type of series not accept this calculation mode.\n"
+                      "For {0} the options are: {2}")
                         .format(env.var_D.TYPE_SERIES, env.config_run.settings['mode_calculation_series_D'],
                                 env.var_D.MODE_CALCULATION_SERIES[env.var_D.TYPE_SERIES]))
         env.globals_vars.input_settings["mode_calculation_series_D"] = colored.green(env.config_run.settings['mode_calculation_series_D'])
     else:
-        console.msg_error_configuration('mode_calculation_series_D', _("The mode_calculation_series_D is wrong, the options are:\n"
+        console.msg_error_configuration('mode_calculation_series_D', _("The 'mode_calculation_series_D' is invalid, the options are:\n"
                                                                        "default, accumulate or mean"))
 
     mode_calculation_series_i18n = [_('accumulate'), _('mean')]
@@ -216,8 +216,8 @@ def configuration_run():
     if not env.config_run.settings["thresholds_var_D"] == "default" and \
        len(env.config_run.settings["thresholds_var_D"]) != env.config_run.settings['class_category_analysis']-1:
             console.msg_error_configuration('thresholds_var_D',
-                _("The thresholds for {0} categories must have {1} thresholds,\n"
-                  "or 'default' for use thresholds by default defined for this variable.")
+                _("The thresholds for {0} categories must have {1} values,\n"
+                  "or use 'default' for thresholds by default defined for this variable.")
                 .format(env.config_run.settings['class_category_analysis'], env.config_run.settings['class_category_analysis']-1))
 
     # ------------------------
@@ -454,7 +454,7 @@ def configuration_run():
                 console.msg_error_configuration('forecast_date',
                     _("The 'analysis_interval' is {0} but the 'forecast_date'\n"
                       "only have the month, please define the month and start day\n"
-                      "for {0} (in different row) for the forecast date.")
+                      "for {0} (in different column) for the forecast date.")
                     .format(env.config_run.settings['analysis_interval']))
 
             env.config_run.settings['forecast_date'] = {'month':forecast_month}

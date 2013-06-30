@@ -318,7 +318,7 @@ class Variable(object):
             kurtosis and coef_variation.
         """
 
-        # size data
+        # size valid data (without nulls)
         self.size_data = len(self.data_filtered_in_process_period)
         # maximum
         self.maximum = array.maximum(self.data_filtered_in_process_period)
