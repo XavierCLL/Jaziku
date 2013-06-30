@@ -7,6 +7,13 @@ Changelog
 0.6.1 (**2013-06-XX**)
 ----------------------
 
+news
+++++
+
+- New script and executable (ideamFormat2jazikuFormat) that convert
+  SISDIM format of IDEAM to Jaziku inputs format ready for to be processed
+  with it.
+
 fixes
 +++++
 

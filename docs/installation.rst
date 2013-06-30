@@ -12,7 +12,7 @@ for run Jaziku.
 Libraries requires
 ------------------
 
-Is recommended install these libraries from repositories of you Linux
+Is recommended install these libraries from repositories of your Linux
 distribution.
 
 - python (version 2.6 or 2.7)

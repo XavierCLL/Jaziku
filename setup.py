@@ -40,7 +40,7 @@ setup(
     url="http://hg.ideam.gov.co:8000/meteorologia/jaziku",
     platforms="platform-independent",
     install_requires=["scipy", "argparse", "python-dateutil", "matplotlib", "numpy", "PIL", "clint"],
-    scripts=["bin/jaziku"],
+    scripts=["bin/jaziku", "bin/ideamFormat2jazikuFormat"],
     packages=find_packages(),
     include_package_data=True,
 )
