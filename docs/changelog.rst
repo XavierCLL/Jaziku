@@ -13,6 +13,7 @@ news
 - New script and executable (ideamFormat2jazikuFormat) that convert
   SISDIM format of IDEAM to Jaziku inputs format ready for to be processed
   with it.
+- New two column "total data" and "lost data" in descriptive statistic table
 
 fixes
 +++++
