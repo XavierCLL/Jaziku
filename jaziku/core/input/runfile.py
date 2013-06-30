@@ -24,7 +24,7 @@ import csv
 from jaziku import env
 from jaziku.core.station import Station
 from jaziku.modules.maps.grid import Grid
-from jaziku.utils import  console, format_in
+from jaziku.utils import  console, input_format
 
 
 def read_runfile():
@@ -70,13 +70,13 @@ def read_runfile():
             if len(line) == 2:
                 # save value of this settings as simple item
                 try:
-                    env.config_run.settings[line[0]] = format_in.to_float(line[1])
+                    env.config_run.settings[line[0]] = input_format.to_float(line[1])
                 except:
                     env.config_run.settings[line[0]] = line[1]
             else: # >2
                 # save values of this settings as list
                 try:
-                    env.config_run.settings[line[0]] = [format_in.to_float(item) for item in line[1::]]
+                    env.config_run.settings[line[0]] = [input_format.to_float(item) for item in line[1::]]
                 except:
                     env.config_run.settings[line[0]] = [item for item in line[1::]]
 
@@ -175,12 +175,12 @@ def read_runfile():
                     .format(runfile.line_num, line_in_runfile[0]), False)
                 if len(line_in_runfile) == 2:
                     try:
-                        setattr(Grid.all_grids[-1], line_in_runfile[0], format_in.to_float(line_in_runfile[1]))
+                        setattr(Grid.all_grids[-1], line_in_runfile[0], input_format.to_float(line_in_runfile[1]))
                     except:
                         setattr(Grid.all_grids[-1], line_in_runfile[0], line_in_runfile[1])
                 if len(line_in_runfile) >= 3:
                     try:
-                        setattr(Grid.all_grids[-1], line_in_runfile[0], [format_in.to_float(item) for item in line_in_runfile[1::]])
+                        setattr(Grid.all_grids[-1], line_in_runfile[0], [input_format.to_float(item) for item in line_in_runfile[1::]])
                     except:
                         setattr(Grid.all_grids[-1], line_in_runfile[0], [item for item in line_in_runfile[1::]])
             else:
@@ -284,9 +284,9 @@ def read_stations(lines_of_stations):
 
             station.code = line_station[0]
             station.name = unicode(line_station[1], 'utf-8')
-            station.lat = format_in.to_float(line_station[2])
-            station.lon = format_in.to_float(line_station[3])
-            station.alt = format_in.to_float(line_station[4])
+            station.lat = input_format.to_float(line_station[2])
+            station.lon = input_format.to_float(line_station[3])
+            station.alt = input_format.to_float(line_station[4])
 
             station.var_D.type_series = env.var_D.TYPE_SERIES
             #station.file_D = open(line_station[5], 'rb')

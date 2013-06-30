@@ -32,7 +32,7 @@ from Image import open as img_open
 
 from jaziku import env
 from jaziku.core.analysis_interval import get_range_analysis_interval
-from jaziku.utils import  watermarking, format_out, output
+from jaziku.utils import  watermarking, output_format, output
 from jaziku.utils.matrix import transpose
 
 image_height = None
@@ -356,7 +356,7 @@ def climate_graphs(station):
 
                 specific_contingency_table = station.contingency_tables[lag][month-1]
 
-                title_period = _("trim {0} ({1})").format(month, format_out.trimester_in_initials(month-1))
+                title_period = _("trim {0} ({1})").format(month, output_format.trimester_in_initials(month-1))
                 filename_period = _("trim_{0}").format(month)
                 create_chart()
 
@@ -366,8 +366,8 @@ def climate_graphs(station):
 
                     specific_contingency_table = station.contingency_tables[lag][month-1][idx_day]
 
-                    title_period = format_out.month_in_initials(month-1) + " " + str(day)
-                    filename_period = format_out.month_in_initials(month-1) + "_" + str(day)
+                    title_period = output_format.month_in_initials(month-1) + " " + str(day)
+                    filename_period = output_format.month_in_initials(month-1) + "_" + str(day)
 
                     create_chart()
 

@@ -41,7 +41,7 @@ import csv
 from subprocess import call
 from clint.textui import colored
 
-from jaziku.utils import format_out, console
+from jaziku.utils import output_format, console
 from jaziku.utils.geographic import dms2dd
 from jaziku.utils.input_format_converters import runfile_skeleton
 
@@ -183,8 +183,8 @@ def main():
                         if (station['code'],station['name']) in stations_processed and stations_processed[(station['code'],station['name'])] is True:
                             print colored.yellow("But not write the same station into the runfile")
                         else:
-                            runfile_csv.writerow([station['code'], station['name'], format_out.number(station['lat']),
-                                              format_out.number(station['lon']), format_out.number(station['alt']), station['path']])
+                            runfile_csv.writerow([station['code'], station['name'], output_format.number(station['lat']),
+                                              output_format.number(station['lon']), output_format.number(station['alt']), station['path']])
 
                         # open to write station
                         station['file_to_write'] = csv.writer(open(os.path.join(dir_output_name, station['path']), 'w'), delimiter='\t')
