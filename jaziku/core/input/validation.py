@@ -19,7 +19,7 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 from jaziku import env
-from jaziku.utils import console, format_in
+from jaziku.utils import console, input_format
 
 
 #==============================================================================
@@ -113,7 +113,7 @@ def set_limits(variable):
                                     "or defined the particular limits in the runfile")
                 .format(variable.type_series, variable.type, env.var_[variable.type].FREQUENCY_DATA))
         else:
-            limit_below = format_in.to_float(input_limit_below)
+            limit_below = input_format.to_float(input_limit_below)
             if limit_below is None:
                 console.msg_error(_("The limit '{0}' for var {1} is not valid limit")
                 .format(input_limit_below, variable.type))
@@ -134,7 +134,7 @@ def set_limits(variable):
                                     "or defined the particular limits in the runfile")
                 .format(variable.type_series, variable.type, env.var_[variable.type].FREQUENCY_DATA))
         else:
-            limit_above = format_in.to_float(input_limit_above)
+            limit_above = input_format.to_float(input_limit_above)
             if limit_above is None:
                 console.msg_error(_("The limit '{0}' for var {1} is not valid limit")
                 .format(input_limit_above, variable.type))

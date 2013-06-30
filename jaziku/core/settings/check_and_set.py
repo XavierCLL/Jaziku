@@ -25,7 +25,7 @@ from jaziku import env
 from jaziku.core import analysis_interval
 from jaziku.modules.maps import maps
 from jaziku.modules.maps.grid import search_and_set_internal_grid, set_particular_grid
-from jaziku.utils import console, format_out, format_in, array
+from jaziku.utils import console, output_format, input_format, array
 
 # TODO: merge with get.py
 
@@ -35,7 +35,7 @@ def configuration_run():
     # ------------------------
     # class_category_analysis
 
-    env.config_run.settings['class_category_analysis'] = format_in.to_int(env.config_run.settings['class_category_analysis'])
+    env.config_run.settings['class_category_analysis'] = input_format.to_int(env.config_run.settings['class_category_analysis'])
 
     if env.config_run.settings['class_category_analysis'] not in [3,7]:
         console.msg_error_configuration('class_category_analysis',
@@ -91,7 +91,7 @@ def configuration_run():
 
     if env.config_run.settings['consistent_data'] is not False:
         try:
-            env.config_run.settings['consistent_data'] = format_in.to_float(env.config_run.settings['consistent_data'])
+            env.config_run.settings['consistent_data'] = input_format.to_float(env.config_run.settings['consistent_data'])
             if env.config_run.settings['consistent_data'] < 0 or \
                env.config_run.settings['consistent_data'] > 100 or\
                env.config_run.settings['consistent_data'] is True:
@@ -180,7 +180,7 @@ def configuration_run():
         env.config_run.settings['limits_var_D']['below'] = None
     else:
         try:
-            env.config_run.settings['limits_var_D']['below'] = format_in.to_float(env.config_run.settings['limits_var_D']['below'])
+            env.config_run.settings['limits_var_D']['below'] = input_format.to_float(env.config_run.settings['limits_var_D']['below'])
         except:
             console.msg_error_configuration('limits_var_D',
                 (_("Problem with particular range validation for "
@@ -201,7 +201,7 @@ def configuration_run():
         env.config_run.settings['limits_var_D']['above'] = None
     else:
         try:
-            env.config_run.settings['limits_var_D']['above'] = format_in.to_float(env.config_run.settings['limits_var_D']['above'])
+            env.config_run.settings['limits_var_D']['above'] = input_format.to_float(env.config_run.settings['limits_var_D']['above'])
         except:
             console.msg_error_configuration('limits_var_D',
                 (_("Problem with particular range validation for "
@@ -266,7 +266,7 @@ def configuration_run():
         env.config_run.settings['limits_var_I']['below'] = None
     else:
         try:
-            env.config_run.settings['limits_var_I']['below'] = format_in.to_float(env.config_run.settings['limits_var_I']['below'])
+            env.config_run.settings['limits_var_I']['below'] = input_format.to_float(env.config_run.settings['limits_var_I']['below'])
         except:
             console.msg_error_configuration('limits_var_I',
                 (_("Problem with particular range validation for "
@@ -286,7 +286,7 @@ def configuration_run():
         env.config_run.settings['limits_var_I']['above'] = None
     else:
         try:
-            env.config_run.settings['limits_var_I']['above'] = format_in.to_float(env.config_run.settings['limits_var_I']['above'])
+            env.config_run.settings['limits_var_I']['above'] = input_format.to_float(env.config_run.settings['limits_var_I']['above'])
         except:
             console.msg_error_configuration('limits_var_I',
                 (_("Problem with particular range validation for "
@@ -349,7 +349,7 @@ def configuration_run():
         for lag in [str(lag) for lag in env.globals_vars.ALL_LAGS]:
             try:
                 env.config_run.settings['forecast_var_I_lag_'+lag] \
-                    = [format_in.to_float(item) for item in env.config_run.settings['forecast_var_I_lag_'+lag]]
+                    = [input_format.to_float(item) for item in env.config_run.settings['forecast_var_I_lag_'+lag]]
                 if env.config_run.settings['class_category_analysis'] == 3:
                     # check if all values are valid (float or int)
                     if False in [isinstance(value, (float, int)) for value in array.clean(env.config_run.settings['forecast_var_I_lag_'+lag])]:
@@ -445,7 +445,7 @@ def configuration_run():
                             analysis_interval.get_range_analysis_interval()))
 
             env.config_run.settings['forecast_date']['text'] \
-                = "{0} {1}".format(format_out.month_in_initials(env.config_run.settings['forecast_date']['month'] - 1),
+                = "{0} {1}".format(output_format.month_in_initials(env.config_run.settings['forecast_date']['month'] - 1),
                                    env.config_run.settings['forecast_date']['day'])
 
         else:
@@ -461,7 +461,7 @@ def configuration_run():
 
             env.config_run.settings['forecast_date']['text'] = _("trim {0} ({1})")\
                 .format(env.config_run.settings['forecast_date']['month'],
-                        format_out.trimester_in_initials(env.config_run.settings['forecast_date']['month'] - 1))
+                        output_format.trimester_in_initials(env.config_run.settings['forecast_date']['month'] - 1))
 
         env.globals_vars.input_settings["forecast_date"] = colored.green(env.config_run.settings['forecast_date']['text'])
 
@@ -521,8 +521,8 @@ def grids_list():
         ## latitude
         if not grid.latitude == "internal":
             if isinstance(grid.latitude, list) and len(grid.latitude) == 2 and not False in [isinstance(x, (int, float)) for x in grid.latitude]:
-                grid.minlat = format_in.to_float(grid.latitude[0])
-                grid.maxlat = format_in.to_float(grid.latitude[1])
+                grid.minlat = input_format.to_float(grid.latitude[0])
+                grid.maxlat = input_format.to_float(grid.latitude[1])
             else:
                 console.msg_error_configuration("latitude",
                     _("The latitude values are wrong, these must be\n"
@@ -546,8 +546,8 @@ def grids_list():
         ## longitude
         if not grid.longitude == "internal":
             if isinstance(grid.longitude, list) and len(grid.longitude) == 2 and not False in [isinstance(x, (int, float)) for x in grid.longitude]:
-                grid.minlon = format_in.to_float(grid.longitude[0])
-                grid.maxlon = format_in.to_float(grid.longitude[1])
+                grid.minlon = input_format.to_float(grid.longitude[0])
+                grid.maxlon = input_format.to_float(grid.longitude[1])
             else:
                 console.msg_error_configuration("longitude",
                     _("The longitude values are wrong, these must be\n"
