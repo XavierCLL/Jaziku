@@ -28,7 +28,7 @@ from jaziku.core.analysis_interval import get_range_analysis_interval
 from jaziku.modules.maps import interpolation
 from jaziku.modules.maps.ncl import make_ncl_probabilistic_map, make_ncl_deterministic_map
 from jaziku.modules.maps.grid import Grid
-from jaziku.utils import console, watermarking, output_format, output, input_format
+from jaziku.utils import console, watermarking, output, input
 from jaziku.utils.text import slugify
 
 
@@ -125,19 +125,19 @@ def process(grid):
                 continue
 
             # get lat and lon from Map_Data
-            latitude = input_format.to_float(line[1])
-            longitude = input_format.to_float(line[2])
+            latitude = input.to_float(line[1])
+            longitude = input.to_float(line[2])
 
             # get index from Map_Data
             if grid.if_running["correlation"]:
-                index = input_format.to_float(line[3])  # get pearson value
+                index = input.to_float(line[3])  # get pearson value
                 index_position = None  # get index position
             if grid.if_running["climate"] or grid.if_running["forecast"]:
                 if env.config_run.settings['class_category_analysis'] == 3:
-                    index = input_format.to_float(line[8])  # get index value
+                    index = input.to_float(line[8])  # get index value
                     index_position = line[9]  # get index position
                 if env.config_run.settings['class_category_analysis'] == 7:
-                    index = input_format.to_float(line[12])  # get index value
+                    index = input.to_float(line[12])  # get index value
                     index_position = line[13]  # get index position
 
             if map_type == _("probabilistic"):
@@ -325,12 +325,12 @@ def process(grid):
 
                             if map_type == _("probabilistic"):
                                 base_file = _(u'Prob_Map_lag_{0}_{1}_{2}')\
-                                    .format(lag, output_format.trimester_in_initials(month - 1), label)
+                                    .format(lag, output.trimester_in_initials(month - 1), label)
                             if map_type == _("deterministic"):
                                 base_file = _(u'Deter_Map_lag_{0}_{1}_{2}')\
-                                    .format(lag, output_format.trimester_in_initials(month - 1), label)
+                                    .format(lag, output.trimester_in_initials(month - 1), label)
 
-                            grid.date = output_format.trimester_in_initials(month - 1)
+                            grid.date = output.trimester_in_initials(month - 1)
                             grid.lag = lag
 
                             if map_type == _("probabilistic"):
@@ -372,15 +372,15 @@ def process(grid):
                                 if map_type == _("probabilistic"):
                                     base_file = _(u'Prob_Map_lag_{0}_{1}_{2}')\
                                         .format(lag,
-                                                output_format.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day]),
+                                                output.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day]),
                                                 label)
                                 if map_type == _("deterministic"):
                                     base_file = _(u'Deter_Map_lag_{0}_{1}_{2}')\
                                         .format(lag,
-                                                output_format.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day]),
+                                                output.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day]),
                                                 label)
 
-                                grid.date = output_format.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day])
+                                grid.date = output.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day])
                                 grid.lag = lag
 
                                 if map_type == _("probabilistic"):
@@ -441,9 +441,9 @@ def process(grid):
                     # make dir with the name of grid
                     output.make_dirs(base_path)
 
-                    base_file = _(u'Map_correlation_lag_{0}_{1}').format(lag, output_format.trimester_in_initials(month - 1))
+                    base_file = _(u'Map_correlation_lag_{0}_{1}').format(lag, output.trimester_in_initials(month - 1))
 
-                    grid.date = output_format.trimester_in_initials(month - 1)
+                    grid.date = output.trimester_in_initials(month - 1)
                     grid.lag = lag
 
                     # file for interpolation
@@ -485,9 +485,9 @@ def process(grid):
                         output.make_dirs(base_path)
 
                         base_file = _(u'Map_correlation_lag_{0}_{1}')\
-                        .format(lag, output_format.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day]))
+                        .format(lag, output.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day]))
 
-                        grid.date = output_format.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day])
+                        grid.date = output.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day])
                         grid.lag = lag
 
                         # file for interpolation

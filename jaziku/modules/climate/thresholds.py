@@ -24,7 +24,7 @@ from dateutil.relativedelta import relativedelta
 
 from jaziku import env
 from jaziku.core.input import validation
-from jaziku.utils import console, input_format, array
+from jaziku.utils import console, input, array
 
 
 def percentiles(values, percentile_values):
@@ -234,7 +234,7 @@ def get_thresholds(station, variable, thresholds_input=None):
     @thresholds_to_dict_format
     def thresholds_with_percentiles(percentile_values):
 
-        percentile_values = [input_format.to_float(value) for value in percentile_values]
+        percentile_values = [input.to_float(value) for value in percentile_values]
 
         if False in [(0 <= value <= 100) for value in percentile_values]:
             console.msg_error(_("the thresholds of var {0} ({1}) were defined as "
@@ -254,7 +254,7 @@ def get_thresholds(station, variable, thresholds_input=None):
     @thresholds_to_dict_format
     def thresholds_with_std_deviation(std_dev_values):
 
-        std_dev_values = [input_format.to_float(value) for value in std_dev_values]
+        std_dev_values = [input.to_float(value) for value in std_dev_values]
 
         # check if all values of std deviation are float
         if False in [isinstance(value, float) for value in std_dev_values]:
@@ -296,7 +296,7 @@ def get_thresholds(station, variable, thresholds_input=None):
     @thresholds_to_dict_format
     def thresholds_with_percentage(percentage_values):
 
-        percentage_values = [input_format.to_float(value) for value in percentage_values]
+        percentage_values = [input.to_float(value) for value in percentage_values]
 
         # check if all values of percentage are float
         if False in [isinstance(value, float) for value in percentage_values]:

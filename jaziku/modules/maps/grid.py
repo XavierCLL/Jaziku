@@ -24,7 +24,7 @@ import math
 from  numpy import linspace
 
 from jaziku import env
-from jaziku.utils import  console, array, input_format
+from jaziku.utils import  console, array, input
 from jaziku.core.station import Station
 
 class Grid(object):
@@ -75,7 +75,7 @@ class Grid(object):
                 console.msg_error_configuration("grid_resolution",
                     _("The grid_resolution '{0}' is wrong, the options are:\n"
                     "'default' or valid number.").format(self.grid_resolution), stop_in_grid=self.num)
-            self.grid_resolution = input_format.to_float(self.grid_resolution)
+            self.grid_resolution = input.to_float(self.grid_resolution)
 
         env.globals_vars.input_settings["grid_resolution"].append(self.grid_resolution)
 

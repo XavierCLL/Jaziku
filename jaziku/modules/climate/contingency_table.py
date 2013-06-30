@@ -22,7 +22,7 @@ from numpy import matrix
 
 from jaziku import env
 from jaziku.core.analysis_interval import get_range_analysis_interval
-from jaziku.utils import output_format
+from jaziku.utils import output
 from jaziku.utils import console
 from jaziku.modules.climate import lags
 from jaziku.modules.climate.thresholds import get_thresholds
@@ -367,19 +367,19 @@ def get_specific_contingency_table(station, lag, month, day=None):
     if env.config_run.settings['class_category_analysis'] == 3:
         for row in contingency_table_in_percentage:
             contingency_table_in_percentage_formatted.append(
-                [output_format.number(row[0], 1),
-                output_format.number(row[1], 1),
-                output_format.number(row[2], 1)])
+                [output.number(row[0], 1),
+                output.number(row[1], 1),
+                output.number(row[2], 1)])
     if env.config_run.settings['class_category_analysis'] == 7:
         for row in contingency_table_in_percentage:
             contingency_table_in_percentage_formatted.append(
-                [output_format.number(row[0], 1),
-                output_format.number(row[1], 1),
-                output_format.number(row[2], 1),
-                output_format.number(row[3], 1),
-                output_format.number(row[4], 1),
-                output_format.number(row[5], 1),
-                output_format.number(row[6], 1)])
+                [output.number(row[0], 1),
+                output.number(row[1], 1),
+                output.number(row[2], 1),
+                output.number(row[3], 1),
+                output.number(row[4], 1),
+                output.number(row[5], 1),
+                output.number(row[6], 1)])
 
     # -------------------------------------------------------------------------
     # save and return

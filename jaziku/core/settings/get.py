@@ -22,7 +22,7 @@ import os
 from clint.textui import colored
 
 from jaziku import env
-from jaziku.utils import console, input_format
+from jaziku.utils import console, input
 
 
 def configuration_run():
@@ -98,7 +98,7 @@ def configuration_run():
 
     # ------------------------
     # class_category_analysis
-    env.config_run.settings['class_category_analysis'] = input_format.to_int(env.config_run.settings['class_category_analysis'])
+    env.config_run.settings['class_category_analysis'] = input.to_int(env.config_run.settings['class_category_analysis'])
     settings["class_category_analysis"] = colored.green(env.config_run.settings['class_category_analysis'])
 
     # ------------------------

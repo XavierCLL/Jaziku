@@ -39,7 +39,7 @@ from jaziku.core.analysis_interval import get_values_in_range_analysis_interval,
 from jaziku.modules.climate import lags
 from jaziku.modules.climate.contingency_table import get_label_of_var_I_category
 from jaziku.modules.climate.lags import  calculate_lags
-from jaziku.utils import  console, output_format, watermarking, array, output
+from jaziku.utils import  console, output, watermarking, array, output
 
 
 def main(stations_list):
@@ -99,22 +99,22 @@ def main(stations_list):
         eda_var_D = [
             station.code,
             station.name,
-            output_format.number(station.lat, 4),
-            output_format.number(station.lon, 4),
-            output_format.number(station.alt, 4),
+            output.number(station.lat, 4),
+            output.number(station.lon, 4),
+            output.number(station.alt, 4),
             '{0}-{1}'.format(station.process_period['start'], station.process_period['end']),
             len(station.var_D.data_in_process_period),
             station.var_D.size_data,
             station.var_D.nulls_in_process_period,
-            output_format.number(station.var_D.maximum, 4),
-            output_format.number(station.var_D.minimum, 4),
-            output_format.number(station.var_D.average, 4),
-            output_format.number(station.var_D.median, 4),
-            output_format.number(station.var_D.std_dev, 4),
-            output_format.number(station.var_D.skewness, 4),
-            output_format.number(station.var_D.variance, 4),
-            output_format.number(station.var_D.kurtosis, 4),
-            output_format.number(station.var_D.coef_variation, 4)
+            output.number(station.var_D.maximum, 4),
+            output.number(station.var_D.minimum, 4),
+            output.number(station.var_D.average, 4),
+            output.number(station.var_D.median, 4),
+            output.number(station.var_D.std_dev, 4),
+            output.number(station.var_D.skewness, 4),
+            output.number(station.var_D.variance, 4),
+            output.number(station.var_D.kurtosis, 4),
+            output.number(station.var_D.coef_variation, 4)
         ]
 
         csv_file_D.writerow(eda_var_D)
@@ -123,22 +123,22 @@ def main(stations_list):
         eda_var_I = [
             station.code,
             station.name,
-            output_format.number(station.lat, 4),
-            output_format.number(station.lon, 4),
-            output_format.number(station.alt, 4),
+            output.number(station.lat, 4),
+            output.number(station.lon, 4),
+            output.number(station.alt, 4),
             '{0}-{1}'.format(station.process_period['start'], station.process_period['end']),
             len(station.var_I.data_in_process_period),
             station.var_I.size_data,
             station.var_I.nulls_in_process_period,
-            output_format.number(station.var_I.maximum, 4),
-            output_format.number(station.var_I.minimum, 4),
-            output_format.number(station.var_I.average, 4),
-            output_format.number(station.var_I.median, 4),
-            output_format.number(station.var_I.std_dev, 4),
-            output_format.number(station.var_I.skewness, 4),
-            output_format.number(station.var_I.variance, 4),
-            output_format.number(station.var_I.kurtosis, 4),
-            output_format.number(station.var_I.coef_variation, 4)
+            output.number(station.var_I.maximum, 4),
+            output.number(station.var_I.minimum, 4),
+            output.number(station.var_I.average, 4),
+            output.number(station.var_I.median, 4),
+            output.number(station.var_I.std_dev, 4),
+            output.number(station.var_I.skewness, 4),
+            output.number(station.var_I.variance, 4),
+            output.number(station.var_I.kurtosis, 4),
+            output.number(station.var_I.coef_variation, 4)
         ]
 
         csv_file_I.writerow(eda_var_I)
@@ -578,10 +578,10 @@ def climatology(stations_list):
     csv_climatology_table = csv.writer(open_file_climatology_table, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
     # print header
-    header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), output_format.month_in_initials(0), output_format.month_in_initials(1),
-              output_format.month_in_initials(2), output_format.month_in_initials(3), output_format.month_in_initials(4), output_format.month_in_initials(5),
-              output_format.month_in_initials(6), output_format.month_in_initials(7), output_format.month_in_initials(8), output_format.month_in_initials(9),
-              output_format.month_in_initials(10), output_format.month_in_initials(11)]
+    header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), output.month_in_initials(0), output.month_in_initials(1),
+              output.month_in_initials(2), output.month_in_initials(3), output.month_in_initials(4), output.month_in_initials(5),
+              output.month_in_initials(6), output.month_in_initials(7), output.month_in_initials(8), output.month_in_initials(9),
+              output.month_in_initials(10), output.month_in_initials(11)]
 
     csv_climatology_table.writerow(header)
 
@@ -627,7 +627,7 @@ def climatology(stations_list):
                 y_max.append(array.mean(years_values_max) - y_mean[-1])
                 y_min.append(y_mean[-1] - array.mean(years_values_min))
 
-        csv_climatology_table.writerow(line + [output_format.number(i) for i in y_mean])
+        csv_climatology_table.writerow(line + [output.number(i) for i in y_mean])
 
         if not env.config_run.settings['graphics']:
             continue
@@ -640,7 +640,7 @@ def climatology(stations_list):
         output.make_dirs(station_climatology_path)
 
         x = range(1, 13)
-        x_labels = [output_format.month_in_initials(i) for i in range(12)]
+        x_labels = [output.month_in_initials(i) for i in range(12)]
 
         # do that matplotlib plot zeros in extreme values
         for value in y_mean:
@@ -771,13 +771,13 @@ def climatology(stations_list):
         csv_table.writerow(header)
 
         # max values
-        csv_table.writerow( [_('max')] + [ output_format.number(x + y_max[i]) for i,x in enumerate(y_mean) ] )
+        csv_table.writerow( [_('max')] + [ output.number(x + y_max[i]) for i,x in enumerate(y_mean) ] )
 
         # mean values
-        csv_table.writerow( [_('mean')] + [ output_format.number(x) for x in y_mean ] )
+        csv_table.writerow( [_('mean')] + [ output.number(x) for x in y_mean ] )
 
         # min values
-        csv_table.writerow( [_('min')] + [ output_format.number(x - y_min[i]) for i,x in enumerate(y_mean) ] )
+        csv_table.writerow( [_('min')] + [ output.number(x - y_min[i]) for i,x in enumerate(y_mean) ] )
 
         open_file.close()
         del csv_table
@@ -821,7 +821,7 @@ def climatology(stations_list):
             x_labels = []
             for i in range(len(y_mean)):
                 if i%x_step_label == 0:
-                    x_labels.append(output_format.month_in_initials(i/x_step_label))
+                    x_labels.append(output.month_in_initials(i/x_step_label))
                 else:
                     x_labels.append('')
 
@@ -954,18 +954,18 @@ def climatology(stations_list):
             header = ['']
             for month in range(1, 13):
                 for day in get_range_analysis_interval():
-                    header.append(output_format.month_in_initials(month-1) +' '+str(day))
+                    header.append(output.month_in_initials(month-1) +' '+str(day))
 
             csv_table.writerow(header)
 
             # max values
-            csv_table.writerow( [_('max')] + [ output_format.number(x + y_max[i]) for i,x in enumerate(y_mean) ] )
+            csv_table.writerow( [_('max')] + [ output.number(x + y_max[i]) for i,x in enumerate(y_mean) ] )
 
             # mean values
-            csv_table.writerow( [_('mean')] + [ output_format.number(x) for x in y_mean ] )
+            csv_table.writerow( [_('mean')] + [ output.number(x) for x in y_mean ] )
 
             # min values
-            csv_table.writerow( [_('min')] + [ output_format.number(x - y_min[i]) for i,x in enumerate(y_mean) ] )
+            csv_table.writerow( [_('min')] + [ output.number(x - y_min[i]) for i,x in enumerate(y_mean) ] )
 
             open_file.close()
             del csv_table
@@ -1150,12 +1150,12 @@ def shapiro_wilks_test(stations_list):
         shapiro_line_station_var_D = [
             station.code,
             station.name,
-            output_format.number(station.lat, 4),
-            output_format.number(station.lon, 4),
-            output_format.number(station.alt, 4),
+            output.number(station.lat, 4),
+            output.number(station.lon, 4),
+            output.number(station.alt, 4),
             '{0}-{1}'.format(station.process_period['start'], station.process_period['end']),
-            output_format.number(W, 4),
-            output_format.number(p_value, 4),
+            output.number(W, 4),
+            output.number(p_value, 4),
             Ho
         ]
 
@@ -1437,12 +1437,12 @@ def outliers(stations_list):
         outliers_station_line = [
             outliers_station['station'].code,
             outliers_station['station'].name,
-            output_format.number(outliers_station['station'].lat),
-            output_format.number(outliers_station['station'].lon),
-            output_format.number(outliers_station['station'].alt),
+            output.number(outliers_station['station'].lat),
+            output.number(outliers_station['station'].lon),
+            output.number(outliers_station['station'].alt),
             '{0}-{1}'.format(outliers_station['station'].process_period['start'], outliers_station['station'].process_period['end']),
-            output_format.number(outliers_station['whiskers_below']),
-            output_format.number(outliers_station['whiskers_above']),
+            output.number(outliers_station['whiskers_below']),
+            output.number(outliers_station['whiskers_above']),
             num_outliers,  _('OUTLIERS LIST:')
         ]
 
@@ -1452,7 +1452,7 @@ def outliers(stations_list):
         for outlier in outliers_station['outliers']:
 
             outliers_station_line.append('{0}-{1}-{2}'.format(outlier[0].year,outlier[0].month,outlier[0].day))
-            outliers_station_line.append(output_format.number(outlier[1]))
+            outliers_station_line.append(output.number(outlier[1]))
             outliers_station_line.append(outlier[2])
             #outliers_station_line.append('|')
 
