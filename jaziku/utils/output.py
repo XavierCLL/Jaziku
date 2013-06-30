@@ -25,6 +25,34 @@ from jaziku import env
 from jaziku.utils import console
 
 
+def number(num, accuracy=False):
+    """
+    Return the number after formatted according to accuracy (default or particular)
+    and fix decimal character.
+    """
+    if accuracy:
+        return str(round(float(num), accuracy)).replace('.', ',')
+    else:
+        return str(round(float(num), env.globals_vars.ACCURACY)).replace('.', ',')
+
+def trimester_in_initials(trimester):
+    """
+    Return the three first letters of three months of trimester
+    """
+    _trim_text = {-2: _('NDJ'), -1: _('DJF'), 0: _('JFM'), 1: _('FMA'), 2: _('MAM'),
+                 3: _('AMJ'), 4: _('MJJ'), 5: _('JJA'), 6: _('JAS'), 7: _('ASO'),
+                 8: _('SON'), 9: _('OND'), 10: _('NDJ'), 11: _('DJF')}
+    return _trim_text[trimester]
+
+def month_in_initials(month):
+    """
+    Return the initials of month (first three letters)
+    """
+    _month_text = {-2: _('Nov'), -1: _('Dec'), 0: _('Jan'), 1: _('Feb'), 2: _('Mar'),
+                  3: _('Apr'), 4: _('May'), 5: _('Jun'), 6: _('Jul'), 7: _('Aug'),
+                  8: _('Sep'), 9: _('Oct'), 10: _('Nov'), 11: _('Dec')}
+    return _month_text[month]
+
 def make_dirs(_dir):
     if not os.path.isdir(_dir):
         try:
@@ -32,7 +60,6 @@ def make_dirs(_dir):
         except Exception as error:
             console.msg_error(_("Problems creating the directory: {0}\n"
                                 "\n{1}").format(_dir, error), False)
-
 
 def prepare_dirs():
     from jaziku.utils import query

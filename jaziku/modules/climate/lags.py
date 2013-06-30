@@ -26,7 +26,7 @@ from dateutil.relativedelta import relativedelta
 
 from jaziku import env
 from jaziku.core.analysis_interval import get_values_in_range_analysis_interval, get_range_analysis_interval
-from jaziku.utils import  array, output_format, output
+from jaziku.utils import  array, output
 
 
 def get_specific_values(station, var, lag, month, day=None):
@@ -107,7 +107,7 @@ def calculate_lags(station, makes_files=True):
                           '({7}-{8}).csv')
                         .format(
                             lag, month,
-                            output_format.trimester_in_initials(month - 1),
+                            output.trimester_in_initials(month - 1),
                             station.code,
                             station.name, station.var_D.type_series,
                             station.var_I.type_series,
@@ -160,8 +160,8 @@ def calculate_lags(station, makes_files=True):
                     # add line output file csv_file
                     if makes_files:
                         csv_file.writerow([str(iter_year) + "/" + str(month),
-                                           output_format.number(mean_var_D),
-                                           output_format.number(mean_var_I)])
+                                           output.number(mean_var_D),
+                                           output.number(mean_var_I)])
                     # next year
                     iter_year += 1
 
@@ -245,8 +245,8 @@ def calculate_lags(station, makes_files=True):
                         if makes_files:
                             csv_file.writerow([str(iter_year) + "/" + str(month)
                                                + "/" + str(day),
-                                               output_format.number(mean_var_D),
-                                               output_format.number(mean_var_I)])
+                                               output.number(mean_var_D),
+                                               output.number(mean_var_I)])
                         # next year
                         iter_year += 1
                 if makes_files:
