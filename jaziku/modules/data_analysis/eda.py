@@ -85,8 +85,9 @@ def main(stations_list):
     csv_file_I = csv.writer(open_file_I, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
     # print header
-    header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), _('SIZE DATA'), _('MAXIMUM'),
-              _('MINIMUM'), _('AVERAGE'), _('MEDIAN'), _('STD DEVIATION'), _('SKEWNESS'), _('VARIANCE'), _('KURTOSIS'), _('COEFF VARIATION')]
+    header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), _('TOTAL DATA'), _('VALID DATA'),
+              _('LOST DATA'), _('MAXIMUM'), _('MINIMUM'), _('AVERAGE'), _('MEDIAN'), _('STD DEVIATION'), _('SKEWNESS'),
+              _('VARIANCE'), _('KURTOSIS'), _('COEFF VARIATION')]
 
     csv_file_D.writerow(header)
     csv_file_I.writerow(header)
@@ -101,7 +102,9 @@ def main(stations_list):
             format_out.number(station.lon, 4),
             format_out.number(station.alt, 4),
             '{0}-{1}'.format(station.process_period['start'], station.process_period['end']),
+            len(station.var_D.data_in_process_period),
             station.var_D.size_data,
+            station.var_D.nulls_in_process_period,
             format_out.number(station.var_D.maximum, 4),
             format_out.number(station.var_D.minimum, 4),
             format_out.number(station.var_D.average, 4),
@@ -123,7 +126,9 @@ def main(stations_list):
             format_out.number(station.lon, 4),
             format_out.number(station.alt, 4),
             '{0}-{1}'.format(station.process_period['start'], station.process_period['end']),
+            len(station.var_I.data_in_process_period),
             station.var_I.size_data,
+            station.var_I.nulls_in_process_period,
             format_out.number(station.var_I.maximum, 4),
             format_out.number(station.var_I.minimum, 4),
             format_out.number(station.var_I.average, 4),
