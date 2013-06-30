@@ -358,7 +358,7 @@ msgstr ""
 msgid ""
 "The 'relevant_climate_categories_var_I' should be\n"
 "'all' one or two valid labels for {0} categories\n"
-"(in different row), such as:\n"
+"(in different column), such as:\n"
 "\n"
 "{1}"
 msgstr ""
@@ -513,7 +513,7 @@ msgstr ""
 msgid ""
 "The 'analysis_interval' is {0} but the 'forecast_date'\n"
 "only have the month, please define the month and start day\n"
-"for {0} (in different row) for the forecast date."
+"for {0} (in different column) for the forecast date."
 msgstr ""
 
 #: core/settings/check_and_set.py:462 modules/climate/graphs.py:359
@@ -665,12 +665,12 @@ msgstr ""
 
 #: core/settings/get.py:118
 msgid ""
-"The period must be: start_year and end_year (in different row)\n"
+"The period must be: start_year and end_year (in different column)\n"
 "or 'maximum' for take the process period maximum possible by station."
 msgstr ""
 
 #: core/settings/get.py:145
-msgid "The lags may be: 0, 1 and/or 2 (in different row), 'all' or 'default'"
+msgid "The lags may be: 0, 1 and/or 2 (in different column), 'all' or 'default'"
 msgstr ""
 
 #: core/settings/get.py:212 core/settings/get.py:226 core/settings/get.py:237

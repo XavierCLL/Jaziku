@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-19 11:55-0500\n"
-"PO-Revision-Date: 2013-06-19 12:08-0500\n"
+"PO-Revision-Date: 2013-06-23 20:18-0500\n"
 "Last-Translator: Xavier Corredor Llano <xavier.corredor.llano@gmail.com>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -401,18 +401,24 @@ msgid ""
 "The 'class_category_analysis' {0} not is valid,\n"
 "this should be '3' or '7'."
 msgstr ""
+"El 'class_category_analysis' {0} es válido,\n"
+"debe ser 3 o 7."
 
 #: core/settings/check_and_set.py:74
 msgid ""
 "The 'categories_labels_var_I' is not valid,\n"
 "this should be 3 labels in different column."
 msgstr ""
+"El 'categories_labels_var_I' no es valido,\n"
+"debe de ser de 3 etiquetas en diferente columna."
 
 #: core/settings/check_and_set.py:86
 msgid ""
 "The 'categories_labels_var_I' is not valid,\n"
 "this should be 7 labels in different column."
 msgstr ""
+"El 'categories_labels_var_I' no es valido,\n"
+"debe de ser de 7 etiquetas en diferente columna."
 
 #: core/settings/check_and_set.py:101
 msgid ""
@@ -420,15 +426,23 @@ msgid ""
 "this should be 'disable', 'default' or\n"
 "valid percentage between 0 to 100."
 msgstr ""
+"El 'consistent_data' no es valido,\n"
+"debe de ser 'disable', 'default' o\n"
+"un porcentaje valido entre 0 a 100."
 
 #: core/settings/check_and_set.py:123
 msgid ""
 "The 'relevant_climate_categories_var_I' should be\n"
 "'all' one or two valid labels for {0} categories\n"
-"(in different row), such as:\n"
+"(in different column), such as:\n"
 "\n"
 "{1}"
 msgstr ""
+"El 'relevant_climate_categories_var_I' debe de ser\n"
+"'all' o uno o dos etiquetas validas para {0} categorias\n"
+"(en diferente columna), tales como:\n"
+"\n"
+"{1}"
 
 #: core/settings/check_and_set.py:131
 msgid ""
@@ -438,6 +452,11 @@ msgid ""
 "\n"
 "{2}"
 msgstr ""
+"'{0}' en 'relevant_climate_categories_var_I'\n"
+"no es una etiqueta valida para {1} categorías,\n"
+"debe se der uno de estos:\n"
+"\n"
+"{2}"
 
 #: core/settings/check_and_set.py:149
 msgid ""
@@ -445,15 +464,17 @@ msgid ""
 "this series not accept this mode to calculate the series.\n"
 "For this series the options are: {2}"
 msgstr ""
+"Para {0} el 'mode_calculation_series_D' configurado como '{1}',\n"
+"pero este tipo de serie no acepta este modo de calculo.\n"
+"Para {0} las opciones son: {2}"
 
 #: core/settings/check_and_set.py:156
-#, fuzzy
 msgid ""
 "The mode_calculation_series_D is wrong, the options are:\n"
 "default, accumulate or mean"
 msgstr ""
-"El marks_stations es incorrecto, las opciones son:\n"
-"disable, enable o default."
+"El 'mode_calculation_series_D' es incorrecto, las opciones son:\n"
+"default, accumulate o mean."
 
 #: core/settings/check_and_set.py:159
 msgid "accumulate"
@@ -489,6 +510,9 @@ msgid ""
 "The thresholds for {0} categories must have {1} thresholds,\n"
 "or 'default' for use thresholds by default defined for this variable."
 msgstr ""
+"Los umbrales para {0} categorías deben tener {1} valores,\n"
+"o use 'default' para usar los umbrales por defecto definidos\n"
+"para ésta variable."
 
 #: core/settings/check_and_set.py:236
 msgid ""
@@ -626,7 +650,7 @@ msgstr ""
 msgid ""
 "The 'analysis_interval' is {0} but the 'forecast_date'\n"
 "only have the month, please define the month and start day\n"
-"for {0} (in different row) for the forecast date."
+"for {0} (in different column) for the forecast date."
 msgstr ""
 
 #: core/settings/check_and_set.py:462 modules/climate/graphs.py:359
@@ -810,7 +834,7 @@ msgstr "trimestre"
 #: core/settings/get.py:118
 #, fuzzy
 msgid ""
-"The period must be: start_year and end_year (in different row)\n"
+"The period must be: start_year and end_year (in different column)\n"
 "or 'maximum' for take the process period maximum possible by station."
 msgstr ""
 "El periodo debe ser: año_inicial-año_final (ej 1980-2008)\n"
@@ -819,7 +843,7 @@ msgstr ""
 "{0}"
 
 #: core/settings/get.py:145
-msgid "The lags may be: 0, 1 and/or 2 (in different row), 'all' or 'default'"
+msgid "The lags may be: 0, 1 and/or 2 (in different column), 'all' or 'default'"
 msgstr ""
 "Los rezagos deben ser: 0, 1 y/o 2 (en diferentes columnas), 'all' o 'default'"
 
