@@ -35,6 +35,8 @@
 #     python transform_data_stations.py FILE_DATA.csv
 #
 
+# TODO complete and fix me
+
 import csv
 import os
 import sys
