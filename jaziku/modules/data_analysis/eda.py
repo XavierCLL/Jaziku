@@ -23,6 +23,7 @@ import csv
 import copy
 import matplotlib.dates as mdates
 from math import log10
+from datetime import date
 from dateutil.relativedelta import relativedelta
 from matplotlib import pyplot
 from numpy import histogram
@@ -39,7 +40,7 @@ from jaziku.core.analysis_interval import get_values_in_range_analysis_interval,
 from jaziku.modules.climate import lags
 from jaziku.modules.climate.contingency_table import get_label_of_var_I_category
 from jaziku.modules.climate.lags import  calculate_lags
-from jaziku.utils import  console, output, watermarking, array, output
+from jaziku.utils import  console, output, watermarking, array
 
 
 def main(stations_list):
@@ -165,6 +166,12 @@ def main(stations_list):
     else:
         console.msg(_("done"), color='green')
 
+    # -------------------------------------------------------------------------
+    # THE BEST PERIODS TO PROCESS
+
+    console.msg(_("Analysis the best periods to process .................. "), newline=False)
+    analysis_the_best_periods_to_process(stations_list)
+    console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
     # GRAPHS INSPECTION OF SERIES
@@ -381,6 +388,96 @@ def descriptive_statistic_graphs(stations_list):
             pyplot.close('all')
 
 
+def analysis_the_best_periods_to_process(stations_list):
+    """Analysis the best periods to be process, off all stations
+    inside the runfile, and are ranked and organized in based
+    on number of stations, number of years and number of nulls.
+    Writes a csv file of all possible periods from best to worst
+    (in based of ranking) with its corresponding list of stations
+    included for the analysis period.
+
+    (Jaziku only show these ranked period for the user to select the
+    best possible period and put in "process_period" in the runfile to
+    be processed with it, but Jaziku no process with this period
+    automatically)
+    """
+
+    start_periods = []
+    end_periods = []
+    for station in stations_list:
+        start_periods.append(station.var_D.date[0].year)
+        end_periods.append(station.var_D.date[-1].year)
+
+    min_start_periods = min(start_periods)+1
+    max_end_periods = max(end_periods)-1
+
+    min_years_for_range_period = 10
+    list_of_periods = []
+
+    for _start_year in range(min_start_periods, max_end_periods-min_years_for_range_period+1):
+        for _end_year in range(min_start_periods+min_years_for_range_period, max_end_periods+1):
+            if (_end_year-_start_year) < min_years_for_range_period:
+                continue
+            period = {}
+            period["start_year"] = _start_year
+            period["end_year"] = _end_year
+            period["nulls"] = 0
+            period["num_stations"] = 0
+            period["stations_included"] = []
+
+            for station in stations_list:
+                # start year for period to process (not common period)
+                station_start_year = station.var_D.date[0].year + 1
+                # end year for period to process (not common period)
+                station_end_year = station.var_D.date[-1].year - 1
+                if station_start_year > period["start_year"] or \
+                   station_end_year < period["end_year"]:
+                    # no process station when the period of the data of var D
+                    # not is inside of analysis period
+                    continue
+
+                start_date_var = date(period["start_year"], 1, 1)
+                if env.var_D.is_daily():
+                    end_date_var = date(period["end_year"], 12, 31)
+                else:
+                    end_date_var = date(period["end_year"], 12, 1)
+
+                # number of valid nulls for var D of the station
+                nulls_in_analysis_period, \
+                percentage_of_nulls_in_analysis_period \
+                    = array.check_nulls(station.var_D.data[station.var_D.date.index(start_date_var):station.var_D.date.index(end_date_var) + 1])
+                period["nulls"] += nulls_in_analysis_period
+                period["num_stations"] += 1
+                period["stations_included"].append("{0}-{1}".format(station.code, station.name))
+
+            # ranking
+            if env.var_D.is_daily():
+                period["rank"] = (period["num_stations"]*(period["end_year"] - period["start_year"])*365)/((period["nulls"]+1)/2)
+            else:
+                period["rank"] = (period["num_stations"]*(period["end_year"] - period["start_year"])*12)/((period["nulls"]+1)/2)
+            list_of_periods.append(period)
+            del period
+
+    periods_ranked = sorted(list_of_periods, key=lambda x: x["rank"], reverse=True)
+
+    # write into file the periods ranked with stations of each period
+    file_name = os.path.join(eda_dir, _('Analysis_the_best_periods_to_process.csv'))
+    open_file = open(file_name, 'w')
+    csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
+
+    header = [_('ANALYSIS PERIOD'), _('NUM YEARS'), _('NUM STATIONS INCLUDED FOR PERIOD'), _('TOTAL OF NULLS INSIDE THE PERIOD'),
+              _('RANKING*'), '--', _('LIST STATIONS INCLUDED FOR PERIOD:')]
+    csv_file.writerow(header)
+
+    for period_ranked in periods_ranked:
+        csv_file.writerow(['{0}-{1}'.format(period_ranked["start_year"], period_ranked["end_year"]),
+                           period_ranked["end_year"] - period_ranked["start_year"] + 1, period_ranked["num_stations"],
+                           period_ranked["nulls"], period_ranked["rank"], '--'] + period_ranked["stations_included"])
+
+    open_file.close()
+    del csv_file, period_ranked, list_of_periods
+
+
 # types graphs based on type of var D
 types_var_D = {'PPT':{'graph':'bar','color':'#578ECE'}, 'NDPPT':{'graph':'bar','color':'#578ECE'},
                'TMIN':{'graph':'o-','color':'#C08A1C'}, 'TMAX':{'graph':'o-','color':'#C08A1C'},
@@ -562,6 +659,7 @@ def graphs_inspection_of_series(stations_list):
         #from guppy import hpy; h=hpy()
         #print h.heap()
         #h.iso(1,[],{})
+
 
 def climatology(stations_list):
     """
