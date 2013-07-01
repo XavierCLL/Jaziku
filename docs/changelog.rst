@@ -4,6 +4,21 @@
 Changelog
 =========
 
+
+0.7.0 (**2013-XX-XX**)
+----------------------
+
+news
+++++
+
+- Analysis the best periods to be process, off all stations
+  inside the runfile, and are ranked and organized in based
+  on number of stations, number of years and number of nulls.
+  Writes a csv file of all possible periods from best to worst
+  (in based of ranking) with its corresponding list of stations
+  included for the analysis period.
+
+
 0.6.1 (**2013-06-XX**)
 ----------------------
 
