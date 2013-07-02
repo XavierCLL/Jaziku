@@ -192,6 +192,7 @@ def main():
                         stations_processed[(station['code'],station['name'])] = False
 
                     in_station_data = True
+                    before_year = None
                     in_station_properties = False
                     before_line = line
                     continue
@@ -208,12 +209,21 @@ def main():
                     in_station_data = False
 
                 if in_station_data:
+                    # fill the empty years with nan
+                    if before_year is not None:
+                        while year != before_year+1:
+                            for month in range(0,12):
+                                station['file_to_write'].writerow(["{0}-{1}".format(before_year+1,fix_zeros(month+1)), 'nan'])
+                            before_year += 1
+                    # write the month values for the year
                     for month in range(0,12):
                         value = line[12+9*month:19+9*month].strip()
                         if value in ['','*','+']:
                             value = 'nan'
                         station['file_to_write'].writerow(["{0}-{1}".format(year,fix_zeros(month+1)), round(float(value), 5)])
                     before_line = line
+                    before_year = year
+
 
             # read until start next station (continue or new station)
             if not in_station_properties and not in_station_data:
