@@ -169,7 +169,7 @@ def main(stations_list):
     # -------------------------------------------------------------------------
     # THE BEST PERIODS TO PROCESS
 
-    console.msg(_("Analysis the best periods to process .................. "), newline=False)
+    console.msg(_("Analysis the best periods to process ................. "), newline=False)
     analysis_the_best_periods_to_process(stations_list)
     console.msg(_("done"), color='green')
 
@@ -411,7 +411,7 @@ def analysis_the_best_periods_to_process(stations_list):
     min_start_periods = min(start_periods)+1
     max_end_periods = max(end_periods)-1
 
-    min_years_for_range_period = 15
+    min_years_for_range_period = 5
     list_of_periods = []
 
     for _start_year in range(min_start_periods, max_end_periods-min_years_for_range_period+1):
@@ -468,8 +468,9 @@ def analysis_the_best_periods_to_process(stations_list):
                 # ranking
                 # TODO: improve the ranking equation
                 period["rank"] = (((period["side_valid_data"]*period["num_stations"])**1.8)/
-                                  ((period["total_nulls"]+1)*100.0/float(period["side_valid_data"])))/1000.0
-                list_of_periods.append(period)
+                                  ((period["total_nulls"]+1)*100.0/float(period["side_valid_data"]+1)))/1000.0
+                if period["num_stations"] > 0:
+                    list_of_periods.append(period)
                 del period
 
     periods_ranked = sorted(list_of_periods, key=lambda x: x["rank"], reverse=True)
