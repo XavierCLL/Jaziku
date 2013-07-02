@@ -40,8 +40,9 @@ import os
 import csv
 from subprocess import call
 from clint.textui import colored
+import errno
 
-from jaziku.utils import output, console
+from jaziku.utils import output, console, text
 from jaziku.utils.geographic import dms2dd
 from jaziku.utils.input_format_converters import runfile_skeleton
 
@@ -63,25 +64,41 @@ def main():
     print "Processing file: " + colored.green(file_input)
 
     # -------------------------------------------------------------------------
-    # prepare directories
+    # variables
+
+    variables = {}
+
+    # -------------------------------------------------------------------------
+    # prepare names directories
 
     dir_output_name = os.path.abspath(os.path.splitext(file_input)[0])
 
     dir_var_D_stations = "var_D_files"
 
-    if not os.path.isdir(os.path.join(dir_output_name, dir_var_D_stations)):
-        os.makedirs(os.path.join(dir_output_name, dir_var_D_stations))
+    # -------------------------------------------------------------------------
+    # prepare directories
+
+    def prepare_directories(variable):
+        # TODO: fix when the name is the same directory, without extension
+        path = os.path.join(dir_output_name, text.slugify(variable['name']), dir_var_D_stations)
+        try:
+            os.makedirs(path)
+        except OSError as exc: # Python >2.5
+            if exc.errno == errno.EEXIST and os.path.isdir(path):
+                pass
+            else: raise
 
     # -------------------------------------------------------------------------
     # prepare runfile
 
-    runfile_name = "runfile.csv"
-    runfile = open(os.path.join(dir_output_name, runfile_name), 'w')
+    def prepare_runfile(variable):
+        runfile_name = "runfile.csv"
+        runfile = open(os.path.join(dir_output_name, text.slugify(variable['name']), runfile_name), 'w')
 
-    # write the base of runfile
-    runfile.write(runfile_skeleton.raw)
-    # define the runfile csv format to write the stations
-    runfile_csv = csv.writer(runfile, delimiter=';')
+        # write the base of runfile
+        runfile.write(runfile_skeleton.raw)
+        # define the runfile csv format to write the stations
+        return csv.writer(runfile, delimiter=';')
 
     # -------------------------------------------------------------------------
     # prepare filein
@@ -112,7 +129,7 @@ def main():
     station = {}
 
     continue_station = False
-    stations_processed = {}
+    all_stations_processed = 0
     before_line = "MINIMOS"
 
     with open(file_input,'rb+') as fileobject:
@@ -121,30 +138,50 @@ def main():
 
             # continue if line is null o empty
             if not line or not line.strip():
-                continue
+                # not continue if is reading the name variable
+                if line_in_station_properties != 2:
+                    continue
 
             # read station properties
             if in_station_properties:
-                # code and name
+                # name variable
+                if line_in_station_properties == 1:
+                    name_variable = line[:100].strip()
+                # continue read the name variable if exist
                 if line_in_station_properties == 2:
+                    if line.strip():
+                        name_variable = name_variable + ' ' + line.strip()
+
+                    if name_variable not in variables:
+                        variable = {}
+                        variable['name'] = name_variable
+                        prepare_directories(variable)
+                        variable['runfile_csv'] = prepare_runfile(variable)
+                        variable['stations_processed'] = {}
+                        variables[name_variable] = variable
+                        variables['stations'] = []
+
+                # code and name
+                if line_in_station_properties == 3:
                     code = line[104:114].strip()
                     name = line[114::].strip()
                     if continue_station:
                         if station['code'] != code or station['name'] != name:
                             print colored.red("Error: the station continue but with different name or code ({0} - {1})".format(station['code'], station['name']))
                             exit()
-                        if stations_processed[(station['code'],station['name'])] is False:
+                        if variables[name_variable]['stations_processed'][(station['code'],station['name'])] is False:
                             print colored.blue("Continue the station:   {0} - {1}".format(station['code'], station['name']))
                     if not continue_station:
                         station = {}
                         station['code'] = line[104:114].strip()
                         station['name'] = line[114::].strip()
-                        if (station['code'],station['name']) in stations_processed and stations_processed[(station['code'],station['name'])] is True:
+                        if (station['code'],station['name']) in variables[name_variable]['stations_processed'] and  \
+                           variables[name_variable]['stations_processed'][(station['code'],station['name'])] is True:
                             print colored.yellow("The station {0} - {1} is already exist: Overwriting".format(station['code'], station['name']))
                         else:
                             print "Processing the station: {0} - {1}".format(station['code'], station['name'])
                 # latitude
-                if line_in_station_properties == 3 and not continue_station:
+                if line_in_station_properties == 4 and not continue_station:
                     lat_deg = line[14:17].strip()
                     lat_min = line[17:19].strip()
                     lat_loc = line[20:21].strip()
@@ -156,7 +193,7 @@ def main():
 
                     station['lat'] = lat_dms
                 # longitude
-                if line_in_station_properties == 4 and not continue_station:
+                if line_in_station_properties == 5 and not continue_station:
                     lon_deg = line[14:17].strip()
                     lon_min = line[17:19].strip()
                     lon_loc = line[20:21].strip()
@@ -168,28 +205,30 @@ def main():
 
                     station['lon'] = lon_dms
                 # altitude
-                if line_in_station_properties == 5 and not continue_station:
+                if line_in_station_properties == 6 and not continue_station:
                     alt = line[14:19].strip()
 
                     station['alt'] = alt
                 # write station info and switch to read the station data
-                if line_in_station_properties == 8:
+                if line_in_station_properties == 9:
                     if not continue_station:
                         # define path to save file
                         station['file'] = "{0}-{1}.txt".format(station['code'], station['name'])
                         station['path'] = os.path.join(dir_var_D_stations, station['file'])
 
                         # write station properties into runfile
-                        if (station['code'],station['name']) in stations_processed and stations_processed[(station['code'],station['name'])] is True:
+                        if (station['code'],station['name']) in variables[name_variable]['stations_processed'] and \
+                           variables[name_variable]['stations_processed'][(station['code'],station['name'])] is True:
                             print colored.yellow("But not write the same station into the runfile")
                         else:
-                            runfile_csv.writerow([station['code'], station['name'], output.number(station['lat']),
-                                              output.number(station['lon']), output.number(station['alt']), station['path']])
+                            variables[name_variable]['runfile_csv'].writerow([station['code'], station['name'], output.number(station['lat']),
+                                                              output.number(station['lon']), output.number(station['alt']), station['path']])
 
                         # open to write station
-                        station['file_to_write'] = csv.writer(open(os.path.join(dir_output_name, station['path']), 'w'), delimiter='\t')
+                        station['file_to_write'] \
+                            = csv.writer(open(os.path.join(dir_output_name, text.slugify(variables[name_variable]['name']), station['path']), 'w'), delimiter=' ')
 
-                        stations_processed[(station['code'],station['name'])] = False
+                        variables[name_variable]['stations_processed'][(station['code'],station['name'])] = False
 
                     in_station_data = True
                     before_year = None
@@ -220,7 +259,17 @@ def main():
                         value = line[12+9*month:19+9*month].strip()
                         if value in ['','*','+']:
                             value = 'nan'
-                        station['file_to_write'].writerow(["{0}-{1}".format(year,fix_zeros(month+1)), round(float(value), 5)])
+                        # for runoff  TODO: check
+                        if value == 'seco':
+                            value = 0
+                        # convert value
+                        try:
+                            value = round(float(value), 5)
+                        except:
+                            # for wind or unknown words  TODO: accept wind values
+                            value = 'unknown'
+
+                        station['file_to_write'].writerow(["{0}-{1}".format(year,fix_zeros(month+1)), value])
                     before_line = line
                     before_year = year
 
@@ -231,7 +280,8 @@ def main():
                     if before_line.strip().startswith("MINIMOS"):
                         continue_station = False
                         if 'code' in station and 'name' in station:
-                            stations_processed[(station['code'],station['name'])] = True
+                            variables[name_variable]['stations_processed'][(station['code'],station['name'])] = True
+                            all_stations_processed += 1
                         del station
                     else:
                         continue_station = True
@@ -242,14 +292,14 @@ def main():
 
                 before_line = line
 
-    print "\nStations processed: " + str(len(stations_processed))
+    print "\nStations processed: " + str(all_stations_processed)
     print "Saving result in: " + os.path.splitext(file_input)[0]
-    print "Saving runfile in: " + os.path.join(os.path.splitext(file_input)[0], runfile_name)
-    print "Saving stations list files in: " + os.path.join(os.path.splitext(file_input)[0], dir_var_D_stations)
+    #print "Saving runfile in: " + os.path.join(os.path.splitext(file_input)[0], runfile_name)
+    #print "Saving stations list files in: " + os.path.join(os.path.splitext(file_input)[0], dir_var_D_stations)
     print colored.yellow("Complete the runfile.csv before run with Jaziku")
     print colored.green("\nDone\n")
 
-    del runfile_csv
+    del variables
     exit()
 
 
