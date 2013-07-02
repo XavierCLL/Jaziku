@@ -703,8 +703,9 @@ def climatology(stations_list):
     for station in stations_list:
         # -------------------------------------------------------------------------
         ## for climatology table
-        line = [station.code, station.name, station.lat, station.lon, station.alt,
-                '{0}-{1}'.format(station.process_period['start'], station.process_period['end'])]
+        line = [station.code, station.name, output.number(station.lat), output.number(station.lon),
+                output.number(station.alt), '{0}-{1}'.format(station.process_period['start'],
+                                                             station.process_period['end'])]
 
         var_D = Variable('D')
         var_D.data = station.var_D.data_in_process_period
