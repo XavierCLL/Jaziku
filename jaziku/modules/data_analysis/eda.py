@@ -411,52 +411,66 @@ def analysis_the_best_periods_to_process(stations_list):
     min_start_periods = min(start_periods)+1
     max_end_periods = max(end_periods)-1
 
-    min_years_for_range_period = 10
+    min_years_for_range_period = 15
     list_of_periods = []
 
     for _start_year in range(min_start_periods, max_end_periods-min_years_for_range_period+1):
         for _end_year in range(min_start_periods+min_years_for_range_period, max_end_periods+1):
             if (_end_year-_start_year) < min_years_for_range_period:
                 continue
-            period = {}
-            period["start_year"] = _start_year
-            period["end_year"] = _end_year
-            period["nulls"] = 0
-            period["num_stations"] = 0
-            period["stations_included"] = []
 
-            for station in stations_list:
-                # start year for period to process (not common period)
-                station_start_year = station.var_D.date[0].year + 1
-                # end year for period to process (not common period)
-                station_end_year = station.var_D.date[-1].year - 1
-                if station_start_year > period["start_year"] or \
-                   station_end_year < period["end_year"]:
-                    # no process station when the period of the data of var D
-                    # not is inside of analysis period
-                    continue
+            for max_percentage_nulls_permitted in range(0,17,4):
+                period = {}
+                period["start_year"] = _start_year
+                period["end_year"] = _end_year
+                period["num_stations"] = 0
+                period["side_valid_data"] = 0
+                period["total_nulls"] = 0
+                period["max_percentage_nulls_permitted"] = max_percentage_nulls_permitted
+                period["stations_included"] = []
 
-                start_date_var = date(period["start_year"], 1, 1)
-                if env.var_D.is_daily():
-                    end_date_var = date(period["end_year"], 12, 31)
-                else:
-                    end_date_var = date(period["end_year"], 12, 1)
+                for station in stations_list:
+                    # start year for period to process (not common period)
+                    station_start_year = station.var_D.date[0].year + 1
+                    # end year for period to process (not common period)
+                    station_end_year = station.var_D.date[-1].year - 1
+                    if station_start_year > period["start_year"] or \
+                       station_end_year < period["end_year"]:
+                        # no included this station when the period of the data of var D
+                        # not is inside of analysis period
+                        continue
 
-                # number of valid nulls for var D of the station
-                nulls_in_analysis_period, \
-                percentage_of_nulls_in_analysis_period \
-                    = array.check_nulls(station.var_D.data[station.var_D.date.index(start_date_var):station.var_D.date.index(end_date_var) + 1])
-                period["nulls"] += nulls_in_analysis_period
-                period["num_stations"] += 1
-                period["stations_included"].append("{0}-{1}".format(station.code, station.name))
+                    start_date_var = date(period["start_year"], 1, 1)
+                    if env.var_D.is_daily():
+                        end_date_var = date(period["end_year"], 12, 31)
+                    else:
+                        end_date_var = date(period["end_year"], 12, 1)
 
-            # ranking
-            if env.var_D.is_daily():
-                period["rank"] = (period["num_stations"]*(period["end_year"] - period["start_year"])*365)/((period["nulls"]+1)/2)
-            else:
-                period["rank"] = (period["num_stations"]*(period["end_year"] - period["start_year"])*12)/((period["nulls"]+1)/2)
-            list_of_periods.append(period)
-            del period
+                    station_data = station.var_D.data[station.var_D.date.index(start_date_var):station.var_D.date.index(end_date_var) + 1]
+
+                    # number of valid nulls for var D of the station
+                    nulls_in_analysis_period, \
+                    percentage_of_nulls_in_analysis_period \
+                        = array.check_nulls(station_data)
+
+                    if percentage_of_nulls_in_analysis_period > max_percentage_nulls_permitted:
+                        # no included this station when the percentage of
+                        # nulls values is greater of permitted.
+                        continue
+
+                    period["total_nulls"] += nulls_in_analysis_period
+
+                    period["side_valid_data"] += len(array.clean(station_data))
+
+                    period["num_stations"] += 1
+                    period["stations_included"].append("{0}-{1}".format(station.code, station.name))
+
+                # ranking
+                # TODO: improve the ranking equation
+                period["rank"] = (((period["side_valid_data"]*period["num_stations"])**1.8)/
+                                  ((period["total_nulls"]+1)*100.0/float(period["side_valid_data"])))/1000.0
+                list_of_periods.append(period)
+                del period
 
     periods_ranked = sorted(list_of_periods, key=lambda x: x["rank"], reverse=True)
 
@@ -465,14 +479,16 @@ def analysis_the_best_periods_to_process(stations_list):
     open_file = open(file_name, 'w')
     csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
-    header = [_('ANALYSIS PERIOD'), _('NUM YEARS'), _('NUM STATIONS INCLUDED FOR PERIOD'), _('TOTAL OF NULLS INSIDE THE PERIOD'),
-              _('RANKING*'), '--', _('LIST STATIONS INCLUDED FOR PERIOD:')]
+    header = [_('ANALYSIS PERIOD'), _('NUM YEARS'), _('NUM STATIONS INCLUDED FOR PERIOD'), _('MAX PERCENTAGE OF NULLS PERMITTED'),
+              _('% OF NULLS INSIDE THE PERIOD'), _('RANKING*'), '--', _('LIST STATIONS INCLUDED FOR PERIOD:')]
     csv_file.writerow(header)
 
     for period_ranked in periods_ranked:
         csv_file.writerow(['{0}-{1}'.format(period_ranked["start_year"], period_ranked["end_year"]),
                            period_ranked["end_year"] - period_ranked["start_year"] + 1, period_ranked["num_stations"],
-                           period_ranked["nulls"], period_ranked["rank"], '--'] + period_ranked["stations_included"])
+                           period_ranked["max_percentage_nulls_permitted"],
+                           output.number(period_ranked["total_nulls"]*100/float(period_ranked["side_valid_data"])),
+                           output.number(period_ranked["rank"]), '--'] + period_ranked["stations_included"])
 
     open_file.close()
     del csv_file, period_ranked, list_of_periods
