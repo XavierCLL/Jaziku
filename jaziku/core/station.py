@@ -95,9 +95,10 @@ class Station(object):
         if len(common_date) < 36:
             console.msg(_("\n   Calculating the common period:"), newline=False)
 
-            console.msg_error(_("The common period calculated {0}-{1}. Jaziku need\n"
-                                "at least 3 year of common period between the two series.")
-                .format(common_date[0].year, common_date[-1].year))
+            console.msg_error(_("The common period calculated for the station {0}-{1}\n"
+                                "is {2}-{3}, Jaziku need at least 3 year of common \n"
+                                "period between the two series.")
+                .format(self.code, self.name, common_date[0].year, common_date[-1].year))
 
         # calculate the process period
         self.process_period = {'start': self.common_period[0][0].year + 1,

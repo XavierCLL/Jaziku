@@ -105,6 +105,9 @@ def check_nulls(values):
     :rtype: (int, float)
     """
 
+    if len(values) == 0:
+        return float('nan'), float('nan')
+
     number_of_nulls = 0
     for value in values:
         if env.globals_vars.is_valid_null(value):
