@@ -93,7 +93,7 @@ class Station(object):
 
         # check if the common period at least 3 years before calculate the process period
         if len(common_date) < 36:
-            console.msg(_("Calculating the common period ................. "), newline=False)
+            console.msg(_("\n   Calculating the common period:"), newline=False)
 
             console.msg_error(_("The common period calculated {0}-{1}. Jaziku need\n"
                                 "at least 3 year of common period between the two series.")
