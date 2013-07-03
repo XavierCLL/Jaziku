@@ -418,8 +418,8 @@ def analysis_the_best_periods_to_process(stations_list):
         for _end_year in range(min_start_periods+min_years_for_range_period, max_end_periods+1):
             if (_end_year-_start_year) < min_years_for_range_period:
                 continue
-
-            for max_percentage_nulls_permitted in range(0,17,4):
+            list_of_one_period = []
+            for max_percentage_nulls_permitted in range(0,17,2):
                 period = {}
                 period["start_year"] = _start_year
                 period["end_year"] = _end_year
@@ -470,8 +470,12 @@ def analysis_the_best_periods_to_process(stations_list):
                 period["rank"] = (((period["side_valid_data"]*period["num_stations"])**1.8)/
                                   ((period["total_nulls"]+1)*100.0/float(period["side_valid_data"]+1)))/1000.0
                 if period["num_stations"] > 0:
-                    list_of_periods.append(period)
+                    list_of_one_period.append(period)
                 del period
+
+            if len(list_of_one_period) > 0:
+                list_of_periods.append(sorted(list_of_one_period, key=lambda x: x["rank"], reverse=True)[0])
+
 
     periods_ranked = sorted(list_of_periods, key=lambda x: x["rank"], reverse=True)
 
@@ -480,8 +484,8 @@ def analysis_the_best_periods_to_process(stations_list):
     open_file = open(file_name, 'w')
     csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
-    header = [_('ANALYSIS PERIOD'), _('NUM YEARS'), _('NUM STATIONS INCLUDED FOR PERIOD'), _('MAX PERCENTAGE OF NULLS PERMITTED'),
-              _('% OF NULLS INSIDE THE PERIOD'), _('RANKING*'), '--', _('LIST STATIONS INCLUDED FOR PERIOD:')]
+    header = [_('ANALYSIS PERIOD'), _('NUM YEARS'), _('NUM STATIONS INCLUDED FOR PERIOD'), _('MAX % OF NULLS PERMITTED PER STATION'),
+              _('% OF NULLS INSIDE THE PERIOD OF ALL DATA'), _('RANKING*'), '--', _('LIST STATIONS INCLUDED FOR PERIOD:')]
     csv_file.writerow(header)
 
     for period_ranked in periods_ranked:
