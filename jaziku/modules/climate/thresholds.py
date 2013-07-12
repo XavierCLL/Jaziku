@@ -18,6 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
+import copy
 import numpy
 from datetime import date
 from dateutil.relativedelta import relativedelta
@@ -134,7 +135,7 @@ def thresholds_to_list(thresholds):
                 thresholds['above3']]
 
 
-def get_thresholds(station, variable, thresholds_input=None):
+def get_thresholds(station, variable, thresholds_input=None, process_analog_year=False):
     """Calculate and return thresholds of dependent or
     independent variable, the type of threshold as
     defined by the user in station file, these may be:
@@ -163,18 +164,12 @@ def get_thresholds(station, variable, thresholds_input=None):
         """thresholds by default of var D or var I, with or without analog year"""
 
         if variable.type == 'D':
-            # check if analog_year is defined
-            if env.config_run.settings['analog_year']:
-                # return thresholds with analog year
-                return thresholds_with_analog_year_for_var_D()
-            else:
-                # return thresholds without analog year
-                default_thresholds = env.var_D.get_default_thresholds()
-                if default_thresholds is None:
-                    console.msg_error(_("the thresholds of var {0} ({1}) were defined as 'default'\n"
-                                        "but this variable ({1}) haven't internal thresholds defined.")
-                    .format(variable.type, env.var_D.TYPE_SERIES))
-                return get_thresholds(station, variable, default_thresholds)
+            default_thresholds = env.var_D.get_default_thresholds()
+            if default_thresholds is None:
+                console.msg_error(_("the thresholds of var {0} ({1}) were defined as 'default'\n"
+                                    "but this variable ({1}) haven't internal thresholds defined.")
+                .format(variable.type, env.var_D.TYPE_SERIES))
+            return get_thresholds(station, variable, default_thresholds)
 
         if variable.type == 'I':
             default_thresholds = env.var_I.get_default_thresholds()
@@ -185,8 +180,6 @@ def get_thresholds(station, variable, thresholds_input=None):
             return get_thresholds(station, variable, default_thresholds)
 
 
-    @validate_thresholds(variable)
-    @thresholds_to_dict_format
     def thresholds_with_analog_year_for_var_D():
         # check if analog_year is inside in process period
         if station.process_period['start'] <= env.config_run.settings['analog_year'] <= station.process_period['end']:
@@ -205,23 +198,16 @@ def get_thresholds(station, variable, thresholds_input=None):
             if percentage_of_nulls > 25:
                 console.msg_error(_("Error calculating thresholds for var {0} ({1}) using analog year,\n"
                                     "the series for analog year {2} have {3}% of nulls, more than\n"
-                                    "25% of permissive nulls.")
+                                    "25% of permissive nulls for analog year.")
                 .format(variable.type, env.var_[variable.type].TYPE_SERIES,
                         env.config_run.settings['analog_year'], percentage_of_nulls))
 
             # clean list of nulls
-            specific_values_with_analog_year = array.clean(specific_values_with_analog_year)
+            variable_analog_year = copy.deepcopy(variable)
+            variable_analog_year.specific_values = specific_values_with_analog_year
 
-            if env.config_run.settings['class_category_analysis'] == 3:
-                return [numpy.percentile(specific_values_with_analog_year, 33),
-                        numpy.percentile(specific_values_with_analog_year, 66)]
-            if env.config_run.settings['class_category_analysis'] == 7:
-                return [numpy.percentile(specific_values_with_analog_year, 11),
-                        numpy.percentile(specific_values_with_analog_year, 22),
-                        numpy.percentile(specific_values_with_analog_year, 33),
-                        numpy.percentile(specific_values_with_analog_year, 66),
-                        numpy.percentile(specific_values_with_analog_year, 77),
-                        numpy.percentile(specific_values_with_analog_year, 88)]
+            return get_thresholds(station, variable_analog_year, process_analog_year=True)
+
         else:
             console.msg_error(_("The analog year ({0}) for this station\n"
                                 "is outside of process period {1} to {2}.")
@@ -387,16 +373,16 @@ def get_thresholds(station, variable, thresholds_input=None):
         if variable.type == 'I':
             thresholds_input = env.config_run.settings['thresholds_var_I']
 
+    # check if analog_year is defined but thresholds aren't equal to "default"
+    if not process_analog_year:
+        if env.config_run.settings['analog_year'] and variable.type == 'D':
+            thresholds_with_analog_year_for_var_D()
+
     ## now analysis threshold input in arguments
     # if are define as default
     if thresholds_input == "default":
         return thresholds_by_default()
 
-    # check if analog_year is defined but thresholds aren't equal to "default"
-    if env.config_run.settings['analog_year'] and variable.type == 'D':  # todo, maybe don't need, for check in the future
-        console.msg_error(_("You have defined the analog year,\n"
-                            "but the thresholds of var D must be\n"
-                            "'default' for use the analog year."))
 
     # if are defined as percentile or standard deviation (all str instance)
     if not False in [isinstance(threshold,str) for threshold in thresholds_input]:
