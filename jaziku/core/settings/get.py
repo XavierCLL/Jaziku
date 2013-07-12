@@ -120,7 +120,11 @@ def configuration_run():
 
     # ------------------------
     # analog_year
-    if env.config_run.settings['analog_year']:
+    if env.config_run.settings['analog_year'] is None:
+        console.msg_error_configuration('analog_year',
+            "The '{0}' no was defined."
+            .format('analog_year'))
+    else:
         try:
             env.config_run.settings['analog_year'] = int(env.config_run.settings['analog_year'])
         except:
@@ -180,13 +184,23 @@ def configuration_run():
 
     # ------------------------
     # categories_labels_var_I
-    if env.config_run.settings['categories_labels_var_I'] == "default":
+    # ------------------------
+    # graphics
+    if env.config_run.settings['categories_labels_var_I'] is None:
+        console.msg_error_configuration('categories_labels_var_I',
+            "The '{0}' no was defined."
+            .format('categories_labels_var_I'))
+    elif env.config_run.settings['categories_labels_var_I'] == "default":
         settings["categories_labels_var_I"] = [env.config_run.settings['categories_labels_var_I']]
     else:
         settings["categories_labels_var_I"] = ["'"+label+"'" for label in env.config_run.settings['categories_labels_var_I']]
 
     # ------------------------
     # relevant_climate_categories_var_I
+    if env.config_run.settings['relevant_climate_categories_var_I'] is None:
+        console.msg_error_configuration('relevant_climate_categories_var_I',
+            "The '{0}' no was defined."
+            .format('relevant_climate_categories_var_I'))
     if env.config_run.settings['relevant_climate_categories_var_I'] == "all":
         settings["relevant_climate_categories_var_I"] = "all"
     else:
@@ -203,6 +217,8 @@ def configuration_run():
     # type var D
     if env.var_D.TYPE_SERIES:
         settings["type_var_D"] = colored.green(env.var_D.TYPE_SERIES) + " ({0})".format(env.var_D.units)
+    else:
+        settings["type_var_D"] = None
 
     # ------------------------
     # mode_calculation_series_D
@@ -210,7 +226,11 @@ def configuration_run():
 
     # ------------------------
     # limits var D below
-    if not isinstance(env.config_run.settings['limits_var_D'], list):
+    if env.config_run.settings['limits_var_D'] is None:
+        console.msg_error_configuration('limits_var_D',
+            "The '{0}' no was defined."
+            .format('limits_var_D'))
+    elif not isinstance(env.config_run.settings['limits_var_D'], list):
         if env.config_run.settings['limits_var_D'] == 'none':
             env.config_run.settings['limits_var_D'] = {'below': None, 'above': None}
             settings["limits_var_D"] = colored.red('none')
@@ -247,7 +267,11 @@ def configuration_run():
 
     # ------------------------
     # thresholds var D
-    if env.config_run.settings['thresholds_var_D'] == 'default':
+    if env.config_run.settings['thresholds_var_D'] is None:
+        console.msg_error_configuration('thresholds_var_D',
+            "The '{0}' no was defined."
+            .format('thresholds_var_D'))
+    elif env.config_run.settings['thresholds_var_D'] == 'default':
         settings["thresholds_var_D"] = _('default')
     else:
         settings["thresholds_var_D"] = colored.green(' | '.join([str(thr) for thr in env.config_run.settings['thresholds_var_D']]))
@@ -272,7 +296,11 @@ def configuration_run():
 
     # ------------------------
     # limits var I below
-    if not isinstance(env.config_run.settings['limits_var_I'], list):
+    if env.config_run.settings['limits_var_I'] is None:
+        console.msg_error_configuration('limits_var_I',
+            "The '{0}' no was defined."
+            .format('limits_var_I'))
+    elif not isinstance(env.config_run.settings['limits_var_I'], list):
         if env.config_run.settings['limits_var_I'] == 'none':
             env.config_run.settings['limits_var_I'] = {'below': None, 'above': None}
             settings["limits_var_I"] = colored.red('none')
@@ -309,6 +337,10 @@ def configuration_run():
 
     # ------------------------
     # thresholds var I
+    if env.config_run.settings['thresholds_var_I'] is None:
+        console.msg_error_configuration('thresholds_var_I',
+            "The '{0}' no was defined."
+            .format('thresholds_var_I'))
     if env.config_run.settings['thresholds_var_I'] == 'default':
         settings["thresholds_var_I"] = _('default')
     else:

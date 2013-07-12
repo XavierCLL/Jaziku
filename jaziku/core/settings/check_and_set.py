@@ -103,6 +103,13 @@ def configuration_run():
                       "valid percentage between 0 to 100."))
 
     # ------------------------
+    # graphics
+    if env.config_run.settings['graphics'] is None:
+        console.msg_error_configuration('graphics',
+            "The '{0}' no was defined."
+            .format('graphics'))
+
+    # ------------------------
     # categories_labels_var_I
 
     @categories_labels_var_I_dictionary
@@ -132,6 +139,13 @@ def configuration_run():
                       "not is a valid label for {1} categories, should be\n"
                       "one of these:\n\n{2}")
                     .format(_label, env.config_run.settings['class_category_analysis'], labels.values()))
+
+    # ------------------------
+    # type_var_D
+    if env.config_run.settings['type_var_D'] is None:
+        console.msg_error_configuration('type_var_D',
+            "The '{0}' no was defined."
+            .format('type_var_D'))
 
     # ------------------------
     # mode_calculation_series_D
@@ -219,6 +233,13 @@ def configuration_run():
                 _("The thresholds for {0} categories must have {1} values,\n"
                   "or use 'default' for thresholds by default defined for this variable.")
                 .format(env.config_run.settings['class_category_analysis'], env.config_run.settings['class_category_analysis']-1))
+
+    # ------------------------
+    # type_var_I
+    if env.config_run.settings['type_var_I'] is None:
+        console.msg_error_configuration('type_var_I',
+            "The '{0}' no was defined."
+            .format('type_var_I'))
 
     # ------------------------
     # mode_calculation_series_I

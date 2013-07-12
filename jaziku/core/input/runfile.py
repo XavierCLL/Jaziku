@@ -56,10 +56,8 @@ def read_runfile():
     def set_settings(runfile, line):
         # check if this settings was defined
         if not len(line) >= 2:
-            console.msg_error(_(
-                "error reading the settings line in runfile,"
-                " line {0}:\n'{1}', no was defined.")
-            .format(runfile.line_num, line[0]), False)
+            line.append(None)
+
         # in this case, for python 'disable' is None,
         # then let default value (it is 'None')
         if line[1] == "disable":
@@ -169,10 +167,11 @@ def read_runfile():
             if line_in_runfile[0] in Grid.fields:
                 # check if this settings was defined
                 if len(line_in_runfile) == 1:
-                    console.msg_error(_(
-                        "error reading the settings line in runfile,"
-                        " line {0}:\n'{1}' no was defined.")
-                    .format(runfile.line_num, line_in_runfile[0]), False)
+                    if env.config_run.settings['maps']:
+                        console.msg_error(_(
+                            "error reading the settings line in runfile,"
+                            " line {0}:\n'{1}' no was defined.")
+                        .format(runfile.line_num, line_in_runfile[0]), False)
                 if len(line_in_runfile) == 2:
                     try:
                         setattr(Grid.all_grids[-1], line_in_runfile[0], input.to_float(line_in_runfile[1]))
@@ -218,7 +217,7 @@ def read_runfile():
 
     # Set type and units for variables D and I
     # var D
-    if '(' and ')' in env.config_run.settings['type_var_D']:
+    if env.config_run.settings['type_var_D'] is not None and '(' and ')' in env.config_run.settings['type_var_D']:
         string = env.config_run.settings['type_var_D']
         # get type
         env.var_D.TYPE_SERIES = string[0:string.index('(')].strip()
@@ -231,7 +230,7 @@ def read_runfile():
         else:
             env.var_D.units = '--'
     # var I
-    if '(' and ')' in env.config_run.settings['type_var_I']:
+    if env.config_run.settings['type_var_I'] is not None and '(' and ')' in env.config_run.settings['type_var_I']:
         string = env.config_run.settings['type_var_I']
         # get type
         env.var_I.TYPE_SERIES = string[0:string.index('(')].strip()
