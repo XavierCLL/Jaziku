@@ -25,6 +25,7 @@ fixes
 - Fixed internal thresholds for PPT in 3 categories
 - Fix number format in climatology table
 - Improve the check values in runfile
+- The analog year now can run with different thresholds
 
 
 0.6.0 (**2013-06-19**)
