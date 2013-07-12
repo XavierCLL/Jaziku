@@ -24,6 +24,7 @@ fixes
 - Fixed and adjust the internal Colombia shape for maps
 - Fixed internal thresholds for PPT in 3 categories
 - Fix number format in climatology table
+- Improve the check values in runfile
 
 
 0.6.0 (**2013-06-19**)
