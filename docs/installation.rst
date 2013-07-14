@@ -38,7 +38,7 @@ distribution.
 Download Jaziku (egg version)
 -----------------------------
 
-- `jaziku 0.6.1 <https://dl.dropbox.com/u/3383807/jaziku-0.6.1-py2.7.egg>`_
+- `jaziku 0.6.1 <https://docs.google.com/uc?id=0B2KQf7Dbx7DUcnJ1RnNlVG0td3c&export=download>`_
 
 
 Install Jaziku (egg version)

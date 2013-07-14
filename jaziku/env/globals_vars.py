@@ -58,7 +58,7 @@ OUTPUT_DIR = None
 #==============================================================================
 # valid nulls
 
-VALID_NULL = [99999, -99999]  # these are deprecate valid null but now used for maps files interpolation
+OLD_VALID_NULL = [99999, -99999]  # these are deprecate valid null but now used for maps files interpolation
 
 def is_valid_null(value):
     """
@@ -74,7 +74,7 @@ def is_valid_null(value):
         try:
             if isinstance(value,(float,int)) and isnan(value):
                 return True
-            if int(float(value)) in VALID_NULL: # TODO: delete deprecated valid null
+            if int(float(value)) in OLD_VALID_NULL: # TODO: delete deprecated valid null
                 return True
         except:
             return False

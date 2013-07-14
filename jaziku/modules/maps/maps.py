@@ -107,7 +107,7 @@ def process(grid):
     global base_matrix
     base_matrix = numpy.matrix(numpy.empty([grid.lat_size, grid.lon_size]))
     # initialize matrix with null value
-    base_matrix.fill(env.globals_vars.VALID_NULL[1])
+    base_matrix.fill(env.globals_vars.OLD_VALID_NULL[1])
 
     def process_map():
         # add counter of maps created in this grid
@@ -186,7 +186,7 @@ def process(grid):
 
             # save values to .INC file
             for value in matrix_vector:
-                if int(value) == env.globals_vars.VALID_NULL[1]:
+                if int(value) == env.globals_vars.OLD_VALID_NULL[1]:
                     open_file.write(str(int(value)) + '\n')
                 else:
                     open_file.write(str(value) + '\n')

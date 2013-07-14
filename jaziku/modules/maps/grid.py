@@ -215,7 +215,7 @@ class Grid(object):
 
         ## put value in the base matrix
         # first check if already exist value in this point on matrix (overlapping)
-        if int(matrix[lat_location, lon_location]) != env.globals_vars.VALID_NULL[1]:
+        if int(matrix[lat_location, lon_location]) != env.globals_vars.OLD_VALID_NULL[1]:
             if env.config_run.settings['overlapping'] == "average":
                 matrix[lat_location, lon_location] = array.mean([matrix[lat_location, lon_location], value])
                 return matrix, _("average")

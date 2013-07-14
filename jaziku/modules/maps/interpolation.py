@@ -26,7 +26,7 @@ from jaziku.utils import  console
 
 def ordinary_kriging(base_grid, inc_file):
     import geo_bsd as hpgl
-    from geo_bsd.routines import *
+    from geo_bsd.routines import SugarboxGrid, load_cont_property, CovarianceModel
 
     # redirect output (HPGL stdout)
     with console.redirectStdStreams():

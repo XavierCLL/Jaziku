@@ -53,7 +53,7 @@ Please read the `instruction install <https://dl.dropbox.com/u/3383807/installat
 Synopsis run
 ------------
 
-- jaziku [-h] [-f] runfile
+- jaziku [-h] [-f] [-o OUTPUT] runFile.csv
 
 Read manual for more information.
 
@@ -68,8 +68,9 @@ Team
 Help and discussion
 -------------------
 
-- Download `Manual <http://>`_.
-- Join us at the Jaziku discussion `google group <http://groups.google.com/group/jaziku>`_.
+- `Jaziku Manual v0.6.1 <https://docs.google.com/uc?id=0B2KQf7Dbx7DUU0J1ZGs4dl9nRTQ&export=download>`_
+- `Reference Card v0.6.1 <https://docs.google.com/uc?id=0B2KQf7Dbx7DUdVJmQzJkaXRPaHM&export=download>`_
+- Mailing list `Jaziku google group <http://groups.google.com/group/jaziku>`_
 
 How to cite Jaziku
 ------------------
