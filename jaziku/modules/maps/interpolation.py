@@ -19,20 +19,20 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import geo_bsd as hpgl
-from geo_bsd.routines import *
 
 from jaziku import env
 from jaziku.utils import  console
 
 
 def ordinary_kriging(base_grid, inc_file):
+    import geo_bsd as hpgl
+    from geo_bsd.routines import *
 
     # redirect output (HPGL stdout)
     with console.redirectStdStreams():
         size = (base_grid.lat_size, base_grid.lon_size, 1)  # (alto, ancho, paso)
         grid = SugarboxGrid(base_grid.lat_size, base_grid.lon_size, 1)
-        data = load_cont_property(os.path.abspath(inc_file.encode('utf-8')), env.globals_vars.VALID_NULL[1], size)
+        data = load_cont_property(os.path.abspath(inc_file.encode('utf-8')), env.globals_vars.OLD_VALID_NULL[1], size)
 
         semivariogram = CovarianceModel(type=base_grid.num_semivariogram_type,
                                      ranges=(base_grid.radiuses[0] / 2,
@@ -63,4 +63,3 @@ def ordinary_kriging(base_grid, inc_file):
         #clf()
 
     return ik_result[0][:, :, 0]
-
