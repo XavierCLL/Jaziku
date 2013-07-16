@@ -73,6 +73,9 @@ def main():
 
     dir_output_name = os.path.abspath(os.path.splitext(file_input)[0])
 
+    if len([e for e in os.path.splitext(file_input) if e]) <= 1:
+        dir_output_name += "_"
+
     dir_var_D_stations = "var_D_files"
 
     # -------------------------------------------------------------------------
@@ -113,9 +116,9 @@ def main():
     print "\nConverting and cleaning all 'DOS' characters inside the SISDIM format:"
 
     # standard clean with dos2unix
-    call([console.which('dos2unix'), file_input], shell=False)
+    call([console.which('dos2unix'), '-f', file_input], shell=False)
     # convert ^M in extra newline
-    call([console.which('dos2unix'), '-l', file_input], shell=False)
+    call([console.which('dos2unix'), '-f', '-l', file_input], shell=False)
     print ""
 
     # -------------------------------------------------------------------------
