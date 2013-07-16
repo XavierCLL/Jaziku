@@ -73,6 +73,7 @@ def main():
 
     dir_output_name = os.path.abspath(os.path.splitext(file_input)[0])
 
+    # next TODO
     if len([e for e in os.path.splitext(file_input) if e]) <= 1:
         dir_output_name += "_"
 
@@ -149,7 +150,7 @@ def main():
             if in_station_properties:
                 # name variable
                 if line_in_station_properties == 1:
-                    name_variable = line[:100].strip()
+                    name_variable = line[:100].strip().split('(')[0].strip()
                 # continue read the name variable if exist
                 if line_in_station_properties == 2:
                     if line.strip():
@@ -158,8 +159,9 @@ def main():
                     if name_variable not in variables:
                         variable = {}
                         variable['name'] = name_variable
-                        prepare_directories(variable)
-                        variable['runfile_csv'] = prepare_runfile(variable)
+                        if not continue_station:
+                            prepare_directories(variable)
+                            variable['runfile_csv'] = prepare_runfile(variable)
                         variable['stations_processed'] = {}
                         variables[name_variable] = variable
                         variables['stations'] = []
@@ -167,17 +169,20 @@ def main():
                 # code and name
                 if line_in_station_properties == 3:
                     code = line[104:114].strip()
-                    name = line[114::].strip()
+                    name = line[114::].strip().replace('/','_')
                     if continue_station:
                         if station['code'] != code or station['name'] != name:
                             print colored.red("Error: the station continue but with different name or code ({0} - {1})".format(station['code'], station['name']))
                             exit()
+                        for variable in variables:
+                            if variable.startswith(name_variable):
+                                name_variable = variable
                         if variables[name_variable]['stations_processed'][(station['code'],station['name'])] is False:
                             print colored.blue("Continue the station:   {0} - {1}".format(station['code'], station['name']))
                     if not continue_station:
                         station = {}
-                        station['code'] = line[104:114].strip()
-                        station['name'] = line[114::].strip()
+                        station['code'] = code
+                        station['name'] = name
                         if (station['code'],station['name']) in variables[name_variable]['stations_processed'] and  \
                            variables[name_variable]['stations_processed'][(station['code'],station['name'])] is True:
                             print colored.yellow("The station {0} - {1} is already exist: Overwriting".format(station['code'], station['name']))
