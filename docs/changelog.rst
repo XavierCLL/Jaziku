@@ -18,6 +18,12 @@ news
   (in based of ranking) with its corresponding list of stations
   included for the analysis period.
 
+fixes
++++++
+
+- Force convert dos2unix with binary characters and fix directory
+  name when the file haven't extension in ideamFormat2jazikuFormat
+
 
 0.6.1 (**2013-06-XX**)
 ----------------------
