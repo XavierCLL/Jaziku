@@ -63,9 +63,9 @@ class Station(object):
 
         # check if common_date is empty
         if not common_date:
-            console.msg_error(_("The two series don't have any common period,\n"
-                                "Jaziku need at least 3 year of common period\n"
-                                "between the two series."))
+            console.msg_error(_("For the series '{0}-{1}' together with var I '{2}'\n"
+                                "don't have any common period, Jaziku need at least \n"
+                                "3 year of common period between the two series.").format(self.code, self.name, self.var_I.type_series))
 
         # initialized variable common_period
         # format list: [[  date ,  var_D ,  var_I ],... ]
@@ -75,10 +75,11 @@ class Station(object):
                 console.msg(_("\nCalculating the process period ................ "), newline=False)
                 console.msg_error(_(
                     "The period defined in argument {0}-{1} is outside in the\n"
-                    "maximum possible period for this station: {2}-{3}.")
+                    "maximum possible period {2}-{3} for station {4}-{5}.")
                 .format(env.config_run.settings['process_period']['start'],
                     env.config_run.settings['process_period']['end'],
-                    common_date[0].year + 1, common_date[-1].year - 1))
+                    common_date[0].year + 1, common_date[-1].year - 1,
+                    self.code, self.name))
 
             common_date = common_date[common_date.index(date(env.config_run.settings['process_period']['start'] - 1, 1, 1)):
             common_date.index(date(env.config_run.settings['process_period']['end'] + 1, 12, 1)) + 1]
