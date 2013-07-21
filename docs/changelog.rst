@@ -18,6 +18,17 @@ news
   (in based of ranking) with its corresponding list of stations
   included for the analysis period.
 
+fixes
++++++
+
+- Fixes some messages and warnings
+- Force convert dos2unix with binary characters and fix directory
+  name when the file haven't extension in ideamFormat2jazikuFormat
+- Fix special character in stations name and name variable in
+  continue station in ideamFormat2jazikuFormat script
+- Fix units in particular type of time series in y-label for graphs
+  for inspection of series
+
 
 0.6.1 (**2013-06-XX**)
 ----------------------

@@ -540,11 +540,17 @@ def graphs_inspection_of_series(stations_list):
             num_years = station.process_period['end'] - station.process_period['start']
 
             if type != 'special_I' and type != 'special_D':
-                type_var = env.config_run.settings['type_var_'+type]
+                if type == 'D':
+                    type_var = env.var_D.TYPE_SERIES
+                if type == 'I':
+                    type_var = env.var_I.TYPE_SERIES
                 name_graph = _("Station_{0}-{1}_({2}_vs_Time)").format(station.code, station.name, type_var)
                 len_x = len(x)
             else:
-                type_var = env.config_run.settings['type_var_'+type[-1::]]
+                if type[-1::] == 'D':
+                    type_var = env.var_D.TYPE_SERIES
+                if type[-1::] == 'I':
+                    type_var = env.var_I.TYPE_SERIES
                 name_graph = _("_Station_{0}-{1}_({2}_vs_Time)_").format(station.code, station.name, type_var)
 
                 # add point in end of X-axis
@@ -618,7 +624,7 @@ def graphs_inspection_of_series(stations_list):
             if type in ['special_I', 'I']:
                 units = env.var_I.units
 
-            ax.set_ylabel(unicode('{0} ({1})'.format(type_var,units), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            ax.set_ylabel(unicode('{0} ({1})'.format(type_var, units), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             pyplot.subplots_adjust(bottom=0.2)
             ax.grid(True)
