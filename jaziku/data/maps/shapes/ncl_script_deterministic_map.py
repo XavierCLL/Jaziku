@@ -44,7 +44,7 @@ def code(map_properties):
         'minlon': map_properties.minlon,
         'maxlon': map_properties.maxlon,
         'thresholds': map_properties.thresholds,
-        'legend_units': env.var_D.units,
+        'legend_units': env.var_D.UNITS,
         'mode_calculation_series': env.config_run.settings['mode_calculation_series_D_i18n'],
         'analysis_interval': env.config_run.settings['analysis_interval_i18n'],
         'name': '''"{0}"'''.format(map_properties.name),

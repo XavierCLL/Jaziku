@@ -80,6 +80,32 @@ INTERNAL_UNITS = {
     'AREA_WHWP':    'anomaly scaled 10e6 km^2'
 }
 
+# translate internal units
+def INTERNAL_UNITS_i18n():
+    global INTERNAL_UNITS
+    INTERNAL_UNITS['ONI1'] = _('anomaly')
+    INTERNAL_UNITS['ONI2'] = _('anomaly')
+    INTERNAL_UNITS['SOI'] = _('Std anomaly')
+    INTERNAL_UNITS['SOI_TROUP'] = _('Std anomaly')
+    INTERNAL_UNITS['W200'] = _('Std anomaly')
+    INTERNAL_UNITS['W850w'] = _('anomaly')
+    INTERNAL_UNITS['W850c'] = _('anomaly')
+    INTERNAL_UNITS['W850e'] = _('anomaly')
+    INTERNAL_UNITS['ASST12'] = _('anomaly')
+    INTERNAL_UNITS['ASST3'] = _('anomaly')
+    INTERNAL_UNITS['ASST4'] = _('anomaly')
+    INTERNAL_UNITS['ASST34'] = _('anomaly')
+    INTERNAL_UNITS['NAO'] = _('anomaly')
+    INTERNAL_UNITS['AREA_WHWP'] = _('anomaly scaled 10e6 km^2')
+
+    if TYPE_SERIES in INTERNAL_UNITS:
+        global UNITS
+        UNITS = INTERNAL_UNITS[TYPE_SERIES]
+
+# variable use for set units for var I, known and unknown for jaziku
+# for particular units set it in runfile, please read jaziku's manual
+UNITS = None
+
 # available mode calculation series for internal independent variable
 # the fist element is by default (options: ['mean', 'accumulate'],)
 MODE_CALCULATION_SERIES = {
@@ -106,11 +132,6 @@ MODE_CALCULATION_SERIES = {
     'CAR':          ['mean'],
     'AREA_WHWP':    ['mean'],
 }
-
-# variable use for set units for var I, known and unknown for jaziku
-# for particular units set it in runfile, please read jaziku's manual
-units = None
-
 
 # Internal limits for var_I (independent variable)
 #

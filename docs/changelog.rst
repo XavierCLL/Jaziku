@@ -28,6 +28,7 @@ fixes
   continue station in ideamFormat2jazikuFormat script
 - Fix units in particular type of time series in y-label for graphs
   for inspection of series
+- Fixes units variable translations for var_D and var_I
 
 
 0.6.1 (**2013-06-XX**)
