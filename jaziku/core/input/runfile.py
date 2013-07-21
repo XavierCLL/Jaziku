@@ -222,26 +222,26 @@ def read_runfile():
         # get type
         env.var_D.TYPE_SERIES = string[0:string.index('(')].strip()
         # get units
-        env.var_D.units = string[string.index('(') + 1:string.index(')')].strip()
+        env.var_D.UNITS = string[string.index('(') + 1:string.index(')')].strip()
     else:
         env.var_D.TYPE_SERIES = env.config_run.settings['type_var_D']
         if env.var_D.TYPE_SERIES in env.var_D.INTERNAL_UNITS:
-            env.var_D.units = env.var_D.INTERNAL_UNITS[env.var_D.TYPE_SERIES]
+            env.var_D.UNITS = env.var_D.INTERNAL_UNITS[env.var_D.TYPE_SERIES]
         else:
-            env.var_D.units = '--'
+            env.var_D.UNITS = '--'
     # var I
     if env.config_run.settings['type_var_I'] is not None and '(' and ')' in env.config_run.settings['type_var_I']:
         string = env.config_run.settings['type_var_I']
         # get type
         env.var_I.TYPE_SERIES = string[0:string.index('(')].strip()
         # get units
-        env.var_I.units = string[string.index('(') + 1:string.index(')')].strip()
+        env.var_I.UNITS = string[string.index('(') + 1:string.index(')')].strip()
     else:
         env.var_I.TYPE_SERIES = env.config_run.settings['type_var_I']
         if env.var_I.TYPE_SERIES in env.var_I.INTERNAL_UNITS:
-            env.var_I.units = env.var_I.INTERNAL_UNITS[env.var_I.TYPE_SERIES]
+            env.var_I.UNITS = env.var_I.INTERNAL_UNITS[env.var_I.TYPE_SERIES]
         else:
-            env.var_I.units = '--'
+            env.var_I.UNITS = '--'
 
     # -------------------------------------------------------------------------
     # read stations:

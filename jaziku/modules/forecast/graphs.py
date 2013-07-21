@@ -282,7 +282,7 @@ def forecast_graphs(station):
                 pie_plot = ax.pie(values_pie, colors=colours, autopct='%1.1f%%', shadow=True)
                 pyplot.legend(tuple(pie_plot[0]), labels, loc=(0.96,0.2), borderaxespad=-3, shadow=False, fancybox=True, fontsize=11, labelspacing=0.3)
                 # show units above of legend box
-                fig.text(0.745, 0.585, '{0}\n{1} ({2})'.format(env.var_D.units,
+                fig.text(0.745, 0.585, '{0}\n{1} ({2})'.format(env.var_D.UNITS,
                                                                env.config_run.settings['mode_calculation_series_D_i18n'],
                                                                env.config_run.settings['analysis_interval_i18n']), fontsize=11, ha='center')
 

@@ -42,7 +42,7 @@ INTERNAL_TYPES = [
 # Units for types of dependent variable, known for jaziku
 INTERNAL_UNITS = {
     'PPT':          'mm',
-    'NDPPT':        _('days'),
+    'NDPPT':        'days',
     'TMIN':         'Celsius',
     'TMAX':         'Celsius',
     'TEMP':         'Celsius',
@@ -50,6 +50,19 @@ INTERNAL_UNITS = {
     'RH':           '%',
     'RUNOFF':       'm^3/s'
 }
+
+# translate internal units
+def INTERNAL_UNITS_i18n():
+    global INTERNAL_UNITS
+    INTERNAL_UNITS['NDPPT'] = _('days')
+
+    if TYPE_SERIES in INTERNAL_UNITS:
+        global UNITS
+        UNITS = INTERNAL_UNITS[TYPE_SERIES]
+
+# variable use for set units for var D, known and unknown for jaziku
+# for particular units set it in runfile, please read jaziku's manual
+UNITS = None
 
 # available mode calculation series for internal dependent variable
 # the fist element is by default (options: ['mean', 'accumulate'],)
@@ -63,10 +76,6 @@ MODE_CALCULATION_SERIES = {
     'RH':           ['mean'],
     'RUNOFF':       ['mean'],
 }
-
-# variable use for set units for var D, known and unknown for jaziku
-# for particular units set it in runfile, please read jaziku's manual
-units = None
 
 # Internal limits for var_D (dependent variable)
 #

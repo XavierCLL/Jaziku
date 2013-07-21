@@ -216,7 +216,7 @@ def configuration_run():
     # ------------------------
     # type var D
     if env.var_D.TYPE_SERIES:
-        settings["type_var_D"] = colored.green(env.var_D.TYPE_SERIES) + " ({0})".format(env.var_D.units)
+        settings["type_var_D"] = colored.green(env.var_D.TYPE_SERIES) + " ({0})".format(env.var_D.UNITS)
     else:
         settings["type_var_D"] = None
 
@@ -280,7 +280,7 @@ def configuration_run():
     # ------------------------
     # type var I
     if env.var_I.TYPE_SERIES:
-        settings["type_var_I"] = colored.green(env.var_I.TYPE_SERIES) + " ({0})".format(env.var_I.units)
+        settings["type_var_I"] = colored.green(env.var_I.TYPE_SERIES) + " ({0})".format(env.var_I.UNITS)
 
     # ------------------------
     # mode_calculation_series_I

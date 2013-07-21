@@ -128,3 +128,14 @@ def set_language(language):
 
     config_run.settings['language'] = settings_language
 
+
+    # -------------------------------------------------------------------------
+    # RUN POST-PROCESS AFTER LANGUAGE SETTINGS
+    # reset some variables in current language
+
+    from jaziku.env import var_D, var_I
+    var_D.INTERNAL_UNITS_i18n()
+    var_I.INTERNAL_UNITS_i18n()
+
+
+
