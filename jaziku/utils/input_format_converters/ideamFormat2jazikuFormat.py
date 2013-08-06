@@ -238,8 +238,9 @@ def main():
 
                         variables[name_variable]['stations_processed'][(station['code'],station['name'])] = False
 
+                        before_year = None
+
                     in_station_data = True
-                    before_year = None
                     in_station_properties = False
                     before_line = line
                     continue
