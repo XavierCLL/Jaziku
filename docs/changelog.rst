@@ -17,6 +17,9 @@ news
   Writes a csv file of all possible periods from best to worst
   (in based of ranking) with its corresponding list of stations
   included for the analysis period.
+- For ideamFormat2jazikuFormat script added 3 new filters (time
+  series that contain start/end year and minimum size years of
+  data) for choose stations for write in runfile
 
 fixes
 +++++
