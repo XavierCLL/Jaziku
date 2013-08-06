@@ -32,15 +32,18 @@
 # Open terminal where saved the file to be processed (i.e INPUT_FILE.bin)
 # and run:
 #
-#     ideamFormat2jazikuFormat INPUT_FILE.bin
+#     ideamFormat2jazikuFormat INPUT_FILE [--start_year START_YEAR]
+#                                         [--end_year END_YEAR]
+#                                         [--min_years MIN_YEARS]
 #
 
 import sys
 import os
 import csv
+import argparse
+import errno
 from subprocess import call
 from clint.textui import colored
-import errno
 
 from jaziku.utils import output, console, text
 from jaziku.utils.geographic import dms2dd
@@ -54,14 +57,44 @@ def main():
     print "\nTRANSFORM DATA SCRIPT FROM IDEAM FORMAT TO JAZIKU FORMAT\n"
     #print colored.yellow("Important: This transform data script version is input valid for Jaziku 0.3.x")
 
-    #csv file from arguments
-    file_input = sys.argv[1]
+    # -------------------------------------------------------------------------
+    # PARSER AND CHECK ARGUMENTS
 
-    if not os.path.isfile(file_input):
-        print "ERROR: no such file or directory: {0}\n".format(file_input)
+    # Create parser arguments
+    arguments = argparse.ArgumentParser(
+                     prog="ideamFormat2jazikuFormat",
+                     description=_("This script transform from ideam format got from SISDIM software to Jaziku format."),
+                     epilog=console.msg_footer(text=True),
+                     formatter_class=argparse.RawTextHelpFormatter)
+
+    # file input argument
+    arguments.add_argument('file_input', type=str, help=_('File input from SISDIM software'))
+
+    # start year
+    arguments.add_argument('--start_year', type=int,  default=None,
+                           help=_('put in runfile only time series have contain this year by below.'), required=False)
+
+    # end year
+    arguments.add_argument('--end_year', type=int,  default=None,
+                           help=_('put in runfile only time series have contain this year by above.'), required=False)
+
+    # min years
+    arguments.add_argument('--min_years', type=int,  default=None,
+                           help=_('put in runfile only time series have contain at least this minimum of years.'), required=False)
+
+    arg = arguments.parse_args()
+
+    # check arguments
+    if arg.start_year is not None and arg.end_year is not None and arg.min_years is not None:
+        print colored.red("ERROR: you can't defined all arguments 'start_year', "
+              "'end_year' and 'min_years' at the same time\n")
         exit()
 
-    print "Processing file: " + colored.green(file_input)
+    if not os.path.isfile(arg.file_input):
+        print colored.red("ERROR: no such file or directory: {0}\n".format(arg.file_input))
+        exit()
+
+    print "Processing file: " + colored.green(arg.file_input)
 
     # -------------------------------------------------------------------------
     # variables
@@ -71,10 +104,10 @@ def main():
     # -------------------------------------------------------------------------
     # prepare names directories
 
-    dir_output_name = os.path.abspath(os.path.splitext(file_input)[0])
+    dir_output_name = os.path.abspath(os.path.splitext(arg.file_input)[0])
 
     # next TODO
-    if len([e for e in os.path.splitext(file_input) if e]) <= 1:
+    if len([e for e in os.path.splitext(arg.file_input) if e]) <= 1:
         dir_output_name += "_"
 
     dir_var_D_stations = "var_D_files"
@@ -117,9 +150,9 @@ def main():
     print "\nConverting and cleaning all 'DOS' characters inside the SISDIM format:"
 
     # standard clean with dos2unix
-    call([console.which('dos2unix'), '-f', file_input], shell=False)
+    call([console.which('dos2unix'), '-f', arg.file_input], shell=False)
     # convert ^M in extra newline
-    call([console.which('dos2unix'), '-f', '-l', file_input], shell=False)
+    call([console.which('dos2unix'), '-f', '-l', arg.file_input], shell=False)
     print ""
 
     # -------------------------------------------------------------------------
@@ -134,14 +167,15 @@ def main():
 
     continue_station = False
     all_stations_processed = 0
+    stations_in_runfile = 0
     before_line = "MINIMOS"
 
-    with open(file_input,'rb+') as fileobject:
+    with open(arg.file_input,'rb+') as fileobject:
 
         for line in fileobject:
 
             # continue if line is null o empty
-            if not line or not line.strip():
+            if not line or not line.strip() or line.strip().startswith("************"):
                 # not continue if is reading the name variable
                 if line_in_station_properties != 2:
                     continue
@@ -218,25 +252,18 @@ def main():
 
                     station['alt'] = alt
                 # write station info and switch to read the station data
-                if line_in_station_properties == 9:
+                if line_in_station_properties == 7:
                     if not continue_station:
                         # define path to save file
                         station['file'] = "{0}-{1}.txt".format(station['code'], station['name'])
                         station['path'] = os.path.join(dir_var_D_stations, station['file'])
 
-                        # write station properties into runfile
-                        if (station['code'],station['name']) in variables[name_variable]['stations_processed'] and \
-                           variables[name_variable]['stations_processed'][(station['code'],station['name'])] is True:
-                            print colored.yellow("But not write the same station into the runfile")
-                        else:
-                            variables[name_variable]['runfile_csv'].writerow([station['code'], station['name'], output.number(station['lat']),
-                                                              output.number(station['lon']), output.number(station['alt']), station['path']])
+
 
                         # open to write station
                         station['file_to_write'] \
                             = csv.writer(open(os.path.join(dir_output_name, text.slugify(variables[name_variable]['name']), station['path']), 'w'), delimiter=' ')
 
-                        variables[name_variable]['stations_processed'][(station['code'],station['name'])] = False
 
                         before_year = None
 
@@ -263,6 +290,8 @@ def main():
                             for month in range(0,12):
                                 station['file_to_write'].writerow(["{0}-{1}".format(before_year+1,fix_zeros(month+1)), 'nan'])
                             before_year += 1
+                    else:
+                        station['start_year'] = year
                     # write the month values for the year
                     for month in range(0,12):
                         value = line[12+9*month:19+9*month].strip()
@@ -281,18 +310,54 @@ def main():
                         station['file_to_write'].writerow(["{0}-{1}".format(year,fix_zeros(month+1)), value])
                     before_line = line
                     before_year = year
+                    station['end_year'] = year
 
 
             # read until start next station (continue or new station)
             if not in_station_properties and not in_station_data:
-                if line.strip().startswith("I D E A M"):
+                if line.strip().startswith("I D E A M") or line.strip() == "**  C O N V E N C I O N E S  **":
                     if before_line.strip().startswith("MINIMOS"):
                         continue_station = False
                         if 'code' in station and 'name' in station:
+                            # write station properties into runfile
+                            if (station['code'],station['name']) in variables[name_variable]['stations_processed'] and \
+                               variables[name_variable]['stations_processed'][(station['code'],station['name'])] is True:
+                                print colored.yellow("But not write the same station into the runfile")
+                            else:
+                                write_in_runfile = None
+                                if arg.start_year is not None:
+                                    if arg.start_year >= station['start_year']:
+                                        write_in_runfile = True
+                                    else:
+                                        write_in_runfile = False
+
+                                if arg.end_year is not None:
+                                    if arg.end_year <= station['end_year'] and write_in_runfile is not False:
+                                        write_in_runfile = True
+                                    else:
+                                        write_in_runfile = False
+
+                                if arg.min_years is not None:
+                                    if arg.min_years <= (station['end_year'] - station['start_year']) and write_in_runfile is not False:
+                                        write_in_runfile = True
+                                    else:
+                                        write_in_runfile = False
+
+                                if write_in_runfile is None:
+                                    write_in_runfile = True
+
+                                if write_in_runfile is True:
+                                    variables[name_variable]['runfile_csv'].\
+                                        writerow([station['code'], station['name'], output.number(station['lat']),
+                                                  output.number(station['lon']), output.number(station['alt']), station['path']])
+                                    stations_in_runfile += 1
+                            # mark the station as processed
                             variables[name_variable]['stations_processed'][(station['code'],station['name'])] = True
                             all_stations_processed += 1
                         del station
                     else:
+                        # continue read the same station in the next block
+                        variables[name_variable]['stations_processed'][(station['code'],station['name'])] = False
                         continue_station = True
 
                     # start new station
@@ -301,10 +366,16 @@ def main():
 
                 before_line = line
 
+                if line.strip() == "**  C O N V E N C I O N E S  **":
+                    # finish
+                    break
+
+
     print "\nStations processed: " + str(all_stations_processed)
-    print "Saving result in: " + os.path.splitext(file_input)[0]
-    #print "Saving runfile in: " + os.path.join(os.path.splitext(file_input)[0], runfile_name)
-    #print "Saving stations list files in: " + os.path.join(os.path.splitext(file_input)[0], dir_var_D_stations)
+    print "Stations in runfile: " + str(stations_in_runfile) + " (pass all filters)"
+    print "Saving result in: " + os.path.splitext(arg.file_input)[0]
+    #print "Saving runfile in: " + os.path.join(os.path.splitext(arg.file_input)[0], runfile_name)
+    #print "Saving stations list files in: " + os.path.join(os.path.splitext(arg.file_input)[0], dir_var_D_stations)
     print colored.yellow("Complete the runfile.csv before run with Jaziku")
     print colored.green("\nDone\n")
 
