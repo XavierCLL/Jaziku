@@ -21,7 +21,7 @@
 
 # Transform data stations:
 #
-# This script transform from ideam format got from SISDIM software
+# This script transform from ideam format got from SISDHIM software
 # (see a example into docs) to individual data per station ready for
 # process with Jaziku, besides, create the structure of runfile with
 # all stations processed, but this needs to be complete before run
@@ -29,7 +29,7 @@
 #
 # Use:
 #
-# Open terminal where saved the file to be processed (i.e INPUT_FILE.bin)
+# Open terminal where saved the file to be processed (i.e INPUT_FILE)
 # and run:
 #
 #     ideamFormat2jazikuFormat INPUT_FILE [--start_year START_YEAR]
@@ -63,12 +63,12 @@ def main():
     # Create parser arguments
     arguments = argparse.ArgumentParser(
                      prog="ideamFormat2jazikuFormat",
-                     description=_("This script transform from ideam format got from SISDIM software to Jaziku format."),
+                     description=_("This script transform from ideam format got from SISDHIM to Jaziku format."),
                      epilog=console.msg_footer(text=True),
                      formatter_class=argparse.RawTextHelpFormatter)
 
     # file input argument
-    arguments.add_argument('file_input', type=str, help=_('File input from SISDIM software'))
+    arguments.add_argument('file_input', type=str, help=_('File input from SISDHIM'))
 
     # start year
     arguments.add_argument('--start_year', type=int,  default=None,
@@ -143,11 +143,11 @@ def main():
     # test if dos2unix exists
     if not console.which('dos2unix'):
         print colored.red("Error: this script need the program 'dos2unix' for\n"
-                          "convert and clean all 'DOS' characters inside the SISDIM format.\n"
+                          "convert and clean all 'DOS' characters inside the SISDHIM format.\n"
                           "Install 'dos2unix' from repositories of your Linux distribution.\n")
         exit()
 
-    print "\nConverting and cleaning all 'DOS' characters inside the SISDIM format:"
+    print "\nConverting and cleaning all 'DOS' characters inside the SISDHIM format:"
 
     # standard clean with dos2unix
     call([console.which('dos2unix'), '-f', arg.file_input], shell=False)
