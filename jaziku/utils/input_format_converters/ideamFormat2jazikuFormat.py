@@ -37,12 +37,11 @@
 #                                         [--min_years MIN_YEARS]
 #
 
-import sys
 import os
 import csv
 import argparse
 import errno
-from subprocess import call
+from calendar import monthrange
 from clint.textui import colored
 
 from jaziku.utils import output, console, text
@@ -50,9 +49,6 @@ from jaziku.utils.geographic import dms2dd
 from jaziku.utils.input_format_converters import runfile_skeleton
 
 def main():
-    if len(sys.argv) < 2:
-        print "Error, missing argument.\nUse: python2 {0} IDEAM_FORMAT_FILE".format(sys.argv[0])
-        exit()
 
     print "\nTRANSFORM DATA SCRIPT FROM IDEAM FORMAT TO JAZIKU FORMAT\n"
     #print colored.yellow("Important: This transform data script version is input valid for Jaziku 0.3.x")
@@ -68,7 +64,7 @@ def main():
                      formatter_class=argparse.RawTextHelpFormatter)
 
     # file input argument
-    arguments.add_argument('file_input', type=str, help=_('File input from SISDHIM'))
+    arguments.add_argument('input_file', type=str, help=_('File input from SISDHIM'))
 
     # start year
     arguments.add_argument('--start_year', type=int,  default=None,
@@ -90,24 +86,19 @@ def main():
               "'end_year' and 'min_years' at the same time\n")
         exit()
 
-    if not os.path.isfile(arg.file_input):
-        print colored.red("ERROR: no such file or directory: {0}\n".format(arg.file_input))
+    if not os.path.isfile(arg.input_file):
+        print colored.red("ERROR: no such file or directory: {0}\n".format(arg.input_file))
         exit()
 
-    print "Processing file: " + colored.green(arg.file_input)
-
-    # -------------------------------------------------------------------------
-    # variables
-
-    variables = {}
+    print "Processing file: " + colored.green(arg.input_file)
 
     # -------------------------------------------------------------------------
     # prepare names directories
 
-    dir_output_name = os.path.abspath(os.path.splitext(arg.file_input)[0])
+    dir_output_name = os.path.abspath(os.path.splitext(arg.input_file)[0])
 
     # next TODO
-    if len([e for e in os.path.splitext(arg.file_input) if e]) <= 1:
+    if len([e for e in os.path.splitext(arg.input_file) if e]) <= 1:
         dir_output_name += "_"
 
     dir_var_D_stations = "var_D_files"
@@ -138,7 +129,7 @@ def main():
         return csv.writer(runfile, delimiter=';')
 
     # -------------------------------------------------------------------------
-    # prepare filein
+    # prepare input file
 
     # test if dos2unix exists
     if not console.which('dos2unix'):
@@ -147,34 +138,73 @@ def main():
                           "Install 'dos2unix' from repositories of your Linux distribution.\n")
         exit()
 
-    print "\nConverting and cleaning all 'DOS' characters inside the SISDHIM format:"
+    print "\nConverting and cleaning all 'DOS' characters inside the SISDHIM format of input file:"
 
     # standard clean with dos2unix
-    call([console.which('dos2unix'), '-f', arg.file_input], shell=False)
+    #call([console.which('dos2unix'), '-f', arg.input_file], shell=False)
     # convert ^M in extra newline
-    call([console.which('dos2unix'), '-f', '-l', arg.file_input], shell=False)
+    #call([console.which('dos2unix'), '-f', '-l', arg.input_file], shell=False)
     print ""
 
     # -------------------------------------------------------------------------
-    # process filein and all stations
+    # utility functions
 
     def fix_zeros(dt):
         return '0'+str(dt) if len(str(dt))<2 else str(dt)
 
+    def if_station_pass_filters():
+        write_in_runfile = None
+        if arg.start_year is not None:
+            if arg.start_year >= station['start_year']:
+                write_in_runfile = True
+            else:
+                write_in_runfile = False
+
+        if arg.end_year is not None:
+            if arg.end_year <= station['end_year'] and write_in_runfile is not False:
+                write_in_runfile = True
+            else:
+                write_in_runfile = False
+
+        if arg.min_years is not None:
+            if arg.min_years <= (station['end_year'] - station['start_year']) and write_in_runfile is not False:
+                write_in_runfile = True
+            else:
+                write_in_runfile = False
+
+        if write_in_runfile is None:
+            write_in_runfile = True
+
+        return write_in_runfile
+
+    def file_len(fname):
+        with open(fname) as f:
+            for i, l in enumerate(f):
+                pass
+        return i + 1
+
+    # -------------------------------------------------------------------------
+    # init some variables
+
+    variables = {}
+    station = {}
+    frequency_data = None
     in_station_data = False
     in_station_properties = False
-    station = {}
-
     continue_station = False
+    before_year = None
     all_stations_processed = 0
     stations_in_runfile = 0
-    before_line = "MINIMOS"
+    len_of_file = file_len(arg.input_file)
 
-    with open(arg.file_input,'rb+') as fileobject:
+    # -------------------------------------------------------------------------
+    # process input file and all stations
 
-        for line in fileobject:
+    with open(arg.input_file,'rb+') as fileobject:
 
-            # continue if line is null o empty
+        for line_num, line in enumerate(fileobject):
+
+            # continue if line is null, empty or with ****
             if not line or not line.strip() or line.strip().startswith("************"):
                 # not continue if is reading the name variable
                 if line_in_station_properties != 2:
@@ -200,20 +230,56 @@ def main():
                         variables[name_variable] = variable
                         variables['stations'] = []
 
-                # code and name
+                # code, name (and year)
                 if line_in_station_properties == 3:
+
+                    # only for daily data
+                    year = line[59:63].strip()
+
+                    if year and len(year) == 4:
+                        year = int(year)
+                        # set the frequency_data of input file
+                        frequency_data = 'daily'
+                    else:
+                        frequency_data = 'monthly'
+
                     code = line[104:114].strip()
                     name = line[114::].strip().replace('/','_')
-                    if continue_station:
-                        if station['code'] != code or station['name'] != name:
-                            print colored.red("Error: the station continue but with different name or code ({0} - {1})".format(station['code'], station['name']))
-                            exit()
+
+                    # check if station is repeat
+                    if (code,name) in variables[name_variable]['stations_processed'] and \
+                       variables[name_variable]['stations_processed'][(code,name)] is True:
+                        print colored.yellow("WARNING: detect repeat station for {0} - {1}: ignore and continue".format(code, name))
+                        in_station_properties = False
+                        in_station_data = False
+                    # continue read the same station in the next block
+                    elif ('code' in station and 'name' in station) and \
+                         (station['code'] == code and station['name'] == name):
+
+                        variables[name_variable]['stations_processed'][(station['code'],station['name'])] = False
+                        continue_station = True
+
                         for variable in variables:
                             if variable.startswith(name_variable):
                                 name_variable = variable
                         if variables[name_variable]['stations_processed'][(station['code'],station['name'])] is False:
                             print colored.blue("Continue the station:   {0} - {1}".format(station['code'], station['name']))
-                    if not continue_station:
+                    # start new station
+                    else:
+                        # save the previous station before to create a new station
+                        continue_station = False
+                        if 'code' in station and 'name' in station:
+                            # write station properties into runfile
+                            if if_station_pass_filters() is True:
+                                variables[name_variable]['runfile_csv'].\
+                                    writerow([station['code'], station['name'], output.number(station['lat']),
+                                              output.number(station['lon']), output.number(station['alt']), station['path']])
+                                stations_in_runfile += 1
+                            # mark the station as processed
+                            variables[name_variable]['stations_processed'][(station['code'],station['name'])] = True
+                            all_stations_processed += 1
+
+                        # start the new station
                         station = {}
                         station['code'] = code
                         station['name'] = name
@@ -222,6 +288,10 @@ def main():
                             print colored.yellow("The station {0} - {1} is already exist: Overwriting".format(station['code'], station['name']))
                         else:
                             print "Processing the station: {0} - {1}".format(station['code'], station['name'])
+
+                        if frequency_data == 'daily':
+                            before_year = None
+
                 # latitude
                 if line_in_station_properties == 4 and not continue_station:
                     lat_deg = line[14:17].strip()
@@ -257,19 +327,16 @@ def main():
                         # define path to save file
                         station['file'] = "{0}-{1}.txt".format(station['code'], station['name'])
                         station['path'] = os.path.join(dir_var_D_stations, station['file'])
-
-
-
                         # open to write station
                         station['file_to_write'] \
                             = csv.writer(open(os.path.join(dir_output_name, text.slugify(variables[name_variable]['name']), station['path']), 'w'), delimiter=' ')
-
-
-                        before_year = None
+                        if frequency_data == 'monthly':
+                            before_year = None
 
                     in_station_data = True
                     in_station_properties = False
-                    before_line = line
+                    if frequency_data == 'daily':
+                        months_data = [[],[],[],[],[],[],[],[],[],[],[],[]]
                     continue
 
                 line_in_station_properties += 1
@@ -277,109 +344,120 @@ def main():
             # read station data
             if in_station_data:
 
-                year = line[1:5]
-                try:
-                    year = int(year)
-                except:
+                if frequency_data == 'monthly':
+                    year = line[1:5]
+                    try:
+                        year = int(year)
+                    except:
+                        in_station_data = False
+
+                if frequency_data == 'daily':
+                    day_to_process = line[11:13]
+                    try:
+                        day_to_process = int(day_to_process)
+                    except:
+                        # write data
+                        for month in range(0,12):
+                            days_in_month = monthrange(year, month+1)[1]
+                            for day in range(0,days_in_month):
+                                station['file_to_write'].writerow(["{0}-{1}-{2}".format(year,fix_zeros(month+1),fix_zeros(day+1)), months_data[month][day]])
+
+                        before_year = year
+                        station['end_year'] = year
+                        in_station_data = False
+
+                # check if station is repeat
+                if continue_station and year < before_year:
+                    print colored.yellow("WARNING: detect repeat station for {0} - {1}: ignore and continue".format(station['code'], station['name']))
+                    variables[name_variable]['stations_processed'][(station['code'],station['name'])] = True
+                    in_station_properties = False
                     in_station_data = False
 
                 if in_station_data:
                     # fill the empty years with nan
                     if before_year is not None:
-                        while year != before_year+1:
-                            for month in range(0,12):
-                                station['file_to_write'].writerow(["{0}-{1}".format(before_year+1,fix_zeros(month+1)), 'nan'])
+                        while year > before_year+1:
+                            if frequency_data == 'monthly':
+                                for month in range(0,12):
+                                    station['file_to_write'].writerow(["{0}-{1}".format(before_year+1,fix_zeros(month+1)), 'nan'])
+                            if frequency_data == 'daily':
+                                for month in range(0,12):
+                                    days_in_month = monthrange(year, month+1)[1]
+                                    for day in range(0,days_in_month):
+                                        station['file_to_write'].writerow(["{0}-{1}-{2}".format(before_year+1,fix_zeros(month+1),fix_zeros(day+1)), 'nan'])
                             before_year += 1
                     else:
+                        # save the first year
                         station['start_year'] = year
-                    # write the month values for the year
-                    for month in range(0,12):
-                        value = line[12+9*month:19+9*month].strip()
-                        if value in ['','*','+']:
-                            value = 'nan'
-                        # for runoff  TODO: check
-                        if value == 'seco':
-                            value = 0
-                        # convert value
-                        try:
-                            value = round(float(value), 5)
-                        except:
-                            # for wind or unknown words  TODO: accept wind values
-                            value = 'unknown'
+                    # get the values when the data are monthly
+                    if frequency_data == 'monthly':
+                        # write the month values for the year
+                        for month in range(0,12):
+                            value = line[12+9*month:19+9*month].strip()
+                            if value in ['','*','+']:
+                                value = 'nan'
+                            # for runoff  TODO: check
+                            if value == 'seco':
+                                value = 0
+                            # convert value
+                            try:
+                                value = round(float(value), 5)
+                            except:
+                                # for wind or unknown words  TODO: accept wind values
+                                value = 'unknown'
+                            station['file_to_write'].writerow(["{0}-{1}".format(year,fix_zeros(month+1)), value])
+                    # get the values when the data are daily
+                    if frequency_data == 'daily':
+                        # write the month values for the year
+                        for month in range(0,12):
+                            value = line[18+9*month:25+9*month].strip()
+                            if value in ['','*','+']:
+                                value = 'nan'
+                            # for runoff  TODO: check
+                            if value == 'seco':
+                                value = 0
+                            # convert value
+                            try:
+                                value = round(float(value), 5)
+                            except:
+                                # for wind or unknown words  TODO: accept wind values
+                                value = 'unknown'
 
-                        station['file_to_write'].writerow(["{0}-{1}".format(year,fix_zeros(month+1)), value])
-                    before_line = line
-                    before_year = year
-                    station['end_year'] = year
+                            months_data[month].append(value)
+
+                    if frequency_data == 'monthly':
+                        before_year = year
+                        station['end_year'] = year
 
 
             # read until start next station (continue or new station)
             if not in_station_properties and not in_station_data:
-                if line.strip().startswith("I D E A M") or line.strip() == "**  C O N V E N C I O N E S  **":
-                    if before_line.strip().startswith("MINIMOS"):
-                        continue_station = False
-                        if 'code' in station and 'name' in station:
-                            # write station properties into runfile
-                            if (station['code'],station['name']) in variables[name_variable]['stations_processed'] and \
-                               variables[name_variable]['stations_processed'][(station['code'],station['name'])] is True:
-                                print colored.yellow("But not write the same station into the runfile")
-                            else:
-                                write_in_runfile = None
-                                if arg.start_year is not None:
-                                    if arg.start_year >= station['start_year']:
-                                        write_in_runfile = True
-                                    else:
-                                        write_in_runfile = False
-
-                                if arg.end_year is not None:
-                                    if arg.end_year <= station['end_year'] and write_in_runfile is not False:
-                                        write_in_runfile = True
-                                    else:
-                                        write_in_runfile = False
-
-                                if arg.min_years is not None:
-                                    if arg.min_years <= (station['end_year'] - station['start_year']) and write_in_runfile is not False:
-                                        write_in_runfile = True
-                                    else:
-                                        write_in_runfile = False
-
-                                if write_in_runfile is None:
-                                    write_in_runfile = True
-
-                                if write_in_runfile is True:
-                                    variables[name_variable]['runfile_csv'].\
-                                        writerow([station['code'], station['name'], output.number(station['lat']),
-                                                  output.number(station['lon']), output.number(station['alt']), station['path']])
-                                    stations_in_runfile += 1
-                            # mark the station as processed
-                            variables[name_variable]['stations_processed'][(station['code'],station['name'])] = True
-                            all_stations_processed += 1
-                        del station
-                    else:
-                        # continue read the same station in the next block
-                        variables[name_variable]['stations_processed'][(station['code'],station['name'])] = False
-                        continue_station = True
-
-                    # start new station
+                if line.strip().startswith("I D E A M"):
+                    # start read new block
                     in_station_properties = True
                     line_in_station_properties = 0
 
-                before_line = line
-
-                if line.strip() == "**  C O N V E N C I O N E S  **":
+                if line_num == len_of_file-3:
+                    # write the last station before finish
+                    if if_station_pass_filters() is True:
+                        variables[name_variable]['runfile_csv'].\
+                            writerow([station['code'], station['name'], output.number(station['lat']),
+                                      output.number(station['lon']), output.number(station['alt']), station['path']])
+                        stations_in_runfile += 1
+                    # mark the station as processed
+                    variables[name_variable]['stations_processed'][(station['code'],station['name'])] = True
+                    all_stations_processed += 1
                     # finish
                     break
 
-
     print "\nStations processed: " + str(all_stations_processed)
     print "Stations in runfile: " + str(stations_in_runfile) + " (pass all filters)"
-    print "Saving result in: " + os.path.splitext(arg.file_input)[0]
-    #print "Saving runfile in: " + os.path.join(os.path.splitext(arg.file_input)[0], runfile_name)
-    #print "Saving stations list files in: " + os.path.join(os.path.splitext(arg.file_input)[0], dir_var_D_stations)
+    print "Saving result in: " + os.path.splitext(arg.input_file)[0]
+    #print "Saving runfile in: " + os.path.join(os.path.splitext(arg.input_file)[0], runfile_name)
+    #print "Saving stations list files in: " + os.path.join(os.path.splitext(arg.input_file)[0], dir_var_D_stations)
     print colored.yellow("Complete the runfile.csv before run with Jaziku")
     print colored.green("\nDone\n")
 
-    del variables
     exit()
 
 

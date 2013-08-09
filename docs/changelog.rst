@@ -20,6 +20,9 @@ news
 - For ideamFormat2jazikuFormat script added 3 new filters (time
   series that contain start/end year and minimum size years of
   data) for choose stations for write in runfile
+- For ideamFormat2jazikuFormat script now accepted the data
+  daily from Sisdhim format, auto-detect and transform to Jaziku
+  data daily format
 
 fixes
 +++++
