@@ -411,7 +411,7 @@ def analysis_the_best_periods_to_process(stations_list):
     min_start_periods = min(start_periods)+1
     max_end_periods = max(end_periods)-1
 
-    min_years_for_range_period = 5
+    min_years_for_range_period = 8
     list_of_periods = []
 
     for _start_year in range(min_start_periods, max_end_periods-min_years_for_range_period+1):
@@ -419,7 +419,8 @@ def analysis_the_best_periods_to_process(stations_list):
             if (_end_year-_start_year) < min_years_for_range_period:
                 continue
             list_of_one_period = []
-            for max_percentage_nulls_permitted in range(0,17,2):
+            num_stations_in_before_nulls_permitted_value = 0
+            for max_percentage_nulls_permitted in range(0,17,4):
                 period = {}
                 period["start_year"] = _start_year
                 period["end_year"] = _end_year
@@ -467,18 +468,17 @@ def analysis_the_best_periods_to_process(stations_list):
 
                 # ranking
                 # TODO: improve the ranking equation
-                period["rank"] = (((period["side_valid_data"]*period["num_stations"])**1.8)/
-                                  ((period["total_nulls"]+1)*100.0/float(period["side_valid_data"]+1)))/1000.0
-                if period["num_stations"] > 0:
+                period["rank"] = (((period["side_valid_data"]*(period["num_stations"]**2)*(period["end_year"]-period["start_year"])))/
+                                  ((period["total_nulls"]+1)/float(period["side_valid_data"]+1))**0.2)/10000.0
+                if period["num_stations"] > num_stations_in_before_nulls_permitted_value:
                     list_of_one_period.append(period)
+                num_stations_in_before_nulls_permitted_value = period["num_stations"]
                 del period
 
             if len(list_of_one_period) > 0:
-                list_of_periods.append(sorted(list_of_one_period, key=lambda x: x["rank"], reverse=True)[0])
+                list_of_periods += sorted(list_of_one_period, key=lambda x: x["rank"], reverse=True)
 
-
-    periods_ranked = sorted(list_of_periods, key=lambda x: x["rank"], reverse=True)
-
+    periods_ranked = sorted(list_of_periods, key=lambda x: x["rank"], reverse=True)[0:len(list_of_periods)/3]
     # write into file the periods ranked with stations of each period
     file_name = os.path.join(eda_dir, _('Analysis_the_best_periods_to_process.csv'))
     open_file = open(file_name, 'w')
