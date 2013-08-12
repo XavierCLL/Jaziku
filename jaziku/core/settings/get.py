@@ -291,7 +291,6 @@ def configuration_run():
 
     # ------------------------
     # path_to_file_var_I
-    print 'yess'
     if env.config_run.settings['path_to_file_var_I'] == 'internal':
         settings["path_to_file_var_I"] = colored.green(env.config_run.settings['path_to_file_var_I'])
     else:
