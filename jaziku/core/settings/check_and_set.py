@@ -106,7 +106,7 @@ def configuration_run():
     # graphics
     if env.config_run.settings['graphics'] is None:
         console.msg_error_configuration('graphics',
-            "The '{0}' no was defined."
+            _("The '{0}' no was defined.")
             .format('graphics'))
 
     # ------------------------
@@ -144,7 +144,7 @@ def configuration_run():
     # type_var_D
     if env.config_run.settings['type_var_D'] is None:
         console.msg_error_configuration('type_var_D',
-            "The '{0}' no was defined."
+            _("The '{0}' no was defined.")
             .format('type_var_D'))
 
     # ------------------------
@@ -238,7 +238,7 @@ def configuration_run():
     # type_var_I
     if env.config_run.settings['type_var_I'] is None:
         console.msg_error_configuration('type_var_I',
-            "The '{0}' no was defined."
+            _("The '{0}' no was defined.")
             .format('type_var_I'))
 
     # ------------------------
@@ -321,7 +321,7 @@ def configuration_run():
 
     # read from internal variable independent files of Jaziku, check
     # and notify if Jaziku are using the independent variable inside
-    # located in plugins/var_I/
+    # located in data/var_I/
     if env.config_run.settings["path_to_file_var_I"] == "internal":
         if env.config_run.settings["type_var_I"] not in env.var_I.INTERNAL_TYPES:
             console.msg_error_configuration('path_to_file_var_I',
