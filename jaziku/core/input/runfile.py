@@ -208,6 +208,11 @@ def read_runfile():
         env.config_run.settings['forecast_process'] = False
         env.config_run.settings['maps'] = False
 
+    # check path_to_file_var_I
+    if env.config_run.settings["path_to_file_var_I"] is None:
+        console.msg_error(_("The '{0}' no was defined.")
+                           .format('path_to_file_var_I'), wait_value=False)
+
     # if path_to_file_var_I is relative convert to absolute, except if is 'internal'
     if not os.path.isabs(env.config_run.settings["path_to_file_var_I"]) and\
        not env.config_run.settings["path_to_file_var_I"] == 'internal':
