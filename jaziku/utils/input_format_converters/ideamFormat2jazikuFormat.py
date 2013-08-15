@@ -42,6 +42,7 @@ import csv
 import argparse
 import errno
 from calendar import monthrange
+from subprocess import call
 from clint.textui import colored
 
 from jaziku.utils import output, console, text
@@ -141,9 +142,9 @@ def main():
     print "\nConverting and cleaning all 'DOS' characters inside the SISDHIM format of input file:"
 
     # standard clean with dos2unix
-    #call([console.which('dos2unix'), '-f', arg.input_file], shell=False)
+    call([console.which('dos2unix'), '-f', arg.input_file], shell=False)
     # convert ^M in extra newline
-    #call([console.which('dos2unix'), '-f', '-l', arg.input_file], shell=False)
+    call([console.which('dos2unix'), '-f', '-l', arg.input_file], shell=False)
     print ""
 
     # -------------------------------------------------------------------------
