@@ -4,24 +4,11 @@
 Incoming Plans / TODO
 =====================
 
-0.6 (**2013-02-xx**)
---------------------
-- Calculation of contingency tables for 4 and 5 categories
-- Nonparametric Tests of contingency table for 4 and 5 categories
-- Risk analysis for contingency tables for 4 and 5 categories
-- Calculations of values of the dependent variable intervals
-- Recalculate the value index files for maps
-- Modification of Figures for 3, 4 and 5 categories
-- Modification of maps for 3, 4 and 5 categories
-- Modification of the linear combination between the contingency table and forecasted by categories of the independent variable.
-- Modification of the option analog years for 4 and 5 categories
-
 0.7 (**2013-xx-xx**)
 --------------------
 - Add month and two-months to analysis resolution
 - Include MEI index for bimonthly analysis
 - Include ARH amazon index
-- Auto-validations
 
 0.8 (**2013-xx-xx**)
 --------------------
@@ -57,6 +44,7 @@ Others TODO
 
 To be included
 --------------
+- Auto-validations (skills)
 - save log
 - print console through classes
 - settings class
