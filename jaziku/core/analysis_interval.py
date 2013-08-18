@@ -43,8 +43,7 @@ class PeriodOfAnalysisInterval(object):
 
 
 def get_range_analysis_interval():
-    """
-    Return all start days of analysis interval
+    """Return all start days of analysis interval
     """
 
     if env.config_run.settings['analysis_interval'] != "trimester":
@@ -59,8 +58,7 @@ def get_range_analysis_interval():
 
 
 def get_state_of_data():
-    """
-    Calculate and define the state of data based on type of data (daily or monthly)
+    """Calculate and define the state of data based on type of data (daily or monthly)
     of dependent and independent variable.
 
     :return:
@@ -134,8 +132,7 @@ def adjust_data_of_variables(stations_list):
 
 
 def locate_day_in_analysis_interval(day_for_locate):
-    """
-    Return corresponding start day of analysis interval where
+    """Return corresponding start day of analysis interval where
     the day_for_locate is inside.
     """
     range_analysis_interval = get_range_analysis_interval()
@@ -146,8 +143,7 @@ def locate_day_in_analysis_interval(day_for_locate):
 
 
 def get_values_in_range_analysis_interval(station, type, year, month, day=None, lag=None):
-    """
-    Get all values inside range analysis interval in specific year, month, day or lag.
+    """Get all values inside range analysis interval in specific year, month, day or lag.
     The "type" must be "D" or "I". For trimester the "month" is the start month of
     trimester, for 5, 10, or 15 days the "day" is a start day in the range analysis
     interval. The "lag" is only affect for the independent variable and it must
