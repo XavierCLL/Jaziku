@@ -50,7 +50,7 @@ def get_specific_values(station, var, lag, month, day=None):
     """
 
     var_select = {'date': 0, 'var_D': 1, 'var_I': 2}
-    lag_select = {0: station.Lag_0, 1: station.Lag_1, 2: station.Lag_2}
+    lag_select = {0: station.time_series['lag_0'], 1: station.time_series['lag_1'], 2: station.time_series['lag_2']}
     temp_list = []
     for line in lag_select[lag]:
         if day:
@@ -88,12 +88,12 @@ def calculate_specific_value_of_time_series(variable, values_in_range_analysis_i
     return time_series_value
 
 
-
-def calculate_lags(station, makes_files=True):
-    """Calculate and return lags 0, 1 and 2 of specific stations
-    and save csv file of time series for each lag and trimester,
-    the lags are calculated based in: +1 year below of start
-    common period and -1 year above of end common period.
+def calculate_time_series(station, makes_files=True):
+    """Calculate and add dictionary to station of time series calculated for
+    lags 0, 1 and 2 of var_D and var_I based on mode calculation series and
+    analysis interval defined in runfile and, of course, type of series
+    (daily, monthly,...). Also makes csv file of time series for each lag and
+    trimester calculated based on the analysis interval.
 
     :param station: station for process
     :type station: Station
@@ -102,16 +102,14 @@ def calculate_lags(station, makes_files=True):
 
     Return by reference:
 
-    :ivar STATION.Lag_0: lag 0 of this station
-    :ivar STATION.Lag_1: lag 1 of this station
-    :ivar STATION.Lag_2: lag 2 of this station
+    :ivar STATION.time_series['lag_0'][[date,var_D,var_I],...]: time series calculated for lag 0 of this station
+    :ivar STATION.time_series['lag_1'][[date,var_D,var_I],...]: time series calculated for lag 1 of this station
+    :ivar STATION.time_series['lag_2'][[date,var_D,var_I],...]: time series calculated for lag 2 of this station
     """
 
     # initialized Lag_X
-    # format list: [trim, [ date, time_series_value_of_var_D, time_series_value_of_var_I ]], ...
-    Lag_0 = []
-    Lag_1 = []
-    Lag_2 = []
+    # format list for each lag: [trim, [ date, time_series_value_of_var_D, time_series_value_of_var_I ]], ...
+    station.time_series = {'lag_0':[], 'lag_1':[], 'lag_2':[]}
 
     if makes_files:
         # directories to save lags
@@ -163,11 +161,12 @@ def calculate_lags(station, makes_files=True):
                     ## calculate time series, get values and calculate the mean or accumulate the values in range analysis
                     values_in_range_analysis_interval = get_values_in_range_analysis_interval(station,'D', iter_year, month)
                     time_series_value_of_var_D = calculate_specific_value_of_time_series(station.var_D, values_in_range_analysis_interval)
+
                     values_in_range_analysis_interval = get_values_in_range_analysis_interval(station,'I', iter_year, month, lag=lag)
                     time_series_value_of_var_I = calculate_specific_value_of_time_series(station.var_I, values_in_range_analysis_interval)
 
                     # add line in list: Lag_X
-                    vars()['Lag_' + str(lag)].append([date(iter_year, month, 1), time_series_value_of_var_D, time_series_value_of_var_I])
+                    station.time_series['lag_'+str(lag)].append([date(iter_year, month, 1), time_series_value_of_var_D, time_series_value_of_var_I])
 
                     # add line output file csv_file
                     if makes_files:
@@ -232,11 +231,12 @@ def calculate_lags(station, makes_files=True):
                         ## calculate time series, get values and calculate the mean or accumulate the values in range analysis of var D
                         values_in_range_analysis_interval = get_values_in_range_analysis_interval(station,'D', iter_year, month, day, lag)
                         time_series_value_of_var_D = calculate_specific_value_of_time_series(station.var_D, values_in_range_analysis_interval)
+
                         values_in_range_analysis_interval = get_values_in_range_analysis_interval(station,'I', iter_year, month, day, lag)
                         time_series_value_of_var_I = calculate_specific_value_of_time_series(station.var_I, values_in_range_analysis_interval)
 
                         # add line in list: Lag_X
-                        vars()['Lag_' + str(lag)].append([date(iter_year, month, day), time_series_value_of_var_D, time_series_value_of_var_I])
+                        station.time_series['lag_'+str(lag)].append([date(iter_year, month, day), time_series_value_of_var_D, time_series_value_of_var_I])
 
                         # add line output file csv_file
                         if makes_files:
@@ -249,5 +249,3 @@ def calculate_lags(station, makes_files=True):
                 if makes_files:
                     open_file.close()
                     del csv_file
-
-    station.Lag_0, station.Lag_1, station.Lag_2 = Lag_0, Lag_1, Lag_2

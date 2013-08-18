@@ -24,7 +24,7 @@ from jaziku import env
 from jaziku.core.analysis_interval import get_range_analysis_interval
 from jaziku.utils import output
 from jaziku.utils import console
-from jaziku.modules.climate import lags
+from jaziku.modules.climate import time_series
 from jaziku.modules.climate.thresholds import get_thresholds
 
 
@@ -141,13 +141,13 @@ def get_specific_contingency_table(station, lag, month, day=None):
 
     if day is None:
         # get all values of var D and var I based on this lag and month
-        station.var_D.specific_values = lags.get_specific_values(station, 'var_D', lag, month)
-        station.var_I.specific_values = lags.get_specific_values(station, 'var_I', lag, month)
+        station.var_D.specific_values = time_series.get_specific_values(station, 'var_D', lag, month)
+        station.var_I.specific_values = time_series.get_specific_values(station, 'var_I', lag, month)
 
     if day is not None:
         # get all values of var D and var I based on this lag and month
-        station.var_D.specific_values = lags.get_specific_values(station, 'var_D', lag, month, day)
-        station.var_I.specific_values = lags.get_specific_values(station, 'var_I', lag, month, day)
+        station.var_D.specific_values = time_series.get_specific_values(station, 'var_D', lag, month, day)
+        station.var_I.specific_values = time_series.get_specific_values(station, 'var_I', lag, month, day)
 
     # calculate thresholds as defined by the user in station file for var D
     thresholds_var_D = get_thresholds(station, station.var_D)

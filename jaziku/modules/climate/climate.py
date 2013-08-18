@@ -22,8 +22,7 @@ import os
 from clint.textui import colored
 
 from jaziku import env
-from jaziku.modules.climate import result_table
-from jaziku.modules.climate.lags import calculate_lags
+from jaziku.modules.climate import result_table, time_series
 from jaziku.modules.climate.contingency_table import get_contingency_tables
 from jaziku.modules.climate.graphs import climate_graphs
 from jaziku.modules.maps.data import climate_data_for_maps
@@ -92,7 +91,7 @@ def process(station):
     # -------------------------------------------------------------------------
     # process
 
-    calculate_lags(station)
+    time_series.calculate_time_series(station)
 
     # size_time_series: is the number o years of the process period
     station.size_time_series = (len(station.common_period) / 12) - 2

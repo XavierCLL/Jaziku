@@ -24,8 +24,9 @@ news
   daily from Sisdhim format, auto-detect and transform to Jaziku
   data daily format
 - The calculate for make the time series in range analysis interval
-  (and lags) now put NaN is the nulls values is greater than 40% of
+  (and lags) now put NaN if the nulls values are greater than 40% of
   the values.
+- [code] Refactoring lag to time_series
 
 fixes
 +++++

@@ -29,8 +29,7 @@ from jaziku import env
 from jaziku.core.analysis_interval import get_range_analysis_interval
 from jaziku.modules.climate.thresholds import thresholds_to_list
 from jaziku.utils import output
-from jaziku.modules.climate import statistic_tests
-from jaziku.modules.climate.lags import get_specific_values
+from jaziku.modules.climate import statistic_tests, time_series
 from jaziku.utils.matrix import column
 
 
@@ -79,15 +78,15 @@ def composite_analysis(station):
 
         if env.globals_vars.STATE_OF_DATA in [1, 3]:
             # get values of var D and I from this lag and month
-            var_D_values = get_specific_values(station, 'var_D', lag, month)
+            var_D_values = time_series.get_specific_values(station, 'var_D', lag, month)
 
-            var_I_values = get_specific_values(station, 'var_I', lag, month)
+            var_I_values = time_series.get_specific_values(station, 'var_I', lag, month)
 
         if env.globals_vars.STATE_OF_DATA in [2, 4]:
             # get values of var D and I from this lag, month and day
-            var_D_values = get_specific_values(station, 'var_D', lag, month, day)
+            var_D_values = time_series.get_specific_values(station, 'var_D', lag, month, day)
 
-            var_I_values = get_specific_values(station, 'var_I', lag, month, day)
+            var_I_values = time_series.get_specific_values(station, 'var_I', lag, month, day)
 
         # calculate pearson correlation of var_D and var_I
         pearson = stats.pearsonr(var_D_values, var_I_values)[0]

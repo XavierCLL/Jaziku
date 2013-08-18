@@ -37,9 +37,9 @@ from jaziku.core.station import Station
 from jaziku.core.variable import Variable
 from jaziku.core.analysis_interval import get_values_in_range_analysis_interval, locate_day_in_analysis_interval, \
     get_range_analysis_interval, get_state_of_data
-from jaziku.modules.climate import lags
+from jaziku.modules.climate import time_series
 from jaziku.modules.climate.contingency_table import get_label_of_var_I_category
-from jaziku.modules.climate.lags import  calculate_lags
+from jaziku.modules.climate.time_series import  calculate_time_series
 from jaziku.utils import  console, output, watermarking, array
 
 
@@ -1397,7 +1397,7 @@ def outliers(stations_list):
         else:
             station_copy = clone_and_transform_station(station, convert_var_D_to_monthly=False, convert_var_I_to_monthly=False)
 
-        calculate_lags(station_copy, makes_files=False)
+        calculate_time_series(station_copy, makes_files=False)
 
         outliers_list = []
 
@@ -1436,14 +1436,14 @@ def outliers(stations_list):
 
                 if env.config_run.settings['analysis_interval'] == "trimester":
                     # get I values for outliers date
-                    station.var_I.specific_values = lags.get_specific_values(station_copy, 'var_I', 0, outlier_date.month)
+                    station.var_I.specific_values = time_series.get_specific_values(station_copy, 'var_I', 0, outlier_date.month)
                     # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                     values_var_I = get_values_in_range_analysis_interval(station_copy, 'I', outlier_date.year, outlier_date.month, None, 0)
                 else:
                     # get the corresponding start day of analysis interval
                     day = locate_day_in_analysis_interval(outlier_date.day)
                     # get I values for outliers date
-                    station.var_I.specific_values = lags.get_specific_values(station_copy, 'var_I', 0, outlier_date.month, day)
+                    station.var_I.specific_values = time_series.get_specific_values(station_copy, 'var_I', 0, outlier_date.month, day)
                     # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                     values_var_I = get_values_in_range_analysis_interval(station_copy, 'I', outlier_date.year, outlier_date.month, day, 0)
 

@@ -29,7 +29,7 @@ from matplotlib import pyplot
 from Image import open as img_open
 
 from jaziku import env
-from jaziku.modules.climate import lags
+from jaziku.modules.climate import time_series
 from jaziku.modules.climate.thresholds import get_thresholds
 from jaziku.utils import  watermarking, output
 from jaziku.utils.text import slugify
@@ -233,11 +233,11 @@ def forecast_graphs(station):
             if env.globals_vars.STATE_OF_DATA in [1, 3]:
                 # get all values of var D based on this lag and month
                 station.var_D.specific_values \
-                    = lags.get_specific_values(station, 'var_D', lag, env.config_run.settings['forecast_date']['month'])
+                    = time_series.get_specific_values(station, 'var_D', lag, env.config_run.settings['forecast_date']['month'])
             if env.globals_vars.STATE_OF_DATA in [2, 4]:
                 # get all values of var D based on this lag and month and day
                 station.var_D.specific_values \
-                    = lags.get_specific_values(station, 'var_D', lag, env.config_run.settings['forecast_date']['month'],
+                    = time_series.get_specific_values(station, 'var_D', lag, env.config_run.settings['forecast_date']['month'],
                                                env.config_run.settings['forecast_date']['day'])
 
             # thresholds of var D for deterministic values for use in labels on legend
