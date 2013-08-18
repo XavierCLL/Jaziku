@@ -23,6 +23,9 @@ news
 - For ideamFormat2jazikuFormat script now accepted the data
   daily from Sisdhim format, auto-detect and transform to Jaziku
   data daily format
+- The calculate for make the time series in range analysis interval
+  (and lags) now put NaN is the nulls values is greater than 40% of
+  the values.
 
 fixes
 +++++
