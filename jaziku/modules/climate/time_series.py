@@ -148,7 +148,8 @@ def calculate_time_series(station, makes_files=True):
                     csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
                     # print headers
-                    csv_file.writerow([_('DATE'), _('VAR_D'), _('VAR_I')])
+                    csv_file.writerow([_('DATE'), _('VAR_D')+' ({0})'.format(station.var_D.type_series),
+                                       _('VAR_I')+' ({0})'.format(station.var_I.type_series)])
                     csv_file.writerow(['', env.config_run.settings['mode_calculation_series_D_i18n'],
                                        env.config_run.settings['mode_calculation_series_I_i18n']])
 
@@ -209,7 +210,8 @@ def calculate_time_series(station, makes_files=True):
                     csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
                     # print headers
-                    csv_file.writerow([_('DATE'), _('VAR_D'), _('VAR_I')])
+                    csv_file.writerow([_('DATE'), _('VAR_D')+' ({0})'.format(station.var_D.type_series),
+                                       _('VAR_I')+' ({0})'.format(station.var_I.type_series)])
                     csv_file.writerow(['', env.config_run.settings['mode_calculation_series_D_i18n'],
                                        env.config_run.settings['mode_calculation_series_I_i18n']])
 
