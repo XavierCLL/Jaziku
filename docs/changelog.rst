@@ -27,6 +27,7 @@ news
   (and lags) now put NaN if the nulls values are greater than 40% of
   the values.
 - [code] Refactoring lag to time_series
+- [code] Refactoring read_var_D and read_var_I into read_variable
 
 fixes
 +++++
