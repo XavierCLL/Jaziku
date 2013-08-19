@@ -30,8 +30,7 @@ from jaziku.utils import console, array
 
 
 class Variable(object):
-    """
-    Class for save data raw, data dates, date filtered for dependent or
+    """Class for save data raw, data dates, date filtered for dependent or
     independent variable of a station.
 
     :attributes:
@@ -84,8 +83,7 @@ class Variable(object):
 
 
     def read_data_from_file(self, station):
-        """
-        Read var I or var D from files, validated and check consistent.
+        """Read var I or var D from files, validated and check consistent.
 
         :return by reference:
             VARIABLE.data
@@ -96,15 +94,14 @@ class Variable(object):
         # Reading the variables from files and check based on range validation
         # and fill variable if is needed
         if self.type == 'D':
-            vars.read_var_D(station)
+            vars.read_variable(station, station.var_D)
             self.fill_variable(station)
         if self.type == 'I':
-            vars.read_var_I(station)
+            vars.read_variable(station, station.var_I)
             self.fill_variable(station)
 
     def fill_variable(self, station):
-        """
-        Complete and fill variable with null values if the last and/or start year
+        """Complete and fill variable with null values if the last and/or start year
         is not completed.
 
         This function check is the series (var D/I) are complete in the last year
@@ -251,8 +248,7 @@ class Variable(object):
             above()
 
     def daily2monthly(self):
-        """
-        Convert the data daily to monthly using the mean
+        """Convert the data daily to monthly using the mean
 
         :return by reference:
             VARIABLE.data (overwrite) (list)
@@ -278,8 +274,7 @@ class Variable(object):
         self.date = date_monthly
 
     def data_and_null_in_process_period(self, station):
-        """
-        Calculate the data without the null values inside
+        """Calculate the data without the null values inside
         the process period and null values.
 
         :return by reference:
@@ -308,8 +303,7 @@ class Variable(object):
         self.data_filtered_in_process_period = array.clean(self.data_in_process_period)
 
     def do_some_statistic_of_data(self):
-        """
-        Calculate several statistics based on data series,
+        """Calculate several statistics based on data series,
         this is mainly used in data analysis module.
 
         :return by reference:

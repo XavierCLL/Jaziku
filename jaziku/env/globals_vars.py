@@ -29,9 +29,9 @@ from math import isnan
 
 PROG_NAME = "jaziku"
 
-VERSION = "0.6.1"
+VERSION = "0.7.0"
 
-VERSION_DATE = "12/07/2013"
+VERSION_DATE = "08/2013"
 
 # absolute directory where is installed Jaziku in your system,
 # this variable is set in jaziku.py
@@ -85,6 +85,15 @@ def is_valid_null(value):
 ALL_ANALYSIS_INTERVALS = ["5days", "10days", "15days", "trimester"]
 NUM_DAYS_OF_ANALYSIS_INTERVAL = None
 
+#==============================================================================
+# State of the data for process, calculate and write output based on type
+# of data (daily or monthly) of dependent and independent variable
+#
+# | state |  var D  |  var I  |         possible results
+# |   1   | monthly | monthly |            trimester
+# |   2   |  daily  | monthly | 5days, 10days, 15days and trimester
+# |   3   | monthly |  daily  |            trimester
+# |   4   |  daily  |  daily  | 5days, 10days, 15days and trimester
 STATE_OF_DATA = None
 
 #==============================================================================
