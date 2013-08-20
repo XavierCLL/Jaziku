@@ -1485,11 +1485,17 @@ def outliers(stations_list):
 
         fig = pyplot.figure(figsize=(2.5+len(stations_list)/2.5,6))
         ax = fig.add_subplot(111)
+
+        if len(stations_list) <= 3:
+            _part_title = _("Outliers")+'\n'
+        else:
+            _part_title = _("Outliers")+' - '
+
         if env.config_run.settings['process_period']:
-            ax.set_title(unicode(_("Outliers")+" - {0} ({1}-{2})".format(env.var_D.TYPE_SERIES,
+            ax.set_title(unicode(_part_title + "{0} ({1}-{2})".format(env.var_D.TYPE_SERIES,
                 env.config_run.settings['process_period']['start'], env.config_run.settings['process_period']['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
         else:
-            ax.set_title(unicode(_("Outliers")+" - {0}".format(env.var_D.TYPE_SERIES), 'utf-8'), env.globals_vars.graphs_title_properties())
+            ax.set_title(unicode(_part_title + "{0}".format(env.var_D.TYPE_SERIES), 'utf-8'), env.globals_vars.graphs_title_properties())
 
         ## X
         xticks(range(len(stations_list)), codes_stations, rotation='vertical')
