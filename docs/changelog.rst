@@ -43,6 +43,7 @@ fixes
 - Fix units in particular type of time series in y-label for graphs
   for inspection of series
 - Fixes units variable translations for var_D and var_I
+- Adjust title in Outliers graphs
 
 
 0.6.1 (**2013-06-XX**)
