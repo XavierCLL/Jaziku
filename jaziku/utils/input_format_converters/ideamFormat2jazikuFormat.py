@@ -265,6 +265,13 @@ def main():
                                 name_variable = variable
                         if variables[name_variable]['stations_processed'][(station['code'],station['name'])] is False:
                             print colored.blue("Continue the station:   {0} - {1}".format(station['code'], station['name']))
+
+                        # check if for daily data the year is repeat
+                        if frequency_data == 'daily' and before_year == year:
+                            print colored.yellow("WARNING: detected the year {0} is repeat for the same station\n"
+                                                 "         save only the data of first year.".format(year))
+                            in_station_properties = False
+                            in_station_data = False
                     # start new station
                     else:
                         # save the previous station before to create a new station
@@ -383,7 +390,7 @@ def main():
                                     station['file_to_write'].writerow(["{0}-{1}".format(before_year+1,fix_zeros(month+1)), 'nan'])
                             if frequency_data == 'daily':
                                 for month in range(0,12):
-                                    days_in_month = monthrange(year, month+1)[1]
+                                    days_in_month = monthrange(before_year+1, month+1)[1]
                                     for day in range(0,days_in_month):
                                         station['file_to_write'].writerow(["{0}-{1}-{2}".format(before_year+1,fix_zeros(month+1),fix_zeros(day+1)), 'nan'])
                             before_year += 1
