@@ -1657,7 +1657,7 @@ def correlation(stations_list, type_correlation):
                 del data_X[-1]
                 del data_Y[0]
 
-            name_of_files = _("AutoCorrelation_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
+            name_of_files = _("Auto_Correlation_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
 
         if type_correlation == 'cross':
 
@@ -1722,7 +1722,7 @@ def correlation(stations_list, type_correlation):
                 del _data_X[-1]
                 del _data_Y[0]
 
-            name_of_files = _("CrossCorrelation_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
+            name_of_files = _("Cross_Correlation_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
 
         # -------------------------------------------------------------------------
         # graphics result
@@ -1731,12 +1731,15 @@ def correlation(stations_list, type_correlation):
 
             if type_correlation == 'auto':
                 fig = pyplot.figure(figsize=(6.5, 4.8))
-                title = _("AutoCorrelation - {0} {1}\n"
-                          "{2} ({3}-{4})").format(station.code, station.name, env.var_D.TYPE_SERIES, station.process_period['start'], station.process_period['end'])
+                title = _("Auto Correlation - {0} {1}\n"
+                          "{2} ({3}-{4})").format(station.code, station.name, env.var_D.TYPE_SERIES,
+                                                  station.process_period['start'], station.process_period['end'])
             if type_correlation == 'cross':
                 fig = pyplot.figure(figsize=(8.5, 4.8))
-                title = _("CrossCorrelation - {0} {1}\n"
-                          "{2} ({3}-{4})").format(station.code, station.name, env.var_D.TYPE_SERIES, station.process_period['start'], station.process_period['end'])
+                title = _("Cross Correlation - {0} {1}\n"
+                          "{2} vs {3} ({4}-{5})").format(station.code, station.name, env.var_D.TYPE_SERIES,
+                                                         env.var_I.TYPE_SERIES, station.process_period['start'],
+                                                         station.process_period['end'])
 
             ax = fig.add_subplot(111)
 
