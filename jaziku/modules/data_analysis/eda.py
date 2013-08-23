@@ -496,7 +496,7 @@ def analysis_the_best_periods_to_process(stations_list):
                            output.number(period_ranked["rank"]), '--'] + period_ranked["stations_included"])
 
     open_file.close()
-    del csv_file, period_ranked, list_of_periods
+    del csv_file, periods_ranked, list_of_periods
 
 
 # types graphs based on type of var D
