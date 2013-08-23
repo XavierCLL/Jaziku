@@ -1730,7 +1730,7 @@ def correlation(stations_list, type_correlation):
         if env.config_run.settings['graphics']:
 
             if type_correlation == 'auto':
-                fig = pyplot.figure(figsize=(7, 4.8))
+                fig = pyplot.figure(figsize=(6.5, 4.8))
                 title = _("AutoCorrelation - {0} {1}\n"
                           "{2} ({3}-{4})").format(station.code, station.name, env.var_D.TYPE_SERIES, station.process_period['start'], station.process_period['end'])
             if type_correlation == 'cross':
@@ -1743,12 +1743,12 @@ def correlation(stations_list, type_correlation):
             ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
 
             ## X
-            ax.set_xlabel(_('Lags'), env.globals_vars.graphs_axis_properties())
+            ax.set_xlabel(unicode(_('Lags'), 'utf-8'), env.globals_vars.graphs_axis_properties())
             #xticks(correlation_values['lags'], x_labels)
 
             ## Y
             # get units os type of var D or I
-            ax.set_ylabel(_("Correlation"), env.globals_vars.graphs_axis_properties())
+            ax.set_ylabel(unicode(_("Correlation"), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             pyplot.axhline(linewidth=1, color='k')
 
