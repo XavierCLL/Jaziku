@@ -1645,17 +1645,19 @@ def correlation(stations_list, type_correlation):
                 correlation_values['lags'].append(lag)
                 correlation_values['pearson'].append(pearson)
 
-                # move the overlap between the 2 series:
+                # move the overlap between the same time series:
                 # move up the data_Y lost the fist item (one month or one day)
                 # so the data_X move down lost the last item (one month or one day)
                 #
+                # lag 1:
+                #
                 #   X  Y
-                #     |x|
-                #  |o||o|
-                #  |o||o|
                 #  |x|
-                del data_X[-1]
-                del data_Y[0]
+                #  |o||o|
+                #  |o||o|
+                #     |x|
+                del data_X[0]
+                del data_Y[-1]
 
             name_of_files = _("Auto_Correlation_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
 
@@ -1694,9 +1696,19 @@ def correlation(stations_list, type_correlation):
             _data_Y = list(data_Y)
 
             for lag in range(1, 25):
-
-                del _data_X[0]
-                del _data_Y[-1]
+                # move the overlap between the 2 series:
+                # move up the data_Y lost the fist item (one month or one day)
+                # so the data_X move down lost the last item (one month or one day)
+                #
+                # lag 1:
+                #
+                #   X  Y
+                #     |x|
+                #  |o||o|
+                #  |o||o|
+                #  |x|
+                del _data_X[-1]
+                del _data_Y[0]
 
                 pearson = pearsonr(_data_X, _data_Y)[0]
 
@@ -1719,8 +1731,19 @@ def correlation(stations_list, type_correlation):
                 correlation_values['lags'].append(lag)
                 correlation_values['pearson'].append(pearson)
 
-                del _data_X[-1]
-                del _data_Y[0]
+                # move the overlap between the 2 series:
+                # move up the data_Y lost the fist item (one month or one day)
+                # so the data_X move down lost the last item (one month or one day)
+                #
+                # lag 1:
+                #
+                #   X  Y
+                #  |x|
+                #  |o||o|
+                #  |o||o|
+                #     |x|
+                del _data_X[0]
+                del _data_Y[-1]
 
             name_of_files = _("Cross_Correlation_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
 
