@@ -40,6 +40,7 @@ fixes
 - Fix calculating the number of days in month with data daily and
   fixed when the year is repeat for the same station in
   ideamFormat2jazikuFormat script
+- Several fixes and adjust in ideamFormat2jazikuFormat script
 - Fix units in particular type of time series in y-label for graphs
   for inspection of series
 - Fixes units variable translations for var_D and var_I
