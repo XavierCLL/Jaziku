@@ -1624,6 +1624,9 @@ def outliers(stations_list):
 
 
 def correlation(stations_list, type_correlation):
+    #todo
+    """
+    """
 
     for station in stations_list:
 
@@ -1668,8 +1671,24 @@ def correlation(stations_list, type_correlation):
 
             data_Y = list(station.var_I.data_in_process_period)
 
-            # Fix the same frequency data
-            if env.var_D.is_daily() and env.var_I.is_monthly():
+            # Fix the same frequency data for the two time series
+            if env.var_I.TYPE_SERIES in ['ONI1', 'ONI2', 'CAR'] and env.var_D.FREQUENCY_DATA != 'trimester':
+                # SPECIAL CASE 1: when var_I is ONI1, ONI2 or CAR, convert time series of var D to trimester
+                # because the ONI and CAR series was calculated by trimesters from original source
+                station_copy = copy.deepcopy(station)
+                if env.var_D.is_daily():
+                    station_copy.var_D.daily2trimester()
+                    #env.var_D.set_FREQUENCY_DATA("trimester", check=False) TODO v0.8
+                    env.var_D.set_FREQUENCY_DATA("monthly", check=False)
+                    station_copy.var_D.data_and_null_in_process_period(station)
+                    env.var_D.set_FREQUENCY_DATA("daily", check=False)
+                if env.var_I.is_monthly():
+                    station_copy.var_D.monthly2trimester()
+                    #env.var_D.set_FREQUENCY_DATA("trimester", check=False) TODO v0.8
+                    station_copy.var_D.data_and_null_in_process_period(station)
+                    env.var_D.set_FREQUENCY_DATA("monthly", check=False)
+                data_X = list(station_copy.var_D.data_in_process_period)
+            elif env.var_D.is_daily() and env.var_I.is_monthly():
                 station_copy = copy.deepcopy(station)
                 station_copy.var_D.daily2monthly()
                 env.var_D.set_FREQUENCY_DATA("monthly", check=False)
