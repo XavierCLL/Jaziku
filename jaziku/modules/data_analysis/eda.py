@@ -29,7 +29,7 @@ from matplotlib import pyplot
 from numpy import histogram
 from pylab import xticks, bar, boxplot
 from Image import open as img_open
-from scipy.stats import shapiro
+from scipy.stats import shapiro, pearsonr
 from calendar import monthrange
 
 from jaziku import env
@@ -259,6 +259,30 @@ def main(stations_list):
                       "   runfile, and rerun each runfile."), color="yellow")
     else:
         console.msg(_("done"), color='green')
+
+    # -------------------------------------------------------------------------
+    # CORRELATION
+    # -------------------------------------------------------------------------
+
+    global correlation_dir
+    correlation_dir = os.path.join(eda_dir, _('Correlation'))
+    output.make_dirs(correlation_dir)
+
+    # -------------------------------------------------------------------------
+    # AUTOCORRELATION
+
+    console.msg(_("AutoCorrelation ...................................... "), newline=False)
+    with console.redirectStdStreams():
+        correlation(stations_list, type_correlation='auto')
+    console.msg(_("done"), color='green')
+
+    # -------------------------------------------------------------------------
+    # CROSSCORRELATION
+
+    console.msg(_("CrossCorrelation ..................................... "), newline=False)
+    with console.redirectStdStreams():
+        correlation(stations_list, type_correlation='cross')
+    console.msg(_("done"), color='green')
 
 
 def zoom_graph(ax,x_scale_below=0, x_scale_above=0, y_scale_below=0, y_scale_above=0, abs_x=False, abs_y=False):
@@ -1597,3 +1621,200 @@ def outliers(stations_list):
     env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
     env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
     env.globals_vars.STATE_OF_DATA = get_state_of_data()
+
+
+def correlation(stations_list, type_correlation):
+
+    for station in stations_list:
+
+        station_path = os.path.join(correlation_dir, station.code +'-'+station.name)
+
+        output.make_dirs(station_path)
+
+        correlation_values = {'lags':[], 'pearson':[]}
+
+        if type_correlation == 'auto':
+
+            # calculate pearson for 0 to 24 lags
+            data_X = list(station.var_D.data_filtered_in_process_period)
+            data_Y = list(station.var_D.data_filtered_in_process_period)
+            for lag in range(25):
+
+                pearson = pearsonr(data_X, data_Y)[0]
+
+                correlation_values['lags'].append(lag)
+                correlation_values['pearson'].append(pearson)
+
+                # move the overlap between the same time series:
+                # move up the data_Y lost the fist item (one month or one day)
+                # so the data_X move down lost the last item (one month or one day)
+                #
+                # lag 1:
+                #
+                #   X  Y
+                #  |x|
+                #  |o||o|
+                #  |o||o|
+                #     |x|
+                del data_X[0]
+                del data_Y[-1]
+
+            name_of_files = _("Auto_Correlation_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
+
+        if type_correlation == 'cross':
+
+            # -------------------------------------------------------------------------
+            # get and adjust data
+
+            data_Y = list(station.var_I.data_in_process_period)
+
+            # Fix the same frequency data
+            if env.var_D.is_daily() and env.var_I.is_monthly():
+                station_copy = copy.deepcopy(station)
+                station_copy.var_D.daily2monthly()
+                env.var_D.set_FREQUENCY_DATA("monthly", check=False)
+                station_copy.var_D.data_and_null_in_process_period(station)
+                env.var_D.set_FREQUENCY_DATA("daily", check=False)
+                data_X = list(station_copy.var_D.data_in_process_period)
+            else:
+                data_X = list(station.var_D.data_in_process_period)
+
+            # clear NaN values in par, if one of two series have a NaN value
+            # delete this NaN and corresponding value in the other series
+            idx_to_clean = []
+            for idx in range(len(data_X)):
+                if env.globals_vars.is_valid_null(data_X[idx]) or env.globals_vars.is_valid_null(data_Y[idx]):
+                    idx_to_clean.append(idx)
+            idx_to_clean.reverse()
+            for idx in idx_to_clean:
+                del data_X[idx]
+                del data_Y[idx]
+
+            # -------------------------------------------------------------------------
+            # calculate pearson for -1 to -24 lags
+            _data_X = list(data_X)
+            _data_Y = list(data_Y)
+
+            for lag in range(1, 25):
+                # move the overlap between the 2 series:
+                # move up the data_Y lost the fist item (one month or one day)
+                # so the data_X move down lost the last item (one month or one day)
+                #
+                # lag 1:
+                #
+                #   X  Y
+                #     |x|
+                #  |o||o|
+                #  |o||o|
+                #  |x|
+                del _data_X[-1]
+                del _data_Y[0]
+
+                pearson = pearsonr(_data_X, _data_Y)[0]
+
+                correlation_values['lags'].append(-lag)
+                correlation_values['pearson'].append(pearson)
+
+
+            # fix order: -24 to -1
+            correlation_values['lags'].reverse()
+            correlation_values['pearson'].reverse()
+
+            # -------------------------------------------------------------------------
+            # calculate pearson for 0 to 24 lags
+            _data_X = list(data_X)
+            _data_Y = list(data_Y)
+            for lag in range(25):
+
+                pearson = pearsonr(_data_X, _data_Y)[0]
+
+                correlation_values['lags'].append(lag)
+                correlation_values['pearson'].append(pearson)
+
+                # move the overlap between the 2 series:
+                # move up the data_Y lost the fist item (one month or one day)
+                # so the data_X move down lost the last item (one month or one day)
+                #
+                # lag 1:
+                #
+                #   X  Y
+                #  |x|
+                #  |o||o|
+                #  |o||o|
+                #     |x|
+                del _data_X[0]
+                del _data_Y[-1]
+
+            name_of_files = _("Cross_Correlation_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
+
+        # -------------------------------------------------------------------------
+        # graphics result
+
+        if env.config_run.settings['graphics']:
+
+            if type_correlation == 'auto':
+                fig = pyplot.figure(figsize=(6.5, 4.8))
+                title = _("Auto Correlation - {0} {1}\n"
+                          "{2} ({3}-{4})").format(station.code, station.name, env.var_D.TYPE_SERIES,
+                                                  station.process_period['start'], station.process_period['end'])
+            if type_correlation == 'cross':
+                fig = pyplot.figure(figsize=(8.5, 4.8))
+                title = _("Cross Correlation - {0} {1}\n"
+                          "{2} vs {3} ({4}-{5})").format(station.code, station.name, env.var_D.TYPE_SERIES,
+                                                         env.var_I.TYPE_SERIES, station.process_period['start'],
+                                                         station.process_period['end'])
+
+            ax = fig.add_subplot(111)
+
+            ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
+
+            ## X
+            ax.set_xlabel(unicode(_('Lags'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            #xticks(correlation_values['lags'], x_labels)
+
+            ## Y
+            # get units os type of var D or I
+            ax.set_ylabel(unicode(_("Correlation"), 'utf-8'), env.globals_vars.graphs_axis_properties())
+
+            pyplot.axhline(linewidth=1, color='k')
+
+            ax.autoscale(tight=True)
+
+            #bar(correlation_values['lags'], correlation_values['pearson'], align='center', width=0.2, color='k')
+            ax.plot(correlation_values['lags'], correlation_values['pearson'], 'ro', color='#638786', mec='#638786', linewidth=2.5, markersize=8)
+            ax.vlines(correlation_values['lags'], [0], correlation_values['pearson'], linewidth=2.5, color='#638786')
+
+            pyplot.ylim(-1, 1)
+            zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.06, y_scale_above=-0.06)
+            fig.tight_layout()
+
+            # save image
+            image = os.path.join(station_path, name_of_files + '.png')
+            pyplot.savefig(image, dpi=75)
+
+            # stamp logo
+            watermarking.logo(image)
+
+            pyplot.close('all')
+
+        # -------------------------------------------------------------------------
+        # table result
+
+        table_file = os.path.join(station_path, name_of_files + ".csv")
+
+        open_file = open(table_file, 'w')
+        csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
+
+        # print header
+        header = [_("LAGS"), _("CORRELATION")]
+
+        csv_file.writerow(header)
+        for _lag, _pearson in zip(correlation_values['lags'], correlation_values['pearson']):
+            csv_file.writerow([_lag, output.number(_pearson)])
+
+        open_file.close()
+        del csv_file
+
+
+
+
