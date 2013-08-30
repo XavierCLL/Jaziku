@@ -81,7 +81,6 @@ class Variable(object):
         # relative path to file
         self.file_relpath = os.path.relpath(file, os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile)))
 
-
     def read_data_from_file(self, station):
         """Read var I or var D from files, validated and check consistent.
 
@@ -248,7 +247,8 @@ class Variable(object):
             above()
 
     def daily2monthly(self):
-        """Convert the data daily to monthly using the mean
+        """Convert the data daily to monthly using the mean or accumulate
+        defined in runfile in mode_calculation_series_X variable.
 
         :return by reference:
             VARIABLE.data (overwrite) (list)
@@ -267,7 +267,12 @@ class Variable(object):
                     _iter += 1
                     if _iter > self.date.index(self.date[-1]):
                         break
-                data_monthly.append(array.mean(var_month_list))
+                # data
+                if env.config_run.settings['mode_calculation_series_'+self.type] == 'mean':
+                    data_monthly.append(array.mean(var_month_list))
+                if env.config_run.settings['mode_calculation_series_'+self.type] == 'accumulate':
+                    data_monthly.append(sum(array.clean(var_month_list)))
+                # date
                 date_monthly.append(date(year, month, 1))
 
         self.data = data_monthly

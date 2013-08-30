@@ -46,6 +46,8 @@ news
 fixes
 +++++
 
+- Fix convert time series using mean or accumulate defined in
+  mode_calculation_series_X inside runfile
 - Fixes some messages and warnings
 - Force convert dos2unix with binary characters and fix directory
   name when the file haven't extension in ideamFormat2jazikuFormat
