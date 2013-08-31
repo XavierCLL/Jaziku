@@ -1624,8 +1624,8 @@ def outliers(stations_list):
 
 
 def correlation(stations_list, type_correlation):
-    #todo
-    """
+    """Make graphs ant tables of auto-correlation of var D and cross correlations
+    between var D and var I
     """
 
     for station in stations_list:
@@ -1671,7 +1671,7 @@ def correlation(stations_list, type_correlation):
 
             data_Y = list(station.var_I.data_in_process_period)
 
-            # Fix the same frequency data for the two time series
+            # Adjust the same frequency data for the two time series
             if env.var_I.TYPE_SERIES in ['ONI1', 'ONI2', 'CAR'] and env.var_D.FREQUENCY_DATA != 'trimester':
                 # SPECIAL CASE 1: when var_I is ONI1, ONI2 or CAR, convert time series of var D to trimester
                 # because the ONI and CAR series was calculated by trimesters from original source
@@ -1699,7 +1699,8 @@ def correlation(stations_list, type_correlation):
                 data_X = list(station.var_D.data_in_process_period)
 
             # clear NaN values in par, if one of two series have a NaN value
-            # delete this NaN and corresponding value in the other series
+            # delete this NaN and corresponding value in the other series in
+            # the same location
             idx_to_clean = []
             for idx in range(len(data_X)):
                 if env.globals_vars.is_valid_null(data_X[idx]) or env.globals_vars.is_valid_null(data_Y[idx]):
