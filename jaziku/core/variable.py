@@ -278,6 +278,43 @@ class Variable(object):
         self.data = data_monthly
         self.date = date_monthly
 
+    def monthly2trimester(self):
+        """Convert the data monthly to trimester using the mean or accumulate
+        defined in runfile in mode_calculation_series_X variable.
+
+        :return by reference:
+            VARIABLE.data (overwrite) (list)
+        """
+        data_trimester = []
+
+        for _iter, _data in enumerate(self.data):
+            values_3months = []
+            # added the data of the three months
+            for plus_month in range(3):
+                try:
+                    values_3months.append(self.data[_iter+plus_month])
+                except:
+                    values_3months.append(float('nan'))
+            # data
+            if env.config_run.settings['mode_calculation_series_'+self.type] == 'mean':
+                data_trimester.append(array.mean(values_3months))
+            if env.config_run.settings['mode_calculation_series_'+self.type] == 'accumulate':
+                data_trimester.append(sum(array.clean(values_3months)))
+
+        self.data = data_trimester
+
+    def daily2trimester(self):
+        """Convert the data daily to trimester using the mean or accumulate
+        defined in runfile in mode_calculation_series_X variable.
+
+        :return by reference:
+            VARIABLE.data (overwrite) (list)
+            VARIABLE.date (overwrite) (list)
+        """
+
+        self.daily2monthly()
+        self.monthly2trimester()
+
     def data_and_null_in_process_period(self, station):
         """Calculate the data without the null values inside
         the process period and null values.
