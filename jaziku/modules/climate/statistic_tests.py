@@ -58,7 +58,10 @@ def contingency_test(O, E = None, alpha = 0.10, side = 0):
     # Compute expected values.
     for i in range(m):
         for j in range(n):
-            E[i][j] = (colsum[j] * rowsum[i]) / Tot
+            try:
+                E[i][j] = (colsum[j] * rowsum[i]) / Tot
+            except:
+                E[i][j] = float('nan')
 
     # Compute statistic.
     teststat = 0.0
@@ -87,11 +90,10 @@ def contingency_test(O, E = None, alpha = 0.10, side = 0):
 
     return  O, E, teststat, critvalue, df, pvalue, alpha
 
-# example to use:
-# Observed, Expected, teststat, critvalue, df, pvalue, alpha=  contingencytest(M, None, alpha, side)
 
+#----------------------------------------------------------------------------------------
 
-# this file base on:
+# the following two functions are base on:
 #
 # file     testofcorr.py
 # author   Ernesto P. Adorio
@@ -113,9 +115,14 @@ def ttest(samplestat, se, df, alpha=0.05, side=0):
      side  - -1 left-sided test
              0  double sided test
              +1 right-sided test
+
     """
 
-    Ttest = samplestat / se  # TODO: check if se == 0
+    try:
+        Ttest = samplestat / se
+    except:
+        Ttest = float('nan')
+
     if side == 0:
         pvalue = t.cdf(Ttest, df)
         if Ttest > 0:
@@ -135,6 +142,10 @@ def ttest(samplestat, se, df, alpha=0.05, side=0):
 
 
 def significance_correlation(rho, r, n, alpha=0.05, side=0):
+    """
+    Example to use:
+      Observed, Expected, teststat, critvalue, df, pvalue, alpha =  contingencytest(M, None, alpha, side)
+    """
     se = sqrt((1 - r * r) / (n - 2.0))
     return ttest(r - rho, se, n - 2, alpha, side)
 
