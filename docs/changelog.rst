@@ -47,6 +47,7 @@ fixes
   for inspection of series
 - Fixes units variable translations for var_D and var_I
 - Adjust title in Outliers graphs
+- Fix crash in some division by zero in statistic tests functions
 
 
 0.6.1 (**2013-06-XX**)
