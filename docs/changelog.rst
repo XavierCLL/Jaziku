@@ -17,17 +17,20 @@ news
   Writes a csv file of all possible periods from best to worst
   (in based of ranking) with its corresponding list of stations
   included for the analysis period.
+- The calculate for make the time series in range analysis interval
+  (and lags) now put NaN if the nulls values are greater than 40% of
+  the values.
+- [code] Refactoring lag to time_series
+- [code] Refactoring read_var_D and read_var_I into read_variable
+
+**ideamFormat2jazikuFormat:**
+
 - For ideamFormat2jazikuFormat script added 3 new filters (time
   series that contain start/end year and minimum size years of
   data) for choose stations for write in runfile
 - For ideamFormat2jazikuFormat script now accepted the data
   daily from Sisdhim format, auto-detect and transform to Jaziku
   data daily format
-- The calculate for make the time series in range analysis interval
-  (and lags) now put NaN if the nulls values are greater than 40% of
-  the values.
-- [code] Refactoring lag to time_series
-- [code] Refactoring read_var_D and read_var_I into read_variable
 
 fixes
 +++++
@@ -35,6 +38,14 @@ fixes
 - Fix convert time series using mean or accumulate defined in
   mode_calculation_series_X inside runfile
 - Fixes some messages and warnings
+- Fix units in particular type of time series in y-label for graphs
+  for inspection of series
+- Fixes units variable translations for var_D and var_I
+- Adjust title in Outliers graphs
+- Fix crash in some division by zero in statistic tests functions
+
+**ideamFormat2jazikuFormat**
+
 - Force convert dos2unix with binary characters and fix directory
   name when the file haven't extension in ideamFormat2jazikuFormat
 - Fix special character in stations name and name variable in
@@ -42,12 +53,9 @@ fixes
 - Fix calculating the number of days in month with data daily and
   fixed when the year is repeat for the same station in
   ideamFormat2jazikuFormat script
+- Fixes when run with different variables for each station
 - Several fixes and adjust in ideamFormat2jazikuFormat script
-- Fix units in particular type of time series in y-label for graphs
-  for inspection of series
-- Fixes units variable translations for var_D and var_I
-- Adjust title in Outliers graphs
-- Fix crash in some division by zero in statistic tests functions
+
 
 
 0.6.1 (**2013-06-XX**)

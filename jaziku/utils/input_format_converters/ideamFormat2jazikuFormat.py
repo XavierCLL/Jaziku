@@ -190,13 +190,13 @@ def main():
     variables = {}
     station = {}
     name_variable = None
+    before_name_variable = None
     frequency_data = None
     in_station_data = False
     in_station_properties = False
     continue_station = False
     starting_new_variable = False
     before_year = None
-    stations_in_runfile = 0
     len_of_file = file_len(arg.input_file)
 
     # -------------------------------------------------------------------------
@@ -244,19 +244,24 @@ def main():
                                 variables[name_variable]['runfile_csv'].\
                                     writerow([station['code'], station['name'], output.number(station['lat']),
                                               output.number(station['lon']), output.number(station['alt']), station['path']])
-                                stations_in_runfile += 1
+                                variables[name_variable]['stations_in_runfile'] += 1
                             # mark the station as processed
                             variables[name_variable]['stations_processed'][(station['code'],station['name'])] = True
 
                         variable = {}
                         variable['name'] = new_name_variable
+                        before_name_variable = name_variable
                         name_variable = new_name_variable
 
                         prepare_directories(variable)
                         variable['runfile_csv'] = prepare_runfile(variable)
                         variable['stations_processed'] = {}
+                        variable['stations_in_runfile'] = 0
                         variables[name_variable] = variable
                         starting_new_variable = True
+                    else:
+                        before_name_variable = name_variable
+                        name_variable = new_name_variable
 
                 # code, name (and year)
                 if line_in_station_properties == 3:
@@ -281,11 +286,11 @@ def main():
                         in_station_properties = False
                         in_station_data = False
                     # continue read the same station in the next block
-                    elif ('code' in station and 'name' in station) and \
+                    elif (code,name) in variables[name_variable]['stations_processed'] and \
+                         ('code' in station and 'name' in station) and \
                          (station['code'] == code and station['name'] == name)\
                          and not starting_new_variable:
 
-                        variables[name_variable]['stations_processed'][(station['code'],station['name'])] = False
                         continue_station = True
 
                         for variable in variables:
@@ -307,12 +312,12 @@ def main():
                         if 'code' in station and 'name' in station and not starting_new_variable:
                             # write station properties into runfile
                             if if_station_pass_filters() is True:
-                                variables[name_variable]['runfile_csv'].\
+                                variables[before_name_variable]['runfile_csv'].\
                                     writerow([station['code'], station['name'], output.number(station['lat']),
                                               output.number(station['lon']), output.number(station['alt']), station['path']])
-                                stations_in_runfile += 1
+                                variables[before_name_variable]['stations_in_runfile'] += 1
                             # mark the station as processed
-                            variables[name_variable]['stations_processed'][(station['code'],station['name'])] = True
+                            variables[before_name_variable]['stations_processed'][(station['code'],station['name'])] = True
 
                         # start the new station
                         station = {}
@@ -323,6 +328,7 @@ def main():
                             print colored.yellow("The station {0} - {1} is already exist: Overwriting".format(station['code'], station['name']))
                         else:
                             print "Processing the station: {0} - {1}".format(station['code'], station['name'])
+                            variables[name_variable]['stations_processed'][(station['code'],station['name'])] = False
 
                         if frequency_data == 'daily':
                             before_year = None
@@ -479,24 +485,22 @@ def main():
                         variables[name_variable]['runfile_csv'].\
                             writerow([station['code'], station['name'], output.number(station['lat']),
                                       output.number(station['lon']), output.number(station['alt']), station['path']])
-                        stations_in_runfile += 1
+                        variables[name_variable]['stations_in_runfile'] += 1
                     # mark the station as processed
                     variables[name_variable]['stations_processed'][(station['code'],station['name'])] = True
                     # finish
                     break
 
-    stations_processed = []
-    for var in variables.keys():
-        for _station in variables[var]['stations_processed']:
-            if variables[var]['stations_processed'][_station]:
-                stations_processed.append(_station)
+    print "\nStations processed and inside runfile for "+str(len(variables))+" different variables :"
+    for variable in variables:
+        stations_in_runfile = []
+        for _station in variables[variable]['stations_processed']:
+            if variables[variable]['stations_processed'][_station]:
+                stations_in_runfile.append(_station)
 
-    stations_processed = list(set(stations_processed))
+        print "  "+str(variable) + ": " + str(len(stations_in_runfile))+" stations (inside runfile: "+str(variables[variable]['stations_in_runfile'])+" stations that pass all filters)"
 
-    print "\nVariables processed: " + str(len(variables))
-    print "Stations processed: " + str(len(stations_processed))
-    print "Stations in runfile: " + str(stations_in_runfile) + " (stations inside runfile in different variables that pass all filters)"
-    print "Saving result in: " + os.path.splitext(arg.input_file)[0]
+    print "\nSaving result in: " + os.path.splitext(arg.input_file)[0]
     #print "Saving runfile in: " + os.path.join(os.path.splitext(arg.input_file)[0], runfile_name)
     #print "Saving stations list files in: " + os.path.join(os.path.splitext(arg.input_file)[0], dir_var_D_stations)
     print colored.yellow("Complete the runfile.csv before run with Jaziku")
