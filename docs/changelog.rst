@@ -20,6 +20,10 @@ news
 - The calculate for make the time series in range analysis interval
   (and lags) now put NaN if the nulls values are greater than 40% of
   the values.
+- New footnote that show the historical values (maximum and minimum
+  inside the period to process) and thresholds for the respective
+  relevant climate categories selected in runfile for the composite
+  analysis graphics in climate module
 - [code] Refactoring lag to time_series
 - [code] Refactoring read_var_D and read_var_I into read_variable
 

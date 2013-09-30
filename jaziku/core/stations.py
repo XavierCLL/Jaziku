@@ -65,18 +65,14 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
         console.msg(_("Thresholds to use (for {0} categories):").format(env.config_run.settings['class_category_analysis']))
 
         console.msg(_("   var_D ({0}):").format(env.var_D.TYPE_SERIES), newline=False)
-        if env.config_run.settings['thresholds_var_D'] == 'default':
-            thresholds_D = env.var_D.get_default_thresholds()
-        else:
-            thresholds_D = env.config_run.settings['thresholds_var_D']
+
+        thresholds_D = env.var_D.get_global_thresholds()
         if isinstance(thresholds_D, list):
             console.msg(' | '.join([str(thr) for thr in thresholds_D]), color='cyan')
 
         console.msg(_("   var_I ({0}):").format(env.var_I.TYPE_SERIES), newline=False)
-        if env.config_run.settings['thresholds_var_I'] == 'default':
-            thresholds_I = env.var_I.get_default_thresholds()
-        else:
-            thresholds_I = env.config_run.settings['thresholds_var_I']
+
+        thresholds_I = env.var_I.get_global_thresholds()
         if isinstance(thresholds_I, list):
             console.msg(' | '.join([str(thr) for thr in thresholds_I]), color='cyan')
 
@@ -131,14 +127,13 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
                 station.var_I.data_and_null_in_process_period(station)
             console.msg(_("done"), color='green')
 
-    if prepare_data_for_data_analysis:
 
-        # statistics for data analysis
-        console.msg(_("Statistics of data for data analysis module ............. "), newline=False)
-        for station in stations_list:
-            station.var_D.do_some_statistic_of_data()
-            station.var_I.do_some_statistic_of_data()
-        console.msg(_("done"), color='green')
+    # statistics for data analysis
+    console.msg(_("Statistics of data for data analysis module ............. "), newline=False)
+    for station in stations_list:
+        station.var_D.do_some_statistic_of_data()
+        station.var_I.do_some_statistic_of_data()
+    console.msg(_("done"), color='green')
 
     console.msg('')
     console.msg(gettext.ngettext(

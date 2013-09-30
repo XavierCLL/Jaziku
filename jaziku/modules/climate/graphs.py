@@ -26,6 +26,7 @@
 import os
 import copy
 from math import isnan
+from jaziku.modules.climate.thresholds import thresholds_to_list
 from numpy import array
 from matplotlib import pyplot
 from Image import open as img_open
@@ -79,7 +80,7 @@ def climate_graphs(station):
                             adjust_h = 0
 
                     pyplot.text(rect.get_x() + rect.get_width() / 2.0, 0.015 * max_height + height + adjust_h,
-                                round(height, 1), ha='center', va='bottom', fontsize=fontsize, rotation=rotation)
+                                output.number(height, 1), ha='center', va='bottom', fontsize=fontsize, rotation=rotation)
 
         # -------------------------------------------------------------------------
         # climate graphics for 3 categories
@@ -129,7 +130,7 @@ def climate_graphs(station):
 
             dpi = 75.0
             image_height = 375
-            image_width_by_num_categ = {1:375, 2:375, 3:430}
+            image_width_by_num_categ = {1:385, 2:385, 3:430}
             image_width = image_width_by_num_categ[num_categ]
             fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
             #fig = pyplot.figure()
@@ -182,10 +183,31 @@ def climate_graphs(station):
             table_cells = table_props['child_artists']
             for cell in table_cells:
                 cell.set_fontsize(12)
-                cell.set_height(0.06)
+                cell.set_height(0.08)
 
             x_text_position = {1:0.155, 2:0.08, 3:0.01}
-            fig.text(x_text_position[num_categ], 0.1, _('Var D'), fontsize=12, rotation='vertical')
+            fig.text(x_text_position[num_categ], 0.185, _('Var D'), fontsize=12, rotation='vertical')
+
+            ## Footnote of historical values
+            # first define and format the thresholds, if the threshold
+            # are particular values then put it, else put the global
+            # threshold and the correspondent value for this contingency
+            # table
+            global_thresholds_D = env.var_D.get_global_thresholds()
+            thresholds_D = [None]*len(global_thresholds_D)
+            for num_thres, thres in enumerate(thresholds_to_list(specific_contingency_table['thresholds_var_D'])):
+                try:
+                    thresholds_D[num_thres] = output.number(float(global_thresholds_D[num_thres]),2)
+                except:
+                    thresholds_D[num_thres] = '{0}: {1}'.format(global_thresholds_D[num_thres],
+                                                         output.number(thres,2))
+
+            fig.text(0.5, 0.02, _(u'Historical values ({units})\nMin: {min}  ( {thresholds} )  Max: {max}')
+                                .format(units=env.var_D.UNITS, min=output.number(station.var_D.minimum,2),
+                                        thresholds=' | '.join(thresholds_D),
+                                        max=output.number(station.var_D.maximum,2)), fontsize=12, ha='center')
+
+
 
             ## Save image
             image_dir_save \
@@ -200,7 +222,7 @@ def climate_graphs(station):
             left_by_num_categ = {1:0.345, 2:0.27, 3:0.173}
             right_by_num_categ = {1:0.655, 2:0.86, 3:0.98}
             #pyplot.subplots_adjust(bottom=0.25, left=0.22, right=0.97)
-            pyplot.subplots_adjust(bottom=0.18, top=0.85, left=left_by_num_categ[num_categ], right=right_by_num_categ[num_categ])
+            pyplot.subplots_adjust(bottom=0.28, top=0.85, left=left_by_num_categ[num_categ], right=right_by_num_categ[num_categ])
 
         # -------------------------------------------------------------------------
         # climate graphics for 7 categories
@@ -313,7 +335,42 @@ def climate_graphs(station):
                 cell.set_fontsize(11)
                 cell.set_height(0.05)
 
-            fig.text(0.005, 0.135, _('Var D'), fontsize=12, rotation='vertical')
+            fig.text(0.005, 0.176, _('Var D'), fontsize=12, rotation='vertical')
+
+            ## Footnote of historical values
+            # first define and format the thresholds, if the threshold
+            # are particular values then put it, else put the global
+            # threshold and the correspondent value for this contingency
+            # table
+            global_thresholds_D = env.var_D.get_global_thresholds()
+            thresholds_D = [None]*len(global_thresholds_D)
+            for num_thres, thres in enumerate(thresholds_to_list(specific_contingency_table['thresholds_var_D'])):
+                try:
+                    thresholds_D[num_thres] = output.number(float(global_thresholds_D[num_thres]),2)
+                except:
+                    thresholds_D[num_thres] = '{0}: {1}'.format(global_thresholds_D[num_thres],
+                                                         output.number(thres,2))
+
+            # select only thresholds for the respective relevant climate categories selected in runfile
+            thres_list = env.globals_vars.categories(include_normal=True, translated=False, as_list=True)
+            thresholds_D_txt = []
+            if env.config_run.settings['relevant_climate_categories_var_I'] != 'all':
+                for cate_var_I in relevant_climate_categories_var_I:
+                    num_thres = thres_list.index(cate_var_I)
+                    if num_thres == 0:
+                        thresholds_D_txt.append('( < | ' + str(thresholds_D[num_thres]) + ' )')
+                    elif num_thres == 6:
+                        thresholds_D_txt.append('( ' + str(thresholds_D[num_thres-1]) + ' | > )')
+                    else:
+                        thresholds_D_txt.append('( ' + str(thresholds_D[num_thres-1])+ ' | ' + str(thresholds_D[num_thres]) + ' )')
+                thresholds_D_txt = ' '.join(thresholds_D_txt)
+            else:
+                thresholds_D_txt = '( ' + ' | '.join(thresholds_D) + ' )'
+
+            fig.text(0.5, 0.01, _(u'Historical values ({units})\nMin: {min}  {thresholds}  Max: {max}')
+                                .format(units=env.var_D.UNITS, min=output.number(station.var_D.minimum,2),
+                                        thresholds=thresholds_D_txt,
+                                        max=output.number(station.var_D.maximum,2)), fontsize=11, ha='center')
 
             ## Save image
             image_dir_save \
@@ -329,7 +386,7 @@ def climate_graphs(station):
             right_by_num_categ = {1:0.78, 2:0.88, 7:0.995}
             top_by_num_categ = {1:0.89, 2:0.89, 7:0.9}
             #pyplot.subplots_adjust(bottom=0.25, left=0.22, right=0.97)
-            pyplot.subplots_adjust(bottom=0.262, top=top_by_num_categ[num_categ], left=left_by_num_categ[num_categ], right=right_by_num_categ[num_categ])
+            pyplot.subplots_adjust(bottom=0.302, top=top_by_num_categ[num_categ], left=left_by_num_categ[num_categ], right=right_by_num_categ[num_categ])
 
         # save image
         pyplot.savefig(image_dir_save, dpi=dpi)
