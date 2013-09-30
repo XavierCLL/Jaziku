@@ -314,6 +314,13 @@ def get_default_thresholds():
     else:
         return THRESHOLDS['default'][FREQUENCY_DATA]
 
+def get_global_thresholds():
+    from jaziku.env import config_run
+    if config_run.settings['thresholds_var_I'] == 'default':
+        return get_default_thresholds()
+    else:
+        return config_run.settings['thresholds_var_I']
+
 def is_daily():
     global FREQUENCY_DATA
     if FREQUENCY_DATA == 'daily':
