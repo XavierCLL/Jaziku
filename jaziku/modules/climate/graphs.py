@@ -202,10 +202,15 @@ def climate_graphs(station):
                     thresholds_D[num_thres] = '{0}: {1}'.format(global_thresholds_D[num_thres],
                                                          output.number(thres,2))
 
-            fig.text(0.5, 0.02, _(u'Historical values ({units})\nMin: {min}  ( {thresholds} )  Max: {max}')
-                                .format(units=env.var_D.UNITS, min=output.number(station.var_D.minimum,2),
+            fig.text(0.5, 0.02, _(u'Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n'
+                                  u'Min: {min}  ( {thresholds} )  Max: {max}')
+                                .format(anal_inter=title_period, units=env.var_D.UNITS,
+                                        start_year=station.process_period['start'],
+                                        end_year=station.process_period['end'],
+                                        min=output.number(min(specific_time_series['var_D']),2),
                                         thresholds=' | '.join(thresholds_D),
-                                        max=output.number(station.var_D.maximum,2)), fontsize=12, ha='center')
+                                        max=output.number(max(specific_time_series['var_D']),2)),
+                                        fontsize=12, ha='center')
 
 
 
@@ -367,10 +372,15 @@ def climate_graphs(station):
             else:
                 thresholds_D_txt = '( ' + ' | '.join(thresholds_D) + ' )'
 
-            fig.text(0.5, 0.01, _(u'Historical values ({units})\nMin: {min}  {thresholds}  Max: {max}')
-                                .format(units=env.var_D.UNITS, min=output.number(station.var_D.minimum,2),
+            fig.text(0.5, 0.01, _(u'Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n'
+                                  u'Min: {min}  {thresholds}  Max: {max}')
+                                .format(anal_inter=title_period, units=env.var_D.UNITS,
+                                        start_year=station.process_period['start'],
+                                        end_year=station.process_period['end'],
+                                        min=output.number(min(specific_time_series['var_D']),2),
                                         thresholds=thresholds_D_txt,
-                                        max=output.number(station.var_D.maximum,2)), fontsize=11, ha='center')
+                                        max=output.number(max(specific_time_series['var_D']),2)),
+                                        fontsize=11, ha='center')
 
             ## Save image
             image_dir_save \
@@ -396,8 +406,9 @@ def climate_graphs(station):
         # save dir image for mosaic
         image_open_list.append(image_dir_save)
 
+
     # -------------------------------------------------------------------------
-    # main
+    # MAIN
 
     for lag in env.config_run.settings['lags']:
 
@@ -415,6 +426,15 @@ def climate_graphs(station):
 
                 title_period = _("trim {0} ({1})").format(month, output.trimester_in_initials(month-1))
                 filename_period = _("trim_{0}").format(month)
+
+                # get all values of the time series only for this month (trimester)
+                # for all years inside the process period
+                specific_time_series = {'var_D':[], 'var_I':[]}
+                for time_series in station.time_series['lag_'+str(lag)]:
+                    if time_series[0].month == month:
+                        specific_time_series['var_D'].append(time_series[1])
+                        specific_time_series['var_I'].append(time_series[2])
+
                 create_chart()
 
             if env.globals_vars.STATE_OF_DATA in [2, 4]:
@@ -425,6 +445,14 @@ def climate_graphs(station):
 
                     title_period = output.month_in_initials(month-1) + " " + str(day)
                     filename_period = output.month_in_initials(month-1) + "_" + str(day)
+
+                    # get all values of the time series only for this month (trimester)
+                    # for all years inside the process period
+                    specific_time_series = {'var_D':[], 'var_I':[]}
+                    for time_series in station.time_series['lag_'+str(lag)]:
+                        if time_series[0].month == month and time_series[0].day == day:
+                            specific_time_series['var_D'].append(time_series[1])
+                            specific_time_series['var_I'].append(time_series[2])
 
                     create_chart()
 
