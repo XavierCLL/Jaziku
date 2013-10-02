@@ -921,23 +921,18 @@ def climatology(stations_list):
                     range_analysis_mean = []
                     range_analysis_max = []
                     range_analysis_min = []
-
-                    iter_year = station.process_period['start']
-                    # iteration for years from first-year +1 to end-year -1 inside
-                    # range common_period
-                    while iter_year <= station.process_period['end']:
+                    # iteration for all years inside process period
+                    for year in range(station.process_period['start'], station.process_period['end']+1):
                         # test if day exist in month and year
-                        if day > monthrange(iter_year, month)[1]:
-                            iter_year += relativedelta(years= +1)
+                        if day > monthrange(year, month)[1]:
                             continue
 
-                        values = get_values_in_range_analysis_interval(station,'D', iter_year, month, day)
+                        values = get_values_in_range_analysis_interval(station,'D', year, month, day)
                         values = array.clean(values)
                         range_analysis_mean.append(array.mean(values))
                         range_analysis_max.append(array.maximum(values))
                         range_analysis_min.append(array.minimum(values))
 
-                        iter_year += 1
                     y_mean.append(array.mean(range_analysis_mean))
                     y_max.append(array.mean(range_analysis_max) - y_mean[-1])
                     y_min.append(y_mean[-1] - array.mean(range_analysis_min))
