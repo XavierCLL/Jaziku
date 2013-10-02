@@ -153,29 +153,24 @@ def calculate_time_series(station, makes_files=True):
                     csv_file.writerow(['', env.config_run.settings['mode_calculation_series_D_i18n'],
                                        env.config_run.settings['mode_calculation_series_I_i18n']])
 
-                iter_year = station.process_period['start']
-
-                # iteration for years from first-year +1 to end-year -1 inside
-                # range common_period
-                while iter_year <= station.process_period['end']:
+                # iteration for all years inside process period
+                for year in range(station.process_period['start'], station.process_period['end']+1):
 
                     ## calculate time series, get values and calculate the mean or accumulate the values in range analysis
-                    values_in_range_analysis_interval = get_values_in_range_analysis_interval(station,'D', iter_year, month)
+                    values_in_range_analysis_interval = get_values_in_range_analysis_interval(station,'D', year, month)
                     time_series_value_of_var_D = calculate_specific_value_of_time_series(station.var_D, values_in_range_analysis_interval)
 
-                    values_in_range_analysis_interval = get_values_in_range_analysis_interval(station,'I', iter_year, month, lag=lag)
+                    values_in_range_analysis_interval = get_values_in_range_analysis_interval(station,'I', year, month, lag=lag)
                     time_series_value_of_var_I = calculate_specific_value_of_time_series(station.var_I, values_in_range_analysis_interval)
 
                     # add line in list: Lag_X
-                    station.time_series['lag_'+str(lag)].append([date(iter_year, month, 1), time_series_value_of_var_D, time_series_value_of_var_I])
+                    station.time_series['lag_'+str(lag)].append([date(year, month, 1), time_series_value_of_var_D, time_series_value_of_var_I])
 
                     # add line output file csv_file
                     if makes_files:
-                        csv_file.writerow([str(iter_year) + "/" + str(month),
+                        csv_file.writerow([str(year) + "/" + str(month),
                                            output.number(time_series_value_of_var_D),
                                            output.number(time_series_value_of_var_I)])
-                    # next year
-                    iter_year += 1
 
                 if makes_files:
                     open_file.close()
@@ -215,39 +210,31 @@ def calculate_time_series(station, makes_files=True):
                     csv_file.writerow(['', env.config_run.settings['mode_calculation_series_D_i18n'],
                                        env.config_run.settings['mode_calculation_series_I_i18n']])
 
-                #days_for_this_month = monthrange(iter_year, month)[1]
-
                 for day in get_range_analysis_interval():
 
-                    iter_year = station.process_period['start']
-
-                    # iteration for years from first-year +1 to end-year -1 inside
-                    # range common_period
-                    while iter_year <= station.process_period['end']:
+                    # iteration for all years inside process period
+                    for year in range(station.process_period['start'], station.process_period['end']+1):
 
                         # test if day exist in month and year
-                        if day > monthrange(iter_year, month)[1]:
-                            iter_year += relativedelta(years= +1)
+                        if day > monthrange(year, month)[1]:
                             continue
 
                         ## calculate time series, get values and calculate the mean or accumulate the values in range analysis of var D
-                        values_in_range_analysis_interval = get_values_in_range_analysis_interval(station,'D', iter_year, month, day, lag)
+                        values_in_range_analysis_interval = get_values_in_range_analysis_interval(station,'D', year, month, day, lag)
                         time_series_value_of_var_D = calculate_specific_value_of_time_series(station.var_D, values_in_range_analysis_interval)
 
-                        values_in_range_analysis_interval = get_values_in_range_analysis_interval(station,'I', iter_year, month, day, lag)
+                        values_in_range_analysis_interval = get_values_in_range_analysis_interval(station,'I', year, month, day, lag)
                         time_series_value_of_var_I = calculate_specific_value_of_time_series(station.var_I, values_in_range_analysis_interval)
 
                         # add line in list: Lag_X
-                        station.time_series['lag_'+str(lag)].append([date(iter_year, month, day), time_series_value_of_var_D, time_series_value_of_var_I])
+                        station.time_series['lag_'+str(lag)].append([date(year, month, day), time_series_value_of_var_D, time_series_value_of_var_I])
 
                         # add line output file csv_file
                         if makes_files:
-                            csv_file.writerow([str(iter_year) + "/" + str(month)
+                            csv_file.writerow([str(year) + "/" + str(month)
                                                + "/" + str(day),
                                                output.number(time_series_value_of_var_D),
                                                output.number(time_series_value_of_var_I)])
-                        # next year
-                        iter_year += 1
                 if makes_files:
                     open_file.close()
                     del csv_file
