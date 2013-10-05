@@ -49,6 +49,8 @@ To be included
 - print console through classes
 - settings class
 - more interpolations
+- ability to change units for dependent and independent variables
+- to able to change the labels for var D
 
 To be analyzed
 --------------
