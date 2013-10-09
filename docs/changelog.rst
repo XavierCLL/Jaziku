@@ -53,6 +53,8 @@ fixes
 - Fixes units variable translations for var_D and var_I
 - Adjust title in Outliers graphs
 - Fix crash in some division by zero in statistic tests functions
+- Fix infinite loop of recursion calculating the thresholds with
+  analog_year
 
 **ideamFormat2jazikuFormat**
 

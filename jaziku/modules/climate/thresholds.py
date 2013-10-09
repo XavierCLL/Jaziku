@@ -169,7 +169,7 @@ def get_thresholds(station, variable, thresholds_input=None, process_analog_year
                 console.msg_error(_("the thresholds of var {0} ({1}) were defined as 'default'\n"
                                     "but this variable ({1}) haven't internal thresholds defined.")
                 .format(variable.type, env.var_D.TYPE_SERIES))
-            return get_thresholds(station, variable, default_thresholds)
+            return get_thresholds(station, variable, default_thresholds, process_analog_year=process_analog_year)
 
         if variable.type == 'I':
             default_thresholds = env.var_I.get_default_thresholds()
