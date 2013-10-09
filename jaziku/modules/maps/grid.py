@@ -74,7 +74,7 @@ class Grid(object):
             if not isinstance(self.grid_resolution, (int, float)):
                 console.msg_error_configuration("grid_resolution",
                     _("The grid_resolution '{0}' is wrong, the options are:\n"
-                    "'default' or valid number.").format(self.grid_resolution), stop_in_grid=self.num)
+                    "'auto' or valid number.").format(self.grid_resolution), stop_in_grid=self.num)
             self.grid_resolution = input.to_float(self.grid_resolution)
 
         env.globals_vars.input_settings["grid_resolution"].append(self.grid_resolution)
