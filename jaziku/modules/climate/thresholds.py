@@ -249,33 +249,64 @@ def get_thresholds(station, variable, thresholds_input=None, process_analog_year
                                 "invalid number (float or integer)\n\n{2}")
                 .format(variable.type, env.var_[variable.type].TYPE_SERIES, std_dev_values))
 
+        # check is the std deviations values are rising
+        mean_values_sort = list(std_dev_values)
+        mean_values_sort.sort()
+        if not mean_values_sort == std_dev_values:
+            console.msg_error(_("the sdt deviation values (sdN) for the thresholds\n"
+                                "of var {0} ({1}), must have rising values:\n\n{2}")
+            .format(variable.type, env.var_[variable.type].TYPE_SERIES, std_dev_values))
+
+        p50 = numpy.percentile(variable.specific_values_cleaned, 50)
+        std_deviation = numpy.std(variable.specific_values_cleaned, ddof=1)
+
         if env.config_run.settings['class_category_analysis'] == 3:
-
-            p50 = numpy.percentile(variable.specific_values_cleaned, 50)
-            std_deviation = numpy.std(variable.specific_values_cleaned, ddof=1)
-
             return [p50 + std_dev_values[0] * std_deviation,
                     p50 + std_dev_values[1] * std_deviation]
 
         if env.config_run.settings['class_category_analysis'] == 7:
-
-            # check is the std deviations values are rising
-            std_dev_values_below_sort = list(std_dev_values)
-            std_dev_values_below_sort.sort()
-            if not std_dev_values_below_sort == std_dev_values:
-                console.msg_error(_("the sdt deviation values (sdN) for the thresholds\n"
-                                    "of var {0} ({1}), must have rising values:\n\n{2}")
-                .format(variable.type, env.var_[variable.type].TYPE_SERIES, std_dev_values))
-
-            p50 = numpy.percentile(variable.specific_values_cleaned, 50)
-            std_deviation = numpy.std(variable.specific_values_cleaned, ddof=1)
-
             return [p50 + std_dev_values[0] * std_deviation,
                     p50 + std_dev_values[1] * std_deviation,
                     p50 + std_dev_values[2] * std_deviation,
                     p50 + std_dev_values[3] * std_deviation,
                     p50 + std_dev_values[4] * std_deviation,
                     p50 + std_dev_values[5] * std_deviation]
+
+
+    @validate_thresholds(variable, force=True)
+    @thresholds_to_dict_format
+    def thresholds_with_p50(p50_values):
+
+        p50_values = [input.to_float(value) for value in p50_values]
+
+        # check if all values of p50+ are float
+        if False in [isinstance(value, float) for value in p50_values]:
+            console.msg_error(_("thresholds of var {0} ({1}) were defined as "
+                                "p50 +/- N (p50+N)\nbut the value N is "
+                                "invalid number (float or integer)\n\n{2}")
+                .format(variable.type, env.var_[variable.type].TYPE_SERIES, p50_values))
+
+        # check is the p50 values are rising
+        p50_values_sort = list(p50_values)
+        p50_values_sort.sort()
+        if not p50_values_sort == p50_values:
+            console.msg_error(_("the p50 values (p50+N) for the thresholds\n"
+                                "of var {0} ({1}), must have rising values:\n\n{2}")
+            .format(variable.type, env.var_[variable.type].TYPE_SERIES, p50_values))
+
+        p50 = numpy.percentile(variable.specific_values_cleaned, 50)
+
+        if env.config_run.settings['class_category_analysis'] == 3:
+            return [p50 + p50_values[0],
+                    p50 + p50_values[1]]
+
+        if env.config_run.settings['class_category_analysis'] == 7:
+            return [p50 + p50_values[0],
+                    p50 + p50_values[1],
+                    p50 + p50_values[2],
+                    p50 + p50_values[3],
+                    p50 + p50_values[4],
+                    p50 + p50_values[5]]
 
 
     @validate_thresholds(variable)
@@ -387,18 +418,23 @@ def get_thresholds(station, variable, thresholds_input=None, process_analog_year
     # if are defined as percentile or standard deviation (all str instance)
     if not False in [isinstance(threshold,str) for threshold in thresholds_input]:
 
+        # if are defined as p50+ - p50+NN
+        if not False in [threshold.startswith(('p50+','P50+','p50-','P50-')) for threshold in thresholds_input]:
+            p50_values = [threshold[3::] for threshold in thresholds_input]
+            return thresholds_with_p50(p50_values)
+
         # if are defined as percentile - pNN
-        if not False in [threshold[0:1] in ['p','P'] for threshold in thresholds_input]:
+        if not False in [threshold.startswith(('p','P')) for threshold in thresholds_input]:
             percentile_values = [threshold[1::] for threshold in thresholds_input]
             return thresholds_with_percentiles(percentile_values)
 
         # if are defined as standard deviation - sdNN
-        if not False in [threshold[0:2] in ['sd','SD'] for threshold in thresholds_input]:
+        if not False in [threshold.startswith(('sd','SD')) for threshold in thresholds_input]:
             std_dev_values = [threshold[2::] for threshold in thresholds_input]
             return thresholds_with_std_deviation(std_dev_values)
 
         # if are defined as percentage - NN%
-        if not False in [threshold[-1::] == "%" for threshold in thresholds_input]:
+        if not False in [threshold.endswith("%") for threshold in thresholds_input]:
             percentage_values = [threshold[0:-1] for threshold in thresholds_input]
             return thresholds_with_percentage(percentage_values)
 

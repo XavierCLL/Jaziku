@@ -25,6 +25,11 @@ news
   to process) and thresholds for the respective relevant climate
   categories selected in runfile for the composite analysis graphics
   in climate module
+- New thresholds p50+/-NN, this is percentile 50 for the multi-year
+  interval analysis values and more or less NN particular values
+  (in the same units). In runfile put; p50+NN or p50-NN, e.g.
+  p50+3.4, p50-7.8
+  or less   at the user can defined in runfile
 - [code] Refactoring lag to time_series
 - [code] Refactoring read_var_D and read_var_I into read_variable
 
@@ -60,6 +65,8 @@ fixes
   ideamFormat2jazikuFormat script
 - Fixes when run with different variables for each station
 - Several fixes and adjust in ideamFormat2jazikuFormat script
+- Fix crashed when there are some words inside data (e.g. vectorial
+  wind data)
 
 
 
