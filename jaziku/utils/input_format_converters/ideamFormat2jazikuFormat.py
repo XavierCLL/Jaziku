@@ -387,6 +387,10 @@ def main():
             # read station data
             if in_station_data:
 
+                # continue for some special characters inside data
+                if line.strip().startswith("MEDIA VECTORIAL"):
+                    continue
+
                 if frequency_data == 'monthly':
                     year = line[1:5]
                     try:
