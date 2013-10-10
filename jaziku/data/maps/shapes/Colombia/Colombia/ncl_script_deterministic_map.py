@@ -151,7 +151,7 @@ begin
   lat1 = f->y
 
   lnres                  = True
-  lnres@gsLineThicknessF = 0.2
+  lnres@gsLineThicknessF = 0.3
   lnres@gsLineColor      = (/"(/0.00, 0.00, 0.00/)"/)
 
   do i=0,numFeatures-1
