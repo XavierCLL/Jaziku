@@ -29,7 +29,6 @@ news
   interval analysis values and more or less NN particular values
   (in the same units). In runfile put; p50+NN or p50-NN, e.g.
   p50+3.4, p50-7.8
-  or less   at the user can defined in runfile
 - [code] Refactoring lag to time_series
 - [code] Refactoring read_var_D and read_var_I into read_variable
 
@@ -55,6 +54,8 @@ fixes
 - Fix crash in some division by zero in statistic tests functions
 - Fix infinite loop of recursion calculating the thresholds with
   analog_year
+- Fix the black points in deterministic maps for events different
+  to "normal"
 
 **ideamFormat2jazikuFormat**
 
