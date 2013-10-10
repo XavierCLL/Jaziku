@@ -170,6 +170,11 @@ def process(grid):
                           "   will not put the {state} values.").
                         format(lat=latitude, lon=longitude, state=point_state), color='yellow', newline=False)
 
+            # if index_position is not 'nan', replace index_position to not translate category text
+            if index_position != 'nan':
+                idx_cat = env.globals_vars.categories(as_list=True).index(index_position)
+                index_position = env.globals_vars.categories(translated=False, as_list=True)[idx_cat]
+
             marks_stations.append([latitude, longitude, index, index_position])
 
         open_file.close()
