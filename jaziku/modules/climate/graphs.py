@@ -202,17 +202,16 @@ def climate_graphs(station):
                     thresholds_D[num_thres] = '{0}: {1}'.format(global_thresholds_D[num_thres],
                                                          output.number(thres,2))
 
-            fig.text(0.5, 0.02, _(u'Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n'
-                                  u'Min: {min}  ( {thresholds} )  Max: {max}')
+            fig.text(0.5, 0.02,
+                     unicode(_('Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n'
+                               'Min: {min}  ( {thresholds} )  Max: {max}')
                                 .format(anal_inter=title_period, units=env.var_D.UNITS,
                                         start_year=station.process_period['start'],
                                         end_year=station.process_period['end'],
                                         min=output.number(min(specific_time_series['var_D']),2),
                                         thresholds=' | '.join(thresholds_D),
-                                        max=output.number(max(specific_time_series['var_D']),2)),
+                                        max=output.number(max(specific_time_series['var_D']),2)), 'utf-8'),
                                         fontsize=12, ha='center')
-
-
 
             ## Save image
             image_dir_save \
@@ -372,14 +371,15 @@ def climate_graphs(station):
             else:
                 thresholds_D_txt = '( ' + ' | '.join(thresholds_D) + ' )'
 
-            fig.text(0.5, 0.01, _(u'Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n'
-                                  u'Min: {min}  {thresholds}  Max: {max}')
+            fig.text(0.5, 0.01,
+                     unicode(_('Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n'
+                                'Min: {min}  {thresholds}  Max: {max}')
                                 .format(anal_inter=title_period, units=env.var_D.UNITS,
                                         start_year=station.process_period['start'],
                                         end_year=station.process_period['end'],
                                         min=output.number(min(specific_time_series['var_D']),2),
                                         thresholds=thresholds_D_txt,
-                                        max=output.number(max(specific_time_series['var_D']),2)),
+                                        max=output.number(max(specific_time_series['var_D']),2)), 'utf-8'),
                                         fontsize=11, ha='center')
 
             ## Save image
