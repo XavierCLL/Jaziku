@@ -31,6 +31,7 @@ news
   p50+3.4, p50-7.8
 - [code] Refactoring lag to time_series
 - [code] Refactoring read_var_D and read_var_I into read_variable
+- [code] Ported the old PIL to new Python-pillow
 
 **ideamFormat2jazikuFormat:**
 
