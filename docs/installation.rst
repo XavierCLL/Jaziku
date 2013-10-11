@@ -21,7 +21,7 @@ distribution.
 - argparse (or python-argparse, or if used ubuntu this inside in python package)
 - matplotlib (or python-matplotlib)
 - numpy (or python-numpy)
-- PIL (or python-image or python-imaging)
+- python-pillow (or python-imaging, python-image)
 - python-dateutil
 - imagemagick
 - `python-clint <http://pypi.python.org/pypi/clint>`_ [1]_

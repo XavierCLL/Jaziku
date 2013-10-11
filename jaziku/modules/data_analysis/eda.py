@@ -28,7 +28,7 @@ from dateutil.relativedelta import relativedelta
 from matplotlib import pyplot
 from numpy import histogram
 from pylab import xticks, bar, boxplot
-from Image import open as img_open
+from PIL import Image
 from scipy.stats import shapiro
 from calendar import monthrange
 
@@ -646,14 +646,14 @@ def graphs_inspection_of_series(stations_list):
 
         ## create mosaic
         if env.var_D.is_daily() and env.var_I.is_monthly():
-            image_var_D = img_open(image_list[0])
-            image_var_I = img_open(image_list[2])
+            image_var_D = Image.open(image_list[0])
+            image_var_I = Image.open(image_list[2])
         elif env.var_D.is_monthly() and env.var_I.is_daily():
-            image_var_D = img_open(image_list[2])
-            image_var_I = img_open(image_list[1])
+            image_var_D = Image.open(image_list[2])
+            image_var_I = Image.open(image_list[1])
         else:
-            image_var_D = img_open(image_list[0])
-            image_var_I = img_open(image_list[1])
+            image_var_D = Image.open(image_list[0])
+            image_var_I = Image.open(image_list[1])
 
         # definition height and width of individual image
         width, height = image_var_D.size
@@ -662,7 +662,7 @@ def graphs_inspection_of_series(stations_list):
         # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
         mosaic_plots = pyplot.figure(figsize=((width) / 75, (height * 2) / 75))
         mosaic_plots.savefig(mosaic_dir_save, dpi=75)
-        mosaic = img_open(mosaic_dir_save)
+        mosaic = Image.open(mosaic_dir_save)
 
         mosaic.paste(image_var_I, (0, 0))
         mosaic.paste(image_var_D, (0, height))

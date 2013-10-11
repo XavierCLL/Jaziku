@@ -29,7 +29,7 @@ from math import isnan
 from jaziku.modules.climate.thresholds import thresholds_to_list
 from numpy import array
 from matplotlib import pyplot
-from Image import open as img_open
+from PIL import Image
 
 from jaziku import env
 from jaziku.core.analysis_interval import get_range_analysis_interval
@@ -470,12 +470,12 @@ def climate_graphs(station):
             dpi = 100.0
             mosaic_plots = pyplot.figure(figsize=((image_width * 3) / dpi, (image_height * 4) / dpi))
             mosaic_plots.savefig(mosaic_dir_save, dpi=dpi)
-            mosaic = img_open(mosaic_dir_save)
+            mosaic = Image.open(mosaic_dir_save)
             i = 0
             # add image in mosaic based on trimester, vertical(v) and horizontal(h)
             for v in range(4):
                 for h in range(3):
-                    mosaic.paste(img_open(image_open_list[i]), (image_width * h, image_height * v))
+                    mosaic.paste(Image.open(image_open_list[i]), (image_width * h, image_height * v))
                     i += 1
 
         if env.globals_vars.STATE_OF_DATA in [2, 4]:
@@ -484,12 +484,12 @@ def climate_graphs(station):
             mosaic_plots = pyplot.figure(figsize=((image_width * len(get_range_analysis_interval())) / dpi,
                                                   (image_height * 12) / dpi))
             mosaic_plots.savefig(mosaic_dir_save, dpi=dpi)
-            mosaic = img_open(mosaic_dir_save)
+            mosaic = Image.open(mosaic_dir_save)
             i = 0
             # add image in mosaic based on months(m) and days(d)
             for m in range(12):
                 for d in range(len(get_range_analysis_interval())):
-                    mosaic.paste(img_open(image_open_list[i]), (image_width * d, image_height * m))
+                    mosaic.paste(Image.open(image_open_list[i]), (image_width * d, image_height * m))
                     i += 1
 
         mosaic.save(mosaic_dir_save)

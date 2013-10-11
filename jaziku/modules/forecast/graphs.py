@@ -26,7 +26,7 @@
 import os
 from math import isnan
 from matplotlib import pyplot
-from Image import open as img_open
+from PIL import Image
 
 from jaziku import env
 from jaziku.modules.climate import time_series
@@ -190,9 +190,9 @@ def forecast_graphs(station):
         dpi = 100.0
         mosaic_plots = pyplot.figure(figsize=((image_width * len(env.config_run.settings['lags'])) / dpi, image_height / dpi))
         mosaic_plots.savefig(mosaic_dir_save, dpi=dpi)
-        mosaic = img_open(mosaic_dir_save)
+        mosaic = Image.open(mosaic_dir_save)
         for lag_iter in range(len(env.config_run.settings['lags'])):
-            mosaic.paste(img_open(image_open_list[lag_iter]), (image_width * lag_iter, 0))
+            mosaic.paste(Image.open(image_open_list[lag_iter]), (image_width * lag_iter, 0))
         # save
         mosaic.save(mosaic_dir_save)
         # stamp logo
@@ -319,9 +319,9 @@ def forecast_graphs(station):
             dpi = 100.0
             mosaic_plots = pyplot.figure(figsize=((image_width * len(env.config_run.settings['lags'])) / dpi, image_height / dpi))
             mosaic_plots.savefig(mosaic_dir_save, dpi=dpi)
-            mosaic = img_open(mosaic_dir_save)
+            mosaic = Image.open(mosaic_dir_save)
             for lag_iter in range(len(env.config_run.settings['lags'])):
-                mosaic.paste(img_open(image_open_list[lag_iter]), (image_width * lag_iter, 0))
+                mosaic.paste(Image.open(image_open_list[lag_iter]), (image_width * lag_iter, 0))
             # save
             mosaic.save(mosaic_dir_save)
             # stamp logo
