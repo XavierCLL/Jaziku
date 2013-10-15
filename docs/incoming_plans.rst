@@ -44,13 +44,16 @@ Others TODO
 
 To be included
 --------------
-- Auto-validations (skills)
+- to able to change the labels for var D
+- include the shapes maps for protected regions of Colombia
 - save log
 - print console through classes
-- settings class
+- Auto-validations (skills)
 - more interpolations
+- parallelize several part of code with MPI (PyMPI) or multi-thread,
+  for example: best period to process, interpolations, maps.
 - ability to change units for dependent and independent variables
-- to able to change the labels for var D
+- settings class
 
 To be analyzed
 --------------
