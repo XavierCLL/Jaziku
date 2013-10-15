@@ -128,17 +128,21 @@ def process(grid):
             latitude = input.to_float(line[1])
             longitude = input.to_float(line[2])
 
-            # get index from Map_Data
-            if grid.if_running["correlation"]:
-                index = input.to_float(line[3])  # get pearson value
-                index_position = None  # get index position
-            if grid.if_running["climate"] or grid.if_running["forecast"]:
-                if env.config_run.settings['class_category_analysis'] == 3:
+            # get index and index_position from Map_Data file
+            if env.config_run.settings['class_category_analysis'] == 3:
+                if grid.if_running["climate"] or grid.if_running["forecast"]:
                     index = input.to_float(line[8])  # get index value
-                    index_position = line[9]  # get index position
-                if env.config_run.settings['class_category_analysis'] == 7:
+                if grid.if_running["correlation"]:
+                    index = input.to_float(line[3])  # get pearson value
+                # get index position:
+                index_position = line[9]
+            if env.config_run.settings['class_category_analysis'] == 7:
+                if grid.if_running["climate"] or grid.if_running["forecast"]:
                     index = input.to_float(line[12])  # get index value
-                    index_position = line[13]  # get index position
+                if grid.if_running["correlation"]:
+                    index = input.to_float(line[3])  # get pearson value
+                # get index position:
+                index_position = line[13]
 
             if map_type == _("probabilistic"):
                 # set the index value on matrix

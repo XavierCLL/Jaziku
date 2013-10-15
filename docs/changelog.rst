@@ -57,6 +57,7 @@ fixes
   analog_year
 - Fix the black points in deterministic maps for events different
   to "normal"
+- Fix index_position for correlation maps
 
 **ideamFormat2jazikuFormat**
 
