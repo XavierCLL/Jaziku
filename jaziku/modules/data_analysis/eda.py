@@ -169,9 +169,17 @@ def main(stations_list):
     # -------------------------------------------------------------------------
     # THE BEST PERIODS TO PROCESS
 
-    console.msg(_("Analysis the best periods to process ................. "), newline=False)
-    analysis_the_best_periods_to_process(stations_list)
-    console.msg(_("done"), color='green')
+    if not env.config_run.settings['process_period']:
+        console.msg(_("Analysis the best periods to process ................. "), newline=False)
+
+        # TODO: Fixes the equation for process several stations, use threads or PyMPI
+        if len(stations_list) < 100:
+            analysis_the_best_periods_to_process(stations_list)
+            console.msg(_("done"), color='green')
+        else:
+            console.msg(_("partial\n > WARNING: There are many station for calculate the best\n"
+                          "   periods to process, currently the algorithm to calculate\n"
+                          "   this could take several minutes to complete."), color="yellow")
 
     # -------------------------------------------------------------------------
     # GRAPHS INSPECTION OF SERIES
@@ -484,7 +492,7 @@ def analysis_the_best_periods_to_process(stations_list):
     open_file = open(file_name, 'w')
     csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
-    header = [_('ANALYSIS PERIOD'), _('NUM YEARS'), _('NUM STATIONS INCLUDED FOR PERIOD'), _('MAX % OF NULLS PERMITTED PER STATION'),
+    header = [_('ANALYSIS PERIOD'), _('NUM. YEARS'), _('NUM. STATIONS INCLUDED FOR PERIOD'), _('MAX % OF NULLS PERMITTED PER STATION'),
               _('% OF NULLS INSIDE THE PERIOD OF ALL DATA'), _('RANKING*'), '--', _('LIST STATIONS INCLUDED FOR PERIOD:')]
     csv_file.writerow(header)
 
@@ -1549,7 +1557,7 @@ def outliers(stations_list):
 
     # print header
     header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), _('WHISKERS BELOW'),
-              _('WHISKERS ABOVE'), _('NUM OUTLIERS'),'']
+              _('WHISKERS ABOVE'), _('NUM. OUTLIERS'),'']
 
     header_outliers = [_('DATE'), _('VALUE'), _('PHEN_CAT')]
 
