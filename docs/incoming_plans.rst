@@ -19,7 +19,6 @@ Incoming Plans / TODO
  for missing values),% pie chart for more missing value repeated, the year with the highest number with missing
  values, filling series with mean and median (entire series), frequency histogram pre and post after fill each series
 - Standardized variables graphic option (Dependent variable transformation to the same format of Independent Variable)
-- Migrate/make manual, documentation and main page of Jaziku to sphinx using reStructuredTex http://sphinx-doc.org/
 
 0.9 (**2013-xx-xx**)
 --------------------
@@ -29,6 +28,7 @@ Incoming Plans / TODO
 - Randomness (Test Runs)
 - Changing trend (Fisher test)
 - Mass curve for (Q, HR, PPT)
+- Migrate/make manual, documentation and main page of Jaziku to sphinx using reStructuredTex http://sphinx-doc.org/
 
 0.10 (**2013-XX-XX**)
 --------------------
@@ -47,6 +47,7 @@ To be included
 - to able to change the labels for var D
 - include the shapes maps for protected regions of Colombia
 - save log
+- Colombia with San Andres and Providencia
 - print console through classes
 - Auto-validations (skills)
 - more interpolations
@@ -59,11 +60,14 @@ To be analyzed
 --------------
 - partial run, if a station has an error continue with other station, alert in final message
 - Add altitude parameter for stations and print in results (maps files)
-- ncl scripts port to pyngl
+- NCL scripts port to pyngl
+- Tool for the creation of a typical meteorological year:
+    Skeiker, K., & Ghani, B. A. (2008). Advanced software tool for the creation of a typical meteorological year.
+    Energy Conversion and Management, 49(10), 2581–2587. Retrieved from http://www.sciencedirect.com/science/article/pii/S0196890408002045
 
 Arts and promotions
 -------------------
-- logo
+- logo (DONE)
 - webpage
 - ISBN
 - mail jaziku@ideam.gov.co
