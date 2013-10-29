@@ -12,7 +12,7 @@ metodology between the major indices of climate variability and major
 meteorological variables in puntual scale.
 
 According to IDEAM’s commitment to promote and guide scientiﬁc research
-about weather forecasting and climate, "Jazikü" is a program designed to
+about weather forecast and climate, "Jazikü" is a program designed to
 evaluate teleconnections between meteorological variables with the main
 indices of climate variability aﬀecting climate in Colombia.
 
