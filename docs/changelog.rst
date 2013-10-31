@@ -33,12 +33,12 @@ news
 - [code] Refactoring read_var_D and read_var_I into read_variable
 - [code] Ported the old PIL to new Python-pillow
 
-**ideamFormat2jazikuFormat:**
+**sisdhim2jaziku:**
 
-- For ideamFormat2jazikuFormat script added 3 new filters (time
+- For sisdhim2jaziku script added 3 new filters (time
   series that contain start/end year and minimum size years of
   data) for choose stations for write in runfile
-- For ideamFormat2jazikuFormat script now accepted the data
+- For sisdhim2jaziku script now accepted the data
   daily from Sisdhim format, auto-detect and transform to Jaziku
   data daily format
 
@@ -59,17 +59,17 @@ fixes
   to "normal"
 - Fix index_position for correlation maps
 
-**ideamFormat2jazikuFormat**
+**sisdhim2jaziku**
 
 - Force convert dos2unix with binary characters and fix directory
-  name when the file haven't extension in ideamFormat2jazikuFormat
+  name when the file haven't extension in sisdhim2jaziku
 - Fix special character in stations name and name variable in
-  continue station in ideamFormat2jazikuFormat script
+  continue station in sisdhim2jaziku script
 - Fix calculating the number of days in month with data daily and
   fixed when the year is repeat for the same station in
-  ideamFormat2jazikuFormat script
+  sisdhim2jaziku script
 - Fixes when run with different variables for each station
-- Several fixes and adjust in ideamFormat2jazikuFormat script
+- Several fixes and adjust in sisdhim2jaziku script
 - Fix crashed when there are some words inside data (e.g. vectorial
   wind data)
 
@@ -81,7 +81,7 @@ fixes
 news
 ++++
 
-- New script and executable (ideamFormat2jazikuFormat) that convert
+- New script and executable (sisdhim2jaziku) that convert
   SISDHIM format of IDEAM to Jaziku inputs format ready for to be processed
   with it.
 - New two columns "total data" and "lost data" in descriptive statistic table

@@ -32,7 +32,7 @@
 # Open terminal where saved the file to be processed (i.e INPUT_FILE)
 # and run:
 #
-#     ideamFormat2jazikuFormat INPUT_FILE [--start_year START_YEAR]
+#     sisdhim2jaziku INPUT_FILE [--start_year START_YEAR]
 #                                         [--end_year END_YEAR]
 #                                         [--min_years MIN_YEARS]
 #
@@ -59,7 +59,7 @@ def main():
 
     # Create parser arguments
     arguments = argparse.ArgumentParser(
-                     prog="ideamFormat2jazikuFormat",
+                     prog="sisdhim2jaziku",
                      description=_("This script transform from ideam format got from SISDHIM to Jaziku format."),
                      epilog=console.msg_footer(text=True),
                      formatter_class=argparse.RawTextHelpFormatter)

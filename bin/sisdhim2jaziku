@@ -30,4 +30,4 @@ fi
 
 # run Jaziku in Linux environment
 #/usr/bin/env python2 -c "from jaziku import jaziku; jaziku.main()" "$@"
-exec `echo $python_version` -c "from jaziku.utils.scripts import ideamFormat2jazikuFormat; ideamFormat2jazikuFormat.main()" "$@"
+exec `echo $python_version` -c "from jaziku.utils.scripts import sisdhim2jaziku; sisdhim2jaziku.main()" "$@"
