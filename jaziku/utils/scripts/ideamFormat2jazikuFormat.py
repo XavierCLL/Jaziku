@@ -47,7 +47,7 @@ from clint.textui import colored
 
 from jaziku.utils import output, console, text
 from jaziku.utils.geographic import dms2dd
-from jaziku.utils.input_format_converters import runfile_skeleton
+from jaziku.utils.scripts import runfile_skeleton
 
 def main():
 
