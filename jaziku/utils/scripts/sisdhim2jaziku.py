@@ -150,9 +150,6 @@ def main():
     # -------------------------------------------------------------------------
     # utility functions
 
-    def fix_zeros(dt):
-        return '0'+str(dt) if len(str(dt))<2 else str(dt)
-
     def if_station_pass_filters():
         write_in_runfile = None
         if arg.start_year is not None:
@@ -407,7 +404,7 @@ def main():
                         for month in range(0,12):
                             days_in_month = monthrange(year, month+1)[1]
                             for day in range(0,days_in_month):
-                                station['file_to_write'].writerow(["{0}-{1}-{2}".format(year,fix_zeros(month+1),fix_zeros(day+1)), months_data[month][day]])
+                                station['file_to_write'].writerow(["{0}-{1}-{2}".format(year,output.fix_zeros(month+1),output.fix_zeros(day+1)), months_data[month][day]])
 
                         before_year = year
                         station['end_year'] = year
@@ -421,17 +418,17 @@ def main():
                     in_station_data = False
 
                 if in_station_data:
-                    # fill the empty years with nan
+                    # fill the empty months or days with nan if not exists
                     if before_year is not None:
                         while year > before_year+1:
                             if frequency_data == 'monthly':
                                 for month in range(0,12):
-                                    station['file_to_write'].writerow(["{0}-{1}".format(before_year+1,fix_zeros(month+1)), 'nan'])
+                                    station['file_to_write'].writerow(["{0}-{1}".format(before_year+1,output.fix_zeros(month+1)), 'nan'])
                             if frequency_data == 'daily':
                                 for month in range(0,12):
                                     days_in_month = monthrange(before_year+1, month+1)[1]
                                     for day in range(0,days_in_month):
-                                        station['file_to_write'].writerow(["{0}-{1}-{2}".format(before_year+1,fix_zeros(month+1),fix_zeros(day+1)), 'nan'])
+                                        station['file_to_write'].writerow(["{0}-{1}-{2}".format(before_year+1,output.fix_zeros(month+1),output.fix_zeros(day+1)), 'nan'])
                             before_year += 1
                     else:
                         # save the first year
@@ -452,7 +449,7 @@ def main():
                             except:
                                 # for wind or unknown words  TODO: accept wind values
                                 value = line[12+9*month:19+9*month].strip()
-                            station['file_to_write'].writerow(["{0}-{1}".format(year,fix_zeros(month+1)), value])
+                            station['file_to_write'].writerow(["{0}-{1}".format(year,output.fix_zeros(month+1)), value])
                     # get the values when the data are daily
                     if frequency_data == 'daily':
                         # write the month values for the year
