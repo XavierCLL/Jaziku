@@ -108,3 +108,10 @@ def prepare_dirs():
             console.msg(_("\nexit"),color='red')
             console.msg_footer()
             sys.exit()
+
+def fix_zeros(dt):
+    '''When the number is less to 10 put 0 before the number,
+    e.g. 5 -> 05, 8 -> 08
+    '''
+
+    return '0'+str(dt) if len(str(dt))<2 else str(dt)

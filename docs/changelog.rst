@@ -29,6 +29,10 @@ news
   interval analysis values and more or less NN particular values
   (in the same units). In runfile put; p50+NN or p50-NN, e.g.
   p50+3.4, p50-7.8
+- New script called 'normalize_format' that normalize the format and data
+  inside of time series, convert the date character division in date,
+  convert space between date and data, fill the nan values and empty
+  dates, and others.
 - [code] Refactoring lag to time_series
 - [code] Refactoring read_var_D and read_var_I into read_variable
 - [code] Ported the old PIL to new Python-pillow
