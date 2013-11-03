@@ -34,6 +34,7 @@ from PIL import Image
 from jaziku import env
 from jaziku.core.analysis_interval import get_range_analysis_interval
 from jaziku.utils import  watermarking, output
+from jaziku.utils.array import minimum, maximum
 from jaziku.utils.matrix import transpose
 
 image_height = None
@@ -208,9 +209,9 @@ def climate_graphs(station):
                                 .format(anal_inter=title_period, units=env.var_D.UNITS,
                                         start_year=station.process_period['start'],
                                         end_year=station.process_period['end'],
-                                        min=output.number(min(specific_time_series['var_D']),2),
+                                        min=output.number(minimum(specific_time_series['var_D']),2),
                                         thresholds=' | '.join(thresholds_D),
-                                        max=output.number(max(specific_time_series['var_D']),2)), 'utf-8'),
+                                        max=output.number(maximum(specific_time_series['var_D']),2)), 'utf-8'),
                                         fontsize=12, ha='center')
 
             ## Save image
@@ -377,9 +378,9 @@ def climate_graphs(station):
                                 .format(anal_inter=title_period, units=env.var_D.UNITS,
                                         start_year=station.process_period['start'],
                                         end_year=station.process_period['end'],
-                                        min=output.number(min(specific_time_series['var_D']),2),
+                                        min=output.number(minimum(specific_time_series['var_D']),2),
                                         thresholds=thresholds_D_txt,
-                                        max=output.number(max(specific_time_series['var_D']),2)), 'utf-8'),
+                                        max=output.number(maximum(specific_time_series['var_D']),2)), 'utf-8'),
                                         fontsize=11, ha='center')
 
             ## Save image
