@@ -40,7 +40,29 @@ def external_run():
     all_input_files = sys.argv[1::]
     for time_series_file in all_input_files:
         print 'processing file: ' + time_series_file
+        main(time_series_file)
 
+def get_int_month(month):
+    if isinstance(month, str) and len(month) in [2,3]:
+        bim_char = {1:'jf', 2: 'fm', 3: 'ma',4: 'am', 5: 'mj', 6: 'jj', 7: 'ja', 8: 'as', 9: 'so', 10: 'on', 11: 'nd', 12: 'dj'}
+        trim_char = {1:'jfm', 2: 'fma', 3: 'mam',4: 'amj', 5: 'mjj', 6: 'jja', 7: 'jas', 8: 'aso', 9: 'son', 10: 'ond', 11: 'ndj', 12: 'djf'}
+
+        if len(month) == 2:
+            return bim_char.keys()[bim_char.values().index(month)]
+        if len(month) == 3:
+            return trim_char.keys()[trim_char.values().index(month)]
+    else:
+        return int(month)
+
+def get_char_month(month, type_of_month):
+    if type_of_month == 'monthly':
+        return output.fix_zeros(month)
+    if type_of_month == 'bimonthly':
+        bim_char = {1:'jf', 2: 'fm', 3: 'ma',4: 'am', 5: 'mj', 6: 'jj', 7: 'ja', 8: 'as', 9: 'so', 10: 'on', 11: 'nd', 12: 'dj'}
+        return bim_char[month]
+    if type_of_month == 'trimester':
+        trim_char = {1:'jfm', 2: 'fma', 3: 'mam',4: 'amj', 5: 'mjj', 6: 'jja', 7: 'jas', 8: 'aso', 9: 'son', 10: 'ond', 11: 'ndj', 12: 'djf'}
+        return trim_char[month]
 
 def main(time_series_file):
 
@@ -60,6 +82,7 @@ def main(time_series_file):
 
         is_daily = False
         is_monthly = False
+        type_of_month = False
 
         # normalize characters and divisions, and clean
         line = line.replace('/','-')
@@ -68,14 +91,22 @@ def main(time_series_file):
         line = line.replace('  ',' ')
         line = line.replace('\"','')
         line = line.replace('\'','')
+        line = line.replace('NaN','nan')
+        line = line.replace('NAN','nan')
         line = line.strip()
 
         year = line.split(' ')[0].split('-')[0]
         month = line.split(' ')[0].split('-')[1]
         try:
-            month = output.fix_zeros(int(month))
+            month = int(month)
+            type_of_month = 'monthly'
         except:
-            pass
+            if isinstance(month, str) and len(month) in [2,3]:
+                month = month.lower()
+                if len(month) == 2:
+                    type_of_month = 'bimonthly'
+                if len(month) == 3:
+                    type_of_month = 'trimester'
 
         if len(line.split(' ')[0].split('-')) == 3:
             day = line.split(' ')[0].split('-')[2]
@@ -91,20 +122,23 @@ def main(time_series_file):
         else:
             value = 'nan'
 
-        date_value = date(int(year),int(month),int(day))
+        date_value = date(int(year),get_int_month(month),int(day))
 
         # fill the empty months or days with nan if not exists
         if old_date_value is not False:
             if is_monthly:
                 while date_value > old_date_value + relativedelta(months=1):
                     old_date_value = old_date_value + relativedelta(months=1)
-                    output_file.write(str(old_date_value.year)+'-'+output.fix_zeros(old_date_value.month)+' '+'nan'+'\n')
+                    output_file.write(str(old_date_value.year)+'-'+get_char_month(old_date_value.month, type_of_month)+' '+'nan'+'\n')
             if is_daily:
                 while date_value > old_date_value + relativedelta(days=1):
                     old_date_value = old_date_value + relativedelta(days=1)
                     output_file.write(str(old_date_value.year)+'-'+output.fix_zeros(old_date_value.month)+'-'+output.fix_zeros(old_date_value.day)+' '+'nan'+'\n')
 
         old_date_value = date_value
+
+        if type_of_month == 'monthly':
+            month = output.fix_zeros(int(month))
 
         if is_monthly:
             output_file.write(year+'-'+str(month)+' '+str(value)+'\n')
