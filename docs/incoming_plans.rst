@@ -49,7 +49,8 @@ To be included
 - save log
 - Colombia with San Andres and Providencia
 - print console through classes
-- Auto-validations (skills)
+- auto-validations (skills)
+- metadata inside time series files
 - more interpolations
 - parallelize several part of code with MPI (PyMPI) or multi-thread,
   for example: best period to process, interpolations, maps.
