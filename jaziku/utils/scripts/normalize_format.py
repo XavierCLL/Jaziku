@@ -84,6 +84,12 @@ def main(time_series_file):
         if not line or not line[0].strip() or line == []:
             continue
 
+        # continue (delete) in line with strange characters
+        if len(re.sub(r'[^\w]', '', line)) == 0:
+            output.console.msg('  deleting strange characters "{0}" in line {1}'
+                    .format(line.encode('string-escape').replace('\\n',''), num_line+1), color='yellow')
+            continue
+
         is_daily = False
         is_n_monthly = False
         type_of_month = False
