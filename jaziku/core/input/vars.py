@@ -23,11 +23,10 @@ import csv
 import re
 from datetime import date
 from dateutil.relativedelta import relativedelta
-from pylab import size
 
 from jaziku import env
 from jaziku.core.input import validation
-from jaziku.utils import  console
+from jaziku.utils import  console, input, output
 
 
 #==============================================================================
@@ -37,12 +36,12 @@ from jaziku.utils import  console
 
 def read_variable(station, variable):
     """Read dependent or independent variable for get and check date and
-    data from the raw file. Accept daily, monthly and bimonthly frequency
-    data. The check data is a process that validate value by value within
-    limits defined in runfile as 'limits_var_X'.
+    data from the raw file. Accept daily, monthly, bimonthly and trimonthly
+    frequency data. The check data is a process that validate value by
+    value within limits defined in runfile as 'limits_var_X'.
 
-    For data bimonthly, this need defined inside metadata file as follow:
-    FREQ:BIMONTHLY
+    For data bimonthly and trimonthly, this need defined each date with
+    characters, e.g. jfm = january-february-march
 
     :param station: station instance
     :type station: class Station
@@ -86,14 +85,14 @@ def read_variable(station, variable):
         delimiter = ';'
     open_file.seek(0)
 
-    csv_file = csv.reader(open_file, delimiter=delimiter)
+    time_series_file = csv.reader(open_file, delimiter=delimiter)
 
-    # csv_file = csv.reader(fo, delimiter = '\t')
-    # csv_file.write(data.replace('\x00', ''))
+    # time_series_file = csv.reader(fo, delimiter = '\t')
+    # time_series_file.write(data.replace('\x00', ''))
 
     first = True
-    # Read line to line csv_file, validation and save variable
-    for row in csv_file:
+    # Read line to line time_series_file, validation and save variable
+    for row in time_series_file:
 
         # if row is null o empty, e.g. empty but with tabs or spaces
         if not row or not row[0].strip():
@@ -104,54 +103,90 @@ def read_variable(station, variable):
 
         # get values
         try:
-            row[0] = row[0].replace('/', '-')
-            row[1] = row[1].replace(',', '.')
-
+            date_value = row[0].replace('/', '-').split("-")
+            value = row[1].replace(',', '.')
         except Exception:
             console.msg_error(_(
                 "Reading from file '{0}' in line: {1}\n\n"
-                "this could be caused by wrong line or garbage "
-                "character,\nplease check manually, fix it and "
-                "run again.")
-            .format(variable.file_name, csv_file.line_num), False)
+                "this could be caused by wrong line or strange character,\n"
+                "fix it manually or run 'normalize_format {0}'")
+            .format(variable.file_name, time_series_file.line_num))
 
         # check if variable is daily or month
         if first:
             try:
-                if size(row[0].split("-")) == 3:
+                if len(date_value) == 3:
                     env.var_[variable.type].set_FREQUENCY_DATA("daily")
                 else:
-                    env.var_[variable.type].set_FREQUENCY_DATA("monthly")
+                    month = re.sub(r'[^\w]', '', date_value[1])
+                    if month.isdigit():
+                        env.var_[variable.type].set_FREQUENCY_DATA("monthly")
+                    elif len(month) == 2:
+                        env.var_[variable.type].set_FREQUENCY_DATA("bimonthly")
+                    elif len(month) == 3:
+                        env.var_[variable.type].set_FREQUENCY_DATA("trimonthly")
+                    else:
+                        raise ValueError(_('date unknown: ')+'-'.join(date_value))
             except ValueError as error:
                 console.msg_error(_("Problems settings the frequency data for the station\n"
                                     "with code '{0}' and name '{1}':\n\n").format( station.code, station.name) + str(error))
 
         try:
-            # delete garbage characters and convert format
-            year = int(re.sub(r'[^\w]', '', row[0].split("-")[0]))
-            month = int(re.sub(r'[^\w]', '', row[0].split("-")[1]))
+            # delete strange characters and convert format
+            year = int(re.sub(r'[^\w]', '', date_value[0]))
+            month = re.sub(r'[^\w]', '', date_value[1])
 
             if env.var_[variable.type].is_daily():
-                day = int(re.sub(r'[^\w]', '', row[0].split("-")[2]))
+                month = int(month)
+                day = int(re.sub(r'[^\w]', '', date_value[2]))
                 # check if the values are continuous
                 if not first and date(year, month, day) + relativedelta(days= -1) != var_date[-1]:
                     missing_date = var_date[-1] + relativedelta(days= +1)
                     console.msg_error(_(
                         "Reading var {0} from file '{1}' in line: {2}\n\n"
-                        "Jaziku detected missing value for date: {3}")
-                    .format(variable.type, variable.file_name, csv_file.line_num, missing_date))
+                        "Jaziku detected missing value for date: {3}\n\n"
+                        "fix it manually or run 'normalize_format {1}'")
+                    .format(variable.type, variable.file_name, time_series_file.line_num, missing_date))
 
             if env.var_[variable.type].is_monthly():
+                month = int(month)
                 day = 1
                 # check if the values are continuous
                 if not first and date(year, month, day) + relativedelta(months= -1) != var_date[-1]:
                     missing_date = var_date[-1] + relativedelta(months= +1)
                     console.msg_error(_(
                         "Reading var {0} from file '{1}' in line: {2}\n\n"
-                        "Jaziku detected missing value for date: {3}-{4}")
-                    .format(variable.type, variable.file_name, csv_file.line_num, missing_date.year, missing_date.month))
+                        "Jaziku detected missing value for date: {3}-{4}\n\n"
+                        "fix it manually or run 'normalize_format {1}'")
+                    .format(variable.type, variable.file_name, time_series_file.line_num, missing_date.year, missing_date.month))
 
-            value = float(row[1])
+            if env.var_[variable.type].is_bimonthly():
+                month = input.bimonthly_char2int(month)
+                day = 1
+                # check if the values are continuous
+                if not first and date(year, month, day) + relativedelta(months= -1) != var_date[-1]:
+                    missing_date = var_date[-1] + relativedelta(months= +1)
+                    console.msg_error(_(
+                        "Reading var {0} from file '{1}' in line: {2}\n\n"
+                        "Jaziku detected missing value for date: {3}-{4}\n\n"
+                        "fix it manually or run 'normalize_format {1}'")
+                    .format(variable.type, variable.file_name, time_series_file.line_num, missing_date.year,
+                            output.bimonthly_int2char(missing_date.month)))
+
+            if env.var_[variable.type].is_trimonthly():
+                month = input.trimonthly_char2int(month)
+                day = 1
+                # check if the values are continuous
+                if not first and date(year, month, day) + relativedelta(months= -1) != var_date[-1]:
+                    missing_date = var_date[-1] + relativedelta(months= +1)
+                    console.msg_error(_(
+                        "Reading var {0} from file '{1}' in line: {2}\n\n"
+                        "Jaziku detected missing value for date: {3}-{4}\n\n"
+                        "fix it manually or run 'normalize_format {1}'")
+                    .format(variable.type, variable.file_name, time_series_file.line_num, missing_date.year,
+                            output.trimonthly_int2char(missing_date.month)))
+
+            value = float(value)
             if env.globals_vars.is_valid_null(value):  # TODO: deprecated valid null
                 value = float('nan')
             # set date of dependent variable from file, column 1,
@@ -159,18 +194,18 @@ def read_variable(station, variable):
             var_date.append(date(year, month, day))
             # check variable if is within limits
             if validation.is_the_value_within_limits(value, variable):
-                # set values of dependent variable
+                # save value
                 var_data.append(value)
 
         except Exception as error:
             console.msg_error(_("Reading from file '{0}' in line: {1}\n\n{2}")
-            .format(variable.file_name, csv_file.line_num, error))
+            .format(variable.file_name, time_series_file.line_num, error))
 
         if first:
             first = False
 
     open_file.close()
-    del csv_file
+    del time_series_file
 
     variable.data = var_data
     variable.date = var_date

@@ -65,9 +65,13 @@ def process(station):
     # -------------------------------------------------------------------------
     # inform some characteristic to process
 
-    # define if results will made by trimester or every n days
-    if env.globals_vars.STATE_OF_DATA in [1, 3] or env.config_run.settings['analysis_interval'] == "trimester":
-        console.msg(_("Results will be made by trimesters"), color='cyan')
+    # define if results will made by N-monthly or every n days
+    if env.config_run.settings['analysis_interval'] == "monthly":
+        console.msg(_("Results will be made monthly (each month)"), color='cyan')
+    elif env.config_run.settings['analysis_interval'] == "bimonthly":
+        console.msg(_("Results will be made bimonthly (each two months)"), color='cyan')
+    elif env.config_run.settings['analysis_interval'] == "trimonthly":
+        console.msg(_("Results will be made trimonthly (each three months)"), color='cyan')
     else:
         console.msg(_("Results will be made every {} days").format(env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL), color='cyan')
 

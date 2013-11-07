@@ -50,16 +50,10 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
 
         # show some information of variables
         console.msg(_("   var_D ({0}):").format(env.var_D.TYPE_SERIES), newline=False)
-        if env.var_D.is_daily():
-            console.msg(_("has data daily").format(env.var_D.TYPE_SERIES), color='cyan')
-        else:
-            console.msg(_("has data monthly").format(env.var_D.TYPE_SERIES), color='cyan')
+        console.msg(_("has data {0}").format(env.var_D.FREQUENCY_DATA), color='cyan')
 
         console.msg(_("   var_I ({0}):").format(env.var_I.TYPE_SERIES), newline=False)
-        if env.var_I.is_daily():
-            console.msg(_("has data daily").format(env.var_I.TYPE_SERIES), color='cyan')
-        else:
-            console.msg(_("has data monthly").format(env.var_I.TYPE_SERIES), color='cyan')
+        console.msg(_("has data {0}").format(env.var_I.FREQUENCY_DATA), color='cyan')
 
         # show thresholds tu use
         console.msg(_("Thresholds to use (for {0} categories):").format(env.config_run.settings['class_category_analysis']))
@@ -93,11 +87,6 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
             console.msg(_("Check if the data are consistent for var_D and var_I:"))
             for station in stations_list:
                 validation.check_consistent_data(station)
-
-        # state of data
-        console.msg(_("Set state of data ....................................... "), newline=False)
-        env.globals_vars.STATE_OF_DATA = analysis_interval.get_state_of_data()
-        console.msg(_("done"), color='green')
 
         # analysis interval
         console.msg(_("Check analysis interval ................................. "), newline=False)

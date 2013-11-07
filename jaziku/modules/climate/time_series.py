@@ -29,10 +29,10 @@ from jaziku.core.analysis_interval import get_values_in_range_analysis_interval,
 from jaziku.utils import  array, output
 
 
-def get_specific_values(station, var, lag, month, day=None):
+def get_specific_values(station, var, lag, n_month, day=None):
     """Return all values of var_D, var_I or date
     inside the period to process with a specific lag,
-    trimester/month and/or day.
+    n_month and/or day.
 
     :param station: station for calculate the lag
     :type station: Station
@@ -40,9 +40,9 @@ def get_specific_values(station, var, lag, month, day=None):
     :type var: str
     :param lag: lag to get values
     :type lag: int
-    :param month: trimester/month to get values
-    :type month: int
-    :param day: day of month, or None if is trimester
+    :param n_month: N-monthly or month to get values
+    :type n_month: int
+    :param day: day of month, or None if is n-monthly
     :type day: int
 
     :return: list of specific values
@@ -54,38 +54,38 @@ def get_specific_values(station, var, lag, month, day=None):
     temp_list = []
     for line in lag_select[lag]:
         if day:
-            if month == line[0].month and day == line[0].day:
+            if n_month == line[0].month and day == line[0].day:
                 temp_list.append(line)
         else:
-            if month == line[0].month:
+            if n_month == line[0].month:
                 temp_list.append(line)
     return [row[var_select[var]] for row in temp_list]
 
 
-def calculate_specific_value_of_time_series(variable, values_in_range_analysis_interval):
+def calculate_specific_values_of_time_series(variable, specific_values):
     '''Calculate time series of specific values in range analysis interval
     (this values is values in specific lag, year, month and range analysis interval)
     and calculate the mean or accumulate (based on mode calculation series), but if
     the number of nulls is great than 40% in this values, the return value is NaN.
     '''
 
+    # if only have one value, return this
+    if isinstance(specific_values, (int,float)):
+        return specific_values
+    elif isinstance(specific_values, list) and len(specific_values) == 1:
+        return specific_values[0]
+
     # check percentage of nulls
-    number_of_nulls, percentage_of_nulls = array.check_nulls(values_in_range_analysis_interval)
+    number_of_nulls, percentage_of_nulls = array.check_nulls(specific_values)
 
-    if percentage_of_nulls > 40:
-        time_series_value = float('NaN')
-    elif variable.type == 'I' and variable.type_series in ['ONI1', 'ONI2', 'CAR']:
-        # SPECIAL CASE 1: when var_I is ONI1, ONI2 or CAR, don't calculate trimesters because the ONI and CAR
-        # series was calculated by trimesters from original source
-        time_series_value = values_in_range_analysis_interval[0]
-    else:
-        # calculate time series based on mode calculation series
-        if env.config_run.settings['mode_calculation_series_'+variable.type] == 'mean':
-            time_series_value = array.mean(values_in_range_analysis_interval)
-        if env.config_run.settings['mode_calculation_series_'+variable.type] == 'accumulate':
-            time_series_value = sum(array.clean(values_in_range_analysis_interval))
-
-    return time_series_value
+    # check if null if over 40% (except if is 1)
+    if percentage_of_nulls > 40 and number_of_nulls != 1:
+        return float('NaN')
+    # calculate time series based on mode calculation series
+    if env.config_run.settings['mode_calculation_series_'+variable.type] == 'mean':
+        return array.mean(specific_values)
+    if env.config_run.settings['mode_calculation_series_'+variable.type] == 'accumulate':
+        return sum(array.clean(specific_values))
 
 
 def calculate_time_series(station, makes_files=True):
@@ -93,7 +93,7 @@ def calculate_time_series(station, makes_files=True):
     lags 0, 1 and 2 of var_D and var_I based on mode calculation series and
     analysis interval defined in runfile and, of course, type of series
     (daily, monthly,...). Also makes csv file of time series for each lag and
-    trimester calculated based on the analysis interval.
+    trimonthly calculated based on the analysis interval.
 
     :param station: station for process
     :type station: Station
@@ -117,7 +117,7 @@ def calculate_time_series(station, makes_files=True):
                    os.path.join(station.climate_dir, _('time_series'), _('lag_1')),
                    os.path.join(station.climate_dir, _('time_series'), _('lag_2'))]
 
-    if env.globals_vars.STATE_OF_DATA in [1, 3]:
+    if env.var_D.is_n_monthly():
 
         for lag in env.config_run.settings['lags']:
 
@@ -128,13 +128,11 @@ def calculate_time_series(station, makes_files=True):
             for month in range(1, 13):
                 if makes_files:
                     csv_name = os.path.join(dir_lag[lag],
-                        _('Time_Series_lag_{0}_trim_{1}_{2}_{3}_{4}_{5}_{6}_'
-                          '({7}-{8}).csv')
+                        _('Time_Series_lag_{0}_{1}_{2}_{3}_{4}_{5}_'
+                          '({6}-{7}).csv')
                         .format(
-                            lag, month,
-                            output.trimester_in_initials(month - 1),
-                            station.code,
-                            station.name, station.var_D.type_series,
+                            lag, output.n_months_in_initials('D', month - 1),
+                            station.code, station.name, station.var_D.type_series,
                             station.var_I.type_series,
                             station.process_period['start'],
                             station.process_period['end']))
@@ -157,18 +155,18 @@ def calculate_time_series(station, makes_files=True):
                 for year in range(station.process_period['start'], station.process_period['end']+1):
 
                     ## calculate time series, get values and calculate the mean or accumulate the values in range analysis
-                    values_in_range_analysis_interval = get_values_in_range_analysis_interval(station,'D', year, month)
-                    time_series_value_of_var_D = calculate_specific_value_of_time_series(station.var_D, values_in_range_analysis_interval)
+                    values_in_range_analysis_interval = get_values_in_range_analysis_interval(station.var_D, year, month)
+                    time_series_value_of_var_D = calculate_specific_values_of_time_series(station.var_D, values_in_range_analysis_interval)
 
-                    values_in_range_analysis_interval = get_values_in_range_analysis_interval(station,'I', year, month, lag=lag)
-                    time_series_value_of_var_I = calculate_specific_value_of_time_series(station.var_I, values_in_range_analysis_interval)
+                    values_in_range_analysis_interval = get_values_in_range_analysis_interval(station.var_I, year, month, lag=lag)
+                    time_series_value_of_var_I = calculate_specific_values_of_time_series(station.var_I, values_in_range_analysis_interval)
 
                     # add line in list: Lag_X
                     station.time_series['lag_'+str(lag)].append([date(year, month, 1), time_series_value_of_var_D, time_series_value_of_var_I])
 
                     # add line output file csv_file
                     if makes_files:
-                        csv_file.writerow([str(year) + "/" + str(month),
+                        csv_file.writerow([str(year) + "-" + output.n_monthly_int2char(month, type="D"),
                                            output.number(time_series_value_of_var_D),
                                            output.number(time_series_value_of_var_I)])
 
@@ -176,7 +174,7 @@ def calculate_time_series(station, makes_files=True):
                     open_file.close()
                     del csv_file
 
-    if env.globals_vars.STATE_OF_DATA in [2, 4]:
+    if env.var_D.is_daily():
 
         for lag in env.config_run.settings['lags']:
             if makes_files:
@@ -186,11 +184,11 @@ def calculate_time_series(station, makes_files=True):
             for month in range(1, 13):
                 if makes_files:
                     csv_name = os.path.join(dir_lag[lag],
-                        _('Time_Series_lag_{0}_{1}_month_{2}_{3}_'
+                        _('Time_Series_lag_{0}_{1}_{2}_{3}_'
                           '{4}_{5}_{6}_({7}-{8}).csv')
                         .format(
                             lag, env.config_run.settings['analysis_interval_i18n'],
-                            month, station.code,
+                            output.months_in_initials(month-1), station.code,
                             station.name, station.var_D.type_series,
                             station.var_I.type_series,
                             station.process_period['start'],
@@ -220,19 +218,19 @@ def calculate_time_series(station, makes_files=True):
                             continue
 
                         ## calculate time series, get values and calculate the mean or accumulate the values in range analysis of var D
-                        values_in_range_analysis_interval = get_values_in_range_analysis_interval(station,'D', year, month, day, lag)
-                        time_series_value_of_var_D = calculate_specific_value_of_time_series(station.var_D, values_in_range_analysis_interval)
+                        values_in_range_analysis_interval = get_values_in_range_analysis_interval(station.var_D, year, month, day, lag)
+                        time_series_value_of_var_D = calculate_specific_values_of_time_series(station.var_D, values_in_range_analysis_interval)
 
-                        values_in_range_analysis_interval = get_values_in_range_analysis_interval(station,'I', year, month, day, lag)
-                        time_series_value_of_var_I = calculate_specific_value_of_time_series(station.var_I, values_in_range_analysis_interval)
+                        values_in_range_analysis_interval = get_values_in_range_analysis_interval(station.var_I, year, month, day, lag)
+                        time_series_value_of_var_I = calculate_specific_values_of_time_series(station.var_I, values_in_range_analysis_interval)
 
                         # add line in list: Lag_X
                         station.time_series['lag_'+str(lag)].append([date(year, month, day), time_series_value_of_var_D, time_series_value_of_var_I])
 
                         # add line output file csv_file
                         if makes_files:
-                            csv_file.writerow([str(year) + "/" + str(month)
-                                               + "/" + str(day),
+                            csv_file.writerow([str(year) + "-" + output.fix_zeros(month)
+                                               + "-" + output.fix_zeros(day),
                                                output.number(time_series_value_of_var_D),
                                                output.number(time_series_value_of_var_I)])
                 if makes_files:
