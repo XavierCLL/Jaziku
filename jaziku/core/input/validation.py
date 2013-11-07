@@ -44,18 +44,11 @@ def is_the_value_within_limits(value, variable):
         return True
 
     # get input values for limits define in runfile
-    if variable.type == 'D':
-        if not env.config_run.settings['limits_var_D']['ready']:
-            # set global limits for var D only once
-            set_limits(variable)
-        limit_below = env.config_run.settings['limits_var_D']['below']
-        limit_above = env.config_run.settings['limits_var_D']['above']
-    if variable.type == 'I':
-        if not env.config_run.settings['limits_var_I']['ready']:
-            # set global limits for var I only once
-            set_limits(variable)
-        limit_below = env.config_run.settings['limits_var_I']['below']
-        limit_above = env.config_run.settings['limits_var_I']['above']
+    if not env.config_run.settings['limits_var_'+variable.type]['ready']:
+        # set global limits for var D only once
+        set_limits(variable)
+    limit_below = env.config_run.settings['limits_var_'+variable.type]['below']
+    limit_above = env.config_run.settings['limits_var_'+variable.type]['above']
 
     ## check
     if limit_below is not None:
@@ -88,16 +81,10 @@ def set_limits(variable):
 
     .. note:: Only needs to run once for variable
     """
-
     # get input values for limits define in runfile
-    if variable.type == 'D':
-        input_limit_below = env.config_run.settings['limits_var_D']['below']
-        input_limit_above = env.config_run.settings['limits_var_D']['above']
-        limits_by_default = env.var_D.get_internal_limits()
-    if variable.type == 'I':
-        input_limit_below = env.config_run.settings['limits_var_I']['below']
-        input_limit_above = env.config_run.settings['limits_var_I']['above']
-        limits_by_default = env.var_I.get_internal_limits()
+    input_limit_below = env.config_run.settings['limits_var_'+variable.type]['below']
+    input_limit_above = env.config_run.settings['limits_var_'+variable.type]['above']
+    limits_by_default = env.var_[variable.type].get_internal_limits()
 
     if input_limit_below is not None:
         # defined limit by below
@@ -141,14 +128,9 @@ def set_limits(variable):
     else:
         limit_above = None
 
-    if variable.type == 'D':
-        env.config_run.settings['limits_var_D']['below'] = limit_below
-        env.config_run.settings['limits_var_D']['above'] = limit_above
-        env.config_run.settings['limits_var_D']['ready'] = True
-    if variable.type == 'I':
-        env.config_run.settings['limits_var_I']['below'] = limit_below
-        env.config_run.settings['limits_var_I']['above'] = limit_above
-        env.config_run.settings['limits_var_I']['ready'] = True
+    env.config_run.settings['limits_var_'+variable.type]['below'] = limit_below
+    env.config_run.settings['limits_var_'+variable.type]['above'] = limit_above
+    env.config_run.settings['limits_var_'+variable.type]['ready'] = True
 
 
 #==============================================================================
@@ -162,32 +144,6 @@ def check_consistent_data(station):
 
     # -------------------------------------------------------------------------
     # check if the data are consistent for variable
-    #console.msg(_("Check if var {0} are consistent").format(variable.type), newline=False)
-
-#    # temporal var initialize start_date = start common_period + 1 year,
-#    # month=1, day=1
-#    start_date = date(station.process_period['start'], 1, 1)
-#    # temporal var initialize end_date = end common_period - 1 year,
-#    # month=12, day=31
-#    if (var_type == "D" and station.var_D.frequency_data== "daily") or\
-#       (var_type == "I" and env.var_I.is_daily()):
-#        end_date = date(station.process_period['end'], 12, 31)
-#        if env.config_run.get['analysis_interval'] == "trimester":
-#            date_plus = monthrange(station.process_period['end'] + 1, 1)[1] +\
-#                        monthrange(station.process_period['end'] + 1, 2)[1]
-#            date_minus = 61
-#        else:
-#            date_plus = date_minus = env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL * 2
-#    else:
-#        end_date = date(station.process_period['end'], 12, 1)
-#        date_plus = date_minus = 2
-#
-#    if var_type == "D":
-#        values_in_common_period \
-#            = station.var_D.data[station.var_D.date.index(start_date):station.var_D.date.index(end_date) + date_plus + 1]
-#    if var_type == "I":
-#        values_in_common_period \
-#            = station.var_I.data[station.var_I.date.index(start_date) - date_minus:station.var_I.date.index(end_date) + date_plus + 1]
 
     # transform of percentage of validation to 0 -> 1
     value_of_validation = env.config_run.settings['consistent_data']/100.0
@@ -195,30 +151,21 @@ def check_consistent_data(station):
     # station for check
     console.msg("   {0} - {1}:".format(station.code, station.name))
 
-    # var D
-    console.msg(_("      var D: {0} ({1}%) nulls of {2}:")
-                .format(station.var_D.nulls_in_process_period, station.var_D.percentage_of_nulls_in_process_period,
-                        len(station.var_D.data_in_process_period)), newline=False)
-    # check var D
-    if  station.var_D.nulls_in_process_period / float(len(station.var_D.data_in_process_period)) > value_of_validation:
-        console.msg_error(_("The number of null values is greater than {0}% of total\n"
-                            "of values inside common period, therefore, for Jaziku\n"
-                            "the data are not consistent for process. You can disable\n"
-                            "this check in the option 'consistent_data' of runfile.").format(value_of_validation*100.0))
+    def check(var_type):
+        console.msg(_("      var {0}: {1} ({2}%) nulls of {3}:")
+                    .format(var_type, station.var_[var_type].nulls_in_process_period, station.var_[var_type].percentage_of_nulls_in_process_period,
+                            len(station.var_[var_type].data_in_process_period)), newline=False)
+        # check var
+        if  station.var_[var_type].nulls_in_process_period / float(len(station.var_[var_type].data_in_process_period)) > value_of_validation:
+            console.msg_error(_("The number of null values is greater than {0}% of total\n"
+                                "of values inside common period, therefore, for Jaziku\n"
+                                "the data are not consistent for process. You can disable\n"
+                                "this check in the option 'consistent_data' of runfile.").format(value_of_validation*100.0))
 
-    console.msg(_("ok"), color='green')
+        console.msg(_("ok"), color='green')
+
+    # var D
+    check('D')
 
     # var I
-    console.msg(_("      var I: {0} ({1}%) nulls of {2}:")
-                .format(station.var_I.nulls_in_process_period, station.var_I.percentage_of_nulls_in_process_period,
-                        len(station.var_I.data_in_process_period)), newline=False)
-    # check var I
-    if  station.var_I.nulls_in_process_period / float(len(station.var_I.data_in_process_period)) > value_of_validation:
-        console.msg_error(_("The number of null values is greater than {0}% of total\n"
-                            "of values inside common period, therefore, for Jaziku\n"
-                            "the data are not consistent for process. You can disable\n"
-                            "this check in the option 'consistent_data' of runfile.").format(value_of_validation*100.0))
-
-    console.msg(_("ok"), color='green')
-
-
+    check('I')

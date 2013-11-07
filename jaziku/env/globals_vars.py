@@ -31,7 +31,7 @@ PROG_NAME = "jaziku"
 
 VERSION = "0.7.0"
 
-VERSION_DATE = "08/2013"
+VERSION_DATE = "02/11/2013"
 
 # absolute directory where is installed Jaziku in your system,
 # this variable is set in jaziku.py
@@ -82,19 +82,8 @@ def is_valid_null(value):
 
 #==============================================================================
 # analysis_interval
-ALL_ANALYSIS_INTERVALS = ["5days", "10days", "15days", "trimester"]
+ALL_ANALYSIS_INTERVALS = ["5days", "10days", "15days", "monthly", "bimonthly", "trimonthly"]
 NUM_DAYS_OF_ANALYSIS_INTERVAL = None
-
-#==============================================================================
-# State of the data for process, calculate and write output based on type
-# of data (daily or monthly) of dependent and independent variable
-#
-# | state |  var D  |  var I  |         possible results
-# |   1   | monthly | monthly |            trimester
-# |   2   |  daily  | monthly | 5days, 10days, 15days and trimester
-# |   3   | monthly |  daily  |            trimester
-# |   4   |  daily  |  daily  | 5days, 10days, 15days and trimester
-STATE_OF_DATA = None
 
 #==============================================================================
 # categories of var I
@@ -170,10 +159,10 @@ def categories(key_label=False, include_normal=True, translated=True, as_list=Fa
 # maps files for climate:
 maps_files_climate = {}  # [lag][month][var_I_labels]
 # maps files for correlation:
-#maps_files_correlation = {'5days': None, '10days': None, '15days': None, 'trimester': None}  # [lag][month][var_I_labels]
+#maps_files_correlation = {'5days': None, '10days': None, '15days': None, 'trimonthly': None}  # [lag][month][var_I_labels]
 maps_files_correlation = {}  # [lag][month][var_I_labels]
 # maps files for forecast:
-#maps_files_forecast = {'5days': {}, '10days': {}, '15days': {}, 'trimester': {}}  # [lag][month][var_I_labels]
+#maps_files_forecast = {'5days': {}, '10days': {}, '15days': {}, 'trimonthly': {}}  # [lag][month][var_I_labels]
 maps_files_forecast = {}  # [lag][month][var_I_labels]
 
 #==============================================================================

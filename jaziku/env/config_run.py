@@ -67,7 +67,7 @@ list_of_all_settings = [
     ## GENERAL OPTIONS
 
     # analysis interval for process
-    #   input/access: "5days", "10days", "15days" or "trimester"
+    #   input/access: "5days", "10days", "15days", "monthly", "bimonthly" or "trimonthly"
     'analysis_interval',
 
     # NOT IN RUNFILE
@@ -199,7 +199,7 @@ list_of_all_settings = [
     ## FORECAST OPTIONS
 
     # date for forecast
-    #   input: month or month;day
+    #   input: month or month;day (for bimonthly and trimonthly this should be in characters)
     #   access: {'month': int, 'day': int, 'text':str} or {'month': int, 'text':str}
     'forecast_date',
 

@@ -44,6 +44,8 @@ class Station(object):
         self.var_D = Variable(type='D')
         self.var_I = Variable(type='I')
 
+        self.var_ = {'D':self.var_D, 'I':self.var_I}
+
 
     def calculate_common_and_process_period(self):
         """Calculate common period (interception) in years of dates from

@@ -26,6 +26,7 @@ from scipy.stats.stats import variation, skew, kurtosis
 
 from jaziku import env
 from jaziku.core.input import vars
+from jaziku.modules.climate.time_series import calculate_specific_values_of_time_series
 from jaziku.utils import console, array
 
 
@@ -268,19 +269,68 @@ class Variable(object):
                     if _iter > self.date.index(self.date[-1]):
                         break
                 # data
-                if env.config_run.settings['mode_calculation_series_'+self.type] == 'mean':
-                    data_monthly.append(array.mean(var_month_list))
-                if env.config_run.settings['mode_calculation_series_'+self.type] == 'accumulate':
-                    data_monthly.append(sum(array.clean(var_month_list)))
+                value = calculate_specific_values_of_time_series(self, var_month_list)
+                data_monthly.append(value)
                 # date
                 date_monthly.append(date(year, month, 1))
 
         self.data = data_monthly
         self.date = date_monthly
 
+    def monthly2n_monthly(self, n_month):
+        """Convert the data monthly to N-monthly using the mean or accumulate
+        defined in runfile in mode_calculation_series_X variable.
+
+        :return by reference:
+            VARIABLE.data (overwrite) (list)
+            VARIABLE.date (overwrite) (list)
+        """
+
+        data_n_monthly = []
+        size_data = len(self.data)
+
+        for idx_data, data in enumerate(self.data):
+            n_month_list = []
+            for n in range(n_month):
+                if idx_data+n >= size_data:
+                    n_month_list = [float('nan')]
+                    continue
+                n_month_list.append(self.data[idx_data+n])
+            # calculate the N-month value
+            value = calculate_specific_values_of_time_series(self, n_month_list)
+            data_n_monthly.append(value)
+
+        self.data = data_n_monthly
+
+    def monthly2bimonthly(self):
+        return self.monthly2n_monthly(2)
+
+    def monthly2trimonthly(self):
+        return self.monthly2n_monthly(3)
+
+    def convert2(self, new_freq_data):
+
+        if new_freq_data == 'monthly':
+            if env.var_[self.type].is_daily():
+                self.daily2monthly()
+
+        if new_freq_data == 'bimonthly':
+            if env.var_[self.type].is_daily():
+                self.daily2monthly()
+                self.monthly2bimonthly()
+            if env.var_[self.type].is_monthly():
+                self.monthly2bimonthly()
+
+        if new_freq_data == 'trimonthly':
+            if env.var_[self.type].is_daily():
+                self.daily2monthly()
+                self.monthly2trimonthly()
+            if env.var_[self.type].is_monthly():
+                self.monthly2trimonthly()
+
     def data_and_null_in_process_period(self, station):
         """Calculate the data without the null values inside
-        the process period and null values.
+        the process period and too calculate the null values.
 
         :return by reference:
             VARIABLE.data_in_process_period (list)

@@ -11,6 +11,15 @@ Changelog
 news
 ++++
 
+- New input of time series, now accept data bimonthly and
+  trimonthly. Bimonthly format is "yyyy-bb data" where "bb"
+  is the bimonthly in characters (e.g. "ao" for august and
+  october), the trimonthly format is "yyyy-ttt data" where
+  "ttt" is the trimonthly in characters (e.g. "jfm" for
+  january, february and march).
+- New analysis resolutions, now accept for "analysis_interval"
+  each month "monthly" and each two months "bimonthly", and
+  the "trimester" now called "trimonthly" for three months.
 - Analysis the best periods to be process, off all stations
   inside the runfile, and are ranked and organized in based
   on number of stations, number of years and number of nulls.
@@ -62,6 +71,7 @@ fixes
 - Fix the black points in deterministic maps for events different
   to "normal"
 - Fix index_position for correlation maps
+- Fix when get the default limits for var I
 
 **sisdhim2jaziku**
 
