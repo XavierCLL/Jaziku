@@ -349,17 +349,6 @@ def configuration_run():
             .format(env.config_run.settings['class_category_analysis'], env.config_run.settings['class_category_analysis']-1))
 
     # ------------------------
-    # check when use special internal variables (ONI1, ONI2, CAR) these series have trimester values
-    # in this case only can use trimester for analysis interval
-
-    if env.config_run.settings['analysis_interval'] != "trimester" and env.config_run.settings["type_var_I"] in ['ONI1', 'ONI2', 'CAR']:
-        console.msg_error_configuration('analysis_interval',
-            _("For the internals variables: ONI1, ONI2 or CAR you need\n"
-              "defined 'analysis_interval' as 'trimester' because these\n"
-              "time series have trimester values")
-            .format(env.var_D.TYPE_SERIES))
-
-    # ------------------------
     # check the probability_forecast_values and forecast date
 
     # if forecast_process is activated
@@ -417,43 +406,74 @@ def configuration_run():
         ## forecast date
         try:
             if isinstance(env.config_run.settings['forecast_date'], list):
+                if env.config_run.settings['analysis_interval'] in ['monthly', 'bimonthly', 'trimonthly']:
+                    raise
+
+                forecast_month = int(env.config_run.settings['forecast_date'][0])
+                forecast_day = int(env.config_run.settings['forecast_date'][1])
+
                 env.config_run.settings['forecast_date'][0] = int(env.config_run.settings['forecast_date'][0])
-                forecast_month = env.config_run.settings['forecast_date'][0]
             else:
-                env.config_run.settings['forecast_date'] = int(env.config_run.settings['forecast_date'])
-                forecast_month = env.config_run.settings['forecast_date']
+                if env.config_run.settings['analysis_interval'] in ['5days', '10days', '15days']:
+                    raise
+
+                if env.config_run.settings['analysis_interval'] in ['monthly']:
+                    env.config_run.settings['forecast_date'] = int(float(env.config_run.settings['forecast_date']))
+                else:
+                    if len(env.config_run.settings['forecast_date']) == 2:
+                        env.config_run.settings['forecast_date'] = input.bimonthly_char2int(env.config_run.settings['forecast_date'])
+                    if len(env.config_run.settings['forecast_date']) == 3:
+                        env.config_run.settings['forecast_date'] = input.trimonthly_char2int(env.config_run.settings['forecast_date'])
+                forecast_month = int(env.config_run.settings['forecast_date'])
         except:
-            console.msg_error_configuration('forecast_date',
-                _("The month for forecast '{0}' is invalid, "
-                  "must be a integer: month or month;day")
-                .format(env.config_run.settings['forecast_date']))
+            if env.config_run.settings['analysis_interval'] in ['monthly', 'bimonthly', 'trimonthly']:
+                if env.config_run.settings['analysis_interval'] in ['monthly']:
+                    console.msg_error_configuration('forecast_date',
+                        _("The date for forecast '{0}' is invalid, "
+                          "must be a valid integer of month (e.g. 2 for february).")
+                        .format(env.config_run.settings['forecast_date']))
+                else:
+                    if env.config_run.settings['analysis_interval'] in ['bimonthly']:
+                        example =  _("(e.g. 'as' for august and september)")
+                    if env.config_run.settings['analysis_interval'] in ['trimonthly']:
+                        example =  _("(e.g. 'aso' for august, september and october).")
+                    console.msg_error_configuration('forecast_date',
+                        _("The date for forecast '{0}' is invalid, must be a\n"
+                          "valid characters for {1} {2}.")
+                        .format(env.config_run.settings['forecast_date'],
+                                env.config_run.settings['analysis_interval'],
+                                example))
+            elif env.config_run.settings['analysis_interval'] in ['5days', '10days', '15days']:
+                if env.config_run.settings['analysis_interval'] in ['5days']:
+                    example =  _("(e.g. '10;16' for period 16 to 20 of october)")
+                if env.config_run.settings['analysis_interval'] in ['10days']:
+                    example =  _("(e.g. '10;11' for period 11 to 20 of october)")
+                if env.config_run.settings['analysis_interval'] in ['15days']:
+                    example =  _("(e.g. '10;1' for period 1 to 15 of october)")
+                console.msg_error_configuration('forecast_date',
+                    _("The date for forecast '{0}' is invalid, must be a\n"
+                      "valid month and start day for {1} 'month;day' where\n"
+                      "the month is a integer and the day is a start day of\n"
+                      "interval analysis {2}.")
+                    .format(env.config_run.settings['forecast_date'],
+                            env.config_run.settings['analysis_interval'], example))
 
-        if not (1 <= forecast_month <= 12):
-            console.msg_error_configuration('forecast_date',
-                _("The month for forecast '{0}' is invalid, "
-                  "must be a valid month number (1-12)")
-                .format(forecast_month))
+        if env.config_run.settings['analysis_interval'] in ['5days', '10days', '15days', 'monthly']:
+            if not (1 <= forecast_month <= 12):
+                console.msg_error_configuration('forecast_date',
+                    _("The month for forecast '{0}' is invalid, "
+                      "must be a valid month number (1-12)")
+                    .format(forecast_month))
 
-        # forecast date by days
+        # set the forecast date by days
         if isinstance(env.config_run.settings['forecast_date'], list):
-            if env.config_run.settings['analysis_interval'] == 'trimester':
-                console.msg_error_configuration('forecast_date',
-                    _("The 'analysis_interval' is by trimester but the 'forecast_date'\n"
-                      "have the month and start day, please define only the start month\n"
-                      "for trimester for the forecast date."))
 
-            if not isinstance(env.config_run.settings['forecast_date'][1], (float, int)):
-                console.msg_error_configuration('forecast_date',
-                    _("The day for forecast process '{0}' is invalid, \n"
-                      "must be a valid day number (1-31)")
-                    .format(env.config_run.settings['forecast_date'][1]))
             if not (1 <= env.config_run.settings['forecast_date'][1] <= 31):
                 console.msg_error_configuration('forecast_date',
                     _("The day for forecast process '{0}' is invalid, \n"
                       "must be a valid day number (1-31)")
                     .format(env.config_run.settings['forecast_date'][1]))
 
-            forecast_day = int(env.config_run.settings['forecast_date'][1])
             env.config_run.settings['forecast_date'] = {'month':forecast_month,'day':forecast_day}
 
             if env.config_run.settings['forecast_date']['day'] not in analysis_interval.get_range_analysis_interval():
@@ -466,23 +486,15 @@ def configuration_run():
                             analysis_interval.get_range_analysis_interval()))
 
             env.config_run.settings['forecast_date']['text'] \
-                = "{0} {1}".format(output.month_in_initials(env.config_run.settings['forecast_date']['month'] - 1),
-                                   env.config_run.settings['forecast_date']['day'])
+                = output.analysis_interval_text(env.config_run.settings['forecast_date']['month'],
+                                                env.config_run.settings['forecast_date']['day'])
 
+        # set the forecast date by month
         else:
-            # forecast date by month
-            if env.config_run.settings['analysis_interval'] != 'trimester':
-                console.msg_error_configuration('forecast_date',
-                    _("The 'analysis_interval' is {0} but the 'forecast_date'\n"
-                      "only have the month, please define the month and start day\n"
-                      "for {0} (in different column) for the forecast date.")
-                    .format(env.config_run.settings['analysis_interval']))
-
             env.config_run.settings['forecast_date'] = {'month':forecast_month}
 
-            env.config_run.settings['forecast_date']['text'] = _("trim {0} ({1})")\
-                .format(env.config_run.settings['forecast_date']['month'],
-                        output.trimester_in_initials(env.config_run.settings['forecast_date']['month'] - 1))
+            env.config_run.settings['forecast_date']['text'] \
+                = output.analysis_interval_text(env.config_run.settings['forecast_date']['month'])
 
         env.globals_vars.input_settings["forecast_date"] = colored.green(env.config_run.settings['forecast_date']['text'])
 

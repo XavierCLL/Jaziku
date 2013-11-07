@@ -131,7 +131,7 @@ def calculate_time_series(station, makes_files=True):
                         _('Time_Series_lag_{0}_{1}_{2}_{3}_{4}_{5}_'
                           '({6}-{7}).csv')
                         .format(
-                            lag, output.n_months_in_initials('D', month - 1),
+                            lag, output.n_months_in_initials('D', month),
                             station.code, station.name, station.var_D.type_series,
                             station.var_I.type_series,
                             station.process_period['start'],
