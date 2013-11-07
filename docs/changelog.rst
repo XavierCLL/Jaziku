@@ -13,8 +13,8 @@ news
 
 - New input of time series, now accept data bimonthly and
   trimonthly. Bimonthly format is "yyyy-bb data" where "bb"
-  is the bimonthly in characters (e.g. "ao" for august and
-  october), the trimonthly format is "yyyy-ttt data" where
+  is the bimonthly in characters (e.g. "as" for august and
+  september), the trimonthly format is "yyyy-ttt data" where
   "ttt" is the trimonthly in characters (e.g. "jfm" for
   january, february and march).
 - New analysis resolutions, now accept for "analysis_interval"

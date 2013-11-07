@@ -78,8 +78,10 @@ def configuration_run():
             _("The 'analysis_interval' defined in runfile {0} is invalid,\nmust be one of these: {1}")
             .format(env.config_run.settings['analysis_interval'], ', '.join(env.globals_vars.ALL_ANALYSIS_INTERVALS)))
 
-    if env.config_run.settings['analysis_interval'] != "trimester":
-        # detect analysis_interval number from string
+    if env.config_run.settings['analysis_interval'] not in ["monthly", "bimonthly", "trimonthly"]:
+        # extract the number of analysis_interval
+        # e.g. 15days -> 15
+        # and save to NUM_DAYS_OF_ANALYSIS_INTERVAL
         _count = 0
         for digit in env.config_run.settings['analysis_interval']:
             try:
@@ -89,7 +91,7 @@ def configuration_run():
                 pass
         env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL = int(env.config_run.settings['analysis_interval'][0:_count])
 
-    analysis_interval_i18n = [_("5days"), _("10days"), _("15days"), _("trimester")]
+    analysis_interval_i18n = [_("5days"), _("10days"), _("15days"), _("monthly"), _("bimonthly"), _("trimonthly")]
     env.config_run.settings['analysis_interval_i18n']\
         = analysis_interval_i18n[env.globals_vars.ALL_ANALYSIS_INTERVALS.index(env.config_run.settings['analysis_interval'])]
     # analysis_interval setting
@@ -165,10 +167,9 @@ def configuration_run():
     # consistent_data
     if env.config_run.settings['consistent_data'] == "default":
         env.config_run.settings['consistent_data'] = 15
-        settings["consistent_data"] = "15%"
-    elif isinstance(env.config_run.settings['consistent_data'], (int,float)) and \
+    if isinstance(env.config_run.settings['consistent_data'], (int,float)) and \
          env.config_run.settings['consistent_data'] not in [True, False]:
-        settings["consistent_data"] = colored.green(str(env.config_run.settings['consistent_data'])+'%')
+        settings["consistent_data"] = _('max ')+colored.green(str(env.config_run.settings['consistent_data'])+'%')+_(' of nulls')
 
 
     # ------------------------

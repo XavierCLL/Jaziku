@@ -20,8 +20,10 @@
 
 import os
 import sys
+from calendar import monthrange
 
 from jaziku import env
+from jaziku.core.analysis_interval import get_range_analysis_interval
 from jaziku.utils import console
 
 
@@ -35,40 +37,60 @@ def number(num, accuracy=False):
     else:
         return str(round(float(num), env.globals_vars.ACCURACY)).replace('.', ',')
 
-def months_in_initials(month):
+def months_in_initials(month_start0):
     """
     Return the initials of month (first three letters)
     """
     _month_text = {-2: _('Nov'), -1: _('Dec'), 0: _('Jan'), 1: _('Feb'), 2: _('Mar'),
                   3: _('Apr'), 4: _('May'), 5: _('Jun'), 6: _('Jul'), 7: _('Aug'),
                   8: _('Sep'), 9: _('Oct'), 10: _('Nov'), 11: _('Dec')}
-    return _month_text[month]
+    return _month_text[month_start0]
 
-def bi_months_in_initials(bimonthly):
+def bi_months_in_initials(bimonthly_start0):
     """
     Return the three first letters of two months of bimonthly
     """
     _bim_text = {-2: _('NovDic'), -1: _('DicJan'), 0: _('JanFeb'), 1: _('FebMar'), 2: _('MarApr'),
                  3: _('AprMay'), 4: _('MayJun'), 5: _('JunJul'), 6: _('JulAug'), 7: _('AugSep'),
                   8: _('SepOct'), 9: _('OctNov'), 10: _('NovDic'), 11: _('DecJan')}
-    return _bim_text[bimonthly]
+    return _bim_text[bimonthly_start0]
 
-def tri_months_in_initials(trimonthly):
+def tri_months_in_initials(trimonthly_start0):
     """
     Return the three first letters of three months of trimonthly
     """
     _trim_text = {-2: _('NDJ'), -1: _('DJF'), 0: _('JFM'), 1: _('FMA'), 2: _('MAM'),
                  3: _('AMJ'), 4: _('MJJ'), 5: _('JJA'), 6: _('JAS'), 7: _('ASO'),
                  8: _('SON'), 9: _('OND'), 10: _('NDJ'), 11: _('DJF')}
-    return _trim_text[trimonthly]
+    return _trim_text[trimonthly_start0]
 
-def n_months_in_initials(type, n_month):
+def n_months_in_initials(type, n_month_start1):
     if env.var_[type].is_monthly():
-        return months_in_initials(n_month)
+        return months_in_initials(n_month_start1-1)
     if env.var_[type].is_bimonthly():
-        return bi_months_in_initials(n_month)
+        return bi_months_in_initials(n_month_start1-1)
     if env.var_[type].is_trimonthly():
-        return tri_months_in_initials(n_month)
+        return tri_months_in_initials(n_month_start1-1)
+    
+def analysis_interval_text(n_month_start1, start_day=None):
+    if env.config_run.settings['analysis_interval'] in ['monthly']:
+        return months_in_initials(n_month_start1-1)
+    if env.config_run.settings['analysis_interval'] in ['bimonthly']:
+        return bi_months_in_initials(n_month_start1-1)
+    if env.config_run.settings['analysis_interval'] in ['trimonthly']:
+        return tri_months_in_initials(n_month_start1-1)
+
+    # daily
+    rai_plus = get_range_analysis_interval()
+    rai_plus.append(monthrange(2013, n_month_start1)[1]+1)
+    idx_day = rai_plus.index(start_day)
+
+    if n_month_start1 == 2 and idx_day == len(rai_plus)-2: # february
+        text = "{2} {0}-{1}*".format(rai_plus[idx_day], rai_plus[idx_day+1]-1, months_in_initials(n_month_start1-1))
+    else:
+        text = "{2} {0}-{1}".format(rai_plus[idx_day], rai_plus[idx_day+1]-1, months_in_initials(n_month_start1-1))
+
+    return text
 
 def n_monthly_int2char(int_month, type=False, n_monthly=False):
     int_month = int(int_month)
