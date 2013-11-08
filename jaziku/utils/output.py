@@ -72,7 +72,7 @@ def n_months_in_initials(type, n_month_start1):
     if env.var_[type].is_trimonthly():
         return tri_months_in_initials(n_month_start1-1)
     
-def analysis_interval_text(n_month_start1, start_day=None):
+def analysis_interval_text(n_month_start1, start_day=None, join_result=False):
     if env.config_run.settings['analysis_interval'] in ['monthly']:
         return months_in_initials(n_month_start1-1)
     if env.config_run.settings['analysis_interval'] in ['bimonthly']:
@@ -90,7 +90,10 @@ def analysis_interval_text(n_month_start1, start_day=None):
     else:
         text = "{2} {0}-{1}".format(rai_plus[idx_day], rai_plus[idx_day+1]-1, months_in_initials(n_month_start1-1))
 
-    return text
+    if join_result:
+        return text.replace(' ', '_')
+    else:
+        return text
 
 def n_monthly_int2char(int_month, type=False, n_monthly=False):
     int_month = int(int_month)

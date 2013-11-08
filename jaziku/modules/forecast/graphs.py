@@ -230,11 +230,11 @@ def forecast_graphs(station):
             colours = list(reversed(colours))
 
             # get specific values of forecast date for calculating thresholds
-            if env.globals_vars.STATE_OF_DATA in [1, 3]:
+            if env.var_D.is_n_monthly():
                 # get all values of var D based on this lag and month
                 station.var_D.specific_values \
                     = time_series.get_specific_values(station, 'var_D', lag, env.config_run.settings['forecast_date']['month'])
-            if env.globals_vars.STATE_OF_DATA in [2, 4]:
+            if env.var_D.is_daily():
                 # get all values of var D based on this lag and month and day
                 station.var_D.specific_values \
                     = time_series.get_specific_values(station, 'var_D', lag, env.config_run.settings['forecast_date']['month'],

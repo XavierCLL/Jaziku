@@ -111,27 +111,21 @@ def get_label_of_var_I_category(value, station):
     return label_of_var_I_category
 
 
-def get_specific_contingency_table(station, lag, month, day=None):
+def get_specific_contingency_table(station, lag, n_month, start_day=None):
     """Calculate and return the contingency table in absolute values,
     values in percent, values to print and thresholds by below and
     above of dependent and independent variable for specific lag,
-    trimester(month) or month/day within the whole period to process.
-
-    If the `state of data` is 1 or 3, the month is the first
-    month of trimester.
-
-    If the `state of data` is 2 or 4, the month/day is the first
-    day of the fraction of `analysis interval`.
+    N-month or month/day within the whole period to process.
 
     :param station: Stations instance
     :type station: Station
     :param lag: lag for calculate the contingency table
     :type lag: int
-    :param month: month for calculate the contingency table
-    :type month: int
+    :param n_month: month for calculate the contingency table
+    :type n_month: int
     :param day: day for calculate the contingency table when is
         data is daily
-    :type day: int
+    :type start_day: int
 
     :return: specific_contingency_table dict:
         {'in_values', 'in_percentage', 'in_percentage_formatted',
@@ -139,15 +133,15 @@ def get_specific_contingency_table(station, lag, month, day=None):
     :rtype: dict
     """
 
-    if day is None:
+    if start_day is None:
         # get all values of var D and var I based on this lag and month
-        station.var_D.specific_values = time_series.get_specific_values(station, 'var_D', lag, month)
-        station.var_I.specific_values = time_series.get_specific_values(station, 'var_I', lag, month)
+        station.var_D.specific_values = time_series.get_specific_values(station, 'var_D', lag, n_month)
+        station.var_I.specific_values = time_series.get_specific_values(station, 'var_I', lag, n_month)
 
-    if day is not None:
+    if start_day is not None:
         # get all values of var D and var I based on this lag and month
-        station.var_D.specific_values = time_series.get_specific_values(station, 'var_D', lag, month, day)
-        station.var_I.specific_values = time_series.get_specific_values(station, 'var_I', lag, month, day)
+        station.var_D.specific_values = time_series.get_specific_values(station, 'var_D', lag, n_month, start_day)
+        station.var_I.specific_values = time_series.get_specific_values(station, 'var_I', lag, n_month, start_day)
 
     # calculate thresholds as defined by the user in station file for var D
     thresholds_var_D = get_thresholds(station, station.var_D)
@@ -398,7 +392,7 @@ def get_specific_contingency_table(station, lag, month, day=None):
 
 
 def get_contingency_tables(station):
-    """get all contingencies tables for all trimester or
+    """get all contingencies tables for all N-monthly or
     all month/day for each lag.
 
     :param station: station for get all contingencies tables
@@ -408,7 +402,7 @@ def get_contingency_tables(station):
 
     :ivar STATION.contingency_tables: get and set  to station
         all contingencies tables within a list
-        [lag][month/trimester][day].
+        [lag][n_month][day].
     """
     # init threshold problem for this station
     # for 3 and 7 categories there are 3 blocks: BELOW, NORMAL and ABOVE
@@ -423,22 +417,22 @@ def get_contingency_tables(station):
 
         tmp_month_list = []
         # all months in year 1->12
-        for month in range(1, 13):
-            if env.globals_vars.STATE_OF_DATA in [1, 3]:
+        for n_month in range(1, 13):
+            if env.var_D.is_n_monthly():
 
-                specific_contingency_table = get_specific_contingency_table(station, lag, month)
+                specific_contingency_table = get_specific_contingency_table(station, lag, n_month)
 
                 tmp_month_list.append(specific_contingency_table)
 
                 if station.first_iter:
                     station.first_iter = False
 
-            if env.globals_vars.STATE_OF_DATA in [2, 4]:
+            if env.var_D.is_daily():
                 tmp_day_list = []
                 for day in get_range_analysis_interval():
 
                     specific_contingency_table = get_specific_contingency_table(station, lag,
-                        month, day)
+                        n_month, day)
                     tmp_day_list.append(specific_contingency_table)
 
                     if station.first_iter:

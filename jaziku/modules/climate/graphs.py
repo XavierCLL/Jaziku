@@ -419,39 +419,39 @@ def climate_graphs(station):
         image_open_list = list()
 
         # all months in year 1->12
-        for month in range(1, 13):
+        for n_month in range(1, 13):
 
-            if env.globals_vars.STATE_OF_DATA in [1, 3]:
+            if env.var_D.is_n_monthly():
 
-                specific_contingency_table = station.contingency_tables[lag][month-1]
+                specific_contingency_table = station.contingency_tables[lag][n_month-1]
 
-                title_period = _("trim {0} ({1})").format(month, output.trimester_in_initials(month-1))
-                filename_period = _("trim_{0}").format(month)
+                title_period = output.analysis_interval_text(n_month)
+                filename_period = output.analysis_interval_text(n_month, join_result=True)
 
-                # get all values of the time series only for this month (trimester)
+                # get all values of the time series only for this N-month
                 # for all years inside the process period
                 specific_time_series = {'var_D':[], 'var_I':[]}
                 for time_series in station.time_series['lag_'+str(lag)]:
-                    if time_series[0].month == month:
+                    if time_series[0].month == n_month:
                         specific_time_series['var_D'].append(time_series[1])
                         specific_time_series['var_I'].append(time_series[2])
 
                 create_chart()
 
-            if env.globals_vars.STATE_OF_DATA in [2, 4]:
+            if env.var_D.is_daily():
 
                 for idx_day, day in enumerate(get_range_analysis_interval()):
 
-                    specific_contingency_table = station.contingency_tables[lag][month-1][idx_day]
+                    specific_contingency_table = station.contingency_tables[lag][n_month-1][idx_day]
 
-                    title_period = output.month_in_initials(month-1) + " " + str(day)
-                    filename_period = output.month_in_initials(month-1) + "_" + str(day)
+                    title_period = output.analysis_interval_text(n_month, day)
+                    filename_period = output.analysis_interval_text(n_month, day, join_result=True)
 
-                    # get all values of the time series only for this month (trimester)
+                    # get all values of the time series only for this N-month
                     # for all years inside the process period
                     specific_time_series = {'var_D':[], 'var_I':[]}
                     for time_series in station.time_series['lag_'+str(lag)]:
-                        if time_series[0].month == month and time_series[0].day == day:
+                        if time_series[0].month == n_month and time_series[0].day == day:
                             specific_time_series['var_D'].append(time_series[1])
                             specific_time_series['var_I'].append(time_series[2])
 
@@ -466,20 +466,20 @@ def climate_graphs(station):
                                   station.var_D.type_series, station.var_I.type_series, station.process_period['start'],
                                   station.process_period['end']))
 
-        if env.globals_vars.STATE_OF_DATA in [1, 3]:
+        if env.var_D.is_n_monthly():
             # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
             dpi = 100.0
             mosaic_plots = pyplot.figure(figsize=((image_width * 3) / dpi, (image_height * 4) / dpi))
             mosaic_plots.savefig(mosaic_dir_save, dpi=dpi)
             mosaic = Image.open(mosaic_dir_save)
             i = 0
-            # add image in mosaic based on trimester, vertical(v) and horizontal(h)
+            # add image in mosaic based on N-month, vertical(v) and horizontal(h)
             for v in range(4):
                 for h in range(3):
                     mosaic.paste(Image.open(image_open_list[i]), (image_width * h, image_height * v))
                     i += 1
 
-        if env.globals_vars.STATE_OF_DATA in [2, 4]:
+        if env.var_D.is_daily():
             # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
             dpi = 100.0
             mosaic_plots = pyplot.figure(figsize=((image_width * len(get_range_analysis_interval())) / dpi,
