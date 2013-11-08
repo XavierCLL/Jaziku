@@ -128,7 +128,7 @@ def climate_data_for_maps(station):
             month_list = []
             for month in range(1, 13):
 
-                if env.globals_vars.STATE_OF_DATA in [1, 3]:
+                if env.var_D.is_n_monthly():
                     categories_list = []
                     for category_label in env.config_run.get_categories_labels_var_I_list():
                         _category_label = category_label
@@ -138,8 +138,8 @@ def climate_data_for_maps(station):
                         output.make_dirs(maps_data_for_category_label)
 
                         csv_name \
-                            = os.path.join(maps_data_for_category_label, _(u'Map_Data_lag_{0}_trim_{1}_{2}.csv')
-                                          .format(lag, month, category_label))
+                            = os.path.join(maps_data_for_category_label, _(u'Map_Data_lag_{0}_{1}_{2}.csv')
+                                          .format(lag, output.analysis_interval_text(month, join_result=True), category_label))
 
                         if os.path.isfile(csv_name):
                             os.remove(csv_name)
@@ -166,7 +166,7 @@ def climate_data_for_maps(station):
                         categories_list.append(csv_name)
 
                     month_list.append(categories_list)
-                if env.globals_vars.STATE_OF_DATA in [2, 4]:
+                if env.var_D.is_daily():
                     day_list = []
                     for day in get_range_analysis_interval():
                         categories_list = []
@@ -181,7 +181,7 @@ def climate_data_for_maps(station):
                             csv_name \
                                 = os.path.join(maps_data_for_category_label, _(u'Map_Data_lag_{0}_{1}_{2}.csv')
                                     .format(lag,
-                                            output.month_in_initials(month - 1) + "_" + str(day),
+                                            output.analysis_interval_text(month, day, join_result=True),
                                             category_label))
 
                             if os.path.isfile(csv_name):
@@ -219,7 +219,7 @@ def climate_data_for_maps(station):
         # all months in year 1->12
         for month in range(1, 13):
 
-            if env.globals_vars.STATE_OF_DATA in [1, 3]:
+            if env.var_D.is_n_monthly():
                 for category_var_I in range(env.config_run.settings['class_category_analysis']):
                     if env.config_run.settings['class_category_analysis'] == 3:
                         values_CT = {'below': station.contingency_tables[lag][month - 1]['in_percentage'][category_var_I][0],
@@ -265,7 +265,7 @@ def climate_data_for_maps(station):
                     open_file.close()
                     del csv_file
 
-            if env.globals_vars.STATE_OF_DATA in [2, 4]:
+            if env.var_D.is_daily():
                 for idx_day, day in enumerate(get_range_analysis_interval()):
                     for category_var_I in range(env.config_run.settings['class_category_analysis']):
                         if env.config_run.settings['class_category_analysis'] == 3:
@@ -334,14 +334,14 @@ def forecast_data_for_maps(station):
 
         output.make_dirs(maps_dir)
 
-        if env.globals_vars.STATE_OF_DATA in [1, 3]:
+        if env.var_D.is_n_monthly():
             lags_list = {}
             # define maps data files and directories
             for lag in env.config_run.settings['lags']:
 
                 # write the headers in file
                 csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}_{1}.csv')
-                .format(lag, output.trimester_in_initials(env.config_run.settings['forecast_date']['month'] - 1)))
+                .format(lag, output.tri_months_in_initials(env.config_run.settings['forecast_date']['month'] - 1)))
 
                 if os.path.isfile(csv_name):
                     os.remove(csv_name)
@@ -357,7 +357,7 @@ def forecast_data_for_maps(station):
                 lags_list[lag] = csv_name
             env.globals_vars.maps_files_forecast[env.config_run.settings['forecast_date']['text']] = lags_list
 
-        if env.globals_vars.STATE_OF_DATA in [2, 4]:
+        if env.var_D.is_daily():
             lags_list = {}
             # define maps data files and directories
             for lag in env.config_run.settings['lags']:

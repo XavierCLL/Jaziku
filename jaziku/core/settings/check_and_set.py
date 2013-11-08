@@ -404,6 +404,7 @@ def configuration_run():
 
         # ------------------------
         ## forecast date
+        _orig = env.config_run.settings['forecast_date']
         try:
             if isinstance(env.config_run.settings['forecast_date'], list):
                 if env.config_run.settings['analysis_interval'] in ['monthly', 'bimonthly', 'trimonthly']:
@@ -422,7 +423,7 @@ def configuration_run():
                 else:
                     if len(env.config_run.settings['forecast_date']) == 2:
                         env.config_run.settings['forecast_date'] = input.bimonthly_char2int(env.config_run.settings['forecast_date'])
-                    if len(env.config_run.settings['forecast_date']) == 3:
+                    elif len(env.config_run.settings['forecast_date']) == 3:
                         env.config_run.settings['forecast_date'] = input.trimonthly_char2int(env.config_run.settings['forecast_date'])
                 forecast_month = int(env.config_run.settings['forecast_date'])
         except:
@@ -431,7 +432,7 @@ def configuration_run():
                     console.msg_error_configuration('forecast_date',
                         _("The date for forecast '{0}' is invalid, "
                           "must be a valid integer of month (e.g. 2 for february).")
-                        .format(env.config_run.settings['forecast_date']))
+                        .format(_orig))
                 else:
                     if env.config_run.settings['analysis_interval'] in ['bimonthly']:
                         example =  _("(e.g. 'as' for august and september)")
@@ -440,7 +441,7 @@ def configuration_run():
                     console.msg_error_configuration('forecast_date',
                         _("The date for forecast '{0}' is invalid, must be a\n"
                           "valid characters for {1} {2}.")
-                        .format(env.config_run.settings['forecast_date'],
+                        .format(_orig,
                                 env.config_run.settings['analysis_interval'],
                                 example))
             elif env.config_run.settings['analysis_interval'] in ['5days', '10days', '15days']:

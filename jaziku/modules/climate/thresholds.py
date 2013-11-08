@@ -190,7 +190,7 @@ def get_thresholds(station, variable, thresholds_input=None, process_analog_year
                 specific_values_with_analog_year.append(variable.data[variable.date.index(_iter_date)])
                 if env.var_[variable.type].is_daily():
                     _iter_date += relativedelta(days=1)
-                if env.var_[variable.type].is_monthly():
+                if env.var_[variable.type].is_n_monthly():
                     _iter_date += relativedelta(months=1)
 
             # check nulls

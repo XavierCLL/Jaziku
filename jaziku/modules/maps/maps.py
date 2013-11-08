@@ -312,7 +312,7 @@ def process(grid):
                 # all months in year 1->12
                 for month in range(1, 13):
 
-                    if env.config_run.settings['analysis_interval'] == 'trimester':
+                    if env.config_run.settings['analysis_interval'] in ['monthly', 'bimonthly', 'trimonthly']:
                         for var_I_idx, label in enumerate(env.config_run.get_categories_labels_var_I_list()):
                             label = label.strip().replace(' ','_')
                             # show only once
@@ -334,12 +334,12 @@ def process(grid):
 
                             if map_type == _("probabilistic"):
                                 base_file = _(u'Prob_Map_lag_{0}_{1}_{2}')\
-                                    .format(lag, output.trimester_in_initials(month - 1), label)
+                                    .format(lag, output.analysis_interval_text(month, join_result=True), label)
                             if map_type == _("deterministic"):
                                 base_file = _(u'Deter_Map_lag_{0}_{1}_{2}')\
-                                    .format(lag, output.trimester_in_initials(month - 1), label)
+                                    .format(lag, output.analysis_interval_text(month, join_result=True), label)
 
-                            grid.date = output.trimester_in_initials(month - 1)
+                            grid.date = output.analysis_interval_text(month)
                             grid.lag = lag
 
                             if map_type == _("probabilistic"):
@@ -381,15 +381,15 @@ def process(grid):
                                 if map_type == _("probabilistic"):
                                     base_file = _(u'Prob_Map_lag_{0}_{1}_{2}')\
                                         .format(lag,
-                                                output.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day]),
+                                                output.analysis_interval_text(month, range_analysis_interval[day], join_result=True),
                                                 label)
                                 if map_type == _("deterministic"):
                                     base_file = _(u'Deter_Map_lag_{0}_{1}_{2}')\
                                         .format(lag,
-                                                output.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day]),
+                                                output.analysis_interval_text(month, range_analysis_interval[day], join_result=True),
                                                 label)
 
-                                grid.date = output.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day])
+                                grid.date = output.analysis_interval_text(month, range_analysis_interval[day]),
                                 grid.lag = lag
 
                                 if map_type == _("probabilistic"):
@@ -426,7 +426,7 @@ def process(grid):
             # all months in year 1->12
             for month in range(1, 13):
 
-                if env.config_run.settings['analysis_interval'] == 'trimester':
+                if env.config_run.settings['analysis_interval'] in ['monthly', 'bimonthly', 'trimonthly']:
                     if env.config_run.settings['class_category_analysis'] == 3:
                         var_I_idx = 1  # normal
                     if env.config_run.settings['class_category_analysis'] == 7:
@@ -450,9 +450,9 @@ def process(grid):
                     # make dir with the name of grid
                     output.make_dirs(base_path)
 
-                    base_file = _(u'Map_correlation_lag_{0}_{1}').format(lag, output.trimester_in_initials(month - 1))
+                    base_file = _(u'Map_correlation_lag_{0}_{1}').format(lag, output.analysis_interval_text(month, join_result=True))
 
-                    grid.date = output.trimester_in_initials(month - 1)
+                    grid.date = output.analysis_interval_text(month)
                     grid.lag = lag
 
                     # file for interpolation
@@ -494,9 +494,9 @@ def process(grid):
                         output.make_dirs(base_path)
 
                         base_file = _(u'Map_correlation_lag_{0}_{1}')\
-                        .format(lag, output.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day]))
+                            .format(lag, output.analysis_interval_text(month, range_analysis_interval[day], join_result=True))
 
-                        grid.date = output.month_in_initials(month - 1) + "_" + str(range_analysis_interval[day])
+                        grid.date = output.analysis_interval_text(month, range_analysis_interval[day])
                         grid.lag = lag
 
                         # file for interpolation

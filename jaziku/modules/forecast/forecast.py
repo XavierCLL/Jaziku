@@ -102,9 +102,9 @@ def process(station):
             in_percentage = 'in_percentage_3x7'
         else:
             in_percentage = 'in_percentage'
-        if env.globals_vars.STATE_OF_DATA in [1, 3]:
+        if env.var_D.is_n_monthly():
             CT_for_forecast_date = station.contingency_tables[lag][env.config_run.settings['forecast_date']['month'] - 1][in_percentage]
-        if env.globals_vars.STATE_OF_DATA in [2, 4]:
+        if env.var_D.is_daily():
             month = env.config_run.settings['forecast_date']['month']
             day = get_range_analysis_interval().index(env.config_run.settings['forecast_date']['day'])
             CT_for_forecast_date = station.contingency_tables[lag][month - 1][day][in_percentage]
