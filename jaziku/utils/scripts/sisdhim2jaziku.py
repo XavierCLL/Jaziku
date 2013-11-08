@@ -151,6 +151,10 @@ def main():
     # utility functions
 
     def if_station_pass_filters():
+
+        if 'start_year' not in station or 'end_year' not in station:
+            return False
+
         write_in_runfile = None
         if arg.start_year is not None:
             if arg.start_year >= station['start_year']:
