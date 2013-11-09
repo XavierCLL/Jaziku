@@ -33,7 +33,7 @@ INTERNAL_TYPES = [
     'ONI2',         # Oceanic Nino Index
     'SOI',          # Index of the Southern Oscillation NOAA
     'SOI_TROUP',    # Index of the Southern Oscillation calculated between Tahiti and Darwin
-    #'MEI'           # Multivariate ENSO inde
+    'MEI'           # Multivariate ENSO index
     'OLR',          # Radiation wavelength Long tropical
     'W200',         # Index of wind anomaly to 200 hpa
     'W850w',        # Index of wind anomaly to 850 hpa west
@@ -60,6 +60,7 @@ INTERNAL_UNITS = {
     'ONI2':         'anomaly',
     'SOI':          'Std anomaly',
     'SOI_TROUP':    'Std anomaly',
+    'MEI':          '-',
     'OLR':          'W/m2',
     'W200':         'Std anomaly',
     'W850w':        'anomaly',
@@ -113,6 +114,7 @@ MODE_CALCULATION_SERIES = {
     'ONI2':         ['mean'],
     'SOI':          ['mean'],
     'SOI_TROUP':    ['mean'],
+    'MEI':          ['mean'],
     'OLR':          ['mean'],
     'W200':         ['mean'],
     'W850w':        ['mean'],
@@ -162,29 +164,118 @@ MODE_CALCULATION_SERIES = {
 # region >28.5C--------------------AREA_WHWP     by 10e6 km^2         -13 to 14
 
 INTERNAL_LIMITS = {
-    'ONI1':         {'daily': None, 'monthly': [-0.5,0.5]},
-    'ONI2':         {'daily': None, 'monthly': [-0.5,0.5]},
-    'SOI':          {'daily': None, 'monthly': [-7,7]},
-    'SOI_TROUP':    {'daily': None, 'monthly': [-35,35]},
-    #'MEI':          {'daily': None, 'monthly': [-4.552,6.078]},
-    'OLR':          {'daily': None, 'monthly': [-5.2,5.2]},
-    'W200':         {'daily': None, 'monthly': [-7.5,7.5]},
-    'W850w':        {'daily': None, 'monthly': [-7.5,7.5]},
-    'W850c':        {'daily': None, 'monthly': [-21,21]},
-    'W850e':        {'daily': None, 'monthly': [-15.1,15.1]},
-    'SST12':        {'daily': None, 'monthly': [-60,60]},
-    'SST3':         {'daily': None, 'monthly': [-60,60]},
-    'SST4':         {'daily': None, 'monthly': [-60,60]},
-    'SST34':        {'daily': None, 'monthly': [-60,60]},
-    'ASST12':       {'daily': None, 'monthly': [-10,10]},
-    'ASST3':        {'daily': None, 'monthly': [-7,7]},
-    'ASST4':        {'daily': None, 'monthly': [-3,3]},
-    'ASST34':       {'daily': None, 'monthly': [-5.6,5.6]},
-    'ARH':          {'daily': None, 'monthly': [-100,100]},
-    'QBO':          {'daily': None, 'monthly': [-40,40]},
-    'NAO':          {'daily': None, 'monthly': [-11.9,11.9]},
-    'CAR':          {'daily': None, 'monthly': [-1.3,1.3]},
-    'AREA_WHWP':    {'daily': None, 'monthly': [-13,14]}
+    'ONI1':      {'daily': None,
+                   'monthly': [-5,5],
+                   'bimonthly': [-5,5],
+                   'trimonthly': [-5,5]},
+
+    'ONI2':      {'daily': None,
+                   'monthly': [-5,5],
+                   'bimonthly': [-5,5],
+                   'trimonthly': [-5,5]},
+
+    'SOI':       {'daily': None,
+                   'monthly': [-7,7],
+                   'bimonthly': [-7,7],
+                   'trimonthly': [-7,7]},
+
+    'SOI_TROUP': {'daily': None,
+                   'monthly': [-35,35],
+                   'bimonthly': [-35,35],
+                   'trimonthly': [-35,35]},
+
+    'MEI':        {'daily': None,
+                    'bimonthly': [-4,4]},
+
+    'OLR':       {'daily': None,
+                   'monthly': [-5.2,5.2],
+                   'bimonthly': [-5.2,5.2],
+                   'trimonthly': [-5.2,5.2]},
+
+    'W200':      {'daily': None,
+                   'monthly': [-7.5,7.5],
+                   'bimonthly': [-7.5,7.5],
+                   'trimonthly': [-7.5,7.5]},
+
+    'W850w':     {'daily': None,
+                   'monthly': [-7.5,7.5],
+                   'bimonthly': [-7.5,7.5],
+                   'trimonthly': [-7.5,7.5]},
+
+    'W850c':     {'daily': None,
+                   'monthly': [-21,21],
+                   'bimonthly': [-21,21],
+                   'trimonthly': [-21,21]},
+
+    'W850e':     {'daily': None,
+                   'monthly': [-15.1,15.1],
+                   'bimonthly': [-15.1,15.1],
+                   'trimonthly': [-15.1,15.1]},
+
+    'SST12':     {'daily': None,
+                   'monthly': [-60,60],
+                   'bimonthly': [-60,60],
+                   'trimonthly': [-60,60]},
+
+    'SST3':      {'daily': None,
+                   'monthly': [-60,60],
+                   'bimonthly': [-60,60],
+                   'trimonthly': [-60,60]},
+
+    'SST4':      {'daily': None,
+                   'monthly': [-60,60],
+                   'bimonthly': [-60,60],
+                   'trimonthly': [-60,60]},
+
+    'SST34':     {'daily': None,
+                   'monthly': [-60,60],
+                   'bimonthly': [-60,60],
+                   'trimonthly': [-60,60]},
+
+    'ASST12':    {'daily': None,
+                   'monthly': [-10,10],
+                   'bimonthly': [-10,10],
+                   'trimonthly': [-10,10]},
+
+    'ASST3':     {'daily': None,
+                   'monthly': [-7,7],
+                   'bimonthly': [-7,7],
+                   'trimonthly': [-7,7]},
+
+    'ASST4':     {'daily': None,
+                   'monthly': [-3,3],
+                   'bimonthly': [-3,3],
+                   'trimonthly': [-3,3]},
+
+    'ASST34':    {'daily': None,
+                   'monthly': [-5.6,5.6],
+                   'bimonthly': [-5.6,5.6],
+                   'trimonthly': [-5.6,5.6]},
+
+    'ARH':       {'daily': None,
+                   'monthly': [-100,100],
+                   'bimonthly': [-100,100],
+                   'trimonthly': [-100,100]},
+
+    'QBO':       {'daily': None,
+                   'monthly': [-40,40],
+                   'bimonthly': [-40,40],
+                   'trimonthly': [-40,40]},
+
+    'NAO':       {'daily': None,
+                   'monthly': [-11.9,11.9],
+                   'bimonthly': [-11.9,11.9],
+                   'trimonthly': [-11.9,11.9]},
+
+    'CAR':       {'daily': None,
+                   'monthly': [-1.3,1.3],
+                   'bimonthly': [-1.3,1.3],
+                   'trimonthly': [-1.3,1.3]},
+
+    'AREA_WHWP': {'daily': None,
+                   'monthly': [-13,14],
+                   'bimonthly': [-13,14],
+                   'trimonthly': [-13,14]},
 }
 
 
@@ -199,90 +290,196 @@ INTERNAL_LIMITS = {
 # thresholds when class_category_analysis is 3
 THRESHOLDS_3_CATEGORIES = {
     ## thresholds by default
-    'default':      {'daily': ['p33','p66'], 'monthly': ['p33','p66'], 'normal_inclusive': True},
+    'default':   {'daily': ['p33','p66'],
+                   'monthly': ['p33','p66'],
+                   'bimonthly': ['p33','p66'],
+                   'trimonthly': ['p33','p66'],
+                   'normal_inclusive': True},
+
     ## thresholds by type of internal series  (if was not defined here, will use thresholds by default)
-    'ONI1':         {'daily': [-0.5,0.5], 'monthly': [-0.5,0.5], 'normal_inclusive': False},
-    'ONI2':         {'daily': [-0.5,0.5], 'monthly': [-0.5,0.5], 'normal_inclusive': False},
-    'SOI':          {'daily': [-1,1], 'monthly': [-1,1], 'normal_inclusive': False},
-    'SOI_TROUP':    {'daily': [-8,8], 'monthly': [-8,8], 'normal_inclusive': False},
-    #'MEI':          {'daily': None, 'monthly': ['p33','p66']},
-    'OLR':          {'daily': [-0.1,0.2], 'monthly': [-0.1,0.2], 'normal_inclusive': True},
-    'ASST12':       {'daily': ['sd-0.4','sd0.4'], 'monthly': ['sd-0.4','sd0.4'], 'normal_inclusive': True},
-    'ASST3':        {'daily': ['sd-0.4','sd0.4'], 'monthly': ['sd-0.4','sd0.4'], 'normal_inclusive': True},
-    'ASST4':        {'daily': ['sd-0.4','sd0.4'], 'monthly': ['sd-0.4','sd0.4'], 'normal_inclusive': True},
-    'ASST34':       {'daily': ['sd-0.4','sd0.4'], 'monthly': ['sd-0.4','sd0.4'], 'normal_inclusive': True},
-    'QBO':          {'daily': [-4,4], 'monthly': [-4,4], 'normal_inclusive': True},
-    'NAO':          {'daily': [-1,1], 'monthly': [-1,1], 'normal_inclusive': True},
+    'ONI1':      {'daily': [-0.5,0.5],
+                   'monthly': [-0.5,0.5],
+                   'bimonthly': [-0.5,0.5],
+                   'trimonthly': [-0.5,0.5],
+                   'normal_inclusive': False},
+
+    'ONI2':      {'daily': [-0.5,0.5],
+                   'monthly': [-0.5,0.5],
+                   'bimonthly': [-0.5,0.5],
+                   'trimonthly': [-0.5,0.5],
+                   'normal_inclusive': False},
+
+    'SOI':       {'daily': [-1,1],
+                   'monthly': [-1,1],
+                   'bimonthly': [-1,1],
+                   'trimonthly': [-1,1],
+                   'normal_inclusive': False},
+
+    'SOI_TROUP': {'daily': [-8,8],
+                   'monthly': [-8,8],
+                   'bimonthly': [-8,8],
+                   'trimonthly': [-8,8],
+                   'normal_inclusive': False},
+
+    'MEI':        {'daily': None,
+                   'bimonthly': [-0.1,0.1]},
+
+    'OLR':       {'daily': [-0.1,0.2],
+                   'monthly': [-0.1,0.2],
+                   'bimonthly': [-0.1,0.2],
+                   'trimonthly': [-0.1,0.2],
+                   'normal_inclusive': True},
+
+    'ASST12':    {'daily': ['sd-0.4','sd0.4'],
+                   'monthly': ['sd-0.4','sd0.4'],
+                   'bimonthly': ['sd-0.4','sd0.4'],
+                   'trimonthly': ['sd-0.4','sd0.4'],
+                   'normal_inclusive': True},
+
+    'ASST3':     {'daily': ['sd-0.4','sd0.4'],
+                   'monthly': ['sd-0.4','sd0.4'],
+                   'bimonthly': ['sd-0.4','sd0.4'],
+                   'trimonthly': ['sd-0.4','sd0.4'],
+                   'normal_inclusive': True},
+
+    'ASST4':     {'daily': ['sd-0.4','sd0.4'],
+                   'monthly': ['sd-0.4','sd0.4'],
+                   'bimonthly': ['sd-0.4','sd0.4'],
+                   'trimonthly': ['sd-0.4','sd0.4'],
+                   'normal_inclusive': True},
+
+    'ASST34':    {'daily': ['sd-0.4','sd0.4'],
+                   'monthly': ['sd-0.4','sd0.4'],
+                   'bimonthly': ['sd-0.4','sd0.4'],
+                   'trimonthly': ['sd-0.4','sd0.4'],
+                   'normal_inclusive': True},
+
+    'QBO':       {'daily': [-4,4],
+                   'monthly': [-4,4],
+                   'bimonthly': [-4,4],
+                   'trimonthly': [-4,4],
+                   'normal_inclusive': True},
+
+    'NAO':       {'daily': [-1,1],
+                   'monthly': [-1,1],
+                   'bimonthly': [-1,1],
+                   'trimonthly': [-1,1],
+                   'normal_inclusive': True},
 }
 
 # thresholds when class_category_analysis is 7
 THRESHOLDS_7_CATEGORIES = {
     ## thresholds by default
-    'default':      {'daily': ['p11','p22','p33','p66','p77','p88'], 'monthly': ['p11','p22','p33','p66','p77','p88'], 'normal_inclusive': True},
+    'default':   {'daily': ['p11','p22','p33','p66','p77','p88'],
+                   'monthly': ['p11','p22','p33','p66','p77','p88'],
+                   'bimonthly': ['p11','p22','p33','p66','p77','p88'],
+                   'trimonthly': ['p11','p22','p33','p66','p77','p88'],
+                   'normal_inclusive': True},
+
     ## thresholds by type of internal series  (if was not defined here, will use thresholds by default)
-    'ONI1':         {'daily': [-1.5,-1,-0.5,0.5,1,1.5], 'monthly': [-1.5,-1,-0.5,0.5,1,1.5], 'normal_inclusive':False},
-    'ONI2':         {'daily': [-1.5,-1,-0.5,0.5,1,1.5], 'monthly': [-1.5,-1,-0.5,0.5,1,1.5], 'normal_inclusive': False},
-    'SOI':          {'daily': [-2.86,-1.62,-1,1,1.62,2.86], 'monthly': [-2.86,-1.62,-1,1,1.62,2.86], 'normal_inclusive':False},
-    'SOI_TROUP':    {'daily': [-23,-13,-8,8,13,23], 'monthly': [-23,-13,-8,8,13,23], 'normal_inclusive':False},
-    #'MEI':          {'daily': None, 'monthly': None, 'normal_inclusive':True},
-    'ASST12':       {'daily': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'normal_inclusive':True},
-    'ASST3':        {'daily': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'normal_inclusive':True},
-    'ASST4':        {'daily': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'normal_inclusive':True},
-    'ASST34':       {'daily': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'], 'normal_inclusive':True},
+    'ONI1':      {'daily': [-1.5,-1,-0.5,0.5,1,1.5],
+                   'monthly': [-1.5,-1,-0.5,0.5,1,1.5],
+                   'bimonthly': [-1.5,-1,-0.5,0.5,1,1.5],
+                   'trimonthly': [-1.5,-1,-0.5,0.5,1,1.5],
+                   'normal_inclusive':False},
+
+    'ONI2':      {'daily': [-1.5,-1,-0.5,0.5,1,1.5],
+                   'monthly': [-1.5,-1,-0.5,0.5,1,1.5],
+                   'bimonthly': [-1.5,-1,-0.5,0.5,1,1.5],
+                   'trimonthly': [-1.5,-1,-0.5,0.5,1,1.5],
+                   'normal_inclusive': False},
+
+    'SOI':       {'daily': [-2.86,-1.62,-1,1,1.62,2.86],
+                   'monthly': [-2.86,-1.62,-1,1,1.62,2.86],
+                   'bimonthly': [-2.86,-1.62,-1,1,1.62,2.86],
+                   'trimonthly': [-2.86,-1.62,-1,1,1.62,2.86],
+                   'normal_inclusive':False},
+
+    'SOI_TROUP': {'daily': [-23,-13,-8,8,13,23],
+                   'monthly': [-23,-13,-8,8,13,23],
+                   'bimonthly': [-23,-13,-8,8,13,23],
+                   'trimonthly': [-23,-13,-8,8,13,23],
+                   'normal_inclusive':False},
+
+    # 'MEI'  TODO: define the threshold for 7 cat
+
+    'ASST12':    {'daily': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'],
+                   'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'],
+                   'bimonthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'],
+                   'trimonthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'],
+                   'normal_inclusive':True},
+
+    'ASST3':     {'daily': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'],
+                   'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'],
+                   'bimonthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'],
+                   'trimonthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'],
+                   'normal_inclusive':True},
+
+    'ASST4':     {'daily': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'],
+                   'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'],
+                   'bimonthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'],
+                   'trimonthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'],
+                   'normal_inclusive':True},
+
+    'ASST34':    {'daily': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'],
+                   'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'],
+                   'bimonthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'],
+                   'trimonthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'],
+                   'normal_inclusive':True},
 }
 
 # namefiles of internal independent variables for each type
 INTERNAL_FILES = {
-    "ONI1":         "ONI1_1950_2012_CPC.txt",
-    "ONI2":         "ONI2_1950_2012_CPC_corr2012.txt",
-    "SOI":          "SOI_1951_2011_CPC_NOAA.txt",
-    "SOI_TROUP":    "SOI_TROUP_1876_2012_AustralinaBureau.txt",
-    #"MEI":          "MEI_1950_2011_ESRL_NOAA.txt",
-    "OLR":          "OLR_1974_2012_CPC_NCEP_NOAA.txt",
-    "W200":         "W200_1979_2012_CPC_NCEP_NOAA.txt",
-    "W850w":        "W850w_1979_2012_CPC_NCEP_NOAA.txt",
-    "W850c":        "W850c_1979_2012_CPC_NCEP_NOAA.txt",
-    "W850e":        "W850e_1979_2012_CPC_NCEP_NOAA.txt",
-    "SST12":        "SST12_1982_2012_CPC_NCEP_NOAA.txt",
-    "SST3":         "SST3_1982_2012_CPC_NCEP_NOAA.txt",
-    "SST4":         "SST4_1982_2012_CPC_NCEP_NOAA.txt",
-    "SST34":        "SST34_1982_2012_CPC_NCEP_NOAA.txt",
-    "ASST12":       "ASST12_1982_2012_CPC_NCEP_NOAA.txt",
-    "ASST3":        "ASST3_1982_2012_CPC_NCEP_NOAA.txt",
-    "ASST4":        "ASST4_1982_2012_CPC_NCEP_NOAA.txt",
-    "ASST34":       "ASST34_1982_2012_CPC_NCEP_NOAA.txt",
-    "ARH":          "ARH_DIPOLE_1979_2009_NCEPNCAR_REAL.txt", #TODO: update series
-    "NAO":          "NAO_1865_2012_Hurrel1995.txt",
-    "QBO":          "QBO_1979_2012_CPC_NOAA.txt",
-    "CAR":          "CAR_1951_2010_ESRL_NOAA.txt",
-    "AREA_WHWP":    "AREA_WHWP_1948_2012_ESRL_NOAA.txt"
+    "ONI1":      "ONI1_1950_2012_CPC.txt",
+    "ONI2":      "ONI2_1950_2013_CPC_corr2012.txt",
+    "SOI":       "SOI_1951_2013_CPC_NOAA.txt",
+    "SOI_TROUP": "SOI_TROUP_1876_2013_AustralinaBureau.txt",
+    "MEI":       "MEI_1950_2013_ESRL_NOAA.txt",
+    "OLR":       "OLR_1974_2013_CPC_NCEP_NOAA.txt",
+    "W200":      "W200_1979_2013_CPC_NCEP_NOAA.txt",
+    "W850w":     "W850w_1979_2013_CPC_NCEP_NOAA.txt",
+    "W850c":     "W850c_1979_2013_CPC_NCEP_NOAA.txt",
+    "W850e":     "W850e_1979_2013_CPC_NCEP_NOAA.txt",
+    "SST12":     "SST12_1982_2013_CPC_NCEP_NOAA.txt",
+    "SST3":      "SST3_1982_2013_CPC_NCEP_NOAA.txt",
+    "SST4":      "SST4_1982_2013_CPC_NCEP_NOAA.txt",
+    "SST34":     "SST34_1982_2013_CPC_NCEP_NOAA.txt",
+    "ASST12":    "ASST12_1982_2013_CPC_NCEP_NOAA.txt",
+    "ASST3":     "ASST3_1982_2013_CPC_NCEP_NOAA.txt",
+    "ASST4":     "ASST4_1982_2013_CPC_NCEP_NOAA.txt",
+    "ASST34":    "ASST34_1982_2013_CPC_NCEP_NOAA.txt",
+    "ARH":       "ARH_DIPOLE_1979_2009_NCEPNCAR_REAL.txt", #TODO: update series
+    "NAO":       "NAO_1865_2013_Hurrel1995.txt",
+    "QBO":       "QBO_1979_2013_CPC_NOAA.txt",
+    "CAR":       "SSTA_CAR_1951_2010_ESRL_NOAA.txt",
+    "AREA_WHWP": "AREA_WHWP_1948_2013_ESRL_NOAA.txt"
 }
 
 # urls where get the internal files for independent variables for each type
 INTERNAL_URLS = {
-    "ONI1":         "http://goo.gl/6tXjh", # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears_1971-2000_climo.shtml
-    "ONI2":         "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears.shtml
-    "SOI":          "http://goo.gl/scbO7", # http://www.cpc.ncep.noaa.gov/data/indices/soi
-    "SOI_TROUP":    "http://goo.gl/2hDk8", # http://www.bom.gov.au/climate/current/soihtm1.shtml
-    #"MEI":          "http://goo.gl/dQsdb", # http://www.esrl.noaa.gov/psd/enso/mei/table.html
-    "OLR":          "http://goo.gl/goMpA", # http://www.cpc.ncep.noaa.gov/data/indices/olr
-    "W200":         "http://goo.gl/aliLh", # http://www.cpc.ncep.noaa.gov/data/indices/zwnd200
-    "W850w":        "http://goo.gl/w4yiO", # http://www.cpc.ncep.noaa.gov/data/indices/wpac850
-    "W850c":        "http://goo.gl/gks7x", # http://www.cpc.ncep.noaa.gov/data/indices/cpac850
-    "W850e":        "http://goo.gl/N7cQ5", # http://www.cpc.ncep.noaa.gov/data/indices/epac850
-    "SST12":        "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-    "SST3":         "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-    "SST4":         "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-    "SST34":        "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-    "ASST12":       "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-    "ASST3":        "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-    "ASST4":        "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-    "ASST34":       "http://goo.gl/WcYSg", # http://www.cpc.ncep.noaa.gov/data/indices/
-    "ARH":          "http://goo.gl/5oiZJ", # http://nomad1.ncep.noaa.gov/ncep_data/index.html
-    "NAO":          "http://goo.gl/ArdVn", # http://climatedataguide.ucar.edu/sites/default/files/cas_data_files/asphilli/nao_station_monthly_2.txt
-    "QBO":          "http://goo.gl/erjsJ and http://goo.gl/qKTrT", # http://www.cpc.ncep.noaa.gov/data/indices/qbo.u50.index and http://www.cpc.ncep.noaa.gov/data/indices/qbo.u30.index
-    "CAR":          "http://goo.gl/c0Xbv", # http://www.esrl.noaa.gov/psd/forecasts/sstlim/Globalsst.html
-    "AREA_WHWP":    "http://goo.gl/mV4QI"  # http://www.esrl.noaa.gov/psd/data/correlation/whwp.data
+    "ONI1":      "http://goo.gl/6tXjh", # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears_1971-2000_climo.shtml
+    "ONI2":      "http://goo.gl/e7unc", # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears.shtml
+    "SOI":       "http://goo.gl/scbO7", # http://www.cpc.ncep.noaa.gov/data/indices/soi
+    "SOI_TROUP": "http://goo.gl/2hDk8", # http://www.bom.gov.au/climate/current/soihtm1.shtml
+    "MEI":       "http://goo.gl/0IAItw", # http://www.esrl.noaa.gov/psd/enso/mei/table.html
+    "OLR":       "http://goo.gl/goMpA", # http://www.cpc.ncep.noaa.gov/data/indices/olr
+    "W200":      "http://goo.gl/aliLh", # http://www.cpc.ncep.noaa.gov/data/indices/zwnd200
+    "W850w":     "http://goo.gl/w4yiO", # http://www.cpc.ncep.noaa.gov/data/indices/wpac850
+    "W850c":     "http://goo.gl/gks7x", # http://www.cpc.ncep.noaa.gov/data/indices/cpac850
+    "W850e":     "http://goo.gl/N7cQ5", # http://www.cpc.ncep.noaa.gov/data/indices/epac850
+    "SST12":     "http://goo.gl/6vzgrB", # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
+    "SST3":      "http://goo.gl/6vzgrB", # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
+    "SST4":      "http://goo.gl/6vzgrB", # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
+    "SST34":     "http://goo.gl/6vzgrB", # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
+    "ASST12":    "http://goo.gl/6vzgrB", # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
+    "ASST3":     "http://goo.gl/6vzgrB", # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
+    "ASST4":     "http://goo.gl/6vzgrB", # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
+    "ASST34":    "http://goo.gl/6vzgrB", # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
+    "ARH":       "http://goo.gl/5oiZJ", # http://nomad1.ncep.noaa.gov/ncep_data/index.html
+    "NAO":       "http://goo.gl/ArdVn", # http://climatedataguide.ucar.edu/sites/default/files/cas_data_files/asphilli/nao_station_monthly_2.txt
+    "QBO":       "http://goo.gl/erjsJ and http://goo.gl/qKTrT", # http://www.cpc.ncep.noaa.gov/data/indices/qbo.u50.index and http://www.cpc.ncep.noaa.gov/data/indices/qbo.u30.index
+    "CAR":       "http://goo.gl/zeY7eP", # http://www.esrl.noaa.gov/psd/data/correlation/CAR.data
+    "AREA_WHWP": "http://goo.gl/mV4QI"  # http://www.esrl.noaa.gov/psd/data/correlation/whwp.data
 }
 
 
@@ -328,9 +525,30 @@ def is_daily():
     else:
         return False
 
+def is_n_monthly():
+    global FREQUENCY_DATA
+    if FREQUENCY_DATA in ['monthly', 'bimonthly', 'trimonthly']:
+        return True
+    else:
+        return False
+
 def is_monthly():
     global FREQUENCY_DATA
     if FREQUENCY_DATA == 'monthly':
+        return True
+    else:
+        return False
+
+def is_bimonthly():
+    global FREQUENCY_DATA
+    if FREQUENCY_DATA == 'bimonthly':
+        return True
+    else:
+        return False
+
+def is_trimonthly():
+    global FREQUENCY_DATA
+    if FREQUENCY_DATA == 'trimonthly':
         return True
     else:
         return False
@@ -354,7 +572,7 @@ def set_FREQUENCY_DATA(new_freq_data, check=True):
     global FREQUENCY_DATA
     global TYPE_SERIES
 
-    if new_freq_data not in ['daily','monthly']:
+    if new_freq_data not in ['daily','monthly','bimonthly','trimonthly']:
         raise
 
     if FREQUENCY_DATA is None or check is False:
@@ -364,5 +582,5 @@ def set_FREQUENCY_DATA(new_freq_data, check=True):
             raise ValueError(_("The frequency data '{0}' for the var I is different\n"
                                "for the others stations before assigned as '{2}'.\n\n"
                                "Jaziku requires that all stations for var I\n"
-                               "have identical frequency data.")
+                            "have identical frequency data.")
                 .format(new_freq_data, TYPE_SERIES, FREQUENCY_DATA))

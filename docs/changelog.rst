@@ -42,6 +42,8 @@ news
   inside of time series, convert the date character division in date,
   convert space between date and data, fill the nan values and empty
   dates, and others.
+- Update all independent variables to sept 2013 and enable the bimonthly
+  MEI series.
 - [code] Refactoring lag to time_series
 - [code] Refactoring read_var_D and read_var_I into read_variable
 - [code] Ported the old PIL to new Python-pillow
@@ -86,6 +88,7 @@ fixes
 - Several fixes and adjust in sisdhim2jaziku script
 - Fix crashed when there are some words inside data (e.g. vectorial
   wind data)
+- Fix crashed when the station have empty data
 
 
 
