@@ -67,14 +67,14 @@ UNITS = None
 # available mode calculation series for internal dependent variable
 # the fist element is by default (options: ['mean', 'accumulate'],)
 MODE_CALCULATION_SERIES = {
-    'PPT':          ['mean', 'accumulate'],
-    'NDPPT':        ['mean', 'accumulate'],
-    'TMIN':         ['mean'],
-    'TMAX':         ['mean'],
-    'TEMP':         ['mean'],
-    'PATM':         ['mean'],
-    'RH':           ['mean'],
-    'RUNOFF':       ['mean'],
+    'PPT':      ['mean', 'accumulate'],
+    'NDPPT':    ['mean', 'accumulate'],
+    'TMIN':     ['mean'],
+    'TMAX':     ['mean'],
+    'TEMP':     ['mean'],
+    'PATM':     ['mean'],
+    'RH':       ['mean'],
+    'RUNOFF':   ['mean'],
 }
 
 # Internal limits for var_D (dependent variable)
@@ -106,14 +106,45 @@ MODE_CALCULATION_SERIES = {
 #  Runoff---------------RUNOFF      m^3/s                0 to 3300
 
 INTERNAL_LIMITS = {
-    'PPT':          {'daily':   [0,200],       'monthly': [0,3500]},
-    'NDPPT':        {'daily':   None,          'monthly': [0,31]},
-    'TMIN':         {'daily':   [-15,22],      'monthly': [-15,50]},
-    'TMAX':         {'daily':   [-15,34],      'monthly': [-15,50]},
-    'TEMP':         {'daily':   [-15,34],      'monthly': [-15,50]},
-    'PATM':         {'daily':   [400,1100],    'monthly': [400,1100]},
-    'RH':           {'daily':   [0,100],       'monthly': [0,100]},
-    'RUNOFF':       {'daily':   [0,3300],      'monthly': [0,3300]},
+    'PPT':      {'daily': [0,200],
+                  'monthly': [0,3500],
+                  'bimonthly': [0,3500],
+                  'trimonthly': [0,3500]},
+
+    'NDPPT':    {'daily': None,
+                  'monthly': [0,31],
+                  'bimonthly': [0,62],
+                  'trimonthly': [0,93]},
+
+    'TMIN':     {'daily': [-15,25],
+                  'monthly': [-15,50],
+                  'bimonthly': [-15,50],
+                  'trimonthly': [-15,50]},
+
+    'TMAX':     {'daily': [-15,35],
+                  'monthly': [-15,50],
+                  'bimonthly': [-15,50],
+                  'trimonthly': [-15,50]},
+
+    'TEMP':     {'daily': [-15,35],
+                  'monthly': [-15,50],
+                  'bimonthly': [-15,50],
+                  'trimonthly': [-15,50]},
+
+    'PATM':     {'daily': [400,1100],
+                  'monthly': [400,1100],
+                  'bimonthly': [400,1100],
+                  'trimonthly': [400,1100]},
+
+    'RH':       {'daily': [0,100],
+                  'monthly': [0,100],
+                  'bimonthly': [0,100],
+                  'trimonthly': [0,100]},
+
+    'RUNOFF':   {'daily': [0,3300],
+                  'monthly': [0,3300],
+                  'bimonthly': [0,3300],
+                  'trimonthly': [0,3300]},
 }
 
 # When the 'normal_inclusive' is True this mean that for the normal values the thresholds
@@ -127,23 +158,71 @@ INTERNAL_LIMITS = {
 # thresholds when class_category_analysis is 3
 THRESHOLDS_3_CATEGORIES = {
     ## thresholds by default
-    'default':      {'daily': ['p33','p66'], 'monthly': ['p33','p66'], 'normal_inclusive': True},
+    'default':  {'daily': ['p33','p66'],
+                  'monthly': ['p33','p66'],
+                  'bimonthly': ['p33','p66'],
+                  'trimonthly': ['p33','p66'],
+                  'normal_inclusive': True},
+
     ## thresholds by type of internal series  (if was not defined here, will use thresholds by default)
-    'PPT':          {'daily': ['90%','110%'], 'monthly': ['90%','110%'], 'normal_inclusive': True},
-    'TMIN':         {'daily': [-1,1], 'monthly': [-1,1], 'normal_inclusive': True},
-    'TMAX':         {'daily': [-1,1], 'monthly': [-1,1], 'normal_inclusive': True},
-    'TEMP':         {'daily': [-1,1], 'monthly': [-1,1], 'normal_inclusive': True},
+    'PPT':      {'daily': ['90%','110%'],
+                  'monthly': ['90%','110%'],
+                  'bimonthly': ['90%','110%'],
+                  'trimonthly': ['90%','110%'],
+                  'normal_inclusive': True},
+
+    'TMIN':     {'daily': [-1,1],
+                  'monthly': [-1,1],
+                  'bimonthly': [-1,1],
+                  'trimonthly': [-1,1],
+                  'normal_inclusive': True},
+
+    'TMAX':     {'daily': [-1,1],
+                  'monthly': [-1,1],
+                  'bimonthly': [-1,1],
+                  'trimonthly': [-1,1],
+                  'normal_inclusive': True},
+
+    'TEMP':     {'daily': [-1,1],
+                  'monthly': [-1,1],
+                  'bimonthly': [-1,1],
+                  'trimonthly': [-1,1],
+                  'normal_inclusive': True},
 }
 
 # thresholds when class_category_analysis is 7
 THRESHOLDS_7_CATEGORIES = {
     ## thresholds by default
-    'default':      {'daily': ['p11','p22','p33','p66','p77','p88'], 'monthly': ['p11','p22','p33','p66','p77','p88'], 'normal_inclusive': True},
+    'default':  {'daily': ['p11','p22','p33','p66','p77','p88'],
+                  'monthly': ['p11','p22','p33','p66','p77','p88'],
+                  'bimonthly': ['p11','p22','p33','p66','p77','p88'],
+                  'trimonthly': ['p11','p22','p33','p66','p77','p88'],
+                  'normal_inclusive': True},
+
     ## thresholds by type of internal series  (if was not defined here, will use thresholds by default)
-    'PPT':          {'daily': ['30%','60%','90%','110%','140%','170%'], 'monthly': ['30%','60%','90%','110%','140%','170%'], 'normal_inclusive': True},
-    'TMIN':         {'daily': [-2,-1.5,-1,1,1.5,2], 'monthly': [-2,-1.5,-1,1,1.5,2], 'normal_inclusive': True},
-    'TMAX':         {'daily': [-2,-1.5,-1,1,1.5,2], 'monthly': [-2,-1.5,-1,1,1.5,2], 'normal_inclusive': True},
-    'TEMP':         {'daily': [-2,-1.5,-1,1,1.5,2], 'monthly': [-2,-1.5,-1,1,1.5,2], 'normal_inclusive': True},
+    'PPT':      {'daily': ['30%','60%','90%','110%','140%','170%'],
+                  'monthly': ['30%','60%','90%','110%','140%','170%'],
+                  'bimonthly': ['30%','60%','90%','110%','140%','170%'],
+                  'trimonthly': ['30%','60%','90%','110%','140%','170%'],
+                  'normal_inclusive': True},
+
+    'TMIN':     {'daily': [-2,-1.5,-1,1,1.5,2],
+                  'monthly': [-2,-1.5,-1,1,1.5,2],
+                  'bimonthly': [-2,-1.5,-1,1,1.5,2],
+                  'trimonthly': [-2,-1.5,-1,1,1.5,2],
+                  'normal_inclusive': True},
+
+    'TMAX':     {'daily': [-2,-1.5,-1,1,1.5,2],
+                  'monthly': [-2,-1.5,-1,1,1.5,2],
+                  'bimonthly': [-2,-1.5,-1,1,1.5,2],
+                  'trimonthly': [-2,-1.5,-1,1,1.5,2],
+                  'normal_inclusive': True},
+
+    'TEMP':     {'daily': [-2,-1.5,-1,1,1.5,2],
+                  'monthly': [-2,-1.5,-1,1,1.5,2],
+                  'bimonthly': [-2,-1.5,-1,1,1.5,2],
+                  'trimonthly': [-2,-1.5,-1,1,1.5,2],
+                  'normal_inclusive': True},
 }
 
 
@@ -189,9 +268,30 @@ def is_daily():
     else:
         return False
 
+def is_n_monthly():
+    global FREQUENCY_DATA
+    if FREQUENCY_DATA in ['monthly', 'bimonthly', 'trimonthly']:
+        return True
+    else:
+        return False
+
 def is_monthly():
     global FREQUENCY_DATA
     if FREQUENCY_DATA == 'monthly':
+        return True
+    else:
+        return False
+
+def is_bimonthly():
+    global FREQUENCY_DATA
+    if FREQUENCY_DATA == 'bimonthly':
+        return True
+    else:
+        return False
+
+def is_trimonthly():
+    global FREQUENCY_DATA
+    if FREQUENCY_DATA == 'trimonthly':
         return True
     else:
         return False
@@ -215,7 +315,7 @@ def set_FREQUENCY_DATA(new_freq_data, check=True):
     global FREQUENCY_DATA
     global TYPE_SERIES
 
-    if new_freq_data not in ['daily','monthly']:
+    if new_freq_data not in ['daily','monthly','bimonthly','trimonthly']:
         raise
 
     if FREQUENCY_DATA is None or check is False:
