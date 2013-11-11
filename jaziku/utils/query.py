@@ -34,7 +34,7 @@ def base_query(question, prompt, options, default, wrong_ans):
         raise ValueError("invalid default answer: {0}".format(default))
 
     while True:
-        console.msg(question + colored.yellow(prompt), newline=False)
+        console.msg(colored.yellow(question) + colored.yellow(prompt), newline=False)
 
         if env.globals_vars.ARGS.force:
             print default
