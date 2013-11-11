@@ -43,7 +43,7 @@ INTERNAL_TYPES = [
     'ONI2',         # Oceanic Nino Index
     'SOI',          # Index of the Southern Oscillation NOAA
     'SOI_TROUP',    # Index of the Southern Oscillation calculated between Tahiti and Darwin
-    'MEI'           # Multivariate ENSO index
+    'MEI',          # Multivariate ENSO index
     'OLR',          # Radiation wavelength Long tropical
     'W200',         # Index of wind anomaly to 200 hpa
     'W850w',        # Index of wind anomaly to 850 hpa west
