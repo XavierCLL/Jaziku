@@ -40,7 +40,7 @@ from jaziku.core.analysis_interval import get_values_in_range_analysis_interval,
 from jaziku.modules.climate import time_series
 from jaziku.modules.climate.contingency_table import get_label_of_var_I_category
 from jaziku.modules.climate.time_series import  calculate_time_series
-from jaziku.utils import  console, output, watermarking, array
+from jaziku.utils import  console, output, watermarking, array, query
 
 
 def main(stations_list):
@@ -173,35 +173,35 @@ def main(stations_list):
         console.msg(_("Analysis the best periods to process ................. "), newline=False)
 
         # TODO: Fixes the equation for process several stations, use threads or PyMPI
-        if len(stations_list) < 100:
-            #analysis_the_best_periods_to_process(stations_list) todo v0.7
+        if len(stations_list) < 50:
+            analysis_the_best_periods_to_process(stations_list)
             console.msg(_("done"), color='green')
         else:
-            console.msg(_("partial\n > WARNING: There are many station for calculate the best\n"
-                          "   periods to process, currently the algorithm to calculate\n"
-                          "   this could take several minutes to complete."), color="yellow")
+            console.msg("?", color='yellow')
+            query_check_continue = query.yes_no(_("  Analysis the best periods to process for many\n"
+                                                  "  stations can take several minutes to complete,\n"
+                                                  "  'y' for do it, 'n' for continue"), default="n")
+            if query_check_continue:
+                console.msg(_("Analysis the best periods to process ................. "), newline=False)
+                analysis_the_best_periods_to_process(stations_list)
+                console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
     # GRAPHS INSPECTION OF SERIES
 
     if env.config_run.settings['graphics']:
         console.msg(_("Graphs inspection of series .......................... "), newline=False)
-        #with console.redirectStdStreams():
-        #    graphs_inspection_of_series(stations_list)
+        with console.redirectStdStreams():
+            graphs_inspection_of_series(stations_list)
         console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
     # CLIMATOLOGY
 
     console.msg(_("Climatology .......................................... "), newline=False)
-
-    if env.var_D.FREQUENCY_DATA in ['daily', 'monthly'] or env.var_I.get_FREQUENCY_DATA() in ['daily', 'monthly']:
-        #with console.redirectStdStreams():
+    with console.redirectStdStreams():
         climatology(stations_list)
-        console.msg(_("done"), color='green')
-    else:
-        console.msg(_("fail\n > WARNING: For the climatology at least need one of the two\n"
-                      "   of the time series has data daily o monthly."), color="yellow")
+    console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
     # DISTRIBUTION TEST
@@ -710,16 +710,22 @@ def climatology(stations_list):
 
     output.make_dirs(graphs_dir)
 
+    # name climatology table of all stations
+    if env.var_D.is_daily() or env.var_D.is_monthly():
+        filename_climatology_table = _('Climatology_table_{0}_(monthly)').format(env.var_D.TYPE_SERIES)+'.csv'
+    else:
+        filename_climatology_table = _('Climatology_table_{0}_({1})').format(env.var_D.TYPE_SERIES,env.config_run.settings['analysis_interval'])+'.csv'
     # climatology table file
     open_file_climatology_table\
-        = open(os.path.join(graphs_dir, _('Climatology_table_{0}').format(env.var_D.TYPE_SERIES)+'.csv'), 'w')
+        = open(os.path.join(graphs_dir, filename_climatology_table), 'w')
     csv_climatology_table = csv.writer(open_file_climatology_table, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
     # print header
-    header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), output.months_in_initials(0), output.months_in_initials(1),
-              output.months_in_initials(2), output.months_in_initials(3), output.months_in_initials(4), output.months_in_initials(5),
-              output.months_in_initials(6), output.months_in_initials(7), output.months_in_initials(8), output.months_in_initials(9),
-              output.months_in_initials(10), output.months_in_initials(11)]
+    header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD')]
+    if env.var_D.is_daily() or env.var_D.is_monthly():
+        header += [output.months_in_initials(i) for i in range(12)]
+    else:
+        header += [output.analysis_interval_text(i) for i in range(1,13)]
 
     csv_climatology_table.writerow(header)
 
@@ -783,10 +789,7 @@ def climatology(stations_list):
             del _station
             return y_min, y_mean, y_max
 
-
     for station in stations_list:
-
-
         # -------------------------------------------------------------------------
         ## for climatology table
         line = [station.code, station.name, output.number(station.lat), output.number(station.lon),
