@@ -44,6 +44,7 @@ Others TODO
 
 To be included
 --------------
+- adjust the PPT var for accumulate the data daily by default
 - to able to change the labels for var D
 - include the shapes maps for protected regions of Colombia
 - save log
