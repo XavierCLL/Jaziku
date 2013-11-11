@@ -24,7 +24,17 @@
 
 # globals vars for all var I
 TYPE_SERIES = None
+
+#
 FREQUENCY_DATA = None
+
+def get_FREQUENCY_DATA():
+    global FREQUENCY_DATA
+    _freq_data ={'daily': _('daily'),
+                 'monthly': _('monthly'),
+                 'bimonthly': _('bimonthly'),
+                 'trimonthly': _('trimonthly')}
+    return _freq_data[FREQUENCY_DATA]
 
 # Valid input types for independent variable, known and internal for jaziku
 

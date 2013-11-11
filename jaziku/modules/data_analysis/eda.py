@@ -36,7 +36,7 @@ from jaziku import env
 from jaziku.core.station import Station
 from jaziku.core.variable import Variable
 from jaziku.core.analysis_interval import get_values_in_range_analysis_interval, locate_day_in_analysis_interval, \
-    get_range_analysis_interval, get_state_of_data
+    get_range_analysis_interval
 from jaziku.modules.climate import time_series
 from jaziku.modules.climate.contingency_table import get_label_of_var_I_category
 from jaziku.modules.climate.time_series import  calculate_time_series
@@ -174,7 +174,7 @@ def main(stations_list):
 
         # TODO: Fixes the equation for process several stations, use threads or PyMPI
         if len(stations_list) < 100:
-            analysis_the_best_periods_to_process(stations_list)
+            #analysis_the_best_periods_to_process(stations_list) todo v0.7
             console.msg(_("done"), color='green')
         else:
             console.msg(_("partial\n > WARNING: There are many station for calculate the best\n"
@@ -186,17 +186,22 @@ def main(stations_list):
 
     if env.config_run.settings['graphics']:
         console.msg(_("Graphs inspection of series .......................... "), newline=False)
-        with console.redirectStdStreams():
-            graphs_inspection_of_series(stations_list)
+        #with console.redirectStdStreams():
+        #    graphs_inspection_of_series(stations_list)
         console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
     # CLIMATOLOGY
 
     console.msg(_("Climatology .......................................... "), newline=False)
-    with console.redirectStdStreams():
+
+    if env.var_D.FREQUENCY_DATA in ['daily', 'monthly'] or env.var_I.get_FREQUENCY_DATA() in ['daily', 'monthly']:
+        #with console.redirectStdStreams():
         climatology(stations_list)
-    console.msg(_("done"), color='green')
+        console.msg(_("done"), color='green')
+    else:
+        console.msg(_("fail\n > WARNING: For the climatology at least need one of the two\n"
+                      "   of the time series has data daily o monthly."), color="yellow")
 
     # -------------------------------------------------------------------------
     # DISTRIBUTION TEST
@@ -535,9 +540,9 @@ def graphs_inspection_of_series(stations_list):
         list_graphs = [[station.var_D,'D'], [station.var_I,'I']]
 
         # add special plot for make mosaic when the frequency off var D and var I are different
-        if env.var_D.is_daily() and env.var_I.is_monthly():
+        if env.var_D.is_daily() and env.var_I.is_n_monthly():
             list_graphs.append([station.var_I, 'special_I'])
-        if env.var_D.is_monthly() and env.var_I.is_daily():
+        if env.var_D.is_n_monthly() and env.var_I.is_daily():
             list_graphs.append([station.var_D, 'special_D'])
 
         for var, type in list_graphs:
@@ -570,7 +575,7 @@ def graphs_inspection_of_series(stations_list):
                 if type == 'special_D':
                     len_x = len(station.var_I.date_in_process_period)
                 # dynamic with based of number of stations
-            if env.var_[var.type].is_monthly():
+            if env.var_[var.type].is_n_monthly():
                 with_fig = 8 + len_x/150
             if env.var_[var.type].is_daily() or type == 'special_I' or type == 'special_D':
                 #with_fig = len_x/20+4
@@ -603,7 +608,7 @@ def graphs_inspection_of_series(stations_list):
                         else:
                             #ax.plot(x, y, TYPES_VAR_D[type_var]['graph'], color=TYPES_VAR_D[type_var]['color'])
                             ax.plot(x, y, '-', color=types_var_D[type_var]['color'])
-                if env.var_[var.type].is_monthly() and not type == 'special_D':
+                if env.var_[var.type].is_n_monthly() and not type == 'special_D':
                     if type_var not in types_var_D:
                         # default for generic type for var D
                         ax.plot(x, y, '-', color="#638786")
@@ -653,10 +658,10 @@ def graphs_inspection_of_series(stations_list):
 
 
         ## create mosaic
-        if env.var_D.is_daily() and env.var_I.is_monthly():
+        if env.var_D.is_daily() and env.var_I.is_n_monthly():
             image_var_D = Image.open(image_list[0])
             image_var_I = Image.open(image_list[2])
-        elif env.var_D.is_monthly() and env.var_I.is_daily():
+        elif env.var_D.is_n_monthly() and env.var_I.is_daily():
             image_var_D = Image.open(image_list[2])
             image_var_I = Image.open(image_list[1])
         else:
@@ -711,218 +716,48 @@ def climatology(stations_list):
     csv_climatology_table = csv.writer(open_file_climatology_table, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
     # print header
-    header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), output.month_in_initials(0), output.month_in_initials(1),
-              output.month_in_initials(2), output.month_in_initials(3), output.month_in_initials(4), output.month_in_initials(5),
-              output.month_in_initials(6), output.month_in_initials(7), output.month_in_initials(8), output.month_in_initials(9),
-              output.month_in_initials(10), output.month_in_initials(11)]
+    header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), output.months_in_initials(0), output.months_in_initials(1),
+              output.months_in_initials(2), output.months_in_initials(3), output.months_in_initials(4), output.months_in_initials(5),
+              output.months_in_initials(6), output.months_in_initials(7), output.months_in_initials(8), output.months_in_initials(9),
+              output.months_in_initials(10), output.months_in_initials(11)]
 
     csv_climatology_table.writerow(header)
 
-    for station in stations_list:
-        # -------------------------------------------------------------------------
-        ## for climatology table
-        line = [station.code, station.name, output.number(station.lat), output.number(station.lon),
-                output.number(station.alt), '{0}-{1}'.format(station.process_period['start'],
-                                                             station.process_period['end'])]
+    # -------------------------------------------------------------------------
+    # calculate function for some variables need in climatology
 
-        var_D = Variable('D')
-        var_D.data = station.var_D.data_in_process_period
-        var_D.date = station.var_D.date_in_process_period
+    def get_climatology_data(station, freq):
+
+        _station = copy.deepcopy(station)
+        _station.var_D.convert2(freq)
+        original_FREQUENCY_DATA = env.var_D.FREQUENCY_DATA
+        env.var_D.set_FREQUENCY_DATA(freq, check=False)
+
+        _station.var_D.data_and_null_in_process_period(_station)
+        var_D_data = _station.var_D.data_in_process_period
+        var_D_date = _station.var_D.date_in_process_period
+
+        env.var_D.set_FREQUENCY_DATA(original_FREQUENCY_DATA, check=False)
 
         y_mean = []
         y_max = [] # value to add to mean for max value
         y_min = [] # value to subtract to mean for min value
-        if env.var_D.is_monthly():
+
+        if freq in ['monthly', 'bimonthly', 'trimonthly']:
             for month in range(1,13):
                 values = []
-                for iter, value in  enumerate(var_D.data):
-                    if var_D.date[iter].month == month:
+                for iter, value in  enumerate(var_D_data):
+                    if var_D_date[iter].month == month:
                         values.append(value)
                 values = array.clean(values)
                 y_mean.append(array.mean(values))
                 y_max.append(array.maximum(values) - y_mean[-1])
                 y_min.append(y_mean[-1] - array.minimum(values))
 
-        if env.var_D.is_daily():
-            for month in range(1,13):
-                years_values_mean = []
-                years_values_max = []
-                years_values_min = []
-                for year in range(station.process_period['start'], station.process_period['end']+1):
-                    month_values = []
-                    for iter, value in  enumerate(var_D.data):
-                        if var_D.date[iter].year == year and var_D.date[iter].month == month:
-                            month_values.append(value)
-                    month_values = array.clean(month_values)
-                    years_values_mean.append(array.mean(month_values))
-                    years_values_max.append(array.maximum(month_values))
-                    years_values_min.append(array.minimum(month_values))
-                y_mean.append(array.mean(years_values_mean))
-                y_max.append(array.mean(years_values_max) - y_mean[-1])
-                y_min.append(y_mean[-1] - array.mean(years_values_min))
+            del _station
+            return y_min, y_mean, y_max
 
-        csv_climatology_table.writerow(line + [output.number(i) for i in y_mean])
-
-        if not env.config_run.settings['graphics']:
-            continue
-
-        # -------------------------------------------------------------------------
-        # for climatology graphs, month by month (base)
-
-        station_climatology_path = os.path.join(graphs_dir, station.code +'-'+station.name, _('Climatology'))
-
-        output.make_dirs(station_climatology_path)
-
-        x = range(1, 13)
-        x_labels = [output.month_in_initials(i) for i in range(12)]
-
-        # do that matplotlib plot zeros in extreme values
-        for value in y_mean:
-            if value == 0:
-                y_mean[y_mean.index(value)] = 0.0001
-
-        title=_("Multiyear climatology (monthly)\n{0} {1} - {2} ({3}-{4})").format(station.code, station.name,
-                env.var_D.TYPE_SERIES, station.process_period['start'], station.process_period['end'])
-
-        # -------------------------------------------------------------------------
-        # climatology monthly without whiskers
-
-        name_graph = _("Multiyear_climatology_(monthly)_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
-
-        fig = pyplot.figure(figsize=(8, 5.5))
-        ax = fig.add_subplot(111)
-
-        ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
-
-        type_var = env.var_D.TYPE_SERIES
-
-        ## X
-        ax.set_xlabel(_('Months'), env.globals_vars.graphs_axis_properties())
-        xticks(x, x_labels)
-
-        ## Y
-        # get units os type of var D or I
-        ax.set_ylabel(unicode('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[mean]'), 'utf-8'), env.globals_vars.graphs_axis_properties())
-
-        #pyplot.subplots_adjust(bottom=0.2)
-        ax.grid(True)
-        ax.autoscale(tight=True)
-
-        if type_var not in types_var_D:
-            # default for generic type for var D
-            #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
-            ax.plot(x, y_mean, '-o', color='#638786', mec='#638786', linewidth=2.5, markersize=8)
-            zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
-        else:
-            if types_var_D[type_var]['graph'] == 'bar':
-                bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
-                #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
-                zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
-            else:
-                #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=TYPES_VAR_D[type_var]['color'],
-                #    mec=TYPES_VAR_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
-                ax.plot(x, y_mean, '-o', color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color'], linewidth=2.5, markersize=8)
-                zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
-
-
-        # labels on both sides
-        #ax.tick_params(labeltop=False, labelright=True)
-
-        fig.tight_layout()
-
-        # save image
-        image = os.path.join(station_climatology_path, name_graph + '.png')
-        pyplot.savefig(image, dpi=75)
-
-        # stamp logo
-        watermarking.logo(image)
-
-        pyplot.close('all')
-
-        # -------------------------------------------------------------------------
-        # climatology monthly with whiskers
-
-        name_graph = _("Multiyear_climatology_(monthly+whiskers)_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
-
-        fig = pyplot.figure(figsize=(8, 5.5))
-        ax = fig.add_subplot(111)
-
-        ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
-
-        type_var = env.var_D.TYPE_SERIES
-
-        ## X
-        ax.set_xlabel(_('Months'), env.globals_vars.graphs_axis_properties())
-        xticks(x, x_labels)
-
-        ## Y
-        # get units os type of var D or I
-        ax.set_ylabel(unicode(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
-
-        #pyplot.subplots_adjust(bottom=0.2)
-        ax.grid(True)
-        ax.autoscale(tight=True)
-
-        if type_var not in types_var_D:
-            # default for generic type for var D
-            ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
-            #bar(x, y_mean, align='center', color='#638786')
-            zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
-        else:
-            if types_var_D[type_var]['graph'] == 'bar':
-                bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
-                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
-                zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
-            else:
-                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=types_var_D[type_var]['color'],
-                    mec=types_var_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
-                #ax.plot(x, y_mean, TYPES_VAR_D[type_var]['graph'], color=TYPES_VAR_D[type_var]['color'])
-                zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
-
-
-        # labels on both sides
-        #ax.tick_params(labeltop=False, labelright=True)
-
-        fig.tight_layout()
-        # save image
-        image = os.path.join(station_climatology_path, name_graph + '.png')
-        pyplot.savefig(image, dpi=75)
-
-        # stamp logo
-        watermarking.logo(image)
-
-        pyplot.close('all')
-
-        # -------------------------------------------------------------------------
-        # climatology monthly table (csv)
-
-        name_csv_table = _("Multiyear_climatology_table_{0}_{1}_{2}.csv").format(station.code, station.name, env.var_D.TYPE_SERIES)
-        open_file = open(os.path.join(station_climatology_path,name_csv_table), 'w')
-        csv_table = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
-
-        # print header
-        header = [''] + x_labels
-        csv_table.writerow(header)
-
-        # max values
-        csv_table.writerow( [_('max')] + [ output.number(x + y_max[i]) for i,x in enumerate(y_mean) ] )
-
-        # mean values
-        csv_table.writerow( [_('mean')] + [ output.number(x) for x in y_mean ] )
-
-        # min values
-        csv_table.writerow( [_('min')] + [ output.number(x - y_min[i]) for i,x in enumerate(y_mean) ] )
-
-        open_file.close()
-        del csv_table
-
-        # -------------------------------------------------------------------------
-        ## for climatology graphs, every 5, 10 or 15 days based to analysis interval
-
-        if env.var_D.is_daily() and not env.config_run.settings['analysis_interval'] == "trimester":
-            y_mean = []
-            y_max = [] # value to add to mean for max value
-            y_min = [] # value to subtract to mean for min value
+        if freq not in ['monthly', 'bimonthly', 'trimonthly'] and env.var_D.is_daily():
             range_analysis_interval = get_range_analysis_interval()
             for month in range(1, 13):
                 for day in range_analysis_interval:
@@ -930,12 +765,12 @@ def climatology(stations_list):
                     range_analysis_max = []
                     range_analysis_min = []
                     # iteration for all years inside process period
-                    for year in range(station.process_period['start'], station.process_period['end']+1):
+                    for year in range(_station.process_period['start'], _station.process_period['end']+1):
                         # test if day exist in month and year
                         if day > monthrange(year, month)[1]:
                             continue
 
-                        values = get_values_in_range_analysis_interval(station,'D', year, month, day)
+                        values = get_values_in_range_analysis_interval(_station.var_D, year, month, day)
                         values = array.clean(values)
                         range_analysis_mean.append(array.mean(values))
                         range_analysis_max.append(array.maximum(values))
@@ -945,12 +780,233 @@ def climatology(stations_list):
                     y_max.append(array.mean(range_analysis_max) - y_mean[-1])
                     y_min.append(y_mean[-1] - array.mean(range_analysis_min))
 
+            del _station
+            return y_min, y_mean, y_max
+
+
+    for station in stations_list:
+
+
+        # -------------------------------------------------------------------------
+        ## for climatology table
+        line = [station.code, station.name, output.number(station.lat), output.number(station.lon),
+                output.number(station.alt), '{0}-{1}'.format(station.process_period['start'],
+                                                             station.process_period['end'])]
+
+        y_min, y_mean, y_max = get_climatology_data(station, 'monthly')
+
+        csv_climatology_table.writerow(line + [output.number(i) for i in y_mean])
+
+        if not env.config_run.settings['graphics']:
+            continue
+
+        # -------------------------------------------------------------------------
+        # Mutliyear climatology monthly, bimonthly and trimonthly
+        #
+        #  - climatology monthly only for data daily and monthly
+        #  - climatology bimonthly only for data or analysis interval bimonthly
+        #  - climatology trimonthly only for data or analysis interval trimonthly
+
+        climatology_n_monthly_list = []
+        vars_n_monthly = {}
+        if env.var_D.is_daily() or env.var_D.is_monthly():
+            vars_n_monthly['freq'] = 'monthly'
+            vars_n_monthly['label'] = _('monthly')
+            vars_n_monthly['x_labels'] = [output.months_in_initials(i) for i in range(12)]
+            vars_n_monthly['x_rotation'] = 'horizontal'
+            climatology_n_monthly_list.append(vars_n_monthly)
+        vars_n_monthly = {}
+        if env.config_run.settings['analysis_interval'] in ['bimonthly', 'trimonthly']:
+            vars_n_monthly['freq'] = env.config_run.settings['analysis_interval']
+            if env.config_run.settings['analysis_interval'] in ['bimonthly']:
+                vars_n_monthly['label'] = _('bimonthly')
+                vars_n_monthly['x_rotation'] = 'vertical'
+            if env.config_run.settings['analysis_interval'] in ['trimonthly']:
+                vars_n_monthly['label'] = _('trimonthly')
+                vars_n_monthly['x_rotation'] = 'horizontal'
+            vars_n_monthly['x_labels'] = [output.analysis_interval_text(i) for i in range(1,13)]
+            climatology_n_monthly_list.append(vars_n_monthly)
+
+        for climatology_n_monthly in climatology_n_monthly_list:
+
+            # first check if the variable need to be convert
+            # if env.config_run.settings['analysis_interval'] in ['bimonthly', 'trimonthly']:
+            y_min, y_mean, y_max = get_climatology_data(station, climatology_n_monthly['freq'])
+
+            # -------------------------------------------------------------------------
+            # for climatology graphs, N-month (base)
+
+            station_climatology_path = os.path.join(graphs_dir, station.code +'-'+station.name, _('Climatology'))
+
+            output.make_dirs(station_climatology_path)
+
+            x = range(1, 13)
+            x_labels = climatology_n_monthly['x_labels']
+
+            # do that matplotlib plot zeros in extreme values
+            for value in y_mean:
+                if value == 0:
+                    y_mean[y_mean.index(value)] = 0.0001
+
+            title=_("Multiyear climatology ({0})\n{1} {2} - {3} ({4}-{5})").format(climatology_n_monthly['label'],
+                    station.code, station.name, env.var_D.TYPE_SERIES, station.process_period['start'],
+                    station.process_period['end'])
+
+            # -------------------------------------------------------------------------
+            # climatology N-monthly without whiskers
+
+            name_graph = _("Multiyear_climatology_({0})_{1}_{2}_{3}").format(climatology_n_monthly['label'],
+                            station.code, station.name, env.var_D.TYPE_SERIES)
+
+            fig = pyplot.figure(figsize=(8, 5.5))
+            ax = fig.add_subplot(111)
+
+            ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
+
+            type_var = env.var_D.TYPE_SERIES
+
+            ## X
+            if climatology_n_monthly['freq'] == 'monthly':
+                ax.set_xlabel(_('Months'), env.globals_vars.graphs_axis_properties())
+            else:
+                ax.set_xlabel(climatology_n_monthly['label'].capitalize(), env.globals_vars.graphs_axis_properties())
+
+            xticks(x, x_labels, rotation=climatology_n_monthly['x_rotation'])
+
+            ## Y
+            # get units os type of var D or I
+            ax.set_ylabel(unicode('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[mean]'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+
+            #pyplot.subplots_adjust(bottom=0.2)
+            ax.grid(True)
+            ax.autoscale(tight=True)
+
+            if type_var not in types_var_D:
+                # default for generic type for var D
+                #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
+                ax.plot(x, y_mean, '-o', color='#638786', mec='#638786', linewidth=2.5, markersize=8)
+                zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
+            else:
+                if types_var_D[type_var]['graph'] == 'bar':
+                    bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
+                    #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
+                    zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
+                else:
+                    #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=TYPES_VAR_D[type_var]['color'],
+                    #    mec=TYPES_VAR_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
+                    ax.plot(x, y_mean, '-o', color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color'], linewidth=2.5, markersize=8)
+                    zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
+
+            # labels on both sides
+            #ax.tick_params(labeltop=False, labelright=True)
+
+            fig.tight_layout()
+
+            # save image
+            image = os.path.join(station_climatology_path, name_graph + '.png')
+            pyplot.savefig(image, dpi=75)
+
+            # stamp logo
+            watermarking.logo(image)
+
+            pyplot.close('all')
+
+            # -------------------------------------------------------------------------
+            # climatology N-monthly with whiskers
+
+            name_graph = _("Multiyear_climatology_({0}+whiskers)_{1}_{2}_{3}").format(climatology_n_monthly['label'],
+                station.code, station.name, env.var_D.TYPE_SERIES)
+
+            fig = pyplot.figure(figsize=(8, 5.5))
+            ax = fig.add_subplot(111)
+
+            ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
+
+            type_var = env.var_D.TYPE_SERIES
+
+            ## X
+            if climatology_n_monthly['freq'] == 'monthly':
+                ax.set_xlabel(_('Months'), env.globals_vars.graphs_axis_properties())
+            else:
+                ax.set_xlabel(climatology_n_monthly['label'].capitalize(), env.globals_vars.graphs_axis_properties())
+
+            xticks(x, x_labels, rotation=climatology_n_monthly['x_rotation'])
+
+            ## Y
+            # get units os type of var D or I
+            ax.set_ylabel(unicode(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
+
+            #pyplot.subplots_adjust(bottom=0.2)
+            ax.grid(True)
+            ax.autoscale(tight=True)
+
+            if type_var not in types_var_D:
+                # default for generic type for var D
+                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
+                #bar(x, y_mean, align='center', color='#638786')
+                zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
+            else:
+                if types_var_D[type_var]['graph'] == 'bar':
+                    bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
+                    ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
+                    zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
+                else:
+                    ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=types_var_D[type_var]['color'],
+                        mec=types_var_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
+                    #ax.plot(x, y_mean, TYPES_VAR_D[type_var]['graph'], color=TYPES_VAR_D[type_var]['color'])
+                    zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
+
+            # labels on both sides
+            #ax.tick_params(labeltop=False, labelright=True)
+
+            fig.tight_layout()
+            # save image
+            image = os.path.join(station_climatology_path, name_graph + '.png')
+            pyplot.savefig(image, dpi=75)
+
+            # stamp logo
+            watermarking.logo(image)
+
+            pyplot.close('all')
+
+            # -------------------------------------------------------------------------
+            # climatology N-monthly table (csv)
+
+            name_csv_table = _("Multiyear_climatology_table_{0}_{1}_{2}_{3}.csv")\
+                .format(climatology_n_monthly['label'], station.code, station.name, env.var_D.TYPE_SERIES)
+            open_file = open(os.path.join(station_climatology_path,name_csv_table), 'w')
+            csv_table = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
+
+            # print header
+            header = [''] + x_labels
+            csv_table.writerow(header)
+
+            # max values
+            csv_table.writerow( [_('max')] + [ output.number(x + y_max[i]) for i,x in enumerate(y_mean) ] )
+
+            # mean values
+            csv_table.writerow( [_('mean')] + [ output.number(x) for x in y_mean ] )
+
+            # min values
+            csv_table.writerow( [_('min')] + [ output.number(x - y_min[i]) for i,x in enumerate(y_mean) ] )
+
+            open_file.close()
+            del csv_table
+
+        # -------------------------------------------------------------------------
+        # For climatology graphs based to analysis interval:
+        # 5, 10 or 15 days climatology -> for data daily
+
+        if env.var_D.is_daily() and env.config_run.settings['analysis_interval'] not in ['monthly', 'bimonthly', 'trimonthly']:
+
+            y_min, y_mean, y_max = get_climatology_data(station, 'daily')
+
             x = range(1, len(y_mean)+1)
             x_step_label = len(y_mean)/12
             x_labels = []
             for i in range(len(y_mean)):
                 if i%x_step_label == 0:
-                    x_labels.append(output.month_in_initials(i/x_step_label))
+                    x_labels.append(output.months_in_initials(i/x_step_label))
                 else:
                     x_labels.append('')
 
@@ -1083,7 +1139,7 @@ def climatology(stations_list):
             header = ['']
             for month in range(1, 13):
                 for day in get_range_analysis_interval():
-                    header.append(output.month_in_initials(month-1) +' '+str(day))
+                    header.append(output.analysis_interval_text(month, day))
 
             csv_table.writerow(header)
 
@@ -1104,15 +1160,14 @@ def climatology(stations_list):
 
 
 def global_common_process(stations_list, var):
-    """
-    Calculate the global common period of all stations
+    """Calculate the global common period of all stations
     based on all common process period of all series var D or I
 
     :arg:
         stations: list of all stations
         var: 'D' or 'I'
     :return:
-        chronological order list of all date (monthly or daily)
+        chronological order list of all date (N-monthly or daily)
         inside of global common process
     """
 
@@ -1306,21 +1361,18 @@ def outliers(stations_list):
     original_freq_data_var_D = env.var_D.FREQUENCY_DATA
     original_freq_data_var_I = env.var_I.FREQUENCY_DATA
 
-
-    def clone_and_transform_station(station, convert_var_D_to_monthly, convert_var_I_to_monthly):
+    def clone_and_transform_station(station, convert_var_D_to, convert_var_I_to):
         station_copy = copy.deepcopy(station)
-        if convert_var_D_to_monthly:
-            station_copy.var_D.daily2monthly()
-            env.var_D.set_FREQUENCY_DATA("monthly", check=False)
+        if convert_var_D_to:
+            station_copy.var_D.convert2(convert_var_D_to)
+            env.var_D.set_FREQUENCY_DATA(convert_var_D_to, check=False)
             station_copy.var_D.data_and_null_in_process_period(station)
-        if convert_var_I_to_monthly:
-            station_copy.var_I.daily2monthly()
-            env.var_I.set_FREQUENCY_DATA("monthly", check=False)
+        if convert_var_I_to:
+            station_copy.var_I.convert2(convert_var_I_to)
+            env.var_I.set_FREQUENCY_DATA(convert_var_I_to, check=False)
             station_copy.var_I.data_and_null_in_process_period(station)
-        # temporally change global STATE_OF_DATA
-        env.globals_vars.STATE_OF_DATA = get_state_of_data()
-        return station_copy
 
+        return station_copy
 
     for station in stations_list:
 
@@ -1391,14 +1443,12 @@ def outliers(stations_list):
         outliers_station['whiskers_above'] = boxplot_station['whiskers'][1].get_data()[1][1]
 
         ## prepare station for special case
-        if env.var_D.is_daily() and env.var_I.is_daily() and env.config_run.settings['analysis_interval'] == "trimester":
-            station_copy = clone_and_transform_station(station, convert_var_D_to_monthly=True, convert_var_I_to_monthly=True)
-        elif env.var_D.is_daily() and env.var_I.is_monthly() and env.config_run.settings['analysis_interval'] == "trimester":
-            station_copy = clone_and_transform_station(station, convert_var_D_to_monthly=True, convert_var_I_to_monthly=False)
-        elif env.var_D.is_monthly() and env.var_I.is_daily():
-            station_copy = clone_and_transform_station(station, convert_var_D_to_monthly=False, convert_var_I_to_monthly=True)
+        if env.config_run.settings['analysis_interval'] in ['monthly', 'bimonthly', 'trimonthly']:
+            station_copy = clone_and_transform_station(station,
+                                                       convert_var_D_to=env.config_run.settings['analysis_interval'],
+                                                       convert_var_I_to=env.config_run.settings['analysis_interval'])
         else:
-            station_copy = clone_and_transform_station(station, convert_var_D_to_monthly=False, convert_var_I_to_monthly=False)
+            station_copy = clone_and_transform_station(station, convert_var_D_to=False, convert_var_I_to=False)
 
         calculate_time_series(station_copy, makes_files=False)
 
@@ -1424,44 +1474,35 @@ def outliers(stations_list):
             # 6.categorizar el atípico segun (5)
             #
             # Tener en cuenta que:
-            # * cuando la variable dependiente es mensual y la independiente diaria, la variable independiente es
-            #   convertida a mensual antes de evaluar las fases del fenómeno de los atípicos
-            # * si la variable dependiente es diaria y la independiente mensual, la variable dependiente se convierte
-            #   a mensual si el intervalo de análisis es trimestral antes de evaluar las fases del fenómeno de los atípicos
-            # * si las dos variables son diarias y el intervalo de análisis es trimestral, ambas variables son
-            #   convertidas a mensuales antes de evaluar las fases del fenómeno de los atípicos
+            # * las dos variables son convertidas al intervalo de analisis excepto cuando el intervalo de
+            #   analisis es diario
 
+            # check if the value is an outliers
             if (value < outliers_station['whiskers_below'] or
                 value > outliers_station['whiskers_above']) and \
                 not env.globals_vars.is_valid_null(value):
+                
                 # date of outlier
                 outlier_date = station.var_D.date_in_process_period[index]
 
-                if env.config_run.settings['analysis_interval'] == "trimester":
+                ## categorize the outlier based on category of var I
+
+                if env.config_run.settings['analysis_interval'] in ['monthly', 'bimonthly', 'trimonthly']:
                     # get I values for outliers date
                     station.var_I.specific_values = time_series.get_specific_values(station_copy, 'var_I', 0, outlier_date.month)
                     # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
-                    values_var_I = get_values_in_range_analysis_interval(station_copy, 'I', outlier_date.year, outlier_date.month, None, 0)
+                    values_var_I = get_values_in_range_analysis_interval(station_copy.var_I, outlier_date.year, outlier_date.month, None, 0)
                 else:
                     # get the corresponding start day of analysis interval
                     day = locate_day_in_analysis_interval(outlier_date.day)
                     # get I values for outliers date
                     station.var_I.specific_values = time_series.get_specific_values(station_copy, 'var_I', 0, outlier_date.month, day)
                     # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
-                    values_var_I = get_values_in_range_analysis_interval(station_copy, 'I', outlier_date.year, outlier_date.month, day, 0)
-
-                # SPECIAL CASE 1: when var_I is ONI1, ONI2 or CAR, don't calculate trimesters because the ONI and CAR
-                # series was calculated by trimesters from original source
-                if original_freq_data_var_I == 'monthly' and env.var_I.TYPE_SERIES in ['ONI1', 'ONI2', 'CAR']:
-                    # take the first month (in this case, it is the mean of trimester)
-                    values_var_I = values_var_I[0]
+                    values_var_I = get_values_in_range_analysis_interval(station_copy.var_I, outlier_date.year, outlier_date.month, day, 0)
 
                 # get the mean or sum (based on mode_calculation_series_I) of all values of var I
                 # in analysis interval in the corresponding period of outlier (var_D)
-                if env.config_run.settings['mode_calculation_series_I'] == 'mean':
-                    value_var_I = array.mean(values_var_I)
-                if env.config_run.settings['mode_calculation_series_I'] == 'accumulate':
-                    value_var_I = sum(array.clean(values_var_I))
+                value_var_I = time_series.calculate_specific_values_of_time_series(station.var_I, values_var_I)
 
                 # get categorize of phenomenon for the value_var_I
                 category_of_phenomenon = get_label_of_var_I_category(value_var_I, station)
@@ -1559,7 +1600,7 @@ def outliers(stations_list):
     header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD'), _('WHISKERS BELOW'),
               _('WHISKERS ABOVE'), _('NUM. OUTLIERS'),'']
 
-    header_outliers = [_('DATE'), _('VALUE'), _('PHEN_CAT')]
+    header_outliers = [_('DATE'), _('VALUE'), _('PHEN_CAT*')]
 
     header = header + header_outliers*num_max_outliers
 
@@ -1586,17 +1627,22 @@ def outliers(stations_list):
 
         for outlier in outliers_station['outliers']:
 
-            outliers_station_line.append('{0}-{1}-{2}'.format(outlier[0].year,outlier[0].month,outlier[0].day))
+            outliers_station_line.append('{0}-{1}-{2}'.format(outlier[0].year,
+                                                              output.fix_zeros(outlier[0].month),
+                                                              output.fix_zeros(outlier[0].day)))
             outliers_station_line.append(output.number(outlier[1]))
             outliers_station_line.append(outlier[2])
             #outliers_station_line.append('|')
 
         csv_file_D.writerow(outliers_station_line)
 
+    # print footnote
+    csv_file_D.writerow([])
+    csv_file_D.writerow([_("*Calculated based on data {0}").format(env.config_run.settings['analysis_interval'])])
+
     open_file_D.close()
     del csv_file_D
 
-    # return to original global STATE_OF_DATA variable
+    # return to original FREQUENCY_DATA of the two variables
     env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
     env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
-    env.globals_vars.STATE_OF_DATA = get_state_of_data()
