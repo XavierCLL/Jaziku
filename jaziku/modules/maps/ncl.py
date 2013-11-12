@@ -52,11 +52,8 @@ def multi_text_centered(multi_text):
         if add_n_spaces != 0:
             add_n_spaces += 1
         lines_formated.append((' '*add_n_spaces)+line.strip()+(' '*add_n_spaces))
-    print n_chars_in_line
-    print lines_formated
-    print '~C~'.join(lines_formated)
-    return '\"'+'~C~'.join(lines_formated)+'\"'
 
+    return '\"'+'~C~'.join(lines_formated)+'\"'
 
 
 def make_ncl_probabilistic_map(grid, base_path_file, globals_vars):
@@ -124,6 +121,7 @@ def make_ncl_probabilistic_map(grid, base_path_file, globals_vars):
         return ncl_file
     except Exception as error:
         print error
+
 
 def make_ncl_deterministic_map(grid, base_path_file, globals_vars):
     try:
