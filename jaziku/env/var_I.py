@@ -332,7 +332,8 @@ THRESHOLDS_3_CATEGORIES = {
                    'normal_inclusive': False},
 
     'MEI':        {'daily': None,
-                   'bimonthly': [-0.1,0.1]},
+                   'bimonthly': [-0.1,0.1],
+                   'normal_inclusive': False},
 
     'OLR':       {'daily': [-0.1,0.2],
                    'monthly': [-0.1,0.2],
@@ -411,7 +412,7 @@ THRESHOLDS_7_CATEGORIES = {
                    'trimonthly': [-23,-13,-8,8,13,23],
                    'normal_inclusive':False},
 
-    # 'MEI'  TODO: define the threshold for 7 cat
+    # 'MEI'  TODO: define the threshold for 7 cat, while by default
 
     'ASST12':    {'daily': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'],
                    'monthly': ['sd-1','sd-0.6','sd-0.4','sd0.4','sd0.6','sd1'],

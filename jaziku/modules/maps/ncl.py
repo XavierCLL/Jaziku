@@ -20,8 +20,10 @@
 
 import os
 import imp
+from math import ceil
 
 from jaziku import env
+
 
 class MapProperties(object):
     pass
@@ -33,6 +35,28 @@ def range_color_bar(inf, sup, step):
     for i in range(0, int(n) + 1):
         array.append(str(round(inf + i * step, 3)))
     return ','.join(array)
+
+
+def multi_text_centered(multi_text):
+    lines = multi_text.split('~C~')
+
+    n_chars_in_line = []
+    for line in lines:
+        n_chars_in_line.append(len(line))
+
+    max_chars = max(n_chars_in_line)
+
+    lines_formated = []
+    for line in lines:
+        add_n_spaces = int(ceil((max_chars - len(line))/2.0))
+        if add_n_spaces != 0:
+            add_n_spaces += 1
+        lines_formated.append((' '*add_n_spaces)+line.strip()+(' '*add_n_spaces))
+    print n_chars_in_line
+    print lines_formated
+    print '~C~'.join(lines_formated)
+    return '\"'+'~C~'.join(lines_formated)+'\"'
+
 
 
 def make_ncl_probabilistic_map(grid, base_path_file, globals_vars):
@@ -50,34 +74,27 @@ def make_ncl_probabilistic_map(grid, base_path_file, globals_vars):
         # set other properties of ncl script for this map
         map_properties.particular_properties_probabilistic_map = grid.particular_properties_probabilistic_map
 
-        if "_" in grid.date:
-            map_properties.date = grid.date.replace("_", " ")
-        else:
-            map_properties.date = grid.date
+        map_properties.date = grid.date
 
         if grid.if_running["climate"]:
-            map_properties.title = _('''"Scenario of affectation of the variable {typeVarD}~C~    under variations of {typeVarI} to lag {lag} in {date}"''')\
-                     .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date)
+            map_properties.title = multi_text_centered(_("Scenario of affectation of the {typeVarD} variable~C~under variations of {typeVarI} to lag {lag} in {date}")\
+                     .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date))
             map_properties.color_bar_levels = "(/{array}/)".format(array=range_color_bar(-100, 100, 2.5))
             map_properties.color_bar_step = 2.5
             map_properties.color_bar_title_on = "True"
             map_properties.colormap = "Blue-Green-Red"
             map_properties.units = '''"%"'''
         if grid.if_running["correlation"]:
-            map_properties.title = _('''"Lineal correlation between the variable {typeVarI}~C~              and {typeVarD} to lag {lag} in {date}"''')\
-                     .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date)
+            map_properties.title = multi_text_centered(_("Lineal correlation between {typeVarI} variable~C~and {typeVarD} to lag {lag} in {date}")\
+                .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date))
             map_properties.color_bar_levels = "(/{array}/)".format(array=range_color_bar(-1, 1, 0.025))
             map_properties.color_bar_step = 0.025
             map_properties.color_bar_title_on = "False"
             map_properties.colormap = "Green-White-Purple"
             map_properties.units = '''"Pearson"'''
         if grid.if_running["forecast"]:
-            if env.config_run.settings['analysis_interval'] == 'trimester':
-                map_properties.title = _('''"   Affectation forecast of the variable {typeVarD}~C~under variations of {typeVarI} to lag {lag} in {date}"''')\
-                         .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date)
-            else:
-                map_properties.title = _('''"Affectation forecast of the variable {typeVarD}~C~  under variations of {typeVarI} to lag {lag} in {date}"''')\
-                         .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date)
+            map_properties.title = multi_text_centered(_("Affectation forecast of the {typeVarD} variable~C~under variations of {typeVarI} to lag {lag} in {date}")\
+                .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date))
             map_properties.color_bar_levels = "(/{array}/)".format(array=range_color_bar(-100, 100, 2.5))
             map_properties.color_bar_step = 2.5
             map_properties.color_bar_title_on = "True"
@@ -131,26 +148,19 @@ def make_ncl_deterministic_map(grid, base_path_file, globals_vars):
         # set other properties of ncl script for this map
         map_properties.particular_properties_deterministic_map = grid.particular_properties_deterministic_map
 
-        if "_" in grid.date:
-            map_properties.date = grid.date.replace("_", " ")
-        else:
-            map_properties.date = grid.date
+        map_properties.date = grid.date
 
         if grid.if_running["climate"]:
-            map_properties.title = _('''"Scenario of affectation of the variable {typeVarD}~C~ under variations of {typeVarI} to lag {lag} in {date}"''')\
-                     .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date)
+            map_properties.title = multi_text_centered(_("Scenario of affectation of the {typeVarD} variable~C~under variations of {typeVarI} to lag {lag} in {date}")\
+                .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date))
 
         if grid.if_running["correlation"]:
-            map_properties.title = _('''"Lineal correlation between the variable {typeVarI}~C~             and {typeVarD} to lag {lag} in {date}"''')\
-                     .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date)
+            map_properties.title = multi_text_centered(_("Lineal correlation between {typeVarI} variable~C~and {typeVarD} to lag {lag} in {date}")\
+                .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date))
 
         if grid.if_running["forecast"]:
-            if env.config_run.settings['analysis_interval'] != 'trimester':
-                map_properties.title = _('''"    Affectation forecast of the variable {typeVarD}~C~under variations of {typeVarI} to lag {lag} in {date}"''')\
-                         .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date)
-            else:
-                map_properties.title = _('''"      Affectation forecast of the variable {typeVarD}~C~under variations of {typeVarI} to lag {lag} in {date}"''')\
-                         .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date)
+            map_properties.title = multi_text_centered(_("Affectation forecast of the {typeVarD} variable~C~under variations of {typeVarI} to lag {lag} in {date}")\
+                .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date))
 
         ### get ncl file in raw
         if grid.need_particular_ncl_script_deterministic_map and os.path.isfile(os.path.join(grid.shape_path, "ncl_script_deterministic_map.py")):
