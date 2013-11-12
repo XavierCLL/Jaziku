@@ -99,8 +99,8 @@ for year in range(years):
                                             "(max value for check var I [none or value])",
                                             "(threshold below [default or personal threshold])",
                                             "(threshold above [default or personal threshold])",
-                                            "(analysis interval [5days,10days,15days or trimester])",
-                                            "(forecast values: 9 values)", "(forecast date [trimester or month/day])"])
+                                            "(analysis interval [5days,10days,15days or trimonthly])",
+                                            "(forecast values: 9 values)", "(forecast date [trimonthly or month/day])"])
 
         for month in range(12):
 

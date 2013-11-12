@@ -4,12 +4,6 @@
 Incoming Plans / TODO
 =====================
 
-0.7 (**2013-xx-xx**)
---------------------
-- Add month and two-months to analysis resolution
-- Include MEI index for bimonthly analysis
-- Include ARH amazon index
-
 0.8 (**2013-xx-xx**)
 --------------------
 :Exploratory data analysis consolidation:
@@ -44,6 +38,8 @@ Others TODO
 
 To be included
 --------------
+- use the global_common_process for maps (climate, correlation, forecast)
+  and put the global_common_process in subtitles inside maps
 - adjust the PPT var for accumulate the data daily by default
 - to able to change the labels for var D
 - include the shapes maps for protected regions of Colombia
