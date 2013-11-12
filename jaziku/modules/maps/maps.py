@@ -389,7 +389,7 @@ def process(grid):
                                                 output.analysis_interval_text(month, range_analysis_interval[day], join_result=True),
                                                 label)
 
-                                grid.date = output.analysis_interval_text(month, range_analysis_interval[day]),
+                                grid.date = output.analysis_interval_text(month, range_analysis_interval[day])
                                 grid.lag = lag
 
                                 if map_type == _("probabilistic"):
