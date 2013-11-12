@@ -42,13 +42,17 @@ def multi_text_centered(multi_text):
 
     n_chars_in_line = []
     for line in lines:
-        n_chars_in_line.append(len(line))
+        copy_line = str(line)
+        copy_line  = copy_line.replace("\"","").replace("+", "").replace("acute","").replace("tilde","")
+        n_chars_in_line.append(len(copy_line))
 
     max_chars = max(n_chars_in_line)
 
     lines_formated = []
     for line in lines:
-        add_n_spaces = int(ceil((max_chars - len(line))/2.0))
+        copy_line = str(line)
+        copy_line  = copy_line.replace("\"","").replace("+", "").replace("acute","").replace("tilde","")
+        add_n_spaces = int(ceil((max_chars - len(copy_line))/2.0))
         if add_n_spaces != 0:
             add_n_spaces += 1
         lines_formated.append((' '*add_n_spaces)+line.strip()+(' '*add_n_spaces))
