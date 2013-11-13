@@ -261,3 +261,14 @@ def get_categories_labels_var_I_list():
              settings['categories_labels_var_I']['above2'],
              settings['categories_labels_var_I']['above3']]
     return None
+
+def get_analysis_interval(): # todo replace the 'analysis_interval_i18n'
+    global settings
+
+    _freq_data ={'5days': _('5days'),
+                 '10days': _('5days'),
+                 '15days': _('5days'),
+                 'monthly': _('monthly'),
+                 'bimonthly': _('bimonthly'),
+                 'trimonthly': _('trimonthly')}
+    return _freq_data[settings['analysis_interval']]

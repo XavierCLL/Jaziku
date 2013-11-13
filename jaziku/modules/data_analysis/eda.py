@@ -714,7 +714,7 @@ def climatology(stations_list):
     if env.var_D.is_daily() or env.var_D.is_monthly():
         filename_climatology_table = _('Climatology_table_{0}_(monthly)').format(env.var_D.TYPE_SERIES)+'.csv'
     else:
-        filename_climatology_table = _('Climatology_table_{0}_({1})').format(env.var_D.TYPE_SERIES,env.config_run.settings['analysis_interval'])+'.csv'
+        filename_climatology_table = _('Climatology_table_{0}_({1})').format(env.var_D.TYPE_SERIES,env.config_run.settings['analysis_interval_i18n'])+'.csv'
     # climatology table file
     open_file_climatology_table\
         = open(os.path.join(graphs_dir, filename_climatology_table), 'w')
@@ -1641,7 +1641,7 @@ def outliers(stations_list):
 
     # print footnote
     csv_file_D.writerow([])
-    csv_file_D.writerow([_("*Calculated based on data {0}").format(env.config_run.settings['analysis_interval'])])
+    csv_file_D.writerow([_("*Calculated based on data {0}").format(env.config_run.get_analysis_interval())])
 
     open_file_D.close()
     del csv_file_D

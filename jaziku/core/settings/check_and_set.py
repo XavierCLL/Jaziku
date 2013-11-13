@@ -442,7 +442,7 @@ def configuration_run():
                         _("The date for forecast '{0}' is invalid, must be a\n"
                           "valid characters for {1} {2}.")
                         .format(_orig,
-                                env.config_run.settings['analysis_interval'],
+                                env.config_run.get_analysis_interval(),
                                 example))
             elif env.config_run.settings['analysis_interval'] in ['5days', '10days', '15days']:
                 if env.config_run.settings['analysis_interval'] in ['5days']:
@@ -457,7 +457,7 @@ def configuration_run():
                       "the month is a integer and the day is a start day of\n"
                       "interval analysis {2}.")
                     .format(env.config_run.settings['forecast_date'],
-                            env.config_run.settings['analysis_interval'], example))
+                            env.config_run.get_analysis_interval(), example))
 
         if env.config_run.settings['analysis_interval'] in ['5days', '10days', '15days', 'monthly']:
             if not (1 <= forecast_month <= 12):
