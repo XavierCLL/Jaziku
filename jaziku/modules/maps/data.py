@@ -392,8 +392,8 @@ def forecast_data_for_maps(station):
 
         if env.config_run.settings['class_category_analysis'] == 3:
             csv_file.writerow([station.code,
-                               output.number(station.lat, 4),
-                               output.number(station.lon, 4),
+                               output.number(station.lat),
+                               output.number(station.lon),
                                env.config_run.settings['forecast_date']['text'],
                                output.number(station.prob_var_D[lag]['below']),
                                output.number(station.prob_var_D[lag]['normal']),
@@ -404,8 +404,8 @@ def forecast_data_for_maps(station):
 
         if env.config_run.settings['class_category_analysis'] == 7:
             csv_file.writerow([station.code,
-                               output.number(station.lat, 4),
-                               output.number(station.lon, 4),
+                               output.number(station.lat),
+                               output.number(station.lon),
                                env.config_run.settings['forecast_date']['text'],
                                output.number(station.prob_var_D[lag]['below3']),
                                output.number(station.prob_var_D[lag]['below2']),

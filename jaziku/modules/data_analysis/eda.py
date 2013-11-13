@@ -100,22 +100,22 @@ def main(stations_list):
         eda_var_D = [
             station.code,
             station.name,
-            output.number(station.lat, 4),
-            output.number(station.lon, 4),
-            output.number(station.alt, 4),
+            output.number(station.lat),
+            output.number(station.lon),
+            output.number(station.alt),
             '{0}-{1}'.format(station.process_period['start'], station.process_period['end']),
             len(station.var_D.data_in_process_period),
             station.var_D.size_data,
             station.var_D.nulls_in_process_period,
-            output.number(station.var_D.maximum, 4),
-            output.number(station.var_D.minimum, 4),
-            output.number(station.var_D.average, 4),
-            output.number(station.var_D.median, 4),
-            output.number(station.var_D.std_dev, 4),
-            output.number(station.var_D.skewness, 4),
-            output.number(station.var_D.variance, 4),
-            output.number(station.var_D.kurtosis, 4),
-            output.number(station.var_D.coef_variation, 4)
+            output.number(station.var_D.maximum),
+            output.number(station.var_D.minimum),
+            output.number(station.var_D.average),
+            output.number(station.var_D.median),
+            output.number(station.var_D.std_dev),
+            output.number(station.var_D.skewness),
+            output.number(station.var_D.variance),
+            output.number(station.var_D.kurtosis),
+            output.number(station.var_D.coef_variation)
         ]
 
         csv_file_D.writerow(eda_var_D)
@@ -124,22 +124,22 @@ def main(stations_list):
         eda_var_I = [
             station.code,
             station.name,
-            output.number(station.lat, 4),
-            output.number(station.lon, 4),
-            output.number(station.alt, 4),
+            output.number(station.lat),
+            output.number(station.lon),
+            output.number(station.alt),
             '{0}-{1}'.format(station.process_period['start'], station.process_period['end']),
             len(station.var_I.data_in_process_period),
             station.var_I.size_data,
             station.var_I.nulls_in_process_period,
-            output.number(station.var_I.maximum, 4),
-            output.number(station.var_I.minimum, 4),
-            output.number(station.var_I.average, 4),
-            output.number(station.var_I.median, 4),
-            output.number(station.var_I.std_dev, 4),
-            output.number(station.var_I.skewness, 4),
-            output.number(station.var_I.variance, 4),
-            output.number(station.var_I.kurtosis, 4),
-            output.number(station.var_I.coef_variation, 4)
+            output.number(station.var_I.maximum),
+            output.number(station.var_I.minimum),
+            output.number(station.var_I.average),
+            output.number(station.var_I.median),
+            output.number(station.var_I.std_dev),
+            output.number(station.var_I.skewness),
+            output.number(station.var_I.variance),
+            output.number(station.var_I.kurtosis),
+            output.number(station.var_I.coef_variation)
         ]
 
         csv_file_I.writerow(eda_var_I)
@@ -1337,12 +1337,12 @@ def shapiro_wilks_test(stations_list):
         shapiro_line_station_var_D = [
             station.code,
             station.name,
-            output.number(station.lat, 4),
-            output.number(station.lon, 4),
-            output.number(station.alt, 4),
+            output.number(station.lat),
+            output.number(station.lon),
+            output.number(station.alt),
             '{0}-{1}'.format(station.process_period['start'], station.process_period['end']),
-            output.number(W, 4),
-            output.number(p_value, 4),
+            output.number(W),
+            output.number(p_value),
             Ho
         ]
 
