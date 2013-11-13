@@ -44,6 +44,7 @@ news
   dates, and others.
 - Update all independent variables to sept 2013 and enable the bimonthly
   MEI series.
+- Adjust the outputs numbers to significant figures in all results
 - Automatic adjust the multi-line title in all maps created in NCL
 - [code] Refactoring lag to time_series
 - [code] Refactoring read_var_D and read_var_I into read_variable

@@ -81,7 +81,7 @@ def climate_graphs(station):
                             adjust_h = 0
 
                     pyplot.text(rect.get_x() + rect.get_width() / 2.0, 0.015 * max_height + height + adjust_h,
-                                output.number(height, 1), ha='center', va='bottom', fontsize=fontsize, rotation=rotation)
+                                output.number(height, decimals=1), ha='center', va='bottom', fontsize=fontsize, rotation=rotation)
 
         # -------------------------------------------------------------------------
         # climate graphics for 3 categories
@@ -198,10 +198,10 @@ def climate_graphs(station):
             thresholds_D = [None]*len(global_thresholds_D)
             for num_thres, thres in enumerate(thresholds_to_list(specific_contingency_table['thresholds_var_D'])):
                 try:
-                    thresholds_D[num_thres] = output.number(float(global_thresholds_D[num_thres]),2)
+                    thresholds_D[num_thres] = output.number(float(global_thresholds_D[num_thres]),3)
                 except:
                     thresholds_D[num_thres] = '{0}: {1}'.format(global_thresholds_D[num_thres],
-                                                         output.number(thres,2))
+                                                         output.number(thres,3))
 
             fig.text(0.5, 0.02,
                      unicode(_('Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n'
@@ -209,9 +209,9 @@ def climate_graphs(station):
                                 .format(anal_inter=title_period, units=env.var_D.UNITS,
                                         start_year=station.process_period['start'],
                                         end_year=station.process_period['end'],
-                                        min=output.number(minimum(specific_time_series['var_D']),2),
+                                        min=output.number(minimum(specific_time_series['var_D']),3),
                                         thresholds=' | '.join(thresholds_D),
-                                        max=output.number(maximum(specific_time_series['var_D']),2)), 'utf-8'),
+                                        max=output.number(maximum(specific_time_series['var_D']),3)), 'utf-8'),
                                         fontsize=12, ha='center')
 
             ## Save image
@@ -351,10 +351,10 @@ def climate_graphs(station):
             thresholds_D = [None]*len(global_thresholds_D)
             for num_thres, thres in enumerate(thresholds_to_list(specific_contingency_table['thresholds_var_D'])):
                 try:
-                    thresholds_D[num_thres] = output.number(float(global_thresholds_D[num_thres]),2)
+                    thresholds_D[num_thres] = output.number(float(global_thresholds_D[num_thres]),3)
                 except:
                     thresholds_D[num_thres] = '{0}: {1}'.format(global_thresholds_D[num_thres],
-                                                         output.number(thres,2))
+                                                         output.number(thres,3))
 
             # select only thresholds for the respective relevant climate categories selected in runfile
             thres_list = env.globals_vars.categories(include_normal=True, translated=False, as_list=True)
@@ -378,9 +378,9 @@ def climate_graphs(station):
                                 .format(anal_inter=title_period, units=env.var_D.UNITS,
                                         start_year=station.process_period['start'],
                                         end_year=station.process_period['end'],
-                                        min=output.number(minimum(specific_time_series['var_D']),2),
+                                        min=output.number(minimum(specific_time_series['var_D']),3),
                                         thresholds=thresholds_D_txt,
-                                        max=output.number(maximum(specific_time_series['var_D']),2)), 'utf-8'),
+                                        max=output.number(maximum(specific_time_series['var_D']),3)), 'utf-8'),
                                         fontsize=11, ha='center')
 
             ## Save image

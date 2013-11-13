@@ -31,14 +31,14 @@ PROG_NAME = "jaziku"
 
 VERSION = "0.7.0"
 
-VERSION_DATE = "02/11/2013"
+VERSION_DATE = "12/11/2013"
 
 # absolute directory where is installed Jaziku in your system,
 # this variable is set in jaziku.py
 JAZIKU_DIR = None
 
-# accuracy of number decimal places, only for print result
-ACCURACY = 4
+# default of number of significant figures, only for output result
+DEFAULT_N_SIG_FIGS = 4
 
 #==============================================================================
 # arguments, inputs and outputs

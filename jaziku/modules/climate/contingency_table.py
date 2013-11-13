@@ -361,19 +361,19 @@ def get_specific_contingency_table(station, lag, n_month, start_day=None):
     if env.config_run.settings['class_category_analysis'] == 3:
         for row in contingency_table_in_percentage:
             contingency_table_in_percentage_formatted.append(
-                [output.number(row[0], 1),
-                output.number(row[1], 1),
-                output.number(row[2], 1)])
+                [output.number(row[0], decimals=1),
+                output.number(row[1], decimals=1),
+                output.number(row[2], decimals=1)])
     if env.config_run.settings['class_category_analysis'] == 7:
         for row in contingency_table_in_percentage:
             contingency_table_in_percentage_formatted.append(
-                [output.number(row[0], 1),
-                output.number(row[1], 1),
-                output.number(row[2], 1),
-                output.number(row[3], 1),
-                output.number(row[4], 1),
-                output.number(row[5], 1),
-                output.number(row[6], 1)])
+                [output.number(row[0], decimals=1),
+                output.number(row[1], decimals=1),
+                output.number(row[2], decimals=1),
+                output.number(row[3], decimals=1),
+                output.number(row[4], decimals=1),
+                output.number(row[5], decimals=1),
+                output.number(row[6], decimals=1)])
 
     # -------------------------------------------------------------------------
     # save and return

@@ -20,6 +20,7 @@
 
 import os
 import sys
+import math
 from calendar import monthrange
 
 from jaziku import env
@@ -27,15 +28,35 @@ from jaziku.core.analysis_interval import get_range_analysis_interval
 from jaziku.utils import console
 
 
-def number(num, accuracy=False):
+def round_sigfigs(num, sig_figs=env.globals_vars.DEFAULT_N_SIG_FIGS):
+    """Round to specified number of significant figures.
     """
-    Return the number after formatted according to accuracy (default or particular)
-    and fix decimal character.
-    """
-    if accuracy:
-        return str(round(float(num), accuracy)).replace('.', ',')
+    if env.globals_vars.is_valid_null(num):
+        return num
+
+    if not sig_figs:
+        sig_figs=env.globals_vars.DEFAULT_N_SIG_FIGS
+
+    if num != 0:
+        return round(num, -int(math.floor(math.log10(abs(num))) - (sig_figs - 1)))
     else:
-        return str(round(float(num), env.globals_vars.ACCURACY)).replace('.', ',')
+        return 0  # Can't take the log of 0
+
+def number(num, sig_figs=False, decimals=False):
+    """Return the number after formatted according to significant figures
+    and/or accuracy to decimals numbers.
+    """
+    if sig_figs and decimals:
+        return str(round(float(round_sigfigs(num,sig_figs)), decimals))
+
+    if sig_figs:
+        return round_sigfigs(num, sig_figs)
+
+    if decimals:
+        return str(round(float(num), decimals))
+
+    # by default
+    return round_sigfigs(num)
 
 def months_in_initials(month_start0):
     """
