@@ -332,9 +332,9 @@ def set_FREQUENCY_DATA(new_freq_data, check=True):
         FREQUENCY_DATA = new_freq_data
     else:
         if not FREQUENCY_DATA == new_freq_data:
-            raise ValueError(_("The frequency data '{0}' for the var D is different\n"
+            raise ValueError(_("The new frequency data '{0}' for the var {1} is different\n"
                                "for the others stations before assigned as '{2}'.\n\n"
-                               "Jaziku requires that all stations for var D\n"
+                               "Jaziku requires that all stations for var {1}\n"
                                "have identical frequency data.")
             .format(new_freq_data, TYPE_SERIES, FREQUENCY_DATA))
 
