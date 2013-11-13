@@ -68,7 +68,7 @@ def forecast_graphs(station):
             colours = ['#DD4620', '#62AD29', '#6087F1']
             colours = list(reversed(colours))
 
-            labels = (_('Decrease'), _('Normal'), _('Exceed'))
+            labels = (unicode(_('Decrease'), 'utf-8'), unicode(_('Normal'), 'utf-8'), unicode(_('Exceed'), 'utf-8'))
 
             labels = tuple(reversed(labels))
 
@@ -119,8 +119,10 @@ def forecast_graphs(station):
             colours = ['#DD4620', '#DD8620','#DDC620', '#62AD29', '#60C7F1', '#6087F1', '#6047F1']
             colours = list(reversed(colours))
 
-            labels = (_('Strong decrease'), _('Moderate decrease'), _('Weak decrease'), _('Normal'),
-                      _('Weak exceed'), _('Moderate exceed'), _('Strong exceed'))
+            labels = (unicode(_('Strong decrease'), 'utf-8'), unicode(_('Moderate decrease'), 'utf-8'),
+                      unicode(_('Weak decrease'), 'utf-8'), unicode(_('Normal'), 'utf-8'),
+                      unicode(_('Weak exceed'), 'utf-8'), unicode(_('Moderate exceed'), 'utf-8'),
+                      unicode(_('Strong exceed'), 'utf-8'))
 
             labels = tuple(reversed(labels))
 
