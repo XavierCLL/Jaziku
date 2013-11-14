@@ -46,6 +46,9 @@ news
   MEI series.
 - Adjust the outputs numbers to significant figures in all results
 - Automatic adjust the multi-line title in all maps created in NCL
+- New script and executable (cpt2jaziku) that convert the CPT format
+  to Jaziku inputs format ready for to be processed (underdeveloped)
+  with it.
 - [code] Refactoring lag to time_series
 - [code] Refactoring read_var_D and read_var_I into read_variable
 - [code] Ported the old PIL to new Python-pillow
