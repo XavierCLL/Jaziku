@@ -76,6 +76,8 @@ fixes
   to "normal"
 - Fix index_position for correlation maps
 - Fix when get the default limits for var I
+- Fixed crash when calculate the Outliers with lags define in runfile
+  different to zero
 
 **sisdhim2jaziku**
 

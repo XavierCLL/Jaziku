@@ -88,7 +88,7 @@ def calculate_specific_values_of_time_series(variable, specific_values):
         return sum(array.clean(specific_values))
 
 
-def calculate_time_series(station, makes_files=True):
+def calculate_time_series(station, lags=None, makes_files=True):
     """Calculate and add dictionary to station of time series calculated for
     lags 0, 1 and 2 of var_D and var_I based on mode calculation series and
     analysis interval defined in runfile and, of course, type of series
@@ -106,6 +106,8 @@ def calculate_time_series(station, makes_files=True):
     :ivar STATION.time_series['lag_1'][[date,var_D,var_I],...]: time series calculated for lag 1 of this station
     :ivar STATION.time_series['lag_2'][[date,var_D,var_I],...]: time series calculated for lag 2 of this station
     """
+    # if is None set lags defined in runfile
+    lags = env.config_run.settings['lags'] if lags is None else lags
 
     # initialized Lag_X
     # format list for each lag: [trim, [ date, time_series_value_of_var_D, time_series_value_of_var_I ]], ...
@@ -119,7 +121,7 @@ def calculate_time_series(station, makes_files=True):
 
     if env.var_D.is_n_monthly():
 
-        for lag in env.config_run.settings['lags']:
+        for lag in lags:
 
             if makes_files:
                 output.make_dirs(dir_lag[lag])
@@ -176,7 +178,7 @@ def calculate_time_series(station, makes_files=True):
 
     if env.var_D.is_daily():
 
-        for lag in env.config_run.settings['lags']:
+        for lag in lags:
             if makes_files:
                 output.make_dirs(dir_lag[lag])
 
