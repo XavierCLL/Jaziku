@@ -1453,7 +1453,7 @@ def outliers(stations_list):
         else:
             station_copy = clone_and_transform_station(station, convert_var_D_to=False, convert_var_I_to=False)
 
-        calculate_time_series(station_copy, makes_files=False)
+        calculate_time_series(station_copy, lags=[0], makes_files=False)
 
         outliers_list = []
 
@@ -1502,7 +1502,6 @@ def outliers(stations_list):
                     station.var_I.specific_values = time_series.get_specific_values(station_copy, 'var_I', 0, outlier_date.month, day)
                     # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
                     values_var_I = get_values_in_range_analysis_interval(station_copy.var_I, outlier_date.year, outlier_date.month, day, 0)
-
                 # get the mean or sum (based on mode_calculation_series_I) of all values of var I
                 # in analysis interval in the corresponding period of outlier (var_D)
                 value_var_I = time_series.calculate_specific_values_of_time_series(station.var_I, values_var_I)
