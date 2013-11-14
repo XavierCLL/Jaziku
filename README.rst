@@ -48,7 +48,7 @@ http://hg.ideam.gov.co:8000/meteorologia/jaziku/summary
 Install
 -------
 
-Please read the `instruction install <https://dl.dropbox.com/u/3383807/installation.html>`_ or `this <http://hg.ideam.gov.co:8000/meteorologia/jaziku/files/tip/docs/installation.rst>`_ file.
+Please read the `instruction install <https://docs.google.com/uc?id=0B2KQf7Dbx7DUWHJnd0xIS2tGcFE&export=download>`_ or `this <http://hg.ideam.gov.co:8000/meteorologia/jaziku/files/tip/docs/installation.rst>`_ file.
 
 Synopsis run
 ------------
@@ -75,7 +75,7 @@ Help and discussion
 How to cite Jaziku
 ------------------
 
-    Jaziku is statistical inference software for the teleconnections analysis, (version 0.6.1).
+    Jaziku is statistical inference software for the teleconnections analysis, (version 0.7.0).
     (2013) IDEAM, Colombia. Jaziku is a free and open source software GPLv3. http://hg.ideam.gov.co:8000/meteorologia/jaziku/summary
 
 Licence
