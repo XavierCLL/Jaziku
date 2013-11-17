@@ -32,6 +32,22 @@ Incoming Plans / TODO
 --------------------
 - Inclusion of wavelete analysis
 
+===============================
+TO RE-CHECK AND RE-VERIFICATION
+===============================
+
+from v0.6
+---------
+- difference of deterministic and probabilistic maps
+
+from v0.7
+---------
+- outliers with monthly and bimonthly as analysis interval and as type of data
+- monthly and bimonthly time series with lags 1 and 2
+- contingency table for monthly and bimonthly
+- monthly and bimonthly with analog year
+- bimonthly and trimonthly climatology
+
 ===========
 Others TODO
 ===========
@@ -46,6 +62,8 @@ To be included
 - save log
 - Colombia with San Andres and Providencia
 - print console through classes
+- merge points when the values of two points were merged
+- accept combine thresholds
 - auto-validations (skills)
 - metadata inside time series files
 - more interpolations
