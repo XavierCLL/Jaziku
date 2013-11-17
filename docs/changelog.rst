@@ -5,6 +5,20 @@ Changelog
 =========
 
 
+0.8.0 (**2013-XX-XX**)
+----------------------
+
+news
+++++
+
+- New graphs and table for each station of AutoCorrelation and
+  CrossCorrelation for var D and var D - var I, and lags 0 to 24
+  and lags -24 to 24 respectively.
+
+fixes
++++++
+
+
 0.7.0 (**2013-11-13**)
 ----------------------
 
