@@ -11,12 +11,15 @@ Changelog
 news
 ++++
 
-- New graphs and table for each station of AutoCorrelation and
-  CrossCorrelation for var D and var D - var I, and lags 0 to 24
-  and lags -24 to 24 respectively.
+- New graphs and table for each station of AutoCorrelation for
+  var D and var D - var I, and lags 0 to 24
+- New graphs and table for each station of CrossCorrelation for
+  var D and var D - var I, and lags -24 to 24
 
 fixes
 +++++
+
+- Check the 'forecast_date' for bimonthly and trimonthly values
 
 
 0.7.0 (**2013-11-13**)

@@ -425,6 +425,8 @@ def configuration_run():
                         env.config_run.settings['forecast_date'] = input.bimonthly_char2int(env.config_run.settings['forecast_date'])
                     elif len(env.config_run.settings['forecast_date']) == 3:
                         env.config_run.settings['forecast_date'] = input.trimonthly_char2int(env.config_run.settings['forecast_date'])
+                    if env.config_run.settings['forecast_date'] is False:
+                        raise
                 forecast_month = int(env.config_run.settings['forecast_date'])
         except:
             if env.config_run.settings['analysis_interval'] in ['monthly', 'bimonthly', 'trimonthly']:
