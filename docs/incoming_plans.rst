@@ -54,9 +54,14 @@ Others TODO
 
 To be included
 --------------
+- behaviour when the interrupt signal is received
 - use the global_common_process for maps (climate, correlation, forecast)
   and put the global_common_process in subtitles inside maps
 - adjust the PPT var for accumulate the data daily by default
+- can select in data_analysis module what I want to process,
+  e.g. data_analysis;outliers;correlation;climatology,
+  data_analysis;all, data_analysis;disable
+- review and search more theoretical support for analysis_the_best_periods_to_process
 - to able to change the labels for var D
 - include the shapes maps for protected regions of Colombia
 - save log
@@ -64,6 +69,7 @@ To be included
 - print console through classes
 - merge points when the values of two points were merged
 - accept combine thresholds
+- revision of title in climate maps in english
 - auto-validations (skills)
 - metadata inside time series files
 - more interpolations
@@ -75,7 +81,6 @@ To be included
 To be analyzed
 --------------
 - partial run, if a station has an error continue with other station, alert in final message
-- Add altitude parameter for stations and print in results (maps files)
 - NCL scripts port to pyngl
 - Tool for the creation of a typical meteorological year:
     Skeiker, K., & Ghani, B. A. (2008). Advanced software tool for the creation of a typical meteorological year.
@@ -83,7 +88,6 @@ To be analyzed
 
 Arts and promotions
 -------------------
-- logo (DONE)
 - webpage
 - ISBN
 - mail jaziku@ideam.gov.co

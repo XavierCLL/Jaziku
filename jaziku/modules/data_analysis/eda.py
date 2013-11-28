@@ -29,14 +29,13 @@ from matplotlib import pyplot
 from numpy import histogram
 from pylab import xticks, bar, boxplot
 from PIL import Image
-from scipy.stats import shapiro
+from scipy.stats import shapiro, pearsonr
 from calendar import monthrange
 
 from jaziku import env
 from jaziku.core.station import Station
-from jaziku.core.variable import Variable
 from jaziku.core.analysis_interval import get_values_in_range_analysis_interval, locate_day_in_analysis_interval, \
-    get_range_analysis_interval
+    get_range_analysis_interval, adjust_data_of_variables
 from jaziku.modules.climate import time_series
 from jaziku.modules.climate.contingency_table import get_label_of_var_I_category
 from jaziku.modules.climate.time_series import  calculate_time_series
@@ -1679,7 +1678,17 @@ def correlation(stations_list, type_correlation):
     between var D and var I
     """
 
-    for station in stations_list:
+    if type_correlation == 'auto':
+        stations_list_correlation = stations_list
+
+    if type_correlation == 'cross':
+        # Adjust the same frequency data for the two time series
+        stations_list_copy = copy.deepcopy(stations_list)
+        adjust_data_of_variables(stations_list_copy, messages=False)
+
+        stations_list_correlation = stations_list_copy
+
+    for station in stations_list_correlation:
 
         station_path = os.path.join(correlation_dir, station.code +'-'+station.name)
 
@@ -1720,34 +1729,11 @@ def correlation(stations_list, type_correlation):
             # -------------------------------------------------------------------------
             # get and adjust data
 
+            station.var_I.data_and_null_in_process_period(station)
             data_Y = list(station.var_I.data_in_process_period)
 
-            # Adjust the same frequency data for the two time series
-            if env.var_I.TYPE_SERIES in ['ONI1', 'ONI2', 'CAR'] and env.var_D.FREQUENCY_DATA != 'trimester':
-                # SPECIAL CASE 1: when var_I is ONI1, ONI2 or CAR, convert time series of var D to trimester
-                # because the ONI and CAR series was calculated by trimesters from original source
-                station_copy = copy.deepcopy(station)
-                if env.var_D.is_daily():
-                    station_copy.var_D.daily2trimester()
-                    #env.var_D.set_FREQUENCY_DATA("trimester", check=False) TODO v0.8
-                    env.var_D.set_FREQUENCY_DATA("monthly", check=False)
-                    station_copy.var_D.data_and_null_in_process_period(station)
-                    env.var_D.set_FREQUENCY_DATA("daily", check=False)
-                if env.var_I.is_monthly():
-                    station_copy.var_D.monthly2trimester()
-                    #env.var_D.set_FREQUENCY_DATA("trimester", check=False) TODO v0.8
-                    station_copy.var_D.data_and_null_in_process_period(station)
-                    env.var_D.set_FREQUENCY_DATA("monthly", check=False)
-                data_X = list(station_copy.var_D.data_in_process_period)
-            elif env.var_D.is_daily() and env.var_I.is_monthly():
-                station_copy = copy.deepcopy(station)
-                station_copy.var_D.daily2monthly()
-                env.var_D.set_FREQUENCY_DATA("monthly", check=False)
-                station_copy.var_D.data_and_null_in_process_period(station)
-                env.var_D.set_FREQUENCY_DATA("daily", check=False)
-                data_X = list(station_copy.var_D.data_in_process_period)
-            else:
-                data_X = list(station.var_D.data_in_process_period)
+            station.var_D.data_and_null_in_process_period(station)
+            data_X = list(station.var_D.data_in_process_period)
 
             # clear NaN values in par, if one of two series have a NaN value
             # delete this NaN and corresponding value in the other series in
