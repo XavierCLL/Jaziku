@@ -15,6 +15,8 @@ news
   var D and var D - var I, and lags 0 to 24
 - New graphs and table for each station of CrossCorrelation for
   var D and var D - var I, and lags -24 to 24
+- disable the analysis_the_best_periods_to_process because this
+  need more review and this need more theoretical support
 
 fixes
 +++++

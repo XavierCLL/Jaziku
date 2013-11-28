@@ -167,23 +167,25 @@ def main(stations_list):
 
     # -------------------------------------------------------------------------
     # THE BEST PERIODS TO PROCESS
+    #
+    # TODO: disable because this need more review and this need more theoretical support
 
-    if not env.config_run.settings['process_period']:
-        console.msg(_("Analysis the best periods to process ................. "), newline=False)
-
-        # TODO: Fixes the equation for process several stations, use threads or PyMPI
-        if len(stations_list) < 50:
-            analysis_the_best_periods_to_process(stations_list)
-            console.msg(_("done"), color='green')
-        else:
-            console.msg("?", color='yellow')
-            query_check_continue = query.yes_no(_("  Analysis the best periods to process for many\n"
-                                                  "  stations can take several minutes to complete,\n"
-                                                  "  'y' for do it, 'n' for continue"), default="n")
-            if query_check_continue:
-                console.msg(_("Analysis the best periods to process ................. "), newline=False)
-                analysis_the_best_periods_to_process(stations_list)
-                console.msg(_("done"), color='green')
+    #if not env.config_run.settings['process_period']:
+    #    console.msg(_("Analysis the best periods to process ................. "), newline=False)
+    #
+    #    # TODO: Fixes the equation for process several stations, use threads or PyMPI
+    #    if len(stations_list) < 50:
+    #        analysis_the_best_periods_to_process(stations_list)
+    #        console.msg(_("done"), color='green')
+    #    else:
+    #        console.msg("?", color='yellow')
+    #        query_check_continue = query.yes_no(_("  Analysis the best periods to process for many\n"
+    #                                              "  stations can take several minutes to complete,\n"
+    #                                              "  'y' for do it, 'n' for continue"), default="n")
+    #        if query_check_continue:
+    #            console.msg(_("Analysis the best periods to process ................. "), newline=False)
+    #            analysis_the_best_periods_to_process(stations_list)
+    #            console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
     # GRAPHS INSPECTION OF SERIES
