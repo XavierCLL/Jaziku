@@ -128,15 +128,17 @@ def check_analysis_interval():
     if env.var_D.FREQUENCY_DATA in ['monthly','bimonthly','trimonthly'] and env.config_run.settings['analysis_interval'] not in ["monthly","bimonthly","trimonthly"]:
         analysis_interval_error(env.var_D)
 
-def adjust_data_of_variables(stations_list):
+def adjust_data_of_variables(stations_list, messages=True):
 
     def convert_stations_2(variable, new_freq_data):
-        console.msg(_("   Converting var {0} of all stations to data {1} ..... ")
-                    .format(variable, new_freq_data), color='cyan', newline=False)
+        if messages:
+            console.msg(_("   Converting var {0} of all stations to data {1} ..... ")
+                        .format(variable, new_freq_data), color='cyan', newline=False)
         for station in stations_list:
             station.var_[variable].convert2(new_freq_data)
         env.var_[variable].set_FREQUENCY_DATA(new_freq_data, check=False)
-        console.msg(_("done"), color='green')
+        if messages:
+            console.msg(_("done"), color='green')
 
     if env.config_run.settings['analysis_interval'] == "monthly":
         for variable in ['D', 'I']:
