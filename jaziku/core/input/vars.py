@@ -34,7 +34,7 @@ from jaziku.utils import  console, input, output
 # Read and validation dependent and independent variables from file
 
 
-def read_variable(station, variable):
+def read_variable(variable):
     """Read dependent or independent variable for get and check date and
     data from the raw file. Accept daily, monthly, bimonthly and trimonthly
     frequency data. The check data is a process that validate value by
@@ -62,13 +62,13 @@ def read_variable(station, variable):
         console.msg_error(
             _("Reading the station: {0} - {1}\n"
               "Can't open file '{2}' for var {3}, \nplease check filename and check that its path is relative\n"
-              "(to runfile) or absolute.").format(station.code, station.name, variable.file_path, variable.type))
+              "(to runfile) or absolute.").format(variable.station.code, variable.station.name, variable.file_path, variable.type))
 
     # Check is file is not empty
     if os.path.getsize(variable.file_path) == 0:
         console.msg_error(
             _("Reading the station: {0} - {1}\n"
-              "The file '{2}' is empty").format(station.code, station.name, variable.file_path))
+              "The file '{2}' is empty").format(variable.station.code, variable.station.name, variable.file_path))
 
     open_file = open(variable.file_path, 'rU')
 
@@ -129,7 +129,7 @@ def read_variable(station, variable):
                         raise ValueError(_('date unknown: ')+'-'.join(date_value))
             except ValueError as error:
                 console.msg_error(_("Problems settings the frequency data for the station\n"
-                                    "with code '{0}' and name '{1}':\n\n").format( station.code, station.name) + str(error))
+                                    "with code '{0}' and name '{1}':\n\n").format( variable.station.code, variable.station.name) + str(error))
 
         try:
             # delete strange characters and convert format

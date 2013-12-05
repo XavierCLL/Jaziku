@@ -44,8 +44,8 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
         # Read vars
         console.msg(_("Reading var D and var I of all stations ................. "), newline=False)
         for station in stations_list:
-            station.var_D.read_data_from_file(station)
-            station.var_I.read_data_from_file(station)
+            station.var_D.read_data_from_file()
+            station.var_I.read_data_from_file()
         console.msg(_("done"), color='green')
 
         # show some information of variables
@@ -79,8 +79,8 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
         # data, date and null
         console.msg(_("Prepare data, date and null in process period ........... "), newline=False)
         for station in stations_list:
-            station.var_D.data_and_null_in_process_period(station)
-            station.var_I.data_and_null_in_process_period(station)
+            station.var_D.data_and_null_in_process_period()
+            station.var_I.data_and_null_in_process_period()
         console.msg(_("done"), color='green')
 
         if env.config_run.settings['consistent_data'] is not False:
@@ -112,8 +112,8 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
             # data, date and null
             console.msg(_("Re-prepare data, date and null in process period ........ "), newline=False)
             for station in stations_list:
-                station.var_D.data_and_null_in_process_period(station)
-                station.var_I.data_and_null_in_process_period(station)
+                station.var_D.data_and_null_in_process_period()
+                station.var_I.data_and_null_in_process_period()
             console.msg(_("done"), color='green')
 
 

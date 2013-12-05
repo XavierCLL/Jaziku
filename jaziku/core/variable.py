@@ -35,6 +35,7 @@ class Variable(object):
     independent variable of a station.
 
     :attributes:
+        VARIABLE.station: station instance which belongs to this variable
         VARIABLE.type: type of variable 'D' (dependent) or 'I' (independent)
         VARIABLE.type_series: type of series (D or I), e.g. 'SOI'
         VARIABLE.file_name: the name of file of series
@@ -46,11 +47,13 @@ class Variable(object):
             do_some_statistic_of_data()
     """
 
-    def __init__(self, type):
+    def __init__(self, type, station):
         if type in ['D','I']:
             self.type = type
         else:
             raise
+
+        self.station = station
 
     def set_file(self, file):
 
@@ -82,7 +85,7 @@ class Variable(object):
         # relative path to file
         self.file_relpath = os.path.relpath(file, os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile)))
 
-    def read_data_from_file(self, station):
+    def read_data_from_file(self):
         """Read var I or var D from files, validated and check consistent.
 
         :return by reference:
@@ -93,14 +96,10 @@ class Variable(object):
         # -------------------------------------------------------------------------
         # Reading the variables from files and check based on range validation
         # and fill variable if is needed
-        if self.type == 'D':
-            vars.read_variable(station, station.var_D)
-            self.fill_variable(station)
-        if self.type == 'I':
-            vars.read_variable(station, station.var_I)
-            self.fill_variable(station)
+        vars.read_variable(self)
+        self.fill_variable()
 
-    def fill_variable(self, station):
+    def fill_variable(self):
         """Complete and fill variable with null values if the last and/or start year
         is not completed.
 
@@ -328,7 +327,7 @@ class Variable(object):
             if env.var_[self.type].is_monthly():
                 self.monthly2trimonthly()
 
-    def data_and_null_in_process_period(self, station):
+    def data_and_null_in_process_period(self):
         """Calculate the data without the null values inside
         the process period and too calculate the null values.
 
@@ -338,11 +337,11 @@ class Variable(object):
             VARIABLE.date_in_process_period (list)
             VARIABLE.nulls_in_process_period (int)
         """
-        start_date_var = date(station.process_period['start'], 1, 1)
+        start_date_var = date(self.station.process_period['start'], 1, 1)
         if (self.type == 'D' and env.var_D.is_daily()) or (self.type == 'I' and env.var_I.is_daily()):
-            end_date_var = date(station.process_period['end'], 12, 31)
+            end_date_var = date(self.station.process_period['end'], 12, 31)
         else:
-            end_date_var = date(station.process_period['end'], 12, 1)
+            end_date_var = date(self.station.process_period['end'], 12, 1)
 
         # data inside the process period
         self.data_in_process_period = self.data[self.date.index(start_date_var):\
