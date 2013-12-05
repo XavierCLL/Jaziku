@@ -20,6 +20,8 @@ news
 - disable the analysis_the_best_periods_to_process because this
   need more review and this need more theoretical support (for
   the future version)
+- [code] change all functions in Variable class now without need pass
+  the Station class (in arguments) which belongs this variable.
 
 fixes
 +++++

@@ -41,8 +41,8 @@ class Station(object):
 
         Station.stations_processed += 1
 
-        self.var_D = Variable(type='D')
-        self.var_I = Variable(type='I')
+        self.var_D = Variable(type='D', station=self)
+        self.var_I = Variable(type='I', station=self)
 
         self.var_ = {'D':self.var_D, 'I':self.var_I}
 
