@@ -140,25 +140,27 @@ def adjust_data_of_variables(stations_list, messages=True):
         if messages:
             console.msg(_("done"), color='green')
 
+    was_converted = False
+
     if env.config_run.settings['analysis_interval'] == "monthly":
         for variable in ['D', 'I']:
             if env.var_[variable].FREQUENCY_DATA in ['daily']:
                 convert_stations_2(variable, 'monthly')
-        return True
+                was_converted = True
 
     if env.config_run.settings['analysis_interval'] == "bimonthly":
         for variable in ['D', 'I']:
             if env.var_[variable].FREQUENCY_DATA in ['daily','monthly']:
                 convert_stations_2(variable, 'bimonthly')
-        return True
+                was_converted = True
 
     if env.config_run.settings['analysis_interval'] == "trimonthly":
         for variable in ['D', 'I']:
             if env.var_[variable].FREQUENCY_DATA in ['daily','monthly']:
                 convert_stations_2(variable, 'trimonthly')
-        return True
+                was_converted = True
 
-    return False
+    return was_converted
 
 
 def locate_day_in_analysis_interval(day_for_locate):
