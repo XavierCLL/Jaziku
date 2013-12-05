@@ -1680,19 +1680,28 @@ def correlation(stations_list, type_correlation):
     between var D and var I
     """
 
-    if type_correlation == 'auto':
-        stations_list_correlation = stations_list
+    # save original state of data for var D and I
+    original_freq_data_var_D = env.var_D.FREQUENCY_DATA
+    original_freq_data_var_I = env.var_I.FREQUENCY_DATA
 
-    if type_correlation == 'cross':
-        # Adjust the same frequency data for the two time series
-        stations_list_copy = copy.deepcopy(stations_list)
-        adjust_data_of_variables(stations_list_copy, messages=False)
+    # Adjust the same frequency data for the two time series
+    stations_list_copy = copy.deepcopy(stations_list)
+    was_converted = adjust_data_of_variables(stations_list_copy, messages=False)
+    if was_converted:
+        freq_data = env.var_D.get_FREQUENCY_DATA() + _(' (converted)')
+    else:
+        freq_data = env.var_D.get_FREQUENCY_DATA()
 
-        stations_list_correlation = stations_list_copy
+    stations_list_correlation = stations_list_copy
 
     for station in stations_list_correlation:
 
         station_path = os.path.join(correlation_dir, station.code +'-'+station.name)
+
+        # recalculate data if is needed
+        if was_converted:
+            station.var_I.data_and_null_in_process_period(station)
+            station.var_D.data_and_null_in_process_period(station)
 
         output.make_dirs(station_path)
 
@@ -1700,9 +1709,10 @@ def correlation(stations_list, type_correlation):
 
         if type_correlation == 'auto':
 
-            # calculate pearson for 0 to 24 lags
             data_X = list(station.var_D.data_filtered_in_process_period)
             data_Y = list(station.var_D.data_filtered_in_process_period)
+
+            # calculate pearson for 0 to 24 lags
             for lag in range(25):
 
                 pearson = pearsonr(data_X, data_Y)[0]
@@ -1728,13 +1738,7 @@ def correlation(stations_list, type_correlation):
 
         if type_correlation == 'cross':
 
-            # -------------------------------------------------------------------------
-            # get and adjust data
-
-            station.var_I.data_and_null_in_process_period(station)
             data_Y = list(station.var_I.data_in_process_period)
-
-            station.var_D.data_and_null_in_process_period(station)
             data_X = list(station.var_D.data_in_process_period)
 
             # clear NaN values in par, if one of two series have a NaN value
@@ -1844,6 +1848,9 @@ def correlation(stations_list, type_correlation):
             ax.vlines(correlation_values['lags'], [0], correlation_values['pearson'], linewidth=2.5, color='#638786')
 
             pyplot.ylim(-1, 1)
+
+            ax.text(24, -1, _('with {0} data').format(freq_data), horizontalalignment='right', verticalalignment='center')
+
             zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.06, y_scale_above=-0.06)
             fig.tight_layout()
 
@@ -1873,5 +1880,10 @@ def correlation(stations_list, type_correlation):
 
         open_file.close()
         del csv_file
+
+        # return to original FREQUENCY_DATA of the two variables
+        env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
+        env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
+
 
 
