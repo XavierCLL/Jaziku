@@ -52,7 +52,7 @@ class Variable(object):
             self.type = type
         else:
             raise
-
+        # save the station instance which belongs to this variable
         self.station = station
 
     def set_file(self, file):
@@ -327,7 +327,7 @@ class Variable(object):
             if env.var_[self.type].is_monthly():
                 self.monthly2trimonthly()
 
-    def data_and_null_in_process_period(self):
+    def calculate_data_date_and_nulls_in_period(self, start_year=False, end_year=False):
         """Calculate the data without the null values inside
         the process period and too calculate the null values.
 
@@ -336,25 +336,55 @@ class Variable(object):
             VARIABLE.data_filtered_in_process_period (list)
             VARIABLE.date_in_process_period (list)
             VARIABLE.nulls_in_process_period (int)
+        (with specific period):
+            VARIABLE.data_in_period (list)
+            VARIABLE.data_filtered_in_period (list)
+            VARIABLE.date_in_period (list)
+            VARIABLE.nulls_in_period (int)
         """
-        start_date_var = date(self.station.process_period['start'], 1, 1)
-        if (self.type == 'D' and env.var_D.is_daily()) or (self.type == 'I' and env.var_I.is_daily()):
-            end_date_var = date(self.station.process_period['end'], 12, 31)
+        if start_year is False and end_year is False:
+            is_process_period = True
         else:
-            end_date_var = date(self.station.process_period['end'], 12, 1)
+            is_process_period = False
 
-        # data inside the process period
-        self.data_in_process_period = self.data[self.date.index(start_date_var):\
+        if start_year is False:
+            # set to start year of process period for this station
+            start_year = self.station.process_period['start']
+        if end_year is False:
+            # set to end year of process period for this station
+            end_year = self.station.process_period['end']
+
+        start_date_var = date(start_year, 1, 1)
+        if (self.type == 'D' and env.var_D.is_daily()) or (self.type == 'I' and env.var_I.is_daily()):
+            end_date_var = date(end_year, 12, 31)
+        else:
+            end_date_var = date(end_year, 12, 1)
+
+        data_in_period = self.data[self.date.index(start_date_var):\
                                                 self.date.index(end_date_var) + 1]
-        # date inside the process period
-        self.date_in_process_period = self.date[self.date.index(start_date_var):\
+        date_in_period = self.date[self.date.index(start_date_var):\
                                       self.date.index(end_date_var) + 1]
-        # nulls inside the process period
-        self.nulls_in_process_period, \
-        self.percentage_of_nulls_in_process_period = array.check_nulls(self.data_in_process_period)
+        nulls_in_period, \
+        percentage_of_nulls_in_period = array.check_nulls(data_in_period)
 
         # delete all valid nulls and clean
-        self.data_filtered_in_process_period = array.clean(self.data_in_process_period)
+        data_filtered_in_period = array.clean(data_in_period)
+
+
+        if is_process_period:
+            # return with data inside the process period
+            self.data_in_process_period = data_in_period
+            self.date_in_process_period = date_in_period
+            self.nulls_in_process_period = nulls_in_period
+            self.percentage_of_nulls_in_process_period = percentage_of_nulls_in_period
+            self.data_filtered_in_process_period = data_filtered_in_period
+        else:
+            # return with data inside the specific period
+            self.data_in_period = data_in_period
+            self.date_in_period = date_in_period
+            self.nulls_in_period = nulls_in_period
+            self.percentage_of_nulls_in_period = percentage_of_nulls_in_period
+            self.data_filtered_in_period = data_filtered_in_period
 
     def do_some_statistic_of_data(self):
         """Calculate several statistics based on data series,

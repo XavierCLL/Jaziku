@@ -79,8 +79,8 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
         # data, date and null
         console.msg(_("Prepare data, date and null in process period ........... "), newline=False)
         for station in stations_list:
-            station.var_D.data_and_null_in_process_period()
-            station.var_I.data_and_null_in_process_period()
+            station.var_D.calculate_data_date_and_nulls_in_period()
+            station.var_I.calculate_data_date_and_nulls_in_period()
         console.msg(_("done"), color='green')
 
         if env.config_run.settings['consistent_data'] is not False:
@@ -112,8 +112,8 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
             # data, date and null
             console.msg(_("Re-prepare data, date and null in process period ........ "), newline=False)
             for station in stations_list:
-                station.var_D.data_and_null_in_process_period()
-                station.var_I.data_and_null_in_process_period()
+                station.var_D.calculate_data_date_and_nulls_in_period()
+                station.var_I.calculate_data_date_and_nulls_in_period()
             console.msg(_("done"), color='green')
 
 
@@ -129,3 +129,29 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
         _("{0} station prepared."),
         _("{0} stations prepared."),
         Station.stations_processed).format(Station.stations_processed), color='cyan')
+
+
+def global_process_period(stations_list):
+    """Calculate the global common period of all stations
+    based on all common process period of all series
+
+    :arg:
+        stations: list of all stations
+    :return:
+        'start': start year of global process period
+        'end': end year of global process period
+        'dates': chronological order list of all date (N-monthly or daily)
+                 inside of global process period
+    """
+    firsts = True
+    for station in stations_list:
+        if firsts:
+            global_common_date = set(station.var_D.date_in_process_period)
+            firsts = False
+        else:
+            global_common_date = global_common_date & set(station.var_D.date_in_process_period)
+
+    global_common_date = list(global_common_date)
+    global_common_date.sort()
+
+    return {'start': global_common_date[0].year, 'end': global_common_date[-1].year, 'dates': global_common_date}
