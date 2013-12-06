@@ -19,6 +19,7 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 import gettext
+from datetime import date
 
 from jaziku import env
 from jaziku.core import analysis_interval
@@ -154,4 +155,14 @@ def global_process_period(stations_list):
     global_common_date = list(global_common_date)
     global_common_date.sort()
 
-    return {'start': global_common_date[0].year, 'end': global_common_date[-1].year, 'dates': global_common_date}
+    if env.config_run.settings['process_period']:
+        # return the process period if this was defined inside the runfile
+        return {'start': env.config_run.settings['process_period']['start'],
+                 'end': env.config_run.settings['process_period']['end'],
+                 'start_date': date(env.config_run.settings['process_period']['start'], 1, 1),
+                 'end_date': date(env.config_run.settings['process_period']['end'], 12, 31 if env.var_D.is_daily() else 1),}
+    else:
+        return {'start': global_common_date[0].year,
+                 'end': global_common_date[-1].year,
+                 'start_date': global_common_date[0],
+                 'end_date': global_common_date[-1]}

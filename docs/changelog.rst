@@ -15,6 +15,8 @@ news
   var D and var D - var I, and lags 0 to 24
 - New graphs and table for each station of CrossCorrelation for
   var D and var D - var I, and lags -24 to 24
+- New cross-correlation matrix table using all stations with process
+  period or global period with data based on analysis_interval
 - Frequency data (converted or not) label text inside of Correlation
   graphs with which the data were processed
 - disable the analysis_the_best_periods_to_process because this
@@ -28,6 +30,8 @@ fixes
 
 - Check the 'forecast_date' for bimonthly and trimonthly values
 - [code] Fixed return boolean in adjust_data_of_variables
+- the global_process_period return the process period if this
+  was defined in runfile
 
 
 0.7.0 (**2013-11-13**)

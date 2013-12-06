@@ -1210,11 +1210,11 @@ def scatter_plots_of_series(stations_list):
 
     for iter_v, station_v in enumerate(stations_list):
         for iter_h, station_h in enumerate(stations_list):
-            x = station_h.var_D.data[station_h.var_D.date.index(global_common_date_process['dates'][0]):\
-            station_h.var_D.date.index(global_common_date_process['dates'][-1])+1]
+            x = station_h.var_D.data[station_h.var_D.date.index(global_common_date_process['start_date']):\
+            station_h.var_D.date.index(global_common_date_process['end_date'])+1]
 
-            y = station_v.var_D.data[station_v.var_D.date.index(global_common_date_process['dates'][0]):\
-            station_v.var_D.date.index(global_common_date_process['dates'][-1])+1]
+            y = station_v.var_D.data[station_v.var_D.date.index(global_common_date_process['start_date']):\
+            station_v.var_D.date.index(global_common_date_process['end_date'])+1]
 
             ax = pyplot.subplot2grid((len(stations_list),len(stations_list)),(iter_v,iter_h))
 
@@ -1845,6 +1845,62 @@ def correlation(stations_list, type_correlation):
 
         open_file.close()
         del csv_file
+
+        # -------------------------------------------------------------------------
+        # cross-correlation matrix table
+
+        if type_correlation == 'cross' and len(stations_list) > 1:
+
+            global_period = global_process_period(stations_list)
+
+            for station in stations_list_correlation:
+                station.var_D.calculate_data_date_and_nulls_in_period(global_period['start'], global_period['end'])
+                station.var_I.calculate_data_date_and_nulls_in_period(global_period['start'], global_period['end'])
+
+            cross_correlation_matrix = []
+            stations_code_and_name = []
+
+            for station_My in stations_list_correlation:
+                cross_correlation_matrix_line = []
+                for station_Mx in stations_list_correlation:
+
+                    data_My = list(station_My.var_D.data_in_period)
+                    data_Mx = list(station_Mx.var_D.data_in_period)
+
+                    # clear NaN values in par, if one of two series have a NaN value
+                    # delete this NaN and corresponding value in the other series in
+                    # the same location
+                    idx_to_clean = []
+                    for idx in range(len(data_My)):
+                        if env.globals_vars.is_valid_null(data_My[idx]) or env.globals_vars.is_valid_null(data_Mx[idx]):
+                            idx_to_clean.append(idx)
+                    idx_to_clean.reverse()
+                    for idx in idx_to_clean:
+                        del data_My[idx]
+                        del data_Mx[idx]
+                    cross_correlation_matrix_line.append(pearsonr(data_My, data_Mx)[0])
+                cross_correlation_matrix.append(cross_correlation_matrix_line)
+                stations_code_and_name.append('{0}-{1}'.format(station_My.code, station_My.name))
+
+            table_file = os.path.join(correlation_dir, _("Cross_Correlation_Matrix_Table_({0}-{1}).csv")
+                .format(global_period['start'], global_period['end']))
+            open_file = open(table_file, 'w')
+            csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
+
+            # print header
+            header = [_("PEARSON")] + stations_code_and_name
+            csv_file.writerow(header)
+
+            for station_idx, station_code in enumerate(stations_code_and_name):
+                csv_file.writerow([station_code] + [output.number(p) for p in cross_correlation_matrix[station_idx]])
+
+            # print footnote
+            csv_file.writerow([])
+            csv_file.writerow([_("*Calculated with {0} data").format(freq_data)])
+            csv_file.writerow([_("*Data in global period {0}-{1}").format(global_period['start'], global_period['end'])])
+
+            open_file.close()
+            del csv_file
 
         # return to original FREQUENCY_DATA of the two variables
         env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
