@@ -24,22 +24,23 @@ import copy
 import matplotlib.dates as mdates
 from math import log10
 from datetime import date
+from calendar import monthrange
 from dateutil.relativedelta import relativedelta
 from matplotlib import pyplot
 from numpy import histogram
 from pylab import xticks, bar, boxplot
 from PIL import Image
 from scipy.stats import shapiro, pearsonr
-from calendar import monthrange
 
 from jaziku import env
 from jaziku.core.station import Station
 from jaziku.core.analysis_interval import get_values_in_range_analysis_interval, locate_day_in_analysis_interval, \
     get_range_analysis_interval, adjust_data_of_variables
+from jaziku.core.stations import global_process_period
 from jaziku.modules.climate import time_series
 from jaziku.modules.climate.contingency_table import get_label_of_var_I_category
 from jaziku.modules.climate.time_series import  calculate_time_series
-from jaziku.utils import  console, output, watermarking, array, query
+from jaziku.utils import  console, output, watermarking, array
 
 
 def main(stations_list):
@@ -764,7 +765,7 @@ def climatology(stations_list):
         original_FREQUENCY_DATA = env.var_D.FREQUENCY_DATA
         env.var_D.set_FREQUENCY_DATA(freq, check=False)
 
-        _station.var_D.data_and_null_in_process_period(_station)
+        _station.var_D.calculate_data_date_and_nulls_in_period()
         var_D_data = _station.var_D.data_in_process_period
         var_D_date = _station.var_D.date_in_process_period
 
@@ -1187,46 +1188,10 @@ def climatology(stations_list):
     del csv_climatology_table
 
 
-def global_common_process(stations_list, var):
-    """Calculate the global common period of all stations
-    based on all common process period of all series var D or I
-
-    :arg:
-        stations: list of all stations
-        var: 'D' or 'I'
-    :return:
-        chronological order list of all date (N-monthly or daily)
-        inside of global common process
-    """
-
-    if var == 'D':
-        firsts = True
-        for station in stations_list:
-            if firsts:
-                global_common_date = set(station.var_D.date_in_process_period)
-                firsts = False
-            else:
-                global_common_date = global_common_date & set(station.var_D.date_in_process_period)
-    if var == 'I':
-        firsts = True
-        for station in stations_list:
-            if firsts:
-                global_common_date = set(station.var_I.date_in_process_period)
-                firsts = False
-            else:
-                global_common_date = global_common_date & set(station.var_I.date_in_process_period)
-
-    global_common_date = list(global_common_date)
-    global_common_date.sort()
-
-    # calculate the process period
-    #return {'start': global_common_date[0].year, 'end': global_common_date[-1].year}
-    return global_common_date
-
 def scatter_plots_of_series(stations_list):
 
     # calculate the common period of all common process
-    global_common_date_process_var_D = global_common_process(stations_list, 'D')
+    global_common_date_process = global_process_period(stations_list)
 
     fig_height = 3.2*len(stations_list)/1.5
     fig_with = 4*len(stations_list)/1.5
@@ -1235,21 +1200,21 @@ def scatter_plots_of_series(stations_list):
 
     name_plot = _("scatter_plots_of_series") + "_{0}_{2}-{3}".format(env.var_D.TYPE_SERIES,
         env.var_D.UNITS,
-        global_common_date_process_var_D[0].year, global_common_date_process_var_D[-1].year)
+        global_common_date_process['start'], global_common_date_process['end'])
 
     title_plot = _("Scatter plots of series") + "\n{0} ({1}) {2}-{3}".format(env.var_D.TYPE_SERIES,
         env.var_D.UNITS,
-        global_common_date_process_var_D[0].year, global_common_date_process_var_D[-1].year)
+        global_common_date_process['start'], global_common_date_process['end'])
 
     pyplot.suptitle(unicode(title_plot, 'utf-8'), y=(fig_height-0.1)/fig_height, fontsize=14)
 
     for iter_v, station_v in enumerate(stations_list):
         for iter_h, station_h in enumerate(stations_list):
-            x = station_h.var_D.data[station_h.var_D.date.index(global_common_date_process_var_D[0]):\
-            station_h.var_D.date.index(global_common_date_process_var_D[-1])+1]
+            x = station_h.var_D.data[station_h.var_D.date.index(global_common_date_process['dates'][0]):\
+            station_h.var_D.date.index(global_common_date_process['dates'][-1])+1]
 
-            y = station_v.var_D.data[station_v.var_D.date.index(global_common_date_process_var_D[0]):\
-            station_v.var_D.date.index(global_common_date_process_var_D[-1])+1]
+            y = station_v.var_D.data[station_v.var_D.date.index(global_common_date_process['dates'][0]):\
+            station_v.var_D.date.index(global_common_date_process['dates'][-1])+1]
 
             ax = pyplot.subplot2grid((len(stations_list),len(stations_list)),(iter_v,iter_h))
 
@@ -1394,11 +1359,11 @@ def outliers(stations_list):
         if convert_var_D_to:
             station_copy.var_D.convert2(convert_var_D_to)
             env.var_D.set_FREQUENCY_DATA(convert_var_D_to, check=False)
-            station_copy.var_D.data_and_null_in_process_period(station)
+            station_copy.var_D.calculate_data_date_and_nulls_in_period()
         if convert_var_I_to:
             station_copy.var_I.convert2(convert_var_I_to)
             env.var_I.set_FREQUENCY_DATA(convert_var_I_to, check=False)
-            station_copy.var_I.data_and_null_in_process_period(station)
+            station_copy.var_I.calculate_data_date_and_nulls_in_period()
 
         return station_copy
 
@@ -1700,8 +1665,8 @@ def correlation(stations_list, type_correlation):
 
         # recalculate data if is needed
         if was_converted:
-            station.var_I.data_and_null_in_process_period(station)
-            station.var_D.data_and_null_in_process_period(station)
+            station.var_I.calculate_data_date_and_nulls_in_period()
+            station.var_D.calculate_data_date_and_nulls_in_period()
 
         output.make_dirs(station_path)
 
