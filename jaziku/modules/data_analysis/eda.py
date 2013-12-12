@@ -1702,6 +1702,7 @@ def correlation(stations_list, type_correlation):
             name_of_files = _("Auto_Correlation_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
 
         if type_correlation == 'cross':
+            # TODO: check if move overlaps between the series is correctly
 
             data_Y = list(station.var_I.data_in_process_period)
             data_X = list(station.var_D.data_in_process_period)
@@ -1731,12 +1732,12 @@ def correlation(stations_list, type_correlation):
                 # lag 1:
                 #
                 #   X  Y
-                #     |x|
-                #  |o||o|
-                #  |o||o|
                 #  |x|
-                del _data_X[-1]
-                del _data_Y[0]
+                #  |o||o|
+                #  |o||o|
+                #     |x|
+                del _data_X[0]
+                del _data_Y[-1]
 
                 pearson = pearsonr(_data_X, _data_Y)[0]
 
@@ -1766,12 +1767,12 @@ def correlation(stations_list, type_correlation):
                 # lag 1:
                 #
                 #   X  Y
-                #  |x|
-                #  |o||o|
-                #  |o||o|
                 #     |x|
-                del _data_X[0]
-                del _data_Y[-1]
+                #  |o||o|
+                #  |o||o|
+                #  |x|
+                del _data_X[-1]
+                del _data_Y[0]
 
             name_of_files = _("Cross_Correlation_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
 

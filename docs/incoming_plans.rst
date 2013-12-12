@@ -36,6 +36,10 @@ Incoming Plans / TODO
 TO RE-CHECK AND RE-VERIFICATION
 ===============================
 
+from v0.8
+---------
+- cross-correlation: check if move overlaps between the series is correctly
+
 from v0.6
 ---------
 - difference of deterministic and probabilistic maps
