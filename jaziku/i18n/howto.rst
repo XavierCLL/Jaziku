@@ -5,7 +5,7 @@ TRANSLATE
 
 1. generar template "messages.po", go into Jaziku directory and run:
 
-	find . -iname "*.py" | xargs xgettext --from-code=UTF-8
+    find . -iname "*.py" | xargs xgettext --from-code=UTF-8
 
 2. move to language (xx) directory: 
 
