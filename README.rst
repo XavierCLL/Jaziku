@@ -69,13 +69,13 @@ Help and discussion
 -------------------
 
 - `Jaziku Manual <https://docs.google.com/uc?id=0B2KQf7Dbx7DUUWFjTFBLUmM0cTg&export=download>`_
-- `Reference Card v0.7.0 <https://docs.google.com/uc?id=0B2KQf7Dbx7DUdVJmQzJkaXRPaHM&export=download>`_
+- `Reference Card v0.8.0 <https://docs.google.com/uc?id=0B2KQf7Dbx7DUdVJmQzJkaXRPaHM&export=download>`_
 - Mailing list `Jaziku google group <http://groups.google.com/group/jaziku>`_
 
 How to cite Jaziku
 ------------------
 
-    Jaziku is statistical inference software for the teleconnections analysis, (version 0.7.0).
+    Jaziku is statistical inference software for the teleconnections analysis, (version 0.8.0).
     (2013) IDEAM, Colombia. Jaziku is a free and open source software GPLv3. http://hg.ideam.gov.co:8000/meteorologia/jaziku/summary
 
 Licence
