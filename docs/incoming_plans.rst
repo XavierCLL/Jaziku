@@ -4,16 +4,6 @@
 Incoming Plans / TODO
 =====================
 
-0.8 (**2013-xx-xx**)
---------------------
-:Exploratory data analysis consolidation:
-- **Correlation:** Autocorrelogram, Cross Correlogram (Var INDP), cross-correlation matrix between all series
-- **Outliers:** Diagram 4-band dispersion, series plot with standard fixed threshold vs time
-- **Missing values for each variable and Test bias:** List of missing values, time series vs time ( with shade
- for missing values),% pie chart for more missing value repeated, the year with the highest number with missing
- values, filling series with mean and median (entire series), frequency histogram pre and post after fill each series
-- Standardized variables graphic option (Dependent variable transformation to the same format of Independent Variable)
-
 0.9 (**2013-xx-xx**)
 --------------------
 :Homogeneity analysis:
@@ -81,6 +71,14 @@ To be included
   for example: best period to process, interpolations, maps.
 - ability to change units for dependent and independent variables
 - settings class
+
+0.8:
+:Exploratory data analysis consolidation:
+- **Outliers:** Diagram 4-band dispersion, series plot with standard fixed threshold vs time
+- **Missing values for each variable and Test bias:** List of missing values, time series vs time ( with shade
+ for missing values),% pie chart for more missing value repeated, the year with the highest number with missing
+ values, filling series with mean and median (entire series), frequency histogram pre and post after fill each series
+- Standardized variables graphic option (Dependent variable transformation to the same format of Independent Variable)
 
 To be analyzed
 --------------
