@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-11 22:12-0500\n"
+"POT-Creation-Date: 2013-12-20 01:09-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: data/maps/shapes/Colombia/ncl.py:42
 #: data/maps/shapes/ncl_script_probabilistic_map.py:42
 #: data/maps/shapes/ncl_script_deterministic_map.py:37
-#: modules/data_analysis/eda.py:393 modules/data_analysis/eda.py:1538
+#: modules/data_analysis/eda.py:406 modules/data_analysis/eda.py:1551
 msgid "Stations"
 msgstr ""
 
@@ -332,18 +332,18 @@ msgstr ""
 msgid "15days"
 msgstr ""
 
-#: core/settings/get.py:94 env/config_run.py:271 env/var_D.py:35
-#: env/var_I.py:34 modules/data_analysis/eda.py:843
+#: core/settings/get.py:94 env/config_run.py:271 env/var_I.py:34
+#: env/var_D.py:35 modules/data_analysis/eda.py:856
 msgid "monthly"
 msgstr ""
 
-#: core/settings/get.py:94 env/config_run.py:272 env/var_D.py:36
-#: env/var_I.py:35 modules/data_analysis/eda.py:851
+#: core/settings/get.py:94 env/config_run.py:272 env/var_I.py:35
+#: env/var_D.py:36 modules/data_analysis/eda.py:864
 msgid "bimonthly"
 msgstr ""
 
-#: core/settings/get.py:94 env/config_run.py:273 env/var_D.py:37
-#: env/var_I.py:36 modules/data_analysis/eda.py:854
+#: core/settings/get.py:94 env/config_run.py:273 env/var_I.py:36
+#: env/var_D.py:37 modules/data_analysis/eda.py:867
 msgid "trimonthly"
 msgstr ""
 
@@ -488,8 +488,8 @@ msgstr ""
 msgid "accumulate"
 msgstr ""
 
-#: core/settings/check_and_set.py:173 modules/data_analysis/eda.py:1017
-#: modules/data_analysis/eda.py:1179
+#: core/settings/check_and_set.py:173 modules/data_analysis/eda.py:1030
+#: modules/data_analysis/eda.py:1192
 msgid "mean"
 msgstr ""
 
@@ -753,7 +753,7 @@ msgstr ""
 #: modules/data_analysis/eda.py:206 modules/data_analysis/eda.py:227
 #: modules/data_analysis/eda.py:247 modules/data_analysis/eda.py:255
 #: modules/data_analysis/eda.py:276 modules/data_analysis/eda.py:292
-#: modules/data_analysis/eda.py:300
+#: modules/data_analysis/eda.py:300 modules/data_analysis/eda.py:312
 msgid "done"
 msgstr ""
 
@@ -1176,6 +1176,34 @@ msgstr ""
 msgid "   Please respond with 'r', 'm' or 'c'"
 msgstr ""
 
+#: env/var_I.py:33 env/var_D.py:34
+msgid "daily"
+msgstr ""
+
+#: env/var_I.py:97 env/var_I.py:98 env/var_I.py:102 env/var_I.py:103
+#: env/var_I.py:104 env/var_I.py:105 env/var_I.py:106 env/var_I.py:107
+#: env/var_I.py:108 env/var_I.py:109
+msgid "anomaly"
+msgstr ""
+
+#: env/var_I.py:99 env/var_I.py:100 env/var_I.py:101
+msgid "Std anomaly"
+msgstr ""
+
+#: env/var_I.py:110
+msgid "anomaly scaled 10e6 km^2"
+msgstr ""
+
+#: env/var_I.py:593 env/var_D.py:335
+#, python-brace-format
+msgid ""
+"The new frequency data '{0}' for the var {1} is different\n"
+"for the others stations before assigned as '{2}'.\n"
+"\n"
+"Jaziku requires that all stations for var {1}\n"
+"have identical frequency data."
+msgstr ""
+
 #: env/globals_vars.py:95 modules/climate/contingency_table.py:344
 #: modules/climate/result_table.py:209
 msgid "below"
@@ -1215,22 +1243,8 @@ msgstr ""
 msgid "strong above"
 msgstr ""
 
-#: env/var_D.py:34 env/var_I.py:33
-msgid "daily"
-msgstr ""
-
 #: env/var_D.py:67
 msgid "days"
-msgstr ""
-
-#: env/var_D.py:335 env/var_I.py:593
-#, python-brace-format
-msgid ""
-"The new frequency data '{0}' for the var {1} is different\n"
-"for the others stations before assigned as '{2}'.\n"
-"\n"
-"Jaziku requires that all stations for var {1}\n"
-"have identical frequency data."
 msgstr ""
 
 #: env/var_D.py:343
@@ -1267,20 +1281,6 @@ msgstr ""
 
 #: env/var_D.py:345
 msgid "var D strong above"
-msgstr ""
-
-#: env/var_I.py:97 env/var_I.py:98 env/var_I.py:102 env/var_I.py:103
-#: env/var_I.py:104 env/var_I.py:105 env/var_I.py:106 env/var_I.py:107
-#: env/var_I.py:108 env/var_I.py:109
-msgid "anomaly"
-msgstr ""
-
-#: env/var_I.py:99 env/var_I.py:100 env/var_I.py:101
-msgid "Std anomaly"
-msgstr ""
-
-#: env/var_I.py:110
-msgid "anomaly scaled 10e6 km^2"
 msgstr ""
 
 #: modules/climate/climate.py:36
@@ -1407,12 +1407,14 @@ msgid "mosaic_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png"
 msgstr ""
 
 #: modules/climate/result_table.py:73 modules/climate/result_table.py:108
-#: modules/climate/result_table.py:115
+#: modules/climate/result_table.py:115 modules/data_analysis/eda.py:1958
+#: modules/data_analysis/eda.py:1995 modules/data_analysis/eda.py:2030
 msgid "yes"
 msgstr ""
 
 #: modules/climate/result_table.py:75 modules/climate/result_table.py:110
-#: modules/climate/result_table.py:117
+#: modules/climate/result_table.py:117 modules/data_analysis/eda.py:1960
+#: modules/data_analysis/eda.py:1997 modules/data_analysis/eda.py:2032
 msgid "no"
 msgstr ""
 
@@ -1433,7 +1435,7 @@ msgstr ""
 
 #: modules/climate/result_table.py:199 modules/climate/result_table.py:214
 #: modules/maps/data.py:160 modules/maps/data.py:203
-#: modules/data_analysis/eda.py:1892
+#: modules/data_analysis/eda.py:1905
 msgid "PEARSON"
 msgstr ""
 
@@ -1647,7 +1649,7 @@ msgid "Time_Series_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv"
 msgstr ""
 
 #: modules/climate/time_series.py:151 modules/climate/time_series.py:208
-#: modules/data_analysis/eda.py:1595
+#: modules/data_analysis/eda.py:1608
 msgid "DATE"
 msgstr ""
 
@@ -1677,22 +1679,23 @@ msgstr ""
 
 #: modules/maps/data.py:160 modules/maps/data.py:203 modules/maps/data.py:351
 #: modules/maps/data.py:374 modules/data_analysis/eda.py:90
-#: modules/data_analysis/eda.py:750 modules/data_analysis/eda.py:1311
-#: modules/data_analysis/eda.py:1592
+#: modules/data_analysis/eda.py:763 modules/data_analysis/eda.py:1324
+#: modules/data_analysis/eda.py:1605 modules/data_analysis/eda.py:1940
+#: modules/data_analysis/eda.py:1979 modules/data_analysis/eda.py:2016
 msgid "CODE"
 msgstr ""
 
 #: modules/maps/data.py:160 modules/maps/data.py:203 modules/maps/data.py:351
 #: modules/maps/data.py:374 modules/data_analysis/eda.py:90
-#: modules/data_analysis/eda.py:750 modules/data_analysis/eda.py:1311
-#: modules/data_analysis/eda.py:1592
+#: modules/data_analysis/eda.py:763 modules/data_analysis/eda.py:1324
+#: modules/data_analysis/eda.py:1605
 msgid "LAT"
 msgstr ""
 
 #: modules/maps/data.py:160 modules/maps/data.py:203 modules/maps/data.py:351
 #: modules/maps/data.py:374 modules/data_analysis/eda.py:90
-#: modules/data_analysis/eda.py:750 modules/data_analysis/eda.py:1311
-#: modules/data_analysis/eda.py:1592
+#: modules/data_analysis/eda.py:763 modules/data_analysis/eda.py:1324
+#: modules/data_analysis/eda.py:1605
 msgid "LON"
 msgstr ""
 
@@ -1972,7 +1975,7 @@ msgid "Processing maps for correlation:"
 msgstr ""
 
 #: modules/maps/maps.py:447 modules/maps/maps.py:490
-#: modules/data_analysis/eda.py:283 modules/data_analysis/eda.py:1806
+#: modules/data_analysis/eda.py:283 modules/data_analysis/eda.py:1819
 msgid "Correlation"
 msgstr ""
 
@@ -2165,18 +2168,20 @@ msgstr ""
 msgid "Descriptive_Statistics_{0}.csv"
 msgstr ""
 
-#: modules/data_analysis/eda.py:90 modules/data_analysis/eda.py:750
-#: modules/data_analysis/eda.py:1311 modules/data_analysis/eda.py:1592
+#: modules/data_analysis/eda.py:90 modules/data_analysis/eda.py:763
+#: modules/data_analysis/eda.py:1324 modules/data_analysis/eda.py:1605
+#: modules/data_analysis/eda.py:1940 modules/data_analysis/eda.py:1979
+#: modules/data_analysis/eda.py:2016
 msgid "NAME"
 msgstr ""
 
-#: modules/data_analysis/eda.py:90 modules/data_analysis/eda.py:750
-#: modules/data_analysis/eda.py:1311 modules/data_analysis/eda.py:1592
+#: modules/data_analysis/eda.py:90 modules/data_analysis/eda.py:763
+#: modules/data_analysis/eda.py:1324 modules/data_analysis/eda.py:1605
 msgid "ALT"
 msgstr ""
 
-#: modules/data_analysis/eda.py:90 modules/data_analysis/eda.py:750
-#: modules/data_analysis/eda.py:1311 modules/data_analysis/eda.py:1592
+#: modules/data_analysis/eda.py:90 modules/data_analysis/eda.py:763
+#: modules/data_analysis/eda.py:1324 modules/data_analysis/eda.py:1605
 msgid "PROCESS PERIOD"
 msgstr ""
 
@@ -2278,10 +2283,10 @@ msgstr ""
 msgid "Shapiro Wilks test ................................... "
 msgstr ""
 
-#: modules/data_analysis/eda.py:261 modules/data_analysis/eda.py:1381
-#: modules/data_analysis/eda.py:1386 modules/data_analysis/eda.py:1516
-#: modules/data_analysis/eda.py:1520 modules/data_analysis/eda.py:1526
-#: modules/data_analysis/eda.py:1528
+#: modules/data_analysis/eda.py:261 modules/data_analysis/eda.py:1394
+#: modules/data_analysis/eda.py:1399 modules/data_analysis/eda.py:1529
+#: modules/data_analysis/eda.py:1533 modules/data_analysis/eda.py:1539
+#: modules/data_analysis/eda.py:1541
 msgid "Outliers"
 msgstr ""
 
@@ -2307,349 +2312,401 @@ msgstr ""
 msgid "CrossCorrelation ..................................... "
 msgstr ""
 
-#: modules/data_analysis/eda.py:336
+#: modules/data_analysis/eda.py:306
+msgid "Homogeneity"
+msgstr ""
+
+#: modules/data_analysis/eda.py:309
+msgid "Homogeneity ........................................... "
+msgstr ""
+
+#: modules/data_analysis/eda.py:349
 msgid "Sizes_data"
 msgstr ""
 
-#: modules/data_analysis/eda.py:336
+#: modules/data_analysis/eda.py:349
 msgid "Maximums"
 msgstr ""
 
-#: modules/data_analysis/eda.py:336
+#: modules/data_analysis/eda.py:349
 msgid "Minimums"
 msgstr ""
 
-#: modules/data_analysis/eda.py:336
+#: modules/data_analysis/eda.py:349
 msgid "Averages"
 msgstr ""
 
-#: modules/data_analysis/eda.py:336
+#: modules/data_analysis/eda.py:349
 msgid "Medians"
 msgstr ""
 
-#: modules/data_analysis/eda.py:337
+#: modules/data_analysis/eda.py:350
 msgid "Std_deviations"
 msgstr ""
 
-#: modules/data_analysis/eda.py:337
+#: modules/data_analysis/eda.py:350
 msgid "skewness"
 msgstr ""
 
-#: modules/data_analysis/eda.py:337
+#: modules/data_analysis/eda.py:350
 msgid "Kurtosis"
 msgstr ""
 
-#: modules/data_analysis/eda.py:337
+#: modules/data_analysis/eda.py:350
 msgid "Coeff_variations"
 msgstr ""
 
-#: modules/data_analysis/eda.py:342
+#: modules/data_analysis/eda.py:355
 #, python-brace-format
 msgid "Graphs_for_{0}"
 msgstr ""
 
-#: modules/data_analysis/eda.py:347 modules/data_analysis/eda.py:358
-#: modules/data_analysis/eda.py:383 modules/data_analysis/eda.py:392
-#: modules/data_analysis/eda.py:410
+#: modules/data_analysis/eda.py:360 modules/data_analysis/eda.py:371
+#: modules/data_analysis/eda.py:396 modules/data_analysis/eda.py:405
+#: modules/data_analysis/eda.py:423
 msgid "vs_Stations"
 msgstr ""
 
-#: modules/data_analysis/eda.py:347 modules/data_analysis/eda.py:360
-#: modules/data_analysis/eda.py:388 modules/data_analysis/eda.py:395
-#: modules/data_analysis/eda.py:415
+#: modules/data_analysis/eda.py:360 modules/data_analysis/eda.py:373
+#: modules/data_analysis/eda.py:401 modules/data_analysis/eda.py:408
+#: modules/data_analysis/eda.py:428
 msgid "vs_Altitude"
 msgstr ""
 
-#: modules/data_analysis/eda.py:369
+#: modules/data_analysis/eda.py:382
 #, python-brace-format
 msgid "{0}_({1})_{2}"
 msgstr ""
 
-#: modules/data_analysis/eda.py:377
+#: modules/data_analysis/eda.py:390
 #, python-brace-format
 msgid ""
 "{0} ({1})\n"
 "{2}"
 msgstr ""
 
-#: modules/data_analysis/eda.py:396
+#: modules/data_analysis/eda.py:409
 msgid "Altitude (m)"
 msgstr ""
 
-#: modules/data_analysis/eda.py:522
+#: modules/data_analysis/eda.py:535
 msgid "Analysis_the_best_periods_to_process.csv"
 msgstr ""
 
-#: modules/data_analysis/eda.py:526
+#: modules/data_analysis/eda.py:539
 msgid "ANALYSIS PERIOD"
 msgstr ""
 
-#: modules/data_analysis/eda.py:526
+#: modules/data_analysis/eda.py:539
 msgid "NUM. YEARS"
 msgstr ""
 
-#: modules/data_analysis/eda.py:526
+#: modules/data_analysis/eda.py:539
 msgid "NUM. STATIONS INCLUDED FOR PERIOD"
 msgstr ""
 
-#: modules/data_analysis/eda.py:526
+#: modules/data_analysis/eda.py:539
 msgid "MAX % OF NULLS PERMITTED PER STATION"
 msgstr ""
 
-#: modules/data_analysis/eda.py:527
+#: modules/data_analysis/eda.py:540
 msgid "% OF NULLS INSIDE THE PERIOD OF ALL DATA"
 msgstr ""
 
-#: modules/data_analysis/eda.py:527
+#: modules/data_analysis/eda.py:540
 msgid "RANKING*"
 msgstr ""
 
-#: modules/data_analysis/eda.py:527
+#: modules/data_analysis/eda.py:540
 msgid "LIST STATIONS INCLUDED FOR PERIOD:"
 msgstr ""
 
-#: modules/data_analysis/eda.py:554 modules/data_analysis/eda.py:735
+#: modules/data_analysis/eda.py:567 modules/data_analysis/eda.py:748
 msgid "Graphs_Inspection_of_Series"
 msgstr ""
 
-#: modules/data_analysis/eda.py:586
+#: modules/data_analysis/eda.py:599
 #, python-brace-format
 msgid "Station_{0}-{1}_({2}_vs_Time)"
 msgstr ""
 
-#: modules/data_analysis/eda.py:593
+#: modules/data_analysis/eda.py:606
 #, python-brace-format
 msgid "_Station_{0}-{1}_({2}_vs_Time)_"
 msgstr ""
 
-#: modules/data_analysis/eda.py:652
+#: modules/data_analysis/eda.py:665 modules/data_analysis/eda.py:2071
 msgid "Time"
 msgstr ""
 
-#: modules/data_analysis/eda.py:699
+#: modules/data_analysis/eda.py:712
 #, python-brace-format
 msgid "mosaic_station_{0}-{1}.png"
 msgstr ""
 
-#: modules/data_analysis/eda.py:741
+#: modules/data_analysis/eda.py:754
 #, python-brace-format
 msgid "Climatology_table_{0}_(monthly)"
 msgstr ""
 
-#: modules/data_analysis/eda.py:743
+#: modules/data_analysis/eda.py:756
 #, python-brace-format
 msgid "Climatology_table_{0}_({1})"
 msgstr ""
 
-#: modules/data_analysis/eda.py:868
+#: modules/data_analysis/eda.py:881
 msgid "Climatology"
 msgstr ""
 
-#: modules/data_analysis/eda.py:880
+#: modules/data_analysis/eda.py:893
 #, python-brace-format
 msgid ""
 "Multiyear climatology ({0})\n"
 "{1} {2} - {3} ({4}-{5})"
 msgstr ""
 
-#: modules/data_analysis/eda.py:887
+#: modules/data_analysis/eda.py:900
 #, python-brace-format
 msgid "Multiyear_climatology_({0})_{1}_{2}_{3}"
 msgstr ""
 
-#: modules/data_analysis/eda.py:899 modules/data_analysis/eda.py:958
-#: modules/data_analysis/eda.py:1060 modules/data_analysis/eda.py:1117
+#: modules/data_analysis/eda.py:912 modules/data_analysis/eda.py:971
+#: modules/data_analysis/eda.py:1073 modules/data_analysis/eda.py:1130
 msgid "Months"
 msgstr ""
 
-#: modules/data_analysis/eda.py:907 modules/data_analysis/eda.py:1065
+#: modules/data_analysis/eda.py:920 modules/data_analysis/eda.py:1078
 msgid "[mean]"
 msgstr ""
 
-#: modules/data_analysis/eda.py:946
+#: modules/data_analysis/eda.py:959
 #, python-brace-format
 msgid "Multiyear_climatology_({0}+whiskers)_{1}_{2}_{3}"
 msgstr ""
 
-#: modules/data_analysis/eda.py:966 modules/data_analysis/eda.py:1122
+#: modules/data_analysis/eda.py:979 modules/data_analysis/eda.py:1135
 msgid "[min-mean-max]"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1004
+#: modules/data_analysis/eda.py:1017
 #, python-brace-format
 msgid "Multiyear_climatology_table_{0}_{1}_{2}_{3}.csv"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1014 modules/data_analysis/eda.py:1176
+#: modules/data_analysis/eda.py:1027 modules/data_analysis/eda.py:1189
 msgid "max"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1020 modules/data_analysis/eda.py:1182
+#: modules/data_analysis/eda.py:1033 modules/data_analysis/eda.py:1195
 msgid "min"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1042
+#: modules/data_analysis/eda.py:1055
 #, python-brace-format
 msgid ""
 "Multiyear climatology (each {0} days)\n"
 "{1} {2} - {3} ({4}-{5})"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1049
+#: modules/data_analysis/eda.py:1062
 #, python-brace-format
 msgid "Multiyear_climatology_({0}days)_{1}_{2}_{3}"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1106
+#: modules/data_analysis/eda.py:1119
 #, python-brace-format
 msgid "Multiyear_climatology_({0}days+whiskers)_{1}_{2}_{3}"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1163
+#: modules/data_analysis/eda.py:1176
 #, python-brace-format
 msgid "Multiyear_climatology_table_{0}days_{1}_{2}_{3}.csv"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1201
+#: modules/data_analysis/eda.py:1214
 msgid "scatter_plots_of_series"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1205
+#: modules/data_analysis/eda.py:1218
 msgid "Scatter plots of series"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1253
+#: modules/data_analysis/eda.py:1266
 msgid "Frequency_histogram"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1266
+#: modules/data_analysis/eda.py:1279
 #, python-brace-format
 msgid "frequency_histogram_{0}_{1}_{2}"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1270
+#: modules/data_analysis/eda.py:1283
 #, python-brace-format
 msgid ""
 "Frequency histogram\n"
 "{0} {1} - {2} ({3}-{4})"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1279
+#: modules/data_analysis/eda.py:1292
 msgid "Frequency"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1305
+#: modules/data_analysis/eda.py:1318
 #, python-brace-format
 msgid "shapiro_wilks_test_{0}.csv"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1322
+#: modules/data_analysis/eda.py:1335
 msgid "rejected"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1324
+#: modules/data_analysis/eda.py:1337
 msgid "accepted"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1377
+#: modules/data_analysis/eda.py:1390
 msgid "Outliers_per_station"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1392
+#: modules/data_analysis/eda.py:1405
 msgid "Station"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1575 modules/data_analysis/eda.py:1580
+#: modules/data_analysis/eda.py:1588 modules/data_analysis/eda.py:1593
 msgid "Outliers_table"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1592
+#: modules/data_analysis/eda.py:1605
 msgid "WHISKERS BELOW"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1593
+#: modules/data_analysis/eda.py:1606
 msgid "WHISKERS ABOVE"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1593
+#: modules/data_analysis/eda.py:1606
 msgid "NUM. OUTLIERS"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1595
+#: modules/data_analysis/eda.py:1608
 msgid "VALUE"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1595
+#: modules/data_analysis/eda.py:1608
 msgid "PHEN_CAT*"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1614
+#: modules/data_analysis/eda.py:1627
 msgid "OUTLIERS LIST:"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1633
+#: modules/data_analysis/eda.py:1646
 #, python-brace-format
 msgid "*Calculated based on data {0}"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1656
+#: modules/data_analysis/eda.py:1669
 msgid " (converted)"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1702
+#: modules/data_analysis/eda.py:1715
 #, python-brace-format
 msgid "Auto_Correlation_{0}_{1}_{2}"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1777
+#: modules/data_analysis/eda.py:1790
 #, python-brace-format
 msgid "Cross_Correlation_{0}_{1}_{2}"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1786
+#: modules/data_analysis/eda.py:1799
 #, python-brace-format
 msgid ""
 "Auto Correlation - {0} {1}\n"
 "{2} ({3}-{4})"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1791
+#: modules/data_analysis/eda.py:1804
 #, python-brace-format
 msgid ""
 "Cross Correlation - {0} {1}\n"
 "{2} vs {3} ({4}-{5})"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1801
+#: modules/data_analysis/eda.py:1814
 msgid "Lags"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1818
+#: modules/data_analysis/eda.py:1831
 #, python-brace-format
 msgid "with {0} data"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1841
+#: modules/data_analysis/eda.py:1854
 msgid "LAGS"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1841
+#: modules/data_analysis/eda.py:1854
 msgid "CORRELATION"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1886
+#: modules/data_analysis/eda.py:1899
 #, python-brace-format
 msgid "Cross_Correlation_Matrix_Table_({0}-{1}).csv"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1900
+#: modules/data_analysis/eda.py:1913 modules/data_analysis/eda.py:1966
+#: modules/data_analysis/eda.py:2003 modules/data_analysis/eda.py:2037
 #, python-brace-format
 msgid "*Calculated with {0} data"
 msgstr ""
 
-#: modules/data_analysis/eda.py:1901
+#: modules/data_analysis/eda.py:1914 modules/data_analysis/eda.py:1967
+#: modules/data_analysis/eda.py:2004 modules/data_analysis/eda.py:2038
 #, python-brace-format
 msgid "*Data in global period {0}-{1}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1940
+msgid "U"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1940 modules/data_analysis/eda.py:1979
+#: modules/data_analysis/eda.py:2016
+msgid "P-VALUE"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1940 modules/data_analysis/eda.py:1979
+#: modules/data_analysis/eda.py:2016
+msgid "?"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1979
+msgid "T"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2016
+msgid "W"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2048 modules/data_analysis/eda.py:2091
+msgid "Mass_Curve"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2066
+#, python-brace-format
+msgid ""
+"{0} for {1}-{2}\n"
+"period {3}-{4}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2067
+msgid "Mass Curve"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2076
+#, python-brace-format
+msgid "{0} accumulated ({1})"
 msgstr ""
 
 #: jaziku.py:66
