@@ -1959,7 +1959,7 @@ def homogeneity(stations_list):
         else:
             is_homogeneous = _('no')
 
-        csv_file.writerow([station.name, station.code, u, p_value, is_homogeneous])
+        csv_file.writerow([station.name, station.code, output.number(u), output.number(p_value), is_homogeneous])
 
     # print footnote
     csv_file.writerow([])
@@ -1987,16 +1987,14 @@ def homogeneity(stations_list):
         s1 = series[0:len_s/2]
         s2 = series[len_s/2::]
 
-        t, prob = stats.ttest_ind(s1,s2)
-
-        p_value = prob
+        t, p_value = stats.ttest_ind(s1,s2)
 
         if p_value > 0.05:
             is_homogeneous = _('yes')
         else:
             is_homogeneous = _('no')
 
-        csv_file.writerow([station.name, station.code, t, p_value, is_homogeneous])
+        csv_file.writerow([station.name, station.code, output.number(t), output.number(p_value), is_homogeneous])
 
     # print footnote
     csv_file.writerow([])
@@ -2030,7 +2028,7 @@ def homogeneity(stations_list):
             is_homogeneous = _('yes')
         else:
             is_homogeneous = _('no')
-        csv_file.writerow([station.name, station.code, w, p_value, is_homogeneous])
+        csv_file.writerow([station.name, station.code, output.number(w), output.number(p_value), is_homogeneous])
 
     # print footnote
     csv_file.writerow([])
