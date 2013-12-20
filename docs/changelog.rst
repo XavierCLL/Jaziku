@@ -4,6 +4,16 @@
 Changelog
 =========
 
+0.9.0 (**2013-12-20**)
+----------------------
+
+news
+++++
+
+- Implemented homogeneity test: Mann-Whitney-Wilcoxon Test,
+  T Test and Levene Test
+- Implemented the Mass Curve graphs for all time series
+
 
 0.8.0 (**2013-12-11**)
 ----------------------
