@@ -30,7 +30,7 @@ from matplotlib import pyplot
 from numpy import histogram
 from pylab import xticks, bar, boxplot
 from PIL import Image
-from scipy.stats import shapiro, pearsonr
+from scipy import stats
 
 from jaziku import env
 from jaziku.core.station import Station
@@ -298,6 +298,19 @@ def main(stations_list):
     with console.redirectStdStreams():
         correlation(stations_list, type_correlation='cross')
     console.msg(_("done"), color='green')
+
+    # -------------------------------------------------------------------------
+    # HOMOGENEITY
+
+    global homogeneity_dir
+    homogeneity_dir = os.path.join(eda_dir, _('Homogeneity'))
+    output.make_dirs(homogeneity_dir)
+
+    console.msg(_("Homogeneity ........................................... "), newline=False)
+    with console.redirectStdStreams():
+        homogeneity(stations_list)
+    console.msg(_("done"), color='green')
+
 
 
 def zoom_graph(ax,x_scale_below=0, x_scale_above=0, y_scale_below=0, y_scale_above=0, abs_x=False, abs_y=False):
@@ -1315,7 +1328,7 @@ def shapiro_wilks_test(stations_list):
     for station in stations_list:
 
         with console.redirectStdStreams():
-            W, p_value = shapiro(station.var_D.data_filtered_in_process_period)
+            W, p_value = stats.shapiro(station.var_D.data_filtered_in_process_period)
 
         # Ho?
         if p_value < 0.5:
@@ -1680,7 +1693,7 @@ def correlation(stations_list, type_correlation):
             # calculate pearson for 0 to 24 lags
             for lag in range(25):
 
-                pearson = pearsonr(data_X, data_Y)[0]
+                pearson = stats.pearsonr(data_X, data_Y)[0]
 
                 correlation_values['lags'].append(lag)
                 correlation_values['pearson'].append(pearson)
@@ -1739,7 +1752,7 @@ def correlation(stations_list, type_correlation):
                 del _data_X[0]
                 del _data_Y[-1]
 
-                pearson = pearsonr(_data_X, _data_Y)[0]
+                pearson = stats.pearsonr(_data_X, _data_Y)[0]
 
                 correlation_values['lags'].append(-lag)
                 correlation_values['pearson'].append(pearson)
@@ -1755,7 +1768,7 @@ def correlation(stations_list, type_correlation):
             _data_Y = list(data_Y)
             for lag in range(25):
 
-                pearson = pearsonr(_data_X, _data_Y)[0]
+                pearson = stats.pearsonr(_data_X, _data_Y)[0]
 
                 correlation_values['lags'].append(lag)
                 correlation_values['pearson'].append(pearson)
@@ -1879,7 +1892,7 @@ def correlation(stations_list, type_correlation):
                     for idx in idx_to_clean:
                         del data_My[idx]
                         del data_Mx[idx]
-                    cross_correlation_matrix_line.append(pearsonr(data_My, data_Mx)[0])
+                    cross_correlation_matrix_line.append(stats.pearsonr(data_My, data_Mx)[0])
                 cross_correlation_matrix.append(cross_correlation_matrix_line)
                 stations_code_and_name.append('{0}-{1}'.format(station_My.code, station_My.name))
 
@@ -1907,5 +1920,180 @@ def correlation(stations_list, type_correlation):
         env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
         env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
 
+
+def homogeneity(stations_list):
+
+    stations_list_copy = copy.deepcopy(stations_list)
+    global_period = global_process_period(stations_list)
+
+    for station in stations_list_copy:
+        station.var_D.calculate_data_date_and_nulls_in_period(global_period['start'], global_period['end'])
+        station.var_I.calculate_data_date_and_nulls_in_period(global_period['start'], global_period['end'])
+
+    # -------------------------------------------------------------------------
+    # Mann-Whitney-Wilcoxon Test (MWW)
+
+    csv_name = os.path.join(homogeneity_dir, 'MWW_test.csv')
+    open_file = open(csv_name, 'w')
+    csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
+    # print header
+    csv_file.writerow([_('NAME'), _('CODE'), _('U'), _('P-VALUE'), _('?')])
+
+    for station in stations_list_copy:
+        series = station.var_D.data_in_process_period
+        series = array.clean(series)
+
+        len_s = len(series)
+
+        s1 = series[0:len_s/2]
+        s2 = series[len_s/2::]
+
+        # prevent identical values
+        if s1 != s2:
+            u, prob = stats.mannwhitneyu(s1,s2, use_continuity=False)
+
+        p_value = prob*2.0
+
+        if p_value > 0.05:
+            is_homogeneous = _('yes')
+        else:
+            is_homogeneous = _('no')
+
+        csv_file.writerow([station.name, station.code, u, p_value, is_homogeneous])
+
+    # print footnote
+    csv_file.writerow([])
+    csv_file.writerow([_("*Calculated with {0} data").format(env.var_D.get_FREQUENCY_DATA())])
+    csv_file.writerow([_("*Data in global period {0}-{1}").format(global_period['start'], global_period['end'])])
+
+    open_file.close()
+    del csv_file
+
+    # -------------------------------------------------------------------------
+    # T Test
+
+    csv_name = os.path.join(homogeneity_dir, 'T_test.csv')
+    open_file = open(csv_name, 'w')
+    csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
+    # print header
+    csv_file.writerow([_('NAME'), _('CODE'), _('T'), _('P-VALUE'), _('?')])
+
+    for station in stations_list_copy:
+        series = station.var_D.data_in_process_period
+        series = array.clean(series)
+
+        len_s = len(series)
+
+        s1 = series[0:len_s/2]
+        s2 = series[len_s/2::]
+
+        t, prob = stats.ttest_ind(s1,s2)
+
+        p_value = prob
+
+        if p_value > 0.05:
+            is_homogeneous = _('yes')
+        else:
+            is_homogeneous = _('no')
+
+        csv_file.writerow([station.name, station.code, t, p_value, is_homogeneous])
+
+    # print footnote
+    csv_file.writerow([])
+    csv_file.writerow([_("*Calculated with {0} data").format(env.var_D.get_FREQUENCY_DATA())])
+    csv_file.writerow([_("*Data in global period {0}-{1}").format(global_period['start'], global_period['end'])])
+
+    open_file.close()
+    del csv_file
+
+    # -------------------------------------------------------------------------
+    #  Levene Test
+
+    csv_name = os.path.join(homogeneity_dir, 'Levene_test.csv')
+    open_file = open(csv_name, 'w')
+    csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
+    # print header
+    csv_file.writerow([_('NAME'), _('CODE'), _('W'), _('P-VALUE'), _('?')])
+
+    for station in stations_list_copy:
+        series = station.var_D.data_in_process_period
+        series = array.clean(series)
+
+        len_s = len(series)
+
+        s1 = series[0:len_s/2]
+        s2 = series[len_s/2::]
+
+        w, p_value = stats.levene(s1,s2)
+
+        if p_value > 0.05:
+            is_homogeneous = _('yes')
+        else:
+            is_homogeneous = _('no')
+        csv_file.writerow([station.name, station.code, w, p_value, is_homogeneous])
+
+    # print footnote
+    csv_file.writerow([])
+    csv_file.writerow([_("*Calculated with {0} data").format(env.var_D.get_FREQUENCY_DATA())])
+    csv_file.writerow([_("*Data in global period {0}-{1}").format(global_period['start'], global_period['end'])])
+
+    open_file.close()
+    del csv_file
+
+    # -------------------------------------------------------------------------
+    # Mass Curve
+
+    if env.var_D.TYPE_SERIES == 'PPT' and env.config_run.settings['graphics']:
+
+        output.make_dirs(os.path.join(homogeneity_dir, _('Mass_Curve')))
+
+        for station in stations_list_copy:
+            series = station.var_D.data_in_process_period
+            accumulate = []
+            for value in series:
+                if len(accumulate) == 0:
+                    if env.globals_vars.is_valid_null(value):
+                        value = 0
+                    accumulate.append(value)
+                else:
+                    if env.globals_vars.is_valid_null(value):
+                        value = 0
+                    accumulate.append(accumulate[-1] + value)
+
+            fig = pyplot.figure(figsize=(7, 5))
+            ax = fig.add_subplot(111)
+
+            titulo = _("{0} for {1}-{2}\nperiod {3}-{4}")\
+                .format(_('Mass Curve'), station.code, station.name, global_period['start'], global_period['end'])
+            ax.set_title(unicode(titulo, 'utf-8'), env.globals_vars.graphs_title_properties())
+
+            ## X
+            ax.set_xlabel(unicode(_("Time"), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            #xticks(correlation_values['lags'], x_labels)
+
+            ## Y
+            # get units os type of var D or I
+            ax.set_ylabel(unicode(_('{0} accumulated ({1})').format(env.var_D.TYPE_SERIES, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
+
+            pyplot.axhline(linewidth=1, color='k')
+
+            ax.autoscale(tight=True)
+
+            pyplot.xlim(global_period['start_date'], global_period['end_date'])
+            ax.grid(True, color='gray')
+
+            #bar(correlation_values['lags'], correlation_values['pearson'], align='center', width=0.2, color='k')
+            ax.plot(global_period['dates'], accumulate, color='#638786', mec='#638786', linewidth=5)
+
+            fig.tight_layout()
+
+            # save image
+            image = os.path.join(homogeneity_dir, _('Mass_Curve'), _('Mass_Curve')+'_{0}-{1}.png'.format(station.code, station.name))
+            pyplot.savefig(image, dpi=75)
+
+            # stamp logo
+            watermarking.logo(image)
+
+            pyplot.close('all')
 
 

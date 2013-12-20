@@ -160,9 +160,11 @@ def global_process_period(stations_list):
         return {'start': env.config_run.settings['process_period']['start'],
                  'end': env.config_run.settings['process_period']['end'],
                  'start_date': date(env.config_run.settings['process_period']['start'], 1, 1),
-                 'end_date': date(env.config_run.settings['process_period']['end'], 12, 31 if env.var_D.is_daily() else 1),}
+                 'end_date': date(env.config_run.settings['process_period']['end'], 12, 31 if env.var_D.is_daily() else 1),
+                 'dates': global_common_date}
     else:
         return {'start': global_common_date[0].year,
                  'end': global_common_date[-1].year,
                  'start_date': global_common_date[0],
-                 'end_date': global_common_date[-1]}
+                 'end_date': global_common_date[-1],
+                 'dates': global_common_date}
