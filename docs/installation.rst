@@ -38,7 +38,7 @@ distribution.
 Download Jaziku (egg version)
 -----------------------------
 
-- `jaziku 0.9.0 <https://docs.google.com/uc?id=0B2KQf7Dbx7DULWxObVJjZWQzVmM&export=download>`_
+- `jaziku 0.9.0 <https://docs.google.com/uc?id=0B2KQf7Dbx7DUWml4NXB6TGktYmc&export=download>`_
 
 
 Install Jaziku (egg version)
