@@ -68,8 +68,8 @@ Team
 Help and discussion
 -------------------
 
-- `Jaziku Manual <https://docs.google.com/uc?id=0B2KQf7Dbx7DUUWFjTFBLUmM0cTg&export=download>`_
-- `Reference Card v0.9.0 <https://docs.google.com/uc?id=0B2KQf7Dbx7DUdVJmQzJkaXRPaHM&export=download>`_
+- `Jaziku Manual v0.9 <https://docs.google.com/uc?id=0B2KQf7Dbx7DUV1FpQUJrSVRlck0&export=download>`_
+- `Reference Card v0.9 <https://docs.google.com/uc?id=0B2KQf7Dbx7DUeWpGV0Z5RDhmUnM&export=download>`_
 - Mailing list `Jaziku google group <http://groups.google.com/group/jaziku>`_
 
 How to cite Jaziku
