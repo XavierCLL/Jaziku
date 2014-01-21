@@ -155,6 +155,10 @@ def global_process_period(stations_list):
     global_common_date = list(global_common_date)
     global_common_date.sort()
 
+    # if there aren't not common dates for all stations, return false
+    if not global_common_date:
+        return False
+
     if env.config_run.settings['process_period']:
         # return the process period if this was defined inside the runfile
         return {'start': env.config_run.settings['process_period']['start'],
