@@ -4,6 +4,19 @@
 Changelog
 =========
 
+
+0.9.1 (****)
+----------------------
+
+fixes
++++++
+
+- Fixes when the all of time series there are no a global common
+  period, then some result such as homogeneity tests, cross
+  correlation matrix table and scatter plots of series are
+  impossible to process, show message and continue.
+
+
 0.9.0 (**2013-12-20**)
 ----------------------
 

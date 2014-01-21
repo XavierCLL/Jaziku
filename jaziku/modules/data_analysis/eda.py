@@ -218,24 +218,13 @@ def main(stations_list):
     # SCATTER PLOTS OF SERIES
 
     if env.config_run.settings['graphics']:
-
         console.msg(_("Scatter plots of series .............................. "), newline=False)
-
-        if 1 < Station.stations_processed <= 10:
-            with console.redirectStdStreams():
-                scatter_plots_of_series(stations_list)
+        with console.redirectStdStreams():
+            return_msg = scatter_plots_of_series(stations_list)
+        if return_msg is True:
             console.msg(_("done"), color='green')
         else:
-            if Station.stations_processed == 1:
-                console.msg(_("partial\n > WARNING: There is only one station for process\n"
-                              "   the scatter plots of series, this need more \n"
-                              "   of one station."), color="yellow")
-            else:
-                console.msg(_("partial\n > WARNING: The maximum limit for make the scatter plots\n"
-                              "   of series are 10 stations, if you want this diagram,\n"
-                              "   please divide the stations in regions into different\n"
-                              "   runfiles with maximum 10 stations per runfile, and\n"
-                              "   rerun each runfile."), color="yellow")
+            console.msg(return_msg, color="yellow")
 
     # -------------------------------------------------------------------------
     # FREQUENCY HISTOGRAM
@@ -296,8 +285,11 @@ def main(stations_list):
 
     console.msg(_("CrossCorrelation ..................................... "), newline=False)
     with console.redirectStdStreams():
-        correlation(stations_list, type_correlation='cross')
-    console.msg(_("done"), color='green')
+        return_msg = correlation(stations_list, type_correlation='cross')
+    if return_msg is True:
+        console.msg(_("done"), color='green')
+    else:
+        console.msg(return_msg, color="yellow")
 
     # -------------------------------------------------------------------------
     # HOMOGENEITY
@@ -306,11 +298,13 @@ def main(stations_list):
     homogeneity_dir = os.path.join(eda_dir, _('Homogeneity'))
     output.make_dirs(homogeneity_dir)
 
-    console.msg(_("Homogeneity ........................................... "), newline=False)
+    console.msg(_("Homogeneity .......................................... "), newline=False)
     with console.redirectStdStreams():
-        homogeneity(stations_list)
-    console.msg(_("done"), color='green')
-
+        return_msg = homogeneity(stations_list)
+    if return_msg is True:
+        console.msg(_("done"), color='green')
+    else:
+        console.msg(return_msg, color="yellow")
 
 
 def zoom_graph(ax,x_scale_below=0, x_scale_above=0, y_scale_below=0, y_scale_above=0, abs_x=False, abs_y=False):
@@ -1203,8 +1197,31 @@ def climatology(stations_list):
 
 def scatter_plots_of_series(stations_list):
 
+    return_msg = True
+
+    if not (1 < Station.stations_processed <= 15):
+        if Station.stations_processed == 1:
+            return_msg = _("partial\n > WARNING: There is only one station for process\n"
+                           "   the scatter plots of series, this need more \n"
+                           "   of one station.")
+        else:
+            return_msg = _("partial\n > WARNING: The maximum limit for make the scatter plots\n"
+                            "   of series are 10 stations, if you want this diagram,\n"
+                            "   please divide the stations in regions into different\n"
+                            "   runfiles with maximum 10 stations per runfile, and\n"
+                            "   rerun each runfile.")
+        return return_msg
+
+
     # calculate the common period of all common process
-    global_common_date_process = global_process_period(stations_list)
+    global_period = global_process_period(stations_list)
+    # if there is no a global period then exit
+    if global_period is False:
+        return_msg = _("impossible\n > WARNING: There is no a global period for all\n"
+                       "   stations, the scatter plots of series need to be\n"
+                       "   evaluated with the global period, continuing\n"
+                       "   without make the scatter plots of series graph")
+        return return_msg
 
     fig_height = 3.2*len(stations_list)/1.5
     fig_with = 4*len(stations_list)/1.5
@@ -1213,21 +1230,21 @@ def scatter_plots_of_series(stations_list):
 
     name_plot = _("scatter_plots_of_series") + "_{0}_{2}-{3}".format(env.var_D.TYPE_SERIES,
         env.var_D.UNITS,
-        global_common_date_process['start'], global_common_date_process['end'])
+        global_period['start'], global_period['end'])
 
     title_plot = _("Scatter plots of series") + "\n{0} ({1}) {2}-{3}".format(env.var_D.TYPE_SERIES,
         env.var_D.UNITS,
-        global_common_date_process['start'], global_common_date_process['end'])
+        global_period['start'], global_period['end'])
 
     pyplot.suptitle(unicode(title_plot, 'utf-8'), y=(fig_height-0.1)/fig_height, fontsize=14)
 
     for iter_v, station_v in enumerate(stations_list):
         for iter_h, station_h in enumerate(stations_list):
-            x = station_h.var_D.data[station_h.var_D.date.index(global_common_date_process['start_date']):\
-            station_h.var_D.date.index(global_common_date_process['end_date'])+1]
+            x = station_h.var_D.data[station_h.var_D.date.index(global_period['start_date']):\
+            station_h.var_D.date.index(global_period['end_date'])+1]
 
-            y = station_v.var_D.data[station_v.var_D.date.index(global_common_date_process['start_date']):\
-            station_v.var_D.date.index(global_common_date_process['end_date'])+1]
+            y = station_v.var_D.data[station_v.var_D.date.index(global_period['start_date']):\
+            station_v.var_D.date.index(global_period['end_date'])+1]
 
             ax = pyplot.subplot2grid((len(stations_list),len(stations_list)),(iter_v,iter_h))
 
@@ -1259,6 +1276,8 @@ def scatter_plots_of_series(stations_list):
     watermarking.logo(image_path)
 
     pyplot.close('all')
+
+    return return_msg
 
 
 def frequency_histogram(stations_list):
@@ -1657,6 +1676,7 @@ def correlation(stations_list, type_correlation):
     """Make graphs ant tables of auto-correlation of var D and cross correlations
     between var D and var I
     """
+    return_msg = True
 
     # save original state of data for var D and I
     original_freq_data_var_D = env.var_D.FREQUENCY_DATA
@@ -1860,12 +1880,15 @@ def correlation(stations_list, type_correlation):
         open_file.close()
         del csv_file
 
-        # -------------------------------------------------------------------------
-        # cross-correlation matrix table
+    # -------------------------------------------------------------------------
+    # cross-correlation matrix table
 
-        if type_correlation == 'cross' and len(stations_list) > 1:
+    if type_correlation == 'cross' and len(stations_list) > 1:
 
-            global_period = global_process_period(stations_list)
+        global_period = global_process_period(stations_list)
+
+        # if there is global period
+        if global_period is not False:
 
             for station in stations_list_correlation:
                 station.var_D.calculate_data_date_and_nulls_in_period(global_period['start'], global_period['end'])
@@ -1916,15 +1939,32 @@ def correlation(stations_list, type_correlation):
             open_file.close()
             del csv_file
 
-        # return to original FREQUENCY_DATA of the two variables
-        env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
-        env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
+        else:
+            return_msg = _("partial\n > WARNING: There is no a global period for all\n"
+                            "   stations, the cross-correlation matrix table need\n"
+                            "   this, continuing without make this matrix table")
+
+    # return to original FREQUENCY_DATA of the two variables
+    env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
+    env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
+
+    return return_msg
 
 
 def homogeneity(stations_list):
 
+    return_msg = True
+
     stations_list_copy = copy.deepcopy(stations_list)
     global_period = global_process_period(stations_list)
+
+    # if there is no a global period then exit
+    if global_period is False:
+        return_msg = _("impossible\n > WARNING: There is no a global period for all\n"
+                       "   stations, the tests of homogeneity need to be\n"
+                       "   evaluated with the global period, continuing\n"
+                       "   without make homogeneity tests")
+        return return_msg
 
     for station in stations_list_copy:
         station.var_D.calculate_data_date_and_nulls_in_period(global_period['start'], global_period['end'])
@@ -2094,4 +2134,4 @@ def homogeneity(stations_list):
 
             pyplot.close('all')
 
-
+    return return_msg
