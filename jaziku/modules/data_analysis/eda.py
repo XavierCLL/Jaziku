@@ -1980,7 +1980,7 @@ def homogeneity(stations_list):
     csv_file.writerow([_('NAME'), _('CODE'), _('U'), _('P-VALUE'), _('?')])
 
     for station in stations_list_copy:
-        series = station.var_D.data_in_process_period
+        series = station.var_D.data_in_period
         series = array.clean(series)
 
         len_s = len(series)
@@ -2019,7 +2019,7 @@ def homogeneity(stations_list):
     csv_file.writerow([_('NAME'), _('CODE'), _('T'), _('P-VALUE'), _('?')])
 
     for station in stations_list_copy:
-        series = station.var_D.data_in_process_period
+        series = station.var_D.data_in_period
         series = array.clean(series)
 
         len_s = len(series)
@@ -2054,7 +2054,7 @@ def homogeneity(stations_list):
     csv_file.writerow([_('NAME'), _('CODE'), _('W'), _('P-VALUE'), _('?')])
 
     for station in stations_list_copy:
-        series = station.var_D.data_in_process_period
+        series = station.var_D.data_in_period
         series = array.clean(series)
 
         len_s = len(series)
@@ -2086,7 +2086,7 @@ def homogeneity(stations_list):
         output.make_dirs(os.path.join(homogeneity_dir, _('Mass_Curve')))
 
         for station in stations_list_copy:
-            series = station.var_D.data_in_process_period
+            series = station.var_D.data_in_period
             accumulate = []
             for value in series:
                 if len(accumulate) == 0:

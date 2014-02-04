@@ -15,6 +15,7 @@ fixes
   period, then some result such as homogeneity tests, cross
   correlation matrix table and scatter plots of series are
   impossible to process, show message and continue.
+- Fix set data in global period in homogeneity test
 
 
 0.9.0 (**2013-12-20**)
