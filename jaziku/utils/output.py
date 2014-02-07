@@ -19,6 +19,7 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import re
 import sys
 import math
 from calendar import monthrange
@@ -46,6 +47,10 @@ def number(num, sig_figs=False, decimals=False):
     """Return the number after formatted according to significant figures
     and/or accuracy to decimals numbers.
     """
+
+    # remove leading zeros
+    num = float(re.sub("^0+","",str(num)))
+
     if sig_figs and decimals:
         return str(round(float(round_sigfigs(num,sig_figs)), decimals))
 

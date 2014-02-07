@@ -17,6 +17,12 @@ fixes
   impossible to process, show message and continue.
 - Fix set data in global period in homogeneity test
 
+**sisdhim2jaziku:**
+
+- Fix crash when the any number (i.e. latitude) have leading
+  zeros, first delete the leading zero before process the number
+  for output format.
+
 
 0.9.0 (**2013-12-20**)
 ----------------------
