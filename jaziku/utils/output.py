@@ -49,7 +49,8 @@ def number(num, sig_figs=False, decimals=False):
     """
 
     # remove leading zeros
-    num = float(re.sub("^0+","",str(num)))
+    if float(num) != 0.0:
+        num = float(re.sub("^0+","",str(num)))
 
     if sig_figs and decimals:
         return str(round(float(round_sigfigs(num,sig_figs)), decimals))
