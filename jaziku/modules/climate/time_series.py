@@ -22,7 +22,6 @@ import os
 import csv
 from calendar import monthrange
 from datetime import date
-from dateutil.relativedelta import relativedelta
 
 from jaziku import env
 from jaziku.core.analysis_interval import get_values_in_range_analysis_interval, get_range_analysis_interval

@@ -8,6 +8,12 @@ Changelog
 0.9.1 (****)
 ----------------------
 
+news
+++++
+
+- Make by each station the anomalies time series and the graph of
+  anomaly frequency histogram, based on analysis interval.
+
 fixes
 +++++
 
