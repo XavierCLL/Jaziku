@@ -140,27 +140,20 @@ def adjust_data_of_variables(stations_list, messages=True):
         if messages:
             console.msg(_("done"), color='green')
 
-    was_converted = False
+    was_converted_to = False
 
-    if env.config_run.settings['analysis_interval'] == "monthly":
-        for variable in ['D', 'I']:
-            if env.var_[variable].FREQUENCY_DATA in ['daily']:
-                convert_stations_2(variable, 'monthly')
-                was_converted = True
+    freq_order = ["daily", "monthly", "bimonthly", "trimonthly"]
 
-    if env.config_run.settings['analysis_interval'] == "bimonthly":
-        for variable in ['D', 'I']:
-            if env.var_[variable].FREQUENCY_DATA in ['daily','monthly']:
-                convert_stations_2(variable, 'bimonthly')
-                was_converted = True
+    max_freq = freq_order[max(freq_order.index(env.var_D.FREQUENCY_DATA),
+                              freq_order.index(env.var_I.FREQUENCY_DATA),
+                              freq_order.index(env.config_run.settings['analysis_interval']))]
 
-    if env.config_run.settings['analysis_interval'] == "trimonthly":
-        for variable in ['D', 'I']:
-            if env.var_[variable].FREQUENCY_DATA in ['daily','monthly']:
-                convert_stations_2(variable, 'trimonthly')
-                was_converted = True
+    for variable in ['D', 'I']:
+        if freq_order.index(env.var_[variable].FREQUENCY_DATA) < freq_order.index(max_freq):
+            convert_stations_2(variable, max_freq)
+            was_converted_to = max_freq
 
-    return was_converted
+    return was_converted_to
 
 
 def locate_day_in_analysis_interval(day_for_locate):

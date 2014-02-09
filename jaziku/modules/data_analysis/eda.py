@@ -1707,8 +1707,8 @@ def correlation(stations_list, type_correlation):
 
     # Adjust the same frequency data for the two time series
     stations_list_copy = copy.deepcopy(stations_list)
-    was_converted = adjust_data_of_variables(stations_list_copy, messages=False)
-    if was_converted:
+    was_converted_to = adjust_data_of_variables(stations_list_copy, messages=False)
+    if was_converted_to:
         freq_data = env.var_D.get_FREQUENCY_DATA() + _(' (converted)')
     else:
         freq_data = env.var_D.get_FREQUENCY_DATA()
@@ -1720,7 +1720,7 @@ def correlation(stations_list, type_correlation):
         station_path = os.path.join(correlation_dir, station.code +'-'+station.name)
 
         # recalculate data if is needed
-        if was_converted:
+        if was_converted_to:
             station.var_I.calculate_data_date_and_nulls_in_period()
             station.var_D.calculate_data_date_and_nulls_in_period()
 
