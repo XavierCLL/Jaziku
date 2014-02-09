@@ -22,6 +22,8 @@ fixes
   correlation matrix table and scatter plots of series are
   impossible to process, show message and continue.
 - Fix set data in global period in homogeneity test
+- Fix function for adjust data to frequency to make result
+  for input data daily
 
 **sisdhim2jaziku:**
 
