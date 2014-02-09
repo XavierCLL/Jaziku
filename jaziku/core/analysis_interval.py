@@ -144,9 +144,13 @@ def adjust_data_of_variables(stations_list, messages=True):
 
     freq_order = ["daily", "monthly", "bimonthly", "trimonthly"]
 
+    freq_analysis_interval = env.config_run.settings['analysis_interval']
+    if freq_analysis_interval in ["5days", "10days", "15days"]:
+        freq_analysis_interval = "daily"
+
     max_freq = freq_order[max(freq_order.index(env.var_D.FREQUENCY_DATA),
                               freq_order.index(env.var_I.FREQUENCY_DATA),
-                              freq_order.index(env.config_run.settings['analysis_interval']))]
+                              freq_order.index(freq_analysis_interval))]
 
     for variable in ['D', 'I']:
         if freq_order.index(env.var_[variable].FREQUENCY_DATA) < freq_order.index(max_freq):
