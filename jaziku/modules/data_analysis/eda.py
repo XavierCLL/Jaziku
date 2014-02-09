@@ -306,6 +306,17 @@ def main(stations_list):
     else:
         console.msg(return_msg, color="yellow")
 
+    # -------------------------------------------------------------------------
+    # ANOMALY
+
+    global anomaly_dir
+    anomaly_dir = os.path.join(eda_dir, _('Anomaly'))
+    output.make_dirs(anomaly_dir)
+
+    console.msg(_("Anomaly .............................................. "), newline=False)
+    anomaly(stations_list)
+    console.msg(_("done"), color='green')
+
 
 def zoom_graph(ax,x_scale_below=0, x_scale_above=0, y_scale_below=0, y_scale_above=0, abs_x=False, abs_y=False):
     """
@@ -733,6 +744,71 @@ def graphs_inspection_of_series(stations_list):
         #print h.heap()
         #h.iso(1,[],{})
 
+# -------------------------------------------------------------------------
+
+
+def get_climatology_data(station, freq = None):
+    '''Calculate function for some variables need in climatology
+    and others
+    '''
+
+    _station = copy.deepcopy(station)
+    _station.var_D.convert2(freq)
+    original_FREQUENCY_DATA = env.var_D.FREQUENCY_DATA
+
+    if freq is None:
+        freq = env.var_D.FREQUENCY_DATA
+    env.var_D.set_FREQUENCY_DATA(freq, check=False)
+
+    _station.var_D.calculate_data_date_and_nulls_in_period()
+    var_D_data = _station.var_D.data_in_process_period
+    var_D_date = _station.var_D.date_in_process_period
+
+    env.var_D.set_FREQUENCY_DATA(original_FREQUENCY_DATA, check=False)
+
+    y_mean = []
+    y_max = [] # value to add to mean for max value
+    y_min = [] # value to subtract to mean for min value
+
+    if freq in ['monthly', 'bimonthly', 'trimonthly']:
+        for month in range(1,13):
+            values = []
+            for iter, value in  enumerate(var_D_data):
+                if var_D_date[iter].month == month:
+                    values.append(value)
+            values = array.clean(values)
+            y_mean.append(array.mean(values))
+            y_max.append(array.maximum(values) - y_mean[-1])
+            y_min.append(y_mean[-1] - array.minimum(values))
+
+        del _station
+        return y_min, y_mean, y_max
+
+    if freq not in ['monthly', 'bimonthly', 'trimonthly'] and env.var_D.is_daily():
+        range_analysis_interval = get_range_analysis_interval()
+        for month in range(1, 13):
+            for day in range_analysis_interval:
+                range_analysis_mean = []
+                range_analysis_max = []
+                range_analysis_min = []
+                # iteration for all years inside process period
+                for year in range(_station.process_period['start'], _station.process_period['end']+1):
+                    # test if day exist in month and year
+                    if day > monthrange(year, month)[1]:
+                        continue
+
+                    values = get_values_in_range_analysis_interval(_station.var_D, year, month, day)
+                    values = array.clean(values)
+                    range_analysis_mean.append(array.mean(values))
+                    range_analysis_max.append(array.maximum(values))
+                    range_analysis_min.append(array.minimum(values))
+
+                y_mean.append(array.mean(range_analysis_mean))
+                y_max.append(array.mean(range_analysis_max) - y_mean[-1])
+                y_min.append(y_mean[-1] - array.mean(range_analysis_min))
+
+        del _station
+        return y_min, y_mean, y_max
 
 def climatology(stations_list):
     """
@@ -761,66 +837,6 @@ def climatology(stations_list):
         header += [output.analysis_interval_text(i) for i in range(1,13)]
 
     csv_climatology_table.writerow(header)
-
-    # -------------------------------------------------------------------------
-    # calculate function for some variables need in climatology
-
-    def get_climatology_data(station, freq):
-
-        _station = copy.deepcopy(station)
-        _station.var_D.convert2(freq)
-        original_FREQUENCY_DATA = env.var_D.FREQUENCY_DATA
-        env.var_D.set_FREQUENCY_DATA(freq, check=False)
-
-        _station.var_D.calculate_data_date_and_nulls_in_period()
-        var_D_data = _station.var_D.data_in_process_period
-        var_D_date = _station.var_D.date_in_process_period
-
-        env.var_D.set_FREQUENCY_DATA(original_FREQUENCY_DATA, check=False)
-
-        y_mean = []
-        y_max = [] # value to add to mean for max value
-        y_min = [] # value to subtract to mean for min value
-
-        if freq in ['monthly', 'bimonthly', 'trimonthly']:
-            for month in range(1,13):
-                values = []
-                for iter, value in  enumerate(var_D_data):
-                    if var_D_date[iter].month == month:
-                        values.append(value)
-                values = array.clean(values)
-                y_mean.append(array.mean(values))
-                y_max.append(array.maximum(values) - y_mean[-1])
-                y_min.append(y_mean[-1] - array.minimum(values))
-
-            del _station
-            return y_min, y_mean, y_max
-
-        if freq not in ['monthly', 'bimonthly', 'trimonthly'] and env.var_D.is_daily():
-            range_analysis_interval = get_range_analysis_interval()
-            for month in range(1, 13):
-                for day in range_analysis_interval:
-                    range_analysis_mean = []
-                    range_analysis_max = []
-                    range_analysis_min = []
-                    # iteration for all years inside process period
-                    for year in range(_station.process_period['start'], _station.process_period['end']+1):
-                        # test if day exist in month and year
-                        if day > monthrange(year, month)[1]:
-                            continue
-
-                        values = get_values_in_range_analysis_interval(_station.var_D, year, month, day)
-                        values = array.clean(values)
-                        range_analysis_mean.append(array.mean(values))
-                        range_analysis_max.append(array.maximum(values))
-                        range_analysis_min.append(array.minimum(values))
-
-                    y_mean.append(array.mean(range_analysis_mean))
-                    y_max.append(array.mean(range_analysis_max) - y_mean[-1])
-                    y_min.append(y_mean[-1] - array.mean(range_analysis_min))
-
-            del _station
-            return y_min, y_mean, y_max
 
     for station in stations_list:
         # -------------------------------------------------------------------------
@@ -1280,6 +1296,18 @@ def scatter_plots_of_series(stations_list):
     return return_msg
 
 
+def get_frequency_histogram(data):
+
+    n = len(data)
+
+    # bins based on sturges formula
+    bins = 1 + 3.3*log10(n)
+
+    hist, bin_edges = histogram(data, bins=bins)
+
+    return hist, bin_edges
+
+
 def frequency_histogram(stations_list):
 
     frequency_histogram_dir = os.path.join(distribution_test_dir, _('Frequency_histogram'))
@@ -1288,12 +1316,7 @@ def frequency_histogram(stations_list):
 
     for station in stations_list:
 
-        n = station.var_D.size_data
-
-        # bins based on sturges formula
-        bins = 1 + 3.3*log10(n)
-
-        hist, bin_edges = histogram(station.var_D.data_filtered_in_process_period, bins=bins)
+        hist, bin_edges = get_frequency_histogram(station.var_D.data_filtered_in_process_period)
 
         name_graph = _("frequency_histogram_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
 
@@ -2135,3 +2158,89 @@ def homogeneity(stations_list):
             pyplot.close('all')
 
     return return_msg
+
+
+def anomaly(stations_list):
+
+    anomaly_time_series_dir = os.path.join(anomaly_dir, _('Anomaly_time_series'))
+    output.make_dirs(anomaly_time_series_dir)
+
+    if env.config_run.settings['graphics']:
+        anomaly_frequency_histogram_dir = os.path.join(anomaly_dir, _('Anomaly_frequency_histogram'))
+        output.make_dirs(anomaly_frequency_histogram_dir)
+
+    for station in stations_list:
+        station_copy = copy.deepcopy(station)
+        calculate_time_series(station_copy, lags=[0], makes_files=False)
+
+        # get the climatology values
+        clim_min, clim_mean, clim_max = get_climatology_data(station)
+        # get the time series values ordered
+        time_series_ordered = sorted(station_copy.time_series['lag_0'], key=lambda x: x[0])
+        time_series_var_D_values = [x[1] for x in time_series_ordered]
+
+        # extend the climatology values to N years of time series
+        climatology_var_D = clim_mean*(station.process_period['end']-station.process_period['start']+1)
+
+        anomaly_values = [x1 - x2 for (x1, x2) in zip(time_series_var_D_values, climatology_var_D)]
+        anomaly_values_cleaned = array.clean(anomaly_values)
+
+        hist, bin_edges = get_frequency_histogram(anomaly_values_cleaned)
+
+        ### Anomaly_time_series
+        file_anomaly_time_series \
+            = os.path.join(anomaly_time_series_dir, _('Anomaly_time_series_{0}_{1}_{2}.csv').format(env.var_D.TYPE_SERIES, station.code, station.name))
+        open_file_anomaly_time_series = open(file_anomaly_time_series, 'w')
+        csv_file_anomaly_time_series = csv.writer(open_file_anomaly_time_series, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
+
+        # print header
+        header = [_('DATE'), _('ANOMALY')+' {0} ({1})'.format(station.var_D.type_series, env.var_D.UNITS)]
+        csv_file_anomaly_time_series.writerow(header)
+
+        for date_anomaly, anomaly in zip([x[0] for x in time_series_ordered], anomaly_values):
+            if env.var_D.is_n_monthly():
+                date_formated = str(date_anomaly.year)+' '+str(output.analysis_interval_text(date_anomaly.month))
+            if env.var_D.is_daily():
+                date_formated = str(date_anomaly.year)+' '+str(output.analysis_interval_text(date_anomaly.month, date_anomaly.day))
+            csv_file_anomaly_time_series.writerow([date_formated, output.number(anomaly)])
+
+        open_file_anomaly_time_series.close()
+        del csv_file_anomaly_time_series
+
+        if env.config_run.settings['graphics']:
+
+            name_graph = _("Anomaly_frequency_histogram_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
+
+            fig = pyplot.figure()
+            ax = fig.add_subplot(111)
+            ax.set_title(unicode(_("Anomaly frequency histogram\n{0} {1} - {2} ({3}-{4})").format(station.code, station.name,
+                env.var_D.TYPE_SERIES, station.process_period['start'], station.process_period['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
+
+            ## X
+            type_var = env.var_D.TYPE_SERIES
+            ax.set_xlabel(unicode('{0} ({1}) - {2}'
+                .format(type_var, env.var_D.UNITS, env.config_run.settings['analysis_interval_i18n']), 'utf-8'), env.globals_vars.graphs_axis_properties())
+
+            ## Y
+            ax.set_ylabel(_('Frequency'), env.globals_vars.graphs_axis_properties())
+
+            width = 0.7 * (bin_edges[1] - bin_edges[0])
+            center = (bin_edges[:-1] + bin_edges[1:]) / 2
+            bar(center,hist,align='center', color='#638786', width=width)
+
+            ax.grid(True)
+            ax.axvline(x=0,color='#4A4A4A',ls='dashed')
+            ax.autoscale(tight=True)
+
+            zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
+
+            fig.tight_layout()
+
+            # save image
+            image = os.path.join(anomaly_frequency_histogram_dir, name_graph + '.png')
+            pyplot.savefig(image, dpi=75)
+
+            # stamp logo
+            watermarking.logo(image)
+
+            pyplot.close('all')
