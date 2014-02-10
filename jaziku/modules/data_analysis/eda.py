@@ -700,7 +700,6 @@ def graphs_inspection_of_series(stations_list):
 
             pyplot.close('all')
 
-
         ## create mosaic
         if env.var_D.is_daily() and env.var_I.is_n_monthly():
             image_var_D = Image.open(image_list[0])
@@ -1707,7 +1706,10 @@ def correlation(stations_list, type_correlation):
 
     # Adjust the same frequency data for the two time series
     stations_list_copy = copy.deepcopy(stations_list)
-    adjust_data_of_variables(stations_list_copy, messages=False)
+    if type_correlation == 'auto':
+        adjust_data_of_variables(stations_list_copy, force_same_frequencies=False, messages=False)
+    if type_correlation == 'cross':
+        adjust_data_of_variables(stations_list_copy, force_same_frequencies=True, messages=False)
 
     stations_list_correlation = stations_list_copy
 

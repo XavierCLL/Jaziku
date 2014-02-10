@@ -129,7 +129,7 @@ def check_analysis_interval():
         analysis_interval_error(env.var_D)
 
 
-def adjust_data_of_variables(stations_list, messages=True):
+def adjust_data_of_variables(stations_list, force_same_frequencies=False, messages=True):
     '''
     Adjust the var D and/or var I for all stations to frequency
     data defined in runfile as analysis_interval
@@ -145,13 +145,21 @@ def adjust_data_of_variables(stations_list, messages=True):
         if messages:
             console.msg(_("done"), color='green')
 
-    was_converted_to = {'D':False, 'I':True}
+    was_converted_to = {'D':False, 'I':False}
 
     freq_order = ["daily", "monthly", "bimonthly", "trimonthly"]
 
     freq_analysis_interval = env.config_run.settings['analysis_interval']
-    if freq_analysis_interval in ["5days", "10days", "15days"]:
+    if freq_analysis_interval in ["5days", "10days", "15days"] and not force_same_frequencies:
         return
+
+    if force_same_frequencies:
+        if freq_analysis_interval in ["5days", "10days", "15days"]:
+            freq_analysis_interval = "daily"
+        max_freq = freq_order[max(freq_order.index(env.var_D.FREQUENCY_DATA),
+                                  freq_order.index(env.var_I.FREQUENCY_DATA),
+                                  freq_order.index(freq_analysis_interval))]
+        freq_analysis_interval = max_freq
 
     for variable in ['D', 'I']:
         if freq_order.index(env.var_[variable].FREQUENCY_DATA) < freq_order.index(freq_analysis_interval):
