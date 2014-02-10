@@ -24,6 +24,8 @@ fixes
 - Fix set data in global period in homogeneity test
 - Fix function for adjust data to frequency to make result
   for input data daily
+- Fix not added value in the real data for all stations in special type
+  in graphs_inspection_of_series getting the data in process period
 
 **sisdhim2jaziku:**
 
