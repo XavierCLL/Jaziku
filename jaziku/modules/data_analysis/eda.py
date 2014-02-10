@@ -590,8 +590,8 @@ def graphs_inspection_of_series(stations_list):
             list_graphs.append([station.var_D, 'special_D'])
 
         for var, type in list_graphs:
-            x = var.date_in_process_period
-            y = var.data_in_process_period
+            x = list(var.date_in_process_period)
+            y = list(var.data_in_process_period)
 
             # number of year for process
             num_years = station.process_period['end'] - station.process_period['start']
