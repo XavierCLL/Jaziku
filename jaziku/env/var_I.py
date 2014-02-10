@@ -28,6 +28,9 @@ TYPE_SERIES = None
 #
 FREQUENCY_DATA = None
 
+#
+was_converted = False
+
 def get_FREQUENCY_DATA():
     global FREQUENCY_DATA
     _freq_data ={'daily': _('daily'),

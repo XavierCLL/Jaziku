@@ -35,7 +35,7 @@ from scipy import stats
 from jaziku import env
 from jaziku.core.station import Station
 from jaziku.core.analysis_interval import get_values_in_range_analysis_interval, locate_day_in_analysis_interval, \
-    get_range_analysis_interval, adjust_data_of_variables
+    get_range_analysis_interval, adjust_data_of_variables, get_text_of_frequency_data
 from jaziku.core.stations import global_process_period
 from jaziku.modules.climate import time_series
 from jaziku.modules.climate.contingency_table import get_label_of_var_I_category
@@ -1707,11 +1707,7 @@ def correlation(stations_list, type_correlation):
 
     # Adjust the same frequency data for the two time series
     stations_list_copy = copy.deepcopy(stations_list)
-    was_converted_to = adjust_data_of_variables(stations_list_copy, messages=False)
-    if was_converted_to:
-        freq_data = env.var_D.get_FREQUENCY_DATA() + _(' (converted)')
-    else:
-        freq_data = env.var_D.get_FREQUENCY_DATA()
+    adjust_data_of_variables(stations_list_copy, messages=False)
 
     stations_list_correlation = stations_list_copy
 
@@ -1720,9 +1716,10 @@ def correlation(stations_list, type_correlation):
         station_path = os.path.join(correlation_dir, station.code +'-'+station.name)
 
         # recalculate data if is needed
-        if was_converted_to:
-            station.var_I.calculate_data_date_and_nulls_in_period()
+        if env.var_D.was_converted:
             station.var_D.calculate_data_date_and_nulls_in_period()
+        if env.var_I.was_converted:
+            station.var_I.calculate_data_date_and_nulls_in_period()
 
         output.make_dirs(station_path)
 
@@ -1871,7 +1868,7 @@ def correlation(stations_list, type_correlation):
 
             pyplot.ylim(-1, 1)
 
-            ax.text(24, -1, _('with {0} data').format(freq_data), horizontalalignment='right', verticalalignment='center')
+            ax.text(24, -1, get_text_of_frequency_data('D'), horizontalalignment='right', verticalalignment='center')
 
             zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.06, y_scale_above=-0.06)
             fig.tight_layout()
@@ -1956,7 +1953,7 @@ def correlation(stations_list, type_correlation):
 
             # print footnote
             csv_file.writerow([])
-            csv_file.writerow([_("*Calculated with {0} data").format(freq_data)])
+            csv_file.writerow([get_text_of_frequency_data('D')])
             csv_file.writerow([_("*Data in global period {0}-{1}").format(global_period['start'], global_period['end'])])
 
             open_file.close()
@@ -2169,7 +2166,15 @@ def anomaly(stations_list):
         anomaly_frequency_histogram_dir = os.path.join(anomaly_dir, _('Anomaly_frequency_histogram'))
         output.make_dirs(anomaly_frequency_histogram_dir)
 
-    for station in stations_list:
+    # save original state of data for var D and I
+    original_freq_data_var_D = env.var_D.FREQUENCY_DATA
+    original_freq_data_var_I = env.var_I.FREQUENCY_DATA
+
+    # Adjust the same frequency data for the two time series
+    stations_list_adjusted = copy.deepcopy(stations_list)
+    adjust_data_of_variables(stations_list_adjusted, messages=False)
+
+    for station in stations_list_adjusted:
         station_copy = copy.deepcopy(station)
         calculate_time_series(station_copy, lags=[0], makes_files=False)
 
@@ -2194,7 +2199,7 @@ def anomaly(stations_list):
         csv_file_anomaly_time_series = csv.writer(open_file_anomaly_time_series, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
         # print header
-        header = [_('DATE'), _('ANOMALY')+' {0} ({1})'.format(station.var_D.type_series, env.var_D.UNITS)]
+        header = [_('DATE'), _('ANOMALIES')+' - {0} ({1})*'.format(station.var_D.type_series, env.var_D.UNITS)]
         csv_file_anomaly_time_series.writerow(header)
 
         for date_anomaly, anomaly in zip([x[0] for x in time_series_ordered], anomaly_values):
@@ -2203,6 +2208,10 @@ def anomaly(stations_list):
             if env.var_D.is_daily():
                 date_formated = str(date_anomaly.year)+' '+str(output.analysis_interval_text(date_anomaly.month, date_anomaly.day))
             csv_file_anomaly_time_series.writerow([date_formated, output.number(anomaly)])
+
+        # print footnote
+        csv_file_anomaly_time_series.writerow([])
+        csv_file_anomaly_time_series.writerow([get_text_of_frequency_data('D', ndays=True)])
 
         open_file_anomaly_time_series.close()
         del csv_file_anomaly_time_series
@@ -2218,8 +2227,9 @@ def anomaly(stations_list):
 
             ## X
             type_var = env.var_D.TYPE_SERIES
-            ax.set_xlabel(unicode('{0} ({1}) - {2}'
-                .format(type_var, env.var_D.UNITS, env.config_run.settings['analysis_interval_i18n']), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            ax.set_xlabel(unicode('{0} ({1}) {2}'
+                .format(type_var, env.var_D.UNITS,
+                        get_text_of_frequency_data('D', ndays=True)), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             ## Y
             ax.set_ylabel(_('Frequency'), env.globals_vars.graphs_axis_properties())
@@ -2231,6 +2241,8 @@ def anomaly(stations_list):
             ax.grid(True)
             ax.axvline(x=0,color='#4A4A4A',ls='dashed')
             ax.autoscale(tight=True)
+            #ax.text(0.99, 0.985, get_text_of_frequency_data('D', ndays=True), horizontalalignment='right',
+            #        verticalalignment='top', transform = ax.transAxes, rotation="vertical")
 
             zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
 
@@ -2244,3 +2256,7 @@ def anomaly(stations_list):
             watermarking.logo(image)
 
             pyplot.close('all')
+
+    # return to original FREQUENCY_DATA of the two variables
+    env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
+    env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
