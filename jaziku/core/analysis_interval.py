@@ -151,6 +151,7 @@ def adjust_data_of_variables(stations_list, force_same_frequencies=False, messag
 
     freq_analysis_interval = env.config_run.settings['analysis_interval']
     if freq_analysis_interval in ["5days", "10days", "15days"] and not force_same_frequencies:
+        env.var_D.was_converted, env.var_I.was_converted = was_converted_to['D'], was_converted_to['I']
         return
 
     if force_same_frequencies:
