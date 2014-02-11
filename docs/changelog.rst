@@ -26,6 +26,8 @@ fixes
   for input data daily
 - Fix not added value in the real data for all stations in special type
   in graphs_inspection_of_series getting the data in process period
+- Fix crash error when make the graphs of contingency tables with
+  the thresholds are statics and float/int type
 
 **sisdhim2jaziku:**
 

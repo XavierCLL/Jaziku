@@ -210,7 +210,7 @@ def climate_graphs(station):
                                         start_year=station.process_period['start'],
                                         end_year=station.process_period['end'],
                                         min=output.number(minimum(specific_time_series['var_D']),3),
-                                        thresholds=' | '.join(thresholds_D),
+                                        thresholds=' | '.join([str(x) for x in thresholds_D]),
                                         max=output.number(maximum(specific_time_series['var_D']),3)), 'utf-8'),
                                         fontsize=12, ha='center')
 
