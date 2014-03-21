@@ -54,11 +54,11 @@ def main(stations_list):
 
     if not env.config_run.settings['graphics']:
         console.msg(_("\n > WARNING: The 'graphics' in 'output options' is disabled,\n"
-                      "   all graphics for EDA module will not be created. The graphics\n"
-                      "   in EDA module represents the vast majority of the results.\n"), color='yellow')
+                      "   all graphics for EDA process will not be created. The graphics\n"
+                      "   in EDA represents the vast majority of the results.\n"), color='yellow')
 
     global eda_dir
-    eda_dir = os.path.join(env.globals_vars.DATA_ANALYSIS_DIR, 'EDA')
+    eda_dir = os.path.join(env.globals_vars.DATA_ANALYSIS_DIR, _('Exploratory_Data_Analysis'))
 
     # -------------------------------------------------------------------------
     # DESCRIPTIVE STATISTICS
@@ -564,7 +564,7 @@ types_var_D = {'PPT':{'graph':'bar','color':'#578ECE'}, 'NDPPT':{'graph':'bar','
 
 def graphs_inspection_of_series(stations_list):
     """
-    Graphs for inspection of series, part of EDA.
+    Graphs for inspection of series, part of Exploratory_Data_Analysis.
     """
 
     # directory for save graphs of descriptive statistic
@@ -811,7 +811,7 @@ def get_climatology_data(station, freq = None):
 
 def climatology(stations_list):
     """
-    Make table and graphs of climatology, part of EDA.
+    Make table and graphs of climatology, part of Exploratory_Data_Analysis.
     """
 
     graphs_dir = os.path.join(shapiro_wilks_dir, _('Graphs_Inspection_of_Series'))
