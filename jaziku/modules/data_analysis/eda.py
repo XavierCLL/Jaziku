@@ -292,10 +292,23 @@ def main(stations_list):
         console.msg(return_msg, color="yellow")
 
     # -------------------------------------------------------------------------
+    # ANOMALY
+
+    global anomaly_dir
+    anomaly_dir = os.path.join(eda_dir, _('Anomaly'))
+    output.make_dirs(anomaly_dir)
+
+    console.msg(_("Anomaly .............................................. "), newline=False)
+    anomaly(stations_list)
+    console.msg(_("done"), color='green')
+
+    # -------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     # HOMOGENEITY
+    # -------------------------------------------------------------------------
 
     global homogeneity_dir
-    homogeneity_dir = os.path.join(eda_dir, _('Homogeneity'))
+    homogeneity_dir = os.path.join(env.globals_vars.DATA_ANALYSIS_DIR, _('Homogeneity'))
     output.make_dirs(homogeneity_dir)
 
     console.msg(_("Homogeneity .......................................... "), newline=False)
@@ -306,16 +319,6 @@ def main(stations_list):
     else:
         console.msg(return_msg, color="yellow")
 
-    # -------------------------------------------------------------------------
-    # ANOMALY
-
-    global anomaly_dir
-    anomaly_dir = os.path.join(eda_dir, _('Anomaly'))
-    output.make_dirs(anomaly_dir)
-
-    console.msg(_("Anomaly .............................................. "), newline=False)
-    anomaly(stations_list)
-    console.msg(_("done"), color='green')
 
 
 def zoom_graph(ax,x_scale_below=0, x_scale_above=0, y_scale_below=0, y_scale_above=0, abs_x=False, abs_y=False):
