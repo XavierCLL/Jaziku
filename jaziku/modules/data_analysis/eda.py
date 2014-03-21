@@ -817,9 +817,8 @@ def climatology(stations_list):
     Make table and graphs of climatology, part of Exploratory_Data_Analysis.
     """
 
-    graphs_dir = os.path.join(shapiro_wilks_dir, _('Graphs_Inspection_of_Series'))
-
-    output.make_dirs(graphs_dir)
+    climatology_dir = os.path.join(eda_dir, _('Climatology'))
+    output.make_dirs(climatology_dir)
 
     # name climatology table of all stations
     if env.var_D.is_daily() or env.var_D.is_monthly():
@@ -828,7 +827,7 @@ def climatology(stations_list):
         filename_climatology_table = _('Climatology_table_{0}_({1})').format(env.var_D.TYPE_SERIES,env.config_run.settings['analysis_interval_i18n'])+'.csv'
     # climatology table file
     open_file_climatology_table\
-        = open(os.path.join(graphs_dir, filename_climatology_table), 'w')
+        = open(os.path.join(climatology_dir, filename_climatology_table), 'w')
     csv_climatology_table = csv.writer(open_file_climatology_table, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
     # print header
@@ -890,8 +889,7 @@ def climatology(stations_list):
             # -------------------------------------------------------------------------
             # for climatology graphs, N-month (base)
 
-            station_climatology_path = os.path.join(graphs_dir, station.code +'-'+station.name, _('Climatology'))
-
+            station_climatology_path = os.path.join(climatology_dir, station.code +'-'+station.name)
             output.make_dirs(station_climatology_path)
 
             x = range(1, 13)
