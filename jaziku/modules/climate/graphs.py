@@ -136,13 +136,13 @@ def climate_graphs(station):
             fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
             #fig = pyplot.figure()
 
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
             # graphics title
             fig.suptitle(unicode(_('Composite analysis - {0} ({1})\n{2} - {3} - lag {6} - {7} - ({4}-{5})').
                 format(station.name, station.code, station.var_D.type_series,
                     station.var_I.type_series, station.process_period['start'],
-                    station.process_period['end'], lag, title_period), 'utf-8'), fontsize=14)
+                    station.process_period['end'], lag, title_period), 'utf-8'), **env.globals_vars.graphs_title_properties(fs=15, fva='top'))
 
             # label for axis Y
             ax.set_ylabel(_('probability (%)'))
@@ -160,9 +160,9 @@ def climate_graphs(station):
             _var_D_values = [[0 if isnan(value) else value for value in l] for l in _var_D_values]
 
             # create bars
-            var_D_below = pyplot.bar(var_I_bars_groups_distance, _var_D_values[0], width, color=colours[0])
-            var_D_normal = pyplot.bar(var_I_bars_groups_distance + width, _var_D_values[1], width, color=colours[1])
-            var_D_above = pyplot.bar(var_I_bars_groups_distance + 2 * width, _var_D_values[2], width, color=colours[2])
+            var_D_below = pyplot.bar(var_I_bars_groups_distance, _var_D_values[0], width, **env.globals_vars.figure_bar_properties(color=colours[0],align='edge'))
+            var_D_normal = pyplot.bar(var_I_bars_groups_distance + width, _var_D_values[1], width, **env.globals_vars.figure_bar_properties(color=colours[1],align='edge'))
+            var_D_above = pyplot.bar(var_I_bars_groups_distance + 2 * width, _var_D_values[2], width, **env.globals_vars.figure_bar_properties(color=colours[2],align='edge'))
 
             # assign value label for each bar
             auto_label(var_D_below)
@@ -221,6 +221,7 @@ def climate_graphs(station):
                               .format(lag, filename_period, station.code, station.name, station.var_D.type_series,
                                       station.var_I.type_series, station.process_period['start'], station.process_period['end']))
 
+            #env.globals_vars.set_others_properties(ax)
             ax.grid(True, color='gray')
             fig.tight_layout()
 
@@ -281,13 +282,13 @@ def climate_graphs(station):
             fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
             #fig = pyplot.figure()
 
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
             # graphics title
             fig.suptitle(unicode(_('Composite analysis - {0} ({1})\n{2} - {3} - lag {6} - {7} - ({4}-{5})').
                 format(station.name, station.code, station.var_D.type_series,
                     station.var_I.type_series, station.process_period['start'],
-                    station.process_period['end'], lag, title_period), 'utf-8'), fontsize=14)
+                    station.process_period['end'], lag, title_period), 'utf-8'), **env.globals_vars.graphs_title_properties(fs=15, fva='top'))
 
             # label for axis Y
             ax.set_ylabel(_('probability (%)'))
@@ -305,13 +306,13 @@ def climate_graphs(station):
             _var_D_values = [[0 if isnan(value) else value for value in l] for l in _var_D_values]
 
             # create bars
-            var_D_strong_below = pyplot.bar(var_I_bars_groups_distance, _var_D_values[0], width, color=colours[0])
-            var_D_moderate_below = pyplot.bar(var_I_bars_groups_distance + width, _var_D_values[1], width, color=colours[1])
-            var_D_weak_below = pyplot.bar(var_I_bars_groups_distance + width*2, _var_D_values[2], width, color=colours[2])
-            var_D_normal = pyplot.bar(var_I_bars_groups_distance + width*3, _var_D_values[3], width, color=colours[3])
-            var_D_weak_above = pyplot.bar(var_I_bars_groups_distance + width*4, _var_D_values[4], width, color=colours[4])
-            var_D_moderate_above = pyplot.bar(var_I_bars_groups_distance + width*5, _var_D_values[5], width, color=colours[5])
-            var_D_strong_above = pyplot.bar(var_I_bars_groups_distance + width*6, _var_D_values[6], width, color=colours[6])
+            var_D_strong_below = pyplot.bar(var_I_bars_groups_distance, _var_D_values[0], width, **env.globals_vars.figure_bar_properties(color=colours[0],align='edge'))
+            var_D_moderate_below = pyplot.bar(var_I_bars_groups_distance + width, _var_D_values[1], width, **env.globals_vars.figure_bar_properties(color=colours[1],align='edge'))
+            var_D_weak_below = pyplot.bar(var_I_bars_groups_distance + width*2, _var_D_values[2], width, **env.globals_vars.figure_bar_properties(color=colours[2],align='edge'))
+            var_D_normal = pyplot.bar(var_I_bars_groups_distance + width*3, _var_D_values[3], width, **env.globals_vars.figure_bar_properties(color=colours[3],align='edge'))
+            var_D_weak_above = pyplot.bar(var_I_bars_groups_distance + width*4, _var_D_values[4], width, **env.globals_vars.figure_bar_properties(color=colours[4],align='edge'))
+            var_D_moderate_above = pyplot.bar(var_I_bars_groups_distance + width*5, _var_D_values[5], width, **env.globals_vars.figure_bar_properties(color=colours[5],align='edge'))
+            var_D_strong_above = pyplot.bar(var_I_bars_groups_distance + width*6, _var_D_values[6], width, **env.globals_vars.figure_bar_properties(color=colours[6],align='edge'))
 
             # assign value label for each bar
             fontsize_by_num_categ = {1:11, 2:11, 7:11}
@@ -390,6 +391,7 @@ def climate_graphs(station):
                               .format(lag, filename_period, station.code, station.name, station.var_D.type_series,
                                       station.var_I.type_series, station.process_period['start'], station.process_period['end']))
 
+            #env.globals_vars.set_others_properties(ax)
             ax.grid(True, color='gray')
             fig.tight_layout()
 
