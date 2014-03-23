@@ -29,9 +29,9 @@ from math import isnan
 
 PROG_NAME = "jaziku"
 
-VERSION = "0.9.0"
+VERSION = "0.9.1"
 
-VERSION_DATE = "20/12/2013"
+VERSION_DATE = "11/02/2014"
 
 # absolute directory where is installed Jaziku in your system,
 # this variable is set in jaziku.py
@@ -168,17 +168,63 @@ maps_files_forecast = {}  # [lag][month][var_I_labels]
 #==============================================================================
 # graphics properties
 
-def graphs_axis_properties(afs=15, ma='center'):
+colors = {
+    'plt_default': '#638786',
+
+    'grey_W2': '#F0F0F0',  # Weak
+    'grey_W1': '#D8D8D8',
+    'grey_S1': '#8A8A8A',
+    'grey_S2': '#646464',
+    'grey_S3': '#535353',
+    'grey_S4': '#4E4E4E',
+    'grey_S5': '#3F3F3F',  # Strong
+}
+
+def graphs_subplot_properties(bg_color=colors['grey_W2']):
+    subplot_properties = {}
+    subplot_properties["axisbg"] = bg_color
+    return subplot_properties
+
+def graphs_axis_properties(fs=15, fa='center', fw='bold', fc=colors['grey_S2']):
     axis_properties = {}
-    axis_properties["fontsize"] = afs
-    axis_properties["multialignment"] = ma
+    axis_properties["fontsize"] = fs
+    axis_properties["multialignment"] = fa
+    axis_properties["weight"] = fw
+    axis_properties["color"] = fc
     return axis_properties
 
-def graphs_title_properties(tfs=18, ma='center'):
+def graphs_title_properties(fs=17, fa='center', fva='bottom', ff='sans-serif', fw='bold', fc=colors['grey_S5']):
     title_properties = {}
-    title_properties["fontsize"] = tfs
-    title_properties["multialignment"] = ma
+    title_properties["fontsize"] = fs
+    title_properties["multialignment"] = fa
+    title_properties["verticalalignment"] = fva
+    title_properties["family"] = ff
+    title_properties["weight"] = fw
+    title_properties["color"] = fc
     return title_properties
+
+def figure_plot_properties(color=colors['plt_default'], mec=colors['plt_default'], ms=8):
+    plot_properties = {}
+    plot_properties["color"] = color
+    plot_properties["markersize"] = ms
+    plot_properties["mec"] = mec
+    return plot_properties
+
+def figure_bar_properties(color=colors['plt_default'], eg_color='none', align='center'):
+    bar_properties = {}
+    bar_properties["color"] = color
+    bar_properties["edgecolor"] = eg_color
+    bar_properties["align"] = align
+    return bar_properties
+
+def set_others_properties(ax, ts=14.5):
+    # text in axes
+    ax.tick_params(axis='both', which='major', labelsize=ts, labelcolor=colors['grey_S3'])
+    #ax.tick_params(axis='both', which='minor', labelsize=8)
+    # line border of box of subplot
+    for spine in ax.spines.values():
+        spine.set_edgecolor(colors['grey_S1'])
+        spine.set_linewidth(1.2)
 
 
 #==============================================================================

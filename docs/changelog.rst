@@ -13,6 +13,9 @@ news
 
 - Make by each station the anomalies time series and the graph of
   anomaly frequency histogram, based on analysis interval.
+- Reorganized several files/directories in Data Analysis
+- Several adjust and improvement for all graphics in Data Analysis,
+  Climate and Forecast modules
 
 fixes
 +++++

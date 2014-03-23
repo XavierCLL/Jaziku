@@ -23,7 +23,8 @@
 # Team:
 #   Developer:
 #       Xavier Corredor Llano < xcorredorl(a)ideam.gov.co >
-#   Roadmap, technical-theoretical support, tester and product verification, doc-user and manual:
+#   Roadmap, technical-theoretical support, tester and product
+#   verification, doc-user and manual:
 #       Ines Sánchez Rodriguez < icsanchez(a)ideam.gov.co >
 #==============================================================================
 

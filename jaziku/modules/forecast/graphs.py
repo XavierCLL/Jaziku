@@ -45,8 +45,8 @@ def forecast_graphs(station):
     # Probability graphics for forecasts (pie chart)
 
     # defined the size of the image
-    image_height = 220
-    image_width = 310
+    image_height = 318
+    image_width = 445
 
     image_open_list = []
 
@@ -56,13 +56,13 @@ def forecast_graphs(station):
         # climate graphics for 3 categories
         if env.config_run.settings['class_category_analysis'] == 3:
             # Options for graphics pie
-            dpi = 75.0
+            dpi = 100.0
             fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
 
             fig.suptitle(unicode(_('Probability forecasts of {0} / {1}\n{2} ({3})\nlag {4} - {5} - ({6}-{7})')
                 .format(station.var_D.type_series, station.var_I.type_series, station.name, station.code, lag, env.config_run.settings['forecast_date']['text'],
                         station.process_period['start'], station.process_period['end']),
-                        'utf-8'), fontsize=13)
+                        'utf-8'), **env.globals_vars.graphs_title_properties(fs=12, fva='top'))
 
             # colors for paint pie: below, normal , above
             colours = ['#DD4620', '#62AD29', '#6087F1']
@@ -90,10 +90,15 @@ def forecast_graphs(station):
                                      "probabilities, because there are thresholds\n"
                                      "problems in contingency table, or the series data."), 'utf-8'), fontsize=10, ha='center')
             else:
-                ax = fig.add_subplot(111)
+                ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
                 pie_plot = ax.pie(values_pie, colors=colours, autopct='%1.1f%%', shadow=True)
+                # pie without borders
+                for wedges in pie_plot[0]:
+                    wedges.set_linewidth(0)
+
                 pyplot.legend(tuple(pie_plot[0]), labels, loc=(0.96,0.4), borderaxespad=-3, shadow=False, fancybox=True, fontsize=10, labelspacing=0.3)
 
+            env.globals_vars.set_others_properties(ax)
             #pyplot.subplots_adjust(bottom=0.025, top=0.76, left=0.22, right=0.78)
             pyplot.subplots_adjust(bottom=-0.04, top=0.78, left=0.06, right=0.65)
 
@@ -107,13 +112,13 @@ def forecast_graphs(station):
         # climate graphics for 7 categories in percentage
         if env.config_run.settings['class_category_analysis'] == 7:
             # Options for graphics pie
-            dpi = 75.0
+            dpi = 100.0
             fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
 
             fig.suptitle(unicode(_('Probability forecasts of {0} / {1}\n{2} ({3})\nlag {4} - {5} - ({6}-{7})')
                 .format(station.var_D.type_series, station.var_I.type_series, station.name, station.code, lag, env.config_run.settings['forecast_date']['text'],
                         station.process_period['start'], station.process_period['end']),
-                        'utf-8'), fontsize=13)
+                        'utf-8'), **env.globals_vars.graphs_title_properties(fs=12, fva='top'))
 
             # colors for paint pie: *below, normal , *above
             colours = ['#DD4620', '#DD8620','#DDC620', '#62AD29', '#60C7F1', '#6087F1', '#6047F1']
@@ -148,10 +153,14 @@ def forecast_graphs(station):
                                      "probabilities, because there are thresholds\n"
                                      "problems in contingency table, or the series data."), 'utf-8'), fontsize=10, ha='center')
             else:
-                ax = fig.add_subplot(111)
+                ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
                 pie_plot = ax.pie(values_pie, colors=colours, autopct='%1.1f%%', shadow=True)
+                # pie without borders
+                for wedges in pie_plot[0]:
+                    wedges.set_linewidth(0)
                 pyplot.legend(tuple(pie_plot[0]), labels, loc=(0.96,0.27), borderaxespad=-3, shadow=False, fancybox=True, fontsize=9, labelspacing=0.3)
 
+            env.globals_vars.set_others_properties(ax)
             pyplot.subplots_adjust(bottom=-0.04, top=0.78, left=-0.01, right=0.58)
 
             # dir and name of image
@@ -219,13 +228,13 @@ def forecast_graphs(station):
         for lag in env.config_run.settings['lags']:
 
             # Options for graphics pie
-            dpi = 75.0
+            dpi = 100.0
             fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
 
             fig.suptitle(unicode(_('Deterministic forecasts of {0} / {1}\n{2} ({3})\nlag {4} - {5} - ({6}-{7})')
                 .format(station.var_D.type_series, station.var_I.type_series, station.name, station.code, lag, env.config_run.settings['forecast_date']['text'],
                         station.process_period['start'], station.process_period['end']),
-                        'utf-8'), fontsize=13)
+                        'utf-8'), **env.globals_vars.graphs_title_properties(fs=12, fva='top'))
 
             # colors for paint pie: *below, normal , *above
             colours = ['#DD4620', '#DD8620','#DDC620', '#62AD29', '#60C7F1', '#6087F1', '#6047F1']
@@ -280,14 +289,18 @@ def forecast_graphs(station):
                                      "probabilities, because there are thresholds\n"
                                      "problems in contingency table, or the series data."), 'utf-8'), fontsize=10, ha='center')
             else:
-                ax = fig.add_subplot(111)
+                ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
                 pie_plot = ax.pie(values_pie, colors=colours, autopct='%1.1f%%', shadow=True)
+                # pie without borders
+                for wedges in pie_plot[0]:
+                    wedges.set_linewidth(0)
                 pyplot.legend(tuple(pie_plot[0]), labels, loc=(0.96,0.2), borderaxespad=-3, shadow=False, fancybox=True, fontsize=11, labelspacing=0.3)
                 # show units above of legend box
                 fig.text(0.745, 0.585, '{0}\n{1} ({2})'.format(env.var_D.UNITS,
                                                                env.config_run.settings['mode_calculation_series_D_i18n'],
                                                                env.config_run.settings['analysis_interval_i18n']), fontsize=11, ha='center')
 
+            env.globals_vars.set_others_properties(ax)
             pyplot.subplots_adjust(bottom=-0.04, top=0.78, left=0, right=0.59)
 
             # dir and name of image

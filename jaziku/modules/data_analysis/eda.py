@@ -391,7 +391,7 @@ def descriptive_statistic_graphs(stations_list):
             # dynamic with based of number of stations
             with_fig = Station.stations_processed/5+4
             fig = pyplot.figure(figsize=(with_fig, 6), dpi=100)
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
             #tfs = 18.5 - 10/(Station.stations_processed)
 
             if Station.stations_processed <= 5:
@@ -403,11 +403,11 @@ def descriptive_statistic_graphs(stations_list):
 
             if graph == _('vs_Stations'):
                 if graph_options[statistics[enum]] == 'dots':
-                    ax.plot(range(1, len(x)+1), y, 'o', color="#638786", markersize=8.5)
+                    ax.plot(range(1, len(x)+1), y, 'o', **env.globals_vars.figure_plot_properties(ms=8.5))
                 if graph_options[statistics[enum]] == 'bars':
-                    bar(range(1, len(x)+1), y, width=0.8, align='center', color="#638786")
+                    bar(range(1, len(x)+1), y, width=0.8, **env.globals_vars.figure_bar_properties())
             if graph == _('vs_Altitude'):
-                ax.plot(x, y, 'o', color="#638786", markersize=8.5)
+                ax.plot(x, y, 'o', **env.globals_vars.figure_plot_properties(ms=8.5))
 
             ## X
             if graph == _('vs_Stations'):
@@ -426,7 +426,8 @@ def descriptive_statistic_graphs(stations_list):
             ax.set_ylabel(unicode('{0} ({1})'.format(statistic.replace('_',' '),units), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             pyplot.subplots_adjust(bottom=0.2)
-            ax.grid(True)
+            ax.grid(True, color='gray')
+            env.globals_vars.set_others_properties(ax)
             ax.autoscale(tight=True)
             if graph == _('vs_Stations'):
                 if graph_options[statistics[enum]] == 'dots':
@@ -630,7 +631,7 @@ def graphs_inspection_of_series(stations_list):
 
             fig = pyplot.figure(figsize=(with_fig, 5))
             #fig = pyplot.figure()
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
             ax.set_title(unicode(name_graph.replace('_',' '), 'utf-8'), env.globals_vars.graphs_title_properties())
 
             # default zoom values
@@ -647,27 +648,28 @@ def graphs_inspection_of_series(stations_list):
                 if env.var_[var.type].is_daily() or type == 'special_D':
                     if type_var not in types_var_D:
                         # default for generic type for var D
-                        ax.plot(x, y, '-', color="#638786")
+                        ax.plot(x, y, '-', **env.globals_vars.figure_plot_properties())
                     else:
                         if types_var_D[type_var]['graph'] == 'bar':
-                            bar(x, y, align='center', color=types_var_D[type_var]['color'], width=1+num_years/5, edgecolor='none')
+                            bar(x, y, width=1+num_years/5, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
                             y_scale_below=0
                         else:
                             #ax.plot(x, y, TYPES_VAR_D[type_var]['graph'], color=TYPES_VAR_D[type_var]['color'])
-                            ax.plot(x, y, '-', color=types_var_D[type_var]['color'])
+                            ax.plot(x, y, '-', **env.globals_vars.figure_plot_properties(color=types_var_D[type_var]['color']))
                 if env.var_[var.type].is_n_monthly() and not type == 'special_D':
                     if type_var not in types_var_D:
                         # default for generic type for var D
-                        ax.plot(x, y, '-', color="#638786")
+                        ax.plot(x, y, '-', **env.globals_vars.figure_plot_properties())
                     else:
                         if types_var_D[type_var]['graph'] == 'bar':
-                            bar(x, y, align='center', color=types_var_D[type_var]['color'], width=20+num_years/5, edgecolor='none')
+                            bar(x, y, width=20+num_years/5, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
                             y_scale_below=0
                         else:
-                            ax.plot(x, y, '-', color=types_var_D[type_var]['color'])
+                            ax.plot(x, y, '-', **env.globals_vars.figure_plot_properties(color=types_var_D[type_var]['color']))
+
 
             if type == 'I' or type == 'special_I':
-                ax.plot(x, y, '-', color="#638786")
+                ax.plot(x, y, '-', **env.globals_vars.figure_plot_properties())
 
             ## X
             ax.set_xlabel(_('Time'), env.globals_vars.graphs_axis_properties())
@@ -687,7 +689,8 @@ def graphs_inspection_of_series(stations_list):
             ax.set_ylabel(unicode('{0} ({1})'.format(type_var, units), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             pyplot.subplots_adjust(bottom=0.2)
-            ax.grid(True)
+            ax.grid(True, color='gray')
+            env.globals_vars.set_others_properties(ax)
             ax.autoscale(tight=True)
             zoom_graph(ax=ax, x_scale_below=x_scale_below,x_scale_above=x_scale_above,
                 y_scale_below=y_scale_below, y_scale_above=y_scale_above)
@@ -911,7 +914,7 @@ def climatology(stations_list):
                             station.code, station.name, env.var_D.TYPE_SERIES)
 
             fig = pyplot.figure(figsize=(8, 5.5))
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
             ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
 
@@ -930,23 +933,24 @@ def climatology(stations_list):
             ax.set_ylabel(unicode('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[mean]'), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             #pyplot.subplots_adjust(bottom=0.2)
-            ax.grid(True)
+            ax.grid(True, color='gray')
+            env.globals_vars.set_others_properties(ax)
             ax.autoscale(tight=True)
 
             if type_var not in types_var_D:
                 # default for generic type for var D
                 #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
-                ax.plot(x, y_mean, '-o', color='#638786', mec='#638786', linewidth=2.5, markersize=8)
+                ax.plot(x, y_mean, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties())
                 zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
             else:
                 if types_var_D[type_var]['graph'] == 'bar':
-                    bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
+                    bar(x, y_mean, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
                     #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
                     zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
                 else:
                     #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=TYPES_VAR_D[type_var]['color'],
                     #    mec=TYPES_VAR_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
-                    ax.plot(x, y_mean, '-o', color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color'], linewidth=2.5, markersize=8)
+                    ax.plot(x, y_mean, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties(color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color']))
                     zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
 
             # labels on both sides
@@ -970,7 +974,7 @@ def climatology(stations_list):
                 station.code, station.name, env.var_D.TYPE_SERIES)
 
             fig = pyplot.figure(figsize=(8, 5.5))
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
             ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
 
@@ -989,17 +993,18 @@ def climatology(stations_list):
             ax.set_ylabel(unicode(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             #pyplot.subplots_adjust(bottom=0.2)
-            ax.grid(True)
+            ax.grid(True, color='gray')
+            env.globals_vars.set_others_properties(ax)
             ax.autoscale(tight=True)
 
             if type_var not in types_var_D:
                 # default for generic type for var D
-                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
+                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', mec='#638786', mew=3, linewidth=2.5, elinewidth=1, **env.globals_vars.figure_bar_properties())
                 #bar(x, y_mean, align='center', color='#638786')
                 zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
             else:
                 if types_var_D[type_var]['graph'] == 'bar':
-                    bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
+                    bar(x, y_mean, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
                     ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
                     zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
                 else:
@@ -1074,7 +1079,7 @@ def climatology(stations_list):
 
             with_fig = 5 + len(y_mean)/9
             fig = pyplot.figure(figsize=(with_fig, 5.5))
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
             ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
 
             type_var = env.var_D.TYPE_SERIES
@@ -1088,7 +1093,8 @@ def climatology(stations_list):
             ax.set_ylabel(unicode('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[mean]'), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             #pyplot.subplots_adjust(bottom=0.2)
-            ax.grid(True)
+            ax.grid(True, color='gray')
+            env.globals_vars.set_others_properties(ax)
             ax.autoscale(tight=True)
 
             x_scale_value = -0.013 - env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL/600.0
@@ -1096,15 +1102,15 @@ def climatology(stations_list):
             if type_var not in types_var_D:
                 # default for generic type for var D
                 #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
-                ax.plot(x, y_mean, '-o', color='#638786', mec='#638786', linewidth=2.5, markersize=8)
+                ax.plot(x, y_mean, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties())
                 zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_below=-0.04, y_scale_above=-0.04)
             else:
                 if types_var_D[type_var]['graph'] == 'bar':
-                    bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
+                    bar(x, y_mean, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
                     #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
                     zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_above=-0.04)
                 else:
-                    ax.plot(x, y_mean, '-o', color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color'], linewidth=2.5, markersize=8)
+                    ax.plot(x, y_mean, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties(color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color']))
                     #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=TYPES_VAR_D[type_var]['color'],
                     #    mec=TYPES_VAR_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
                     zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_below=-0.04, y_scale_above=-0.04)
@@ -1131,7 +1137,7 @@ def climatology(stations_list):
 
             with_fig = 5 + len(y_mean)/9
             fig = pyplot.figure(figsize=(with_fig, 5.5))
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
             ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
 
             type_var = env.var_D.TYPE_SERIES
@@ -1145,7 +1151,8 @@ def climatology(stations_list):
             ax.set_ylabel(unicode(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             #pyplot.subplots_adjust(bottom=0.2)
-            ax.grid(True)
+            ax.grid(True, color='gray')
+            env.globals_vars.set_others_properties(ax)
             ax.autoscale(tight=True)
 
             x_scale_value = -0.013 - env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL/600.0
@@ -1157,7 +1164,7 @@ def climatology(stations_list):
                 #bar(x, y_mean, align='center', color='#638786')
             else:
                 if types_var_D[type_var]['graph'] == 'bar':
-                    bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
+                    bar(x, y_mean, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
                     ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
                     zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_above=-0.04)
                 else:
@@ -1252,7 +1259,7 @@ def scatter_plots_of_series(stations_list):
         env.var_D.UNITS,
         global_period['start'], global_period['end'])
 
-    pyplot.suptitle(unicode(title_plot, 'utf-8'), y=(fig_height-0.1)/fig_height, fontsize=14)
+    pyplot.suptitle(unicode(title_plot, 'utf-8'), y=(fig_height-0.1)/fig_height, **env.globals_vars.graphs_title_properties(fs=14, fva='top'))
 
     for iter_v, station_v in enumerate(stations_list):
         for iter_h, station_h in enumerate(stations_list):
@@ -1275,7 +1282,9 @@ def scatter_plots_of_series(stations_list):
             else:
                 ax.set_xticklabels([])
 
-            ax.grid(True)
+            pyplot.xticks(rotation='vertical')
+            ax.grid(True, color='gray')
+            env.globals_vars.set_others_properties(ax, ts=12.5)
             ax.autoscale(tight=True)
 
             pyplot.tight_layout(pad=0.8)
@@ -1321,7 +1330,7 @@ def frequency_histogram(stations_list):
         name_graph = _("frequency_histogram_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
 
         fig = pyplot.figure()
-        ax = fig.add_subplot(111)
+        ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
         ax.set_title(unicode(_("Frequency histogram\n{0} {1} - {2} ({3}-{4})").format(station.code, station.name,
             env.var_D.TYPE_SERIES, station.process_period['start'], station.process_period['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
 
@@ -1335,9 +1344,10 @@ def frequency_histogram(stations_list):
 
         width = 0.7 * (bin_edges[1] - bin_edges[0])
         center = (bin_edges[:-1] + bin_edges[1:]) / 2
-        bar(center,hist,align='center', color='#638786', width=width)
+        bar(center, hist, width=width, **env.globals_vars.figure_bar_properties())
 
-        ax.grid(True)
+        ax.grid(True, color='gray')
+        env.globals_vars.set_others_properties(ax)
         ax.autoscale(tight=True)
 
         zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
@@ -1436,8 +1446,8 @@ def outliers(stations_list):
             name_graph = _("Outliers")+"_{0}_{1}_{2}_({3}-{4})".format(station.code, station.name,
             env.var_D.TYPE_SERIES, station.process_period['start'], station.process_period['end'])
 
-            fig = pyplot.figure(figsize=(3,6))
-            ax = fig.add_subplot(111)
+            fig = pyplot.figure(figsize=(3.5,7))
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
             ax.set_title(unicode(_("Outliers")+"\n{0} ({1}-{2})".format(env.var_D.TYPE_SERIES,
                 station.process_period['start'], station.process_period['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
 
@@ -1453,12 +1463,14 @@ def outliers(stations_list):
 
             boxplot_station = boxplot(station.var_D.data_filtered_in_process_period)
 
-            #pyplot.setp(boxplot_station['boxes'], color='black')
-            #pyplot.setp(boxplot_station['whiskers'], color='black', linestyle='-')
-            pyplot.setp(boxplot_station['fliers'], color='red', marker='+')
-            #pyplot.setp(boxplot_station['fliers'], markersize=3.0)
+            pyplot.setp(boxplot_station['boxes'], color=env.globals_vars.colors['plt_default'], linewidth=2.5)
+            pyplot.setp(boxplot_station['medians'], color='red', linewidth=2.5)
+            pyplot.setp(boxplot_station['whiskers'], color=env.globals_vars.colors['plt_default'], linestyle='solid', linewidth=2.5)
+            pyplot.setp(boxplot_station['fliers'], color='red', markersize=11, marker='.')
+            pyplot.setp(boxplot_station['caps'], color=env.globals_vars.colors['plt_default'], linewidth=2.5)
 
-            #ax.grid(True)
+            ax.grid(True, color='gray')
+            env.globals_vars.set_others_properties(ax)
             ax.autoscale(tight=True)
 
             zoom_graph(ax=ax, x_scale_below=-2.5,x_scale_above=-2.5, y_scale_below=-0.04, y_scale_above=-0.04)
@@ -1574,13 +1586,14 @@ def outliers(stations_list):
         else:
             name_graph = _("Outliers")+"_{0}".format(env.var_D.TYPE_SERIES)
 
-        fig = pyplot.figure(figsize=(2.5+len(stations_list)/2.5,6))
-        ax = fig.add_subplot(111)
-
-        if len(stations_list) <= 3:
+        if len(stations_list) <= 4:
             _part_title = _("Outliers")+'\n'
+            fig = pyplot.figure(figsize=(2.5+len(stations_list)/2.5,7))
         else:
             _part_title = _("Outliers")+' - '
+            fig = pyplot.figure(figsize=(2.5+len(stations_list)/2.5,6))
+
+        ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
         if env.config_run.settings['process_period']:
             ax.set_title(unicode(_part_title + "{0} ({1}-{2})".format(env.var_D.TYPE_SERIES,
@@ -1599,12 +1612,14 @@ def outliers(stations_list):
 
         boxplot_station = boxplot(data_stations)
 
-        #pyplot.setp(boxplot_station['boxes'], color='black')
-        #pyplot.setp(boxplot_station['whiskers'], color='black', linestyle='-')
-        pyplot.setp(boxplot_station['fliers'], color='red', marker='+')
-        #pyplot.setp(boxplot_station['fliers'], markersize=3.0)
+        pyplot.setp(boxplot_station['boxes'], color=env.globals_vars.colors['plt_default'], linewidth=2.5)
+        pyplot.setp(boxplot_station['medians'], color='red', linewidth=2.5)
+        pyplot.setp(boxplot_station['whiskers'], color=env.globals_vars.colors['plt_default'], linestyle='solid', linewidth=2.5)
+        pyplot.setp(boxplot_station['fliers'], color='red', markersize=11, marker='.')
+        pyplot.setp(boxplot_station['caps'], color=env.globals_vars.colors['plt_default'], linewidth=2.5)
 
-        #ax.grid(True)
+        ax.grid(True, color='gray')
+        env.globals_vars.set_others_properties(ax)
         ax.autoscale(tight=True)
         #pyplot.subplots_adjust(bottom=) #(len(array.max(codes_stations))/30.0))
 
@@ -1849,7 +1864,7 @@ def correlation(stations_list, type_correlation):
                                                          env.var_I.TYPE_SERIES, station.process_period['start'],
                                                          station.process_period['end'])
 
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
             ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
 
@@ -1866,12 +1881,15 @@ def correlation(stations_list, type_correlation):
             ax.autoscale(tight=True)
 
             #bar(correlation_values['lags'], correlation_values['pearson'], align='center', width=0.2, color='k')
-            ax.plot(correlation_values['lags'], correlation_values['pearson'], 'ro', color='#638786', mec='#638786', linewidth=2.5, markersize=8)
+            ax.plot(correlation_values['lags'], correlation_values['pearson'], 'ro', linewidth=2.5, **env.globals_vars.figure_plot_properties())
             ax.vlines(correlation_values['lags'], [0], correlation_values['pearson'], linewidth=2.5, color='#638786')
 
             pyplot.ylim(-1, 1)
 
             ax.text(24, -1, get_text_of_frequency_data('D'), horizontalalignment='right', verticalalignment='center')
+
+            env.globals_vars.set_others_properties(ax)
+            ax.grid(True, color='gray')
 
             zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.06, y_scale_above=-0.06)
             fig.tight_layout()
@@ -2122,7 +2140,7 @@ def homogeneity(stations_list):
                     accumulate.append(accumulate[-1] + value)
 
             fig = pyplot.figure(figsize=(7, 5))
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
             titulo = _("{0} for {1}-{2}\nperiod {3}-{4}")\
                 .format(_('Mass Curve'), station.code, station.name, global_period['start'], global_period['end'])
@@ -2138,13 +2156,14 @@ def homogeneity(stations_list):
 
             pyplot.axhline(linewidth=1, color='k')
 
+            env.globals_vars.set_others_properties(ax)
             ax.autoscale(tight=True)
 
             pyplot.xlim(global_period['start_date'], global_period['end_date'])
             ax.grid(True, color='gray')
 
             #bar(correlation_values['lags'], correlation_values['pearson'], align='center', width=0.2, color='k')
-            ax.plot(global_period['dates'], accumulate, color='#638786', mec='#638786', linewidth=5)
+            ax.plot(global_period['dates'], accumulate, linewidth=5, **env.globals_vars.figure_plot_properties())
 
             fig.tight_layout()
 
@@ -2224,7 +2243,7 @@ def anomaly(stations_list):
             name_graph = _("Anomaly_frequency_histogram_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
 
             fig = pyplot.figure()
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
             ax.set_title(unicode(_("Anomaly frequency histogram\n{0} {1} - {2} ({3}-{4})").format(station.code, station.name,
                 env.var_D.TYPE_SERIES, station.process_period['start'], station.process_period['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
 
@@ -2239,10 +2258,11 @@ def anomaly(stations_list):
 
             width = 0.7 * (bin_edges[1] - bin_edges[0])
             center = (bin_edges[:-1] + bin_edges[1:]) / 2
-            bar(center,hist,align='center', color='#638786', width=width)
+            bar(center, hist, width=width, **env.globals_vars.figure_bar_properties())
 
-            ax.grid(True)
+            ax.grid(True, color='gray')
             ax.axvline(x=0,color='#4A4A4A',ls='dashed')
+            env.globals_vars.set_others_properties(ax)
             ax.autoscale(tight=True)
             #ax.text(0.99, 0.985, get_text_of_frequency_data('D', ndays=True), horizontalalignment='right',
             #        verticalalignment='top', transform = ax.transAxes, rotation="vertical")
