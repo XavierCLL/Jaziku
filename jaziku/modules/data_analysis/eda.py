@@ -654,28 +654,28 @@ def graphs_inspection_of_series(stations_list):
                 if env.var_[var.type].is_daily() or type == 'special_D':
                     if type_var not in types_var_D:
                         # default for generic type for var D
-                        ax.plot(x, y, '-', **env.globals_vars.figure_plot_properties())
+                        ax.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties())
                     else:
                         if types_var_D[type_var]['graph'] == 'bar':
-                            bar(x, y, width=1+num_years/5, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
+                            bar(x, y, width=2+num_years/5, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
                             y_scale_below=0
                         else:
                             #ax.plot(x, y, TYPES_VAR_D[type_var]['graph'], color=TYPES_VAR_D[type_var]['color'])
-                            ax.plot(x, y, '-', **env.globals_vars.figure_plot_properties(color=types_var_D[type_var]['color']))
+                            ax.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties(color=types_var_D[type_var]['color']))
                 if env.var_[var.type].is_n_monthly() and not type == 'special_D':
                     if type_var not in types_var_D:
                         # default for generic type for var D
-                        ax.plot(x, y, '-', **env.globals_vars.figure_plot_properties())
+                        ax.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties())
                     else:
                         if types_var_D[type_var]['graph'] == 'bar':
-                            bar(x, y, width=20+num_years/5, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
+                            bar(x, y, width=22+num_years/5, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
                             y_scale_below=0
                         else:
-                            ax.plot(x, y, '-', **env.globals_vars.figure_plot_properties(color=types_var_D[type_var]['color']))
+                            ax.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties(color=types_var_D[type_var]['color']))
 
 
             if type == 'I' or type == 'special_I':
-                ax.plot(x, y, '-', **env.globals_vars.figure_plot_properties())
+                ax.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties())
 
             ## X
             ax.set_xlabel(_('Time'), env.globals_vars.graphs_axis_properties())
