@@ -382,32 +382,31 @@ def descriptive_statistic_graphs(stations_list):
                     x.append(float(station.alt))
                 y.append(get_statistic[statistics[enum]])
 
-            # do that matplotlib plot zeros in extreme values
-            for value in y:
-                if value == 0:
-                    y[y.index(value)] = 0.0001
-
             name_graph = _("{0}_({1})_{2}").format(statistic, env.var_D.TYPE_SERIES, graph)
             # dynamic with based of number of stations
             with_fig = Station.stations_processed/5+4
-            fig = pyplot.figure(figsize=(with_fig, 6), dpi=100)
+            if with_fig < 5:
+                with_fig = 4.4
+            fig = pyplot.figure(figsize=(with_fig, 6.5), dpi=100)
             ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
             #tfs = 18.5 - 10/(Station.stations_processed)
 
-            if Station.stations_processed <= 5:
+            if Station.stations_processed <= 20:
                 title = _("{0} ({1})\n{2}").format(statistic.replace('_',' '), env.var_D.TYPE_SERIES, graph.replace('_',' '))
             else:
                 title = name_graph.replace('_',' ')
+
+            title += ' ({0}-{1})'.format(station.process_period['start'], station.process_period['end'])
 
             ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
 
             if graph == _('vs_Stations'):
                 if graph_options[statistics[enum]] == 'dots':
-                    ax.plot(range(1, len(x)+1), y, 'o', **env.globals_vars.figure_plot_properties(ms=8.5))
+                    ax.plot(range(1, len(x)+1), y, 'o', **env.globals_vars.figure_plot_properties(ms=8))
                 if graph_options[statistics[enum]] == 'bars':
                     bar(range(1, len(x)+1), y, width=0.8, **env.globals_vars.figure_bar_properties())
             if graph == _('vs_Altitude'):
-                ax.plot(x, y, 'o', **env.globals_vars.figure_plot_properties(ms=8.5))
+                ax.plot(x, y, 'o', **env.globals_vars.figure_plot_properties(ms=8))
 
             ## X
             if graph == _('vs_Stations'):
@@ -415,8 +414,10 @@ def descriptive_statistic_graphs(stations_list):
                 xticks(range(1, len(x)+1), x, rotation='vertical')
             if graph == _('vs_Altitude'):
                 ax.set_xlabel(_('Altitude (m)'), env.globals_vars.graphs_axis_properties())
-                #locs, labels = xticks(range(1, len(x)+1), x)
-                #setp(labels, 'rotation', 'vertical')
+                pyplot.xticks(rotation='vertical')
+                # avoid the auto exponential ticks format
+                ax.get_xaxis().get_major_formatter().set_useOffset(False)
+
             ## Y
             # get units os type of var D or I
             if statistics[enum] not in ['skewness', 'kurtosis', 'coef_variation']:
@@ -436,6 +437,11 @@ def descriptive_statistic_graphs(stations_list):
                     zoom_graph(ax=ax, x_scale_below=-0.3,x_scale_above=-0.3, y_scale_above=-0.1, abs_x=True)
             if graph == _('vs_Altitude'):
                 zoom_graph(ax=ax, x_scale_below=-0.07,x_scale_above=-0.07, y_scale_below=-0.08, y_scale_above=-0.08)
+
+            if graph == _('vs_Stations') and graph_options[statistics[enum]] == 'bars' and \
+                all(v == 0 for v in y):
+                ax.text(0.5, 0.5, unicode(_("All values are zeros"), 'utf-8'),
+                         fontsize=14, horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
 
             fig.tight_layout()
 
