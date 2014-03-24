@@ -1924,6 +1924,10 @@ def correlation(stations_list, type_correlation):
         for _lag, _pearson in zip(correlation_values['lags'], correlation_values['pearson']):
             csv_file.writerow([_lag, output.number(_pearson)])
 
+        # print footnote
+        csv_file.writerow([])
+        csv_file.writerow([_("*Data in period {0}-{1}").format(station.process_period['start'], station.process_period['end'])])
+
         open_file.close()
         del csv_file
 
