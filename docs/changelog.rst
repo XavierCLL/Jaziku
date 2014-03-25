@@ -5,8 +5,8 @@ Changelog
 =========
 
 
-0.9.1 (****)
-----------------------
+0.10.0 (**2014-04**)
+--------------------
 
 news
 ++++
@@ -16,6 +16,11 @@ news
 - Reorganized several files/directories in Data Analysis
 - Several adjust and improvement for all graphics in Data Analysis,
   Climate and Forecast modules
+- Now the maximum process_period is the maximum global common
+  period of intersection of all stations and the var_I, the
+  particular process period defined by the user in runfile
+  must be inside the maximum global common period. All results
+  are make with this feature.
 
 fixes
 +++++
@@ -629,5 +634,5 @@ fixes
 
 
 0.1.0 initial version (**2011-11-03**)
---------------------------------
+--------------------------------------
 - (initial code)

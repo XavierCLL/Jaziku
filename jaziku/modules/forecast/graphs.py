@@ -61,7 +61,7 @@ def forecast_graphs(station):
 
             fig.suptitle(unicode(_('Probability forecasts of {0} / {1}\n{2} ({3})\nlag {4} - {5} - ({6}-{7})')
                 .format(station.var_D.type_series, station.var_I.type_series, station.name, station.code, lag, env.config_run.settings['forecast_date']['text'],
-                        station.process_period['start'], station.process_period['end']),
+                        env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']),
                         'utf-8'), **env.globals_vars.graphs_title_properties(fs=12, fva='top'))
 
             # colors for paint pie: below, normal , above
@@ -106,7 +106,7 @@ def forecast_graphs(station):
             image_dir_save \
                 = os.path.join(station.forecast_dir, _('prob_of_{0}_lag_{1}_{2}_({3}-{4}).png')
                     .format(station.var_D.type_series, lag, slugify(env.config_run.settings['forecast_date']['text']),
-                            station.process_period['start'], station.process_period['end']))
+                            env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']))
 
         # -------------------------------------------------------------------------
         # climate graphics for 7 categories in percentage
@@ -117,7 +117,7 @@ def forecast_graphs(station):
 
             fig.suptitle(unicode(_('Probability forecasts of {0} / {1}\n{2} ({3})\nlag {4} - {5} - ({6}-{7})')
                 .format(station.var_D.type_series, station.var_I.type_series, station.name, station.code, lag, env.config_run.settings['forecast_date']['text'],
-                        station.process_period['start'], station.process_period['end']),
+                        env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']),
                         'utf-8'), **env.globals_vars.graphs_title_properties(fs=12, fva='top'))
 
             # colors for paint pie: *below, normal , *above
@@ -168,7 +168,7 @@ def forecast_graphs(station):
             image_dir_save \
                 = os.path.join(station.forecast_dir, _('probabilistic'), _('prob_of_{0}_lag_{1}_{2}_({3}-{4}).png')
                     .format(station.var_D.type_series, lag, slugify(env.config_run.settings['forecast_date']['text']),
-                            station.process_period['start'], station.process_period['end']))
+                            env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']))
 
         # save image
         pyplot.savefig(image_dir_save, dpi=dpi)
@@ -185,7 +185,7 @@ def forecast_graphs(station):
         filename = _('mosaic_prob_of_{0}_under_{1}_{2}_({3}-{4}).png')\
                     .format(station.var_D.type_series, station.var_I.type_series,
                             slugify(env.config_run.settings['forecast_date']['text']),
-                            station.process_period['start'], station.process_period['end'])
+                            env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])
 
         if env.config_run.settings['class_category_analysis'] == 3:
             mosaic_dir_save \
@@ -233,7 +233,7 @@ def forecast_graphs(station):
 
             fig.suptitle(unicode(_('Deterministic forecasts of {0} / {1}\n{2} ({3})\nlag {4} - {5} - ({6}-{7})')
                 .format(station.var_D.type_series, station.var_I.type_series, station.name, station.code, lag, env.config_run.settings['forecast_date']['text'],
-                        station.process_period['start'], station.process_period['end']),
+                        env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']),
                         'utf-8'), **env.globals_vars.graphs_title_properties(fs=12, fva='top'))
 
             # colors for paint pie: *below, normal , *above
@@ -308,7 +308,7 @@ def forecast_graphs(station):
             image_dir_save \
                 = os.path.join(station.forecast_dir, _('deterministic'), _('Determ_of_{0}_lag_{1}_{2}_({3}-{4}).png')
                     .format(station.var_D.type_series, lag, slugify(env.config_run.settings['forecast_date']['text']),
-                            station.process_period['start'], station.process_period['end']))
+                            env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']))
             # save image
             pyplot.savefig(image_dir_save, dpi=dpi)
             pyplot.clf()
@@ -323,7 +323,7 @@ def forecast_graphs(station):
             filename = _('mosaic_determ_of_{0}_under_{1}_{2}_({3}-{4}).png')\
                     .format(station.var_D.type_series, station.var_I.type_series,
                             slugify(env.config_run.settings['forecast_date']['text']),
-                            station.process_period['start'], station.process_period['end'])
+                            env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])
             mosaic_dir_save \
                 = os.path.join(station.forecast_dir, _('deterministic'), filename)
             output.make_dirs(os.path.join(station.forecast_dir, _('deterministic')))

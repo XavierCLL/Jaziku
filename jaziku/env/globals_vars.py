@@ -82,8 +82,19 @@ def is_valid_null(value):
 
 #==============================================================================
 # analysis_interval
+
 ALL_ANALYSIS_INTERVALS = ["5days", "10days", "15days", "monthly", "bimonthly", "trimonthly"]
 NUM_DAYS_OF_ANALYSIS_INTERVAL = None
+
+#==============================================================================
+# PROCESS_PERIOD is the period for process and make all results in Jaziku,
+# this is the process period define by the user in runfile  but this
+# should be inside in the maximum global common period or are the values
+# of maximum global common period possible.
+#
+# PROCESS_PERIOD = {'start', 'end', 'dates'}
+
+PROCESS_PERIOD = {}
 
 #==============================================================================
 # categories of var I

@@ -141,8 +141,8 @@ def climate_graphs(station):
             # graphics title
             fig.suptitle(unicode(_('Composite analysis - {0} ({1})\n{2} - {3} - lag {6} - {7} - ({4}-{5})').
                 format(station.name, station.code, station.var_D.type_series,
-                    station.var_I.type_series, station.process_period['start'],
-                    station.process_period['end'], lag, title_period), 'utf-8'), **env.globals_vars.graphs_title_properties(fs=15, fva='top'))
+                    station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'],
+                    env.globals_vars.PROCESS_PERIOD['end'], lag, title_period), 'utf-8'), **env.globals_vars.graphs_title_properties(fs=15, fva='top'))
 
             # label for axis Y
             ax.set_ylabel(_('probability (%)'))
@@ -207,8 +207,8 @@ def climate_graphs(station):
                      unicode(_('Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n'
                                'Min: {min}  ( {thresholds} )  Max: {max}')
                                 .format(anal_inter=title_period, units=env.var_D.UNITS,
-                                        start_year=station.process_period['start'],
-                                        end_year=station.process_period['end'],
+                                        start_year=env.globals_vars.PROCESS_PERIOD['start'],
+                                        end_year=env.globals_vars.PROCESS_PERIOD['end'],
                                         min=output.number(minimum(specific_time_series['var_D']),3),
                                         thresholds=' | '.join([str(x) for x in thresholds_D]),
                                         max=output.number(maximum(specific_time_series['var_D']),3)), 'utf-8'),
@@ -219,7 +219,7 @@ def climate_graphs(station):
                 = os.path.join(graphics_dir_ca, _('lag_{0}').format(lag),
                                _('CA_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
                               .format(lag, filename_period, station.code, station.name, station.var_D.type_series,
-                                      station.var_I.type_series, station.process_period['start'], station.process_period['end']))
+                                      station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']))
 
             #env.globals_vars.set_others_properties(ax)
             ax.grid(True, color='gray')
@@ -287,8 +287,8 @@ def climate_graphs(station):
             # graphics title
             fig.suptitle(unicode(_('Composite analysis - {0} ({1})\n{2} - {3} - lag {6} - {7} - ({4}-{5})').
                 format(station.name, station.code, station.var_D.type_series,
-                    station.var_I.type_series, station.process_period['start'],
-                    station.process_period['end'], lag, title_period), 'utf-8'), **env.globals_vars.graphs_title_properties(fs=15, fva='top'))
+                    station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'],
+                    env.globals_vars.PROCESS_PERIOD['end'], lag, title_period), 'utf-8'), **env.globals_vars.graphs_title_properties(fs=15, fva='top'))
 
             # label for axis Y
             ax.set_ylabel(_('probability (%)'))
@@ -377,8 +377,8 @@ def climate_graphs(station):
                      unicode(_('Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n'
                                 'Min: {min}  {thresholds}  Max: {max}')
                                 .format(anal_inter=title_period, units=env.var_D.UNITS,
-                                        start_year=station.process_period['start'],
-                                        end_year=station.process_period['end'],
+                                        start_year=env.globals_vars.PROCESS_PERIOD['start'],
+                                        end_year=env.globals_vars.PROCESS_PERIOD['end'],
                                         min=output.number(minimum(specific_time_series['var_D']),3),
                                         thresholds=thresholds_D_txt,
                                         max=output.number(maximum(specific_time_series['var_D']),3)), 'utf-8'),
@@ -389,7 +389,7 @@ def climate_graphs(station):
                 = os.path.join(graphics_dir_ca, _('lag_{0}').format(lag),
                                _('CA_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
                               .format(lag, filename_period, station.code, station.name, station.var_D.type_series,
-                                      station.var_I.type_series, station.process_period['start'], station.process_period['end']))
+                                      station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']))
 
             #env.globals_vars.set_others_properties(ax)
             ax.grid(True, color='gray')
@@ -465,8 +465,8 @@ def climate_graphs(station):
         mosaic_dir_save \
             = os.path.join(graphics_dir_ca, _('mosaic_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
                           .format(lag, env.config_run.settings['analysis_interval_i18n'], station.code, station.name,
-                                  station.var_D.type_series, station.var_I.type_series, station.process_period['start'],
-                                  station.process_period['end']))
+                                  station.var_D.type_series, station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'],
+                                  env.globals_vars.PROCESS_PERIOD['end']))
 
         if env.var_D.is_n_monthly():
             # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid

@@ -349,10 +349,10 @@ class Variable(object):
 
         if start_year is False:
             # set to start year of process period for this station
-            start_year = self.station.process_period['start']
+            start_year = env.globals_vars.PROCESS_PERIOD['start']
         if end_year is False:
             # set to end year of process period for this station
-            end_year = self.station.process_period['end']
+            end_year = env.globals_vars.PROCESS_PERIOD['end']
 
         start_date_var = date(start_year, 1, 1)
         if (self.type == 'D' and env.var_D.is_daily()) or (self.type == 'I' and env.var_I.is_daily()):
