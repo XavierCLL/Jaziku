@@ -74,7 +74,7 @@ class Station(object):
         if env.config_run.settings['process_period']:
             if (env.config_run.settings['process_period']['start'] < common_date[0].year + 1 or
                 env.config_run.settings['process_period']['end'] > common_date[-1].year - 1):
-                console.msg(_("\nCalculating the process period ................ "), newline=False)
+
                 console.msg_error(_(
                     "The period defined in argument {0}-{1} is outside in the\n"
                     "maximum possible period {2}-{3} of intersection between station\n"
@@ -94,15 +94,6 @@ class Station(object):
             self.common_period.append([date_period,
                                       self.var_D.data[self.var_D.date.index(date_period)],
                                       self.var_I.data[self.var_I.date.index(date_period)]])
-
-        # check if the common period at least 3 years before calculate the process period
-        if len(common_date) < 36:
-            console.msg(_("\n   Calculating the common period:"), newline=False)
-
-            console.msg_error(_("The common period calculated for the station {0}-{1}\n"
-                                "is {2}-{3}, Jaziku need at least 3 year of common \n"
-                                "period between the two series.")
-                .format(self.code, self.name, common_date[0].year, common_date[-1].year))
 
         # calculate the process period
         self.process_period = {'start': self.common_period[0][0].year + 1,
