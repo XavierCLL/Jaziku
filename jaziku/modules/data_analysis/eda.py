@@ -2220,7 +2220,7 @@ def anomaly(stations_list):
             bar(center, hist, width=width, **env.globals_vars.figure_bar_properties())
 
             ax.grid(True, color='gray')
-            ax.axvline(x=0,color='#4A4A4A',ls='dashed')
+            ax.axvline(x=0, color=env.globals_vars.colors['grey_S2'], ls='dashed', linewidth=1)
             env.globals_vars.set_others_properties(ax)
             ax.autoscale(tight=True)
             #ax.text(0.99, 0.985, get_text_of_frequency_data('D', ndays=True), horizontalalignment='right',
