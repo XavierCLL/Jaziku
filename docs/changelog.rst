@@ -36,6 +36,7 @@ fixes
   in graphs_inspection_of_series getting the data in process period
 - Fix crash error when make the graphs of contingency tables with
   the thresholds are statics and float/int type
+- Fix thresholds by default for MEI to p33 and p66
 
 **sisdhim2jaziku:**
 
