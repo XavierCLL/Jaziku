@@ -108,7 +108,7 @@ def check_analysis_interval():
     # env.globals_vars.STATE_OF_DATA in [2, 4] =  if env.var_D.FREQUENCY_DATA in ['daily'] and env.var_I.FREQUENCY_DATA in ['daily','monthly']
 
     def analysis_interval_error(env_variable):
-        console.msg_error(_("The var {0} ({1}) of stations have data {2}, but you\n"
+        console.msg_error(_("The variable {0} ({1}) have data {2}, but you\n"
                             "define in runfile the 'analysis_interval' as '{3}',\n"
                             "this is incompatible and Jaziku can't convert the times\n"
                             "series properly for this case. Or change the analysis\n"
