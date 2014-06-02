@@ -80,8 +80,8 @@ UNITS = None
 # available mode calculation series for internal dependent variable
 # the fist element is by default (options: ['mean', 'accumulate'],)
 MODE_CALCULATION_SERIES = {
-    'PPT':      ['mean', 'accumulate'],
-    'NDPPT':    ['mean', 'accumulate'],
+    'PPT':      ['accumulate', 'mean'],
+    'NDPPT':    ['accumulate', 'mean'],
     'TMIN':     ['mean'],
     'TMAX':     ['mean'],
     'TEMP':     ['mean'],
