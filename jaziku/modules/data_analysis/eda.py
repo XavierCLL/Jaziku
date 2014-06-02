@@ -763,11 +763,12 @@ def get_climatology_data(station, freq = None):
     '''
 
     _station = copy.deepcopy(station)
-    _station.var_D.convert2(freq)
     original_FREQUENCY_DATA = env.var_D.FREQUENCY_DATA
 
     if freq is None:
         freq = env.var_D.FREQUENCY_DATA
+
+    _station.var_D.convert2(freq)
     env.var_D.set_FREQUENCY_DATA(freq, check=False)
 
     _station.var_D.calculate_data_date_and_nulls_in_period()
@@ -798,9 +799,7 @@ def get_climatology_data(station, freq = None):
         range_analysis_interval = get_range_analysis_interval()
         for month in range(1, 13):
             for day in range_analysis_interval:
-                range_analysis_mean = []
-                range_analysis_max = []
-                range_analysis_min = []
+                range_analysis_values = []
                 # iteration for all years inside process period
                 for year in range(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']+1):
                     # test if day exist in month and year
@@ -809,13 +808,15 @@ def get_climatology_data(station, freq = None):
 
                     values = get_values_in_range_analysis_interval(_station.var_D, year, month, day)
                     values = array.clean(values)
-                    range_analysis_mean.append(array.mean(values))
-                    range_analysis_max.append(array.maximum(values))
-                    range_analysis_min.append(array.minimum(values))
+                    # calculate time series based on mode calculation series
+                    if env.config_run.settings['mode_calculation_series_D'] == 'mean':
+                        range_analysis_values.append(array.mean(values))
+                    if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
+                        range_analysis_values.append(sum(array.clean(values)))
 
-                y_mean.append(array.mean(range_analysis_mean))
-                y_max.append(array.mean(range_analysis_max) - y_mean[-1])
-                y_min.append(y_mean[-1] - array.mean(range_analysis_min))
+                y_mean.append(array.mean(range_analysis_values))
+                y_max.append(array.maximum(range_analysis_values) - y_mean[-1])
+                y_min.append(y_mean[-1] - array.minimum(range_analysis_values))
 
         del _station
         return y_min, y_mean, y_max
@@ -935,7 +936,10 @@ def climatology(stations_list):
 
             ## Y
             # get units os type of var D or I
-            ax.set_ylabel(unicode('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[mean]'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            if env.config_run.settings['mode_calculation_series_D'] == 'mean':
+                ax.set_ylabel(unicode('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[mean]'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
+                ax.set_ylabel(unicode('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[accumulate]'), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             #pyplot.subplots_adjust(bottom=0.2)
             ax.grid(True, color='gray')
@@ -995,7 +999,10 @@ def climatology(stations_list):
 
             ## Y
             # get units os type of var D or I
-            ax.set_ylabel(unicode(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            if env.config_run.settings['mode_calculation_series_D'] == 'mean':
+                ax.set_ylabel(unicode(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
+                ax.set_ylabel(unicode(('{0} ({1}) - ' + _('[min-accum-max]')).format(type_var, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             #pyplot.subplots_adjust(bottom=0.2)
             ax.grid(True, color='gray')
@@ -1047,7 +1054,10 @@ def climatology(stations_list):
             csv_table.writerow( [_('max')] + [ output.number(x + y_max[i]) for i,x in enumerate(y_mean) ] )
 
             # mean values
-            csv_table.writerow( [_('mean')] + [ output.number(x) for x in y_mean ] )
+            if env.config_run.settings['mode_calculation_series_D'] == 'mean':
+                csv_table.writerow( [_('mean')] + [ output.number(x) for x in y_mean ] )
+            if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
+                csv_table.writerow( [_('accum')] + [ output.number(x) for x in y_mean ] )
 
             # min values
             csv_table.writerow( [_('min')] + [ output.number(x - y_min[i]) for i,x in enumerate(y_mean) ] )
@@ -1095,7 +1105,10 @@ def climatology(stations_list):
 
             ## Y
             # get units os type of var D or I
-            ax.set_ylabel(unicode('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[mean]'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            if env.config_run.settings['mode_calculation_series_D'] == 'mean':
+                ax.set_ylabel(unicode('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[mean]'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
+                ax.set_ylabel(unicode('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[accumulate]'), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             #pyplot.subplots_adjust(bottom=0.2)
             ax.grid(True, color='gray')
@@ -1153,7 +1166,10 @@ def climatology(stations_list):
 
             ## Y
             # get units os type of var D or I
-            ax.set_ylabel(unicode(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            if env.config_run.settings['mode_calculation_series_D'] == 'mean':
+                ax.set_ylabel(unicode(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
+                ax.set_ylabel(unicode(('{0} ({1}) - ' + _('[min-accum-max]')).format(type_var, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             #pyplot.subplots_adjust(bottom=0.2)
             ax.grid(True, color='gray')
@@ -1211,7 +1227,10 @@ def climatology(stations_list):
             csv_table.writerow( [_('max')] + [ output.number(x + y_max[i]) for i,x in enumerate(y_mean) ] )
 
             # mean values
-            csv_table.writerow( [_('mean')] + [ output.number(x) for x in y_mean ] )
+            if env.config_run.settings['mode_calculation_series_D'] == 'mean':
+                csv_table.writerow( [_('mean')] + [ output.number(x) for x in y_mean ] )
+            if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
+                csv_table.writerow( [_('accum')] + [ output.number(x) for x in y_mean ] )
 
             # min values
             csv_table.writerow( [_('min')] + [ output.number(x - y_min[i]) for i,x in enumerate(y_mean) ] )
@@ -1413,10 +1432,12 @@ def outliers(stations_list):
     def clone_and_transform_station(station, convert_var_D_to, convert_var_I_to):
         station_copy = copy.deepcopy(station)
         if convert_var_D_to:
+            env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
             station_copy.var_D.convert2(convert_var_D_to)
             env.var_D.set_FREQUENCY_DATA(convert_var_D_to, check=False)
             station_copy.var_D.calculate_data_date_and_nulls_in_period()
         if convert_var_I_to:
+            env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
             station_copy.var_I.convert2(convert_var_I_to)
             env.var_I.set_FREQUENCY_DATA(convert_var_I_to, check=False)
             station_copy.var_I.calculate_data_date_and_nulls_in_period()

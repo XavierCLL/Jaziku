@@ -21,10 +21,14 @@ news
   particular process period defined by the user in runfile
   must be inside the maximum global common period. All results
   are make with this feature.
+- By default the PPT and the NDPPT are accumulative for mode
+  calculation series.
 
 fixes
 +++++
 
+- Fixes in climatology products in EDA when the data set to
+  accumulative in mode calculation series.
 - Fixes when the all of time series there are no a global common
   period, then some result such as homogeneity tests, cross
   correlation matrix table and scatter plots of series are
