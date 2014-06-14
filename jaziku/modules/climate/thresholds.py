@@ -182,7 +182,7 @@ def get_thresholds(station, variable, thresholds_input=None, process_analog_year
 
     def thresholds_with_analog_year_for_var_D():
         # check if analog_year is inside in process period
-        if station.process_period['start'] <= env.config_run.settings['analog_year'] <= station.process_period['end']:
+        if env.globals_vars.PROCESS_PERIOD['start'] <= env.config_run.settings['analog_year'] <= env.globals_vars.PROCESS_PERIOD['end']:
             _iter_date = date(env.config_run.settings['analog_year'], 1, 1)
             specific_values_with_analog_year = []
             # get all raw values of var D only in analog year
@@ -212,8 +212,8 @@ def get_thresholds(station, variable, thresholds_input=None, process_analog_year
             console.msg_error(_("The analog year ({0}) for this station\n"
                                 "is outside of process period {1} to {2}.")
                                 .format(env.config_run.settings['analog_year'],
-                                        station.process_period['start'],
-                                        station.process_period['end']))
+                                        env.globals_vars.PROCESS_PERIOD['start'],
+                                        env.globals_vars.PROCESS_PERIOD['end']))
 
 
     @validate_thresholds(variable)

@@ -108,7 +108,7 @@ def check_analysis_interval():
     # env.globals_vars.STATE_OF_DATA in [2, 4] =  if env.var_D.FREQUENCY_DATA in ['daily'] and env.var_I.FREQUENCY_DATA in ['daily','monthly']
 
     def analysis_interval_error(env_variable):
-        console.msg_error(_("The var {0} ({1}) of stations have data {2}, but you\n"
+        console.msg_error(_("The variable {0} ({1}) have data {2}, but you\n"
                             "define in runfile the 'analysis_interval' as '{3}',\n"
                             "this is incompatible and Jaziku can't convert the times\n"
                             "series properly for this case. Or change the analysis\n"
@@ -128,7 +128,12 @@ def check_analysis_interval():
     if env.var_D.FREQUENCY_DATA in ['monthly','bimonthly','trimonthly'] and env.config_run.settings['analysis_interval'] not in ["monthly","bimonthly","trimonthly"]:
         analysis_interval_error(env.var_D)
 
-def adjust_data_of_variables(stations_list, messages=True):
+
+def adjust_data_of_variables(stations_list, force_same_frequencies=False, messages=True):
+    '''
+    Adjust the var D and/or var I for all stations to frequency
+    data defined in runfile as analysis_interval
+    '''
 
     def convert_stations_2(variable, new_freq_data):
         if messages:
@@ -140,27 +145,50 @@ def adjust_data_of_variables(stations_list, messages=True):
         if messages:
             console.msg(_("done"), color='green')
 
-    was_converted = False
+    was_converted_to = {'D':False, 'I':False}
 
-    if env.config_run.settings['analysis_interval'] == "monthly":
-        for variable in ['D', 'I']:
-            if env.var_[variable].FREQUENCY_DATA in ['daily']:
-                convert_stations_2(variable, 'monthly')
-                was_converted = True
+    freq_order = ["daily", "monthly", "bimonthly", "trimonthly"]
 
-    if env.config_run.settings['analysis_interval'] == "bimonthly":
-        for variable in ['D', 'I']:
-            if env.var_[variable].FREQUENCY_DATA in ['daily','monthly']:
-                convert_stations_2(variable, 'bimonthly')
-                was_converted = True
+    freq_analysis_interval = env.config_run.settings['analysis_interval']
+    if freq_analysis_interval in ["5days", "10days", "15days"] and not force_same_frequencies:
+        env.var_D.was_converted, env.var_I.was_converted = was_converted_to['D'], was_converted_to['I']
+        return
 
-    if env.config_run.settings['analysis_interval'] == "trimonthly":
-        for variable in ['D', 'I']:
-            if env.var_[variable].FREQUENCY_DATA in ['daily','monthly']:
-                convert_stations_2(variable, 'trimonthly')
-                was_converted = True
+    if force_same_frequencies:
+        if freq_analysis_interval in ["5days", "10days", "15days"]:
+            freq_analysis_interval = "daily"
+        max_freq = freq_order[max(freq_order.index(env.var_D.FREQUENCY_DATA),
+                                  freq_order.index(env.var_I.FREQUENCY_DATA),
+                                  freq_order.index(freq_analysis_interval))]
+        freq_analysis_interval = max_freq
 
-    return was_converted
+    for variable in ['D', 'I']:
+        if freq_order.index(env.var_[variable].FREQUENCY_DATA) < freq_order.index(freq_analysis_interval):
+            convert_stations_2(variable, freq_analysis_interval)
+            was_converted_to[variable] = True
+
+    env.var_D.was_converted, env.var_I.was_converted = was_converted_to['D'], was_converted_to['I']
+
+
+def get_text_of_frequency_data(var, ndays=False):
+
+    if env.var_[var].FREQUENCY_DATA == "daily":
+        if ndays:
+            text_of_frequency_data = _("*calculated from data every {0}").format(env.config_run.settings['analysis_interval_i18n'])
+        else:
+            text_of_frequency_data = _("*calculated from daily data")
+    else:
+        if env.var_[var].FREQUENCY_DATA == "monthly":
+            text_of_frequency_data = _("*calculated from monthly data")
+        if env.var_[var].FREQUENCY_DATA == "bimonthly":
+            text_of_frequency_data = _("*calculated from bimonthly data")
+        if env.var_[var].FREQUENCY_DATA == "trimonthly":
+            text_of_frequency_data = _("*calculated from trimonthly data")
+
+    if env.var_[var].was_converted:
+        text_of_frequency_data += _( " (converted)")
+
+    return text_of_frequency_data
 
 
 def locate_day_in_analysis_interval(day_for_locate):

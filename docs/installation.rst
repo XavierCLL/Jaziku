@@ -17,6 +17,7 @@ distribution.
 
 - python (version 2.6 or 2.7)
 - python-setuptools (or python-distribute)
+- python-pip
 - scipy (or python-scipy)
 - argparse (or python-argparse, or if used ubuntu this inside in python package)
 - matplotlib (or python-matplotlib)
@@ -29,35 +30,32 @@ distribution.
 - `ncl <http://www.ncl.ucar.edu>`_ [3]_
 
 .. [1] you can install this using easy install:
-       "easy_install clint"
+       "pip clint"
 .. [2] this is need for interpolation for maps
 .. [3] this is for make maps, ignore this and hpgl if you don't need maps
 
     Note: Sure that the version of these packages are for python version 2.6 or 2.7
 
-Download Jaziku (egg version)
------------------------------
+Download Jaziku
+---------------
 
-- `jaziku 0.9.0 <https://docs.google.com/uc?id=0B2KQf7Dbx7DULWxObVJjZWQzVmM&export=download>`_
+- `jaziku 0.9.0 <https://docs.google.com/uc?id=0B2KQf7Dbx7DUWml4NXB6TGktYmc&export=download>`_
 
 
-Install Jaziku (egg version)
-----------------------------
+Install Jaziku (installation with PIP)
+--------------------------------------
 
-- Go into downloaded file an run this command to install
+- Go into downloaded file an run this command to install/update
   (as root or use sudo):
 
-    easy_install jaziku-0.9.0-py2.7.egg
+    pip jaziku-0.9.0.tar.gz
 
 - Test if jaziku has installed correctly running:
 
     jaziku -h
 
-    check the version in the end of message.
+    check the version and compilation date in the end of message.
 
-- If you have installed old version, for update to new version use (using egg):
-
-    easy_install -U jaziku-0.9.0-py2.7.egg
 
 Windows and Mac
 ---------------

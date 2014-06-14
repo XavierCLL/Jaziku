@@ -4,6 +4,52 @@
 Changelog
 =========
 
+
+0.10.0 (**2014-04**)
+--------------------
+
+news
+++++
+
+- Make by each station the anomalies time series and the graph of
+  anomaly frequency histogram, based on analysis interval.
+- Reorganized several files/directories in Data Analysis
+- Several adjust and improvement for all graphics in Data Analysis,
+  Climate and Forecast modules
+- Now the maximum process_period is the maximum global common
+  period of intersection of all stations and the var_I, the
+  particular process period defined by the user in runfile
+  must be inside the maximum global common period. All results
+  are make with this feature.
+- By default the PPT and the NDPPT are accumulative for mode
+  calculation series.
+
+fixes
++++++
+
+- Fixes in climatology products in EDA when the data set to
+  accumulative in mode calculation series.
+- Fixes when the all of time series there are no a global common
+  period, then some result such as homogeneity tests, cross
+  correlation matrix table and scatter plots of series are
+  impossible to process, show message and continue.
+- Fix set data in global period in homogeneity test
+- Fix function for adjust data to frequency to make result
+  for input data daily
+- Fix not added value in the real data for all stations in special type
+  in graphs_inspection_of_series getting the data in process period
+- Fix crash error when make the graphs of contingency tables with
+  the thresholds are statics and float/int type
+- Fix thresholds by default for MEI to p33 and p66
+- Fix TYPO in months and bi-months initials
+
+**sisdhim2jaziku:**
+
+- Fix crash when the any number (i.e. latitude) have leading
+  zeros, first delete the leading zero before process the number
+  for output format.
+
+
 0.9.0 (**2013-12-20**)
 ----------------------
 
@@ -594,5 +640,5 @@ fixes
 
 
 0.1.0 initial version (**2011-11-03**)
---------------------------------
+--------------------------------------
 - (initial code)
