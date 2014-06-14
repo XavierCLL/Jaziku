@@ -308,6 +308,16 @@ class Variable(object):
         return self.monthly2n_monthly(3)
 
     def convert2(self, new_freq_data):
+        """Convert the variable D or I to new frequency,
+        this based too on the new_freq_data set in argument and
+        the mode calculation series (mean or accumulate).
+
+        Please set the new frequency:
+        env.var_[D,I].set_FREQUENCY_DATA(new_freq_data, check=False)
+        AFTER this function (not before).
+        """
+
+        #TODO for data daily??
 
         if new_freq_data == 'monthly':
             if env.var_[self.type].is_daily():
@@ -326,6 +336,9 @@ class Variable(object):
                 self.monthly2trimonthly()
             if env.var_[self.type].is_monthly():
                 self.monthly2trimonthly()
+
+        # save the new frequency data
+        #env.var_[self.type].set_FREQUENCY_DATA(new_freq_data, check=False)
 
     def calculate_data_date_and_nulls_in_period(self, start_year=False, end_year=False):
         """Calculate the data without the null values inside
@@ -349,10 +362,10 @@ class Variable(object):
 
         if start_year is False:
             # set to start year of process period for this station
-            start_year = self.station.process_period['start']
+            start_year = env.globals_vars.PROCESS_PERIOD['start']
         if end_year is False:
             # set to end year of process period for this station
-            end_year = self.station.process_period['end']
+            end_year = env.globals_vars.PROCESS_PERIOD['end']
 
         start_date_var = date(start_year, 1, 1)
         if (self.type == 'D' and env.var_D.is_daily()) or (self.type == 'I' and env.var_I.is_daily()):

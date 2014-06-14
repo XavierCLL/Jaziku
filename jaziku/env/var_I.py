@@ -28,6 +28,9 @@ TYPE_SERIES = None
 #
 FREQUENCY_DATA = None
 
+#
+was_converted = False
+
 def get_FREQUENCY_DATA():
     global FREQUENCY_DATA
     _freq_data ={'daily': _('daily'),
@@ -332,7 +335,7 @@ THRESHOLDS_3_CATEGORIES = {
                    'normal_inclusive': False},
 
     'MEI':        {'daily': None,
-                   'bimonthly': [-0.1,0.1],
+                   'bimonthly': ['p33','p66'],
                    'normal_inclusive': False},
 
     'OLR':       {'daily': [-0.1,0.2],

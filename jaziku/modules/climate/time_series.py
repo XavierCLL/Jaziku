@@ -22,7 +22,6 @@ import os
 import csv
 from calendar import monthrange
 from datetime import date
-from dateutil.relativedelta import relativedelta
 
 from jaziku import env
 from jaziku.core.analysis_interval import get_values_in_range_analysis_interval, get_range_analysis_interval
@@ -136,8 +135,8 @@ def calculate_time_series(station, lags=None, makes_files=True):
                             lag, output.n_months_in_initials('D', month),
                             station.code, station.name, station.var_D.type_series,
                             station.var_I.type_series,
-                            station.process_period['start'],
-                            station.process_period['end']))
+                            env.globals_vars.PROCESS_PERIOD['start'],
+                            env.globals_vars.PROCESS_PERIOD['end']))
 
                     if os.path.isfile(csv_name):
                         os.remove(csv_name)
@@ -154,7 +153,7 @@ def calculate_time_series(station, lags=None, makes_files=True):
                                        env.config_run.settings['mode_calculation_series_I_i18n']])
 
                 # iteration for all years inside process period
-                for year in range(station.process_period['start'], station.process_period['end']+1):
+                for year in range(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']+1):
 
                     ## calculate time series, get values and calculate the mean or accumulate the values in range analysis
                     values_in_range_analysis_interval = get_values_in_range_analysis_interval(station.var_D, year, month)
@@ -193,8 +192,8 @@ def calculate_time_series(station, lags=None, makes_files=True):
                             output.months_in_initials(month-1), station.code,
                             station.name, station.var_D.type_series,
                             station.var_I.type_series,
-                            station.process_period['start'],
-                            station.process_period['end']))
+                            env.globals_vars.PROCESS_PERIOD['start'],
+                            env.globals_vars.PROCESS_PERIOD['end']))
 
                     if os.path.isfile(csv_name):
                         os.remove(csv_name)
@@ -213,7 +212,7 @@ def calculate_time_series(station, lags=None, makes_files=True):
                 for day in get_range_analysis_interval():
 
                     # iteration for all years inside process period
-                    for year in range(station.process_period['start'], station.process_period['end']+1):
+                    for year in range(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']+1):
 
                         # test if day exist in month and year
                         if day > monthrange(year, month)[1]:

@@ -173,3 +173,14 @@ def configuration_run(stop_in=None, stop_in_grid=None):
                       "   its limits coherent. This option is not\n"
                       "   recommended, use it with precaution"), color='yellow')
 
+    if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
+        console.msg(_("\n > WARNING: you are defined the var D as accumulate\n"
+                      "   Please make sure the time series are accumulative\n"
+                      "   if it are monthly, bimonthly or trimonthly"), color='yellow')
+
+    if env.config_run.settings['mode_calculation_series_I'] == 'accumulate':
+        console.msg(_("\n > WARNING: you are defined the var I as accumulate\n"
+                      "   Please make sure the time series is accumulative\n"
+                      "   if it is monthly, bimonthly or trimonthly"), color='yellow')
+
+

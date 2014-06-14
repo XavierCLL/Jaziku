@@ -15,11 +15,11 @@ Incoming Plans / TODO
 - Migrate/make manual, documentation and main page of Jaziku to sphinx using reStructuredTex http://sphinx-doc.org/
 
 0.10 (**2013-XX-XX**)
---------------------
+---------------------
 - Inclusion of spectral analysis
 
 0.11 (**2013-XX-XX**)
---------------------
+---------------------
 - Inclusion of wavelete analysis
 
 ===============================
@@ -49,8 +49,7 @@ Others TODO
 To be included
 --------------
 - behaviour when the interrupt signal is received
-- use the global_common_process for maps (climate, correlation, forecast)
-  and put the global_common_process in subtitles inside maps
+- put the global_common_process in subtitles inside maps
 - adjust the PPT var for accumulate the data daily by default
 - can select in data_analysis module what I want to process,
   e.g. data_analysis;outliers;correlation;climatology,
@@ -71,6 +70,11 @@ To be included
   for example: best period to process, interpolations, maps.
 - ability to change units for dependent and independent variables
 - settings class
+
+* Develop:
+- Using Pandas for store the time series http://pandas.pydata.org
+- Change runfile structure using ConfigParser for load/save
+  using list: http://stackoverflow.com/questions/335695/lists-in-configparser
 
 0.8:
 :Exploratory data analysis consolidation:

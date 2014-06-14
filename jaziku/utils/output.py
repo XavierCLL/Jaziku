@@ -19,6 +19,7 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import re
 import sys
 import math
 from calendar import monthrange
@@ -46,6 +47,11 @@ def number(num, sig_figs=False, decimals=False):
     """Return the number after formatted according to significant figures
     and/or accuracy to decimals numbers.
     """
+
+    # remove leading zeros
+    if float(num) != 0.0:
+        num = float(re.sub("^0+","",str(num)))
+
     if sig_figs and decimals:
         return str(round(float(round_sigfigs(num,sig_figs)), decimals))
 
@@ -71,9 +77,9 @@ def bi_months_in_initials(bimonthly_start0):
     """
     Return the three first letters of two months of bimonthly
     """
-    _bim_text = {-2: _('NovDic'), -1: _('DicJan'), 0: _('JanFeb'), 1: _('FebMar'), 2: _('MarApr'),
+    _bim_text = {-2: _('NovDec'), -1: _('DecJan'), 0: _('JanFeb'), 1: _('FebMar'), 2: _('MarApr'),
                  3: _('AprMay'), 4: _('MayJun'), 5: _('JunJul'), 6: _('JulAug'), 7: _('AugSep'),
-                  8: _('SepOct'), 9: _('OctNov'), 10: _('NovDic'), 11: _('DecJan')}
+                  8: _('SepOct'), 9: _('OctNov'), 10: _('NovDec'), 11: _('DecJan')}
     return _bim_text[bimonthly_start0]
 
 def tri_months_in_initials(trimonthly_start0):

@@ -35,8 +35,7 @@ from scipy import stats
 from jaziku import env
 from jaziku.core.station import Station
 from jaziku.core.analysis_interval import get_values_in_range_analysis_interval, locate_day_in_analysis_interval, \
-    get_range_analysis_interval, adjust_data_of_variables
-from jaziku.core.stations import global_process_period
+    get_range_analysis_interval, adjust_data_of_variables, get_text_of_frequency_data
 from jaziku.modules.climate import time_series
 from jaziku.modules.climate.contingency_table import get_label_of_var_I_category
 from jaziku.modules.climate.time_series import  calculate_time_series
@@ -54,11 +53,11 @@ def main(stations_list):
 
     if not env.config_run.settings['graphics']:
         console.msg(_("\n > WARNING: The 'graphics' in 'output options' is disabled,\n"
-                      "   all graphics for EDA module will not be created. The graphics\n"
-                      "   in EDA module represents the vast majority of the results.\n"), color='yellow')
+                      "   all graphics for EDA process will not be created. The graphics\n"
+                      "   in EDA represents the vast majority of the results.\n"), color='yellow')
 
     global eda_dir
-    eda_dir = os.path.join(env.globals_vars.DATA_ANALYSIS_DIR, 'EDA')
+    eda_dir = os.path.join(env.globals_vars.DATA_ANALYSIS_DIR, _('Exploratory_Data_Analysis'))
 
     # -------------------------------------------------------------------------
     # DESCRIPTIVE STATISTICS
@@ -103,7 +102,7 @@ def main(stations_list):
             output.number(station.lat),
             output.number(station.lon),
             output.number(station.alt),
-            '{0}-{1}'.format(station.process_period['start'], station.process_period['end']),
+            '{0}-{1}'.format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']),
             len(station.var_D.data_in_process_period),
             station.var_D.size_data,
             station.var_D.nulls_in_process_period,
@@ -127,7 +126,7 @@ def main(stations_list):
             output.number(station.lat),
             output.number(station.lon),
             output.number(station.alt),
-            '{0}-{1}'.format(station.process_period['start'], station.process_period['end']),
+            '{0}-{1}'.format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']),
             len(station.var_I.data_in_process_period),
             station.var_I.size_data,
             station.var_I.nulls_in_process_period,
@@ -218,24 +217,13 @@ def main(stations_list):
     # SCATTER PLOTS OF SERIES
 
     if env.config_run.settings['graphics']:
-
         console.msg(_("Scatter plots of series .............................. "), newline=False)
-
-        if 1 < Station.stations_processed <= 10:
-            with console.redirectStdStreams():
-                scatter_plots_of_series(stations_list)
+        with console.redirectStdStreams():
+            return_msg = scatter_plots_of_series(stations_list)
+        if return_msg is True:
             console.msg(_("done"), color='green')
         else:
-            if Station.stations_processed == 1:
-                console.msg(_("partial\n > WARNING: There is only one station for process\n"
-                              "   the scatter plots of series, this need more \n"
-                              "   of one station."), color="yellow")
-            else:
-                console.msg(_("partial\n > WARNING: The maximum limit for make the scatter plots\n"
-                              "   of series are 10 stations, if you want this diagram,\n"
-                              "   please divide the stations in regions into different\n"
-                              "   runfiles with maximum 10 stations per runfile, and\n"
-                              "   rerun each runfile."), color="yellow")
+            console.msg(return_msg, color="yellow")
 
     # -------------------------------------------------------------------------
     # FREQUENCY HISTOGRAM
@@ -296,20 +284,39 @@ def main(stations_list):
 
     console.msg(_("CrossCorrelation ..................................... "), newline=False)
     with console.redirectStdStreams():
-        correlation(stations_list, type_correlation='cross')
+        return_msg = correlation(stations_list, type_correlation='cross')
+    if return_msg is True:
+        console.msg(_("done"), color='green')
+    else:
+        console.msg(return_msg, color="yellow")
+
+    # -------------------------------------------------------------------------
+    # ANOMALY
+
+    global anomaly_dir
+    anomaly_dir = os.path.join(eda_dir, _('Anomaly'))
+    output.make_dirs(anomaly_dir)
+
+    console.msg(_("Anomaly .............................................. "), newline=False)
+    anomaly(stations_list)
     console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     # HOMOGENEITY
+    # -------------------------------------------------------------------------
 
     global homogeneity_dir
-    homogeneity_dir = os.path.join(eda_dir, _('Homogeneity'))
+    homogeneity_dir = os.path.join(env.globals_vars.DATA_ANALYSIS_DIR, _('Homogeneity'))
     output.make_dirs(homogeneity_dir)
 
-    console.msg(_("Homogeneity ........................................... "), newline=False)
+    console.msg(_("Homogeneity .......................................... "), newline=False)
     with console.redirectStdStreams():
-        homogeneity(stations_list)
-    console.msg(_("done"), color='green')
+        return_msg = homogeneity(stations_list)
+    if return_msg is True:
+        console.msg(_("done"), color='green')
+    else:
+        console.msg(return_msg, color="yellow")
 
 
 
@@ -374,32 +381,31 @@ def descriptive_statistic_graphs(stations_list):
                     x.append(float(station.alt))
                 y.append(get_statistic[statistics[enum]])
 
-            # do that matplotlib plot zeros in extreme values
-            for value in y:
-                if value == 0:
-                    y[y.index(value)] = 0.0001
-
             name_graph = _("{0}_({1})_{2}").format(statistic, env.var_D.TYPE_SERIES, graph)
             # dynamic with based of number of stations
             with_fig = Station.stations_processed/5+4
-            fig = pyplot.figure(figsize=(with_fig, 6), dpi=100)
-            ax = fig.add_subplot(111)
+            if with_fig < 5:
+                with_fig = 4.4
+            fig = pyplot.figure(figsize=(with_fig, 6.5), dpi=100)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
             #tfs = 18.5 - 10/(Station.stations_processed)
 
-            if Station.stations_processed <= 5:
+            if Station.stations_processed <= 20:
                 title = _("{0} ({1})\n{2}").format(statistic.replace('_',' '), env.var_D.TYPE_SERIES, graph.replace('_',' '))
             else:
                 title = name_graph.replace('_',' ')
+
+            title += ' ({0}-{1})'.format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])
 
             ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
 
             if graph == _('vs_Stations'):
                 if graph_options[statistics[enum]] == 'dots':
-                    ax.plot(range(1, len(x)+1), y, 'o', color="#638786", markersize=8.5)
+                    ax.plot(range(1, len(x)+1), y, 'o', **env.globals_vars.figure_plot_properties(ms=8))
                 if graph_options[statistics[enum]] == 'bars':
-                    bar(range(1, len(x)+1), y, width=0.8, align='center', color="#638786")
+                    bar(range(1, len(x)+1), y, width=0.8, **env.globals_vars.figure_bar_properties())
             if graph == _('vs_Altitude'):
-                ax.plot(x, y, 'o', color="#638786", markersize=8.5)
+                ax.plot(x, y, 'o', **env.globals_vars.figure_plot_properties(ms=8))
 
             ## X
             if graph == _('vs_Stations'):
@@ -407,8 +413,10 @@ def descriptive_statistic_graphs(stations_list):
                 xticks(range(1, len(x)+1), x, rotation='vertical')
             if graph == _('vs_Altitude'):
                 ax.set_xlabel(_('Altitude (m)'), env.globals_vars.graphs_axis_properties())
-                #locs, labels = xticks(range(1, len(x)+1), x)
-                #setp(labels, 'rotation', 'vertical')
+                pyplot.xticks(rotation='vertical')
+                # avoid the auto exponential ticks format
+                ax.get_xaxis().get_major_formatter().set_useOffset(False)
+
             ## Y
             # get units os type of var D or I
             if statistics[enum] not in ['skewness', 'kurtosis', 'coef_variation']:
@@ -418,7 +426,8 @@ def descriptive_statistic_graphs(stations_list):
             ax.set_ylabel(unicode('{0} ({1})'.format(statistic.replace('_',' '),units), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             pyplot.subplots_adjust(bottom=0.2)
-            ax.grid(True)
+            ax.grid(True, color='gray')
+            env.globals_vars.set_others_properties(ax)
             ax.autoscale(tight=True)
             if graph == _('vs_Stations'):
                 if graph_options[statistics[enum]] == 'dots':
@@ -427,6 +436,11 @@ def descriptive_statistic_graphs(stations_list):
                     zoom_graph(ax=ax, x_scale_below=-0.3,x_scale_above=-0.3, y_scale_above=-0.1, abs_x=True)
             if graph == _('vs_Altitude'):
                 zoom_graph(ax=ax, x_scale_below=-0.07,x_scale_above=-0.07, y_scale_below=-0.08, y_scale_above=-0.08)
+
+            if graph == _('vs_Stations') and graph_options[statistics[enum]] == 'bars' and \
+                all(v == 0 for v in y):
+                ax.text(0.5, 0.5, unicode(_("All values are zeros"), 'utf-8'),
+                         fontsize=14, horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
 
             fig.tight_layout()
 
@@ -559,7 +573,7 @@ types_var_D = {'PPT':{'graph':'bar','color':'#578ECE'}, 'NDPPT':{'graph':'bar','
 
 def graphs_inspection_of_series(stations_list):
     """
-    Graphs for inspection of series, part of EDA.
+    Graphs for inspection of series, part of Exploratory_Data_Analysis.
     """
 
     # directory for save graphs of descriptive statistic
@@ -585,11 +599,11 @@ def graphs_inspection_of_series(stations_list):
             list_graphs.append([station.var_D, 'special_D'])
 
         for var, type in list_graphs:
-            x = var.date_in_process_period
-            y = var.data_in_process_period
+            x = list(var.date_in_process_period)
+            y = list(var.data_in_process_period)
 
             # number of year for process
-            num_years = station.process_period['end'] - station.process_period['start']
+            num_years = env.globals_vars.PROCESS_PERIOD['end'] - env.globals_vars.PROCESS_PERIOD['start']
 
             if type != 'special_I' and type != 'special_D':
                 if type == 'D':
@@ -622,7 +636,7 @@ def graphs_inspection_of_series(stations_list):
 
             fig = pyplot.figure(figsize=(with_fig, 5))
             #fig = pyplot.figure()
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
             ax.set_title(unicode(name_graph.replace('_',' '), 'utf-8'), env.globals_vars.graphs_title_properties())
 
             # default zoom values
@@ -639,27 +653,28 @@ def graphs_inspection_of_series(stations_list):
                 if env.var_[var.type].is_daily() or type == 'special_D':
                     if type_var not in types_var_D:
                         # default for generic type for var D
-                        ax.plot(x, y, '-', color="#638786")
+                        ax.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties())
                     else:
                         if types_var_D[type_var]['graph'] == 'bar':
-                            bar(x, y, align='center', color=types_var_D[type_var]['color'], width=1+num_years/5, edgecolor='none')
+                            bar(x, y, width=2+num_years/5, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
                             y_scale_below=0
                         else:
                             #ax.plot(x, y, TYPES_VAR_D[type_var]['graph'], color=TYPES_VAR_D[type_var]['color'])
-                            ax.plot(x, y, '-', color=types_var_D[type_var]['color'])
+                            ax.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties(color=types_var_D[type_var]['color']))
                 if env.var_[var.type].is_n_monthly() and not type == 'special_D':
                     if type_var not in types_var_D:
                         # default for generic type for var D
-                        ax.plot(x, y, '-', color="#638786")
+                        ax.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties())
                     else:
                         if types_var_D[type_var]['graph'] == 'bar':
-                            bar(x, y, align='center', color=types_var_D[type_var]['color'], width=20+num_years/5, edgecolor='none')
+                            bar(x, y, width=22+num_years/5, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
                             y_scale_below=0
                         else:
-                            ax.plot(x, y, '-', color=types_var_D[type_var]['color'])
+                            ax.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties(color=types_var_D[type_var]['color']))
+
 
             if type == 'I' or type == 'special_I':
-                ax.plot(x, y, '-', color="#638786")
+                ax.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties())
 
             ## X
             ax.set_xlabel(_('Time'), env.globals_vars.graphs_axis_properties())
@@ -679,7 +694,8 @@ def graphs_inspection_of_series(stations_list):
             ax.set_ylabel(unicode('{0} ({1})'.format(type_var, units), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             pyplot.subplots_adjust(bottom=0.2)
-            ax.grid(True)
+            ax.grid(True, color='gray')
+            env.globals_vars.set_others_properties(ax)
             ax.autoscale(tight=True)
             zoom_graph(ax=ax, x_scale_below=x_scale_below,x_scale_above=x_scale_above,
                 y_scale_below=y_scale_below, y_scale_above=y_scale_above)
@@ -694,7 +710,6 @@ def graphs_inspection_of_series(stations_list):
             image_list.append(image_path)
 
             pyplot.close('all')
-
 
         ## create mosaic
         if env.var_D.is_daily() and env.var_I.is_n_monthly():
@@ -739,15 +754,80 @@ def graphs_inspection_of_series(stations_list):
         #print h.heap()
         #h.iso(1,[],{})
 
+# -------------------------------------------------------------------------
+
+
+def get_climatology_data(station, freq = None):
+    '''Calculate function for some variables need in climatology
+    and others
+    '''
+
+    _station = copy.deepcopy(station)
+    original_FREQUENCY_DATA = env.var_D.FREQUENCY_DATA
+
+    if freq is None:
+        freq = env.var_D.FREQUENCY_DATA
+
+    _station.var_D.convert2(freq)
+    env.var_D.set_FREQUENCY_DATA(freq, check=False)
+
+    _station.var_D.calculate_data_date_and_nulls_in_period()
+    var_D_data = _station.var_D.data_in_process_period
+    var_D_date = _station.var_D.date_in_process_period
+
+    env.var_D.set_FREQUENCY_DATA(original_FREQUENCY_DATA, check=False)
+
+    y_mean = []
+    y_max = [] # value to add to mean for max value
+    y_min = [] # value to subtract to mean for min value
+
+    if freq in ['monthly', 'bimonthly', 'trimonthly']:
+        for month in range(1,13):
+            values = []
+            for iter, value in  enumerate(var_D_data):
+                if var_D_date[iter].month == month:
+                    values.append(value)
+            values = array.clean(values)
+            y_mean.append(array.mean(values))
+            y_max.append(array.maximum(values) - y_mean[-1])
+            y_min.append(y_mean[-1] - array.minimum(values))
+
+        del _station
+        return y_min, y_mean, y_max
+
+    if freq not in ['monthly', 'bimonthly', 'trimonthly'] and env.var_D.is_daily():
+        range_analysis_interval = get_range_analysis_interval()
+        for month in range(1, 13):
+            for day in range_analysis_interval:
+                range_analysis_values = []
+                # iteration for all years inside process period
+                for year in range(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']+1):
+                    # test if day exist in month and year
+                    if day > monthrange(year, month)[1]:
+                        continue
+
+                    values = get_values_in_range_analysis_interval(_station.var_D, year, month, day)
+                    values = array.clean(values)
+                    # calculate time series based on mode calculation series
+                    if env.config_run.settings['mode_calculation_series_D'] == 'mean':
+                        range_analysis_values.append(array.mean(values))
+                    if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
+                        range_analysis_values.append(sum(array.clean(values)))
+
+                y_mean.append(array.mean(range_analysis_values))
+                y_max.append(array.maximum(range_analysis_values) - y_mean[-1])
+                y_min.append(y_mean[-1] - array.minimum(range_analysis_values))
+
+        del _station
+        return y_min, y_mean, y_max
 
 def climatology(stations_list):
     """
-    Make table and graphs of climatology, part of EDA.
+    Make table and graphs of climatology, part of Exploratory_Data_Analysis.
     """
 
-    graphs_dir = os.path.join(shapiro_wilks_dir, _('Graphs_Inspection_of_Series'))
-
-    output.make_dirs(graphs_dir)
+    climatology_dir = os.path.join(eda_dir, _('Climatology'))
+    output.make_dirs(climatology_dir)
 
     # name climatology table of all stations
     if env.var_D.is_daily() or env.var_D.is_monthly():
@@ -756,7 +836,7 @@ def climatology(stations_list):
         filename_climatology_table = _('Climatology_table_{0}_({1})').format(env.var_D.TYPE_SERIES,env.config_run.settings['analysis_interval_i18n'])+'.csv'
     # climatology table file
     open_file_climatology_table\
-        = open(os.path.join(graphs_dir, filename_climatology_table), 'w')
+        = open(os.path.join(climatology_dir, filename_climatology_table), 'w')
     csv_climatology_table = csv.writer(open_file_climatology_table, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
     # print header
@@ -768,72 +848,12 @@ def climatology(stations_list):
 
     csv_climatology_table.writerow(header)
 
-    # -------------------------------------------------------------------------
-    # calculate function for some variables need in climatology
-
-    def get_climatology_data(station, freq):
-
-        _station = copy.deepcopy(station)
-        _station.var_D.convert2(freq)
-        original_FREQUENCY_DATA = env.var_D.FREQUENCY_DATA
-        env.var_D.set_FREQUENCY_DATA(freq, check=False)
-
-        _station.var_D.calculate_data_date_and_nulls_in_period()
-        var_D_data = _station.var_D.data_in_process_period
-        var_D_date = _station.var_D.date_in_process_period
-
-        env.var_D.set_FREQUENCY_DATA(original_FREQUENCY_DATA, check=False)
-
-        y_mean = []
-        y_max = [] # value to add to mean for max value
-        y_min = [] # value to subtract to mean for min value
-
-        if freq in ['monthly', 'bimonthly', 'trimonthly']:
-            for month in range(1,13):
-                values = []
-                for iter, value in  enumerate(var_D_data):
-                    if var_D_date[iter].month == month:
-                        values.append(value)
-                values = array.clean(values)
-                y_mean.append(array.mean(values))
-                y_max.append(array.maximum(values) - y_mean[-1])
-                y_min.append(y_mean[-1] - array.minimum(values))
-
-            del _station
-            return y_min, y_mean, y_max
-
-        if freq not in ['monthly', 'bimonthly', 'trimonthly'] and env.var_D.is_daily():
-            range_analysis_interval = get_range_analysis_interval()
-            for month in range(1, 13):
-                for day in range_analysis_interval:
-                    range_analysis_mean = []
-                    range_analysis_max = []
-                    range_analysis_min = []
-                    # iteration for all years inside process period
-                    for year in range(_station.process_period['start'], _station.process_period['end']+1):
-                        # test if day exist in month and year
-                        if day > monthrange(year, month)[1]:
-                            continue
-
-                        values = get_values_in_range_analysis_interval(_station.var_D, year, month, day)
-                        values = array.clean(values)
-                        range_analysis_mean.append(array.mean(values))
-                        range_analysis_max.append(array.maximum(values))
-                        range_analysis_min.append(array.minimum(values))
-
-                    y_mean.append(array.mean(range_analysis_mean))
-                    y_max.append(array.mean(range_analysis_max) - y_mean[-1])
-                    y_min.append(y_mean[-1] - array.mean(range_analysis_min))
-
-            del _station
-            return y_min, y_mean, y_max
-
     for station in stations_list:
         # -------------------------------------------------------------------------
         ## for climatology table
         line = [station.code, station.name, output.number(station.lat), output.number(station.lon),
-                output.number(station.alt), '{0}-{1}'.format(station.process_period['start'],
-                                                             station.process_period['end'])]
+                output.number(station.alt), '{0}-{1}'.format(env.globals_vars.PROCESS_PERIOD['start'],
+                                                             env.globals_vars.PROCESS_PERIOD['end'])]
 
         y_min, y_mean, y_max = get_climatology_data(station, 'monthly')
 
@@ -878,8 +898,7 @@ def climatology(stations_list):
             # -------------------------------------------------------------------------
             # for climatology graphs, N-month (base)
 
-            station_climatology_path = os.path.join(graphs_dir, station.code +'-'+station.name, _('Climatology'))
-
+            station_climatology_path = os.path.join(climatology_dir, station.code +'-'+station.name)
             output.make_dirs(station_climatology_path)
 
             x = range(1, 13)
@@ -891,8 +910,8 @@ def climatology(stations_list):
                     y_mean[y_mean.index(value)] = 0.0001
 
             title=_("Multiyear climatology ({0})\n{1} {2} - {3} ({4}-{5})").format(climatology_n_monthly['label'],
-                    station.code, station.name, env.var_D.TYPE_SERIES, station.process_period['start'],
-                    station.process_period['end'])
+                    station.code, station.name, env.var_D.TYPE_SERIES, env.globals_vars.PROCESS_PERIOD['start'],
+                    env.globals_vars.PROCESS_PERIOD['end'])
 
             # -------------------------------------------------------------------------
             # climatology N-monthly without whiskers
@@ -901,7 +920,7 @@ def climatology(stations_list):
                             station.code, station.name, env.var_D.TYPE_SERIES)
 
             fig = pyplot.figure(figsize=(8, 5.5))
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
             ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
 
@@ -917,26 +936,30 @@ def climatology(stations_list):
 
             ## Y
             # get units os type of var D or I
-            ax.set_ylabel(unicode('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[mean]'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            if env.config_run.settings['mode_calculation_series_D'] == 'mean':
+                ax.set_ylabel(unicode('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[mean]'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
+                ax.set_ylabel(unicode('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[accumulate]'), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             #pyplot.subplots_adjust(bottom=0.2)
-            ax.grid(True)
+            ax.grid(True, color='gray')
+            env.globals_vars.set_others_properties(ax)
             ax.autoscale(tight=True)
 
             if type_var not in types_var_D:
                 # default for generic type for var D
                 #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
-                ax.plot(x, y_mean, '-o', color='#638786', mec='#638786', linewidth=2.5, markersize=8)
+                ax.plot(x, y_mean, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties())
                 zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
             else:
                 if types_var_D[type_var]['graph'] == 'bar':
-                    bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
+                    bar(x, y_mean, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
                     #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
                     zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
                 else:
                     #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=TYPES_VAR_D[type_var]['color'],
                     #    mec=TYPES_VAR_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
-                    ax.plot(x, y_mean, '-o', color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color'], linewidth=2.5, markersize=8)
+                    ax.plot(x, y_mean, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties(color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color']))
                     zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
 
             # labels on both sides
@@ -960,7 +983,7 @@ def climatology(stations_list):
                 station.code, station.name, env.var_D.TYPE_SERIES)
 
             fig = pyplot.figure(figsize=(8, 5.5))
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
             ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
 
@@ -976,20 +999,24 @@ def climatology(stations_list):
 
             ## Y
             # get units os type of var D or I
-            ax.set_ylabel(unicode(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            if env.config_run.settings['mode_calculation_series_D'] == 'mean':
+                ax.set_ylabel(unicode(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
+                ax.set_ylabel(unicode(('{0} ({1}) - ' + _('[min-accum-max]')).format(type_var, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             #pyplot.subplots_adjust(bottom=0.2)
-            ax.grid(True)
+            ax.grid(True, color='gray')
+            env.globals_vars.set_others_properties(ax)
             ax.autoscale(tight=True)
 
             if type_var not in types_var_D:
                 # default for generic type for var D
-                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
+                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', mec='#638786', mew=3, linewidth=2.5, elinewidth=1, **env.globals_vars.figure_bar_properties())
                 #bar(x, y_mean, align='center', color='#638786')
                 zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
             else:
                 if types_var_D[type_var]['graph'] == 'bar':
-                    bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
+                    bar(x, y_mean, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
                     ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
                     zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
                 else:
@@ -1027,7 +1054,10 @@ def climatology(stations_list):
             csv_table.writerow( [_('max')] + [ output.number(x + y_max[i]) for i,x in enumerate(y_mean) ] )
 
             # mean values
-            csv_table.writerow( [_('mean')] + [ output.number(x) for x in y_mean ] )
+            if env.config_run.settings['mode_calculation_series_D'] == 'mean':
+                csv_table.writerow( [_('mean')] + [ output.number(x) for x in y_mean ] )
+            if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
+                csv_table.writerow( [_('accum')] + [ output.number(x) for x in y_mean ] )
 
             # min values
             csv_table.writerow( [_('min')] + [ output.number(x - y_min[i]) for i,x in enumerate(y_mean) ] )
@@ -1053,8 +1083,8 @@ def climatology(stations_list):
                     x_labels.append('')
 
             title = _("Multiyear climatology (each {0} days)\n{1} {2} - {3} ({4}-{5})").format(env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL,
-                station.code, station.name, env.var_D.TYPE_SERIES, station.process_period['start'],
-                station.process_period['end'])
+                station.code, station.name, env.var_D.TYPE_SERIES, env.globals_vars.PROCESS_PERIOD['start'],
+                env.globals_vars.PROCESS_PERIOD['end'])
 
             # -------------------------------------------------------------------------
             # climatology N days without whiskers
@@ -1064,7 +1094,7 @@ def climatology(stations_list):
 
             with_fig = 5 + len(y_mean)/9
             fig = pyplot.figure(figsize=(with_fig, 5.5))
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
             ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
 
             type_var = env.var_D.TYPE_SERIES
@@ -1075,10 +1105,14 @@ def climatology(stations_list):
 
             ## Y
             # get units os type of var D or I
-            ax.set_ylabel(unicode('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[mean]'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            if env.config_run.settings['mode_calculation_series_D'] == 'mean':
+                ax.set_ylabel(unicode('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[mean]'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
+                ax.set_ylabel(unicode('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[accumulate]'), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             #pyplot.subplots_adjust(bottom=0.2)
-            ax.grid(True)
+            ax.grid(True, color='gray')
+            env.globals_vars.set_others_properties(ax)
             ax.autoscale(tight=True)
 
             x_scale_value = -0.013 - env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL/600.0
@@ -1086,15 +1120,15 @@ def climatology(stations_list):
             if type_var not in types_var_D:
                 # default for generic type for var D
                 #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
-                ax.plot(x, y_mean, '-o', color='#638786', mec='#638786', linewidth=2.5, markersize=8)
+                ax.plot(x, y_mean, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties())
                 zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_below=-0.04, y_scale_above=-0.04)
             else:
                 if types_var_D[type_var]['graph'] == 'bar':
-                    bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
+                    bar(x, y_mean, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
                     #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
                     zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_above=-0.04)
                 else:
-                    ax.plot(x, y_mean, '-o', color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color'], linewidth=2.5, markersize=8)
+                    ax.plot(x, y_mean, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties(color=types_var_D[type_var]['color'], mec=types_var_D[type_var]['color']))
                     #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=TYPES_VAR_D[type_var]['color'],
                     #    mec=TYPES_VAR_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
                     zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_below=-0.04, y_scale_above=-0.04)
@@ -1121,7 +1155,7 @@ def climatology(stations_list):
 
             with_fig = 5 + len(y_mean)/9
             fig = pyplot.figure(figsize=(with_fig, 5.5))
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
             ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
 
             type_var = env.var_D.TYPE_SERIES
@@ -1132,10 +1166,14 @@ def climatology(stations_list):
 
             ## Y
             # get units os type of var D or I
-            ax.set_ylabel(unicode(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            if env.config_run.settings['mode_calculation_series_D'] == 'mean':
+                ax.set_ylabel(unicode(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
+                ax.set_ylabel(unicode(('{0} ({1}) - ' + _('[min-accum-max]')).format(type_var, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             #pyplot.subplots_adjust(bottom=0.2)
-            ax.grid(True)
+            ax.grid(True, color='gray')
+            env.globals_vars.set_others_properties(ax)
             ax.autoscale(tight=True)
 
             x_scale_value = -0.013 - env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL/600.0
@@ -1147,7 +1185,7 @@ def climatology(stations_list):
                 #bar(x, y_mean, align='center', color='#638786')
             else:
                 if types_var_D[type_var]['graph'] == 'bar':
-                    bar(x, y_mean, align='center', color=types_var_D[type_var]['color'])
+                    bar(x, y_mean, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
                     ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
                     zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_above=-0.04)
                 else:
@@ -1189,7 +1227,10 @@ def climatology(stations_list):
             csv_table.writerow( [_('max')] + [ output.number(x + y_max[i]) for i,x in enumerate(y_mean) ] )
 
             # mean values
-            csv_table.writerow( [_('mean')] + [ output.number(x) for x in y_mean ] )
+            if env.config_run.settings['mode_calculation_series_D'] == 'mean':
+                csv_table.writerow( [_('mean')] + [ output.number(x) for x in y_mean ] )
+            if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
+                csv_table.writerow( [_('accum')] + [ output.number(x) for x in y_mean ] )
 
             # min values
             csv_table.writerow( [_('min')] + [ output.number(x - y_min[i]) for i,x in enumerate(y_mean) ] )
@@ -1203,8 +1244,20 @@ def climatology(stations_list):
 
 def scatter_plots_of_series(stations_list):
 
-    # calculate the common period of all common process
-    global_common_date_process = global_process_period(stations_list)
+    return_msg = True
+
+    if not (1 < Station.stations_processed <= 15):
+        if Station.stations_processed == 1:
+            return_msg = _("partial\n > WARNING: There is only one station for process\n"
+                           "   the scatter plots of series, this need more \n"
+                           "   of one station.")
+        else:
+            return_msg = _("partial\n > WARNING: The maximum limit for make the scatter plots\n"
+                            "   of series are 10 stations, if you want this diagram,\n"
+                            "   please divide the stations in regions into different\n"
+                            "   runfiles with maximum 10 stations per runfile, and\n"
+                            "   rerun each runfile.")
+        return return_msg
 
     fig_height = 3.2*len(stations_list)/1.5
     fig_with = 4*len(stations_list)/1.5
@@ -1213,21 +1266,18 @@ def scatter_plots_of_series(stations_list):
 
     name_plot = _("scatter_plots_of_series") + "_{0}_{2}-{3}".format(env.var_D.TYPE_SERIES,
         env.var_D.UNITS,
-        global_common_date_process['start'], global_common_date_process['end'])
+        env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])
 
     title_plot = _("Scatter plots of series") + "\n{0} ({1}) {2}-{3}".format(env.var_D.TYPE_SERIES,
         env.var_D.UNITS,
-        global_common_date_process['start'], global_common_date_process['end'])
+        env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])
 
-    pyplot.suptitle(unicode(title_plot, 'utf-8'), y=(fig_height-0.1)/fig_height, fontsize=14)
+    pyplot.suptitle(unicode(title_plot, 'utf-8'), y=(fig_height-0.1)/fig_height, **env.globals_vars.graphs_title_properties(fs=14, fva='top'))
 
     for iter_v, station_v in enumerate(stations_list):
         for iter_h, station_h in enumerate(stations_list):
-            x = station_h.var_D.data[station_h.var_D.date.index(global_common_date_process['start_date']):\
-            station_h.var_D.date.index(global_common_date_process['end_date'])+1]
-
-            y = station_v.var_D.data[station_v.var_D.date.index(global_common_date_process['start_date']):\
-            station_v.var_D.date.index(global_common_date_process['end_date'])+1]
+            x = station_h.var_D.data_in_process_period
+            y = station_v.var_D.data_in_process_period
 
             ax = pyplot.subplot2grid((len(stations_list),len(stations_list)),(iter_v,iter_h))
 
@@ -1242,7 +1292,9 @@ def scatter_plots_of_series(stations_list):
             else:
                 ax.set_xticklabels([])
 
-            ax.grid(True)
+            pyplot.xticks(rotation='vertical')
+            ax.grid(True, color='gray')
+            env.globals_vars.set_others_properties(ax, ts=12.5)
             ax.autoscale(tight=True)
 
             pyplot.tight_layout(pad=0.8)
@@ -1260,6 +1312,20 @@ def scatter_plots_of_series(stations_list):
 
     pyplot.close('all')
 
+    return return_msg
+
+
+def get_frequency_histogram(data):
+
+    n = len(data)
+
+    # bins based on sturges formula
+    bins = 1 + 3.3*log10(n)
+
+    hist, bin_edges = histogram(data, bins=bins)
+
+    return hist, bin_edges
+
 
 def frequency_histogram(stations_list):
 
@@ -1269,19 +1335,14 @@ def frequency_histogram(stations_list):
 
     for station in stations_list:
 
-        n = station.var_D.size_data
-
-        # bins based on sturges formula
-        bins = 1 + 3.3*log10(n)
-
-        hist, bin_edges = histogram(station.var_D.data_filtered_in_process_period, bins=bins)
+        hist, bin_edges = get_frequency_histogram(station.var_D.data_filtered_in_process_period)
 
         name_graph = _("frequency_histogram_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
 
         fig = pyplot.figure()
-        ax = fig.add_subplot(111)
+        ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
         ax.set_title(unicode(_("Frequency histogram\n{0} {1} - {2} ({3}-{4})").format(station.code, station.name,
-            env.var_D.TYPE_SERIES, station.process_period['start'], station.process_period['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
+            env.var_D.TYPE_SERIES, env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
 
 
         ## X
@@ -1293,9 +1354,10 @@ def frequency_histogram(stations_list):
 
         width = 0.7 * (bin_edges[1] - bin_edges[0])
         center = (bin_edges[:-1] + bin_edges[1:]) / 2
-        bar(center,hist,align='center', color='#638786', width=width)
+        bar(center, hist, width=width, **env.globals_vars.figure_bar_properties())
 
-        ax.grid(True)
+        ax.grid(True, color='gray')
+        env.globals_vars.set_others_properties(ax)
         ax.autoscale(tight=True)
 
         zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
@@ -1343,7 +1405,7 @@ def shapiro_wilks_test(stations_list):
             output.number(station.lat),
             output.number(station.lon),
             output.number(station.alt),
-            '{0}-{1}'.format(station.process_period['start'], station.process_period['end']),
+            '{0}-{1}'.format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']),
             output.number(W),
             output.number(p_value),
             Ho
@@ -1370,10 +1432,12 @@ def outliers(stations_list):
     def clone_and_transform_station(station, convert_var_D_to, convert_var_I_to):
         station_copy = copy.deepcopy(station)
         if convert_var_D_to:
+            env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
             station_copy.var_D.convert2(convert_var_D_to)
             env.var_D.set_FREQUENCY_DATA(convert_var_D_to, check=False)
             station_copy.var_D.calculate_data_date_and_nulls_in_period()
         if convert_var_I_to:
+            env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
             station_copy.var_I.convert2(convert_var_I_to)
             env.var_I.set_FREQUENCY_DATA(convert_var_I_to, check=False)
             station_copy.var_I.calculate_data_date_and_nulls_in_period()
@@ -1392,12 +1456,12 @@ def outliers(stations_list):
             output.make_dirs(outliers_per_stations_dir)
 
             name_graph = _("Outliers")+"_{0}_{1}_{2}_({3}-{4})".format(station.code, station.name,
-            env.var_D.TYPE_SERIES, station.process_period['start'], station.process_period['end'])
+            env.var_D.TYPE_SERIES, env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])
 
-            fig = pyplot.figure(figsize=(3,6))
-            ax = fig.add_subplot(111)
+            fig = pyplot.figure(figsize=(3.5,7))
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
             ax.set_title(unicode(_("Outliers")+"\n{0} ({1}-{2})".format(env.var_D.TYPE_SERIES,
-                station.process_period['start'], station.process_period['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
+                env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
 
             ## X
             x_labels = [station.code]
@@ -1411,12 +1475,14 @@ def outliers(stations_list):
 
             boxplot_station = boxplot(station.var_D.data_filtered_in_process_period)
 
-            #pyplot.setp(boxplot_station['boxes'], color='black')
-            #pyplot.setp(boxplot_station['whiskers'], color='black', linestyle='-')
-            pyplot.setp(boxplot_station['fliers'], color='red', marker='+')
-            #pyplot.setp(boxplot_station['fliers'], markersize=3.0)
+            pyplot.setp(boxplot_station['boxes'], color=env.globals_vars.colors['plt_default'], linewidth=2.5)
+            pyplot.setp(boxplot_station['medians'], color='red', linewidth=2.5)
+            pyplot.setp(boxplot_station['whiskers'], color=env.globals_vars.colors['plt_default'], linestyle='solid', linewidth=2.5)
+            pyplot.setp(boxplot_station['fliers'], color='red', markersize=11, marker='.')
+            pyplot.setp(boxplot_station['caps'], color=env.globals_vars.colors['plt_default'], linewidth=2.5)
 
-            #ax.grid(True)
+            ax.grid(True, color='gray')
+            env.globals_vars.set_others_properties(ax)
             ax.autoscale(tight=True)
 
             zoom_graph(ax=ax, x_scale_below=-2.5,x_scale_above=-2.5, y_scale_below=-0.04, y_scale_above=-0.04)
@@ -1525,26 +1591,23 @@ def outliers(stations_list):
     ## Outliers graph all in one
 
     if env.config_run.settings['graphics'] and ( 1 < Station.stations_processed <= 50 ):
-        if env.config_run.settings['process_period']:
-            name_graph = _("Outliers")+"_{0}_({1}-{2})".format(
-                env.var_D.TYPE_SERIES, env.config_run.settings['process_period']['start'],
-                env.config_run.settings['process_period']['end'])
-        else:
-            name_graph = _("Outliers")+"_{0}".format(env.var_D.TYPE_SERIES)
 
-        fig = pyplot.figure(figsize=(2.5+len(stations_list)/2.5,6))
-        ax = fig.add_subplot(111)
+        name_graph = _("Outliers")+"_{0}_({1}-{2})".format(
+            env.var_D.TYPE_SERIES, env.globals_vars.PROCESS_PERIOD['start'],
+            env.globals_vars.PROCESS_PERIOD['end'])
 
-        if len(stations_list) <= 3:
+        if len(stations_list) <= 4:
             _part_title = _("Outliers")+'\n'
+            fig = pyplot.figure(figsize=(2.5+len(stations_list)/2.5,7))
         else:
             _part_title = _("Outliers")+' - '
+            fig = pyplot.figure(figsize=(2.5+len(stations_list)/2.5,6))
 
-        if env.config_run.settings['process_period']:
-            ax.set_title(unicode(_part_title + "{0} ({1}-{2})".format(env.var_D.TYPE_SERIES,
-                env.config_run.settings['process_period']['start'], env.config_run.settings['process_period']['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
-        else:
-            ax.set_title(unicode(_part_title + "{0}".format(env.var_D.TYPE_SERIES), 'utf-8'), env.globals_vars.graphs_title_properties())
+        ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
+
+
+        ax.set_title(unicode(_part_title + "{0} ({1}-{2})".format(env.var_D.TYPE_SERIES,
+            env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
 
         ## X
         xticks(range(len(stations_list)), codes_stations, rotation='vertical')
@@ -1557,12 +1620,14 @@ def outliers(stations_list):
 
         boxplot_station = boxplot(data_stations)
 
-        #pyplot.setp(boxplot_station['boxes'], color='black')
-        #pyplot.setp(boxplot_station['whiskers'], color='black', linestyle='-')
-        pyplot.setp(boxplot_station['fliers'], color='red', marker='+')
-        #pyplot.setp(boxplot_station['fliers'], markersize=3.0)
+        pyplot.setp(boxplot_station['boxes'], color=env.globals_vars.colors['plt_default'], linewidth=2.5)
+        pyplot.setp(boxplot_station['medians'], color='red', linewidth=2.5)
+        pyplot.setp(boxplot_station['whiskers'], color=env.globals_vars.colors['plt_default'], linestyle='solid', linewidth=2.5)
+        pyplot.setp(boxplot_station['fliers'], color='red', markersize=11, marker='.')
+        pyplot.setp(boxplot_station['caps'], color=env.globals_vars.colors['plt_default'], linewidth=2.5)
 
-        #ax.grid(True)
+        ax.grid(True, color='gray')
+        env.globals_vars.set_others_properties(ax)
         ax.autoscale(tight=True)
         #pyplot.subplots_adjust(bottom=) #(len(array.max(codes_stations))/30.0))
 
@@ -1583,15 +1648,10 @@ def outliers(stations_list):
     # -------------------------------------------------------------------------
     ## Report all Outliers of all stations in file
 
-    if env.config_run.settings['process_period']:
-        file_outliers_var_D\
+    file_outliers_var_D\
         = os.path.join(outliers_dir, _("Outliers_table")+"_{0}_({1}-{2}).csv".format(
-            env.var_D.TYPE_SERIES, env.config_run.settings['process_period']['start'],
-            env.config_run.settings['process_period']['end']))
-    else:
-        file_outliers_var_D\
-        = os.path.join(outliers_dir, _("Outliers_table")+"_{0}.csv".format(
-            env.var_D.TYPE_SERIES))
+            env.var_D.TYPE_SERIES, env.globals_vars.PROCESS_PERIOD['start'],
+            env.globals_vars.PROCESS_PERIOD['end']))
 
     open_file_D = open(file_outliers_var_D, 'w')
     csv_file_D = csv.writer(open_file_D, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
@@ -1657,6 +1717,7 @@ def correlation(stations_list, type_correlation):
     """Make graphs ant tables of auto-correlation of var D and cross correlations
     between var D and var I
     """
+    return_msg = True
 
     # save original state of data for var D and I
     original_freq_data_var_D = env.var_D.FREQUENCY_DATA
@@ -1664,11 +1725,10 @@ def correlation(stations_list, type_correlation):
 
     # Adjust the same frequency data for the two time series
     stations_list_copy = copy.deepcopy(stations_list)
-    was_converted = adjust_data_of_variables(stations_list_copy, messages=False)
-    if was_converted:
-        freq_data = env.var_D.get_FREQUENCY_DATA() + _(' (converted)')
-    else:
-        freq_data = env.var_D.get_FREQUENCY_DATA()
+    if type_correlation == 'auto':
+        adjust_data_of_variables(stations_list_copy, force_same_frequencies=False, messages=False)
+    if type_correlation == 'cross':
+        adjust_data_of_variables(stations_list_copy, force_same_frequencies=True, messages=False)
 
     stations_list_correlation = stations_list_copy
 
@@ -1677,9 +1737,10 @@ def correlation(stations_list, type_correlation):
         station_path = os.path.join(correlation_dir, station.code +'-'+station.name)
 
         # recalculate data if is needed
-        if was_converted:
-            station.var_I.calculate_data_date_and_nulls_in_period()
+        if env.var_D.was_converted:
             station.var_D.calculate_data_date_and_nulls_in_period()
+        if env.var_I.was_converted:
+            station.var_I.calculate_data_date_and_nulls_in_period()
 
         output.make_dirs(station_path)
 
@@ -1798,15 +1859,15 @@ def correlation(stations_list, type_correlation):
                 fig = pyplot.figure(figsize=(6.5, 4.8))
                 title = _("Auto Correlation - {0} {1}\n"
                           "{2} ({3}-{4})").format(station.code, station.name, env.var_D.TYPE_SERIES,
-                                                  station.process_period['start'], station.process_period['end'])
+                                                  env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])
             if type_correlation == 'cross':
                 fig = pyplot.figure(figsize=(8.5, 4.8))
                 title = _("Cross Correlation - {0} {1}\n"
                           "{2} vs {3} ({4}-{5})").format(station.code, station.name, env.var_D.TYPE_SERIES,
-                                                         env.var_I.TYPE_SERIES, station.process_period['start'],
-                                                         station.process_period['end'])
+                                                         env.var_I.TYPE_SERIES, env.globals_vars.PROCESS_PERIOD['start'],
+                                                         env.globals_vars.PROCESS_PERIOD['end'])
 
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
             ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
 
@@ -1823,12 +1884,15 @@ def correlation(stations_list, type_correlation):
             ax.autoscale(tight=True)
 
             #bar(correlation_values['lags'], correlation_values['pearson'], align='center', width=0.2, color='k')
-            ax.plot(correlation_values['lags'], correlation_values['pearson'], 'ro', color='#638786', mec='#638786', linewidth=2.5, markersize=8)
+            ax.plot(correlation_values['lags'], correlation_values['pearson'], 'ro', linewidth=2.5, **env.globals_vars.figure_plot_properties())
             ax.vlines(correlation_values['lags'], [0], correlation_values['pearson'], linewidth=2.5, color='#638786')
 
             pyplot.ylim(-1, 1)
 
-            ax.text(24, -1, _('with {0} data').format(freq_data), horizontalalignment='right', verticalalignment='center')
+            ax.text(24, -1, get_text_of_frequency_data('D'), horizontalalignment='right', verticalalignment='center')
+
+            env.globals_vars.set_others_properties(ax)
+            ax.grid(True, color='gray')
 
             zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.06, y_scale_above=-0.06)
             fig.tight_layout()
@@ -1857,78 +1921,75 @@ def correlation(stations_list, type_correlation):
         for _lag, _pearson in zip(correlation_values['lags'], correlation_values['pearson']):
             csv_file.writerow([_lag, output.number(_pearson)])
 
+        # print footnote
+        csv_file.writerow([])
+        csv_file.writerow([_("*Data in period {0}-{1}").format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])])
+
         open_file.close()
         del csv_file
 
-        # -------------------------------------------------------------------------
-        # cross-correlation matrix table
+    # -------------------------------------------------------------------------
+    # cross-correlation matrix table
 
-        if type_correlation == 'cross' and len(stations_list) > 1:
+    if type_correlation == 'cross' and len(stations_list) > 1:
 
-            global_period = global_process_period(stations_list)
+        cross_correlation_matrix = []
+        stations_code_and_name = []
 
-            for station in stations_list_correlation:
-                station.var_D.calculate_data_date_and_nulls_in_period(global_period['start'], global_period['end'])
-                station.var_I.calculate_data_date_and_nulls_in_period(global_period['start'], global_period['end'])
+        for station_My in stations_list_correlation:
+            cross_correlation_matrix_line = []
+            for station_Mx in stations_list_correlation:
 
-            cross_correlation_matrix = []
-            stations_code_and_name = []
+                data_My = list(station_My.var_D.data_in_process_period)
+                data_Mx = list(station_Mx.var_D.data_in_process_period)
 
-            for station_My in stations_list_correlation:
-                cross_correlation_matrix_line = []
-                for station_Mx in stations_list_correlation:
+                # clear NaN values in par, if one of two series have a NaN value
+                # delete this NaN and corresponding value in the other series in
+                # the same location
+                idx_to_clean = []
+                for idx in range(len(data_My)):
+                    if env.globals_vars.is_valid_null(data_My[idx]) or env.globals_vars.is_valid_null(data_Mx[idx]):
+                        idx_to_clean.append(idx)
+                idx_to_clean.reverse()
+                for idx in idx_to_clean:
+                    del data_My[idx]
+                    del data_Mx[idx]
+                cross_correlation_matrix_line.append(stats.pearsonr(data_My, data_Mx)[0])
+            cross_correlation_matrix.append(cross_correlation_matrix_line)
+            stations_code_and_name.append('{0}-{1}'.format(station_My.code, station_My.name))
 
-                    data_My = list(station_My.var_D.data_in_period)
-                    data_Mx = list(station_Mx.var_D.data_in_period)
+        table_file = os.path.join(correlation_dir, _("Cross_Correlation_Matrix_Table_({0}-{1}).csv")
+            .format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']))
+        open_file = open(table_file, 'w')
+        csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
-                    # clear NaN values in par, if one of two series have a NaN value
-                    # delete this NaN and corresponding value in the other series in
-                    # the same location
-                    idx_to_clean = []
-                    for idx in range(len(data_My)):
-                        if env.globals_vars.is_valid_null(data_My[idx]) or env.globals_vars.is_valid_null(data_Mx[idx]):
-                            idx_to_clean.append(idx)
-                    idx_to_clean.reverse()
-                    for idx in idx_to_clean:
-                        del data_My[idx]
-                        del data_Mx[idx]
-                    cross_correlation_matrix_line.append(stats.pearsonr(data_My, data_Mx)[0])
-                cross_correlation_matrix.append(cross_correlation_matrix_line)
-                stations_code_and_name.append('{0}-{1}'.format(station_My.code, station_My.name))
+        # print header
+        header = [_("PEARSON")] + stations_code_and_name
+        csv_file.writerow(header)
 
-            table_file = os.path.join(correlation_dir, _("Cross_Correlation_Matrix_Table_({0}-{1}).csv")
-                .format(global_period['start'], global_period['end']))
-            open_file = open(table_file, 'w')
-            csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
+        for station_idx, station_code in enumerate(stations_code_and_name):
+            csv_file.writerow([station_code] + [output.number(p) for p in cross_correlation_matrix[station_idx]])
 
-            # print header
-            header = [_("PEARSON")] + stations_code_and_name
-            csv_file.writerow(header)
+        # print footnote
+        csv_file.writerow([])
+        csv_file.writerow([get_text_of_frequency_data('D')])
+        csv_file.writerow([_("*Data in the period {0}-{1}").format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])])
 
-            for station_idx, station_code in enumerate(stations_code_and_name):
-                csv_file.writerow([station_code] + [output.number(p) for p in cross_correlation_matrix[station_idx]])
+        open_file.close()
+        del csv_file
 
-            # print footnote
-            csv_file.writerow([])
-            csv_file.writerow([_("*Calculated with {0} data").format(freq_data)])
-            csv_file.writerow([_("*Data in global period {0}-{1}").format(global_period['start'], global_period['end'])])
+    # return to original FREQUENCY_DATA of the two variables
+    env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
+    env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
 
-            open_file.close()
-            del csv_file
-
-        # return to original FREQUENCY_DATA of the two variables
-        env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
-        env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
+    return return_msg
 
 
 def homogeneity(stations_list):
 
-    stations_list_copy = copy.deepcopy(stations_list)
-    global_period = global_process_period(stations_list)
+    return_msg = True
 
-    for station in stations_list_copy:
-        station.var_D.calculate_data_date_and_nulls_in_period(global_period['start'], global_period['end'])
-        station.var_I.calculate_data_date_and_nulls_in_period(global_period['start'], global_period['end'])
+    stations_list_copy = copy.deepcopy(stations_list)
 
     # -------------------------------------------------------------------------
     # Mann-Whitney-Wilcoxon Test (MWW)
@@ -1959,12 +2020,12 @@ def homogeneity(stations_list):
         else:
             is_homogeneous = _('no')
 
-        csv_file.writerow([station.name, station.code, u, p_value, is_homogeneous])
+        csv_file.writerow([station.name, station.code, output.number(u), output.number(p_value), is_homogeneous])
 
     # print footnote
     csv_file.writerow([])
     csv_file.writerow([_("*Calculated with {0} data").format(env.var_D.get_FREQUENCY_DATA())])
-    csv_file.writerow([_("*Data in global period {0}-{1}").format(global_period['start'], global_period['end'])])
+    csv_file.writerow([_("*Data in the period {0}-{1}").format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])])
 
     open_file.close()
     del csv_file
@@ -1987,21 +2048,19 @@ def homogeneity(stations_list):
         s1 = series[0:len_s/2]
         s2 = series[len_s/2::]
 
-        t, prob = stats.ttest_ind(s1,s2)
-
-        p_value = prob
+        t, p_value = stats.ttest_ind(s1,s2)
 
         if p_value > 0.05:
             is_homogeneous = _('yes')
         else:
             is_homogeneous = _('no')
 
-        csv_file.writerow([station.name, station.code, t, p_value, is_homogeneous])
+        csv_file.writerow([station.name, station.code, output.number(t), output.number(p_value), is_homogeneous])
 
     # print footnote
     csv_file.writerow([])
     csv_file.writerow([_("*Calculated with {0} data").format(env.var_D.get_FREQUENCY_DATA())])
-    csv_file.writerow([_("*Data in global period {0}-{1}").format(global_period['start'], global_period['end'])])
+    csv_file.writerow([_("*Data in the period {0}-{1}").format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])])
 
     open_file.close()
     del csv_file
@@ -2030,12 +2089,12 @@ def homogeneity(stations_list):
             is_homogeneous = _('yes')
         else:
             is_homogeneous = _('no')
-        csv_file.writerow([station.name, station.code, w, p_value, is_homogeneous])
+        csv_file.writerow([station.name, station.code, output.number(w), output.number(p_value), is_homogeneous])
 
     # print footnote
     csv_file.writerow([])
     csv_file.writerow([_("*Calculated with {0} data").format(env.var_D.get_FREQUENCY_DATA())])
-    csv_file.writerow([_("*Data in global period {0}-{1}").format(global_period['start'], global_period['end'])])
+    csv_file.writerow([_("*Data in the period {0}-{1}").format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])])
 
     open_file.close()
     del csv_file
@@ -2061,10 +2120,10 @@ def homogeneity(stations_list):
                     accumulate.append(accumulate[-1] + value)
 
             fig = pyplot.figure(figsize=(7, 5))
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
             titulo = _("{0} for {1}-{2}\nperiod {3}-{4}")\
-                .format(_('Mass Curve'), station.code, station.name, global_period['start'], global_period['end'])
+                .format(_('Mass Curve'), station.code, station.name, env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])
             ax.set_title(unicode(titulo, 'utf-8'), env.globals_vars.graphs_title_properties())
 
             ## X
@@ -2077,13 +2136,14 @@ def homogeneity(stations_list):
 
             pyplot.axhline(linewidth=1, color='k')
 
+            env.globals_vars.set_others_properties(ax)
             ax.autoscale(tight=True)
 
-            pyplot.xlim(global_period['start_date'], global_period['end_date'])
+            pyplot.xlim(station.var_D.date_in_process_period[0], station.var_D.date_in_process_period[-1])
             ax.grid(True, color='gray')
 
             #bar(correlation_values['lags'], correlation_values['pearson'], align='center', width=0.2, color='k')
-            ax.plot(global_period['dates'], accumulate, color='#638786', mec='#638786', linewidth=5)
+            ax.plot(station.var_D.date_in_process_period, accumulate, linewidth=5, **env.globals_vars.figure_plot_properties())
 
             fig.tight_layout()
 
@@ -2096,4 +2156,110 @@ def homogeneity(stations_list):
 
             pyplot.close('all')
 
+    return return_msg
 
+
+def anomaly(stations_list):
+
+    anomaly_time_series_dir = os.path.join(anomaly_dir, _('Anomaly_time_series'))
+    output.make_dirs(anomaly_time_series_dir)
+
+    if env.config_run.settings['graphics']:
+        anomaly_frequency_histogram_dir = os.path.join(anomaly_dir, _('Anomaly_frequency_histogram'))
+        output.make_dirs(anomaly_frequency_histogram_dir)
+
+    # save original state of data for var D and I
+    original_freq_data_var_D = env.var_D.FREQUENCY_DATA
+    original_freq_data_var_I = env.var_I.FREQUENCY_DATA
+
+    # Adjust the same frequency data for the two time series
+    stations_list_adjusted = copy.deepcopy(stations_list)
+    adjust_data_of_variables(stations_list_adjusted, messages=False)
+
+    for station in stations_list_adjusted:
+        station_copy = copy.deepcopy(station)
+        calculate_time_series(station_copy, lags=[0], makes_files=False)
+
+        # get the climatology values
+        clim_min, clim_mean, clim_max = get_climatology_data(station)
+        # get the time series values ordered
+        time_series_ordered = sorted(station_copy.time_series['lag_0'], key=lambda x: x[0])
+        time_series_var_D_values = [x[1] for x in time_series_ordered]
+
+        # extend the climatology values to N years of time series
+        climatology_var_D = clim_mean*(env.globals_vars.PROCESS_PERIOD['end']-env.globals_vars.PROCESS_PERIOD['start']+1)
+
+        anomaly_values = [x1 - x2 for (x1, x2) in zip(time_series_var_D_values, climatology_var_D)]
+        anomaly_values_cleaned = array.clean(anomaly_values)
+
+        hist, bin_edges = get_frequency_histogram(anomaly_values_cleaned)
+
+        ### Anomaly_time_series
+        file_anomaly_time_series \
+            = os.path.join(anomaly_time_series_dir, _('Anomaly_time_series_{0}_{1}_{2}.csv').format(env.var_D.TYPE_SERIES, station.code, station.name))
+        open_file_anomaly_time_series = open(file_anomaly_time_series, 'w')
+        csv_file_anomaly_time_series = csv.writer(open_file_anomaly_time_series, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
+
+        # print header
+        header = [_('DATE'), _('ANOMALIES')+' - {0} ({1})*'.format(station.var_D.type_series, env.var_D.UNITS)]
+        csv_file_anomaly_time_series.writerow(header)
+
+        for date_anomaly, anomaly in zip([x[0] for x in time_series_ordered], anomaly_values):
+            if env.var_D.is_n_monthly():
+                date_formated = str(date_anomaly.year)+' '+str(output.analysis_interval_text(date_anomaly.month))
+            if env.var_D.is_daily():
+                date_formated = str(date_anomaly.year)+' '+str(output.analysis_interval_text(date_anomaly.month, date_anomaly.day))
+            csv_file_anomaly_time_series.writerow([date_formated, output.number(anomaly)])
+
+        # print footnote
+        csv_file_anomaly_time_series.writerow([])
+        csv_file_anomaly_time_series.writerow([get_text_of_frequency_data('D', ndays=True)])
+
+        open_file_anomaly_time_series.close()
+        del csv_file_anomaly_time_series
+
+        if env.config_run.settings['graphics']:
+
+            name_graph = _("Anomaly_frequency_histogram_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
+
+            fig = pyplot.figure()
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
+            ax.set_title(unicode(_("Anomaly frequency histogram\n{0} {1} - {2} ({3}-{4})").format(station.code, station.name,
+                env.var_D.TYPE_SERIES, env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
+
+            ## X
+            type_var = env.var_D.TYPE_SERIES
+            ax.set_xlabel(unicode('{0} ({1}) {2}'
+                .format(type_var, env.var_D.UNITS,
+                        get_text_of_frequency_data('D', ndays=True)), 'utf-8'), env.globals_vars.graphs_axis_properties())
+
+            ## Y
+            ax.set_ylabel(_('Frequency'), env.globals_vars.graphs_axis_properties())
+
+            width = 0.7 * (bin_edges[1] - bin_edges[0])
+            center = (bin_edges[:-1] + bin_edges[1:]) / 2
+            bar(center, hist, width=width, **env.globals_vars.figure_bar_properties())
+
+            ax.grid(True, color='gray')
+            ax.axvline(x=0, color=env.globals_vars.colors['grey_S2'], ls='dashed', linewidth=1)
+            env.globals_vars.set_others_properties(ax)
+            ax.autoscale(tight=True)
+            #ax.text(0.99, 0.985, get_text_of_frequency_data('D', ndays=True), horizontalalignment='right',
+            #        verticalalignment='top', transform = ax.transAxes, rotation="vertical")
+
+            zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_above=-0.04)
+
+            fig.tight_layout()
+
+            # save image
+            image = os.path.join(anomaly_frequency_histogram_dir, name_graph + '.png')
+            pyplot.savefig(image, dpi=75)
+
+            # stamp logo
+            watermarking.logo(image)
+
+            pyplot.close('all')
+
+    # return to original FREQUENCY_DATA of the two variables
+    env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
+    env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
