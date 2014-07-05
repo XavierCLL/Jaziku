@@ -629,7 +629,7 @@ def graphs_inspection_of_series(stations_list):
                     len_x = len(station.var_I.date_in_process_period)
                 # dynamic with based of number of stations
             if env.var_[var.type].is_n_monthly():
-                with_fig = 8 + len_x/150
+                with_fig = 8 + len_x/150.0
             if env.var_[var.type].is_daily() or type == 'special_I' or type == 'special_D':
                 #with_fig = len_x/20+4
                 with_fig = 12
@@ -656,7 +656,7 @@ def graphs_inspection_of_series(stations_list):
                         ax.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties())
                     else:
                         if types_var_D[type_var]['graph'] == 'bar':
-                            bar(x, y, width=2+num_years/5, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
+                            bar(x, y, width=2+num_years/5.0, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
                             y_scale_below=0
                         else:
                             #ax.plot(x, y, TYPES_VAR_D[type_var]['graph'], color=TYPES_VAR_D[type_var]['color'])
@@ -667,7 +667,7 @@ def graphs_inspection_of_series(stations_list):
                         ax.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties())
                     else:
                         if types_var_D[type_var]['graph'] == 'bar':
-                            bar(x, y, width=22+num_years/5, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
+                            bar(x, y, width=22+num_years/5.0, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
                             y_scale_below=0
                         else:
                             ax.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties(color=types_var_D[type_var]['color']))
@@ -676,10 +676,24 @@ def graphs_inspection_of_series(stations_list):
             if type == 'I' or type == 'special_I':
                 ax.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties())
 
+            # check if all values (y-axis) are nulls inside the period to process,
+            # then render text message in the graph
+            if len([item for item in y if not env.globals_vars.is_valid_null(item)]) == 0:
+                pyplot.cla()
+                ax.text(0.5, 0.5, unicode(_("All values are nulls"), 'utf-8'),
+                         fontsize=14, horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
+                image_path = os.path.join(station_image_path, name_graph + '.png')
+                # save image
+                pyplot.savefig(image_path, dpi=75)
+                image_list.append(image_path)
+                pyplot.close('all')
+                continue
+
             ## X
             ax.set_xlabel(_('Time'), env.globals_vars.graphs_axis_properties())
             ax.xaxis.set_major_locator(mdates.YearLocator())  # every year
             ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+
             if num_years < 20:
                 ax.xaxis.set_minor_locator(mdates.MonthLocator())  # every month
             xticks(rotation='vertical')
@@ -727,7 +741,7 @@ def graphs_inspection_of_series(stations_list):
         mosaic_dir_save = os.path.join(station_image_path, _('mosaic_station_{0}-{1}.png').format(station.code, station.name))
 
         # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
-        mosaic_plots = pyplot.figure(figsize=((width) / 75, (height * 2) / 75))
+        mosaic_plots = pyplot.figure(figsize=((width) / 75.0, (height * 2) / 75.0))
         mosaic_plots.savefig(mosaic_dir_save, dpi=75)
         mosaic = Image.open(mosaic_dir_save)
 
@@ -1074,7 +1088,7 @@ def climatology(stations_list):
             y_min, y_mean, y_max = get_climatology_data(station, 'daily')
 
             x = range(1, len(y_mean)+1)
-            x_step_label = len(y_mean)/12
+            x_step_label = len(y_mean)/12.0
             x_labels = []
             for i in range(len(y_mean)):
                 if i%x_step_label == 0:
@@ -1092,7 +1106,7 @@ def climatology(stations_list):
             name_graph = _("Multiyear_climatology_({0}days)_{1}_{2}_{3}").format(env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL,
                 station.code, station.name, env.var_D.TYPE_SERIES)
 
-            with_fig = 5 + len(y_mean)/9
+            with_fig = 5 + len(y_mean)/9.0
             fig = pyplot.figure(figsize=(with_fig, 5.5))
             ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
             ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
@@ -1153,7 +1167,7 @@ def climatology(stations_list):
             name_graph = _("Multiyear_climatology_({0}days+whiskers)_{1}_{2}_{3}").format(env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL,
                 station.code, station.name, env.var_D.TYPE_SERIES)
 
-            with_fig = 5 + len(y_mean)/9
+            with_fig = 5 + len(y_mean)/9.0
             fig = pyplot.figure(figsize=(with_fig, 5.5))
             ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
             ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
@@ -1335,8 +1349,6 @@ def frequency_histogram(stations_list):
 
     for station in stations_list:
 
-        hist, bin_edges = get_frequency_histogram(station.var_D.data_filtered_in_process_period)
-
         name_graph = _("frequency_histogram_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
 
         fig = pyplot.figure()
@@ -1352,9 +1364,16 @@ def frequency_histogram(stations_list):
         ## Y
         ax.set_ylabel(_('Frequency'), env.globals_vars.graphs_axis_properties())
 
-        width = 0.7 * (bin_edges[1] - bin_edges[0])
-        center = (bin_edges[:-1] + bin_edges[1:]) / 2
-        bar(center, hist, width=width, **env.globals_vars.figure_bar_properties())
+        # check if all values (var D) are nulls inside the period to process,
+        # then render text message in the graph
+        if len(station.var_D.data_filtered_in_process_period)==0:
+            ax.text(0.5, 0.5, unicode(_("All values are nulls"), 'utf-8'),
+                         fontsize=14, horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
+        else:
+            hist, bin_edges = get_frequency_histogram(station.var_D.data_filtered_in_process_period)
+            width = 0.7 * (bin_edges[1] - bin_edges[0])
+            center = (bin_edges[:-1] + bin_edges[1:])/2.0
+            bar(center, hist, width=width, **env.globals_vars.figure_bar_properties())
 
         ax.grid(True, color='gray')
         env.globals_vars.set_others_properties(ax)
@@ -1390,13 +1409,17 @@ def shapiro_wilks_test(stations_list):
     for station in stations_list:
 
         with console.redirectStdStreams():
-            W, p_value = stats.shapiro(station.var_D.data_filtered_in_process_period)
-
-        # Ho?
-        if p_value < 0.5:
-            Ho = _('rejected')
-        else:
-            Ho = _('accepted')
+            # check if all values (var D) are nulls inside the period to process
+            if len(station.var_D.data_filtered_in_process_period)==0:
+                W = p_value = float('nan')
+                Ho = _('unknown (all values are nulls)')
+            else:
+                W, p_value = stats.shapiro(station.var_D.data_filtered_in_process_period)
+                # Ho?
+                if p_value < 0.5:
+                    Ho = _('rejected')
+                else:
+                    Ho = _('accepted')
 
         # var D
         shapiro_line_station_var_D = [
@@ -1473,7 +1496,14 @@ def outliers(stations_list):
             ax.set_ylabel(unicode('{0} ({1})'.format(type_var, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
             #ax.set_ylabel(_('Frequency'))
 
-            boxplot_station = boxplot(station.var_D.data_filtered_in_process_period)
+            # check if all values (var D) are nulls inside the period to process
+            if len(station.var_D.data_filtered_in_process_period)==0:
+                ax.text(0.5, 0.5, unicode(_("All values are nulls"), 'utf-8'),
+                         fontsize=14, horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
+                with console.redirectStdStreams():
+                    boxplot_station = boxplot([float('nan')]*3)
+            else:
+                boxplot_station = boxplot(station.var_D.data_filtered_in_process_period)
 
             pyplot.setp(boxplot_station['boxes'], color=env.globals_vars.colors['plt_default'], linewidth=2.5)
             pyplot.setp(boxplot_station['medians'], color='red', linewidth=2.5)
@@ -1502,7 +1532,12 @@ def outliers(stations_list):
             data_stations.append(station.var_D.data_filtered_in_process_period)
             codes_stations.append(station.code)
         else:
-            boxplot_station = boxplot(station.var_D.data_filtered_in_process_period)
+            # check if all values (var D) are nulls inside the period to process
+            if len(station.var_D.data_filtered_in_process_period)==0:
+                with console.redirectStdStreams():
+                    boxplot_station = boxplot([float('nan')]*3)
+            else:
+                boxplot_station = boxplot(station.var_D.data_filtered_in_process_period)
 
         # -------------------------------------------------------------------------
         ## Prepare variables for report all outliers of all stations
@@ -1745,6 +1780,10 @@ def correlation(stations_list, type_correlation):
         output.make_dirs(station_path)
 
         correlation_values = {'lags':[], 'pearson':[]}
+
+        # check if all values (var D or var I) are nulls inside the period to process
+        if len(station.var_D.data_filtered_in_process_period)==0 or len(station.var_I.data_filtered_in_process_period)==0:
+            continue
 
         if type_correlation == 'auto':
 
@@ -2009,9 +2048,7 @@ def homogeneity(stations_list):
         s1 = series[0:len_s/2]
         s2 = series[len_s/2::]
 
-        # prevent identical values
-        if s1 != s2:
-            u, prob = stats.mannwhitneyu(s1,s2, use_continuity=False)
+        u, prob = stats.mannwhitneyu(s1,s2, use_continuity=False)
 
         p_value = prob*2.0
 
@@ -2192,8 +2229,6 @@ def anomaly(stations_list):
         anomaly_values = [x1 - x2 for (x1, x2) in zip(time_series_var_D_values, climatology_var_D)]
         anomaly_values_cleaned = array.clean(anomaly_values)
 
-        hist, bin_edges = get_frequency_histogram(anomaly_values_cleaned)
-
         ### Anomaly_time_series
         file_anomaly_time_series \
             = os.path.join(anomaly_time_series_dir, _('Anomaly_time_series_{0}_{1}_{2}.csv').format(env.var_D.TYPE_SERIES, station.code, station.name))
@@ -2236,9 +2271,16 @@ def anomaly(stations_list):
             ## Y
             ax.set_ylabel(_('Frequency'), env.globals_vars.graphs_axis_properties())
 
-            width = 0.7 * (bin_edges[1] - bin_edges[0])
-            center = (bin_edges[:-1] + bin_edges[1:]) / 2
-            bar(center, hist, width=width, **env.globals_vars.figure_bar_properties())
+            # check if all values (var D) are nulls inside the period to process,
+            # then render text message in the graph
+            if len(anomaly_values_cleaned)==0:
+                ax.text(0.5, 0.5, unicode(_("All values are nulls"), 'utf-8'),
+                         fontsize=14, horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
+            else:
+                hist, bin_edges = get_frequency_histogram(anomaly_values_cleaned)
+                width = 0.7 * (bin_edges[1] - bin_edges[0])
+                center = (bin_edges[:-1] + bin_edges[1:])/2.0
+                bar(center, hist, width=width, **env.globals_vars.figure_bar_properties())
 
             ax.grid(True, color='gray')
             ax.axvline(x=0, color=env.globals_vars.colors['grey_S2'], ls='dashed', linewidth=1)

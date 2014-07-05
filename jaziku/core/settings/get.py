@@ -101,7 +101,7 @@ def configuration_run():
     # ------------------------
     # class_category_analysis
     env.config_run.settings['class_category_analysis'] = input.to_int(env.config_run.settings['class_category_analysis'])
-    settings["class_category_analysis"] = colored.green(env.config_run.settings['class_category_analysis'])
+    settings["class_category_analysis"] = colored.green(str(env.config_run.settings['class_category_analysis']))
 
     # ------------------------
     # process_period

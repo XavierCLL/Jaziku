@@ -42,6 +42,7 @@ fixes
   the thresholds are statics and float/int type
 - Fix thresholds by default for MEI to p33 and p66
 - Fix TYPO in months and bi-months initials
+- Fixes when all values are nulls in process period in EDA
 
 **sisdhim2jaziku:**
 
