@@ -48,6 +48,7 @@ Others TODO
 
 To be included
 --------------
+- data quality control R program: http://ciifen.org/index.php?option=com_content&view=article&catid=127&id=523&Itemid=83&lang=es
 - behaviour when the interrupt signal is received
 - put the global_common_process in subtitles inside maps
 - adjust the PPT var for accumulate the data daily by default
