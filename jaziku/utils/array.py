@@ -49,32 +49,22 @@ def maximum(values):
     max function for Jaziku with special behavior
     """
 
-    if len(values) == 0:
+    values_cleaned = clean(values)
+    if len(values_cleaned) == 0:
         return float('nan')
     else:
-        # test if there is a nan value in list
-        for value in values:
-            if isnan(value):
-                values = clean(values)
-                return max(values)
-
-        return max(values)
+        return max(values_cleaned)
 
 def minimum(values):
     """
     min function for Jaziku with special behavior
     """
 
-    if len(values) == 0:
+    values_cleaned = clean(values)
+    if len(values_cleaned) == 0:
         return float('nan')
     else:
-        # test if there is a nan value in list
-        for value in values:
-            if isnan(value):
-                values = clean(values)
-                return min(values)
-
-        return min(values)
+        return min(values_cleaned)
 
 def clean(values):
     """Clean the list of empty elements and valid nulls
