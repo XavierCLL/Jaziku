@@ -132,8 +132,9 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
     # statistics for data analysis
     console.msg(_("Statistics of data for data analysis module ............. "), newline=False)
     for station in stations_list:
-        station.var_D.do_some_statistic_of_data()
-        station.var_I.do_some_statistic_of_data()
+        with console.redirectStdStreams():
+            station.var_D.do_some_statistic_of_data()
+            station.var_I.do_some_statistic_of_data()
     console.msg(_("done"), color='green')
 
     console.msg('')
