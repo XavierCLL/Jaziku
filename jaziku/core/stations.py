@@ -205,7 +205,7 @@ def calculate_process_period(stations_list):
         if not (env.config_run.settings['process_period']['start'] >= max_global_period['start'] and
                 env.config_run.settings['process_period']['end'] <= max_global_period['end']):
                 console.msg_error(_(
-                    "The period defined in argument {0}-{1} is outside in the\n"
+                    "The period defined in runfile {0}-{1} is outside in the\n"
                     "maximum global common period possible {2}-{3}.")
                 .format(env.config_run.settings['process_period']['start'],
                     env.config_run.settings['process_period']['end'],
