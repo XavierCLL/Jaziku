@@ -63,9 +63,9 @@ def pre_process():
 
     # second check if NCARG_ROOT is right
     if not os.path.isdir(os.environ.get('NCARG_ROOT')) or\
-       not os.path.isfile(os.path.join(os.environ.get('NCARG_ROOT'),'/lib/ncarg/nclscripts/csm/gsn_code.ncl')) or\
-       not os.path.isfile(os.path.join(os.environ.get('NCARG_ROOT'),'/lib/ncarg/nclscripts/csm/gsn_csm.ncl')) or\
-       not os.path.isfile(os.path.join(os.environ.get('NCARG_ROOT'),'/lib/ncarg/nclscripts/csm/contributed.ncl')):
+       not os.path.isfile(os.path.join(os.environ.get('NCARG_ROOT'),'lib/ncarg/nclscripts/csm/gsn_code.ncl')) or\
+       not os.path.isfile(os.path.join(os.environ.get('NCARG_ROOT'),'lib/ncarg/nclscripts/csm/gsn_csm.ncl')) or\
+       not os.path.isfile(os.path.join(os.environ.get('NCARG_ROOT'),'lib/ncarg/nclscripts/csm/contributed.ncl')):
         console.msg_error(_('The NCARG_ROOT variable is defined in your system,\n'
                             'but there are problems for found nclscripts files,\n'
                             'please check the NCARG_ROOT variable in your system.\n'
