@@ -43,6 +43,7 @@ fixes
 - Fix thresholds by default for MEI to p33 and p66
 - Fix TYPO in months and bi-months initials
 - Fixes when all values are nulls in process period in EDA
+- Fix the search path of NCL scripts in local system
 
 **sisdhim2jaziku:**
 
