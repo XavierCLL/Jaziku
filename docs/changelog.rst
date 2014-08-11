@@ -27,6 +27,10 @@ news
   analysis interval is N_days, first convert to N_days
   before calculation, for example, correlation, outliers and
   others. Adjust too the label inside graphics
+- Added the periodogram part of spectral analysis in EDA, these are:
+  graphs of periodogram by stations, the table of the value of
+  periodogram and the matrix table of the top of the power spectral
+  density for all stations.
 
 fixes
 +++++
