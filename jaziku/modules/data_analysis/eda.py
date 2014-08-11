@@ -303,6 +303,18 @@ def main(stations_list):
     console.msg(_("done"), color='green')
 
     # -------------------------------------------------------------------------
+    # PERIODOGRAM
+
+    global periodogram_dir
+    periodogram_dir = os.path.join(eda_dir, _('Periodogram'))
+    output.make_dirs(periodogram_dir)
+
+    console.msg(_("Periodogram .......................................... "), newline=False)
+    with console.redirectStdStreams():
+        periodogram(stations_list)
+    console.msg(_("done"), color='green')
+
+    # -------------------------------------------------------------------------
     # -------------------------------------------------------------------------
     # HOMOGENEITY
     # -------------------------------------------------------------------------
@@ -2296,6 +2308,174 @@ def anomaly(stations_list):
             watermarking.logo(image)
 
             pyplot.close('all')
+
+    # return to original FREQUENCY_DATA of the two variables
+    env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
+    env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
+
+
+def periodogram(stations_list):
+    """Make graphs ant tables of periodogram between var D and var I
+    """
+
+    # save original state of data for var D and I
+    original_freq_data_var_D = env.var_D.FREQUENCY_DATA
+    original_freq_data_var_I = env.var_I.FREQUENCY_DATA
+
+    # Adjust the same frequency data for the two time series
+    stations_list_adjusted = copy.deepcopy(stations_list)
+    adjust_data_of_variables(stations_list_adjusted, messages=False)
+
+    top_Pxx_den = {}
+
+    for station in stations_list_adjusted:
+
+        station_path = os.path.join(periodogram_dir, station.code +'-'+station.name)
+
+        output.make_dirs(station_path)
+
+        station.var_D.calculate_data_date_and_nulls_in_period()
+
+        data_var_D = list(station.var_D.data_filtered_in_process_period)
+
+        # calculate the frequencies and power spectral density for var D
+        f, Pxx_den = signal.periodogram(data_var_D, fs=1.0, window='bartlett', nfft=None, detrend='constant',
+                                        return_onesided=True, scaling='density', axis=-1)
+
+        # delete the zero frequency, convert to periods and added the zero value to last item (0 frequency)
+        f = list(f)
+
+        # check if all values (var D) are nulls inside the period to process
+        if len(f) == 0:
+            continue
+
+        del f[0]
+        period = [1/float(x) for x in f]
+        period = period + [0]
+
+        # delete the first value and added to last item (0 frequency equivalent value)
+        Pxx_den = list(Pxx_den)
+        del Pxx_den[0]
+        Pxx_den = Pxx_den + [0]
+
+        # select and save the top 5 of maximum of pxx_den
+        Pxx_den_station = zip(period, Pxx_den)
+        top_Pxx_den[(station.code, station.name)] = sorted(Pxx_den_station, key=lambda x: x[1], reverse=True)[0:6]
+
+        name_of_files = _("Periodogram_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
+
+        # -------------------------------------------------------------------------
+        # graphics result
+
+        if env.config_run.settings['graphics']:
+
+            title = _("Periodogram - {0} {1}\n"
+                      "{2} ({3}-{4})").format(station.code, station.name, env.var_D.TYPE_SERIES,
+                                              station.process_period['start'], station.process_period['end'])
+
+            fig = pyplot.figure(figsize=(10, 6))
+            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
+
+            ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
+
+            ## X
+            if env.var_D.FREQUENCY_DATA in ['bimonthly', 'trimonthly']:
+                ax.set_xlabel(unicode(_('Period')+' ('+_('overlapping')+' '+env.var_D.get_FREQUENCY_DATA()+')', 'utf-8'), env.globals_vars.graphs_axis_properties())
+            else:
+                ax.set_xlabel(unicode(_('Period')+' ('+env.var_D.get_FREQUENCY_DATA()+')', 'utf-8'), env.globals_vars.graphs_axis_properties())
+            #xticks(correlation_values['lags'], x_labels)
+
+            ## Y
+            # get units os type of var D or I
+            ax.set_ylabel(unicode(_("Power spectral density"), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            #ax.set_ylabel(unicode(_('Densidad de potencia espectral'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+
+            #pyplot.axhline(linewidth=0.8, color=env.globals_vars.colors['grey_S1'])
+
+            ax.grid(True, color='gray')
+            env.globals_vars.set_others_properties(ax)
+            ax.autoscale(tight=True)
+
+            #bar(period, Pxx_den, align='center', color='#638786', edgecolor='none') #, width=0.5, width=0.003
+            ax.plot(period, Pxx_den, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties(ms=7))
+            #ax.vlines(period, [0], Pxx_den, linewidth=2.5, color='#638786')
+
+            # put label on the 4 best points
+            for x,y in top_Pxx_den[(station.code, station.name)][0:3]:
+                ax.annotate(round(x,1), xy=(x, y),  xycoords='data',
+                xytext=(-12, 0), textcoords='offset points', rotation='vertical',
+                horizontalalignment='center', verticalalignment='center',
+                color=env.globals_vars.colors['grey_S2']
+                )
+
+            #pyplot.ylim(-1, 1)
+            zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.06, y_scale_above=-0.08)
+            fig.tight_layout()
+
+            # save image
+            image = os.path.join(station_path, name_of_files + '.png')
+            pyplot.savefig(image, dpi=75)
+
+            # stamp logo
+            watermarking.logo(image)
+
+            pyplot.close('all')
+
+        # -------------------------------------------------------------------------
+        # table result
+
+        table_file = os.path.join(station_path, name_of_files + ".csv")
+
+        open_file = open(table_file, 'w')
+        csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
+
+        # print header
+        if env.var_D.FREQUENCY_DATA in ['bimonthly', 'trimonthly']:
+            header = [_("PERIOD")+" ("+_("overlapping")+" "+env.var_D.get_FREQUENCY_DATA()+")", _("POWER SPECTRAL DENSITY")]
+        else:
+            header = [_("PERIOD")+" ("+env.var_D.get_FREQUENCY_DATA()+")", _("POWER SPECTRAL DENSITY")]
+
+        csv_file.writerow(header)
+        for _period, _Pxx_den in zip(period, Pxx_den):
+            csv_file.writerow([output.number(_period), output.number(_Pxx_den)])
+
+        # print footnote
+        csv_file.writerow([])
+        csv_file.writerow([get_text_of_frequency_data('D')])
+        csv_file.writerow([_("*Data in the period {0}-{1}").format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])])
+
+        open_file.close()
+        del csv_file
+
+    # -------------------------------------------------------------------------
+    # table of top based on power spectral density of all stations
+
+    table_top_file = os.path.join(periodogram_dir, _("Top_power_spectral_density")+".csv")
+
+    open_file = open(table_top_file, 'w')
+    csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
+
+    # print header
+    if env.var_D.FREQUENCY_DATA in ['bimonthly', 'trimonthly']:
+        header = [_("TOP"), _('CODE'), _('NAME'), _('PERIOD')+" ("+_("overlapping")+" "+env.var_D.get_FREQUENCY_DATA()+")", _("POWER SPECTRAL DENSITY")]
+    else:
+        header = [_("TOP"), _('CODE'), _('NAME'), _('PERIOD')+" ("+env.var_D.get_FREQUENCY_DATA()+")", _("POWER SPECTRAL DENSITY")]
+    csv_file.writerow(header)
+
+    for _code,_name in top_Pxx_den:
+        for top_count in range(5):
+            _period, _Pxx_den = top_Pxx_den[(_code,_name)][top_count]
+            csv_file.writerow([top_count+1, _code,_name, output.number(_period),output.number(_Pxx_den)])
+
+        csv_file.writerow([])
+
+    # print footnote
+    csv_file.writerow([])
+    csv_file.writerow([get_text_of_frequency_data('D')])
+    csv_file.writerow([_("*Data in the period {0}-{1}").format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])])
+
+    open_file.close()
+    del csv_file
 
     # return to original FREQUENCY_DATA of the two variables
     env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
