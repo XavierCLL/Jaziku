@@ -166,7 +166,7 @@ def climate_data_for_maps(station):
                         categories_list.append(csv_name)
 
                     month_list.append(categories_list)
-                if env.var_D.is_daily():
+                if env.var_D.is_n_daily():
                     day_list = []
                     for day in get_range_analysis_interval():
                         categories_list = []
@@ -265,7 +265,7 @@ def climate_data_for_maps(station):
                     open_file.close()
                     del csv_file
 
-            if env.var_D.is_daily():
+            if env.var_D.is_n_daily():
                 for idx_day, day in enumerate(get_range_analysis_interval()):
                     for category_var_I in range(env.config_run.settings['class_category_analysis']):
                         if env.config_run.settings['class_category_analysis'] == 3:
@@ -357,7 +357,7 @@ def forecast_data_for_maps(station):
                 lags_list[lag] = csv_name
             env.globals_vars.maps_files_forecast[env.config_run.settings['forecast_date']['text']] = lags_list
 
-        if env.var_D.is_daily():
+        if env.var_D.is_n_daily():
             lags_list = {}
             # define maps data files and directories
             for lag in env.config_run.settings['lags']:

@@ -29,6 +29,7 @@ from dateutil.relativedelta import relativedelta
 from matplotlib import pyplot
 from numpy import histogram
 from pylab import xticks, bar, boxplot
+from scipy import signal
 from PIL import Image
 from scipy import stats
 
@@ -319,7 +320,6 @@ def main(stations_list):
         console.msg(return_msg, color="yellow")
 
 
-
 def zoom_graph(ax,x_scale_below=0, x_scale_above=0, y_scale_below=0, y_scale_above=0, abs_x=False, abs_y=False):
     """
     zoom in/out graph where ax is figure subplot and scale is the value for
@@ -593,9 +593,9 @@ def graphs_inspection_of_series(stations_list):
         list_graphs = [[station.var_D,'D'], [station.var_I,'I']]
 
         # add special plot for make mosaic when the frequency off var D and var I are different
-        if env.var_D.is_daily() and env.var_I.is_n_monthly():
+        if env.var_D.is_n_daily() and env.var_I.is_n_monthly():
             list_graphs.append([station.var_I, 'special_I'])
-        if env.var_D.is_n_monthly() and env.var_I.is_daily():
+        if env.var_D.is_n_monthly() and env.var_I.is_n_daily():
             list_graphs.append([station.var_D, 'special_D'])
 
         for var, type in list_graphs:
@@ -630,7 +630,7 @@ def graphs_inspection_of_series(stations_list):
                 # dynamic with based of number of stations
             if env.var_[var.type].is_n_monthly():
                 with_fig = 8 + len_x/150.0
-            if env.var_[var.type].is_daily() or type == 'special_I' or type == 'special_D':
+            if env.var_[var.type].is_n_daily() or type == 'special_I' or type == 'special_D':
                 #with_fig = len_x/20+4
                 with_fig = 12
 
@@ -645,12 +645,12 @@ def graphs_inspection_of_series(stations_list):
             y_scale_below=-0.04
             y_scale_above=-0.04
 
-            if env.var_[var.type].is_daily() or type == 'special_I' or type == 'special_D':
+            if env.var_[var.type].is_n_daily() or type == 'special_I' or type == 'special_D':
                 x_scale_below=-3.0/len_x
                 x_scale_above=-6.0/len_x
 
             if type == 'D' or type == 'special_D':
-                if env.var_[var.type].is_daily() or type == 'special_D':
+                if env.var_[var.type].is_n_daily() or type == 'special_D':
                     if type_var not in types_var_D:
                         # default for generic type for var D
                         ax.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties())
@@ -726,10 +726,10 @@ def graphs_inspection_of_series(stations_list):
             pyplot.close('all')
 
         ## create mosaic
-        if env.var_D.is_daily() and env.var_I.is_n_monthly():
+        if env.var_D.is_n_daily() and env.var_I.is_n_monthly():
             image_var_D = Image.open(image_list[0])
             image_var_I = Image.open(image_list[2])
-        elif env.var_D.is_n_monthly() and env.var_I.is_daily():
+        elif env.var_D.is_n_monthly() and env.var_I.is_n_daily():
             image_var_D = Image.open(image_list[2])
             image_var_I = Image.open(image_list[1])
         else:
@@ -771,9 +771,9 @@ def graphs_inspection_of_series(stations_list):
 # -------------------------------------------------------------------------
 
 
-def get_climatology_data(station, freq = None):
+def get_climatology_data(station, freq=None):
     '''Calculate function for some variables need in climatology
-    and others
+    and others results
     '''
 
     _station = copy.deepcopy(station)
@@ -797,54 +797,44 @@ def get_climatology_data(station, freq = None):
 
     if freq in ['monthly', 'bimonthly', 'trimonthly']:
         for month in range(1,13):
-            values = []
+            interannual_values = []
             for iter, value in  enumerate(var_D_data):
                 if var_D_date[iter].month == month:
-                    values.append(value)
-            values = array.clean(values)
-            y_mean.append(array.mean(values))
-            y_max.append(array.maximum(values) - y_mean[-1])
-            y_min.append(y_mean[-1] - array.minimum(values))
+                    interannual_values.append(value)
+            interannual_values = array.clean(interannual_values)
+            y_mean.append(array.mean(interannual_values))
+            y_max.append(array.maximum(interannual_values) - y_mean[-1])
+            y_min.append(y_mean[-1] - array.minimum(interannual_values))
 
         del _station
         return y_min, y_mean, y_max
 
-    if freq not in ['monthly', 'bimonthly', 'trimonthly'] and env.var_D.is_daily():
+    if freq in ['5days', '10days', '15days']:
         range_analysis_interval = get_range_analysis_interval()
-        for month in range(1, 13):
+        for month in range(1,13):
             for day in range_analysis_interval:
-                range_analysis_values = []
-                # iteration for all years inside process period
+                interannual_values = []
                 for year in range(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']+1):
-                    # test if day exist in month and year
-                    if day > monthrange(year, month)[1]:
-                        continue
-
-                    values = get_values_in_range_analysis_interval(_station.var_D, year, month, day)
-                    values = array.clean(values)
-                    # calculate time series based on mode calculation series
-                    if env.config_run.settings['mode_calculation_series_D'] == 'mean':
-                        range_analysis_values.append(array.mean(values))
-                    if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
-                        range_analysis_values.append(sum(array.clean(values)))
-
-                y_mean.append(array.mean(range_analysis_values))
-                y_max.append(array.maximum(range_analysis_values) - y_mean[-1])
-                y_min.append(y_mean[-1] - array.minimum(range_analysis_values))
+                    value_in_this_year =  var_D_data[var_D_date.index(date(year, month, day))]
+                    interannual_values.append(value_in_this_year)
+                interannual_values = array.clean(interannual_values)
+                y_mean.append(array.mean(interannual_values))
+                y_max.append(array.maximum(interannual_values) - y_mean[-1])
+                y_min.append(y_mean[-1] - array.minimum(interannual_values))
 
         del _station
         return y_min, y_mean, y_max
+
 
 def climatology(stations_list):
-    """
-    Make table and graphs of climatology, part of Exploratory_Data_Analysis.
+    """Make table and graphs of climatology, part of Exploratory_Data_Analysis.
     """
 
     climatology_dir = os.path.join(eda_dir, _('Climatology'))
     output.make_dirs(climatology_dir)
 
     # name climatology table of all stations
-    if env.var_D.is_daily() or env.var_D.is_monthly():
+    if env.var_D.is_n_daily() or env.var_D.is_monthly():
         filename_climatology_table = _('Climatology_table_{0}_(monthly)').format(env.var_D.TYPE_SERIES)+'.csv'
     else:
         filename_climatology_table = _('Climatology_table_{0}_({1})').format(env.var_D.TYPE_SERIES,env.config_run.settings['analysis_interval_i18n'])+'.csv'
@@ -855,7 +845,7 @@ def climatology(stations_list):
 
     # print header
     header = [_('CODE'), _('NAME'), _('LAT'), _('LON'), _('ALT'), _('PROCESS PERIOD')]
-    if env.var_D.is_daily() or env.var_D.is_monthly():
+    if env.var_D.is_n_daily() or env.var_D.is_monthly():
         header += [output.months_in_initials(i) for i in range(12)]
     else:
         header += [output.analysis_interval_text(i) for i in range(1,13)]
@@ -1083,9 +1073,9 @@ def climatology(stations_list):
         # For climatology graphs based to analysis interval:
         # 5, 10 or 15 days climatology -> for data daily
 
-        if env.var_D.is_daily() and env.config_run.settings['analysis_interval'] not in ['monthly', 'bimonthly', 'trimonthly']:
+        if env.var_D.is_n_daily() and env.config_run.settings['analysis_interval'] not in ['monthly', 'bimonthly', 'trimonthly']:
 
-            y_min, y_mean, y_max = get_climatology_data(station, 'daily')
+            y_min, y_mean, y_max = get_climatology_data(station, env.config_run.settings['analysis_interval'])
 
             x = range(1, len(y_mean)+1)
             x_step_label = len(y_mean)/12.0
@@ -1550,12 +1540,9 @@ def outliers(stations_list):
         outliers_station['whiskers_above'] = boxplot_station['whiskers'][1].get_data()[1][1]
 
         ## prepare station for special case
-        if env.config_run.settings['analysis_interval'] in ['monthly', 'bimonthly', 'trimonthly']:
-            station_copy = clone_and_transform_station(station,
+        station_copy = clone_and_transform_station(station,
                                                        convert_var_D_to=env.config_run.settings['analysis_interval'],
                                                        convert_var_I_to=env.config_run.settings['analysis_interval'])
-        else:
-            station_copy = clone_and_transform_station(station, convert_var_D_to=False, convert_var_I_to=False)
 
         calculate_time_series(station_copy, lags=[0], makes_files=False)
 
@@ -1738,7 +1725,7 @@ def outliers(stations_list):
 
     # print footnote
     csv_file_D.writerow([])
-    csv_file_D.writerow([_("*Calculated based on data {0}").format(env.config_run.get_analysis_interval())])
+    csv_file_D.writerow([get_text_of_frequency_data('I')])
 
     open_file_D.close()
     del csv_file_D
@@ -1849,14 +1836,15 @@ def correlation(stations_list, type_correlation):
                 #  |o||o|
                 #  |o||o|
                 #     |x|
-                del _data_X[0]
-                del _data_Y[-1]
-
-                pearson = stats.pearsonr(_data_X, _data_Y)[0]
+                try:
+                    del _data_X[0]
+                    del _data_Y[-1]
+                    pearson = stats.pearsonr(_data_X, _data_Y)[0]
+                except:
+                    pearson = float('nan')
 
                 correlation_values['lags'].append(-lag)
                 correlation_values['pearson'].append(pearson)
-
 
             # fix order: -24 to -1
             correlation_values['lags'].reverse()
@@ -1867,11 +1855,6 @@ def correlation(stations_list, type_correlation):
             _data_X = list(data_X)
             _data_Y = list(data_Y)
             for lag in range(25):
-
-                pearson = stats.pearsonr(_data_X, _data_Y)[0]
-
-                correlation_values['lags'].append(lag)
-                correlation_values['pearson'].append(pearson)
 
                 # move the overlap between the 2 series:
                 # move up the data_Y lost the fist item (one month or one day)
@@ -1884,8 +1867,15 @@ def correlation(stations_list, type_correlation):
                 #  |o||o|
                 #  |o||o|
                 #  |x|
-                del _data_X[-1]
-                del _data_Y[0]
+                try:
+                    pearson = stats.pearsonr(_data_X, _data_Y)[0]
+                    del _data_X[-1]
+                    del _data_Y[0]
+                except:
+                    pearson = float('nan')
+
+                correlation_values['lags'].append(lag)
+                correlation_values['pearson'].append(pearson)
 
             name_of_files = _("Cross_Correlation_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
 
@@ -1928,7 +1918,7 @@ def correlation(stations_list, type_correlation):
 
             pyplot.ylim(-1, 1)
 
-            ax.text(24, -1, get_text_of_frequency_data('D'), horizontalalignment='right', verticalalignment='center')
+            ax.text(24, -1, unicode(get_text_of_frequency_data('D'), 'utf-8'), horizontalalignment='right', verticalalignment='center')
 
             env.globals_vars.set_others_properties(ax)
             ax.grid(True, color='gray')
@@ -1962,6 +1952,7 @@ def correlation(stations_list, type_correlation):
 
         # print footnote
         csv_file.writerow([])
+        csv_file.writerow([get_text_of_frequency_data('D')])
         csv_file.writerow([_("*Data in period {0}-{1}").format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])])
 
         open_file.close()
@@ -2061,7 +2052,7 @@ def homogeneity(stations_list):
 
     # print footnote
     csv_file.writerow([])
-    csv_file.writerow([_("*Calculated with {0} data").format(env.var_D.get_FREQUENCY_DATA())])
+    csv_file.writerow([get_text_of_frequency_data('D')])
     csv_file.writerow([_("*Data in the period {0}-{1}").format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])])
 
     open_file.close()
@@ -2096,7 +2087,7 @@ def homogeneity(stations_list):
 
     # print footnote
     csv_file.writerow([])
-    csv_file.writerow([_("*Calculated with {0} data").format(env.var_D.get_FREQUENCY_DATA())])
+    csv_file.writerow([get_text_of_frequency_data('D')])
     csv_file.writerow([_("*Data in the period {0}-{1}").format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])])
 
     open_file.close()
@@ -2130,7 +2121,7 @@ def homogeneity(stations_list):
 
     # print footnote
     csv_file.writerow([])
-    csv_file.writerow([_("*Calculated with {0} data").format(env.var_D.get_FREQUENCY_DATA())])
+    csv_file.writerow([get_text_of_frequency_data('D')])
     csv_file.writerow([_("*Data in the period {0}-{1}").format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])])
 
     open_file.close()
@@ -2197,6 +2188,10 @@ def homogeneity(stations_list):
 
 
 def anomaly(stations_list):
+    """Calculate the frequency histogram and the time series of the
+    anomaly of the data converted to the analysis interval of all
+    station (var D).
+    """
 
     anomaly_time_series_dir = os.path.join(anomaly_dir, _('Anomaly_time_series'))
     output.make_dirs(anomaly_time_series_dir)
@@ -2218,7 +2213,7 @@ def anomaly(stations_list):
         calculate_time_series(station_copy, lags=[0], makes_files=False)
 
         # get the climatology values
-        clim_min, clim_mean, clim_max = get_climatology_data(station)
+        clim_min, clim_mean, clim_max = get_climatology_data(station, env.config_run.settings['analysis_interval'])
         # get the time series values ordered
         time_series_ordered = sorted(station_copy.time_series['lag_0'], key=lambda x: x[0])
         time_series_var_D_values = [x[1] for x in time_series_ordered]
@@ -2242,13 +2237,13 @@ def anomaly(stations_list):
         for date_anomaly, anomaly in zip([x[0] for x in time_series_ordered], anomaly_values):
             if env.var_D.is_n_monthly():
                 date_formated = str(date_anomaly.year)+' '+str(output.analysis_interval_text(date_anomaly.month))
-            if env.var_D.is_daily():
+            if env.var_D.is_n_daily():
                 date_formated = str(date_anomaly.year)+' '+str(output.analysis_interval_text(date_anomaly.month, date_anomaly.day))
             csv_file_anomaly_time_series.writerow([date_formated, output.number(anomaly)])
 
         # print footnote
         csv_file_anomaly_time_series.writerow([])
-        csv_file_anomaly_time_series.writerow([get_text_of_frequency_data('D', ndays=True)])
+        csv_file_anomaly_time_series.writerow([get_text_of_frequency_data('D')])
 
         open_file_anomaly_time_series.close()
         del csv_file_anomaly_time_series
@@ -2264,9 +2259,9 @@ def anomaly(stations_list):
 
             ## X
             type_var = env.var_D.TYPE_SERIES
-            ax.set_xlabel(unicode('{0} ({1}) {2}'
+            ax.set_xlabel(unicode('{0} ({1})\n{2}'
                 .format(type_var, env.var_D.UNITS,
-                        get_text_of_frequency_data('D', ndays=True)), 'utf-8'), env.globals_vars.graphs_axis_properties())
+                        get_text_of_frequency_data('D')), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             ## Y
             ax.set_ylabel(_('Frequency'), env.globals_vars.graphs_axis_properties())

@@ -35,6 +35,9 @@ was_converted = False
 def get_FREQUENCY_DATA():
     global FREQUENCY_DATA
     _freq_data ={'daily': _('daily'),
+                 '5days': _('5 days'),
+                 '10days': _('10 days'),
+                 '15days': _('15 days'),
                  'monthly': _('monthly'),
                  'bimonthly': _('bimonthly'),
                  'trimonthly': _('trimonthly')}
@@ -274,6 +277,13 @@ def get_global_thresholds():
     else:
         return config_run.settings['thresholds_var_D']
 
+def is_n_daily():
+    global FREQUENCY_DATA
+    if FREQUENCY_DATA in ["daily", "5days", "10days", "15days"]:
+        return True
+    else:
+        return False
+
 def is_daily():
     global FREQUENCY_DATA
     if FREQUENCY_DATA == 'daily':
@@ -328,7 +338,7 @@ def set_FREQUENCY_DATA(new_freq_data, check=True):
     global FREQUENCY_DATA
     global TYPE_SERIES
 
-    if new_freq_data not in ['daily','monthly','bimonthly','trimonthly']:
+    if new_freq_data not in ["daily", "5days", "10days", "15days", "monthly", "bimonthly", "trimonthly"]:
         raise
 
     if FREQUENCY_DATA is None or check is False:
