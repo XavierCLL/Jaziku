@@ -23,6 +23,10 @@ news
   are make with this feature.
 - By default the PPT and the NDPPT are accumulative for mode
   calculation series.
+- Adjust several results in data analysis module when the
+  analysis interval is N_days, first convert to N_days
+  before calculation, for example, correlation, outliers and
+  others. Adjust too the label inside graphics
 
 fixes
 +++++

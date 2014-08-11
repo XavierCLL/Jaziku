@@ -82,7 +82,7 @@ def composite_analysis(station):
 
             var_I_values = time_series.get_specific_values(station, 'var_I', lag, month)
 
-        if env.var_D.is_daily():
+        if env.var_D.is_n_daily():
             # get values of var D and I from this lag, month and day
             var_D_values = time_series.get_specific_values(station, 'var_D', lag, month, day)
 
@@ -244,7 +244,7 @@ def composite_analysis(station):
                 pearson_list_month.append(pearson)
                 is_sig_risk_analysis_month.append(is_sig_risk_analysis_list)
 
-            if env.var_D.is_daily():
+            if env.var_D.is_n_daily():
                 pearson_list_day = []
                 is_sig_risk_analysis_list_day = []
                 range_analysis_interval = get_range_analysis_interval()

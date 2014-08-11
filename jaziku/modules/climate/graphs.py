@@ -440,7 +440,7 @@ def climate_graphs(station):
 
                 create_chart()
 
-            if env.var_D.is_daily():
+            if env.var_D.is_n_daily():
 
                 for idx_day, day in enumerate(get_range_analysis_interval()):
 
@@ -481,7 +481,7 @@ def climate_graphs(station):
                     mosaic.paste(Image.open(image_open_list[i]), (image_width * h, image_height * v))
                     i += 1
 
-        if env.var_D.is_daily():
+        if env.var_D.is_n_daily():
             # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
             dpi = 100.0
             mosaic_plots = pyplot.figure(figsize=((image_width * len(get_range_analysis_interval())) / dpi,

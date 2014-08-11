@@ -262,12 +262,12 @@ def get_categories_labels_var_I_list():
              settings['categories_labels_var_I']['above3']]
     return None
 
-def get_analysis_interval(): # todo replace the 'analysis_interval_i18n'
+def get_analysis_interval(): # todo replace the 'analysis_interval_i18n'..... delete??? use this -> env.var_[var].get_FREQUENCY_DATA()
     global settings
 
-    _freq_data ={'5days': _('5days'),
-                 '10days': _('5days'),
-                 '15days': _('5days'),
+    _freq_data ={'5days': _('5 days'),
+                 '10days': _('10 days'),
+                 '15days': _('15 days'),
                  'monthly': _('monthly'),
                  'bimonthly': _('bimonthly'),
                  'trimonthly': _('trimonthly')}

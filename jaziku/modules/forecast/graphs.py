@@ -245,7 +245,7 @@ def forecast_graphs(station):
                 # get all values of var D based on this lag and month
                 station.var_D.specific_values \
                     = time_series.get_specific_values(station, 'var_D', lag, env.config_run.settings['forecast_date']['month'])
-            if env.var_D.is_daily():
+            if env.var_D.is_n_daily():
                 # get all values of var D based on this lag and month and day
                 station.var_D.specific_values \
                     = time_series.get_specific_values(station, 'var_D', lag, env.config_run.settings['forecast_date']['month'],

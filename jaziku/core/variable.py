@@ -23,9 +23,11 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from numpy import median, average, var, std
 from scipy.stats.stats import variation, skew, kurtosis
+from copy import deepcopy
 
 from jaziku import env
 from jaziku.core.input import vars
+from jaziku.core.analysis_interval import get_range_analysis_interval, get_values_in_range_analysis_interval
 from jaziku.modules.climate.time_series import calculate_specific_values_of_time_series
 from jaziku.utils import console, array
 
@@ -42,6 +44,9 @@ class Variable(object):
         VARIABLE.file_path: the absolute path where save the file of series
         VARIABLE.data: complete data of series
         VARIABLE.date: complete date of series
+        VARIABLE.origin_data: original complete data of series
+        VARIABLE.origin_date: original complete date of series
+        VARIABLE.origin_frequency_data: original the frequency data
         plus attributes return of methods:
             data_and_null_in_process_period()
             do_some_statistic_of_data()
@@ -54,6 +59,10 @@ class Variable(object):
             raise
         # save the station instance which belongs to this variable
         self.station = station
+        # for save the original data/date/freq
+        self.origin_data = None
+        self.origin_date = None
+        self.origin_frequency_data = None
 
     def set_file(self, file):
 
@@ -98,6 +107,11 @@ class Variable(object):
         # and fill variable if is needed
         vars.read_variable(self)
         self.fill_variable()
+
+        # save the original data/date/freq
+        self.origin_data = deepcopy(self.data)
+        self.origin_date = deepcopy(self.date)
+        self.origin_frequency_data = env.var_[self.type].FREQUENCY_DATA
 
     def fill_variable(self):
         """Complete and fill variable with null values if the last and/or start year
@@ -246,6 +260,43 @@ class Variable(object):
             # fill data above
             above()
 
+    def rollback_to_origin(self):
+        """Rollback to origin data, date and frequency of this variable
+        """
+        self.data = deepcopy(self.origin_data)
+        self.date = deepcopy(self.origin_date)
+        env.var_[self.type].set_FREQUENCY_DATA(self.origin_frequency_data, check=False)
+
+    def daily2Ndays(self, N_days=None):
+        """Convert the data daily of the time series to 5 days, 10 days or
+         15 days based on the mode calculation series.
+        """
+
+        range_analysis_interval = get_range_analysis_interval(N_days)
+
+        data_Ndays = []
+        date_Ndays = []
+        for year in range(self.date[0].year, self.date[-1].year + 1):
+            for month in range(1, 13):
+                for day in range_analysis_interval:
+                    values = get_values_in_range_analysis_interval(self, year, month, day, 0)
+                    values = array.clean(values)
+                    # calculate time series based on mode calculation series
+                    if env.config_run.settings['mode_calculation_series_D'] == 'mean':
+                        data_Ndays.append(array.mean(values))
+                    if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
+                        data_Ndays.append(sum(array.clean(values)))
+
+                    date_Ndays.append(date(year, month, day))
+
+        # save the original data/date
+        self.ori_data = self.data
+        self.ori_date = self.date
+
+        # replace the original data/date with the data/date converted
+        self.data = data_Ndays
+        self.date = date_Ndays
+
     def daily2monthly(self):
         """Convert the data daily to monthly using the mean or accumulate
         defined in runfile in mode_calculation_series_X variable.
@@ -316,8 +367,12 @@ class Variable(object):
         env.var_[D,I].set_FREQUENCY_DATA(new_freq_data, check=False)
         AFTER this function (not before).
         """
+        if env.var_[self.type].FREQUENCY_DATA == new_freq_data:
+            return
 
-        #TODO for data daily??
+        if new_freq_data in ['5days', '10days', '15days']:
+            if env.var_[self.type].is_daily():
+                self.daily2Ndays(new_freq_data)
 
         if new_freq_data == 'monthly':
             if env.var_[self.type].is_daily():
@@ -367,11 +422,8 @@ class Variable(object):
             # set to end year of process period for this station
             end_year = env.globals_vars.PROCESS_PERIOD['end']
 
-        start_date_var = date(start_year, 1, 1)
-        if (self.type == 'D' and env.var_D.is_daily()) or (self.type == 'I' and env.var_I.is_daily()):
-            end_date_var = date(end_year, 12, 31)
-        else:
-            end_date_var = date(end_year, 12, 1)
+        start_date_var = min([d for d in self.date if d.year==start_year])
+        end_date_var = max([d for d in self.date if d.year==end_year])
 
         data_in_period = self.data[self.date.index(start_date_var):\
                                                 self.date.index(end_date_var) + 1]

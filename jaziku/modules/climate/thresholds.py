@@ -188,7 +188,7 @@ def get_thresholds(station, variable, thresholds_input=None, process_analog_year
             # get all raw values of var D only in analog year
             while _iter_date <= date(env.config_run.settings['analog_year'], 12, 31):
                 specific_values_with_analog_year.append(variable.data[variable.date.index(_iter_date)])
-                if env.var_[variable.type].is_daily():
+                if env.var_[variable.type].is_n_daily(): #TODO 0.10
                     _iter_date += relativedelta(days=1)
                 if env.var_[variable.type].is_n_monthly():
                     _iter_date += relativedelta(months=1)

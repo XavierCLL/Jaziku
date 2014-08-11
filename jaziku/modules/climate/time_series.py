@@ -175,7 +175,7 @@ def calculate_time_series(station, lags=None, makes_files=True):
                     open_file.close()
                     del csv_file
 
-    if env.var_D.is_daily():
+    if env.var_D.is_n_daily():
 
         for lag in lags:
             if makes_files:

@@ -42,20 +42,23 @@ class PeriodOfAnalysisInterval(object):
             self.day = day
 
 
-def get_range_analysis_interval():
+def get_range_analysis_interval(_analysis_interval=None):
     """Return all start days of analysis interval, this is only
     for analysis interval 5days, 10days and 15days
     """
 
-    if env.config_run.settings['analysis_interval'] not in ['monthly','bimonthly','trimonthly']:
-        if env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL == 5:
+    if _analysis_interval is None:
+        _analysis_interval = env.config_run.settings['analysis_interval']
+
+    if _analysis_interval is not None:
+        if _analysis_interval == '5days':
             return [1, 6, 11, 16, 21, 26]
-        if env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL == 10:
+        if _analysis_interval == '10days':
             return [1, 11, 21]
-        if env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL == 15:
+        if _analysis_interval == '15days':
             return [1, 16]
-    else:
-        return None
+
+    return None
 
 
 def check_analysis_interval():
@@ -130,8 +133,7 @@ def check_analysis_interval():
 
 
 def adjust_data_of_variables(stations_list, force_same_frequencies=False, messages=True):
-    '''
-    Adjust the var D and/or var I for all stations to frequency
+    '''Adjust the var D and/or var I for all stations to frequency
     data defined in runfile as analysis_interval
     '''
 
@@ -147,16 +149,15 @@ def adjust_data_of_variables(stations_list, force_same_frequencies=False, messag
 
     was_converted_to = {'D':False, 'I':False}
 
-    freq_order = ["daily", "monthly", "bimonthly", "trimonthly"]
+    freq_order = ["daily", "5days", "10days", "15days", "monthly", "bimonthly", "trimonthly"]
 
     freq_analysis_interval = env.config_run.settings['analysis_interval']
-    if freq_analysis_interval in ["5days", "10days", "15days"] and not force_same_frequencies:
-        env.var_D.was_converted, env.var_I.was_converted = was_converted_to['D'], was_converted_to['I']
-        return
+
+    # if freq_analysis_interval in ["5days", "10days", "15days"] and not force_same_frequencies:
+    #     env.var_D.was_converted, env.var_I.was_converted = was_converted_to['D'], was_converted_to['I']
+    #     return
 
     if force_same_frequencies:
-        if freq_analysis_interval in ["5days", "10days", "15days"]:
-            freq_analysis_interval = "daily"
         max_freq = freq_order[max(freq_order.index(env.var_D.FREQUENCY_DATA),
                                   freq_order.index(env.var_I.FREQUENCY_DATA),
                                   freq_order.index(freq_analysis_interval))]
@@ -170,13 +171,12 @@ def adjust_data_of_variables(stations_list, force_same_frequencies=False, messag
     env.var_D.was_converted, env.var_I.was_converted = was_converted_to['D'], was_converted_to['I']
 
 
-def get_text_of_frequency_data(var, ndays=False):
+def get_text_of_frequency_data(var):
 
     if env.var_[var].FREQUENCY_DATA == "daily":
-        if ndays:
-            text_of_frequency_data = _("*calculated from data every {0}").format(env.config_run.settings['analysis_interval_i18n'])
-        else:
-            text_of_frequency_data = _("*calculated from daily data")
+        text_of_frequency_data = _("*calculated from daily data")
+    elif env.var_[var].FREQUENCY_DATA in ["5days", "10days", "15days"]:
+        text_of_frequency_data = _("*calculated from data every {0}").format(env.var_[var].get_FREQUENCY_DATA())
     else:
         if env.var_[var].FREQUENCY_DATA == "monthly":
             text_of_frequency_data = _("*calculated from monthly data")
@@ -219,20 +219,24 @@ def get_values_in_range_analysis_interval(variable, year, n_month, day=None, lag
 
     if variable.type == 'D':
         var_D_values = []
-        if env.var_D.is_daily():
-            # clone range for add the last day (32) for calculate interval_day_var_D
-            rai_plus = list(range_analysis_interval)
-            rai_plus.append(32)
-            # from day to next iterator based on analysis interval
-            # e.g. [0,1,2,3,4] for first iteration for 5 days
-            interval_day_var_D = range(day - 1, rai_plus[rai_plus.index(day) + 1] - 1)
+        if env.var_D.is_n_daily():
+            if env.var_D.is_daily():
+                # clone range for add the last day (32) for calculate interval_day_var_D
+                rai_plus = list(range_analysis_interval)
+                rai_plus.append(32)
+                # from day to next iterator based on analysis interval
+                # e.g. [0,1,2,3,4] for first iteration for 5 days
+                interval_day_var_D = range(day - 1, rai_plus[rai_plus.index(day) + 1] - 1)
 
-            for iter_day in interval_day_var_D:
-                now = date(year, n_month, 1) + relativedelta(days=iter_day)
-                # check if continues with the same month
-                if now.month == n_month:
-                    index_var_D = variable.date.index(now)
-                    var_D_values.append(variable.data[index_var_D])
+                for iter_day in interval_day_var_D:
+                    now = date(year, n_month, 1) + relativedelta(days=iter_day)
+                    # check if continues with the same month
+                    if now.month == n_month:
+                        index_var_D = variable.date.index(now)
+                        var_D_values.append(variable.data[index_var_D])
+            else:
+                index_var_D = variable.date.index(date(year, n_month, day))
+                var_D_values.append(variable.data[index_var_D])
         if env.var_D.is_n_monthly():
             var_D_values.append(variable.data[variable.date.index(date(year, n_month, 1))])
 
@@ -240,7 +244,7 @@ def get_values_in_range_analysis_interval(variable, year, n_month, day=None, lag
 
     if variable.type == 'I':
         var_I_values = []
-        if env.var_I.is_daily():
+        if env.var_I.is_n_daily():
             # from day to next iterator based on analysis interval
             start_interval = range_analysis_interval[range_analysis_interval.index(day) - lag]
             try:
@@ -255,11 +259,14 @@ def get_values_in_range_analysis_interval(variable, year, n_month, day=None, lag
 
             iter_date = start_date
 
-            while iter_date.day != end_interval:
-                index_var_I = variable.date.index(iter_date)
+            if env.var_I.is_daily():
+                while iter_date.day != end_interval:
+                    index_var_I = variable.date.index(iter_date)
+                    var_I_values.append(variable.data[index_var_I])
+                    iter_date += relativedelta(days=1)
+            else:
+                index_var_I = variable.date.index(start_date)
                 var_I_values.append(variable.data[index_var_I])
-                iter_date += relativedelta(days=1)
-
         if env.var_I.is_n_monthly():
             if env.config_run.settings['analysis_interval'] in ["5days", "10days", "15days"]:
                 real_date = date(year, n_month, day) + relativedelta(days= -env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL * lag)

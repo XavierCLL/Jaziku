@@ -427,7 +427,7 @@ def get_contingency_tables(station):
                 if station.first_iter:
                     station.first_iter = False
 
-            if env.var_D.is_daily():
+            if env.var_D.is_n_daily():
                 tmp_day_list = []
                 for day in get_range_analysis_interval():
 
