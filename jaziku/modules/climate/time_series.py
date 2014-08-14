@@ -149,8 +149,8 @@ def calculate_time_series(station, lags=None, makes_files=True):
                     # print headers
                     csv_file.writerow([_('DATE'), _('VAR_D')+' ({0})'.format(station.var_D.type_series),
                                        _('VAR_I')+' ({0})'.format(station.var_I.type_series)])
-                    csv_file.writerow(['', env.config_run.settings['mode_calculation_series_D_i18n'],
-                                       env.config_run.settings['mode_calculation_series_I_i18n']])
+                    csv_file.writerow(['', env.config_run.get_MODE_CALCULATION_SERIES_i18n("D"),
+                                       env.config_run.get_MODE_CALCULATION_SERIES_i18n("I")])
 
                 # iteration for all years inside process period
                 for year in range(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']+1):
@@ -188,7 +188,7 @@ def calculate_time_series(station, lags=None, makes_files=True):
                         _('Time_Series_lag_{0}_{1}_{2}_{3}_'
                           '{4}_{5}_{6}_({7}-{8}).csv')
                         .format(
-                            lag, env.config_run.settings['analysis_interval_i18n'],
+                            lag, env.config_run.get_ANALYSIS_INTERVAL_i18n(),
                             output.months_in_initials(month-1), station.code,
                             station.name, station.var_D.type_series,
                             station.var_I.type_series,
@@ -206,8 +206,8 @@ def calculate_time_series(station, lags=None, makes_files=True):
                     # print headers
                     csv_file.writerow([_('DATE'), _('VAR_D')+' ({0})'.format(station.var_D.type_series),
                                        _('VAR_I')+' ({0})'.format(station.var_I.type_series)])
-                    csv_file.writerow(['', env.config_run.settings['mode_calculation_series_D_i18n'],
-                                       env.config_run.settings['mode_calculation_series_I_i18n']])
+                    csv_file.writerow(['', env.config_run.get_MODE_CALCULATION_SERIES_i18n("D"),
+                                       env.config_run.get_MODE_CALCULATION_SERIES_i18n("I")])
 
                 for day in get_range_analysis_interval():
 

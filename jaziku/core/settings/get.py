@@ -91,9 +91,6 @@ def configuration_run():
                 pass
         env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL = int(env.config_run.settings['analysis_interval'][0:_count])
 
-    analysis_interval_i18n = [_("5days"), _("10days"), _("15days"), _("monthly"), _("bimonthly"), _("trimonthly")]
-    env.config_run.settings['analysis_interval_i18n']\
-        = analysis_interval_i18n[env.globals_vars.ALL_ANALYSIS_INTERVALS.index(env.config_run.settings['analysis_interval'])]
     # analysis_interval setting
     if env.config_run.settings['analysis_interval']:
         settings["analysis_interval"] = colored.green(env.config_run.settings['analysis_interval'])

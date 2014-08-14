@@ -849,7 +849,7 @@ def climatology(stations_list):
     if env.var_D.is_n_daily() or env.var_D.is_monthly():
         filename_climatology_table = _('Climatology_table_{0}_(monthly)').format(env.var_D.TYPE_SERIES)+'.csv'
     else:
-        filename_climatology_table = _('Climatology_table_{0}_({1})').format(env.var_D.TYPE_SERIES,env.config_run.settings['analysis_interval_i18n'])+'.csv'
+        filename_climatology_table = _('Climatology_table_{0}_({1})').format(env.var_D.TYPE_SERIES,env.config_run.get_ANALYSIS_INTERVAL_i18n())+'.csv'
     # climatology table file
     open_file_climatology_table\
         = open(os.path.join(climatology_dir, filename_climatology_table), 'w')

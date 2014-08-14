@@ -45,8 +45,8 @@ def code(map_properties):
         'maxlon': map_properties.maxlon,
         'thresholds': map_properties.thresholds,
         'legend_units': env.var_D.UNITS,
-        'mode_calculation_series': env.config_run.settings['mode_calculation_series_D_i18n'],
-        'analysis_interval': env.config_run.settings['analysis_interval_i18n'],
+        'mode_calculation_series': env.config_run.get_MODE_CALCULATION_SERIES_i18n("D"),
+        'analysis_interval': env.config_run.get_ANALYSIS_INTERVAL_i18n(),
         'name': '''"{0}"'''.format(map_properties.name),
         'subtitle': map_properties.subtitle,
         'units': _("Deterministic")

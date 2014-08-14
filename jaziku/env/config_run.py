@@ -70,10 +70,6 @@ list_of_all_settings = [
     #   input/access: "5days", "10days", "15days", "monthly", "bimonthly" or "trimonthly"
     'analysis_interval',
 
-    # NOT IN RUNFILE
-    # analysis interval translated
-    'analysis_interval_i18n',
-
     # defines how many categories to process
     #   input: int (3 or 7)
     'class_category_analysis',
@@ -146,10 +142,6 @@ list_of_all_settings = [
     #   input: 'default', 'accumulate', 'mean'
     'mode_calculation_series_D',
 
-    # NOT IN RUNFILE
-    # mode of series calculation translated
-    'mode_calculation_series_D_i18n',
-
     # limits below and above for dependence variable
     #   input: 'default', none or float (below; above)
     #   access: {'below','above'}
@@ -173,10 +165,6 @@ list_of_all_settings = [
     # this is the mode of series calculation
     #   input: 'default', 'accumulate', 'mean'
     'mode_calculation_series_I',
-
-    # NOT IN RUNFILE
-    # mode of series calculation translated
-    'mode_calculation_series_I_i18n',
 
     # path
     #   input: string or 'internal'
@@ -245,7 +233,7 @@ def init():
 #==============================================================================
 # SOME FUNCTIONS
 
-def get_categories_labels_var_I_list():
+def get_CATEGORIES_LABELS_VAR_I():
     if settings['class_category_analysis'] == 3:
         return \
             [settings['categories_labels_var_I']['below'],
@@ -262,7 +250,7 @@ def get_categories_labels_var_I_list():
              settings['categories_labels_var_I']['above3']]
     return None
 
-def get_analysis_interval(): # todo replace the 'analysis_interval_i18n'..... delete??? use this -> env.var_[var].get_FREQUENCY_DATA()
+def get_ANALYSIS_INTERVAL_i18n():
     global settings
 
     _freq_data ={'5days': _('5 days'),
@@ -272,3 +260,11 @@ def get_analysis_interval(): # todo replace the 'analysis_interval_i18n'..... de
                  'bimonthly': _('bimonthly'),
                  'trimonthly': _('trimonthly')}
     return _freq_data[settings['analysis_interval']]
+
+def get_MODE_CALCULATION_SERIES_i18n(var):
+    global settings
+
+    mode_calculation_series_i18n = [_('accumulate'), _('mean')]
+
+    if var in ["D", "I"]:
+        return mode_calculation_series_i18n[['accumulate', 'mean'].index(settings['mode_calculation_series_'+var])]

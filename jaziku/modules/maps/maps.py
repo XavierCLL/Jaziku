@@ -313,7 +313,7 @@ def process(grid):
                 for month in range(1, 13):
 
                     if env.config_run.settings['analysis_interval'] in ['monthly', 'bimonthly', 'trimonthly']:
-                        for var_I_idx, label in enumerate(env.config_run.get_categories_labels_var_I_list()):
+                        for var_I_idx, label in enumerate(env.config_run.get_CATEGORIES_LABELS_VAR_I()):
                             label = label.strip().replace(' ','_')
                             # show only once
                             if lag == env.config_run.settings['lags'][0] and month == 1 and var_I_idx == 0:
@@ -359,7 +359,7 @@ def process(grid):
                         range_analysis_interval = get_range_analysis_interval()
 
                         for day in range(len(range_analysis_interval)):
-                            for var_I_idx, label in enumerate(env.config_run.get_categories_labels_var_I_list()):
+                            for var_I_idx, label in enumerate(env.config_run.get_CATEGORIES_LABELS_VAR_I()):
                                 label = label.strip().replace(' ','_')
                                 # show only once
                                 if lag == env.config_run.settings['lags'][0] and month == 1 and var_I_idx == 0 and day == 0:
@@ -485,7 +485,7 @@ def process(grid):
 
                         # save matrix for interpolation
                         base_path = os.path.join(env.globals_vars.CLIMATE_DIR, _('maps'),
-                            env.config_run.settings['analysis_interval_i18n'],
+                            env.config_run.get_ANALYSIS_INTERVAL_i18n(),
                             _('lag_{0}').format(lag),
                             _('Correlation'),
                             grid.grid_name)
