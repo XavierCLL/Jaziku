@@ -170,10 +170,6 @@ def configuration_run():
         console.msg_error_configuration('mode_calculation_series_D', _("The 'mode_calculation_series_D' is invalid, the options are:\n"
                                                                        "default, accumulate or mean"))
 
-    mode_calculation_series_i18n = [_('accumulate'), _('mean')]
-    env.config_run.settings['mode_calculation_series_D_i18n']\
-        = mode_calculation_series_i18n[['accumulate', 'mean'].index(env.config_run.settings['mode_calculation_series_D'])]
-
     # ------------------------
     # limits var D
 
@@ -263,9 +259,6 @@ def configuration_run():
     else:
         console.msg_error_configuration('mode_calculation_series_I', _("The mode_calculation_series_I is wrong, the options are:\n"
                                                                        "default, accumulate or mean"))
-
-    env.config_run.settings['mode_calculation_series_I_i18n']\
-        = mode_calculation_series_i18n[['accumulate', 'mean'].index(env.config_run.settings['mode_calculation_series_I'])]
 
     # ------------------------
     # limits var I
@@ -444,7 +437,7 @@ def configuration_run():
                         _("The date for forecast '{0}' is invalid, must be a\n"
                           "valid characters for {1} {2}.")
                         .format(_orig,
-                                env.config_run.get_analysis_interval(),
+                                env.config_run.get_ANALYSIS_INTERVAL_i18n(),
                                 example))
             elif env.config_run.settings['analysis_interval'] in ['5days', '10days', '15days']:
                 if env.config_run.settings['analysis_interval'] in ['5days']:
@@ -459,7 +452,7 @@ def configuration_run():
                       "the month is a integer and the day is a start day of\n"
                       "interval analysis {2}.")
                     .format(env.config_run.settings['forecast_date'],
-                            env.config_run.get_analysis_interval(), example))
+                            env.config_run.get_ANALYSIS_INTERVAL_i18n(), example))
 
         if env.config_run.settings['analysis_interval'] in ['5days', '10days', '15days', 'monthly']:
             if not (1 <= forecast_month <= 12):
@@ -485,7 +478,7 @@ def configuration_run():
                       "must be a valid start day based on\nrange analysis "
                       "interval, the valid start days for\n{1} are: {2}")
                     .format(env.config_run.settings['forecast_date']['day'],
-                            env.config_run.settings['analysis_interval_i18n'],
+                            env.config_run.get_ANALYSIS_INTERVAL_i18n(),
                             analysis_interval.get_range_analysis_interval()))
 
             env.config_run.settings['forecast_date']['text'] \

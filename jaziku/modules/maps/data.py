@@ -130,7 +130,7 @@ def climate_data_for_maps(station):
 
                 if env.var_D.is_n_monthly():
                     categories_list = []
-                    for category_label in env.config_run.get_categories_labels_var_I_list():
+                    for category_label in env.config_run.get_CATEGORIES_LABELS_VAR_I():
                         _category_label = category_label
                         category_label = category_label.strip().replace(' ','_')
                         maps_data_for_category_label = os.path.join(maps_data_lag, category_label)
@@ -171,7 +171,7 @@ def climate_data_for_maps(station):
                     for day in get_range_analysis_interval():
                         categories_list = []
 
-                        for category_label in env.config_run.get_categories_labels_var_I_list():
+                        for category_label in env.config_run.get_CATEGORIES_LABELS_VAR_I():
                             _category_label = category_label
                             category_label = category_label.strip().replace(' ','_')
                             maps_data_for_category_label = os.path.join(maps_data_lag, category_label)
@@ -329,7 +329,7 @@ def forecast_data_for_maps(station):
 
         maps_dir = os.path.join(
                     env.globals_vars.FORECAST_DIR, _('maps'),
-                    env.config_run.settings['analysis_interval_i18n'],
+                    env.config_run.get_ANALYSIS_INTERVAL_i18n(),
                     slugify(env.config_run.settings['forecast_date']['text']))
 
         output.make_dirs(maps_dir)

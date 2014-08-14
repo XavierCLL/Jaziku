@@ -109,7 +109,7 @@ def climate_graphs(station):
 
             _CT = copy.deepcopy(specific_contingency_table['in_percentage'])
             _CT_p = copy.deepcopy(specific_contingency_table['in_percentage_formatted'])
-            _CL_I = copy.deepcopy(env.config_run.get_categories_labels_var_I_list())
+            _CL_I = copy.deepcopy(env.config_run.get_CATEGORIES_LABELS_VAR_I())
 
             # delete columns (var I) deactivated, in reversed order is needed
             # because if any element is delete in the first columns, the side of
@@ -256,7 +256,7 @@ def climate_graphs(station):
 
             _CT = copy.deepcopy(specific_contingency_table['in_percentage'])
             _CT_p = copy.deepcopy(specific_contingency_table['in_percentage_formatted'])
-            _CL_I = copy.deepcopy(env.config_run.get_categories_labels_var_I_list())
+            _CL_I = copy.deepcopy(env.config_run.get_CATEGORIES_LABELS_VAR_I())
 
             # delete columns (var I) deactivated, in reversed order is needed
             # because if any element is delete in the first columns, the side of
@@ -464,7 +464,7 @@ def climate_graphs(station):
 
         mosaic_dir_save \
             = os.path.join(graphics_dir_ca, _('mosaic_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
-                          .format(lag, env.config_run.settings['analysis_interval_i18n'], station.code, station.name,
+                          .format(lag, env.config_run.get_ANALYSIS_INTERVAL_i18n(), station.code, station.name,
                                   station.var_D.type_series, station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'],
                                   env.globals_vars.PROCESS_PERIOD['end']))
 
