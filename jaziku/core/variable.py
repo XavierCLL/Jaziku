@@ -373,27 +373,42 @@ class Variable(object):
         if new_freq_data in ['5days', '10days', '15days']:
             if env.var_[self.type].is_daily():
                 self.daily2Ndays(new_freq_data)
+                # save the new frequency data
+                env.var_[self.type].set_FREQUENCY_DATA(new_freq_data, check=False)
+                return
 
         if new_freq_data == 'monthly':
             if env.var_[self.type].is_daily():
                 self.daily2monthly()
+                # save the new frequency data
+                env.var_[self.type].set_FREQUENCY_DATA(new_freq_data, check=False)
+                return
 
         if new_freq_data == 'bimonthly':
             if env.var_[self.type].is_daily():
                 self.daily2monthly()
                 self.monthly2bimonthly()
+                # save the new frequency data
+                env.var_[self.type].set_FREQUENCY_DATA(new_freq_data, check=False)
+                return
             if env.var_[self.type].is_monthly():
                 self.monthly2bimonthly()
+                # save the new frequency data
+                env.var_[self.type].set_FREQUENCY_DATA(new_freq_data, check=False)
+                return
 
         if new_freq_data == 'trimonthly':
             if env.var_[self.type].is_daily():
                 self.daily2monthly()
                 self.monthly2trimonthly()
+                # save the new frequency data
+                env.var_[self.type].set_FREQUENCY_DATA(new_freq_data, check=False)
+                return
             if env.var_[self.type].is_monthly():
                 self.monthly2trimonthly()
-
-        # save the new frequency data
-        #env.var_[self.type].set_FREQUENCY_DATA(new_freq_data, check=False)
+                # save the new frequency data
+                env.var_[self.type].set_FREQUENCY_DATA(new_freq_data, check=False)
+                return
 
     def calculate_data_date_and_nulls_in_period(self, start_year=False, end_year=False):
         """Calculate the data without the null values inside

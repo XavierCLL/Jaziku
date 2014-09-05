@@ -795,7 +795,6 @@ def get_climatology_data(station, freq=None):
         freq = env.var_D.FREQUENCY_DATA
 
     _station.var_D.convert2(freq)
-    env.var_D.set_FREQUENCY_DATA(freq, check=False)
 
     _station.var_D.calculate_data_date_and_nulls_in_period()
     var_D_data = _station.var_D.data_in_process_period
@@ -1459,12 +1458,10 @@ def outliers(stations_list):
         if convert_var_D_to:
             env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
             station_copy.var_D.convert2(convert_var_D_to)
-            env.var_D.set_FREQUENCY_DATA(convert_var_D_to, check=False)
             station_copy.var_D.calculate_data_date_and_nulls_in_period()
         if convert_var_I_to:
             env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
             station_copy.var_I.convert2(convert_var_I_to)
-            env.var_I.set_FREQUENCY_DATA(convert_var_I_to, check=False)
             station_copy.var_I.calculate_data_date_and_nulls_in_period()
 
         return station_copy
@@ -1483,15 +1480,14 @@ def outliers(stations_list):
             name_graph = _("Outliers")+"_{0}_{1}_{2}_({3}-{4})".format(station.code, station.name,
             env.var_D.TYPE_SERIES, env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])
 
-            fig = pyplot.figure(figsize=(3.5,7))
+            fig = pyplot.figure(figsize=(3.8,7))
             ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
             ax.set_title(unicode(_("Outliers")+"\n{0} ({1}-{2})".format(env.var_D.TYPE_SERIES,
                 env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
 
             ## X
-            x_labels = [station.code]
-            xticks([1], x_labels)
-            ax.set_xlabel(unicode(_('Station'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            ax.tick_params(axis='x', which='both', bottom='off', top='off', labelbottom='off')
+            ax.set_xlabel(unicode(_('{0}\n{1}').format(station.code, station.name), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             ## Y
             type_var = env.var_D.TYPE_SERIES
@@ -1510,7 +1506,7 @@ def outliers(stations_list):
             pyplot.setp(boxplot_station['boxes'], color=env.globals_vars.colors['plt_default'], linewidth=2.5)
             pyplot.setp(boxplot_station['medians'], color='red', linewidth=2.5)
             pyplot.setp(boxplot_station['whiskers'], color=env.globals_vars.colors['plt_default'], linestyle='solid', linewidth=2.5)
-            pyplot.setp(boxplot_station['fliers'], color='red', markersize=11, marker='.')
+            pyplot.setp(boxplot_station['fliers'], color='red', markersize=16, marker='+', markeredgecolor='red', markeredgewidth='1')
             pyplot.setp(boxplot_station['caps'], color=env.globals_vars.colors['plt_default'], linewidth=2.5)
 
             ax.grid(True, color='gray')
@@ -1635,16 +1631,15 @@ def outliers(stations_list):
             fig = pyplot.figure(figsize=(2.5+len(stations_list)/2.5,7))
         else:
             _part_title = _("Outliers")+' - '
-            fig = pyplot.figure(figsize=(2.5+len(stations_list)/2.5,6))
+            fig = pyplot.figure(figsize=(2.5+len(stations_list)/2.5,7))
 
         ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
-
 
         ax.set_title(unicode(_part_title + "{0} ({1}-{2})".format(env.var_D.TYPE_SERIES,
             env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
 
         ## X
-        xticks(range(len(stations_list)), codes_stations, rotation='vertical')
+        #xticks(range(len(stations_list)), codes_stations, rotation='vertical')
         ax.set_xlabel(unicode(_('Stations'), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
         ## Y
@@ -1652,12 +1647,17 @@ def outliers(stations_list):
         ax.set_ylabel(unicode('{0} ({1})'.format(type_var, env.var_D.UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
         #ax.set_ylabel(_('Frequency'))
 
+        data_stations = [float('nan') if len(x)==0 else x for x in data_stations]
+
         boxplot_station = boxplot(data_stations)
+
+        # X ticks
+        xticks(range(1, len(stations_list)+1), codes_stations, rotation='vertical')
 
         pyplot.setp(boxplot_station['boxes'], color=env.globals_vars.colors['plt_default'], linewidth=2.5)
         pyplot.setp(boxplot_station['medians'], color='red', linewidth=2.5)
         pyplot.setp(boxplot_station['whiskers'], color=env.globals_vars.colors['plt_default'], linestyle='solid', linewidth=2.5)
-        pyplot.setp(boxplot_station['fliers'], color='red', markersize=11, marker='.')
+        pyplot.setp(boxplot_station['fliers'], color='red', markersize=8, marker='+', markeredgecolor='red', markeredgewidth='1')
         pyplot.setp(boxplot_station['caps'], color=env.globals_vars.colors['plt_default'], linewidth=2.5)
 
         ax.grid(True, color='gray')
