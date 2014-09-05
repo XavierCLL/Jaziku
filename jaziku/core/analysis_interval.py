@@ -143,7 +143,6 @@ def adjust_data_of_variables(stations_list, force_same_frequencies=False, messag
                         .format(variable, new_freq_data), color='cyan', newline=False)
         for station in stations_list:
             station.var_[variable].convert2(new_freq_data)
-        env.var_[variable].set_FREQUENCY_DATA(new_freq_data, check=False)
         if messages:
             console.msg(_("done"), color='green')
 
