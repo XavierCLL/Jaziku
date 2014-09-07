@@ -175,6 +175,9 @@ INTERNAL_LIMITS = {
 THRESHOLDS_3_CATEGORIES = {
     ## thresholds by default
     'default':  {'daily': ['p33','p66'],
+                  '5days': ['p33','p66'],
+                  '10days': ['p33','p66'],
+                  '15days': ['p33','p66'],
                   'monthly': ['p33','p66'],
                   'bimonthly': ['p33','p66'],
                   'trimonthly': ['p33','p66'],
@@ -182,24 +185,36 @@ THRESHOLDS_3_CATEGORIES = {
 
     ## thresholds by type of internal series  (if was not defined here, will use thresholds by default)
     'PPT':      {'daily': ['90%','110%'],
+                  '5days': ['90%','110%'],
+                  '10days': ['90%','110%'],
+                  '15days': ['90%','110%'],
                   'monthly': ['90%','110%'],
                   'bimonthly': ['90%','110%'],
                   'trimonthly': ['90%','110%'],
                   'normal_inclusive': True},
 
     'TMIN':     {'daily': [-1,1],
+                  '5days': [-1,1],
+                  '10days': [-1,1],
+                  '15days': [-1,1],
                   'monthly': [-1,1],
                   'bimonthly': [-1,1],
                   'trimonthly': [-1,1],
                   'normal_inclusive': True},
 
     'TMAX':     {'daily': [-1,1],
+                  '5days': [-1,1],
+                  '10days': [-1,1],
+                  '15days': [-1,1],
                   'monthly': [-1,1],
                   'bimonthly': [-1,1],
                   'trimonthly': [-1,1],
                   'normal_inclusive': True},
 
     'TEMP':     {'daily': [-1,1],
+                  '5days': [-1,1],
+                  '10days': [-1,1],
+                  '15days': [-1,1],
                   'monthly': [-1,1],
                   'bimonthly': [-1,1],
                   'trimonthly': [-1,1],
@@ -210,6 +225,9 @@ THRESHOLDS_3_CATEGORIES = {
 THRESHOLDS_7_CATEGORIES = {
     ## thresholds by default
     'default':  {'daily': ['p11','p22','p33','p66','p77','p88'],
+                  '5days': ['p11','p22','p33','p66','p77','p88'],
+                  '10days': ['p11','p22','p33','p66','p77','p88'],
+                  '15days': ['p11','p22','p33','p66','p77','p88'],
                   'monthly': ['p11','p22','p33','p66','p77','p88'],
                   'bimonthly': ['p11','p22','p33','p66','p77','p88'],
                   'trimonthly': ['p11','p22','p33','p66','p77','p88'],
@@ -217,24 +235,36 @@ THRESHOLDS_7_CATEGORIES = {
 
     ## thresholds by type of internal series  (if was not defined here, will use thresholds by default)
     'PPT':      {'daily': ['30%','60%','90%','110%','140%','170%'],
+                  '5days': ['30%','60%','90%','110%','140%','170%'],
+                  '10days': ['30%','60%','90%','110%','140%','170%'],
+                  '15days': ['30%','60%','90%','110%','140%','170%'],
                   'monthly': ['30%','60%','90%','110%','140%','170%'],
                   'bimonthly': ['30%','60%','90%','110%','140%','170%'],
                   'trimonthly': ['30%','60%','90%','110%','140%','170%'],
                   'normal_inclusive': True},
 
     'TMIN':     {'daily': [-2,-1.5,-1,1,1.5,2],
+                  '5days': [-2,-1.5,-1,1,1.5,2],
+                  '10days': [-2,-1.5,-1,1,1.5,2],
+                  '15days': [-2,-1.5,-1,1,1.5,2],
                   'monthly': [-2,-1.5,-1,1,1.5,2],
                   'bimonthly': [-2,-1.5,-1,1,1.5,2],
                   'trimonthly': [-2,-1.5,-1,1,1.5,2],
                   'normal_inclusive': True},
 
     'TMAX':     {'daily': [-2,-1.5,-1,1,1.5,2],
+                  '5days': [-2,-1.5,-1,1,1.5,2],
+                  '10days': [-2,-1.5,-1,1,1.5,2],
+                  '15days': [-2,-1.5,-1,1,1.5,2],
                   'monthly': [-2,-1.5,-1,1,1.5,2],
                   'bimonthly': [-2,-1.5,-1,1,1.5,2],
                   'trimonthly': [-2,-1.5,-1,1,1.5,2],
                   'normal_inclusive': True},
 
     'TEMP':     {'daily': [-2,-1.5,-1,1,1.5,2],
+                  '5days': [-2,-1.5,-1,1,1.5,2],
+                  '10days': [-2,-1.5,-1,1,1.5,2],
+                  '15days': [-2,-1.5,-1,1,1.5,2],
                   'monthly': [-2,-1.5,-1,1,1.5,2],
                   'bimonthly': [-2,-1.5,-1,1,1.5,2],
                   'trimonthly': [-2,-1.5,-1,1,1.5,2],

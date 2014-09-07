@@ -52,6 +52,9 @@ fixes
 - Fix TYPO in months and bi-months initials
 - Fixes when all values are nulls in process period in EDA
 - Fix the search path of NCL scripts in local system
+- Fixed the problem with result directory with space in its name
+  for make maps due ncl restrictions, now use a temporal directory
+  for make maps with ncl and after
 
 **sisdhim2jaziku:**
 
