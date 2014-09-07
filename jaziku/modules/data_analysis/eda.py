@@ -2411,12 +2411,12 @@ def periodogram(stations_list):
             ax.plot(period, Pxx_den, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties(ms=7))
             #ax.vlines(period, [0], Pxx_den, linewidth=2.5, color='#638786')
 
-            # put label on the 4 best points
+            # put label on the 3 best points
             for per, fre, pxx in top_Pxx_den[(station.code, station.name)][0:3]:
                 ax.annotate(round(per,1), xy=(per, pxx),  xycoords='data',
                 xytext=(-12, 0), textcoords='offset points', rotation='vertical',
                 horizontalalignment='center', verticalalignment='center',
-                color=env.globals_vars.colors['grey_S2']
+                color=env.globals_vars.colors['grey_S2'], size=10
                 )
 
             #pyplot.ylim(-1, 1)
@@ -2469,12 +2469,12 @@ def periodogram(stations_list):
             ax.plot(freq, Pxx_den, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties(ms=7))
             #ax.vlines(period, [0], Pxx_den, linewidth=2.5, color='#638786')
 
-            # put label on the 4 best points
+            # put label on the 3 best points
             for per, fre, pxx in top_Pxx_den[(station.code, station.name)][0:3]:
                 ax.annotate(round(fre,2), xy=(fre, pxx),  xycoords='data',
                 xytext=(-12, 0), textcoords='offset points', rotation='vertical',
                 horizontalalignment='center', verticalalignment='center',
-                color=env.globals_vars.colors['grey_S2']
+                color=env.globals_vars.colors['grey_S2'], size=10
                 )
 
             #pyplot.ylim(-1, 1)
