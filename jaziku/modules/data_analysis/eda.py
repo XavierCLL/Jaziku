@@ -2539,7 +2539,12 @@ def periodogram(stations_list):
 
     for _code,_name in top_Pxx_den:
         for top_count in range(5):
-            _period,_freq, _Pxx_den = top_Pxx_den[(_code,_name)][top_count]
+            try:
+                _period, _freq, _Pxx_den = top_Pxx_den[(_code,_name)][top_count]
+                if _Pxx_den == 0:
+                    raise
+            except:
+                _period, _freq, _Pxx_den =  float('nan'), float('nan'), float('nan')
             csv_file.writerow([top_count+1, _code,_name, output.number(_period), output.number(_freq), output.number(_Pxx_den)])
 
         csv_file.writerow([])
