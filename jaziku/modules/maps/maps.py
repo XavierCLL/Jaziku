@@ -20,6 +20,8 @@
 
 import os
 import csv
+import shutil
+import tempfile
 import numpy
 from subprocess import call
 
@@ -242,12 +244,13 @@ def process(grid):
         del tsv_file
 
         # make ncl file for map
+        tmp_path_file = os.path.join(tmp_dir, base_file)
         base_path_file = os.path.join(base_path, base_file)
         # make and write ncl file for ncl process
         if map_type == _("probabilistic"):
-            ncl_file = make_ncl_probabilistic_map(grid, base_path_file, env.globals_vars)
+            ncl_file = make_ncl_probabilistic_map(grid, tmp_path_file, env.globals_vars)
         if map_type == _("deterministic"):
-            ncl_file = make_ncl_deterministic_map(grid, base_path_file, env.globals_vars)
+            ncl_file = make_ncl_deterministic_map(grid, tmp_path_file, env.globals_vars)
         devnull = os.open(os.devnull, os.O_WRONLY)
 
         ## COLORMAP
@@ -264,24 +267,22 @@ def process(grid):
 
         ## TRANSFORM IMAGE
         # trim png created
-        image_file = os.path.join(os.path.abspath(base_path_file) + ".png").replace(" ", r"\ ")
+        image_file = (tmp_path_file + ".png").replace(" ", r"\ ")
 
         call(["convert", image_file, "-trim", "-bordercolor", "white", "-border", "4", image_file], shell=False)
 
-        # stamp logo
-        watermarking.logo(os.path.abspath(base_path_file) + ".png")
-
         # TODO: test if convert worked
 
-        # delete unnecessary files
-        if map_type == _("probabilistic"):
-            os.remove(os.path.abspath(base_path_file) + ".INC")
-            os.remove(os.path.abspath(base_path_file) + ".ncl")
-            os.remove(os.path.abspath(base_path_file) + ".tsv")
-            os.remove(os.path.abspath(base_path_file) + "_stations.tsv")
-        if map_type == _("deterministic"):
-            os.remove(os.path.abspath(base_path_file) + ".ncl")
-            os.remove(os.path.abspath(base_path_file) + "_stations.tsv")
+        # stamp logo
+        watermarking.logo(tmp_path_file + ".png")
+
+        # copy map
+        if os.path.isfile(base_path_file + ".png"):
+            os.remove(base_path_file + ".png")
+        shutil.move(tmp_path_file + ".png", base_path)
+
+        # delete temporal directory
+        shutil.rmtree(tmp_dir)
 
         del matrix
 
@@ -329,6 +330,9 @@ def process(grid):
                             if env.config_run.settings['class_category_analysis'] == 7:
                                 base_path = os.path.join(base_path, map_type)
 
+                            # create the temporal directory
+                            tmp_dir = tempfile.mkdtemp()
+
                             # make dir with the name of grid
                             output.make_dirs(base_path)
 
@@ -344,13 +348,13 @@ def process(grid):
 
                             if map_type == _("probabilistic"):
                                 # file for interpolation
-                                inc_file = os.path.join(base_path, base_file + ".INC")
+                                inc_file = os.path.join(tmp_dir, base_file + ".INC")
 
                                 # save file for NCL
-                                tsv_interpolation_file = os.path.join(base_path, base_file + ".tsv")
+                                tsv_interpolation_file = os.path.join(tmp_dir, base_file + ".tsv")
 
                             # file where saved stations with lat, lon, index and index_position
-                            tsv_stations_file = os.path.join(base_path, base_file + "_stations.tsv")
+                            tsv_stations_file = os.path.join(tmp_dir, base_file + "_stations.tsv")
 
                             process_map()
 
@@ -375,6 +379,9 @@ def process(grid):
                                 if env.config_run.settings['class_category_analysis'] == 7:
                                     base_path = os.path.join(base_path, map_type)
 
+                                # create the temporal directory
+                                tmp_dir = tempfile.mkdtemp()
+
                                 # make dir with the name of grid
                                 output.make_dirs(base_path)
 
@@ -394,13 +401,13 @@ def process(grid):
 
                                 if map_type == _("probabilistic"):
                                     # file for interpolation
-                                    inc_file = os.path.join(base_path, base_file + ".INC")
+                                    inc_file = os.path.join(tmp_dir, base_file + ".INC")
 
                                     # save file for NCL
-                                    tsv_interpolation_file = os.path.join(base_path, base_file + ".tsv")
+                                    tsv_interpolation_file = os.path.join(tmp_dir, base_file + ".tsv")
 
                                 # file where saved stations with lat, lon, index and index_position
-                                tsv_stations_file = os.path.join(base_path, base_file + "_stations.tsv")
+                                tsv_stations_file = os.path.join(tmp_dir, base_file + "_stations.tsv")
 
                                 process_map()
 
@@ -447,6 +454,9 @@ def process(grid):
                         _('Correlation'),
                         grid.grid_name)
 
+                    # create the temporal directory
+                    tmp_dir = tempfile.mkdtemp()
+
                     # make dir with the name of grid
                     output.make_dirs(base_path)
 
@@ -456,11 +466,11 @@ def process(grid):
                     grid.lag = lag
 
                     # file for interpolation
-                    inc_file = os.path.join(base_path, base_file + ".INC")
+                    inc_file = os.path.join(tmp_dir, base_file + ".INC")
 
                     # save file for NCL
-                    tsv_interpolation_file = os.path.join(base_path, base_file + ".tsv")
-                    tsv_stations_file = os.path.join(base_path, base_file + "_stations.tsv")
+                    tsv_interpolation_file = os.path.join(tmp_dir, base_file + ".tsv")
+                    tsv_stations_file = os.path.join(tmp_dir, base_file + "_stations.tsv")
 
                     process_map()
 
@@ -485,10 +495,12 @@ def process(grid):
 
                         # save matrix for interpolation
                         base_path = os.path.join(env.globals_vars.CLIMATE_DIR, _('maps'),
-                            env.config_run.get_ANALYSIS_INTERVAL_i18n(),
                             _('lag_{0}').format(lag),
                             _('Correlation'),
                             grid.grid_name)
+
+                        # create the temporal directory
+                        tmp_dir = tempfile.mkdtemp()
 
                         # make dir with the name of grid
                         output.make_dirs(base_path)
@@ -500,11 +512,11 @@ def process(grid):
                         grid.lag = lag
 
                         # file for interpolation
-                        inc_file = os.path.join(base_path, base_file + ".INC")
+                        inc_file = os.path.join(tmp_dir, base_file + ".INC")
 
                         # save file for NCL
-                        tsv_interpolation_file = os.path.join(base_path, base_file + ".tsv")
-                        tsv_stations_file = os.path.join(base_path, base_file + "_stations.tsv")
+                        tsv_interpolation_file = os.path.join(tmp_dir, base_file + ".tsv")
+                        tsv_stations_file = os.path.join(tmp_dir, base_file + "_stations.tsv")
 
                         process_map()
 
@@ -547,6 +559,9 @@ def process(grid):
                     if env.config_run.settings['class_category_analysis'] == 7:
                         base_path = os.path.join(base_path, map_type)
 
+                    # create the temporal directory
+                    tmp_dir = tempfile.mkdtemp()
+
                     # make dir with the name of grid
                     output.make_dirs(base_path)
 
@@ -560,13 +575,13 @@ def process(grid):
 
                     if map_type == _("probabilistic"):
                         # file for interpolation
-                        inc_file = os.path.join(base_path, base_file + ".INC")
+                        inc_file = os.path.join(tmp_dir, base_file + ".INC")
 
                         # save file for NCL
-                        tsv_interpolation_file = os.path.join(base_path, base_file + ".tsv")
+                        tsv_interpolation_file = os.path.join(tmp_dir, base_file + ".tsv")
 
                     # file where saved stations with lat, lon, index and index_position
-                    tsv_stations_file = os.path.join(base_path, base_file + "_stations.tsv")
+                    tsv_stations_file = os.path.join(tmp_dir, base_file + "_stations.tsv")
 
                     process_map()
 
