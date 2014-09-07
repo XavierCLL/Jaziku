@@ -795,6 +795,8 @@ def get_climatology_data(station, freq=None):
         freq = env.var_D.FREQUENCY_DATA
 
     _station.var_D.convert2(freq)
+    if _station.var_D.was_converted:
+        env.var_D.set_FREQUENCY_DATA(freq, check=False)
 
     _station.var_D.calculate_data_date_and_nulls_in_period()
     var_D_data = _station.var_D.data_in_process_period
@@ -1458,10 +1460,14 @@ def outliers(stations_list):
         if convert_var_D_to:
             env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
             station_copy.var_D.convert2(convert_var_D_to)
+            if station_copy.var_D.was_converted:
+                env.var_D.set_FREQUENCY_DATA(convert_var_D_to, check=False)
             station_copy.var_D.calculate_data_date_and_nulls_in_period()
         if convert_var_I_to:
             env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
             station_copy.var_I.convert2(convert_var_I_to)
+            if station_copy.var_I.was_converted:
+                env.var_I.set_FREQUENCY_DATA(convert_var_I_to, check=False)
             station_copy.var_I.calculate_data_date_and_nulls_in_period()
 
         return station_copy
@@ -1487,7 +1493,7 @@ def outliers(stations_list):
 
             ## X
             ax.tick_params(axis='x', which='both', bottom='off', top='off', labelbottom='off')
-            ax.set_xlabel(unicode(_('{0}\n{1}').format(station.code, station.name), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            ax.set_xlabel(unicode('{0}\n{1}'.format(station.code, station.name), 'utf-8'), env.globals_vars.graphs_axis_properties())
 
             ## Y
             type_var = env.var_D.TYPE_SERIES

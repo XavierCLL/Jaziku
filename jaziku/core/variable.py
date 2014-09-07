@@ -47,6 +47,7 @@ class Variable(object):
         VARIABLE.origin_data: original complete data of series
         VARIABLE.origin_date: original complete date of series
         VARIABLE.origin_frequency_data: original the frequency data
+        VARIABLE.was_converted
         plus attributes return of methods:
             data_and_null_in_process_period()
             do_some_statistic_of_data()
@@ -112,6 +113,8 @@ class Variable(object):
         self.origin_data = deepcopy(self.data)
         self.origin_date = deepcopy(self.date)
         self.origin_frequency_data = env.var_[self.type].FREQUENCY_DATA
+
+        self.was_converted = False
 
     def fill_variable(self):
         """Complete and fill variable with null values if the last and/or start year
@@ -367,47 +370,42 @@ class Variable(object):
         env.var_[D,I].set_FREQUENCY_DATA(new_freq_data, check=False)
         AFTER this function (not before).
         """
+
         if env.var_[self.type].FREQUENCY_DATA == new_freq_data:
             return
 
         if new_freq_data in ['5days', '10days', '15days']:
             if env.var_[self.type].is_daily():
                 self.daily2Ndays(new_freq_data)
-                # save the new frequency data
-                env.var_[self.type].set_FREQUENCY_DATA(new_freq_data, check=False)
+                self.was_converted = True
                 return
 
         if new_freq_data == 'monthly':
             if env.var_[self.type].is_daily():
                 self.daily2monthly()
-                # save the new frequency data
-                env.var_[self.type].set_FREQUENCY_DATA(new_freq_data, check=False)
+                self.was_converted = True
                 return
 
         if new_freq_data == 'bimonthly':
             if env.var_[self.type].is_daily():
                 self.daily2monthly()
                 self.monthly2bimonthly()
-                # save the new frequency data
-                env.var_[self.type].set_FREQUENCY_DATA(new_freq_data, check=False)
+                self.was_converted = True
                 return
             if env.var_[self.type].is_monthly():
                 self.monthly2bimonthly()
-                # save the new frequency data
-                env.var_[self.type].set_FREQUENCY_DATA(new_freq_data, check=False)
+                self.was_converted = True
                 return
 
         if new_freq_data == 'trimonthly':
             if env.var_[self.type].is_daily():
                 self.daily2monthly()
                 self.monthly2trimonthly()
-                # save the new frequency data
-                env.var_[self.type].set_FREQUENCY_DATA(new_freq_data, check=False)
+                self.was_converted = True
                 return
             if env.var_[self.type].is_monthly():
                 self.monthly2trimonthly()
-                # save the new frequency data
-                env.var_[self.type].set_FREQUENCY_DATA(new_freq_data, check=False)
+                self.was_converted = True
                 return
 
     def calculate_data_date_and_nulls_in_period(self, start_year=False, end_year=False):
