@@ -2364,12 +2364,7 @@ def periodogram(stations_list):
         _freq = copy.deepcopy(freq)
         del _freq[0]
         period = [1/float(x) for x in _freq]
-        period = period + [0]
-
-        # delete the first value and added to last item (0 frequency equivalent value)
-        Pxx_den = list(Pxx_den)
-        del Pxx_den[0]
-        Pxx_den = Pxx_den + [0]
+        period = [float('nan')] + period
 
         # select and save the top 5 of maximum of pxx_den
         Pxx_den_station = zip(period, freq, Pxx_den)
@@ -2411,13 +2406,13 @@ def periodogram(stations_list):
             ax.plot(period, Pxx_den, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties(ms=7))
             #ax.vlines(period, [0], Pxx_den, linewidth=2.5, color='#638786')
 
-            # put label on the 3 best points
-            for per, fre, pxx in top_Pxx_den[(station.code, station.name)][0:3]:
-                ax.annotate(round(per,1), xy=(per, pxx),  xycoords='data',
-                xytext=(-12, 0), textcoords='offset points', rotation='vertical',
-                horizontalalignment='center', verticalalignment='center',
-                color=env.globals_vars.colors['grey_S2'], size=10
-                )
+            # # put label on the 3 best points
+            # for per, fre, pxx in top_Pxx_den[(station.code, station.name)][0:3]:
+            #     ax.annotate(round(per,1), xy=(per, pxx),  xycoords='data',
+            #     xytext=(-12, 0), textcoords='offset points', rotation='vertical',
+            #     horizontalalignment='center', verticalalignment='center',
+            #     color=env.globals_vars.colors['grey_S2'], size=10
+            #     )
 
             #pyplot.ylim(-1, 1)
             zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.06, y_scale_above=-0.08)
@@ -2469,13 +2464,13 @@ def periodogram(stations_list):
             ax.plot(freq, Pxx_den, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties(ms=7))
             #ax.vlines(period, [0], Pxx_den, linewidth=2.5, color='#638786')
 
-            # put label on the 3 best points
-            for per, fre, pxx in top_Pxx_den[(station.code, station.name)][0:3]:
-                ax.annotate(round(fre,2), xy=(fre, pxx),  xycoords='data',
-                xytext=(-12, 0), textcoords='offset points', rotation='vertical',
-                horizontalalignment='center', verticalalignment='center',
-                color=env.globals_vars.colors['grey_S2'], size=10
-                )
+            # # put label on the 3 best points
+            # for per, fre, pxx in top_Pxx_den[(station.code, station.name)][0:3]:
+            #     ax.annotate(round(fre,2), xy=(fre, pxx),  xycoords='data',
+            #     xytext=(-12, 0), textcoords='offset points', rotation='vertical',
+            #     horizontalalignment='center', verticalalignment='center',
+            #     color=env.globals_vars.colors['grey_S2'], size=10
+            #     )
 
             #pyplot.ylim(-1, 1)
             zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.06, y_scale_above=-0.08)
@@ -2491,8 +2486,6 @@ def periodogram(stations_list):
 
             pyplot.close('all')
 
-
-
         # -------------------------------------------------------------------------
         # table result
 
@@ -2503,14 +2496,15 @@ def periodogram(stations_list):
         csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
         # print header
-        if env.var_D.FREQUENCY_DATA in ['bimonthly', 'trimonthly']:
-            header = [_("PERIOD")+'**', _('FREQUENCY')+'**', _("POWER SPECTRAL DENSITY")]
-        else:
-            header = [_("PERIOD")+'**', _('FREQUENCY')+'**', _("POWER SPECTRAL DENSITY")]
+        header = [_("POWER SPECTRAL DENSITY"), _("PERIOD")+'**', _('FREQUENCY')+'**']
 
         csv_file.writerow(header)
-        for _period, _freq, _Pxx_den in zip(period, freq, Pxx_den):
-            csv_file.writerow([output.number(_period), output.number(_freq), output.number(_Pxx_den)])
+
+        # sorted by power spectral density
+        Pxx_den_sorted = sorted(zip(Pxx_den, period, freq), key=lambda x: x[0], reverse=True)
+
+        for _Pxx_den, _period, _freq in Pxx_den_sorted:
+            csv_file.writerow([output.number(_Pxx_den), output.number(_period), output.number(_freq)])
 
         # print footnote
         csv_file.writerow([])
@@ -2523,43 +2517,6 @@ def periodogram(stations_list):
 
         open_file.close()
         del csv_file
-
-    # -------------------------------------------------------------------------
-    # table of top based on power spectral density of all stations
-
-    table_top_file = os.path.join(periodogram_dir, _("Top_power_spectral_density")+".csv")
-
-    open_file = open(table_top_file, 'w')
-    csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
-
-    # print header
-    header = [_("TOP"), _('CODE'), _('NAME'), _('PERIOD')+'**', _('FREQUENCY')+'**', _("POWER SPECTRAL DENSITY")]
-
-    csv_file.writerow(header)
-
-    for _code,_name in top_Pxx_den:
-        for top_count in range(5):
-            try:
-                _period, _freq, _Pxx_den = top_Pxx_den[(_code,_name)][top_count]
-                if _Pxx_den == 0:
-                    raise
-            except:
-                _period, _freq, _Pxx_den =  float('nan'), float('nan'), float('nan')
-            csv_file.writerow([top_count+1, _code,_name, output.number(_period), output.number(_freq), output.number(_Pxx_den)])
-
-        csv_file.writerow([])
-
-    # print footnote
-    csv_file.writerow([])
-    csv_file.writerow([get_text_of_frequency_data('D')])
-    csv_file.writerow([_("*Data in the period {0}-{1}").format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])])
-    if env.var_D.FREQUENCY_DATA in ['bimonthly', 'trimonthly']:
-        csv_file.writerow(["**"+_("overlapping")+" "+env.var_D.get_FREQUENCY_DATA()])
-    else:
-        csv_file.writerow(["**"+env.var_D.get_FREQUENCY_DATA()])
-
-    open_file.close()
-    del csv_file
 
     # return to original FREQUENCY_DATA of the two variables
     env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
