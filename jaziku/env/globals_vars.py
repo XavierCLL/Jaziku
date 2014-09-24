@@ -29,9 +29,9 @@ from math import isnan
 
 PROG_NAME = "jaziku"
 
-VERSION = "0.9.1"
+VERSION = "0.10.0"
 
-VERSION_DATE = "11/02/2014"
+VERSION_DATE = "--/10/2014"
 
 # absolute directory where is installed Jaziku in your system,
 # this variable is set in jaziku.py
@@ -221,11 +221,13 @@ def figure_plot_properties(color=colors['plt_default'], mec=colors['plt_default'
     plot_properties["mec"] = mec
     return plot_properties
 
-def figure_bar_properties(color=colors['plt_default'], eg_color='none', align='center'):
+def figure_bar_properties(color=colors['plt_default'], eg_color=None, align='center'):
     bar_properties = {}
     bar_properties["color"] = color
-    bar_properties["edgecolor"] = eg_color
-    bar_properties["align"] = align
+    if eg_color is not None:
+        bar_properties["edgecolor"] = eg_color
+    if align is not None:
+        bar_properties["align"] = align
     return bar_properties
 
 def set_others_properties(ax, ts=14.5):

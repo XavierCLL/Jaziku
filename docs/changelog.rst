@@ -55,6 +55,8 @@ fixes
 - Fixed the problem with result directory with space in its name
   for make maps due ncl restrictions, now use a temporal directory
   for make maps with ncl and after
+- Fixed the error plotting the climatology whiskers when the variable D
+  is not into the pre-defined variable in Jaziku
 
 **sisdhim2jaziku:**
 
