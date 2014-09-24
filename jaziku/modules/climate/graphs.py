@@ -352,7 +352,7 @@ def climate_graphs(station):
             thresholds_D = [None]*len(global_thresholds_D)
             for num_thres, thres in enumerate(thresholds_to_list(specific_contingency_table['thresholds_var_D'])):
                 try:
-                    thresholds_D[num_thres] = output.number(float(global_thresholds_D[num_thres]),3)
+                    thresholds_D[num_thres] = str(output.number(float(global_thresholds_D[num_thres]),3))
                 except:
                     thresholds_D[num_thres] = '{0}: {1}'.format(global_thresholds_D[num_thres],
                                                          output.number(thres,3))
@@ -364,11 +364,11 @@ def climate_graphs(station):
                 for cate_var_I in relevant_climate_categories_var_I:
                     num_thres = thres_list.index(cate_var_I)
                     if num_thres == 0:
-                        thresholds_D_txt.append('( < | ' + str(thresholds_D[num_thres]) + ' )')
+                        thresholds_D_txt.append('( < | ' + thresholds_D[num_thres] + ' )')
                     elif num_thres == 6:
-                        thresholds_D_txt.append('( ' + str(thresholds_D[num_thres-1]) + ' | > )')
+                        thresholds_D_txt.append('( ' + thresholds_D[num_thres-1] + ' | > )')
                     else:
-                        thresholds_D_txt.append('( ' + str(thresholds_D[num_thres-1])+ ' | ' + str(thresholds_D[num_thres]) + ' )')
+                        thresholds_D_txt.append('( ' + thresholds_D[num_thres-1]+ ' | ' + thresholds_D[num_thres] + ' )')
                 thresholds_D_txt = ' '.join(thresholds_D_txt)
             else:
                 thresholds_D_txt = '( ' + ' | '.join(thresholds_D) + ' )'

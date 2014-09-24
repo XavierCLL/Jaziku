@@ -1028,7 +1028,7 @@ def climatology(stations_list):
 
             if type_var not in types_var_D:
                 # default for generic type for var D
-                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', mec='#638786', mew=3, linewidth=2.5, elinewidth=1, **env.globals_vars.figure_bar_properties())
+                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', mec='#638786', mew=3, linewidth=2.5, elinewidth=1, **env.globals_vars.figure_bar_properties(align=None))
                 #bar(x, y_mean, align='center', color='#638786')
                 zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
             else:
@@ -1197,7 +1197,7 @@ def climatology(stations_list):
 
             if type_var not in types_var_D:
                 # default for generic type for var D
-                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
+                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1, **env.globals_vars.figure_bar_properties(align=None))
                 zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_below=-0.04, y_scale_above=-0.04)
                 #bar(x, y_mean, align='center', color='#638786')
             else:
