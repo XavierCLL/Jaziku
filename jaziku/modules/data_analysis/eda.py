@@ -2325,6 +2325,198 @@ def anomaly(stations_list):
     env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
 
 
+def make_periodogram(station, path_to_save, data, variable):
+
+    output.make_dirs(path_to_save)
+
+    # calculate the frequencies and power spectral density for var D
+    freq, Pxx_den = signal.periodogram(data, fs=1.0, window='bartlett', nfft=None, detrend='constant',
+                                    return_onesided=True, scaling='density', axis=-1)
+
+    # delete the zero frequency, convert to periods and added the zero value to last item (0 frequency)
+    freq = list(freq)
+
+    # check if all values (var D) are nulls inside the period to process
+    if len(freq) == 0:
+        return
+
+    # calculate period
+    _freq = copy.deepcopy(freq)
+    del _freq[0]
+    period = [1/float(x) for x in _freq]
+    period = [float('nan')] + period
+
+    # select and save the top 5 of maximum of pxx_den
+    Pxx_den_station = zip(period, freq, Pxx_den)
+    top_Pxx_den = {}
+    top_Pxx_den[(station.code, station.name)] = sorted(Pxx_den_station, key=lambda x: x[2], reverse=True)[0:6]
+
+    # -------------------------------------------------------------------------
+    # graphics result periodogram in period
+
+    if env.config_run.settings['graphics']:
+
+        if variable == 'D':
+            title = _("Periodogram - {0} {1}\n"
+                      "{2} ({3}-{4})").format(station.code, station.name, env.var_[variable].TYPE_SERIES,
+                                              station.process_period['start'], station.process_period['end'])
+        if variable == 'I':
+            title = _("Periodogram - {0} ({1}-{2})").format(env.var_[variable].TYPE_SERIES,
+                                              station.process_period['start'], station.process_period['end'])
+
+        fig = pyplot.figure(figsize=(10, 6))
+        ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
+
+        ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
+
+        ## X
+        if env.var_[variable].FREQUENCY_DATA in ['bimonthly', 'trimonthly']:
+            ax.set_xlabel(unicode(_('Period')+' ('+_('overlapping')+' '+env.var_[variable].get_FREQUENCY_DATA()+')', 'utf-8'), env.globals_vars.graphs_axis_properties())
+        else:
+            ax.set_xlabel(unicode(_('Period')+' ('+env.var_[variable].get_FREQUENCY_DATA()+')', 'utf-8'), env.globals_vars.graphs_axis_properties())
+        #xticks(correlation_values['lags'], x_labels)
+
+        ## Y
+        # get units os type of var D or I
+        ax.set_ylabel(unicode(_("Power spectral density"), 'utf-8'), env.globals_vars.graphs_axis_properties())
+        #ax.set_ylabel(unicode(_('Densidad de potencia espectral'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+
+        #pyplot.axhline(linewidth=0.8, color=env.globals_vars.colors['grey_S1'])
+
+        ax.grid(True, color='gray')
+        env.globals_vars.set_others_properties(ax)
+        ax.autoscale(tight=True)
+
+        #bar(period, Pxx_den, align='center', color='#638786', edgecolor='none') #, width=0.5, width=0.003
+        ax.plot(period, Pxx_den, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties(ms=7))
+        #ax.vlines(period, [0], Pxx_den, linewidth=2.5, color='#638786')
+
+        # # put label on the 3 best points
+        # for per, fre, pxx in top_Pxx_den[(station.code, station.name)][0:3]:
+        #     ax.annotate(round(per,1), xy=(per, pxx),  xycoords='data',
+        #     xytext=(-12, 0), textcoords='offset points', rotation='vertical',
+        #     horizontalalignment='center', verticalalignment='center',
+        #     color=env.globals_vars.colors['grey_S2'], size=10
+        #     )
+
+        #pyplot.ylim(-1, 1)
+        zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.06, y_scale_above=-0.08)
+        fig.tight_layout()
+
+        # save image
+        if variable == 'D':
+            name_of_files = _("Periodogram_(period)_{0}_{1}_{2}").format(station.code, station.name, env.var_[variable].TYPE_SERIES)
+        if variable == 'I':
+            name_of_files = _("Periodogram_(period)_{0}").format(env.var_[variable].TYPE_SERIES)
+        image = os.path.join(path_to_save, name_of_files + '.png')
+        pyplot.savefig(image, dpi=75)
+
+        # stamp logo
+        watermarking.logo(image)
+
+        pyplot.close('all')
+
+    # -------------------------------------------------------------------------
+    # graphics result periodogram in frequency
+
+    if env.config_run.settings['graphics']:
+
+        if variable == 'D':
+            title = _("Periodogram - {0} {1}\n"
+                      "{2} ({3}-{4})").format(station.code, station.name, env.var_[variable].TYPE_SERIES,
+                                              station.process_period['start'], station.process_period['end'])
+        if variable == 'I':
+            title = _("Periodogram - {0} ({1}-{2})").format(env.var_[variable].TYPE_SERIES,
+                                              station.process_period['start'], station.process_period['end'])
+
+        fig = pyplot.figure(figsize=(10, 6))
+        ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
+
+        ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
+
+        ## X
+        if env.var_[variable].FREQUENCY_DATA in ['bimonthly', 'trimonthly']:
+            ax.set_xlabel(unicode(_('Frequency')+' ('+_('overlapping')+' '+env.var_[variable].get_FREQUENCY_DATA()+')', 'utf-8'), env.globals_vars.graphs_axis_properties())
+        else:
+            ax.set_xlabel(unicode(_('Frequency')+' ('+env.var_[variable].get_FREQUENCY_DATA()+')', 'utf-8'), env.globals_vars.graphs_axis_properties())
+        #xticks(correlation_values['lags'], x_labels)
+
+        ## Y
+        # get units os type of var D or I
+        ax.set_ylabel(unicode(_("Power spectral density"), 'utf-8'), env.globals_vars.graphs_axis_properties())
+        #ax.set_ylabel(unicode(_('Densidad de potencia espectral'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+
+        #pyplot.axhline(linewidth=0.8, color=env.globals_vars.colors['grey_S1'])
+
+        ax.grid(True, color='gray')
+        env.globals_vars.set_others_properties(ax)
+        ax.autoscale(tight=True)
+
+        #bar(period, Pxx_den, align='center', color='#638786', edgecolor='none') #, width=0.5, width=0.003
+        ax.plot(freq, Pxx_den, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties(ms=7))
+        #ax.vlines(period, [0], Pxx_den, linewidth=2.5, color='#638786')
+
+        # # put label on the 3 best points
+        # for per, fre, pxx in top_Pxx_den[(station.code, station.name)][0:3]:
+        #     ax.annotate(round(fre,2), xy=(fre, pxx),  xycoords='data',
+        #     xytext=(-12, 0), textcoords='offset points', rotation='vertical',
+        #     horizontalalignment='center', verticalalignment='center',
+        #     color=env.globals_vars.colors['grey_S2'], size=10
+        #     )
+
+        #pyplot.ylim(-1, 1)
+        zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.06, y_scale_above=-0.08)
+        fig.tight_layout()
+
+        # save image
+        if variable == 'D':
+            name_of_files = _("Periodogram_(freq)_{0}_{1}_{2}").format(station.code, station.name, env.var_[variable].TYPE_SERIES)
+        if variable == 'I':
+            name_of_files = _("Periodogram_(freq)_{0}").format(env.var_[variable].TYPE_SERIES)
+        image = os.path.join(path_to_save, name_of_files + '.png')
+        pyplot.savefig(image, dpi=75)
+
+        # stamp logo
+        watermarking.logo(image)
+
+        pyplot.close('all')
+
+    # -------------------------------------------------------------------------
+    # table result
+
+    if variable == 'D':
+        name_of_files = _("Periodogram_{0}_{1}_{2}").format(station.code, station.name, env.var_[variable].TYPE_SERIES)
+    if variable == 'I':
+        name_of_files = _("Periodogram_{0}").format(env.var_[variable].TYPE_SERIES)
+    table_file = os.path.join(path_to_save, name_of_files + ".csv")
+
+    open_file = open(table_file, 'w')
+    csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
+
+    # print header
+    header = [_("POWER SPECTRAL DENSITY"), _("PERIOD")+'**', _('FREQUENCY')+'**']
+
+    csv_file.writerow(header)
+
+    # sorted by power spectral density
+    Pxx_den_sorted = sorted(zip(Pxx_den, period, freq), key=lambda x: x[0], reverse=True)
+
+    for _Pxx_den, _period, _freq in Pxx_den_sorted:
+        csv_file.writerow([output.number(_Pxx_den), output.number(_period), output.number(_freq)])
+
+    # print footnote
+    csv_file.writerow([])
+    csv_file.writerow([get_text_of_frequency_data('D')])
+    csv_file.writerow([_("*Data in the period {0}-{1}").format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])])
+    if env.var_[variable].FREQUENCY_DATA in ['bimonthly', 'trimonthly']:
+        csv_file.writerow(["**"+_("overlapping")+" "+env.var_[variable].get_FREQUENCY_DATA()])
+    else:
+        csv_file.writerow(["**"+env.var_[variable].get_FREQUENCY_DATA()])
+
+    open_file.close()
+    del csv_file
+
+
 def periodogram(stations_list):
     """Make graphs ant tables of periodogram between var D and var I
     """
@@ -2337,186 +2529,19 @@ def periodogram(stations_list):
     stations_list_adjusted = copy.deepcopy(stations_list)
     adjust_data_of_variables(stations_list_adjusted, messages=False)
 
-    top_Pxx_den = {}
-
+    # make periodograms for each station for Var D
     for station in stations_list_adjusted:
-
-        station_path = os.path.join(periodogram_dir, station.code +'-'+station.name)
-
-        output.make_dirs(station_path)
-
+        path_to_save = os.path.join(periodogram_dir, station.code +'-'+station.name)
         station.var_D.calculate_data_date_and_nulls_in_period()
+        data = list(station.var_D.data_filtered_in_process_period)
+        make_periodogram(station, path_to_save, data, 'D')
 
-        data_var_D = list(station.var_D.data_filtered_in_process_period)
-
-        # calculate the frequencies and power spectral density for var D
-        freq, Pxx_den = signal.periodogram(data_var_D, fs=1.0, window='bartlett', nfft=None, detrend='constant',
-                                        return_onesided=True, scaling='density', axis=-1)
-
-        # delete the zero frequency, convert to periods and added the zero value to last item (0 frequency)
-        freq = list(freq)
-
-        # check if all values (var D) are nulls inside the period to process
-        if len(freq) == 0:
-            continue
-
-        # calculate period
-        _freq = copy.deepcopy(freq)
-        del _freq[0]
-        period = [1/float(x) for x in _freq]
-        period = [float('nan')] + period
-
-        # select and save the top 5 of maximum of pxx_den
-        Pxx_den_station = zip(period, freq, Pxx_den)
-        top_Pxx_den[(station.code, station.name)] = sorted(Pxx_den_station, key=lambda x: x[2], reverse=True)[0:6]
-
-        # -------------------------------------------------------------------------
-        # graphics result periodogram in period
-
-        if env.config_run.settings['graphics']:
-
-            title = _("Periodogram - {0} {1}\n"
-                      "{2} ({3}-{4})").format(station.code, station.name, env.var_D.TYPE_SERIES,
-                                              station.process_period['start'], station.process_period['end'])
-
-            fig = pyplot.figure(figsize=(10, 6))
-            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
-
-            ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
-
-            ## X
-            if env.var_D.FREQUENCY_DATA in ['bimonthly', 'trimonthly']:
-                ax.set_xlabel(unicode(_('Period')+' ('+_('overlapping')+' '+env.var_D.get_FREQUENCY_DATA()+')', 'utf-8'), env.globals_vars.graphs_axis_properties())
-            else:
-                ax.set_xlabel(unicode(_('Period')+' ('+env.var_D.get_FREQUENCY_DATA()+')', 'utf-8'), env.globals_vars.graphs_axis_properties())
-            #xticks(correlation_values['lags'], x_labels)
-
-            ## Y
-            # get units os type of var D or I
-            ax.set_ylabel(unicode(_("Power spectral density"), 'utf-8'), env.globals_vars.graphs_axis_properties())
-            #ax.set_ylabel(unicode(_('Densidad de potencia espectral'), 'utf-8'), env.globals_vars.graphs_axis_properties())
-
-            #pyplot.axhline(linewidth=0.8, color=env.globals_vars.colors['grey_S1'])
-
-            ax.grid(True, color='gray')
-            env.globals_vars.set_others_properties(ax)
-            ax.autoscale(tight=True)
-
-            #bar(period, Pxx_den, align='center', color='#638786', edgecolor='none') #, width=0.5, width=0.003
-            ax.plot(period, Pxx_den, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties(ms=7))
-            #ax.vlines(period, [0], Pxx_den, linewidth=2.5, color='#638786')
-
-            # # put label on the 3 best points
-            # for per, fre, pxx in top_Pxx_den[(station.code, station.name)][0:3]:
-            #     ax.annotate(round(per,1), xy=(per, pxx),  xycoords='data',
-            #     xytext=(-12, 0), textcoords='offset points', rotation='vertical',
-            #     horizontalalignment='center', verticalalignment='center',
-            #     color=env.globals_vars.colors['grey_S2'], size=10
-            #     )
-
-            #pyplot.ylim(-1, 1)
-            zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.06, y_scale_above=-0.08)
-            fig.tight_layout()
-
-            # save image
-            name_of_files = _("Periodogram_(period)_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
-            image = os.path.join(station_path, name_of_files + '.png')
-            pyplot.savefig(image, dpi=75)
-
-            # stamp logo
-            watermarking.logo(image)
-
-            pyplot.close('all')
-
-        # -------------------------------------------------------------------------
-        # graphics result periodogram in frequency
-
-        if env.config_run.settings['graphics']:
-
-            title = _("Periodogram - {0} {1}\n"
-                      "{2} ({3}-{4})").format(station.code, station.name, env.var_D.TYPE_SERIES,
-                                              station.process_period['start'], station.process_period['end'])
-
-            fig = pyplot.figure(figsize=(10, 6))
-            ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
-
-            ax.set_title(unicode(title, 'utf-8'), env.globals_vars.graphs_title_properties())
-
-            ## X
-            if env.var_D.FREQUENCY_DATA in ['bimonthly', 'trimonthly']:
-                ax.set_xlabel(unicode(_('Frequency')+' ('+_('overlapping')+' '+env.var_D.get_FREQUENCY_DATA()+')', 'utf-8'), env.globals_vars.graphs_axis_properties())
-            else:
-                ax.set_xlabel(unicode(_('Frequency')+' ('+env.var_D.get_FREQUENCY_DATA()+')', 'utf-8'), env.globals_vars.graphs_axis_properties())
-            #xticks(correlation_values['lags'], x_labels)
-
-            ## Y
-            # get units os type of var D or I
-            ax.set_ylabel(unicode(_("Power spectral density"), 'utf-8'), env.globals_vars.graphs_axis_properties())
-            #ax.set_ylabel(unicode(_('Densidad de potencia espectral'), 'utf-8'), env.globals_vars.graphs_axis_properties())
-
-            #pyplot.axhline(linewidth=0.8, color=env.globals_vars.colors['grey_S1'])
-
-            ax.grid(True, color='gray')
-            env.globals_vars.set_others_properties(ax)
-            ax.autoscale(tight=True)
-
-            #bar(period, Pxx_den, align='center', color='#638786', edgecolor='none') #, width=0.5, width=0.003
-            ax.plot(freq, Pxx_den, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties(ms=7))
-            #ax.vlines(period, [0], Pxx_den, linewidth=2.5, color='#638786')
-
-            # # put label on the 3 best points
-            # for per, fre, pxx in top_Pxx_den[(station.code, station.name)][0:3]:
-            #     ax.annotate(round(fre,2), xy=(fre, pxx),  xycoords='data',
-            #     xytext=(-12, 0), textcoords='offset points', rotation='vertical',
-            #     horizontalalignment='center', verticalalignment='center',
-            #     color=env.globals_vars.colors['grey_S2'], size=10
-            #     )
-
-            #pyplot.ylim(-1, 1)
-            zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.06, y_scale_above=-0.08)
-            fig.tight_layout()
-
-            # save image
-            name_of_files = _("Periodogram_(freq)_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
-            image = os.path.join(station_path, name_of_files + '.png')
-            pyplot.savefig(image, dpi=75)
-
-            # stamp logo
-            watermarking.logo(image)
-
-            pyplot.close('all')
-
-        # -------------------------------------------------------------------------
-        # table result
-
-        name_of_files = _("Periodogram_{0}_{1}_{2}").format(station.code, station.name, env.var_D.TYPE_SERIES)
-        table_file = os.path.join(station_path, name_of_files + ".csv")
-
-        open_file = open(table_file, 'w')
-        csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
-
-        # print header
-        header = [_("POWER SPECTRAL DENSITY"), _("PERIOD")+'**', _('FREQUENCY')+'**']
-
-        csv_file.writerow(header)
-
-        # sorted by power spectral density
-        Pxx_den_sorted = sorted(zip(Pxx_den, period, freq), key=lambda x: x[0], reverse=True)
-
-        for _Pxx_den, _period, _freq in Pxx_den_sorted:
-            csv_file.writerow([output.number(_Pxx_den), output.number(_period), output.number(_freq)])
-
-        # print footnote
-        csv_file.writerow([])
-        csv_file.writerow([get_text_of_frequency_data('D')])
-        csv_file.writerow([_("*Data in the period {0}-{1}").format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])])
-        if env.var_D.FREQUENCY_DATA in ['bimonthly', 'trimonthly']:
-            csv_file.writerow(["**"+_("overlapping")+" "+env.var_D.get_FREQUENCY_DATA()])
-        else:
-            csv_file.writerow(["**"+env.var_D.get_FREQUENCY_DATA()])
-
-        open_file.close()
-        del csv_file
+    # make periodogram for var I
+    path_to_save = os.path.join(periodogram_dir)
+    station = stations_list_adjusted[0]
+    station.var_D.calculate_data_date_and_nulls_in_period()
+    data = list(station.var_D.data_filtered_in_process_period)
+    make_periodogram(station, path_to_save, data, 'I')
 
     # return to original FREQUENCY_DATA of the two variables
     env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
