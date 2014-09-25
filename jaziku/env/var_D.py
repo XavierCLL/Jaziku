@@ -280,6 +280,8 @@ def get_internal_limits():
     global TYPE_SERIES
 
     if TYPE_SERIES in INTERNAL_LIMITS:
+        if FREQUENCY_DATA in ['5days','10days','15days']:
+            return INTERNAL_LIMITS[TYPE_SERIES]['daily']
         return INTERNAL_LIMITS[TYPE_SERIES][FREQUENCY_DATA]
     else:
         return [None,None]
