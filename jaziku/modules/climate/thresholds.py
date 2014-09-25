@@ -429,7 +429,7 @@ def get_thresholds(station, variable, thresholds_input=None, process_analog_year
             return thresholds_with_percentiles(percentile_values)
 
         # if are defined as standard deviation - sdNN
-        if not False in [threshold.startswith(('sd','SD')) for threshold in thresholds_input]:
+        if not False in [threshold.startswith(('sd','SD','Sd')) for threshold in thresholds_input]:
             std_dev_values = [threshold[2::] for threshold in thresholds_input]
             return thresholds_with_std_deviation(std_dev_values)
 
