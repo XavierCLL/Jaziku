@@ -22,6 +22,8 @@ from math import sqrt
 from scipy import stats
 from scipy.stats import t
 
+from jaziku.utils import console
+
 
 def contingency_test(O, E = None, alpha = 0.10, side = 0):
     """
@@ -59,7 +61,8 @@ def contingency_test(O, E = None, alpha = 0.10, side = 0):
     for i in range(m):
         for j in range(n):
             try:
-                E[i][j] = (colsum[j] * rowsum[i]) / Tot
+                with console.redirectStdStreams():
+                    E[i][j] = (colsum[j] * rowsum[i]) / Tot
             except:
                 E[i][j] = float('nan')
 
@@ -68,7 +71,7 @@ def contingency_test(O, E = None, alpha = 0.10, side = 0):
     for i in range(m):
         for j in range(n):
             if E[i][j] != 0:
-                teststat += (E[i][j] - O[i][j]) ** 2 / E[i][j]
+                teststat += (E[i][j] - O[i][j]) ** 2 / float(E[i][j])
 
     # Determine critical value.
     if m == 1:  # single row?
@@ -117,7 +120,6 @@ def ttest(samplestat, se, df, alpha=0.05, side=0):
              +1 right-sided test
 
     """
-
     try:
         Ttest = samplestat / se
     except:
@@ -128,7 +130,7 @@ def ttest(samplestat, se, df, alpha=0.05, side=0):
         if Ttest > 0:
             pvalue = 1 - pvalue
         pvalue *= 2
-        tcrit1 = t.ppf(alpha / 2, df)
+        tcrit1 = t.ppf(alpha / 2.0, df)
         tcrit2 = t.ppf(1 - alpha / 2.0, df)
         return pvalue, Ttest, (tcrit1, tcrit2)
     elif side == -1:
@@ -146,14 +148,16 @@ def significance_correlation(rho, r, n, alpha=0.05, side=0):
     Example to use:
       Observed, Expected, teststat, critvalue, df, pvalue, alpha =  contingencytest(M, None, alpha, side)
     """
-    se = sqrt((1 - r * r) / (n - 2.0))
-    return ttest(r - rho, se, n - 2, alpha, side)
+    with console.redirectStdStreams():
+        se = sqrt((1 - r * r) / (n - 2.0))
+        return ttest(r - rho, se, n - 2, alpha, side)
 
-#example
-#rho = 0
-#r = 0.951
-#alpha = 0.05
-#side = 1
-#n = 14
-#print "Berenson's example, p. 546"
-#print corrtest(rho, r, n, alpha, side)
+# example
+# rho = 0
+# r = 0.951
+# alpha = 0.05
+# side = 1
+# n = 14
+# print "Berenson's example, p. 546"
+# print significance_correlation(rho, r, n, alpha, side)
+# exit()
