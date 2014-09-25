@@ -28,9 +28,9 @@ news
   before calculation, for example, correlation, outliers and
   others. Adjust too the label inside graphics
 - Added the periodogram part of spectral analysis in EDA, these are:
-  graphs of periodogram by stations, the table of the value of
-  periodogram and the matrix table of the top of the power spectral
-  density for all stations.
+  graphs of periodogram by stations and for var I for period and
+  frequency, the table of the values of periodogram sorted from
+  highest to lowest of power spectral density.
 
 fixes
 +++++
