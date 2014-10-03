@@ -70,7 +70,7 @@ def make_ncl_probabilistic_map(grid, base_path_file, globals_vars):
         map_properties.lat_size = grid.lat_size
         map_properties.lon_size = grid.lon_size
         map_properties.shape_mask = grid.shape_mask
-        map_properties.subtitle = grid.subtitle
+        map_properties.text_bottom_left = grid.text_bottom_left
 
         # set other properties of ncl script for this map
         map_properties.particular_properties_probabilistic_map = grid.particular_properties_probabilistic_map
@@ -101,6 +101,10 @@ def make_ncl_probabilistic_map(grid, base_path_file, globals_vars):
             map_properties.color_bar_title_on = "True"
             map_properties.colormap = "Blue-Green-Red"
             map_properties.units = '''"%"'''
+
+        ### set subtitle
+        grid.subtitle = "\"{0}-{1}\"".format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])
+        map_properties.subtitle = grid.subtitle
 
         ### get ncl file in raw
         if grid.need_particular_ncl_script_probabilistic_map and os.path.isfile(os.path.join(grid.shape_path, "ncl_script_probabilistic_map.py")):
@@ -134,12 +138,12 @@ def make_ncl_deterministic_map(grid, base_path_file, globals_vars):
         map_properties.shape = os.path.join(grid.shape_path, grid.grid_name + ".shp")
         map_properties.base_path_file = base_path_file
         map_properties.name = grid.grid_name
-        map_properties.subtitle = grid.subtitle
         map_properties.colormap = "Colors-7-Categories"
         map_properties.minlat = grid.minlat
         map_properties.maxlat = grid.maxlat
         map_properties.minlon = grid.minlon
         map_properties.maxlon = grid.maxlon
+        map_properties.text_bottom_left = grid.text_bottom_left
 
         # thresholds
         thresholds_var_D = env.config_run.settings['thresholds_var_D']
@@ -163,6 +167,10 @@ def make_ncl_deterministic_map(grid, base_path_file, globals_vars):
         if grid.if_running["forecast"]:
             map_properties.title = multi_text_centered(_("Affectation forecast of the {typeVarD} variable~C~under variations of {typeVarI} to lag {lag} in {date}")\
                 .format(typeVarD=env.var_D.TYPE_SERIES, typeVarI=env.var_I.TYPE_SERIES, lag=grid.lag, date=map_properties.date))
+
+        ### set subtitle
+        grid.subtitle = "\"{0}-{1}\"".format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])
+        map_properties.subtitle = grid.subtitle
 
         ### get ncl file in raw
         if grid.need_particular_ncl_script_deterministic_map and os.path.isfile(os.path.join(grid.shape_path, "ncl_script_deterministic_map.py")):

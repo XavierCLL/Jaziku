@@ -61,7 +61,7 @@ class Grid(object):
         self.minlon = None
         self.maxlon = None
 
-    def  grid_properties(self):
+    def grid_properties(self):
         """Set values and default values for grid variables
         """
 
@@ -123,7 +123,6 @@ class Grid(object):
         env.globals_vars.input_settings["semivariogram_type"].append(self.semivariogram_type)
         self.num_semivariogram_type = self.all_semivariogram_type[self.semivariogram_type]
 
-
         # set the radiuses for interpolation
         if self.radiuses == "auto":
             radius = max([self.lat_size, self.lon_size]) * 3
@@ -157,11 +156,11 @@ class Grid(object):
         if env.config_run.settings['shape_boundary']:
             self.shape_mask = True
 
-        ## set subtitle on maps
+        ## set analog year text on maps
         if env.config_run.settings['analog_year']:
-            self.subtitle = _("\"Analog year: {0}\"").format(env.config_run.settings['analog_year'])
+            self.text_bottom_left = _("\"With analog year: {0}\"").format(env.config_run.settings['analog_year'])
         else:
-            self.subtitle = "\"\""
+            self.text_bottom_left = "\"\""
 
     def  print_grid_properties(self):
         console.msg(_("   Mesh size: {0}x{1}").format(self.lat_size, self.lon_size), color='cyan')

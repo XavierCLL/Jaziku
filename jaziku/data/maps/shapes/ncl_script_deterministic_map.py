@@ -49,6 +49,7 @@ def code(map_properties):
         'analysis_interval': env.config_run.get_ANALYSIS_INTERVAL_i18n(),
         'name': '''"{0}"'''.format(map_properties.name),
         'subtitle': map_properties.subtitle,
+        'text_bottom_left': map_properties.text_bottom_left,
         'units': _("Deterministic")
     }
 
@@ -450,7 +451,21 @@ begin
       end if
     end if
   end do
+  ;*****************************************
 
+  ;*****************************************
+  ; plotting text BottomLeft
+  txres                    = True
+  txres@lgAutoManage       = True
+  txres@txFontHeightF = 0.0085
+  txt_bl = gsn_create_text(wks, {text_bottom_left}, txres)
+
+  amres_bl = True
+  amres_bl@amParallelPosF   = -0.49   ; This is the right edge of the plot.
+  amres_bl@amOrthogonalPosF = 0.495    ; This is the bottom edge of the plot.
+  amres_bl@amJust           = "BottomLeft"
+
+  annoid1 = gsn_add_annotation(map, txt_bl, amres_bl)
   ;*****************************************
 
   ;## add subtitles

@@ -31,6 +31,9 @@ news
   graphs of periodogram by stations and for var I for period and
   frequency, the table of the values of periodogram sorted from
   highest to lowest of power spectral density.
+- Added the period to process in all maps in tob-center of the
+  graphics, and put the analog year label in bottom left location
+  into the maps only if this is enable.
 
 fixes
 +++++
