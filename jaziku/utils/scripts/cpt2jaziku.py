@@ -25,25 +25,28 @@
 # transform_data_stations_input_example.csv) to individual data per
 # station ready for process with Jaziku program, besides, create
 # basic structure of station list file with station name and link to file
-# dep var(before processed) for run with Jaziku, but this needs to be complete.
+# var_D (before processed) for run with Jaziku, but this needs to be complete.
 #
 # Use:
 #
-# Open terminal where saved this script and file to process(i.e FILE_DATA.csv)
+# Open terminal where saved the file to process(i.e FILE_DATA.csv)
 # and run:
 #
-#     python transform_data_stations.py FILE_DATA.csv
+#     cpt2jaziku FILE_DATA.csv
 #
-
+# This script is installed together with Jaziku, and this needs some
+# Jaziku libraries.
+#
 
 import csv
 import os
-from subprocess import call
-import argparse
-from clint.textui import colored
 import errno
-from jaziku.utils import console, output
-from jaziku.utils.scripts import runfile_skeleton
+import argparse
+from subprocess import call
+from clint.textui import colored
+
+from jaziku.utils import console
+from jaziku.utils.scripts import runfile_skeleton, normalize_format
 
 
 def main():
@@ -128,28 +131,32 @@ def main():
     stations_list_name = "stations_list.csv"
     runfile = prepare_runfile()
 
-    #get values from file input
-    input_file = csv.reader(open(arg.input_file, 'rb'), delimiter='\t')
-    values = []
-    for idx, line in enumerate(input_file):
-        if idx == 0:
-            stations_list = line[2::]
-        elif idx == 1:
-            if line[0] == 'LAT':
-                latitude = line[2::]
-            else:
-                latitude = None
-                values.append(line)
-        elif idx == 2:
-            if line[0] == 'LON':
-                longitude = line[2::]
-            else:
-                longitude = None
-                values.append(line)
-        else:
-            values.append(line)
+    # get values from file input
+    with open(arg.input_file, 'rb') as csvfile:
+        dialect = csv.Sniffer().sniff(csvfile.read(4096))
+        csvfile.seek(0)
+        reader = csv.reader(csvfile, dialect)
 
-    #get number of years todo not depend of start year in 1
+        values = []
+        for idx, line in enumerate(reader):
+            if idx == 0:
+                stations_list = line[2::]
+            elif idx == 1:
+                if line[0] == 'LAT':
+                    latitude = line[2::]
+                else:
+                    latitude = None
+                    values.append(line)
+            elif idx == 2:
+                if line[0] == 'LON':
+                    longitude = line[2::]
+                else:
+                    longitude = None
+                    values.append(line)
+            else:
+                values.append(line)
+
+    # get number of years (counts based on numbers of januaries)
     years = 0
     for line in values:
         if line[1] == '1':
@@ -167,15 +174,22 @@ def main():
             for idx_station, station_name in enumerate(stations_list):
 
                 file_name = os.path.join(dir_output_name, dir_var_D_stations, station_name)
-                stations_files.append(csv.writer(open(file_name + ".txt", 'w'), delimiter=' '))
+                stations_files.append(open(file_name + ".txt", 'w'))
                 lat = latitude[idx_station] if latitude is not None else 'lat'
                 lon = longitude[idx_station] if longitude is not None else 'lon'
-                #write station list
+                # write station list
                 runfile.writerow(['code', station_name, lat, lon, 'alt', os.path.join(dir_var_D_stations, station_name + ".txt")])
 
         for month in range(12):
             for number, station_file in enumerate(stations_files):
-                station_file.writerow(["{0}-{1}".format(values[month * years + year][0], values[month * years + year][1]), values[month * years + year][number + 2]])
+                csv_file = csv.writer(station_file, delimiter=' ')
+                csv_file.writerow(["{0}-{1}".format(values[month * years + year][0], values[month * years + year][1]), values[month * years + year][number + 2]])
+                station_file.flush()
+
+    # applying normalize format for each station
+    for station_file in stations_files:
+        normalize_format.main(station_file.name, make_backup=False)
+        station_file.close()
 
     print "\nSaving result in dir: " + colored.green(dir_output_name)
     print "\nSaving stations list file: " + colored.green(stations_list_name)

@@ -35,7 +35,8 @@ import re
 from shutil import copyfile
 from datetime import date
 from dateutil.relativedelta import relativedelta
-from jaziku.utils import output 
+
+from jaziku.utils import output
 
 
 def external_run():
@@ -65,12 +66,13 @@ def get_char_month(month, type_of_month):
         trim_char = {1:'jfm', 2: 'fma', 3: 'mam',4: 'amj', 5: 'mjj', 6: 'jja', 7: 'jas', 8: 'aso', 9: 'son', 10: 'ond', 11: 'ndj', 12: 'djf'}
         return trim_char[month]
 
-def main(time_series_file):
+def main(time_series_file, make_backup=True):
 
     output.console.msg('processing file: ' + time_series_file, color='cyan')
 
-    output.console.msg('  making backup in ' + time_series_file+'~')
-    copyfile(time_series_file, time_series_file+'~')
+    if make_backup:
+        output.console.msg('  making backup in ' + time_series_file+'~')
+        copyfile(time_series_file, time_series_file+'~')
 
     input_file = open(time_series_file, 'rU')
     lines = input_file.readlines()
