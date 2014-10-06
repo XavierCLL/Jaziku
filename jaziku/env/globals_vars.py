@@ -180,7 +180,7 @@ maps_files_forecast = {}  # [lag][month][var_I_labels]
 # graphics properties
 
 colors = {
-    'plt_default': '#638786',
+    'plt_default': '#617C8D',
 
     'grey_W2': '#F0F0F0',  # Weak
     'grey_W1': '#D8D8D8',

@@ -965,7 +965,7 @@ def climatology(stations_list):
 
             if type_var not in types_var_D:
                 # default for generic type for var D
-                #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
+                #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=env.globals_vars.colors['plt_default'], mec=env.globals_vars.colors['plt_default'], mew=3, linewidth=2.5, elinewidth=1)
                 ax.plot(x, y_mean, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties())
                 zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
             else:
@@ -1028,8 +1028,8 @@ def climatology(stations_list):
 
             if type_var not in types_var_D:
                 # default for generic type for var D
-                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', mec='#638786', mew=3, linewidth=2.5, elinewidth=1, **env.globals_vars.figure_bar_properties(align=None))
-                #bar(x, y_mean, align='center', color='#638786')
+                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', mec=env.globals_vars.colors['plt_default'], mew=3, linewidth=2.5, elinewidth=1, **env.globals_vars.figure_bar_properties(align=None))
+                #bar(x, y_mean, align='center', color=env.globals_vars.colors['plt_default'])
                 zoom_graph(ax=ax, x_scale_below=-0.04,x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
             else:
                 if types_var_D[type_var]['graph'] == 'bar':
@@ -1136,7 +1136,7 @@ def climatology(stations_list):
 
             if type_var not in types_var_D:
                 # default for generic type for var D
-                #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1)
+                #ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=env.globals_vars.colors['plt_default'], mec=env.globals_vars.colors['plt_default'], mew=3, linewidth=2.5, elinewidth=1)
                 ax.plot(x, y_mean, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties())
                 zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_below=-0.04, y_scale_above=-0.04)
             else:
@@ -1197,9 +1197,9 @@ def climatology(stations_list):
 
             if type_var not in types_var_D:
                 # default for generic type for var D
-                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color='#638786', mec='#638786', mew=3, linewidth=2.5, elinewidth=1, **env.globals_vars.figure_bar_properties(align=None))
+                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=env.globals_vars.colors['plt_default'], mec=env.globals_vars.colors['plt_default'], mew=3, linewidth=2.5, elinewidth=1, **env.globals_vars.figure_bar_properties(align=None))
                 zoom_graph(ax=ax, x_scale_below=x_scale_value,x_scale_above=x_scale_value, y_scale_below=-0.04, y_scale_above=-0.04)
-                #bar(x, y_mean, align='center', color='#638786')
+                #bar(x, y_mean, align='center', color=env.globals_vars.colors['plt_default'])
             else:
                 if types_var_D[type_var]['graph'] == 'bar':
                     bar(x, y_mean, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
@@ -1298,7 +1298,7 @@ def scatter_plots_of_series(stations_list):
 
             ax = pyplot.subplot2grid((len(stations_list),len(stations_list)),(iter_v,iter_h))
 
-            ax.scatter(x,y, marker='o', color="#638786", edgecolors="#3C5250")
+            ax.scatter(x,y, marker='o', color=env.globals_vars.colors['plt_default'], edgecolors=env.globals_vars.colors['grey_S3'])
 
             if iter_h == 0:
                 ax.set_ylabel(station_v.code, env.globals_vars.graphs_axis_properties())
@@ -1937,7 +1937,7 @@ def correlation(stations_list, type_correlation):
 
             #bar(correlation_values['lags'], correlation_values['pearson'], align='center', width=0.2, color='k')
             ax.plot(correlation_values['lags'], correlation_values['pearson'], 'ro', linewidth=2.5, **env.globals_vars.figure_plot_properties())
-            ax.vlines(correlation_values['lags'], [0], correlation_values['pearson'], linewidth=2.5, color='#638786')
+            ax.vlines(correlation_values['lags'], [0], correlation_values['pearson'], linewidth=2.5, color=env.globals_vars.colors['plt_default'])
 
             pyplot.ylim(-1, 1)
 
@@ -2388,9 +2388,9 @@ def make_periodogram(station, path_to_save, data, variable):
         env.globals_vars.set_others_properties(ax)
         ax.autoscale(tight=True)
 
-        #bar(period, Pxx_den, align='center', color='#638786', edgecolor='none') #, width=0.5, width=0.003
+        #bar(period, Pxx_den, align='center', color=env.globals_vars.colors['plt_default'], edgecolor='none') #, width=0.5, width=0.003
         ax.plot(period, Pxx_den, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties(ms=7))
-        #ax.vlines(period, [0], Pxx_den, linewidth=2.5, color='#638786')
+        #ax.vlines(period, [0], Pxx_den, linewidth=2.5, color=env.globals_vars.colors['plt_default'])
 
         # # put label on the 3 best points
         # for per, fre, pxx in top_Pxx_den[(station.code, station.name)][0:3]:
@@ -2453,9 +2453,9 @@ def make_periodogram(station, path_to_save, data, variable):
         env.globals_vars.set_others_properties(ax)
         ax.autoscale(tight=True)
 
-        #bar(period, Pxx_den, align='center', color='#638786', edgecolor='none') #, width=0.5, width=0.003
+        #bar(period, Pxx_den, align='center', color=env.globals_vars.colors['plt_default'], edgecolor='none') #, width=0.5, width=0.003
         ax.plot(freq, Pxx_den, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties(ms=7))
-        #ax.vlines(period, [0], Pxx_den, linewidth=2.5, color='#638786')
+        #ax.vlines(period, [0], Pxx_den, linewidth=2.5, color=env.globals_vars.colors['plt_default'])
 
         # # put label on the 3 best points
         # for per, fre, pxx in top_Pxx_den[(station.code, station.name)][0:3]:
