@@ -2173,13 +2173,14 @@ def homogeneity(stations_list):
             fig = pyplot.figure(figsize=(7, 5))
             ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
-            titulo = _("{0} for {1}-{2}\nperiod {3}-{4}")\
-                .format(_('Mass Curve'), station.code, station.name, env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end'])
+            titulo = _("{0}\n{1}-{2}")\
+                .format(_('Mass Curve'), station.code, station.name)
             ax.set_title(unicode(titulo, 'utf-8'), env.globals_vars.graphs_title_properties())
 
             ## X
             ax.set_xlabel(unicode(_("Time"), 'utf-8'), env.globals_vars.graphs_axis_properties())
-            #xticks(correlation_values['lags'], x_labels)
+            #xticks(station.var_D.date_in_process_period)
+            #xticks(rotation='vertical')
 
             ## Y
             # get units os type of var D or I
