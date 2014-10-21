@@ -2519,29 +2519,44 @@ def make_periodogram(station, path_to_save, data, variable):
 
 
 def periodogram(stations_list):
-    """Make graphs ant tables of periodogram between var D and var I
+    """Make graphs and tables of periodogram for var D and var I
     """
 
     # save original state of data for var D and I
     original_freq_data_var_D = env.var_D.FREQUENCY_DATA
     original_freq_data_var_I = env.var_I.FREQUENCY_DATA
 
-    # Adjust the same frequency data for the two time series
     stations_list_adjusted = copy.deepcopy(stations_list)
+
+    ## make periodogram for var D (all stations)
+    # Filling the variables for all stations before convert
+    for station in stations_list_adjusted:
+        station.var_D.rollback_to_origin()
+        station.var_D.filling()
+    # return to original FREQUENCY_DATA of the two variables
+    env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
+    # Adjust the same frequency data for the two time series
     adjust_data_of_variables(stations_list_adjusted, messages=False)
 
     # make periodograms for each station for Var D
     for station in stations_list_adjusted:
-        path_to_save = os.path.join(periodogram_dir, station.code +'-'+station.name)
         station.var_D.calculate_data_date_and_nulls_in_period()
+        path_to_save = os.path.join(periodogram_dir, station.code +'-'+station.name)
         data = list(station.var_D.data_filtered_in_process_period)
         make_periodogram(station, path_to_save, data, 'D')
 
-    # make periodogram for var I
+    ## make periodogram for var I
     path_to_save = os.path.join(periodogram_dir)
     station = stations_list_adjusted[0]
-    station.var_D.calculate_data_date_and_nulls_in_period()
-    data = list(station.var_D.data_filtered_in_process_period)
+    # Filling the variables for all stations before convert
+    station.var_I.rollback_to_origin()
+    station.var_I.filling()
+    # return to original FREQUENCY_DATA of the two variables
+    env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
+    # Adjust the same frequency data for the two time series
+    adjust_data_of_variables([station], messages=False)
+    station.var_I.calculate_data_date_and_nulls_in_period()
+    data = list(station.var_I.data_filtered_in_process_period)
     make_periodogram(station, path_to_save, data, 'I')
 
     # return to original FREQUENCY_DATA of the two variables

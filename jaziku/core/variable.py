@@ -17,6 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
+from calendar import monthrange
 
 import os
 from datetime import date
@@ -407,6 +408,67 @@ class Variable(object):
                 self.monthly2trimonthly()
                 self.was_converted = True
                 return
+
+    def filling(self, mode='MeanMultiyear'):
+        """Filling the variable of the time series using different methods from the
+        original frequency (daily, N_days, N_monthly) of the series
+
+        Methods of filling:
+            MeanMultiyear: Use the mean multiyear inside the period
+        """
+
+        self.calculate_data_date_and_nulls_in_period()
+
+        ### MeanMultiyear ###
+
+        if mode == 'MeanMultiyear':
+
+            if env.var_[self.type].is_n_daily():
+                # calculate the mean N multi-year
+                multiyear_values = {}
+                for month in range(1, 13):
+                    #range_analysis_interval = get_range_analysis_interval()
+                    #for idx_day, day in enumerate(range_analysis_interval):
+                    if env.var_[self.type].FREQUENCY_DATA in ['daily']:
+                        n_days_range = range(1, monthrange(2000, month)[1]+1)
+                    if env.var_[self.type].FREQUENCY_DATA in ['5days', '10days', '15days']:
+                        n_days_range = get_range_analysis_interval()
+
+                    for n_day in n_days_range:
+                        multiyear = []
+                        for idx, value in enumerate(self.data_in_process_period):
+                            if self.date_in_process_period[idx].month == month and self.date_in_process_period[idx].day == n_day:
+                                multiyear.append(value)
+                        multiyear_values[(month, n_day)] = array.mean(multiyear)
+                if env.var_[self.type].FREQUENCY_DATA in ['daily']:
+                    # fix for leap year, put the average of the two mean-multiyear neighbors values (+-1 day) with its value if exists
+                    multiyear_values[(2, 29)] = array.mean([multiyear_values[(2, 28)], multiyear_values[(2, 29)], multiyear_values[(3, 1)]])
+
+                # filling the nan values with the respective multiyear value
+                for idx, value in enumerate(self.data_in_process_period):
+                    if env.globals_vars.is_valid_null(value):
+                        idx_date_period = self.date_in_process_period[idx]
+                        idx_date = self.date.index(idx_date_period)
+                        self.data[idx_date] = multiyear_values[(idx_date_period.month, idx_date_period.day)]
+
+            if env.var_[self.type].is_n_monthly():
+                # calculate the mean N multi-year
+                multiyear_values = {}
+                for month in range(1, 13):
+                    multiyear = []
+                    for idx, value in enumerate(self.data_in_process_period):
+                        if self.date_in_process_period[idx].month == month:
+                            multiyear.append(value)
+                    multiyear_values[month] = array.mean(multiyear)
+
+                # filling the nan values with the respective multiyear value
+                for idx, value in enumerate(self.data_in_process_period):
+                    if env.globals_vars.is_valid_null(value):
+                        idx_date_period = self.date_in_process_period[idx]
+                        idx_date = self.date.index(idx_date_period)
+                        self.data[idx_date] = multiyear_values[idx_date_period.month]
+
+            self.calculate_data_date_and_nulls_in_period()
 
     def calculate_data_date_and_nulls_in_period(self, start_year=False, end_year=False):
         """Calculate the data without the null values inside
