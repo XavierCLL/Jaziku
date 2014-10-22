@@ -309,7 +309,7 @@ def get_specific_contingency_table(station, lag, n_month, start_day=None):
         contingency_table_in_percentage \
             = [(column/sum_per_column_CT[i]*100).tolist()[0] for i,column in enumerate(matrix(contingency_table))]
 
-    # fix table when the value is nan (replace with zero) it is due while it calculate the contingency
+    # fix table when the value is nan (replace with zero) it is due to while it calculate the contingency
     # table and there are not values with independent variable for one category (thresholds problem)
     # this cause division by zero and nan values
     contingency_table_in_percentage = [[i if not isnan(i) else 0 for i in c] for c in contingency_table_in_percentage]
@@ -335,7 +335,7 @@ def get_specific_contingency_table(station, lag, n_month, start_day=None):
             contingency_table_in_percentage_3x7 \
                 = [(column/sum_per_column_CT_3x7[i]*100).tolist()[0] for i,column in enumerate(matrix(contingency_table_3x7))]
 
-        # fix table when the value is nan (replace with zero) it is due while it calculate the contingency
+        # fix table when the value is nan (replace with zero) it is due to while it calculate the contingency
         # table and there are not values with independent variable for one category (thresholds problem)
         # this cause division by zero and nan values
         contingency_table_in_percentage_3x7 = [[i if not isnan(i) else 0 for i in c] for c in contingency_table_in_percentage_3x7]
