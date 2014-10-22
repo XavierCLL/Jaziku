@@ -60,6 +60,10 @@ fixes
   for make maps with ncl and after
 - Fixed the error plotting the climatology whiskers when the variable D
   is not into the pre-defined variable in Jaziku
+- fix table when the value is nan (replace with zero) it is due while it
+  calculate the contingency table and there are not values with independent
+  variable for one category (thresholds problem) this cause division by zero
+  and nan values
 
 **sisdhim2jaziku:**
 

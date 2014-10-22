@@ -19,6 +19,7 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 from numpy import matrix
+from math import isnan
 
 from jaziku import env
 from jaziku.core.analysis_interval import get_range_analysis_interval
@@ -308,6 +309,11 @@ def get_specific_contingency_table(station, lag, n_month, start_day=None):
         contingency_table_in_percentage \
             = [(column/sum_per_column_CT[i]*100).tolist()[0] for i,column in enumerate(matrix(contingency_table))]
 
+    # fix table when the value is nan (replace with zero) it is due while it calculate the contingency
+    # table and there are not values with independent variable for one category (thresholds problem)
+    # this cause division by zero and nan values
+    contingency_table_in_percentage = [[i if not isnan(i) else 0 for i in c] for c in contingency_table_in_percentage]
+
     # special case when the forecast type is 3x7, clear columns of the var I with zeros of
     # the contingency table in absolute values for not selected categories defined in runfile
     # for forecast type 3x7
@@ -328,6 +334,11 @@ def get_specific_contingency_table(station, lag, n_month, start_day=None):
         with console.redirectStdStreams():
             contingency_table_in_percentage_3x7 \
                 = [(column/sum_per_column_CT_3x7[i]*100).tolist()[0] for i,column in enumerate(matrix(contingency_table_3x7))]
+
+        # fix table when the value is nan (replace with zero) it is due while it calculate the contingency
+        # table and there are not values with independent variable for one category (thresholds problem)
+        # this cause division by zero and nan values
+        contingency_table_in_percentage_3x7 = [[i if not isnan(i) else 0 for i in c] for c in contingency_table_in_percentage_3x7]
 
     # -------------------------------------------------------------------------
     # threshold_problem is global variable for detect problem with
