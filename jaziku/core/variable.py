@@ -17,10 +17,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
-from calendar import monthrange
 
 import os
 from datetime import date
+from calendar import monthrange
 from dateutil.relativedelta import relativedelta
 from numpy import median, average, var, std
 from scipy.stats.stats import variation, skew, kurtosis

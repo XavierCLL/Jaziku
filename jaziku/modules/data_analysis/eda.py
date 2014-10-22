@@ -2330,27 +2330,39 @@ def make_periodogram(station, path_to_save, data, variable):
 
     output.make_dirs(path_to_save)
 
+    ## Bartlett M
     # calculate the frequencies and power spectral density for var D
-    freq, Pxx_den = signal.periodogram(data, fs=1.0, window='bartlett', nfft=None, detrend='constant',
+    freq_1, Pxx_den_1 = signal.periodogram(data, fs=1.0, window='bartlett', nfft=None, detrend='constant',
                                     return_onesided=True, scaling='density', axis=-1)
 
-    # delete the zero frequency, convert to periods and added the zero value to last item (0 frequency)
-    freq = list(freq)
-
+    freq_1 = list(freq_1)
     # check if all values (var D) are nulls inside the period to process
-    if len(freq) == 0:
+    if len(freq_1) == 0:
         return
-
     # calculate period
-    _freq = copy.deepcopy(freq)
-    del _freq[0]
-    period = [1/float(x) for x in _freq]
-    period = [float('nan')] + period
+    _freq_1 = copy.deepcopy(freq_1)
+    del _freq_1[0]
+    period_1 = [1/float(x) for x in _freq_1]
+    period_1 = [float('nan')] + period_1
+
+    ## Bartlett M/5
+    # for smooth frequency diagram with m=m/5
+    freq_2, Pxx_den_2 = signal.welch(data, fs=1.0, window='bartlett', nperseg=round(len(data)/5.0), nfft=len(data), detrend='constant',
+                                    return_onesided=True, scaling='density', axis=-1)
+    freq_2 = list(freq_2)
+    # check if all values (var D) are nulls inside the period to process
+    if len(freq_2) == 0:
+        return
+    # calculate period
+    _freq_2 = copy.deepcopy(freq_2)
+    del _freq_2[0]
+    period_2 = [1/float(x) for x in _freq_2]
+    period_2 = [float('nan')] + period_2
 
     # select and save the top 5 of maximum of pxx_den
-    Pxx_den_station = zip(period, freq, Pxx_den)
-    top_Pxx_den = {}
-    top_Pxx_den[(station.code, station.name)] = sorted(Pxx_den_station, key=lambda x: x[2], reverse=True)[0:6]
+    #Pxx_den_station = zip(period_1, freq_1, Pxx_den_1)
+    #top_Pxx_den = {}
+    #top_Pxx_den[(station.code, station.name)] = sorted(Pxx_den_station, key=lambda x: x[2], reverse=True)[0:6]
 
     # -------------------------------------------------------------------------
     # graphics result periodogram in period
@@ -2389,7 +2401,10 @@ def make_periodogram(station, path_to_save, data, variable):
         ax.autoscale(tight=True)
 
         #bar(period, Pxx_den, align='center', color=env.globals_vars.colors['plt_default'], edgecolor='none') #, width=0.5, width=0.003
-        ax.plot(period, Pxx_den, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties(ms=7))
+        plt_1, = ax.plot(period_1, Pxx_den_1, '-o', linewidth=2,
+                **env.globals_vars.figure_plot_properties(mec=env.globals_vars.colors['grey_S4'], ms=7))
+        plt_2, = ax.plot(period_2, Pxx_den_2, '-o', linewidth=2,
+                **env.globals_vars.figure_plot_properties(color='red',mec=env.globals_vars.colors['grey_S2'],ms=7))
         #ax.vlines(period, [0], Pxx_den, linewidth=2.5, color=env.globals_vars.colors['plt_default'])
 
         # # put label on the 3 best points
@@ -2399,6 +2414,16 @@ def make_periodogram(station, path_to_save, data, variable):
         #     horizontalalignment='center', verticalalignment='center',
         #     color=env.globals_vars.colors['grey_S2'], size=10
         #     )
+
+        ### legend
+        l = ax.legend( (plt_1, plt_2), (_('Bartlett (M)'), _('Bartlett (M/5)')), loc='upper right',
+                   shadow=False, fancybox=False, fontsize=12, markerscale=0.8, framealpha=0.6, numpoints=1, handlelength=1.2)
+
+        # set color for legend text
+        for text in l.get_texts():
+            text.set_color(env.globals_vars.colors['grey_S3'])
+        # set color for legend border
+        l.get_frame().set_edgecolor(env.globals_vars.colors['grey_S3'])
 
         #pyplot.ylim(-1, 1)
         zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.06, y_scale_above=-0.08)
@@ -2454,7 +2479,10 @@ def make_periodogram(station, path_to_save, data, variable):
         ax.autoscale(tight=True)
 
         #bar(period, Pxx_den, align='center', color=env.globals_vars.colors['plt_default'], edgecolor='none') #, width=0.5, width=0.003
-        ax.plot(freq, Pxx_den, '-o', linewidth=2.5, **env.globals_vars.figure_plot_properties(ms=7))
+        ax.plot(freq_1, Pxx_den_1, '-o', linewidth=2,
+                **env.globals_vars.figure_plot_properties(mec=env.globals_vars.colors['grey_S4'], ms=7))
+        ax.plot(freq_2, Pxx_den_2, '-o', linewidth=2,
+                **env.globals_vars.figure_plot_properties(color='red',mec=env.globals_vars.colors['grey_S2'],ms=7))
         #ax.vlines(period, [0], Pxx_den, linewidth=2.5, color=env.globals_vars.colors['plt_default'])
 
         # # put label on the 3 best points
@@ -2464,6 +2492,16 @@ def make_periodogram(station, path_to_save, data, variable):
         #     horizontalalignment='center', verticalalignment='center',
         #     color=env.globals_vars.colors['grey_S2'], size=10
         #     )
+
+        ### legend
+        l = ax.legend( (plt_1, plt_2), (_('Bartlett (M)'), _('Bartlett (M/5)')), loc='upper right',
+                   shadow=False, fancybox=False, fontsize=12, markerscale=0.8, framealpha=0.6, numpoints=1, handlelength=1.2)
+
+        # set color for legend text
+        for text in l.get_texts():
+            text.set_color(env.globals_vars.colors['grey_S3'])
+        # set color for legend border
+        l.get_frame().set_edgecolor(env.globals_vars.colors['grey_S3'])
 
         #pyplot.ylim(-1, 1)
         zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.06, y_scale_above=-0.08)
@@ -2495,15 +2533,16 @@ def make_periodogram(station, path_to_save, data, variable):
     csv_file = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
     # print header
-    header = [_("POWER SPECTRAL DENSITY"), _("PERIOD")+'**', _('FREQUENCY')+'**']
-
-    csv_file.writerow(header)
+    csv_file.writerow([_("BARTLETT (M)"), '','',_("BARTLETT (M/5)")])
+    csv_file.writerow([_("POWER SPECTRAL DENSITY"), _("PERIOD")+'**', _('FREQUENCY')+'**']*2)
 
     # sorted by power spectral density
-    Pxx_den_sorted = sorted(zip(Pxx_den, period, freq), key=lambda x: x[0], reverse=True)
+    Pxx_den_sorted_1 = sorted(zip(Pxx_den_1, period_1, freq_1), key=lambda x: x[0], reverse=True)
+    Pxx_den_sorted_2 = sorted(zip(Pxx_den_2, period_2, freq_2), key=lambda x: x[0], reverse=True)
 
-    for _Pxx_den, _period, _freq in Pxx_den_sorted:
-        csv_file.writerow([output.number(_Pxx_den), output.number(_period), output.number(_freq)])
+    for (_Pxx_den_1, _period_1, _freq_1), (_Pxx_den_2, _period_2, _freq_2) in zip(Pxx_den_sorted_1, Pxx_den_sorted_2):
+        csv_file.writerow([output.number(_Pxx_den_1), output.number(_period_1), output.number(_freq_1),
+                           output.number(_Pxx_den_2), output.number(_period_2), output.number(_freq_2)])
 
     # print footnote
     csv_file.writerow([])
