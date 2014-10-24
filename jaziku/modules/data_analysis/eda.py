@@ -578,7 +578,7 @@ def analysis_the_best_periods_to_process(stations_list):
 
 
 # types graphs based on type of var D
-types_var_D = {'PPT':{'graph':'bar','color':'#578ECE'}, 'NDPPT':{'graph':'bar','color':'#578ECE'},
+types_var_D = {'PPT':{'graph':'bar','color':'#0078B8'}, 'NDPPT':{'graph':'bar','color':'#0078B8'},
                'TMIN':{'graph':'o-','color':'#C08A1C'}, 'TMAX':{'graph':'o-','color':'#C08A1C'},
                'TEMP':{'graph':'o-','color':'#C08A1C'}, 'PATM':{'graph':'*-','color':'#287F2A'},
                'RH':{'graph':'s-','color':'#833680'}, 'RUNOFF':{'graph':'s-','color':'#833680'}}
@@ -668,7 +668,8 @@ def graphs_inspection_of_series(stations_list):
                         ax.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties())
                     else:
                         if types_var_D[type_var]['graph'] == 'bar':
-                            bar(x, y, width=2+num_years/5.0, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
+                            bar(x, y, width=2+num_years/5.0,
+                                **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color'], eg_color=types_var_D[type_var]['color']))
                             y_scale_below=0
                         else:
                             #ax.plot(x, y, TYPES_VAR_D[type_var]['graph'], color=TYPES_VAR_D[type_var]['color'])
@@ -679,7 +680,8 @@ def graphs_inspection_of_series(stations_list):
                         ax.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties())
                     else:
                         if types_var_D[type_var]['graph'] == 'bar':
-                            bar(x, y, width=22+num_years/5.0, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
+                            bar(x, y, width=22+num_years/5.0,
+                                **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color'], eg_color=types_var_D[type_var]['color']))
                             y_scale_below=0
                         else:
                             ax.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties(color=types_var_D[type_var]['color']))

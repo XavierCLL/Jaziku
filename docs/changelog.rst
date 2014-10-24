@@ -69,12 +69,12 @@ fixes
 
 - Fix crash when the any number (i.e. latitude) have leading
   zeros, first delete the leading zero before process the number
-  for output format.
+  for output format
 
 **cpt2jaziku:**
 
-- Fixes some errors with different format input and different delimiters,
-- Now run the normalize format for each stations after processed.
+- Fixes some errors with different format input and different delimiters
+- Now run the normalize format for each stations after processed
 
 
 0.9.0 (**2013-12-20**)
