@@ -70,6 +70,8 @@ fixes
 - Fix crash when the any number (i.e. latitude) have leading
   zeros, first delete the leading zero before process the number
   for output format
+- Fixed the problem with some special character when detecting
+  the next block for continue the same station
 
 **cpt2jaziku:**
 
