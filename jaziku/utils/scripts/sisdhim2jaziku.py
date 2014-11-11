@@ -479,7 +479,7 @@ def main():
 
             # read until start next station (continue or new station)
             if not in_station_properties and not in_station_data:
-                if line.strip().startswith("I D E A M"):
+                if "I D E A M" in line:
                     # start read new block
                     in_station_properties = True
                     line_in_station_properties = 0
