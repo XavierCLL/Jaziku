@@ -32,15 +32,24 @@ FREQUENCY_DATA = None
 #
 was_converted = False
 
-def get_FREQUENCY_DATA():
+def get_FREQUENCY_DATA(adverb=True):
     global FREQUENCY_DATA
-    _freq_data ={'daily': _('daily'),
-                 '5days': _('5 days'),
-                 '10days': _('10 days'),
-                 '15days': _('15 days'),
-                 'monthly': _('monthly'),
-                 'bimonthly': _('bimonthly'),
-                 'trimonthly': _('trimonthly')}
+    if adverb:
+        _freq_data ={'daily': _('daily'),
+                     '5days': _('5 days'),
+                     '10days': _('10 days'),
+                     '15days': _('15 days'),
+                     'monthly': _('monthly'),
+                     'bimonthly': _('bimonthly'),
+                     'trimonthly': _('trimonthly')}
+    else:
+        _freq_data ={'daily': _('days'),
+                     '5days': _('5 days'),
+                     '10days': _('10 days'),
+                     '15days': _('15 days'),
+                     'monthly': _('months'),
+                     'bimonthly': _('2 months'),
+                     'trimonthly': _('3 months')}
     return _freq_data[FREQUENCY_DATA]
 
 # Valid input types for dependent variable, known for jaziku

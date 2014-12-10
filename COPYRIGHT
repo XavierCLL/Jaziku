@@ -90,5 +90,6 @@ CLINT
 Module for developing commandline applications for Python
 License: ISC, url: http://pypi.python.org/pypi/clint/
 
-
-
+WAVELETS
+Continuous wavelet transforms in Python, 2013 Aaron O'Leary
+License: MIT, url: https://github.com/aaren/wavelets
