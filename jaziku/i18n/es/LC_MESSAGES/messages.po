@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-10 16:25-0500\n"
+"POT-Creation-Date: 2014-12-10 11:41-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,57 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: data/maps/shapes/Colombia/Colombia/ncl_script_probabilistic_map.py:33
-#: data/maps/shapes/Colombia/Colombia/ncl_script_deterministic_map.py:37
-#: data/maps/shapes/Colombia/ncl.py:42
-#: data/maps/shapes/ncl_script_probabilistic_map.py:42
-#: data/maps/shapes/ncl_script_deterministic_map.py:37
-#: modules/data_analysis/eda.py:411 modules/data_analysis/eda.py:1592
-msgid "Stations"
-msgstr ""
-
-#: data/maps/shapes/Colombia/Colombia/ncl_script_probabilistic_map.py:36
-#: data/maps/shapes/Colombia/ncl.py:45
-#: data/maps/shapes/ncl_script_probabilistic_map.py:45
-msgid "Below"
-msgstr ""
-
-#: data/maps/shapes/Colombia/Colombia/ncl_script_probabilistic_map.py:37
-#: data/maps/shapes/Colombia/ncl.py:46
-#: data/maps/shapes/ncl_script_probabilistic_map.py:46
-#: modules/forecast/graphs.py:71 modules/forecast/graphs.py:123
-msgid "Normal"
-msgstr ""
-
-#: data/maps/shapes/Colombia/Colombia/ncl_script_probabilistic_map.py:38
-#: data/maps/shapes/Colombia/ncl.py:47
-#: data/maps/shapes/ncl_script_probabilistic_map.py:47
-msgid "Above"
-msgstr ""
-
-#: data/maps/shapes/Colombia/Colombia/ncl_script_deterministic_map.py:52
-#: data/maps/shapes/ncl_script_deterministic_map.py:52
-msgid "Deterministic"
-msgstr ""
-
-#: i18n/i18n.py:99
-#, python-brace-format
-msgid "'{0}' language not available."
-msgstr ""
-
-#: i18n/i18n.py:110
-msgid " (system language)"
-msgstr ""
-
-#: i18n/i18n.py:119
-#, python-brace-format
-msgid " (language '{0}' has not was translated yet)"
-msgstr ""
-
-#: i18n/i18n.py:124
-msgid " (other languages were not detected)"
-msgstr ""
 
 #: core/input/arg.py:32
 msgid ""
@@ -118,11 +67,11 @@ msgid ""
 "{1}"
 msgstr ""
 
-#: core/input/runfile.py:213 core/settings/get.py:127 core/settings/get.py:195
-#: core/settings/get.py:206 core/settings/get.py:235 core/settings/get.py:276
-#: core/settings/get.py:305 core/settings/get.py:346
-#: core/settings/check_and_set.py:109 core/settings/check_and_set.py:147
-#: core/settings/check_and_set.py:241
+#: core/input/runfile.py:213 core/settings/check_and_set.py:109
+#: core/settings/check_and_set.py:147 core/settings/check_and_set.py:237
+#: core/settings/get.py:124 core/settings/get.py:192 core/settings/get.py:203
+#: core/settings/get.py:232 core/settings/get.py:273 core/settings/get.py:302
+#: core/settings/get.py:343
 #, python-brace-format
 msgid "The '{0}' no was defined."
 msgstr ""
@@ -248,183 +197,6 @@ msgid ""
 "exit"
 msgstr ""
 
-#: core/settings/show.py:41
-msgid ""
-"\n"
-"CONFIGURATION RUN:"
-msgstr ""
-
-#: core/settings/show.py:119
-msgid ""
-"\n"
-"MAPS:"
-msgstr ""
-
-#: core/settings/show.py:157
-#, python-brace-format
-msgid ""
-"\n"
-" > You are using internal files for independent\n"
-"   variable defined as {0} which has data from\n"
-"   {1} to {2} and the source of data was\n"
-"   obtained in {3}.\n"
-"   url: {4}"
-msgstr ""
-
-#: core/settings/show.py:170
-msgid ""
-"\n"
-" > WARNING: you are using one or more limits as\n"
-"   'none' value, this means that series values\n"
-"   will not be checked if they are valid in\n"
-"   its limits coherent. This option is not\n"
-"   recommended, use it with precaution"
-msgstr ""
-
-#: core/settings/get.py:31 core/settings/get.py:32 core/settings/get.py:33
-#: core/settings/get.py:34 core/settings/get.py:35 core/settings/get.py:38
-#: core/settings/get.py:39 core/settings/get.py:40 core/settings/get.py:41
-#: core/settings/get.py:44 core/settings/get.py:425 core/settings/get.py:426
-msgid "disabled"
-msgstr ""
-
-#: core/settings/get.py:42 core/settings/get.py:52 core/settings/get.py:60
-#: core/settings/get.py:68 core/settings/get.py:181 core/settings/get.py:187
-#: core/settings/get.py:384 core/settings/get.py:393 core/settings/get.py:412
-msgid "enabled"
-msgstr ""
-
-#: core/settings/get.py:54
-msgid ""
-"'data_analysis' variable in runfile is wrong,\n"
-"this must be 'enable' or 'disable'"
-msgstr ""
-
-#: core/settings/get.py:62
-msgid ""
-"'climate_process' variable in runfile is wrong,\n"
-"this must be 'enable' or 'disable'"
-msgstr ""
-
-#: core/settings/get.py:70
-msgid ""
-"'forecast_process' variable in runfile is wrong,\n"
-"this must be 'enable' or 'disable'"
-msgstr ""
-
-#: core/settings/get.py:78
-#, python-brace-format
-msgid ""
-"The 'analysis_interval' defined in runfile {0} is invalid,\n"
-"must be one of these: {1}"
-msgstr ""
-
-#: core/settings/get.py:94 env/config_run.py:268 env/config_run.py:269
-#: env/config_run.py:270
-msgid "5days"
-msgstr ""
-
-#: core/settings/get.py:94
-msgid "10days"
-msgstr ""
-
-#: core/settings/get.py:94
-msgid "15days"
-msgstr ""
-
-#: core/settings/get.py:94 env/config_run.py:271 env/var_I.py:37
-#: env/var_D.py:38 modules/data_analysis/eda.py:865
-msgid "monthly"
-msgstr ""
-
-#: core/settings/get.py:94 env/config_run.py:272 env/var_I.py:38
-#: env/var_D.py:39 modules/data_analysis/eda.py:873
-msgid "bimonthly"
-msgstr ""
-
-#: core/settings/get.py:94 env/config_run.py:273 env/var_I.py:39
-#: env/var_D.py:40 modules/data_analysis/eda.py:876
-msgid "trimonthly"
-msgstr ""
-
-#: core/settings/get.py:120
-msgid ""
-"The period must be: start_year and end_year (in different column)\n"
-"or 'maximum' for take the process period maximum possible by station."
-msgstr ""
-
-#: core/settings/get.py:158
-msgid ""
-"The lags may be: 0, 1 and/or 2 (in different column), 'all' or 'default'"
-msgstr ""
-
-#: core/settings/get.py:172
-msgid "max "
-msgstr ""
-
-#: core/settings/get.py:172
-msgid " of nulls"
-msgstr ""
-
-#: core/settings/get.py:178
-msgid ""
-"'risk_analysis' variable in runfile is wrong,\n"
-"this must be 'enable' or 'disable'"
-msgstr ""
-
-#: core/settings/get.py:243 core/settings/get.py:257 core/settings/get.py:268
-#: core/settings/get.py:279 core/settings/get.py:313 core/settings/get.py:327
-#: core/settings/get.py:338 core/settings/get.py:349
-msgid "default"
-msgstr ""
-
-#: core/settings/get.py:246
-#, python-brace-format
-msgid ""
-"Problem with particular range validation for dependent\n"
-"variable: '{0}' this must be a valid number: <below>;<above>,\n"
-"'none' or 'default'."
-msgstr ""
-
-#: core/settings/get.py:316
-#, python-brace-format
-msgid ""
-"Problem with particular range validation for independent\n"
-"variable: '{0}' this must be a valid number: <below>;<above>,\n"
-"'none' or 'default'."
-msgstr ""
-
-#: core/settings/get.py:381
-msgid ""
-"the maps options are: 'climate', 'forecast', 'correlation' (in different "
-"column), or 'all'."
-msgstr ""
-
-#: core/settings/get.py:398
-msgid ""
-"The marks_stations is wrong, the options are:\n"
-"disable, enable or default."
-msgstr ""
-
-#: core/settings/get.py:407
-msgid ""
-"The overlapping solution is wrong, the options are:\n"
-"default, average, maximum, minimum or neither"
-msgstr ""
-
-#: core/settings/get.py:416
-msgid ""
-"The shape_boundary is wrong, the options are:\n"
-"disable, enable or default."
-msgstr ""
-
-#: core/settings/get.py:423
-msgid ""
-"\n"
-"Climate process is disable, then forecast and maps\n"
-"process will be disabled."
-msgstr ""
-
 #: core/settings/check_and_set.py:42
 msgid ""
 "The 'class_category_analysis' not is valid,\n"
@@ -484,16 +256,7 @@ msgid ""
 "default, accumulate or mean"
 msgstr ""
 
-#: core/settings/check_and_set.py:173
-msgid "accumulate"
-msgstr ""
-
-#: core/settings/check_and_set.py:173 modules/data_analysis/eda.py:1039
-#: modules/data_analysis/eda.py:1201
-msgid "mean"
-msgstr ""
-
-#: core/settings/check_and_set.py:188 core/settings/check_and_set.py:209
+#: core/settings/check_and_set.py:184 core/settings/check_and_set.py:205
 #, python-brace-format
 msgid ""
 "{0} not is valid internal type for dependent variable if you\n"
@@ -502,21 +265,21 @@ msgid ""
 "as real values (or 'none') the LIMIT VAR D BELOW/ABOVE"
 msgstr ""
 
-#: core/settings/check_and_set.py:200 core/settings/check_and_set.py:221
+#: core/settings/check_and_set.py:196 core/settings/check_and_set.py:217
 #, python-brace-format
 msgid ""
 "Problem with particular range validation for dependent\n"
 "variable: '{0}' this must be a valid number, 'none' or 'default'."
 msgstr ""
 
-#: core/settings/check_and_set.py:233
+#: core/settings/check_and_set.py:229
 #, python-brace-format
 msgid ""
 "The thresholds for {0} categories must have {1} values,\n"
 "or use 'default' for thresholds by default defined for this variable."
 msgstr ""
 
-#: core/settings/check_and_set.py:257
+#: core/settings/check_and_set.py:253
 #, python-brace-format
 msgid ""
 "For {0} the 'mode_calculation_series_I' set as '{1}', but\n"
@@ -524,13 +287,13 @@ msgid ""
 "For {0} series the options are: {2}"
 msgstr ""
 
-#: core/settings/check_and_set.py:264
+#: core/settings/check_and_set.py:260
 msgid ""
 "The mode_calculation_series_I is wrong, the options are:\n"
 "default, accumulate or mean"
 msgstr ""
 
-#: core/settings/check_and_set.py:281 core/settings/check_and_set.py:301
+#: core/settings/check_and_set.py:274 core/settings/check_and_set.py:294
 #, python-brace-format
 msgid ""
 "{0} not is valid internal type for independent variable if you\n"
@@ -539,14 +302,14 @@ msgid ""
 "as real values (or 'none') the LIMIT VAR I BELOW/ABOVE"
 msgstr ""
 
-#: core/settings/check_and_set.py:293 core/settings/check_and_set.py:313
+#: core/settings/check_and_set.py:286 core/settings/check_and_set.py:306
 #, python-brace-format
 msgid ""
 "Problem with particular range validation for independent\n"
 "variable: '{0}' this must be a valid number, 'none' or 'default'."
 msgstr ""
 
-#: core/settings/check_and_set.py:328
+#: core/settings/check_and_set.py:321
 #, python-brace-format
 msgid ""
 "The 'path_to_file_var_I' is defined as 'internal' but the\n"
@@ -555,7 +318,7 @@ msgid ""
 "a valid path to file var I."
 msgstr ""
 
-#: core/settings/check_and_set.py:335
+#: core/settings/check_and_set.py:328
 #, python-brace-format
 msgid ""
 "Can't open file '{0}' for var I,\n"
@@ -564,21 +327,21 @@ msgid ""
 "of jaziku you need set 'PATH TO FILE VAR I' as 'internal'"
 msgstr ""
 
-#: core/settings/check_and_set.py:347
+#: core/settings/check_and_set.py:340
 #, python-brace-format
 msgid ""
 "The thresholds for {0} categories must have {1} thresholds,\n"
 "or 'default' for use thresholds by default defined for this variable."
 msgstr ""
 
-#: core/settings/check_and_set.py:395
+#: core/settings/check_and_set.py:388
 #, python-brace-format
 msgid ""
 "The 'forecast_var_I_lag_{0}' should be a {1} valid\n"
 "values (int or float)."
 msgstr ""
 
-#: core/settings/check_and_set.py:401
+#: core/settings/check_and_set.py:394
 #, python-brace-format
 msgid ""
 "The sum for the values of 'forecast_var_I_lag_{0}'\n"
@@ -586,41 +349,41 @@ msgid ""
 "equal to 100."
 msgstr ""
 
-#: core/settings/check_and_set.py:435
+#: core/settings/check_and_set.py:428
 #, python-brace-format
 msgid ""
 "The date for forecast '{0}' is invalid, must be a valid integer of month (e."
 "g. 2 for february)."
 msgstr ""
 
-#: core/settings/check_and_set.py:440
+#: core/settings/check_and_set.py:433
 msgid "(e.g. 'as' for august and september)"
 msgstr ""
 
-#: core/settings/check_and_set.py:442
+#: core/settings/check_and_set.py:435
 msgid "(e.g. 'aso' for august, september and october)."
 msgstr ""
 
-#: core/settings/check_and_set.py:444
+#: core/settings/check_and_set.py:437
 #, python-brace-format
 msgid ""
 "The date for forecast '{0}' is invalid, must be a\n"
 "valid characters for {1} {2}."
 msgstr ""
 
-#: core/settings/check_and_set.py:451
+#: core/settings/check_and_set.py:444
 msgid "(e.g. '10;16' for period 16 to 20 of october)"
 msgstr ""
 
-#: core/settings/check_and_set.py:453
+#: core/settings/check_and_set.py:446
 msgid "(e.g. '10;11' for period 11 to 20 of october)"
 msgstr ""
 
-#: core/settings/check_and_set.py:455
+#: core/settings/check_and_set.py:448
 msgid "(e.g. '10;1' for period 1 to 15 of october)"
 msgstr ""
 
-#: core/settings/check_and_set.py:457
+#: core/settings/check_and_set.py:450
 #, python-brace-format
 msgid ""
 "The date for forecast '{0}' is invalid, must be a\n"
@@ -629,20 +392,20 @@ msgid ""
 "interval analysis {2}."
 msgstr ""
 
-#: core/settings/check_and_set.py:467
+#: core/settings/check_and_set.py:460
 #, python-brace-format
 msgid ""
 "The month for forecast '{0}' is invalid, must be a valid month number (1-12)"
 msgstr ""
 
-#: core/settings/check_and_set.py:476
+#: core/settings/check_and_set.py:469
 #, python-brace-format
 msgid ""
 "The day for forecast process '{0}' is invalid, \n"
 "must be a valid day number (1-31)"
 msgstr ""
 
-#: core/settings/check_and_set.py:484
+#: core/settings/check_and_set.py:477
 #, python-brace-format
 msgid ""
 "Start day (month/day) for forecast process '{0}'\n"
@@ -651,63 +414,63 @@ msgid ""
 "{1} are: {2}"
 msgstr ""
 
-#: core/settings/check_and_set.py:564
+#: core/settings/check_and_set.py:557
 msgid ""
 "The latitude values are wrong, these must be\n"
 "decimal degrees, and two values: minlat and maxlat\n"
 "in different column."
 msgstr ""
 
-#: core/settings/check_and_set.py:570
+#: core/settings/check_and_set.py:563
 msgid ""
 "Can't defined 'latitude' as 'internal' if 'shape_path'\n"
 "was not defined as 'internal'.\n"
 msgstr ""
 
-#: core/settings/check_and_set.py:576
+#: core/settings/check_and_set.py:569
 msgid ""
 "The latitude values are wrong, the minlat must be\n"
 "less to maxlat and their values must be between\n"
 "-90 to 90."
 msgstr ""
 
-#: core/settings/check_and_set.py:589
+#: core/settings/check_and_set.py:582
 msgid ""
 "The longitude values are wrong, these must be\n"
 "decimal degrees, and two values: minlon and maxlon\n"
 "in different column."
 msgstr ""
 
-#: core/settings/check_and_set.py:595
+#: core/settings/check_and_set.py:588
 msgid ""
 "Can't defined 'longitude' as 'internal' if 'shape_path'\n"
 "was not defined as 'internal'.\n"
 msgstr ""
 
-#: core/settings/check_and_set.py:601
+#: core/settings/check_and_set.py:594
 msgid ""
 "The longitude values are wrong, the minlon must be\n"
 "less to maxlon and their values must be between\n"
 "-180 to 180."
 msgstr ""
 
-#: core/settings/check_and_set.py:613
+#: core/settings/check_and_set.py:606
 msgid ""
 "\n"
 "Checking the stations list:"
 msgstr ""
 
-#: core/settings/check_and_set.py:624
+#: core/settings/check_and_set.py:617
 msgid ""
 "The combination of the code and name of the station can't repeat,\n"
 "many result will be replaced with the same code-name of station."
 msgstr ""
 
-#: core/settings/check_and_set.py:635 core/settings/check_and_set.py:642
+#: core/settings/check_and_set.py:628 core/settings/check_and_set.py:635
 msgid "WARNING:"
 msgstr ""
 
-#: core/settings/check_and_set.py:636
+#: core/settings/check_and_set.py:629
 #, python-brace-format
 msgid ""
 "   The code '{0}' of the station '{1}' is repeat\n"
@@ -716,7 +479,7 @@ msgid ""
 "   you can continue."
 msgstr ""
 
-#: core/settings/check_and_set.py:643
+#: core/settings/check_and_set.py:636
 #, python-brace-format
 msgid ""
 "   The name '{0}' of the station with code '{1}' is repeat\n"
@@ -725,37 +488,204 @@ msgid ""
 "   you can continue."
 msgstr ""
 
-#: core/settings/check_and_set.py:660
+#: core/settings/check_and_set.py:653
 msgid ""
 "The latitude values are wrong, must be between\n"
 "-90 to 90."
 msgstr ""
 
-#: core/settings/check_and_set.py:665
+#: core/settings/check_and_set.py:658
 msgid ""
 "The longitude values are wrong, must be between\n"
 "-180 to 180."
 msgstr ""
 
-#: core/settings/check_and_set.py:670
+#: core/settings/check_and_set.py:663
 msgid ""
 "The altitude values are wrong, must be between\n"
 "-1000 to 10000."
 msgstr ""
 
-#: core/settings/check_and_set.py:674 core/stations.py:50 core/stations.py:78
-#: core/stations.py:85 core/stations.py:95 core/stations.py:111
-#: core/stations.py:118 core/stations.py:126 core/analysis_interval.py:146
-#: modules/climate/climate.py:116 modules/maps/maps.py:80
-#: modules/maps/maps.py:407 modules/maps/maps.py:512 modules/maps/maps.py:573
-#: modules/forecast/forecast.py:174 modules/data_analysis/eda.py:161
-#: modules/data_analysis/eda.py:167 modules/data_analysis/eda.py:198
-#: modules/data_analysis/eda.py:206 modules/data_analysis/eda.py:225
+#: core/settings/check_and_set.py:667 core/stations.py:50 core/stations.py:78
+#: core/stations.py:83 core/stations.py:95 core/stations.py:106
+#: core/stations.py:122 core/stations.py:129 core/stations.py:138
+#: core/analysis_interval.py:149 modules/climate/climate.py:116
+#: modules/data_analysis/eda.py:81 modules/data_analysis/eda.py:92
+#: modules/data_analysis/eda.py:199 modules/data_analysis/eda.py:205
 #: modules/data_analysis/eda.py:236 modules/data_analysis/eda.py:244
-#: modules/data_analysis/eda.py:265 modules/data_analysis/eda.py:281
-#: modules/data_analysis/eda.py:290 modules/data_analysis/eda.py:305
-#: modules/data_analysis/eda.py:318
+#: modules/data_analysis/eda.py:263 modules/data_analysis/eda.py:274
+#: modules/data_analysis/eda.py:282 modules/data_analysis/eda.py:303
+#: modules/data_analysis/eda.py:319 modules/data_analysis/eda.py:328
+#: modules/data_analysis/eda.py:341 modules/data_analysis/eda.py:363
+#: modules/data_analysis/eda.py:375 modules/data_analysis/eda.py:391
+#: modules/forecast/forecast.py:174 modules/maps/maps.py:82
+#: modules/maps/maps.py:414 modules/maps/maps.py:524 modules/maps/maps.py:588
 msgid "done"
+msgstr ""
+
+#: core/settings/get.py:31 core/settings/get.py:32 core/settings/get.py:33
+#: core/settings/get.py:34 core/settings/get.py:35 core/settings/get.py:38
+#: core/settings/get.py:39 core/settings/get.py:40 core/settings/get.py:41
+#: core/settings/get.py:44 core/settings/get.py:422 core/settings/get.py:423
+msgid "disabled"
+msgstr ""
+
+#: core/settings/get.py:42 core/settings/get.py:52 core/settings/get.py:60
+#: core/settings/get.py:68 core/settings/get.py:178 core/settings/get.py:184
+#: core/settings/get.py:381 core/settings/get.py:390 core/settings/get.py:409
+msgid "enabled"
+msgstr ""
+
+#: core/settings/get.py:54
+msgid ""
+"'data_analysis' variable in runfile is wrong,\n"
+"this must be 'enable' or 'disable'"
+msgstr ""
+
+#: core/settings/get.py:62
+msgid ""
+"'climate_process' variable in runfile is wrong,\n"
+"this must be 'enable' or 'disable'"
+msgstr ""
+
+#: core/settings/get.py:70
+msgid ""
+"'forecast_process' variable in runfile is wrong,\n"
+"this must be 'enable' or 'disable'"
+msgstr ""
+
+#: core/settings/get.py:78
+#, python-brace-format
+msgid ""
+"The 'analysis_interval' defined in runfile {0} is invalid,\n"
+"must be one of these: {1}"
+msgstr ""
+
+#: core/settings/get.py:117
+msgid ""
+"The period must be: start_year and end_year (in different column)\n"
+"or 'maximum' for take the process period maximum possible by station."
+msgstr ""
+
+#: core/settings/get.py:155
+msgid ""
+"The lags may be: 0, 1 and/or 2 (in different column), 'all' or 'default'"
+msgstr ""
+
+#: core/settings/get.py:169
+msgid "max "
+msgstr ""
+
+#: core/settings/get.py:169
+msgid " of nulls"
+msgstr ""
+
+#: core/settings/get.py:175
+msgid ""
+"'risk_analysis' variable in runfile is wrong,\n"
+"this must be 'enable' or 'disable'"
+msgstr ""
+
+#: core/settings/get.py:240 core/settings/get.py:254 core/settings/get.py:265
+#: core/settings/get.py:276 core/settings/get.py:310 core/settings/get.py:324
+#: core/settings/get.py:335 core/settings/get.py:346
+msgid "default"
+msgstr ""
+
+#: core/settings/get.py:243
+#, python-brace-format
+msgid ""
+"Problem with particular range validation for dependent\n"
+"variable: '{0}' this must be a valid number: <below>;<above>,\n"
+"'none' or 'default'."
+msgstr ""
+
+#: core/settings/get.py:313
+#, python-brace-format
+msgid ""
+"Problem with particular range validation for independent\n"
+"variable: '{0}' this must be a valid number: <below>;<above>,\n"
+"'none' or 'default'."
+msgstr ""
+
+#: core/settings/get.py:378
+msgid ""
+"the maps options are: 'climate', 'forecast', 'correlation' (in different "
+"column), or 'all'."
+msgstr ""
+
+#: core/settings/get.py:395
+msgid ""
+"The marks_stations is wrong, the options are:\n"
+"disable, enable or default."
+msgstr ""
+
+#: core/settings/get.py:404
+msgid ""
+"The overlapping solution is wrong, the options are:\n"
+"default, average, maximum, minimum or neither"
+msgstr ""
+
+#: core/settings/get.py:413
+msgid ""
+"The shape_boundary is wrong, the options are:\n"
+"disable, enable or default."
+msgstr ""
+
+#: core/settings/get.py:420
+msgid ""
+"\n"
+"Climate process is disable, then forecast and maps\n"
+"process will be disabled."
+msgstr ""
+
+#: core/settings/show.py:41
+msgid ""
+"\n"
+"CONFIGURATION RUN:"
+msgstr ""
+
+#: core/settings/show.py:119
+msgid ""
+"\n"
+"MAPS:"
+msgstr ""
+
+#: core/settings/show.py:157
+#, python-brace-format
+msgid ""
+"\n"
+" > You are using internal files for independent\n"
+"   variable defined as {0} which has data from\n"
+"   {1} to {2} and the source of data was\n"
+"   obtained in {3}.\n"
+"   url: {4}"
+msgstr ""
+
+#: core/settings/show.py:170
+msgid ""
+"\n"
+" > WARNING: you are using one or more limits as\n"
+"   'none' value, this means that series values\n"
+"   will not be checked if they are valid in\n"
+"   its limits coherent. This option is not\n"
+"   recommended, use it with precaution"
+msgstr ""
+
+#: core/settings/show.py:177
+msgid ""
+"\n"
+" > WARNING: you are defined the var D as accumulate,\n"
+"   please make sure the time series are accumulative\n"
+"   if it are monthly, bimonthly or trimonthly"
+msgstr ""
+
+#: core/settings/show.py:182
+msgid ""
+"\n"
+" > WARNING: you are defined the var I as accumulate,\n"
+"   please make sure the time series is accumulative\n"
+"   if it is monthly, bimonthly or trimonthly"
 msgstr ""
 
 #: core/station.py:68
@@ -766,32 +696,12 @@ msgid ""
 "3 year of common period between the two series."
 msgstr ""
 
-#: core/station.py:77
-msgid ""
-"\n"
-"Calculating the process period ................ "
-msgstr ""
-
 #: core/station.py:79
 #, python-brace-format
 msgid ""
 "The period defined in argument {0}-{1} is outside in the\n"
 "maximum possible period {2}-{3} of intersection between station\n"
 "{4}-{5} and {6}."
-msgstr ""
-
-#: core/station.py:100
-msgid ""
-"\n"
-"   Calculating the common period:"
-msgstr ""
-
-#: core/station.py:102
-#, python-brace-format
-msgid ""
-"The common period calculated for the station {0}-{1}\n"
-"is {2}-{3}, Jaziku need at least 3 year of common \n"
-"period between the two series."
 msgstr ""
 
 #: core/stations.py:35
@@ -837,48 +747,87 @@ msgid "Calculate common and process period for each stations ... "
 msgstr ""
 
 #: core/stations.py:81
+msgid "Calculate, check and set the global process period ...... "
+msgstr ""
+
+#: core/stations.py:86
+msgid "   The maximum global common period is:"
+msgstr ""
+
+#: core/stations.py:91
 msgid "Prepare data, date and null in process period ........... "
 msgstr ""
 
-#: core/stations.py:88
+#: core/stations.py:99
 msgid "Check if the data are consistent for var_D and var_I:"
 msgstr ""
 
-#: core/stations.py:93
+#: core/stations.py:104
 msgid "Check analysis interval ................................. "
 msgstr ""
 
-#: core/stations.py:101
+#: core/stations.py:112
 msgid "Adjust data of all variables if is needed:"
 msgstr ""
 
-#: core/stations.py:104
+#: core/stations.py:115
 msgid "   data not need to be adjusted"
 msgstr ""
 
-#: core/stations.py:108
+#: core/stations.py:119
 msgid "Re-calculate common and process period for each stations  "
 msgstr ""
 
-#: core/stations.py:114
+#: core/stations.py:125
 msgid "Re-prepare data, date and null in process period ........ "
 msgstr ""
 
-#: core/stations.py:122
+#: core/stations.py:133
 msgid "Statistics of data for data analysis module ............. "
 msgstr ""
 
-#: core/stations.py:130
+#: core/stations.py:142
 #, python-brace-format
 msgid "{0} station prepared."
 msgstr ""
 
-#: core/stations.py:131
+#: core/stations.py:143
 #, python-brace-format
 msgid "{0} stations prepared."
 msgstr ""
 
-#: core/variable.py:131 core/variable.py:199
+#: core/stations.py:197
+msgid ""
+"There is no a global common period for all stations,\n"
+"this mean that two or more stations don't have any\n"
+"data for a common date. Please check the data of\n"
+"stations."
+msgstr ""
+
+#: core/stations.py:208
+#, python-brace-format
+msgid ""
+"The period defined in runfile {0}-{1} is outside in the\n"
+"maximum global common period possible {2}-{3}."
+msgstr ""
+
+#: core/stations.py:221
+#, python-brace-format
+msgid ""
+"The process period {0}-{1} has less than 3 years,\n"
+"Jaziku need at least 3 years for run."
+msgstr ""
+
+#: core/stations.py:234
+#, python-brace-format
+msgid ""
+"The maximum global common period possible of intersection\n"
+"for all stations and {0} time series is {1}-{2},\n"
+"Jaziku need at least 3 years for run, please check the\n"
+"data of stations."
+msgstr ""
+
+#: core/variable.py:149 core/variable.py:217
 #, python-brace-format
 msgid ""
 "Reading var {0} from file '{1}':\n"
@@ -886,7 +835,7 @@ msgid ""
 "for the first year ({2}) of the series."
 msgstr ""
 
-#: core/variable.py:162 core/variable.py:229
+#: core/variable.py:180 core/variable.py:247
 #, python-brace-format
 msgid ""
 "Reading var {0} from file '{1}':\n"
@@ -894,372 +843,193 @@ msgid ""
 "for the last year ({2}) of the series."
 msgstr ""
 
-#: core/analysis_interval.py:111
+#: core/analysis_interval.py:114
 #, python-brace-format
 msgid ""
-"The var {0} ({1}) of stations have data {2}, but you\n"
+"The variable {0} ({1}) have data {2}, but you\n"
 "define in runfile the 'analysis_interval' as '{3}',\n"
 "this is incompatible and Jaziku can't convert the times\n"
 "series properly for this case. Or change the analysis\n"
 "interval or change the data of var {0}."
 msgstr ""
 
-#: core/analysis_interval.py:140
+#: core/analysis_interval.py:142
 #, python-brace-format
 msgid "   Converting var {0} of all stations to data {1} ..... "
-msgstr ""
-
-#: core/analysis_interval.py:176
-#, python-brace-format
-msgid "*calculated from data every {0}"
 msgstr ""
 
 #: core/analysis_interval.py:178
 msgid "*calculated from daily data"
 msgstr ""
 
-#: core/analysis_interval.py:181
-msgid "*calculated from monthly data"
+#: core/analysis_interval.py:180
+#, python-brace-format
+msgid "*calculated from data every {0}"
 msgstr ""
 
 #: core/analysis_interval.py:183
-msgid "*calculated from bimonthly data"
+msgid "*calculated from monthly data"
 msgstr ""
 
 #: core/analysis_interval.py:185
-msgid "*calculated from trimonthly data"
+msgid "*calculated from (overlapping) bimonthly data"
 msgstr ""
 
-#: core/analysis_interval.py:188
+#: core/analysis_interval.py:187
+msgid "*calculated from (overlapping) trimonthly data"
+msgstr ""
+
+#: core/analysis_interval.py:190
 msgid " (converted)"
 msgstr ""
 
-#: utils/console.py:74
-#, python-brace-format
-msgid ""
-"\n"
-"Jaziku, version {0} - {1}.\n"
-"Copyright (C) 2011-2013 IDEAM - Colombia"
+#: data/maps/shapes/Colombia/Colombia/ncl_script_deterministic_map.py:37
+#: data/maps/shapes/Colombia/Colombia/ncl_script_probabilistic_map.py:33
+#: data/maps/shapes/Colombia/ncl.py:42
+#: data/maps/shapes/ncl_script_deterministic_map.py:37
+#: data/maps/shapes/ncl_script_probabilistic_map.py:42
+#: modules/data_analysis/eda.py:518 modules/data_analysis/eda.py:1745
+msgid "Stations"
 msgstr ""
 
-#: utils/console.py:89
-#, python-brace-format
-msgid ""
-"fail\n"
-"\n"
-"ERROR:\n"
-"{0}\n"
-"\n"
+#: data/maps/shapes/Colombia/Colombia/ncl_script_deterministic_map.py:53
+#: data/maps/shapes/ncl_script_deterministic_map.py:53
+msgid "Deterministic"
 msgstr ""
 
-#: utils/console.py:91
-#, python-brace-format
-msgid ""
-"\n"
-"ERROR:\n"
-"{0}\n"
+#: data/maps/shapes/Colombia/Colombia/ncl_script_probabilistic_map.py:36
+#: data/maps/shapes/Colombia/ncl.py:45
+#: data/maps/shapes/ncl_script_probabilistic_map.py:45
+msgid "Below"
 msgstr ""
 
-#: utils/console.py:92
-msgid ""
-"Please check the error and read the manual if is necessary.\n"
-"If this is an error of Jaziku, please report it with Jaziku developers."
+#: data/maps/shapes/Colombia/Colombia/ncl_script_probabilistic_map.py:37
+#: data/maps/shapes/Colombia/ncl.py:46
+#: data/maps/shapes/ncl_script_probabilistic_map.py:46
+#: modules/forecast/graphs.py:71 modules/forecast/graphs.py:128
+msgid "Normal"
 msgstr ""
 
-#: utils/console.py:103
-#, python-brace-format
-msgid "Reading the station from the runfile in line {0}:\n"
+#: data/maps/shapes/Colombia/Colombia/ncl_script_probabilistic_map.py:38
+#: data/maps/shapes/Colombia/ncl.py:47
+#: data/maps/shapes/ncl_script_probabilistic_map.py:47
+msgid "Above"
 msgstr ""
 
-#: utils/console.py:131
-#, python-brace-format
-msgid "The Configuration run from the runfile in line {0}:\n"
+#: env/config_run.py:256 env/var_I.py:38 env/var_I.py:46 env/var_D.py:39
+#: env/var_D.py:47
+msgid "5 days"
 msgstr ""
 
-#: utils/console.py:136
-msgid "Error in configuration run from the runfile:\n"
+#: env/config_run.py:257 env/var_I.py:39 env/var_I.py:47 env/var_D.py:40
+#: env/var_D.py:48
+msgid "10 days"
 msgstr ""
 
-#: utils/scripts/cpt2jaziku.py:59
-msgid ""
-"This script transform from Climate Predictability Tool format to Jaziku "
-"format."
+#: env/config_run.py:258 env/var_I.py:40 env/var_I.py:48 env/var_D.py:41
+#: env/var_D.py:49
+msgid "15 days"
 msgstr ""
 
-#: utils/scripts/cpt2jaziku.py:64
-msgid "CPT file input"
+#: env/config_run.py:259 env/var_I.py:41 env/var_D.py:42
+#: modules/data_analysis/eda.py:989
+msgid "monthly"
 msgstr ""
 
-#: utils/scripts/sisdhim2jaziku.py:63
-msgid ""
-"This script transform from ideam format got from SISDHIM to Jaziku format."
+#: env/config_run.py:260 env/var_I.py:42 env/var_D.py:43
+#: modules/data_analysis/eda.py:997
+msgid "bimonthly"
 msgstr ""
 
-#: utils/scripts/sisdhim2jaziku.py:68
-msgid "File input from SISDHIM"
+#: env/config_run.py:261 env/var_I.py:43 env/var_D.py:44
+#: modules/data_analysis/eda.py:1000
+msgid "trimonthly"
 msgstr ""
 
-#: utils/scripts/sisdhim2jaziku.py:72
-msgid "put in runfile only time series have contain this year by below."
+#: env/config_run.py:267
+msgid "accumulate"
 msgstr ""
 
-#: utils/scripts/sisdhim2jaziku.py:76
-msgid "put in runfile only time series have contain this year by above."
+#: env/config_run.py:267 modules/data_analysis/eda.py:1171
+#: modules/data_analysis/eda.py:1344
+msgid "mean"
 msgstr ""
 
-#: utils/scripts/sisdhim2jaziku.py:80
-msgid ""
-"put in runfile only time series have contain at least this minimum of years."
-msgstr ""
-
-#: utils/query.py:57
-msgid "Please respond with 'y' or 'n'"
-msgstr ""
-
-#: utils/query.py:76
-msgid "   Please respond with 'r', 'm' or 'c'"
-msgstr ""
-
-#: utils/output.py:71 utils/output.py:73
-msgid "Nov"
-msgstr ""
-
-#: utils/output.py:71 utils/output.py:73
-msgid "Dec"
-msgstr ""
-
-#: utils/output.py:71
-msgid "Jan"
-msgstr ""
-
-#: utils/output.py:71
-msgid "Feb"
-msgstr ""
-
-#: utils/output.py:71
-msgid "Mar"
-msgstr ""
-
-#: utils/output.py:72
-msgid "Apr"
-msgstr ""
-
-#: utils/output.py:72
-msgid "May"
-msgstr ""
-
-#: utils/output.py:72
-msgid "Jun"
-msgstr ""
-
-#: utils/output.py:72
-msgid "Jul"
-msgstr ""
-
-#: utils/output.py:72
-msgid "Aug"
-msgstr ""
-
-#: utils/output.py:73
-msgid "Sep"
-msgstr ""
-
-#: utils/output.py:73
-msgid "Oct"
-msgstr ""
-
-#: utils/output.py:80 utils/output.py:82
-msgid "NovDic"
-msgstr ""
-
-#: utils/output.py:80
-msgid "DicJan"
-msgstr ""
-
-#: utils/output.py:80
-msgid "JanFeb"
-msgstr ""
-
-#: utils/output.py:80
-msgid "FebMar"
-msgstr ""
-
-#: utils/output.py:80
-msgid "MarApr"
-msgstr ""
-
-#: utils/output.py:81
-msgid "AprMay"
-msgstr ""
-
-#: utils/output.py:81
-msgid "MayJun"
-msgstr ""
-
-#: utils/output.py:81
-msgid "JunJul"
-msgstr ""
-
-#: utils/output.py:81
-msgid "JulAug"
-msgstr ""
-
-#: utils/output.py:81
-msgid "AugSep"
-msgstr ""
-
-#: utils/output.py:82
-msgid "SepOct"
-msgstr ""
-
-#: utils/output.py:82
-msgid "OctNov"
-msgstr ""
-
-#: utils/output.py:82
-msgid "DecJan"
-msgstr ""
-
-#: utils/output.py:89 utils/output.py:91
-msgid "NDJ"
-msgstr ""
-
-#: utils/output.py:89 utils/output.py:91
-msgid "DJF"
-msgstr ""
-
-#: utils/output.py:89
-msgid "JFM"
-msgstr ""
-
-#: utils/output.py:89
-msgid "FMA"
-msgstr ""
-
-#: utils/output.py:89
-msgid "MAM"
-msgstr ""
-
-#: utils/output.py:90
-msgid "AMJ"
-msgstr ""
-
-#: utils/output.py:90
-msgid "MJJ"
-msgstr ""
-
-#: utils/output.py:90
-msgid "JJA"
-msgstr ""
-
-#: utils/output.py:90
-msgid "JAS"
-msgstr ""
-
-#: utils/output.py:90
-msgid "ASO"
-msgstr ""
-
-#: utils/output.py:91
-msgid "SON"
-msgstr ""
-
-#: utils/output.py:91
-msgid "OND"
-msgstr ""
-
-#: utils/output.py:150
-#, python-brace-format
-msgid ""
-"Problems creating the directory: {0}\n"
-"\n"
-"{1}"
-msgstr ""
-
-#: utils/output.py:157
-msgid ""
-"\n"
-"Directory where to save all results:"
-msgstr ""
-
-#: utils/output.py:169
-msgid "Jaziku_Data_Analysis"
-msgstr ""
-
-#: utils/output.py:176
-msgid "Jaziku_Climate"
-msgstr ""
-
-#: utils/output.py:183 modules/forecast/forecast.py:38
-msgid "Jaziku_Forecast"
-msgstr ""
-
-#: utils/output.py:188
-msgid " > WARNING: the following output directories already exist:"
-msgstr ""
-
-#: utils/output.py:193
-msgid "   What do you like to do? [r]eplace, [m]erge or [c]ancel"
-msgstr ""
-
-#: env/globals_vars.py:95 modules/climate/contingency_table.py:344
-#: modules/climate/result_table.py:209
+#: env/globals_vars.py:106 modules/climate/result_table.py:209
+#: modules/climate/contingency_table.py:355
 msgid "below"
 msgstr ""
 
-#: env/globals_vars.py:96 env/globals_vars.py:107
-#: modules/climate/contingency_table.py:344
+#: env/globals_vars.py:107 env/globals_vars.py:118
+#: modules/climate/contingency_table.py:355
 msgid "normal"
 msgstr ""
 
-#: env/globals_vars.py:97 modules/climate/contingency_table.py:344
-#: modules/climate/result_table.py:209
+#: env/globals_vars.py:108 modules/climate/result_table.py:209
+#: modules/climate/contingency_table.py:355
 msgid "above"
 msgstr ""
 
-#: env/globals_vars.py:104 modules/climate/result_table.py:224
+#: env/globals_vars.py:115 modules/climate/result_table.py:224
 msgid "strong below"
 msgstr ""
 
-#: env/globals_vars.py:105 modules/climate/result_table.py:224
+#: env/globals_vars.py:116 modules/climate/result_table.py:224
 msgid "moderate below"
 msgstr ""
 
-#: env/globals_vars.py:106 modules/climate/result_table.py:224
+#: env/globals_vars.py:117 modules/climate/result_table.py:224
 msgid "weak below"
 msgstr ""
 
-#: env/globals_vars.py:108 modules/climate/result_table.py:225
+#: env/globals_vars.py:119 modules/climate/result_table.py:225
 msgid "weak above"
 msgstr ""
 
-#: env/globals_vars.py:109 modules/climate/result_table.py:225
+#: env/globals_vars.py:120 modules/climate/result_table.py:225
 msgid "moderate above"
 msgstr ""
 
-#: env/globals_vars.py:110 modules/climate/result_table.py:225
+#: env/globals_vars.py:121 modules/climate/result_table.py:225
 msgid "strong above"
 msgstr ""
 
-#: env/var_I.py:36 env/var_D.py:37
+#: env/var_I.py:37 env/var_D.py:38
 msgid "daily"
 msgstr ""
 
-#: env/var_I.py:100 env/var_I.py:101 env/var_I.py:105 env/var_I.py:106
-#: env/var_I.py:107 env/var_I.py:108 env/var_I.py:109 env/var_I.py:110
-#: env/var_I.py:111 env/var_I.py:112
+#: env/var_I.py:45 env/var_D.py:46 env/var_D.py:82
+msgid "days"
+msgstr ""
+
+#: env/var_I.py:49 env/var_D.py:50 modules/data_analysis/eda.py:2483
+#: modules/data_analysis/eda.py:2563 modules/data_analysis/eda.py:2857
+msgid "months"
+msgstr ""
+
+#: env/var_I.py:50 env/var_D.py:51
+msgid "2 months"
+msgstr ""
+
+#: env/var_I.py:51 env/var_D.py:52
+msgid "3 months"
+msgstr ""
+
+#: env/var_I.py:112 env/var_I.py:113 env/var_I.py:117 env/var_I.py:118
+#: env/var_I.py:119 env/var_I.py:120 env/var_I.py:121 env/var_I.py:122
+#: env/var_I.py:123 env/var_I.py:124
 msgid "anomaly"
 msgstr ""
 
-#: env/var_I.py:102 env/var_I.py:103 env/var_I.py:104
+#: env/var_I.py:114 env/var_I.py:115 env/var_I.py:116
 msgid "Std anomaly"
 msgstr ""
 
-#: env/var_I.py:113
+#: env/var_I.py:125
 msgid "anomaly scaled 10e6 km^2"
 msgstr ""
 
-#: env/var_I.py:596 env/var_D.py:338
+#: env/var_I.py:617 env/var_D.py:389
 #, python-brace-format
 msgid ""
 "The new frequency data '{0}' for the var {1} is different\n"
@@ -1269,44 +1039,58 @@ msgid ""
 "have identical frequency data."
 msgstr ""
 
-#: env/var_D.py:70
-msgid "days"
-msgstr ""
-
-#: env/var_D.py:346
+#: env/var_D.py:397
 msgid "var D below"
 msgstr ""
 
-#: env/var_D.py:346 env/var_D.py:347
+#: env/var_D.py:397 env/var_D.py:398
 msgid "var D normal"
 msgstr ""
 
-#: env/var_D.py:346
+#: env/var_D.py:397
 msgid "var D above"
 msgstr ""
 
-#: env/var_D.py:347
+#: env/var_D.py:398
 msgid "var D strong below"
 msgstr ""
 
-#: env/var_D.py:347
+#: env/var_D.py:398
 msgid "var D moderate below"
 msgstr ""
 
-#: env/var_D.py:347
+#: env/var_D.py:398
 msgid "var D weak below"
 msgstr ""
 
-#: env/var_D.py:348
+#: env/var_D.py:399
 msgid "var D weak above"
 msgstr ""
 
-#: env/var_D.py:348
+#: env/var_D.py:399
 msgid "var D moderate above"
 msgstr ""
 
-#: env/var_D.py:348
+#: env/var_D.py:399
 msgid "var D strong above"
+msgstr ""
+
+#: i18n/i18n.py:99
+#, python-brace-format
+msgid "'{0}' language not available."
+msgstr ""
+
+#: i18n/i18n.py:110
+msgid " (system language)"
+msgstr ""
+
+#: i18n/i18n.py:119
+#, python-brace-format
+msgid " (language '{0}' has not was translated yet)"
+msgstr ""
+
+#: i18n/i18n.py:124
+msgid " (other languages were not detected)"
 msgstr ""
 
 #: modules/climate/climate.py:36
@@ -1366,81 +1150,15 @@ msgid ""
 "   continue without make graphics ............. "
 msgstr ""
 
-#: modules/climate/contingency_table.py:347
-#, python-brace-format
-msgid ""
-"\n"
-" > WARNING: The thresholds defined for var I\n"
-"   are not suitable in some time series for \n"
-"   compound analysis of '{0}' with relation to\n"
-"   '{1}' inside the block category '{2}'.\n"
-"   Is recommended review the thresholds\n"
-"   of two variables, or the series data ......."
-msgstr ""
-
-#: modules/climate/graphs.py:50
-msgid "graphics"
-msgstr ""
-
-#: modules/climate/graphs.py:54
-msgid "composite_analysis"
-msgstr ""
-
-#: modules/climate/graphs.py:142 modules/climate/graphs.py:287
-#, python-brace-format
-msgid ""
-"Composite analysis - {0} ({1})\n"
-"{2} - {3} - lag {6} - {7} - ({4}-{5})"
-msgstr ""
-
-#: modules/climate/graphs.py:148 modules/climate/graphs.py:293
-msgid "probability (%)"
-msgstr ""
-
-#: modules/climate/graphs.py:190 modules/climate/graphs.py:343
-msgid "Var D"
-msgstr ""
-
-#: modules/climate/graphs.py:207
-#, python-brace-format
-msgid ""
-"Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n"
-"Min: {min}  ( {thresholds} )  Max: {max}"
-msgstr ""
-
-#: modules/climate/graphs.py:219 modules/climate/graphs.py:388
-#: modules/climate/graphs.py:417 modules/maps/data.py:123
-#: modules/maps/maps.py:446 modules/maps/maps.py:489
-#, python-brace-format
-msgid "lag_{0}"
-msgstr ""
-
-#: modules/climate/graphs.py:220 modules/climate/graphs.py:389
-#, python-brace-format
-msgid "CA_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png"
-msgstr ""
-
-#: modules/climate/graphs.py:376
-#, python-brace-format
-msgid ""
-"Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n"
-"Min: {min}  {thresholds}  Max: {max}"
-msgstr ""
-
-#: modules/climate/graphs.py:464
-#, python-brace-format
-msgid "mosaic_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png"
-msgstr ""
-
 #: modules/climate/result_table.py:73 modules/climate/result_table.py:108
-#: modules/climate/result_table.py:115 modules/data_analysis/eda.py:2020
-#: modules/data_analysis/eda.py:2055 modules/data_analysis/eda.py:2090
+#: modules/climate/result_table.py:115 modules/data_analysis/eda.py:2166
+#: modules/data_analysis/eda.py:2201 modules/data_analysis/eda.py:2236
 msgid "yes"
 msgstr ""
 
 #: modules/climate/result_table.py:75 modules/climate/result_table.py:110
-#: modules/climate/result_table.py:117 modules/data_analysis/eda.py:2022
-#: modules/data_analysis/eda.py:2057 modules/data_analysis/eda.py:2092
+#: modules/climate/result_table.py:117 modules/data_analysis/eda.py:2168
+#: modules/data_analysis/eda.py:2203 modules/data_analysis/eda.py:2238
 msgid "no"
 msgstr ""
 
@@ -1460,8 +1178,8 @@ msgid "VAR_I"
 msgstr ""
 
 #: modules/climate/result_table.py:199 modules/climate/result_table.py:214
-#: modules/maps/data.py:160 modules/maps/data.py:203
-#: modules/data_analysis/eda.py:1950
+#: modules/data_analysis/eda.py:2116 modules/maps/data.py:160
+#: modules/maps/data.py:203
 msgid "PEARSON"
 msgstr ""
 
@@ -1507,6 +1225,60 @@ msgstr ""
 
 #: modules/climate/result_table.py:205 modules/climate/result_table.py:220
 msgid "CORREL CT"
+msgstr ""
+
+#: modules/climate/graphs.py:50
+msgid "graphics"
+msgstr ""
+
+#: modules/climate/graphs.py:54
+msgid "composite_analysis"
+msgstr ""
+
+#: modules/climate/graphs.py:142 modules/climate/graphs.py:288
+#, python-brace-format
+msgid ""
+"Composite analysis - {0} ({1})\n"
+"{2} - {3} - lag {6} - {7} - ({4}-{5})"
+msgstr ""
+
+#: modules/climate/graphs.py:148 modules/climate/graphs.py:294
+msgid "probability (%)"
+msgstr ""
+
+#: modules/climate/graphs.py:190 modules/climate/graphs.py:344
+msgid "Var D"
+msgstr ""
+
+#: modules/climate/graphs.py:207
+#, python-brace-format
+msgid ""
+"Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n"
+"Min: {min}  ( {thresholds} )  Max: {max}"
+msgstr ""
+
+#: modules/climate/graphs.py:219 modules/climate/graphs.py:389
+#: modules/climate/graphs.py:419 modules/maps/data.py:123
+#: modules/maps/maps.py:453 modules/maps/maps.py:498
+#, python-brace-format
+msgid "lag_{0}"
+msgstr ""
+
+#: modules/climate/graphs.py:220 modules/climate/graphs.py:390
+#, python-brace-format
+msgid "CA_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png"
+msgstr ""
+
+#: modules/climate/graphs.py:377
+#, python-brace-format
+msgid ""
+"Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n"
+"Min: {min}  {thresholds}  Max: {max}"
+msgstr ""
+
+#: modules/climate/graphs.py:466
+#, python-brace-format
+msgid "mosaic_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png"
 msgstr ""
 
 #: modules/climate/thresholds.py:104
@@ -1652,6 +1424,18 @@ msgstr ""
 msgid "unrecognizable thresholds '{0}' for var {1} ({2})"
 msgstr ""
 
+#: modules/climate/contingency_table.py:358
+#, python-brace-format
+msgid ""
+"\n"
+" > WARNING: The thresholds defined for var I\n"
+"   are not suitable in some time series for \n"
+"   compound analysis of '{0}' with relation to\n"
+"   '{1}' inside the block category '{2}'.\n"
+"   Is recommended review the thresholds\n"
+"   of two variables, or the series data ......."
+msgstr ""
+
 #: modules/climate/time_series.py:117 modules/climate/time_series.py:118
 #: modules/climate/time_series.py:119
 msgid "time_series"
@@ -1675,7 +1459,7 @@ msgid "Time_Series_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).csv"
 msgstr ""
 
 #: modules/climate/time_series.py:150 modules/climate/time_series.py:207
-#: modules/data_analysis/eda.py:1649 modules/data_analysis/eda.py:2204
+#: modules/data_analysis/eda.py:1804 modules/data_analysis/eda.py:2354
 msgid "DATE"
 msgstr ""
 
@@ -1684,8 +1468,932 @@ msgstr ""
 msgid "Time_Series_lag_{0}_{1}_{2}_{3}_{4}_{5}_{6}_({7}-{8}).csv"
 msgstr ""
 
-#: modules/maps/data.py:121 modules/maps/data.py:331 modules/maps/maps.py:445
-#: modules/maps/maps.py:487
+#: modules/data_analysis/data_analysis.py:37
+msgid ""
+"\n"
+"\n"
+"#################### DATA ANALYSIS PROCESS #####################\n"
+"# Data analysis module, here is verified linearity, outliers   #\n"
+"# are reported and the primary statistical time series.        #\n"
+"################################################################\n"
+msgstr ""
+
+#: modules/data_analysis/data_analysis.py:43
+msgid "Saving the result for data analysis in:"
+msgstr ""
+
+#: modules/data_analysis/eda.py:56
+msgid ""
+"\n"
+"################# EXPLORATORY DATA ANALYSIS:"
+msgstr ""
+
+#: modules/data_analysis/eda.py:59
+msgid ""
+"\n"
+" > WARNING: The 'graphics' in 'output options' is disabled,\n"
+"   all graphics for EDA process will not be created. The graphics\n"
+"   in EDA represents the vast majority of the results.\n"
+msgstr ""
+
+#: modules/data_analysis/eda.py:64
+msgid "Exploratory_Data_Analysis"
+msgstr ""
+
+#: modules/data_analysis/eda.py:69 modules/data_analysis/eda.py:350
+msgid "Spectral_Analysis"
+msgstr ""
+
+#: modules/data_analysis/eda.py:75 modules/data_analysis/eda.py:369
+msgid "Wavelets"
+msgstr ""
+
+#: modules/data_analysis/eda.py:78 modules/data_analysis/eda.py:372
+msgid "Wavelets ............................................. "
+msgstr ""
+
+#: modules/data_analysis/eda.py:86 modules/data_analysis/eda.py:357
+msgid "Periodogram"
+msgstr ""
+
+#: modules/data_analysis/eda.py:89 modules/data_analysis/eda.py:360
+msgid "Periodogram .......................................... "
+msgstr ""
+
+#: modules/data_analysis/eda.py:105
+msgid "Descriptive statistics ............................... "
+msgstr ""
+
+#: modules/data_analysis/eda.py:111
+msgid "Descriptive_Statistic"
+msgstr ""
+
+#: modules/data_analysis/eda.py:116 modules/data_analysis/eda.py:119
+#, python-brace-format
+msgid "Descriptive_Statistics_{0}.csv"
+msgstr ""
+
+#: modules/data_analysis/eda.py:128 modules/data_analysis/eda.py:956
+#: modules/data_analysis/eda.py:1504 modules/data_analysis/eda.py:1801
+#: modules/data_analysis/eda.py:2150 modules/data_analysis/eda.py:2187
+#: modules/data_analysis/eda.py:2222 modules/maps/data.py:160
+#: modules/maps/data.py:203 modules/maps/data.py:351 modules/maps/data.py:374
+msgid "CODE"
+msgstr ""
+
+#: modules/data_analysis/eda.py:128 modules/data_analysis/eda.py:956
+#: modules/data_analysis/eda.py:1504 modules/data_analysis/eda.py:1801
+#: modules/data_analysis/eda.py:2150 modules/data_analysis/eda.py:2187
+#: modules/data_analysis/eda.py:2222
+msgid "NAME"
+msgstr ""
+
+#: modules/data_analysis/eda.py:128 modules/data_analysis/eda.py:956
+#: modules/data_analysis/eda.py:1504 modules/data_analysis/eda.py:1801
+#: modules/maps/data.py:160 modules/maps/data.py:203 modules/maps/data.py:351
+#: modules/maps/data.py:374
+msgid "LAT"
+msgstr ""
+
+#: modules/data_analysis/eda.py:128 modules/data_analysis/eda.py:956
+#: modules/data_analysis/eda.py:1504 modules/data_analysis/eda.py:1801
+#: modules/maps/data.py:160 modules/maps/data.py:203 modules/maps/data.py:351
+#: modules/maps/data.py:374
+msgid "LON"
+msgstr ""
+
+#: modules/data_analysis/eda.py:128 modules/data_analysis/eda.py:956
+#: modules/data_analysis/eda.py:1504 modules/data_analysis/eda.py:1801
+msgid "ALT"
+msgstr ""
+
+#: modules/data_analysis/eda.py:128 modules/data_analysis/eda.py:956
+#: modules/data_analysis/eda.py:1504 modules/data_analysis/eda.py:1801
+msgid "PROCESS PERIOD"
+msgstr ""
+
+#: modules/data_analysis/eda.py:128
+msgid "TOTAL DATA"
+msgstr ""
+
+#: modules/data_analysis/eda.py:128
+msgid "VALID DATA"
+msgstr ""
+
+#: modules/data_analysis/eda.py:129
+msgid "LOST DATA"
+msgstr ""
+
+#: modules/data_analysis/eda.py:129
+msgid "MAXIMUM"
+msgstr ""
+
+#: modules/data_analysis/eda.py:129
+msgid "MINIMUM"
+msgstr ""
+
+#: modules/data_analysis/eda.py:129
+msgid "AVERAGE"
+msgstr ""
+
+#: modules/data_analysis/eda.py:129
+msgid "MEDIAN"
+msgstr ""
+
+#: modules/data_analysis/eda.py:129
+msgid "STD DEVIATION"
+msgstr ""
+
+#: modules/data_analysis/eda.py:129
+msgid "SKEWNESS"
+msgstr ""
+
+#: modules/data_analysis/eda.py:130
+msgid "VARIANCE"
+msgstr ""
+
+#: modules/data_analysis/eda.py:130
+msgid "KURTOSIS"
+msgstr ""
+
+#: modules/data_analysis/eda.py:130
+msgid "COEFF VARIATION"
+msgstr ""
+
+#: modules/data_analysis/eda.py:201
+msgid ""
+"partial\n"
+" > WARNING: There is only one station for process\n"
+"   the graphs for descriptive statistic need more \n"
+"   of one station."
+msgstr ""
+
+#: modules/data_analysis/eda.py:233
+msgid "Graphs inspection of series .......................... "
+msgstr ""
+
+#: modules/data_analysis/eda.py:241
+msgid "Climatology .......................................... "
+msgstr ""
+
+#: modules/data_analysis/eda.py:251
+msgid "Distribution_Test"
+msgstr ""
+
+#: modules/data_analysis/eda.py:259
+msgid "Scatter plots of series .............................. "
+msgstr ""
+
+#: modules/data_analysis/eda.py:271
+msgid "Frequency histogram .................................. "
+msgstr ""
+
+#: modules/data_analysis/eda.py:279
+msgid "Shapiro Wilks test ................................... "
+msgstr ""
+
+#: modules/data_analysis/eda.py:288 modules/data_analysis/eda.py:1582
+#: modules/data_analysis/eda.py:1587 modules/data_analysis/eda.py:1727
+#: modules/data_analysis/eda.py:1732 modules/data_analysis/eda.py:1735
+msgid "Outliers"
+msgstr ""
+
+#: modules/data_analysis/eda.py:292
+msgid "Outliers ............................................. "
+msgstr ""
+
+#: modules/data_analysis/eda.py:297
+msgid ""
+"partial\n"
+" > WARNING: The maximum limit for make the box-plot of\n"
+"   outliers of all stations are 50 stations, if you want\n"
+"   this box-plot, please divide the stations in regions\n"
+"   into different runfiles with maximum 50 stations per\n"
+"   runfile, and rerun each runfile."
+msgstr ""
+
+#: modules/data_analysis/eda.py:310 modules/data_analysis/eda.py:2028
+#: modules/maps/maps.py:454 modules/maps/maps.py:499
+msgid "Correlation"
+msgstr ""
+
+#: modules/data_analysis/eda.py:316
+msgid "AutoCorrelation ...................................... "
+msgstr ""
+
+#: modules/data_analysis/eda.py:324
+msgid "CrossCorrelation ..................................... "
+msgstr ""
+
+#: modules/data_analysis/eda.py:336
+msgid "Anomaly"
+msgstr ""
+
+#: modules/data_analysis/eda.py:339
+msgid "Anomaly .............................................. "
+msgstr ""
+
+#: modules/data_analysis/eda.py:384
+msgid "Homogeneity"
+msgstr ""
+
+#: modules/data_analysis/eda.py:387
+msgid "Homogeneity .......................................... "
+msgstr ""
+
+#: modules/data_analysis/eda.py:462
+msgid "Sizes_data"
+msgstr ""
+
+#: modules/data_analysis/eda.py:462
+msgid "Maximums"
+msgstr ""
+
+#: modules/data_analysis/eda.py:462
+msgid "Minimums"
+msgstr ""
+
+#: modules/data_analysis/eda.py:462
+msgid "Averages"
+msgstr ""
+
+#: modules/data_analysis/eda.py:462
+msgid "Medians"
+msgstr ""
+
+#: modules/data_analysis/eda.py:463
+msgid "Std_deviations"
+msgstr ""
+
+#: modules/data_analysis/eda.py:463
+msgid "skewness"
+msgstr ""
+
+#: modules/data_analysis/eda.py:463
+msgid "Kurtosis"
+msgstr ""
+
+#: modules/data_analysis/eda.py:463
+msgid "Coeff_variations"
+msgstr ""
+
+#: modules/data_analysis/eda.py:468
+#, python-brace-format
+msgid "Graphs_for_{0}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:473 modules/data_analysis/eda.py:484
+#: modules/data_analysis/eda.py:508 modules/data_analysis/eda.py:517
+#: modules/data_analysis/eda.py:538 modules/data_analysis/eda.py:546
+msgid "vs_Stations"
+msgstr ""
+
+#: modules/data_analysis/eda.py:473 modules/data_analysis/eda.py:486
+#: modules/data_analysis/eda.py:513 modules/data_analysis/eda.py:520
+#: modules/data_analysis/eda.py:543
+msgid "vs_Altitude"
+msgstr ""
+
+#: modules/data_analysis/eda.py:490
+#, python-brace-format
+msgid "{0}_({1})_{2}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:500
+#, python-brace-format
+msgid ""
+"{0} ({1})\n"
+"{2}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:521
+msgid "Altitude (m)"
+msgstr ""
+
+#: modules/data_analysis/eda.py:548
+msgid "All values are zeros"
+msgstr ""
+
+#: modules/data_analysis/eda.py:655
+msgid "Analysis_the_best_periods_to_process.csv"
+msgstr ""
+
+#: modules/data_analysis/eda.py:659
+msgid "ANALYSIS PERIOD"
+msgstr ""
+
+#: modules/data_analysis/eda.py:659
+msgid "NUM. YEARS"
+msgstr ""
+
+#: modules/data_analysis/eda.py:659
+msgid "NUM. STATIONS INCLUDED FOR PERIOD"
+msgstr ""
+
+#: modules/data_analysis/eda.py:659
+msgid "MAX % OF NULLS PERMITTED PER STATION"
+msgstr ""
+
+#: modules/data_analysis/eda.py:660
+msgid "% OF NULLS INSIDE THE PERIOD OF ALL DATA"
+msgstr ""
+
+#: modules/data_analysis/eda.py:660
+msgid "RANKING*"
+msgstr ""
+
+#: modules/data_analysis/eda.py:660
+msgid "LIST STATIONS INCLUDED FOR PERIOD:"
+msgstr ""
+
+#: modules/data_analysis/eda.py:687
+msgid "Graphs_Inspection_of_Series"
+msgstr ""
+
+#: modules/data_analysis/eda.py:719
+#, python-brace-format
+msgid "Station_{0}-{1}_({2}_vs_Time)"
+msgstr ""
+
+#: modules/data_analysis/eda.py:726
+#, python-brace-format
+msgid "_Station_{0}-{1}_({2}_vs_Time)_"
+msgstr ""
+
+#: modules/data_analysis/eda.py:791 modules/data_analysis/eda.py:1469
+#: modules/data_analysis/eda.py:1601 modules/data_analysis/eda.py:2392
+msgid "All values are nulls"
+msgstr ""
+
+#: modules/data_analysis/eda.py:801 modules/data_analysis/eda.py:2277
+msgid "Time"
+msgstr ""
+
+#: modules/data_analysis/eda.py:849
+#, python-brace-format
+msgid "mosaic_station_{0}-{1}.png"
+msgstr ""
+
+#: modules/data_analysis/eda.py:942
+msgid "Climatology"
+msgstr ""
+
+#: modules/data_analysis/eda.py:947
+#, python-brace-format
+msgid "Climatology_table_{0}_(monthly)"
+msgstr ""
+
+#: modules/data_analysis/eda.py:949
+#, python-brace-format
+msgid "Climatology_table_{0}_({1})"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1025
+#, python-brace-format
+msgid ""
+"Multiyear climatology ({0})\n"
+"{1} {2} - {3} ({4}-{5})"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1032
+#, python-brace-format
+msgid "Multiyear_climatology_({0})_{1}_{2}_{3}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1044 modules/data_analysis/eda.py:1107
+#: modules/data_analysis/eda.py:1216 modules/data_analysis/eda.py:1277
+msgid "Months"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1053 modules/data_analysis/eda.py:1222
+msgid "[mean]"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1055 modules/data_analysis/eda.py:1224
+msgid "[accumulate]"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1095
+#, python-brace-format
+msgid "Multiyear_climatology_({0}+whiskers)_{1}_{2}_{3}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1116 modules/data_analysis/eda.py:1283
+msgid "[min-mean-max]"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1118 modules/data_analysis/eda.py:1285
+msgid "[min-accum-max]"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1157
+#, python-brace-format
+msgid "Multiyear_climatology_table_{0}_{1}_{2}_{3}.csv"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1167 modules/data_analysis/eda.py:1340
+msgid "max"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1173 modules/data_analysis/eda.py:1346
+msgid "accum"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1176 modules/data_analysis/eda.py:1349
+msgid "min"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1198
+#, python-brace-format
+msgid ""
+"Multiyear climatology (each {0} days)\n"
+"{1} {2} - {3} ({4}-{5})"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1205
+#, python-brace-format
+msgid "Multiyear_climatology_({0}days)_{1}_{2}_{3}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1266
+#, python-brace-format
+msgid "Multiyear_climatology_({0}days+whiskers)_{1}_{2}_{3}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1327
+#, python-brace-format
+msgid "Multiyear_climatology_table_{0}days_{1}_{2}_{3}.csv"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1364
+msgid ""
+"partial\n"
+" > WARNING: There is only one station for process\n"
+"   the scatter plots of series, this need more \n"
+"   of one station."
+msgstr ""
+
+#: modules/data_analysis/eda.py:1368
+msgid ""
+"partial\n"
+" > WARNING: The maximum limit for make the scatter plots\n"
+"   of series are 10 stations, if you want this diagram,\n"
+"   please divide the stations in regions into different\n"
+"   runfiles with maximum 10 stations per runfile, and\n"
+"   rerun each runfile."
+msgstr ""
+
+#: modules/data_analysis/eda.py:1380
+msgid "scatter_plots_of_series"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1384
+msgid "Scatter plots of series"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1445
+msgid "Frequency_histogram"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1451
+#, python-brace-format
+msgid "frequency_histogram_{0}_{1}_{2}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1455
+#, python-brace-format
+msgid ""
+"Frequency histogram\n"
+"{0} {1} - {2} ({3}-{4})"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1464 modules/data_analysis/eda.py:2387
+#: modules/data_analysis/eda.py:2563 modules/data_analysis/eda.py:2565
+msgid "Frequency"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1498
+#, python-brace-format
+msgid "shapiro_wilks_test_{0}.csv"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1514
+msgid "unknown (all values are nulls)"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1519
+msgid "rejected"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1521
+msgid "accepted"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1578
+msgid "Outliers_per_station"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1788
+msgid "Outliers_table"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1801
+msgid "WHISKERS BELOW"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1802
+msgid "WHISKERS ABOVE"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1802
+msgid "NUM. OUTLIERS"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1804
+msgid "VALUE"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1804
+msgid "PHEN_CAT*"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1823
+msgid "OUTLIERS LIST:"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1919
+#, python-brace-format
+msgid "Auto_Correlation_{0}_{1}_{2}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:1999
+#, python-brace-format
+msgid "Cross_Correlation_{0}_{1}_{2}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2008
+#, python-brace-format
+msgid ""
+"Auto Correlation - {0} {1}\n"
+"{2} ({3}-{4})"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2013
+#, python-brace-format
+msgid ""
+"Cross Correlation - {0} {1}\n"
+"{2} vs {3} ({4}-{5})"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2023
+msgid "Lags"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2066
+msgid "LAGS"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2066
+msgid "CORRELATION"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2075
+#, python-brace-format
+msgid "*Data in period {0}-{1}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2110
+#, python-brace-format
+msgid "Cross_Correlation_Matrix_Table_({0}-{1}).csv"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2125 modules/data_analysis/eda.py:2175
+#: modules/data_analysis/eda.py:2210 modules/data_analysis/eda.py:2244
+#: modules/data_analysis/eda.py:2650
+#, python-brace-format
+msgid "*Data in the period {0}-{1}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2150
+msgid "U"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2150 modules/data_analysis/eda.py:2187
+#: modules/data_analysis/eda.py:2222
+msgid "P-VALUE"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2150 modules/data_analysis/eda.py:2187
+#: modules/data_analysis/eda.py:2222
+msgid "?"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2187
+msgid "T"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2222
+msgid "W"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2254 modules/data_analysis/eda.py:2299
+msgid "Mass_Curve"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2272
+#, python-brace-format
+msgid ""
+"{0}\n"
+"{1}-{2}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2273
+msgid "Mass Curve"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2283
+#, python-brace-format
+msgid "{0} accumulated ({1})"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2316
+msgid "Anomaly_time_series"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2320
+msgid "Anomaly_frequency_histogram"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2349
+#, python-brace-format
+msgid "Anomaly_time_series_{0}_{1}_{2}.csv"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2354
+msgid "ANOMALIES"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2373
+#, python-brace-format
+msgid "Anomaly_frequency_histogram_{0}_{1}_{2}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2377
+#, python-brace-format
+msgid ""
+"Anomaly frequency histogram\n"
+"{0} {1} - {2} ({3}-{4})"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2469 modules/data_analysis/eda.py:2549
+#, python-brace-format
+msgid ""
+"Periodogram - {0} {1}\n"
+"{2} ({3}-{4})"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2473 modules/data_analysis/eda.py:2553
+#, python-brace-format
+msgid "Periodogram - {0} ({1}-{2})"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2483 modules/data_analysis/eda.py:2485
+msgid "Period"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2490 modules/data_analysis/eda.py:2570
+msgid "Power spectral density"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2515 modules/data_analysis/eda.py:2595
+msgid "Bartlett (M)"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2515 modules/data_analysis/eda.py:2595
+msgid "Bartlett (M/5)"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2532
+#, python-brace-format
+msgid "Periodogram_(period)_{0}_{1}_{2}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2534
+#, python-brace-format
+msgid "Periodogram_(period)_{0}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2612
+#, python-brace-format
+msgid "Periodogram_(freq)_{0}_{1}_{2}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2614
+#, python-brace-format
+msgid "Periodogram_(freq)_{0}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2627
+#, python-brace-format
+msgid "Periodogram_{0}_{1}_{2}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2629
+#, python-brace-format
+msgid "Periodogram_{0}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2636
+msgid "BARTLETT (M)"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2636
+msgid "BARTLETT (M/5)"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2637
+msgid "POWER SPECTRAL DENSITY"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2637
+msgid "PERIOD"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2637
+msgid "FREQUENCY"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2652
+msgid "overlapping"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2757
+#, python-brace-format
+msgid "Station {0} {1} - {2}-{3}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2760
+#, python-brace-format
+msgid "Independent Variable {0} - {1}-{2}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2842
+msgid "Wavelet power spectrum"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2857
+msgid "Period ("
+msgstr ""
+
+#: modules/data_analysis/eda.py:2859
+#, python-brace-format
+msgid "Period ({0})"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2860
+msgid "Years"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2903
+#, python-brace-format
+msgid "Wavelets_{0}_{1}_{2}"
+msgstr ""
+
+#: modules/data_analysis/eda.py:2905
+#, python-brace-format
+msgid "Wavelets_{0}"
+msgstr ""
+
+#: modules/forecast/graphs.py:62 modules/forecast/graphs.py:118
+#, python-brace-format
+msgid ""
+"Probability forecasts of {0} / {1}\n"
+"{2} ({3})\n"
+"lag {4} - {5} - ({6}-{7})"
+msgstr ""
+
+#: modules/forecast/graphs.py:71
+msgid "Decrease"
+msgstr ""
+
+#: modules/forecast/graphs.py:71
+msgid "Exceed"
+msgstr ""
+
+#: modules/forecast/graphs.py:89 modules/forecast/graphs.py:152
+#: modules/forecast/graphs.py:288
+msgid ""
+"For this time series there aren't suitable\n"
+"probabilities, because there are thresholds\n"
+"problems in contingency table, or the series data."
+msgstr ""
+
+#: modules/forecast/graphs.py:107 modules/forecast/graphs.py:169
+#, python-brace-format
+msgid "prob_of_{0}_lag_{1}_{2}_({3}-{4}).png"
+msgstr ""
+
+#: modules/forecast/graphs.py:127
+msgid "Strong decrease"
+msgstr ""
+
+#: modules/forecast/graphs.py:127
+msgid "Moderate decrease"
+msgstr ""
+
+#: modules/forecast/graphs.py:128
+msgid "Weak decrease"
+msgstr ""
+
+#: modules/forecast/graphs.py:129
+msgid "Weak exceed"
+msgstr ""
+
+#: modules/forecast/graphs.py:129
+msgid "Moderate exceed"
+msgstr ""
+
+#: modules/forecast/graphs.py:130
+msgid "Strong exceed"
+msgstr ""
+
+#: modules/forecast/graphs.py:167 modules/forecast/graphs.py:169
+#: modules/forecast/graphs.py:194 modules/forecast/graphs.py:196
+#: modules/maps/maps.py:149 modules/maps/maps.py:189 modules/maps/maps.py:250
+#: modules/maps/maps.py:299 modules/maps/maps.py:301 modules/maps/maps.py:339
+#: modules/maps/maps.py:349 modules/maps/maps.py:388 modules/maps/maps.py:402
+#: modules/maps/maps.py:423 modules/maps/maps.py:534 modules/maps/maps.py:536
+#: modules/maps/maps.py:568 modules/maps/maps.py:576
+msgid "probabilistic"
+msgstr ""
+
+#: modules/forecast/graphs.py:185
+#, python-brace-format
+msgid "mosaic_prob_of_{0}_under_{1}_{2}_({3}-{4}).png"
+msgstr ""
+
+#: modules/forecast/graphs.py:234
+#, python-brace-format
+msgid ""
+"Deterministic forecasts of {0} / {1}\n"
+"{2} ({3})\n"
+"lag {4} - {5} - ({6}-{7})"
+msgstr ""
+
+#: modules/forecast/graphs.py:260
+#, python-brace-format
+msgid "< {0}"
+msgstr ""
+
+#: modules/forecast/graphs.py:261 modules/forecast/graphs.py:262
+#: modules/forecast/graphs.py:263 modules/forecast/graphs.py:264
+#: modules/forecast/graphs.py:265
+#, python-brace-format
+msgid "{0} to {1}"
+msgstr ""
+
+#: modules/forecast/graphs.py:266
+#, python-brace-format
+msgid "> {0}"
+msgstr ""
+
+#: modules/forecast/graphs.py:307 modules/forecast/graphs.py:309
+#: modules/forecast/graphs.py:328 modules/forecast/graphs.py:329
+#: modules/maps/maps.py:252 modules/maps/maps.py:301 modules/maps/maps.py:342
+#: modules/maps/maps.py:393 modules/maps/maps.py:536 modules/maps/maps.py:570
+msgid "deterministic"
+msgstr ""
+
+#: modules/forecast/graphs.py:309
+#, python-brace-format
+msgid "Determ_of_{0}_lag_{1}_{2}_({3}-{4}).png"
+msgstr ""
+
+#: modules/forecast/graphs.py:323
+#, python-brace-format
+msgid "mosaic_determ_of_{0}_under_{1}_{2}_({3}-{4}).png"
+msgstr ""
+
+#: modules/forecast/forecast.py:38 utils/output.py:183
+msgid "Jaziku_Forecast"
+msgstr ""
+
+#: modules/forecast/forecast.py:40
+msgid ""
+"\n"
+"Saving the result for forecast in:"
+msgstr ""
+
+#: modules/forecast/forecast.py:87
+msgid "Processing forecast:"
+msgstr ""
+
+#: modules/forecast/forecast.py:89
+msgid "   making forecast for date: "
+msgstr ""
+
+#: modules/maps/data.py:121 modules/maps/data.py:331 modules/maps/maps.py:452
+#: modules/maps/maps.py:497
 msgid "maps"
 msgstr ""
 
@@ -1701,28 +2409,6 @@ msgstr ""
 #: modules/maps/data.py:154 modules/maps/data.py:197 modules/maps/data.py:353
 #: modules/maps/data.py:376
 msgid "SUM"
-msgstr ""
-
-#: modules/maps/data.py:160 modules/maps/data.py:203 modules/maps/data.py:351
-#: modules/maps/data.py:374 modules/data_analysis/eda.py:90
-#: modules/data_analysis/eda.py:832 modules/data_analysis/eda.py:1365
-#: modules/data_analysis/eda.py:1646 modules/data_analysis/eda.py:2002
-#: modules/data_analysis/eda.py:2041 modules/data_analysis/eda.py:2076
-msgid "CODE"
-msgstr ""
-
-#: modules/maps/data.py:160 modules/maps/data.py:203 modules/maps/data.py:351
-#: modules/maps/data.py:374 modules/data_analysis/eda.py:90
-#: modules/data_analysis/eda.py:832 modules/data_analysis/eda.py:1365
-#: modules/data_analysis/eda.py:1646
-msgid "LAT"
-msgstr ""
-
-#: modules/maps/data.py:160 modules/maps/data.py:203 modules/maps/data.py:351
-#: modules/maps/data.py:374 modules/data_analysis/eda.py:90
-#: modules/data_analysis/eda.py:832 modules/data_analysis/eda.py:1365
-#: modules/data_analysis/eda.py:1646
-msgid "LON"
 msgstr ""
 
 #: modules/maps/data.py:162 modules/maps/data.py:205 modules/maps/data.py:353
@@ -1762,74 +2448,74 @@ msgid ""
 "default, {1}"
 msgstr ""
 
-#: modules/maps/grid.py:136
+#: modules/maps/grid.py:135
 #, python-brace-format
 msgid ""
 "The radiuses '{0}' is wrong, the options are:\n"
 "'auto' or radius1 and radius2 in different column."
 msgstr ""
 
-#: modules/maps/grid.py:148
+#: modules/maps/grid.py:147
 #, python-brace-format
 msgid ""
 "The max_neighbours '{0}' is wrong, the options are:\n"
 "'auto' or valid number"
 msgstr ""
 
-#: modules/maps/grid.py:162
+#: modules/maps/grid.py:161
 #, python-brace-format
-msgid "\"Analog year: {0}\""
+msgid "\"With analog year: {0}\""
 msgstr ""
 
-#: modules/maps/grid.py:167
+#: modules/maps/grid.py:166
 #, python-brace-format
 msgid "   Mesh size: {0}x{1}"
 msgstr ""
 
-#: modules/maps/grid.py:170
+#: modules/maps/grid.py:169
 #, python-brace-format
 msgid "   Interpolation type: {0}"
 msgstr ""
 
-#: modules/maps/grid.py:175
+#: modules/maps/grid.py:174
 msgid "   Semivariogram type: spherical"
 msgstr ""
 
-#: modules/maps/grid.py:177
+#: modules/maps/grid.py:176
 msgid "   Semivariogram type: exponential"
 msgstr ""
 
-#: modules/maps/grid.py:179
+#: modules/maps/grid.py:178
 msgid "   Semivariogram type: gaussian"
 msgstr ""
 
-#: modules/maps/grid.py:182
+#: modules/maps/grid.py:181
 #, python-brace-format
 msgid "   Radiuses: {0} {1}"
 msgstr ""
 
-#: modules/maps/grid.py:185
+#: modules/maps/grid.py:184
 #, python-brace-format
 msgid "   Max neighbours: {0}"
 msgstr ""
 
-#: modules/maps/grid.py:221 modules/maps/maps.py:164
+#: modules/maps/grid.py:220 modules/maps/maps.py:166
 msgid "average"
 msgstr ""
 
-#: modules/maps/grid.py:224 modules/maps/maps.py:164
+#: modules/maps/grid.py:223 modules/maps/maps.py:166
 msgid "maximum"
 msgstr ""
 
-#: modules/maps/grid.py:227 modules/maps/maps.py:164
+#: modules/maps/grid.py:226 modules/maps/maps.py:166
 msgid "minimum"
 msgstr ""
 
-#: modules/maps/grid.py:229 modules/maps/maps.py:170
+#: modules/maps/grid.py:228 modules/maps/maps.py:172
 msgid "neither"
 msgstr ""
 
-#: modules/maps/grid.py:274
+#: modules/maps/grid.py:273
 #, python-brace-format
 msgid ""
 "The 'shape_path' was defined as 'internal' but\n"
@@ -1843,7 +2529,7 @@ msgid ""
 "For example: Colombia, Vaupes;Colombia, Caldas;Colombia.\n"
 msgstr ""
 
-#: modules/maps/grid.py:294
+#: modules/maps/grid.py:293
 msgid ""
 "Can't set particular shape, please check files in shape path\n"
 "this must be contain inside .shp .prj .sbn .sbx .shx\n"
@@ -1856,7 +2542,7 @@ msgid ""
 "region_A.sbx and region_A.shx."
 msgstr ""
 
-#: modules/maps/maps.py:39
+#: modules/maps/maps.py:41
 msgid ""
 "\n"
 "\n"
@@ -1868,27 +2554,27 @@ msgid ""
 "################################################################"
 msgstr ""
 
-#: modules/maps/maps.py:48
+#: modules/maps/maps.py:50
 msgid ""
 "\n"
 "Checking basic requirements for make maps:"
 msgstr ""
 
-#: modules/maps/maps.py:54
+#: modules/maps/maps.py:56
 msgid ""
 "Jaziku can't execute the 'ncl' command for make maps,\n"
 "please check that ncl is include into PATH variable in your\n"
 "system. For more information read: http://goo.gl/4dAeH"
 msgstr ""
 
-#: modules/maps/maps.py:60
+#: modules/maps/maps.py:62
 msgid ""
 "The NCARG_ROOT variable is not defined in your system,\n"
 "please defined NCARG_ROOT where you have installed NCL.\n"
 "For more information read: http://goo.gl/4dAeH"
 msgstr ""
 
-#: modules/maps/maps.py:69
+#: modules/maps/maps.py:71
 msgid ""
 "The NCARG_ROOT variable is defined in your system,\n"
 "but there are problems for found nclscripts files,\n"
@@ -1896,28 +2582,18 @@ msgid ""
 "For more information read: http://goo.gl/4dAeH"
 msgstr ""
 
-#: modules/maps/maps.py:76
+#: modules/maps/maps.py:78
 msgid ""
 "Jaziku can't execute the 'convert' command for transform image,\n"
 "please check that 'imagemagick' is installed in your system.\n"
 "For more information read Jaziku install instructions."
 msgstr ""
 
-#: modules/maps/maps.py:100
+#: modules/maps/maps.py:102
 msgid "MAP"
 msgstr ""
 
-#: modules/maps/maps.py:147 modules/maps/maps.py:187 modules/maps/maps.py:247
-#: modules/maps/maps.py:277 modules/maps/maps.py:298 modules/maps/maps.py:300
-#: modules/maps/maps.py:335 modules/maps/maps.py:345 modules/maps/maps.py:381
-#: modules/maps/maps.py:395 modules/maps/maps.py:416 modules/maps/maps.py:522
-#: modules/maps/maps.py:524 modules/maps/maps.py:553 modules/maps/maps.py:561
-#: modules/forecast/graphs.py:158 modules/forecast/graphs.py:160
-#: modules/forecast/graphs.py:185 modules/forecast/graphs.py:187
-msgid "probabilistic"
-msgstr ""
-
-#: modules/maps/maps.py:154
+#: modules/maps/maps.py:156
 #, python-brace-format
 msgid ""
 "\n"
@@ -1926,7 +2602,7 @@ msgid ""
 "   because the value of index is 'nan' (null)."
 msgstr ""
 
-#: modules/maps/maps.py:160
+#: modules/maps/maps.py:162
 #, python-brace-format
 msgid ""
 "\n"
@@ -1935,7 +2611,7 @@ msgid ""
 "   because the point is outside of the grid."
 msgstr ""
 
-#: modules/maps/maps.py:166
+#: modules/maps/maps.py:168
 #, python-brace-format
 msgid ""
 "\n"
@@ -1944,7 +2620,7 @@ msgid ""
 "   will put the {state} value."
 msgstr ""
 
-#: modules/maps/maps.py:172
+#: modules/maps/maps.py:174
 #, python-brace-format
 msgid ""
 "\n"
@@ -1953,854 +2629,358 @@ msgid ""
 "   will not put the {state} values."
 msgstr ""
 
-#: modules/maps/maps.py:224 modules/maps/maps.py:236
+#: modules/maps/maps.py:226 modules/maps/maps.py:238
 msgid "lat"
 msgstr ""
 
-#: modules/maps/maps.py:224 modules/maps/maps.py:236
+#: modules/maps/maps.py:226 modules/maps/maps.py:238
 msgid "lon"
 msgstr ""
 
-#: modules/maps/maps.py:224
+#: modules/maps/maps.py:226
 msgid "value"
 msgstr ""
 
-#: modules/maps/maps.py:236
+#: modules/maps/maps.py:238
 msgid "index"
 msgstr ""
 
-#: modules/maps/maps.py:236
+#: modules/maps/maps.py:238
 msgid "index position"
 msgstr ""
 
-#: modules/maps/maps.py:249 modules/maps/maps.py:282 modules/maps/maps.py:300
-#: modules/maps/maps.py:338 modules/maps/maps.py:386 modules/maps/maps.py:524
-#: modules/maps/maps.py:555 modules/forecast/graphs.py:294
-#: modules/forecast/graphs.py:296 modules/forecast/graphs.py:315
-#: modules/forecast/graphs.py:316
-msgid "deterministic"
-msgstr ""
-
-#: modules/maps/maps.py:304
+#: modules/maps/maps.py:305
 #, python-brace-format
 msgid "Processing {map_type} maps for climate:"
 msgstr ""
 
-#: modules/maps/maps.py:336 modules/maps/maps.py:382
+#: modules/maps/maps.py:340 modules/maps/maps.py:389
 #, python-brace-format
 msgid "Prob_Map_lag_{0}_{1}_{2}"
 msgstr ""
 
-#: modules/maps/maps.py:339 modules/maps/maps.py:387
+#: modules/maps/maps.py:343 modules/maps/maps.py:394
 #, python-brace-format
 msgid "Deter_Map_lag_{0}_{1}_{2}"
 msgstr ""
 
-#: modules/maps/maps.py:418
+#: modules/maps/maps.py:425
 msgid "Processing maps for correlation:"
 msgstr ""
 
-#: modules/maps/maps.py:447 modules/maps/maps.py:490
-#: modules/data_analysis/eda.py:272 modules/data_analysis/eda.py:1861
-msgid "Correlation"
-msgstr ""
-
-#: modules/maps/maps.py:453 modules/maps/maps.py:496
+#: modules/maps/maps.py:463 modules/maps/maps.py:508
 #, python-brace-format
 msgid "Map_correlation_lag_{0}_{1}"
 msgstr ""
 
-#: modules/maps/maps.py:528
+#: modules/maps/maps.py:540
 #, python-brace-format
 msgid "Processing {map_type} maps for forecast:"
 msgstr ""
 
-#: modules/maps/maps.py:554
+#: modules/maps/maps.py:569
 #, python-brace-format
 msgid "Prob_Map_lag_{0}_{1}"
 msgstr ""
 
-#: modules/maps/maps.py:556
+#: modules/maps/maps.py:571
 #, python-brace-format
 msgid "Deter_Map_lag_{0}_{1}"
 msgstr ""
 
-#: modules/maps/ncl.py:81 modules/maps/ncl.py:156
+#: modules/maps/ncl.py:81 modules/maps/ncl.py:160
 #, python-brace-format
 msgid ""
 "Scenario of affectation of the {typeVarD} variable~C~under variations of "
 "{typeVarI} to lag {lag} in {date}"
 msgstr ""
 
-#: modules/maps/ncl.py:89 modules/maps/ncl.py:160
+#: modules/maps/ncl.py:89 modules/maps/ncl.py:164
 #, python-brace-format
 msgid ""
 "Lineal correlation between {typeVarI} variable~C~and {typeVarD} to lag {lag} "
 "in {date}"
 msgstr ""
 
-#: modules/maps/ncl.py:97 modules/maps/ncl.py:164
+#: modules/maps/ncl.py:97 modules/maps/ncl.py:168
 #, python-brace-format
 msgid ""
 "Affectation forecast of the {typeVarD} variable~C~under variations of "
 "{typeVarI} to lag {lag} in {date}"
 msgstr ""
 
-#: modules/forecast/forecast.py:40
+#: utils/console.py:74
+#, python-brace-format
 msgid ""
 "\n"
-"Saving the result for forecast in:"
+"Jaziku, version {0} - {1}.\n"
+"Copyright (C) 2011-2013 IDEAM - Colombia"
 msgstr ""
 
-#: modules/forecast/forecast.py:87
-msgid "Processing forecast:"
-msgstr ""
-
-#: modules/forecast/forecast.py:89
-msgid "   making forecast for date: "
-msgstr ""
-
-#: modules/forecast/graphs.py:62 modules/forecast/graphs.py:113
+#: utils/console.py:89
 #, python-brace-format
 msgid ""
-"Probability forecasts of {0} / {1}\n"
-"{2} ({3})\n"
-"lag {4} - {5} - ({6}-{7})"
+"fail\n"
+"\n"
+"ERROR:\n"
+"{0}\n"
+"\n"
 msgstr ""
 
-#: modules/forecast/graphs.py:71
-msgid "Decrease"
-msgstr ""
-
-#: modules/forecast/graphs.py:71
-msgid "Exceed"
-msgstr ""
-
-#: modules/forecast/graphs.py:89 modules/forecast/graphs.py:147
-#: modules/forecast/graphs.py:279
-msgid ""
-"For this time series there aren't suitable\n"
-"probabilities, because there are thresholds\n"
-"problems in contingency table, or the series data."
-msgstr ""
-
-#: modules/forecast/graphs.py:102 modules/forecast/graphs.py:160
+#: utils/console.py:91
 #, python-brace-format
-msgid "prob_of_{0}_lag_{1}_{2}_({3}-{4}).png"
-msgstr ""
-
-#: modules/forecast/graphs.py:122
-msgid "Strong decrease"
-msgstr ""
-
-#: modules/forecast/graphs.py:122
-msgid "Moderate decrease"
-msgstr ""
-
-#: modules/forecast/graphs.py:123
-msgid "Weak decrease"
-msgstr ""
-
-#: modules/forecast/graphs.py:124
-msgid "Weak exceed"
-msgstr ""
-
-#: modules/forecast/graphs.py:124
-msgid "Moderate exceed"
-msgstr ""
-
-#: modules/forecast/graphs.py:125
-msgid "Strong exceed"
-msgstr ""
-
-#: modules/forecast/graphs.py:176
-#, python-brace-format
-msgid "mosaic_prob_of_{0}_under_{1}_{2}_({3}-{4}).png"
-msgstr ""
-
-#: modules/forecast/graphs.py:225
-#, python-brace-format
-msgid ""
-"Deterministic forecasts of {0} / {1}\n"
-"{2} ({3})\n"
-"lag {4} - {5} - ({6}-{7})"
-msgstr ""
-
-#: modules/forecast/graphs.py:251
-#, python-brace-format
-msgid "< {0}"
-msgstr ""
-
-#: modules/forecast/graphs.py:252 modules/forecast/graphs.py:253
-#: modules/forecast/graphs.py:254 modules/forecast/graphs.py:255
-#: modules/forecast/graphs.py:256
-#, python-brace-format
-msgid "{0} to {1}"
-msgstr ""
-
-#: modules/forecast/graphs.py:257
-#, python-brace-format
-msgid "> {0}"
-msgstr ""
-
-#: modules/forecast/graphs.py:296
-#, python-brace-format
-msgid "Determ_of_{0}_lag_{1}_{2}_({3}-{4}).png"
-msgstr ""
-
-#: modules/forecast/graphs.py:310
-#, python-brace-format
-msgid "mosaic_determ_of_{0}_under_{1}_{2}_({3}-{4}).png"
-msgstr ""
-
-#: modules/data_analysis/data_analysis.py:37
 msgid ""
 "\n"
+"ERROR:\n"
+"{0}\n"
+msgstr ""
+
+#: utils/console.py:92
+msgid ""
+"Please check the error and read the manual if is necessary.\n"
+"If this is an error of Jaziku, please report it with Jaziku developers."
+msgstr ""
+
+#: utils/console.py:103
+#, python-brace-format
+msgid "Reading the station from the runfile in line {0}:\n"
+msgstr ""
+
+#: utils/console.py:131
+#, python-brace-format
+msgid "The Configuration run from the runfile in line {0}:\n"
+msgstr ""
+
+#: utils/console.py:136
+msgid "Error in configuration run from the runfile:\n"
+msgstr ""
+
+#: utils/output.py:71 utils/output.py:73
+msgid "Nov"
+msgstr ""
+
+#: utils/output.py:71 utils/output.py:73
+msgid "Dec"
+msgstr ""
+
+#: utils/output.py:71
+msgid "Jan"
+msgstr ""
+
+#: utils/output.py:71
+msgid "Feb"
+msgstr ""
+
+#: utils/output.py:71
+msgid "Mar"
+msgstr ""
+
+#: utils/output.py:72
+msgid "Apr"
+msgstr ""
+
+#: utils/output.py:72
+msgid "May"
+msgstr ""
+
+#: utils/output.py:72
+msgid "Jun"
+msgstr ""
+
+#: utils/output.py:72
+msgid "Jul"
+msgstr ""
+
+#: utils/output.py:72
+msgid "Aug"
+msgstr ""
+
+#: utils/output.py:73
+msgid "Sep"
+msgstr ""
+
+#: utils/output.py:73
+msgid "Oct"
+msgstr ""
+
+#: utils/output.py:80 utils/output.py:82
+msgid "NovDec"
+msgstr ""
+
+#: utils/output.py:80 utils/output.py:82
+msgid "DecJan"
+msgstr ""
+
+#: utils/output.py:80
+msgid "JanFeb"
+msgstr ""
+
+#: utils/output.py:80
+msgid "FebMar"
+msgstr ""
+
+#: utils/output.py:80
+msgid "MarApr"
+msgstr ""
+
+#: utils/output.py:81
+msgid "AprMay"
+msgstr ""
+
+#: utils/output.py:81
+msgid "MayJun"
+msgstr ""
+
+#: utils/output.py:81
+msgid "JunJul"
+msgstr ""
+
+#: utils/output.py:81
+msgid "JulAug"
+msgstr ""
+
+#: utils/output.py:81
+msgid "AugSep"
+msgstr ""
+
+#: utils/output.py:82
+msgid "SepOct"
+msgstr ""
+
+#: utils/output.py:82
+msgid "OctNov"
+msgstr ""
+
+#: utils/output.py:89 utils/output.py:91
+msgid "NDJ"
+msgstr ""
+
+#: utils/output.py:89 utils/output.py:91
+msgid "DJF"
+msgstr ""
+
+#: utils/output.py:89
+msgid "JFM"
+msgstr ""
+
+#: utils/output.py:89
+msgid "FMA"
+msgstr ""
+
+#: utils/output.py:89
+msgid "MAM"
+msgstr ""
+
+#: utils/output.py:90
+msgid "AMJ"
+msgstr ""
+
+#: utils/output.py:90
+msgid "MJJ"
+msgstr ""
+
+#: utils/output.py:90
+msgid "JJA"
+msgstr ""
+
+#: utils/output.py:90
+msgid "JAS"
+msgstr ""
+
+#: utils/output.py:90
+msgid "ASO"
+msgstr ""
+
+#: utils/output.py:91
+msgid "SON"
+msgstr ""
+
+#: utils/output.py:91
+msgid "OND"
+msgstr ""
+
+#: utils/output.py:150
+#, python-brace-format
+msgid ""
+"Problems creating the directory: {0}\n"
 "\n"
-"#################### DATA ANALYSIS PROCESS #####################\n"
-"# Data analysis module, here is verified linearity, outliers   #\n"
-"# are reported and the primary statistical time series.        #\n"
-"################################################################\n"
+"{1}"
 msgstr ""
 
-#: modules/data_analysis/data_analysis.py:43
-msgid "Saving the result for data analysis in:"
-msgstr ""
-
-#: modules/data_analysis/eda.py:53
+#: utils/output.py:157
 msgid ""
 "\n"
-"################# EXPLORATORY DATA ANALYSIS:"
+"Directory where to save all results:"
 msgstr ""
 
-#: modules/data_analysis/eda.py:56
+#: utils/output.py:169
+msgid "Jaziku_Data_Analysis"
+msgstr ""
+
+#: utils/output.py:176
+msgid "Jaziku_Climate"
+msgstr ""
+
+#: utils/output.py:188
+msgid " > WARNING: the following output directories already exist:"
+msgstr ""
+
+#: utils/output.py:193
+msgid "   What do you like to do? [r]eplace, [m]erge or [c]ancel"
+msgstr ""
+
+#: utils/query.py:57
+msgid "Please respond with 'y' or 'n'"
+msgstr ""
+
+#: utils/query.py:76
+msgid "   Please respond with 'r', 'm' or 'c'"
+msgstr ""
+
+#: utils/scripts/cpt2jaziku.py:62
 msgid ""
-"\n"
-" > WARNING: The 'graphics' in 'output options' is disabled,\n"
-"   all graphics for EDA module will not be created. The graphics\n"
-"   in EDA module represents the vast majority of the results.\n"
+"This script transform from Climate Predictability Tool format to Jaziku "
+"format."
 msgstr ""
 
-#: modules/data_analysis/eda.py:67
-msgid "Descriptive statistics ............................... "
+#: utils/scripts/cpt2jaziku.py:67
+msgid "CPT file input"
 msgstr ""
 
-#: modules/data_analysis/eda.py:73
-msgid "Descriptive_Statistic"
-msgstr ""
-
-#: modules/data_analysis/eda.py:78 modules/data_analysis/eda.py:81
-#, python-brace-format
-msgid "Descriptive_Statistics_{0}.csv"
-msgstr ""
-
-#: modules/data_analysis/eda.py:90 modules/data_analysis/eda.py:832
-#: modules/data_analysis/eda.py:1365 modules/data_analysis/eda.py:1646
-#: modules/data_analysis/eda.py:2002 modules/data_analysis/eda.py:2041
-#: modules/data_analysis/eda.py:2076
-msgid "NAME"
-msgstr ""
-
-#: modules/data_analysis/eda.py:90 modules/data_analysis/eda.py:832
-#: modules/data_analysis/eda.py:1365 modules/data_analysis/eda.py:1646
-msgid "ALT"
-msgstr ""
-
-#: modules/data_analysis/eda.py:90 modules/data_analysis/eda.py:832
-#: modules/data_analysis/eda.py:1365 modules/data_analysis/eda.py:1646
-msgid "PROCESS PERIOD"
-msgstr ""
-
-#: modules/data_analysis/eda.py:90
-msgid "TOTAL DATA"
-msgstr ""
-
-#: modules/data_analysis/eda.py:90
-msgid "VALID DATA"
-msgstr ""
-
-#: modules/data_analysis/eda.py:91
-msgid "LOST DATA"
-msgstr ""
-
-#: modules/data_analysis/eda.py:91
-msgid "MAXIMUM"
-msgstr ""
-
-#: modules/data_analysis/eda.py:91
-msgid "MINIMUM"
-msgstr ""
-
-#: modules/data_analysis/eda.py:91
-msgid "AVERAGE"
-msgstr ""
-
-#: modules/data_analysis/eda.py:91
-msgid "MEDIAN"
-msgstr ""
-
-#: modules/data_analysis/eda.py:91
-msgid "STD DEVIATION"
-msgstr ""
-
-#: modules/data_analysis/eda.py:91
-msgid "SKEWNESS"
-msgstr ""
-
-#: modules/data_analysis/eda.py:92
-msgid "VARIANCE"
-msgstr ""
-
-#: modules/data_analysis/eda.py:92
-msgid "KURTOSIS"
-msgstr ""
-
-#: modules/data_analysis/eda.py:92
-msgid "COEFF VARIATION"
-msgstr ""
-
-#: modules/data_analysis/eda.py:163
+#: utils/scripts/sisdhim2jaziku.py:63
 msgid ""
-"partial\n"
-" > WARNING: There is only one station for process\n"
-"   the graphs for descriptive statistic need more \n"
-"   of one station."
+"This script transform from ideam format got from SISDHIM to Jaziku format."
 msgstr ""
 
-#: modules/data_analysis/eda.py:195
-msgid "Graphs inspection of series .......................... "
+#: utils/scripts/sisdhim2jaziku.py:68
+msgid "File input from SISDHIM"
 msgstr ""
 
-#: modules/data_analysis/eda.py:203
-msgid "Climatology .......................................... "
+#: utils/scripts/sisdhim2jaziku.py:72
+msgid "put in runfile only time series have contain this year by below."
 msgstr ""
 
-#: modules/data_analysis/eda.py:213
-msgid "Distribution_Test"
+#: utils/scripts/sisdhim2jaziku.py:76
+msgid "put in runfile only time series have contain this year by above."
 msgstr ""
 
-#: modules/data_analysis/eda.py:221
-msgid "Scatter plots of series .............................. "
-msgstr ""
-
-#: modules/data_analysis/eda.py:233
-msgid "Frequency histogram .................................. "
-msgstr ""
-
-#: modules/data_analysis/eda.py:241
-msgid "Shapiro Wilks test ................................... "
-msgstr ""
-
-#: modules/data_analysis/eda.py:250 modules/data_analysis/eda.py:1435
-#: modules/data_analysis/eda.py:1440 modules/data_analysis/eda.py:1570
-#: modules/data_analysis/eda.py:1574 modules/data_analysis/eda.py:1580
-#: modules/data_analysis/eda.py:1582
-msgid "Outliers"
-msgstr ""
-
-#: modules/data_analysis/eda.py:254
-msgid "Outliers ............................................. "
-msgstr ""
-
-#: modules/data_analysis/eda.py:259
+#: utils/scripts/sisdhim2jaziku.py:80
 msgid ""
-"partial\n"
-" > WARNING: The maximum limit for make the box-plot of\n"
-"   outliers of all stations are 50 stations, if you want\n"
-"   this box-plot, please divide the stations in regions\n"
-"   into different runfiles with maximum 50 stations per\n"
-"   runfile, and rerun each runfile."
+"put in runfile only time series have contain at least this minimum of years."
 msgstr ""
 
-#: modules/data_analysis/eda.py:278
-msgid "AutoCorrelation ...................................... "
-msgstr ""
-
-#: modules/data_analysis/eda.py:286
-msgid "CrossCorrelation ..................................... "
-msgstr ""
-
-#: modules/data_analysis/eda.py:298
-msgid "Homogeneity"
-msgstr ""
-
-#: modules/data_analysis/eda.py:301
-msgid "Homogeneity .......................................... "
-msgstr ""
-
-#: modules/data_analysis/eda.py:313
-msgid "Anomaly"
-msgstr ""
-
-#: modules/data_analysis/eda.py:316
-msgid "Anomaly .............................................. "
-msgstr ""
-
-#: modules/data_analysis/eda.py:354
-msgid "Sizes_data"
-msgstr ""
-
-#: modules/data_analysis/eda.py:354
-msgid "Maximums"
-msgstr ""
-
-#: modules/data_analysis/eda.py:354
-msgid "Minimums"
-msgstr ""
-
-#: modules/data_analysis/eda.py:354
-msgid "Averages"
-msgstr ""
-
-#: modules/data_analysis/eda.py:354
-msgid "Medians"
-msgstr ""
-
-#: modules/data_analysis/eda.py:355
-msgid "Std_deviations"
-msgstr ""
-
-#: modules/data_analysis/eda.py:355
-msgid "skewness"
-msgstr ""
-
-#: modules/data_analysis/eda.py:355
-msgid "Kurtosis"
-msgstr ""
-
-#: modules/data_analysis/eda.py:355
-msgid "Coeff_variations"
-msgstr ""
-
-#: modules/data_analysis/eda.py:360
-#, python-brace-format
-msgid "Graphs_for_{0}"
-msgstr ""
-
-#: modules/data_analysis/eda.py:365 modules/data_analysis/eda.py:376
-#: modules/data_analysis/eda.py:401 modules/data_analysis/eda.py:410
-#: modules/data_analysis/eda.py:428
-msgid "vs_Stations"
-msgstr ""
-
-#: modules/data_analysis/eda.py:365 modules/data_analysis/eda.py:378
-#: modules/data_analysis/eda.py:406 modules/data_analysis/eda.py:413
-#: modules/data_analysis/eda.py:433
-msgid "vs_Altitude"
-msgstr ""
-
-#: modules/data_analysis/eda.py:387
-#, python-brace-format
-msgid "{0}_({1})_{2}"
-msgstr ""
-
-#: modules/data_analysis/eda.py:395
-#, python-brace-format
-msgid ""
-"{0} ({1})\n"
-"{2}"
-msgstr ""
-
-#: modules/data_analysis/eda.py:414
-msgid "Altitude (m)"
-msgstr ""
-
-#: modules/data_analysis/eda.py:540
-msgid "Analysis_the_best_periods_to_process.csv"
-msgstr ""
-
-#: modules/data_analysis/eda.py:544
-msgid "ANALYSIS PERIOD"
-msgstr ""
-
-#: modules/data_analysis/eda.py:544
-msgid "NUM. YEARS"
-msgstr ""
-
-#: modules/data_analysis/eda.py:544
-msgid "NUM. STATIONS INCLUDED FOR PERIOD"
-msgstr ""
-
-#: modules/data_analysis/eda.py:544
-msgid "MAX % OF NULLS PERMITTED PER STATION"
-msgstr ""
-
-#: modules/data_analysis/eda.py:545
-msgid "% OF NULLS INSIDE THE PERIOD OF ALL DATA"
-msgstr ""
-
-#: modules/data_analysis/eda.py:545
-msgid "RANKING*"
-msgstr ""
-
-#: modules/data_analysis/eda.py:545
-msgid "LIST STATIONS INCLUDED FOR PERIOD:"
-msgstr ""
-
-#: modules/data_analysis/eda.py:572 modules/data_analysis/eda.py:817
-msgid "Graphs_Inspection_of_Series"
-msgstr ""
-
-#: modules/data_analysis/eda.py:604
-#, python-brace-format
-msgid "Station_{0}-{1}_({2}_vs_Time)"
-msgstr ""
-
-#: modules/data_analysis/eda.py:611
-#, python-brace-format
-msgid "_Station_{0}-{1}_({2}_vs_Time)_"
-msgstr ""
-
-#: modules/data_analysis/eda.py:670 modules/data_analysis/eda.py:2131
-msgid "Time"
-msgstr ""
-
-#: modules/data_analysis/eda.py:716
-#, python-brace-format
-msgid "mosaic_station_{0}-{1}.png"
-msgstr ""
-
-#: modules/data_analysis/eda.py:823
-#, python-brace-format
-msgid "Climatology_table_{0}_(monthly)"
-msgstr ""
-
-#: modules/data_analysis/eda.py:825
-#, python-brace-format
-msgid "Climatology_table_{0}_({1})"
-msgstr ""
-
-#: modules/data_analysis/eda.py:890
-msgid "Climatology"
-msgstr ""
-
-#: modules/data_analysis/eda.py:902
-#, python-brace-format
-msgid ""
-"Multiyear climatology ({0})\n"
-"{1} {2} - {3} ({4}-{5})"
-msgstr ""
-
-#: modules/data_analysis/eda.py:909
-#, python-brace-format
-msgid "Multiyear_climatology_({0})_{1}_{2}_{3}"
-msgstr ""
-
-#: modules/data_analysis/eda.py:921 modules/data_analysis/eda.py:980
-#: modules/data_analysis/eda.py:1082 modules/data_analysis/eda.py:1139
-msgid "Months"
-msgstr ""
-
-#: modules/data_analysis/eda.py:929 modules/data_analysis/eda.py:1087
-msgid "[mean]"
-msgstr ""
-
-#: modules/data_analysis/eda.py:968
-#, python-brace-format
-msgid "Multiyear_climatology_({0}+whiskers)_{1}_{2}_{3}"
-msgstr ""
-
-#: modules/data_analysis/eda.py:988 modules/data_analysis/eda.py:1144
-msgid "[min-mean-max]"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1026
-#, python-brace-format
-msgid "Multiyear_climatology_table_{0}_{1}_{2}_{3}.csv"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1036 modules/data_analysis/eda.py:1198
-msgid "max"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1042 modules/data_analysis/eda.py:1204
-msgid "min"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1064
-#, python-brace-format
-msgid ""
-"Multiyear climatology (each {0} days)\n"
-"{1} {2} - {3} ({4}-{5})"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1071
-#, python-brace-format
-msgid "Multiyear_climatology_({0}days)_{1}_{2}_{3}"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1128
-#, python-brace-format
-msgid "Multiyear_climatology_({0}days+whiskers)_{1}_{2}_{3}"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1185
-#, python-brace-format
-msgid "Multiyear_climatology_table_{0}days_{1}_{2}_{3}.csv"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1219
-msgid ""
-"partial\n"
-" > WARNING: There is only one station for process\n"
-"   the scatter plots of series, this need more \n"
-"   of one station."
-msgstr ""
-
-#: modules/data_analysis/eda.py:1223
-msgid ""
-"partial\n"
-" > WARNING: The maximum limit for make the scatter plots\n"
-"   of series are 10 stations, if you want this diagram,\n"
-"   please divide the stations in regions into different\n"
-"   runfiles with maximum 10 stations per runfile, and\n"
-"   rerun each runfile."
-msgstr ""
-
-#: modules/data_analysis/eda.py:1235
-msgid ""
-"impossible\n"
-" > WARNING: There is no a global period for all\n"
-"   stations, the scatter plots of series need to be\n"
-"   evaluated with the global period, continuing\n"
-"   without make the scatter plots of series graph"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1246
-msgid "scatter_plots_of_series"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1250
-msgid "Scatter plots of series"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1312
-msgid "Frequency_histogram"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1320
-#, python-brace-format
-msgid "frequency_histogram_{0}_{1}_{2}"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1324
-#, python-brace-format
-msgid ""
-"Frequency histogram\n"
-"{0} {1} - {2} ({3}-{4})"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1333 modules/data_analysis/eda.py:2237
-msgid "Frequency"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1359
-#, python-brace-format
-msgid "shapiro_wilks_test_{0}.csv"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1376
-msgid "rejected"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1378
-msgid "accepted"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1431
-msgid "Outliers_per_station"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1446
-msgid "Station"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1629 modules/data_analysis/eda.py:1634
-msgid "Outliers_table"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1646
-msgid "WHISKERS BELOW"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1647
-msgid "WHISKERS ABOVE"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1647
-msgid "NUM. OUTLIERS"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1649
-msgid "VALUE"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1649
-msgid "PHEN_CAT*"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1668
-msgid "OUTLIERS LIST:"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1687
-#, python-brace-format
-msgid "*Calculated based on data {0}"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1757
-#, python-brace-format
-msgid "Auto_Correlation_{0}_{1}_{2}"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1832
-#, python-brace-format
-msgid "Cross_Correlation_{0}_{1}_{2}"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1841
-#, python-brace-format
-msgid ""
-"Auto Correlation - {0} {1}\n"
-"{2} ({3}-{4})"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1846
-#, python-brace-format
-msgid ""
-"Cross Correlation - {0} {1}\n"
-"{2} vs {3} ({4}-{5})"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1856
-msgid "Lags"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1896
-msgid "LAGS"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1896
-msgid "CORRELATION"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1944
-#, python-brace-format
-msgid "Cross_Correlation_Matrix_Table_({0}-{1}).csv"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1959 modules/data_analysis/eda.py:2029
-#: modules/data_analysis/eda.py:2064 modules/data_analysis/eda.py:2098
-#, python-brace-format
-msgid "*Data in global period {0}-{1}"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1965
-msgid ""
-"partial\n"
-" > WARNING: There is no a global period for all\n"
-"   stations, the cross-correlation matrix table need\n"
-"   this, continuing without make this matrix table"
-msgstr ""
-
-#: modules/data_analysis/eda.py:1985
-msgid ""
-"impossible\n"
-" > WARNING: There is no a global period for all\n"
-"   stations, the tests of homogeneity need to be\n"
-"   evaluated with the global period, continuing\n"
-"   without make homogeneity tests"
-msgstr ""
-
-#: modules/data_analysis/eda.py:2002
-msgid "U"
-msgstr ""
-
-#: modules/data_analysis/eda.py:2002 modules/data_analysis/eda.py:2041
-#: modules/data_analysis/eda.py:2076
-msgid "P-VALUE"
-msgstr ""
-
-#: modules/data_analysis/eda.py:2002 modules/data_analysis/eda.py:2041
-#: modules/data_analysis/eda.py:2076
-msgid "?"
-msgstr ""
-
-#: modules/data_analysis/eda.py:2028 modules/data_analysis/eda.py:2063
-#: modules/data_analysis/eda.py:2097
-#, python-brace-format
-msgid "*Calculated with {0} data"
-msgstr ""
-
-#: modules/data_analysis/eda.py:2041
-msgid "T"
-msgstr ""
-
-#: modules/data_analysis/eda.py:2076
-msgid "W"
-msgstr ""
-
-#: modules/data_analysis/eda.py:2108 modules/data_analysis/eda.py:2151
-msgid "Mass_Curve"
-msgstr ""
-
-#: modules/data_analysis/eda.py:2126
-#, python-brace-format
-msgid ""
-"{0} for {1}-{2}\n"
-"period {3}-{4}"
-msgstr ""
-
-#: modules/data_analysis/eda.py:2127
-msgid "Mass Curve"
-msgstr ""
-
-#: modules/data_analysis/eda.py:2136
-#, python-brace-format
-msgid "{0} accumulated ({1})"
-msgstr ""
-
-#: modules/data_analysis/eda.py:2164
-msgid "Anomaly_time_series"
-msgstr ""
-
-#: modules/data_analysis/eda.py:2168
-msgid "Anomaly_frequency_histogram"
-msgstr ""
-
-#: modules/data_analysis/eda.py:2199
-#, python-brace-format
-msgid "Anomaly_time_series_{0}_{1}_{2}.csv"
-msgstr ""
-
-#: modules/data_analysis/eda.py:2204
-msgid "ANOMALIES"
-msgstr ""
-
-#: modules/data_analysis/eda.py:2223
-#, python-brace-format
-msgid "Anomaly_frequency_histogram_{0}_{1}_{2}"
-msgstr ""
-
-#: modules/data_analysis/eda.py:2227
-#, python-brace-format
-msgid ""
-"Anomaly frequency histogram\n"
-"{0} {1} - {2} ({3}-{4})"
-msgstr ""
-
-#: jaziku.py:66
+#: jaziku.py:67
 #, python-brace-format
 msgid ""
 "You version of python is {0}, please use Jaziku with python v2.6 or v2.7"
 msgstr ""
 
-#: jaziku.py:96
+#: jaziku.py:97
 #, python-brace-format
 msgid "[runfile] no such file or directory: {0}"
 msgstr ""
 
-#: jaziku.py:109
+#: jaziku.py:110
 #, python-brace-format
 msgid ""
 "\n"
@@ -2813,47 +2993,47 @@ msgid ""
 "################################################################"
 msgstr ""
 
-#: jaziku.py:179
+#: jaziku.py:180
 #, python-brace-format
 msgid ""
 "\n"
 "################# STATION: {0} ({1})"
 msgstr ""
 
-#: jaziku.py:192
+#: jaziku.py:193
 #, python-brace-format
 msgid ""
 "\n"
 "{0} station processed."
 msgstr ""
 
-#: jaziku.py:193
+#: jaziku.py:194
 #, python-brace-format
 msgid ""
 "\n"
 "{0} stations processed."
 msgstr ""
 
-#: jaziku.py:217
+#: jaziku.py:218
 #, python-brace-format
 msgid ""
 "\n"
 "{0} map created for {1}"
 msgstr ""
 
-#: jaziku.py:218
+#: jaziku.py:219
 #, python-brace-format
 msgid ""
 "\n"
 "{0} maps created for {1}"
 msgstr ""
 
-#: jaziku.py:221
+#: jaziku.py:222
 msgid ""
 "\n"
 "Process completed!"
 msgstr ""
 
-#: jaziku.py:223
+#: jaziku.py:224
 msgid "Good bye :)"
 msgstr ""
