@@ -182,9 +182,9 @@ def get_text_of_frequency_data(var):
         if env.var_[var].FREQUENCY_DATA == "monthly":
             text_of_frequency_data = _("*calculated from monthly data")
         if env.var_[var].FREQUENCY_DATA == "bimonthly":
-            text_of_frequency_data = _("*calculated from bimonthly data")
+            text_of_frequency_data = _("*calculated from (overlapping) bimonthly data")
         if env.var_[var].FREQUENCY_DATA == "trimonthly":
-            text_of_frequency_data = _("*calculated from trimonthly data")
+            text_of_frequency_data = _("*calculated from (overlapping) trimonthly data")
 
     if env.var_[var].was_converted:
         text_of_frequency_data += _( " (converted)")
