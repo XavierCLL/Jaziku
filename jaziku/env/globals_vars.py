@@ -230,7 +230,7 @@ def figure_bar_properties(color=colors['plt_default'], eg_color=None, align='cen
         bar_properties["align"] = align
     return bar_properties
 
-def set_others_properties(ax, ts=14.5):
+def set_others_properties(ax, ts=15.5):
     # text in axes
     ax.tick_params(axis='both', which='major', labelsize=ts, labelcolor=colors['grey_S3'])
     #ax.tick_params(axis='both', which='minor', labelsize=8)
