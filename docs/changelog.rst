@@ -34,6 +34,7 @@ news
 - Added the period to process in all maps in tob-center of the
   graphics, and put the analog year label in bottom left location
   into the maps only if this is enable.
+- Added the Wavelets for spectral analysis in EDA
 
 fixes
 +++++

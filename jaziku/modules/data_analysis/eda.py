@@ -26,8 +26,10 @@ from math import log10
 from datetime import date
 from calendar import monthrange
 from dateutil.relativedelta import relativedelta
-from matplotlib import pyplot
-from numpy import histogram
+from matplotlib import pyplot, gridspec
+from numpy import histogram, meshgrid, unique, append
+from numpy.ma import log2, floor
+from numpy import array as np_array
 from pylab import xticks, bar, boxplot
 from scipy import signal
 from PIL import Image
@@ -41,6 +43,7 @@ from jaziku.modules.climate import time_series
 from jaziku.modules.climate.contingency_table import get_label_of_var_I_category
 from jaziku.modules.climate.time_series import  calculate_time_series
 from jaziku.utils import  console, output, watermarking, array
+from jaziku.modules.data_analysis.wavelets import WaveletAnalysis
 
 
 def main(stations_list):
@@ -302,17 +305,40 @@ def main(stations_list):
     anomaly(stations_list)
     console.msg(_("done"), color='green')
 
+
+    # -------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
+    # SPECTRAL ANALYSIS
+    # -------------------------------------------------------------------------
+
+    global spectral_analysis_dir
+    spectral_analysis_dir = os.path.join(env.globals_vars.DATA_ANALYSIS_DIR, _('Spectral_Analysis'))
+    output.make_dirs(spectral_analysis_dir)
+
     # -------------------------------------------------------------------------
     # PERIODOGRAM
 
     global periodogram_dir
-    periodogram_dir = os.path.join(eda_dir, _('Periodogram'))
+    periodogram_dir = os.path.join(spectral_analysis_dir, _('Periodogram'))
     output.make_dirs(periodogram_dir)
 
     console.msg(_("Periodogram .......................................... "), newline=False)
     with console.redirectStdStreams():
         periodogram(stations_list)
     console.msg(_("done"), color='green')
+
+    # -------------------------------------------------------------------------
+    # WAVELETS
+
+    global wavelets_dir
+    wavelets_dir = os.path.join(spectral_analysis_dir, _('Wavelets'))
+    output.make_dirs(wavelets_dir)
+
+    console.msg(_("Wavelets ............................................. "), newline=False)
+    #with console.redirectStdStreams():
+    wavelets(stations_list)
+    console.msg(_("done"), color='green')
+
 
     # -------------------------------------------------------------------------
     # -------------------------------------------------------------------------
@@ -330,6 +356,39 @@ def main(stations_list):
         console.msg(_("done"), color='green')
     else:
         console.msg(return_msg, color="yellow")
+
+stations_list_adjusted = None
+stations_list_adjusted_filling = None
+def convert_stations(stations_list, filling=False, force_same_frequencies=False, messages=False):
+    # save original state of data for var D and I
+    original_freq_data_var_D = env.var_D.FREQUENCY_DATA
+    original_freq_data_var_I = env.var_I.FREQUENCY_DATA
+
+    global stations_list_adjusted
+    global stations_list_adjusted_filling
+
+    if not filling and stations_list_adjusted is not None:
+        return stations_list_adjusted
+    if filling and stations_list_adjusted_filling is not None:
+        return stations_list_adjusted_filling
+
+    if filling:
+        stations_list_adjusted_filling = copy.deepcopy(stations_list)
+        ## make periodogram for var D (all stations)
+        # Filling the variables for all stations before convert
+        for station in stations_list_adjusted_filling:
+            station.var_D.rollback_to_origin()
+            station.var_D.filling()
+        # return to original FREQUENCY_DATA of the two variables
+        env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
+        # Adjust the same frequency data for the two time series
+        adjust_data_of_variables(stations_list_adjusted_filling, force_same_frequencies=force_same_frequencies, messages=messages)
+        return stations_list_adjusted_filling
+    if not filling:
+        stations_list_adjusted = copy.deepcopy(stations_list)
+        # Adjust the same frequency data for the two time series
+        adjust_data_of_variables(stations_list_adjusted, force_same_frequencies=force_same_frequencies, messages=messages)
+        return stations_list_adjusted
 
 
 def zoom_graph(ax,x_scale_below=0, x_scale_above=0, y_scale_below=0, y_scale_above=0, abs_x=False, abs_y=False):
@@ -2386,9 +2445,9 @@ def make_periodogram(station, path_to_save, data, variable):
 
         ## X
         if env.var_[variable].FREQUENCY_DATA in ['bimonthly', 'trimonthly']:
-            ax.set_xlabel(unicode(_('Period')+' ('+_('overlapping')+' '+env.var_[variable].get_FREQUENCY_DATA()+')', 'utf-8'), env.globals_vars.graphs_axis_properties())
+            ax.set_xlabel(unicode(_('Period')+' ('+_('months')+')', 'utf-8'), env.globals_vars.graphs_axis_properties())
         else:
-            ax.set_xlabel(unicode(_('Period')+' ('+env.var_[variable].get_FREQUENCY_DATA()+')', 'utf-8'), env.globals_vars.graphs_axis_properties())
+            ax.set_xlabel(unicode(_('Period')+' ('+env.var_[variable].get_FREQUENCY_DATA(adverb=False)+')', 'utf-8'), env.globals_vars.graphs_axis_properties())
         #xticks(correlation_values['lags'], x_labels)
 
         ## Y
@@ -2427,8 +2486,10 @@ def make_periodogram(station, path_to_save, data, variable):
         # set color for legend border
         l.get_frame().set_edgecolor(env.globals_vars.colors['grey_S3'])
 
+        ax.text(0.01, 0.97, unicode(get_text_of_frequency_data('D'), 'utf-8'), horizontalalignment='left', verticalalignment='center', transform=ax.transAxes)
+
         #pyplot.ylim(-1, 1)
-        zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.06, y_scale_above=-0.08)
+        zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.06, y_scale_above=-0.11)
         fig.tight_layout()
 
         # save image
@@ -2464,9 +2525,9 @@ def make_periodogram(station, path_to_save, data, variable):
 
         ## X
         if env.var_[variable].FREQUENCY_DATA in ['bimonthly', 'trimonthly']:
-            ax.set_xlabel(unicode(_('Frequency')+' ('+_('overlapping')+' '+env.var_[variable].get_FREQUENCY_DATA()+')', 'utf-8'), env.globals_vars.graphs_axis_properties())
+            ax.set_xlabel(unicode(_('Frequency')+' (1/'+_('months')+')', 'utf-8'), env.globals_vars.graphs_axis_properties())
         else:
-            ax.set_xlabel(unicode(_('Frequency')+' ('+env.var_[variable].get_FREQUENCY_DATA()+')', 'utf-8'), env.globals_vars.graphs_axis_properties())
+            ax.set_xlabel(unicode(_('Frequency')+' (1/'+env.var_[variable].get_FREQUENCY_DATA(adverb=False)+')', 'utf-8'), env.globals_vars.graphs_axis_properties())
         #xticks(correlation_values['lags'], x_labels)
 
         ## Y
@@ -2505,8 +2566,10 @@ def make_periodogram(station, path_to_save, data, variable):
         # set color for legend border
         l.get_frame().set_edgecolor(env.globals_vars.colors['grey_S3'])
 
+        ax.text(0.01, 0.97, unicode(get_text_of_frequency_data('D'), 'utf-8'), horizontalalignment='left', verticalalignment='center', transform=ax.transAxes)
+
         #pyplot.ylim(-1, 1)
-        zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.06, y_scale_above=-0.08)
+        zoom_graph(ax=ax, x_scale_below=-0.05,x_scale_above=-0.05, y_scale_below=-0.06, y_scale_above=-0.11)
         fig.tight_layout()
 
         # save image
@@ -2562,13 +2625,12 @@ def make_periodogram(station, path_to_save, data, variable):
 def periodogram(stations_list):
     """Make graphs and tables of periodogram for var D and var I
     """
-
     # save original state of data for var D and I
     original_freq_data_var_D = env.var_D.FREQUENCY_DATA
     original_freq_data_var_I = env.var_I.FREQUENCY_DATA
 
+    #stations_list_adjusted = convert_stations(stations_list, filling=True)
     stations_list_adjusted = copy.deepcopy(stations_list)
-
     ## make periodogram for var D (all stations)
     # Filling the variables for all stations before convert
     for station in stations_list_adjusted:
@@ -2599,6 +2661,259 @@ def periodogram(stations_list):
     station.var_I.calculate_data_date_and_nulls_in_period()
     data = list(station.var_I.data_filtered_in_process_period)
     make_periodogram(station, path_to_save, data, 'I')
+
+    # return to original FREQUENCY_DATA of the two variables
+    env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
+    env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
+
+def make_cmap(colors, position=None, bit=False):
+    '''
+    make_cmap takes a list of tuples which contain RGB values. The RGB
+    values may either be in 8-bit [0 to 255] (in which bit must be set to
+    True when called) or arithmetic [0 to 1] (default). make_cmap returns
+    a cmap with equally spaced colors.
+    Arrange your tuples so that the first color is the lowest value for the
+    colorbar and the last is the highest.
+    position contains values from 0 to 1 to dictate the location of each color.
+    '''
+    import matplotlib as mpl
+    import numpy as np
+    import sys
+    bit_rgb = np.linspace(0,1,256)
+    if position == None:
+        position = np.linspace(0,1,len(colors))
+    else:
+        if len(position) != len(colors):
+            sys.exit("position length must be the same as colors")
+        elif position[0] != 0 or position[-1] != 1:
+            sys.exit("position must start with 0 and end with 1")
+    if bit:
+        for i in range(len(colors)):
+            colors[i] = (bit_rgb[colors[i][0]],
+                         bit_rgb[colors[i][1]],
+                         bit_rgb[colors[i][2]])
+    cdict = {'red':[], 'green':[], 'blue':[]}
+    for pos, color in zip(position, colors):
+        cdict['red'].append((pos, color[0], color[0]))
+        cdict['green'].append((pos, color[1], color[1]))
+        cdict['blue'].append((pos, color[2], color[2]))
+
+    cmap = mpl.colors.LinearSegmentedColormap('my_colormap',cdict,256)
+    return cmap
+
+def make_wavelets(station, path_to_save, variable):
+
+    output.make_dirs(path_to_save)
+
+    data = np_array(list(station.var_[variable].data_filtered_in_process_period))
+
+    wa = WaveletAnalysis(data)
+
+    fig = pyplot.figure(figsize=(17, 11))
+    gs = gridspec.GridSpec(2, 2,height_ratios=[2,4], width_ratios=[25,1])
+
+    ax1 = pyplot.subplot(gs[0,0], **env.globals_vars.graphs_subplot_properties(bg_color='white'))
+    ax2 = pyplot.subplot(gs[1,0], **env.globals_vars.graphs_subplot_properties(bg_color='white'))
+    ax3 = pyplot.subplot(gs[1,1], **env.globals_vars.graphs_subplot_properties())
+    fig.delaxes(ax3)
+
+    ###### firsts graphic
+    if variable == 'D':
+        ax1.set_title(unicode(_("Station {0} {1} - {2}-{3}")
+                              .format(station.code, station.name, env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
+    else:
+        ax1.set_title(unicode(_("Independent Variable {0} - {1}-{2}")
+                              .format(env.var_[variable].TYPE_SERIES, env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']), 'utf-8'), env.globals_vars.graphs_title_properties())
+
+    x = list(station.var_[variable].date_in_process_period)
+    y = list(station.var_[variable].data_in_process_period)
+
+    ax1.plot(x, y, '-', linewidth=2, **env.globals_vars.figure_plot_properties(color=env.globals_vars.colors["grey_S3"]))
+
+    #ax1.set_xlabel(_('Time'), env.globals_vars.graphs_axis_properties())
+
+    x_idx_years1 = [d for d in station.var_[variable].date_in_process_period if d.month==1 and d.day==1]
+    x_idx_years = [station.var_[variable].date_in_process_period.index(d) for d in station.var_[variable].date_in_process_period if d.month==1 and d.day==1]
+    x_years = [d.year for d in station.var_[variable].date_in_process_period if d.month==1 and d.day==1]
+
+    ax1.xaxis.set_ticks(x_idx_years1)
+
+    inter_x = int(round(len(x_years)/15.0, 0))
+    xticklabels = [i if i in x_years[0::inter_x] else '' for i in x_years]
+
+    ax1.set_xticklabels(xticklabels)
+
+    # graphs the background var I categories
+    # colors for paint bars and labels: below, normal , above
+    if env.config_run.settings['class_category_analysis'] == 3:
+        colours = {'below':'#DD4620', 'normal':'#62AD29', 'above':'#6087F1'}
+        colours_keys = ['below', 'normal', 'above']
+    if env.config_run.settings['class_category_analysis'] == 7:
+        colours = {'below3':'#DD4620', 'below2':'#DD8620', 'below1':'#DDC620', 'normal':'#62AD29',
+                   'above1':'#60C7F1', 'above2':'#6087F1', 'above3':'#6047F1'}
+        colours_keys = ['below3', 'below2','below1', 'normal', 'above1', 'above2', 'above3']
+
+    calculate_time_series(station, lags=[0], makes_files=False)
+    before_category_of_phenomenon = None
+    start_area_date = None
+    for idx, iter_date in enumerate(x):
+        ## categorize the outlier based on category of var I
+        if env.config_run.settings['analysis_interval'] in ['monthly', 'bimonthly', 'trimonthly']:
+            # get I values for outliers date
+            station.var_I.specific_values = time_series.get_specific_values(station, 'var_I', 0, iter_date.month)
+            # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
+            values_var_I = get_values_in_range_analysis_interval(station.var_I, iter_date.year, iter_date.month, None, 0)
+        else:
+            # get the corresponding start day of analysis interval
+            day = locate_day_in_analysis_interval(iter_date.day)
+            # get I values for outliers date
+            station.var_I.specific_values = time_series.get_specific_values(station, 'var_I', 0, iter_date.month, day)
+            # get all values of var I in analysis interval in the corresponding period of outlier (var_D)
+            values_var_I = get_values_in_range_analysis_interval(station.var_I, iter_date.year, iter_date.month, day, 0)
+        # get the mean or sum (based on mode_calculation_series_I) of all values of var I
+        # in analysis interval in the corresponding period of outlier (var_D)
+        value_var_I = time_series.calculate_specific_values_of_time_series(station.var_I, values_var_I)
+
+        # get categorize of phenomenon for the value_var_I
+        category_of_phenomenon = get_label_of_var_I_category(value_var_I, station)
+
+        if start_area_date is None:
+            start_area_date = iter_date
+        if before_category_of_phenomenon is None:
+            before_category_of_phenomenon = category_of_phenomenon
+
+        if before_category_of_phenomenon != category_of_phenomenon or idx == len(x)-1:
+            #if before_category_of_phenomenon == "above":
+            color = colours[[key for key, value in env.config_run.settings['categories_labels_var_I'].iteritems() if value == before_category_of_phenomenon][0]]
+            ax1.axvspan(start_area_date, iter_date,ymax=1, alpha=0.22, color=color)
+            before_category_of_phenomenon = category_of_phenomenon
+            start_area_date = iter_date
+
+    ## legend of categories
+    import matplotlib.patches as mpatches
+    legend_items = []
+    for category, label in zip(colours_keys, env.config_run.get_CATEGORIES_LABELS_VAR_I()):
+        legend_items.append(mpatches.Patch(color=colours[category], label=label, alpha=0.22))
+
+    ax1.legend(handles=legend_items, ncol=env.config_run.settings['class_category_analysis'], loc=9, bbox_to_anchor=(0.5, -0.1),frameon=False)
+
+    #ax1.autoscale(tight=True)
+    ax1.grid(True, color='gray')
+    ax1.set_ylabel(unicode('{0} ({1})'.format(env.var_[variable].TYPE_SERIES, env.var_[variable].UNITS), 'utf-8'), env.globals_vars.graphs_axis_properties())
+    env.globals_vars.set_others_properties(ax1)
+
+    ###### second graphic
+
+    ax2.set_title(unicode(_("Wavelet power spectrum"), 'utf-8'), env.globals_vars.graphs_title_properties())
+    t, s = wa.time, wa.scales
+
+    #colors = [(229, 236, 240), (56, 99, 128), (85, 175, 105), (210,196,0), (182,0,0)]
+    #colors = [(211, 231, 243), (110, 171, 207), (56, 99, 128), (64, 201, 94), (255, 239, 10), (254, 0, 0), (150, 0, 0)]
+    colors = [(254, 254, 254),(0, 108, 209),(85, 160, 170), (51, 117, 114), (25, 215, 123), (118, 168, 0), (255, 239, 10), (240, 183, 92),(254, 0, 0),(254, 0, 0), (150, 0, 0)]
+    #colors = [ (85, 175, 105), (210,196,0), (182,0,0)] # This example uses the 8-bit RGB
+    my_cmap = make_cmap(colors, bit=True)
+
+    # plot the wavelet power
+    T, S = meshgrid(t, s)
+    #ax2.contourf(T, S, wa.wavelet_power, 256, cmap=pyplot.get_cmap('gist_stern_r'))
+    CT = ax2.contourf(T, S, wa.wavelet_power, 256, cmap=my_cmap)
+
+    if env.var_[variable].FREQUENCY_DATA in ['bimonthly', 'trimonthly']:
+        ax2.set_ylabel(unicode(_("Period ("+_('months')+")"), 'utf-8'), env.globals_vars.graphs_axis_properties())
+    else:
+        ax2.set_ylabel(unicode(_("Period ({0})").format(env.var_[variable].get_FREQUENCY_DATA(adverb=False)), 'utf-8'), env.globals_vars.graphs_axis_properties())
+    ax2.set_xlabel(unicode(_("Years"), 'utf-8'), env.globals_vars.graphs_axis_properties())
+    ax2.set_yscale('log')
+    ax2.grid(True, color='gray')
+
+    # put the ticks at powers of 2 in the scale
+    ticks = unique(2 ** floor(log2(s)))[1:]
+    ax2.yaxis.set_ticks(ticks)
+    ax2.yaxis.set_ticklabels(ticks.astype(str))
+    ax2.set_ylim(128, 0)
+
+    ax2.xaxis.set_ticks(x_idx_years)
+    ax2.xaxis.set_ticklabels(xticklabels)
+
+    ax2.text(0, 1.013, unicode(get_text_of_frequency_data('D'), 'utf-8'), horizontalalignment='left', verticalalignment='center', transform=ax2.transAxes)
+
+    # shade the region between the edge and coi
+    C, S = wa.coi
+    C = append(t.min(), C)
+    C = append(C, t.max())
+    S = append(s.min(), S)
+    S = append(S, s.min())
+
+    ax2.fill_between(x=C, y1=S, y2=s.max(), color='gray',edgecolor='black', alpha=0.2, hatch = 'x')
+
+    cbar = pyplot.colorbar(CT,fraction=1, pad=0.01, ax=ax3)
+    #cbar.ax.set_ylabel(unicode(_("Wavelets units"), 'utf-8'), env.globals_vars.graphs_axis_properties())
+
+    for cbar_label in cbar.ax.get_yticklabels():
+        cbar_label.set_fontsize(15)
+        cbar_label.set_color(env.globals_vars.colors['grey_S3'])
+
+    ax2.grid(True, color='gray')
+    env.globals_vars.set_others_properties(ax2)
+    ax2.autoscale(tight=True)
+
+    ax2.set_xlim(t.min(), t.max())
+    ax2.set_xbound(lower=0, upper=len(station.var_[variable].date_in_process_period)-1)
+
+    fig.tight_layout()
+    gs.update(hspace=0.3)
+
+    # save image
+    if variable == 'D':
+        name_of_files = _("Wavelets_{0}_{1}_{2}").format(station.code, station.name, env.var_[variable].TYPE_SERIES)
+    if variable == 'I':
+        name_of_files = _("Wavelets_{0}").format(env.var_[variable].TYPE_SERIES)
+    image = os.path.join(path_to_save, name_of_files + '.png')
+    pyplot.savefig(image, dpi=75)
+
+    # stamp logo
+    watermarking.logo(image)
+
+    pyplot.close('all')
+
+def wavelets(stations_list):
+    """Make graphs and tables of Wavelets for var D and var I
+    """
+    # save original state of data for var D and I
+    original_freq_data_var_D = env.var_D.FREQUENCY_DATA
+    original_freq_data_var_I = env.var_I.FREQUENCY_DATA
+
+    #stations_list_adjusted = convert_stations(stations_list, filling=True)
+    stations_list_adjusted = copy.deepcopy(stations_list)
+    ## make periodogram for var D (all stations)
+    # Filling the variables for all stations before convert
+    for station in stations_list_adjusted:
+        station.var_D.rollback_to_origin()
+        station.var_D.filling()
+    # return to original FREQUENCY_DATA of the two variables
+    env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
+    # Adjust the same frequency data for the two time series
+    adjust_data_of_variables(stations_list_adjusted, messages=False)
+
+    # make wavelets for each station for Var D
+    for station in stations_list_adjusted:
+        station.var_D.calculate_data_date_and_nulls_in_period()
+        path_to_save = os.path.join(wavelets_dir, station.code +'-'+station.name)
+        make_wavelets(station, path_to_save, 'D')
+
+    # make wavelet for Var I
+    station = stations_list_adjusted[0]
+    # Filling the variables for all stations before convert
+    station.var_I.rollback_to_origin()
+    station.var_I.filling()
+    # return to original FREQUENCY_DATA of the two variables
+    env.var_I.set_FREQUENCY_DATA(original_freq_data_var_I, check=False)
+    # Adjust the same frequency data for the two time series
+    adjust_data_of_variables([station], messages=False)
+    station.var_I.calculate_data_date_and_nulls_in_period()
+    station.var_D.calculate_data_date_and_nulls_in_period()
+    path_to_save = os.path.join(wavelets_dir)
+    make_wavelets(station, path_to_save, 'I')
 
     # return to original FREQUENCY_DATA of the two variables
     env.var_D.set_FREQUENCY_DATA(original_freq_data_var_D, check=False)
