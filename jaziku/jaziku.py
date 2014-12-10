@@ -113,7 +113,7 @@ def main():
             "#               for the teleconnections analysis.              #\n"
             "#                                                              #\n"
             "#                 Version {0} - {1}\t               #\n"
-            "#           Copyright (C) 2011-2013 IDEAM - Colombia           #\n"
+            "#           Copyright (C) 2011-2014 IDEAM - Colombia           #\n"
             "################################################################")\
     .format(env.globals_vars.VERSION, env.globals_vars.VERSION_DATE)
 

@@ -39,7 +39,7 @@ distribution.
 Download Jaziku
 ---------------
 
-- `jaziku 0.9.0 <https://docs.google.com/uc?id=0B2KQf7Dbx7DUWml4NXB6TGktYmc&export=download>`_
+- `jaziku 1.0.0 <https://docs.google.com/uc?id=0B2KQf7Dbx7DUWml4NXB6TGktYmc&export=download>`_
 
 
 Install Jaziku (installation with PIP)
@@ -48,7 +48,7 @@ Install Jaziku (installation with PIP)
 - Go into downloaded file an run this command to install/update
   (as root or use sudo):
 
-    pip jaziku-0.9.0.tar.gz
+    pip jaziku-1.0.0.tar.gz
 
 - Test if jaziku has installed correctly running:
 
