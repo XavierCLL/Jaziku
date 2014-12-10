@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-# Copyright © 2011-2013 IDEAM
+# Copyright © 2011-2014 IDEAM
 #
 # This file is part of Jaziku.
 #
