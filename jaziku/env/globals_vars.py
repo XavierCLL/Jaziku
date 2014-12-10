@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright © 2011-2013 IDEAM
+# Copyright © 2011-2014 IDEAM
 #
 # This file is part of Jaziku.
 #
@@ -29,9 +29,9 @@ from math import isnan
 
 PROG_NAME = "jaziku"
 
-VERSION = "0.10.0"
+VERSION = "1.0.0"
 
-VERSION_DATE = "--/10/2014"
+VERSION_DATE = "10/12/2014"
 
 # absolute directory where is installed Jaziku in your system,
 # this variable is set in jaziku.py

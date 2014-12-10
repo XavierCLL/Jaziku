@@ -82,7 +82,7 @@ Licence
 -------
 
 | GNU General Public License - GPLv3_
-| Copyright © 2011-2013 IDEAM
+| Copyright © 2011-2014 IDEAM
 | Instituto de Hidrología, Meteorología y Estudios Ambientales
 | Carrera 10 No. 20-30
 | Bogotá, Colombia
