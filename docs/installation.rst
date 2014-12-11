@@ -39,7 +39,7 @@ distribution.
 Download Jaziku
 ---------------
 
-- `jaziku 1.0.0 <https://docs.google.com/uc?id=0B2KQf7Dbx7DUWml4NXB6TGktYmc&export=download>`_
+- `jaziku 1.0.0 <https://docs.google.com/uc?id=0B2KQf7Dbx7DUakRMcEM3WUstMFE&export=download>`_
 
 
 Install Jaziku (installation with PIP)
