@@ -24,14 +24,15 @@ distribution.
 - numpy (or python-numpy)
 - python-pillow (or python-imaging, python-image)
 - python-dateutil
+- zlib or zlib1g-dev
 - imagemagick
 - `python-clint <http://pypi.python.org/pypi/clint>`_ [1]_
-- `hpgl <http://hpgl.aoizora.org>`_ [2]_
+- `hpgl <http://hpgl.mit-ufa.com>`_ `hpgl download list <http://sourceforge.net/projects/hpgl/files/>`_ [2]_
 - `ncl <http://www.ncl.ucar.edu>`_ [3]_
 
 .. [1] you can install this using easy install:
-       "pip clint"
-.. [2] this is need for interpolation for maps
+       "pip2 install clint"
+.. [2] this is need for maps interpolation
 .. [3] this is for make maps, ignore this and hpgl if you don't need maps
 
     Note: Sure that the version of these packages are for python version 2.6 or 2.7
@@ -39,7 +40,7 @@ distribution.
 Download Jaziku
 ---------------
 
-- `jaziku 1.0.0 <https://docs.google.com/uc?id=0B2KQf7Dbx7DUakRMcEM3WUstMFE&export=download>`_
+- `jaziku v1.0.0 <https://docs.google.com/uc?id=0B2KQf7Dbx7DUakRMcEM3WUstMFE&export=download>`_
 
 
 Install Jaziku (installation with PIP)
@@ -48,7 +49,7 @@ Install Jaziku (installation with PIP)
 - Go into downloaded file an run this command to install/update
   (as root or use sudo):
 
-    pip jaziku-1.0.0.tar.gz
+    pip2 install jaziku-1.0.0.tar.gz
 
 - Test if jaziku has installed correctly running:
 
