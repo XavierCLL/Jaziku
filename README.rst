@@ -48,7 +48,7 @@ http://hg.ideam.gov.co:8000/meteorologia/jaziku/summary
 Install
 -------
 
-Please read the `instruction install <https://docs.google.com/uc?id=0B2KQf7Dbx7DUWHJnd0xIS2tGcFE&export=download>`_ or `this <http://hg.ideam.gov.co:8000/meteorologia/jaziku/files/tip/docs/installation.rst>`_ file.
+Please read the `instruction install <https://docs.google.com/uc?id=0B2KQf7Dbx7DUaVVMTHBJUG80MkU&export=download>`_ or `this <http://hg.ideam.gov.co:8000/meteorologia/jaziku/files/tip/docs/installation.rst>`_ file.
 
 Synopsis run
 ------------
