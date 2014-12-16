@@ -335,8 +335,8 @@ def main(stations_list):
     output.make_dirs(wavelets_dir)
 
     console.msg(_("Wavelets ............................................. "), newline=False)
-    #with console.redirectStdStreams():
-    wavelets(stations_list)
+    with console.redirectStdStreams():
+        wavelets(stations_list)
     console.msg(_("done"), color='green')
 
 
