@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-# Copyright © 2011-2012 IDEAM
+# Copyright © 2011-2015 IDEAM
 #
 # This file is part of Jaziku.
 #
@@ -133,9 +133,10 @@ def main():
 
     # get values from file input
     with open(arg.input_file, 'rb') as csvfile:
-        dialect = csv.Sniffer().sniff(csvfile.read(4096))
-        csvfile.seek(0)
-        reader = csv.reader(csvfile, dialect)
+        #dialect = csv.Sniffer().sniff(csvfile.read(4096))
+        #csvfile.seek(0)
+        #reader = csv.reader(csvfile, dialect)
+        reader = csv.reader(csvfile, delimiter='\t')
 
         values = []
         for idx, line in enumerate(reader):
