@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-#==============================================================================
+# ==============================================================================
 # Copyright © 2011-2014 IDEAM
 # Instituto de Hidrología, Meteorología y Estudios Ambientales
 # Carrera 10 No. 20-30
@@ -26,9 +26,9 @@
 #   Roadmap, technical-theoretical support, tester and product
 #   verification, doc-user and manual:
 #       Ines Sánchez Rodriguez < icsanchez(a)ideam.gov.co >
-#==============================================================================
+# ==============================================================================
 
-#==============================================================================
+# ==============================================================================
 # IMPORTS
 
 import sys
@@ -53,7 +53,7 @@ from modules.maps import maps
 from utils import console, output
 
 
-#==============================================================================
+# ==============================================================================
 # MAIN PROCESS
 
 
@@ -65,7 +65,7 @@ def main():
     # check python version
     if sys.version_info[0] != 2 or sys.version_info[1] < 6:
         console.msg_error(_("You version of python is {0}, please use Jaziku with "
-                      "python v2.6 or v2.7").format(sys.version_info[0:2]), False)
+                            "python v2.6 or v2.7").format(sys.version_info[0:2]), False)
 
     # set encoding to utf-8
     reload(sys)
@@ -77,7 +77,7 @@ def main():
     except TypeError:
         use("AGG", warn=False)  # for old version of matplotlib
 
-    #set the root directory where jaziku was installed
+    # set the root directory where jaziku was installed
     env.globals_vars.JAZIKU_DIR = os.path.dirname(os.path.realpath(__file__))
 
     # Parser and check arguments
@@ -114,8 +114,8 @@ def main():
             "#                                                              #\n"
             "#                 Version {0} - {1}\t               #\n"
             "#           Copyright (C) 2011-2014 IDEAM - Colombia           #\n"
-            "################################################################")\
-    .format(env.globals_vars.VERSION, env.globals_vars.VERSION_DATE)
+            "################################################################") \
+        .format(env.globals_vars.VERSION, env.globals_vars.VERSION_DATE)
 
     # -------------------------------------------------------------------------
     # GET/SET AND CHECK SETTINGS TO RUN
@@ -142,7 +142,6 @@ def main():
     # DATA ANALYSIS
 
     if env.config_run.settings['data_analysis']:
-
         # PRE-PROCESS: prepare data for all stations for data analysis process
         stations.prepare_all_stations(stations_list,
                                       prepare_data_for_data_analysis=True,
@@ -157,7 +156,6 @@ def main():
 
     # climate
     if env.config_run.settings['climate_process']:
-
         # PRE-PROCESS: prepare data for all stations for climate (and forecast) process
         stations.prepare_all_stations(stations_list,
                                       prepare_data_for_data_analysis=False,
@@ -190,9 +188,9 @@ def main():
                 forecast.process(station)
 
         console.msg(gettext.ngettext(
-                    _("\n{0} station processed."),
-                    _("\n{0} stations processed."),
-                    Station.stations_processed).format(Station.stations_processed), color='green')
+            _("\n{0} station processed."),
+            _("\n{0} stations processed."),
+            Station.stations_processed).format(Station.stations_processed), color='green')
 
     # delete instance of stations for clean memory
     del stations_list
@@ -215,9 +213,10 @@ def main():
 
         for grid in maps.Grid.all_grids:
             console.msg(gettext.ngettext(
-                        _("\n{0} map created for {1}"),
-                        _("\n{0} maps created for {1}"),
-                        maps.Grid.maps_created_in_grid).format(maps.Grid.maps_created_in_grid, grid.grid_fullname), color='green')
+                _("\n{0} map created for {1}"),
+                _("\n{0} maps created for {1}"),
+                maps.Grid.maps_created_in_grid).format(maps.Grid.maps_created_in_grid, grid.grid_fullname),
+                        color='green')
 
     console.msg(_("\nProcess completed!"), color='green')
 
@@ -226,8 +225,9 @@ def main():
     console.msg_footer()
 
     # clear all variables and exit
-    #sys.modules[__name__].__dict__.clear()
+    # sys.modules[__name__].__dict__.clear()
     sys.exit()
+
 
 # Run main() when call jaziku.py
 if __name__ == "__main__":

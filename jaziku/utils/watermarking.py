@@ -37,4 +37,5 @@ def logo(image, gravity='southeast', dissolve=100):
 
     image_dir = os.path.abspath(image)
 
-    call("composite -gravity {0} -dissolve {1} '{2}' '{3}' '{3}'".format(gravity, dissolve, watermarking_logo, image_dir), shell=True)
+    call("composite -gravity {0} -dissolve {1} '{2}' '{3}' '{3}'".format(gravity, dissolve, watermarking_logo,
+                                                                         image_dir), shell=True)

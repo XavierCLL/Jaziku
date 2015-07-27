@@ -24,8 +24,9 @@ import math
 from  numpy import linspace
 
 from jaziku import env
-from jaziku.utils import  console, array, input
+from jaziku.utils import console, array, input
 from jaziku.core.station import Station
+
 
 class Grid(object):
     """Grid class for maps
@@ -73,8 +74,9 @@ class Grid(object):
         else:
             if not isinstance(self.grid_resolution, (int, float)):
                 console.msg_error_configuration("grid_resolution",
-                    _("The grid_resolution '{0}' is wrong, the options are:\n"
-                    "'auto' or valid number.").format(self.grid_resolution), stop_in_grid=self.num)
+                                                _("The grid_resolution '{0}' is wrong, the options are:\n"
+                                                  "'auto' or valid number.").format(self.grid_resolution),
+                                                stop_in_grid=self.num)
             self.grid_resolution = input.to_float(self.grid_resolution)
 
         env.globals_vars.input_settings["grid_resolution"].append(self.grid_resolution)
@@ -96,14 +98,14 @@ class Grid(object):
 
         # make list of coordinate of latitude, this is a list of latitude for this grid
         lat_coordinates_list = linspace(max(self.maxlat, self.minlat),
-            min(self.maxlat, self.minlat),
-            self.lat_size).tolist()
+                                        min(self.maxlat, self.minlat),
+                                        self.lat_size).tolist()
         self.lat_coordinates = [round(item, self.decimal_resolution) for item in lat_coordinates_list]
 
         # make list of coordinate of longitude, this is a list of longitude for this grid
         lon_coordinates_list = linspace(min(self.maxlon, self.minlon),
-            max(self.maxlon, self.minlon),
-            self.lon_size).tolist()
+                                        max(self.maxlon, self.minlon),
+                                        self.lon_size).tolist()
         self.lon_coordinates = [round(item, self.decimal_resolution) for item in lon_coordinates_list]
 
         # interpolation type TODO:
@@ -111,14 +113,15 @@ class Grid(object):
 
         # set the semivariogram type for interpolation
         #     0 – spherical, 1 – exponential, 2 – gaussian;
-        self.all_semivariogram_type = {'spherical':0, 'exponential':1, 'gaussian':2}
+        self.all_semivariogram_type = {'spherical': 0, 'exponential': 1, 'gaussian': 2}
         if self.semivariogram_type == "default":
             self.semivariogram_type = 'spherical'
         if self.semivariogram_type not in self.all_semivariogram_type:
             console.msg_error_configuration("semivariogram_type",
-                _("The semivariogram type '{0}' is wrong, the options are:\n"
-                  "default, {1}").format(self.semivariogram_type, ', '.join(self.all_semivariogram_type.keys())),
-                stop_in_grid=self.num)
+                                            _("The semivariogram type '{0}' is wrong, the options are:\n"
+                                              "default, {1}").format(self.semivariogram_type,
+                                                                     ', '.join(self.all_semivariogram_type.keys())),
+                                            stop_in_grid=self.num)
 
         env.globals_vars.input_settings["semivariogram_type"].append(self.semivariogram_type)
         self.num_semivariogram_type = self.all_semivariogram_type[self.semivariogram_type]
@@ -132,8 +135,9 @@ class Grid(object):
                 self.radiuses = [int(self.radiuses[0]), int(self.radiuses[1])]
             except:
                 console.msg_error_configuration("radiuses",
-                    _("The radiuses '{0}' is wrong, the options are:\n"
-                      "'auto' or radius1 and radius2 in different column.").format(self.radiuses), stop_in_grid=self.num)
+                                                _("The radiuses '{0}' is wrong, the options are:\n"
+                                                  "'auto' or radius1 and radius2 in different column.").format(
+                                                    self.radiuses), stop_in_grid=self.num)
 
         env.globals_vars.input_settings["radiuses"].append(', '.join([str(x) for x in self.radiuses]))
 
@@ -144,8 +148,9 @@ class Grid(object):
             self.max_neighbours = int(self.max_neighbours)
         else:
             console.msg_error_configuration("max_neighbours",
-                _("The max_neighbours '{0}' is wrong, the options are:\n"
-                  "'auto' or valid number").format(self.max_neighbours), stop_in_grid=self.num)
+                                            _("The max_neighbours '{0}' is wrong, the options are:\n"
+                                              "'auto' or valid number").format(self.max_neighbours),
+                                            stop_in_grid=self.num)
 
         env.globals_vars.input_settings["max_neighbours"].append(self.max_neighbours)
 
@@ -162,7 +167,7 @@ class Grid(object):
         else:
             self.text_bottom_left = "\"\""
 
-    def  print_grid_properties(self):
+    def print_grid_properties(self):
         console.msg(_("   Mesh size: {0}x{1}").format(self.lat_size, self.lon_size), color='cyan')
 
         # interpolation type TODO:
@@ -195,10 +200,10 @@ class Grid(object):
             return matrix, "nan"
 
         # check if point is outside of the grid
-        if lat < min(self.lat_coordinates) or\
-           lat > max(self.lat_coordinates) or\
-           lon < min(self.lon_coordinates) or\
-           lon > max(self.lon_coordinates):
+        if lat < min(self.lat_coordinates) or \
+                        lat > max(self.lat_coordinates) or \
+                        lon < min(self.lon_coordinates) or \
+                        lon > max(self.lon_coordinates):
             return matrix, "point not added"
 
         def closest(target, collection):
@@ -233,7 +238,6 @@ class Grid(object):
 
 
 def search_and_set_internal_grid(grid):
-
     grid.is_internal = True
 
     grid.shape_path = os.path.join(env.globals_vars.JAZIKU_DIR, 'data', 'maps', 'shapes', grid.grid_path)
@@ -279,25 +283,25 @@ def search_and_set_internal_grid(grid):
                            "please check the manual.\n\n"
                            "For example: Colombia, Vaupes;Colombia, Caldas;Colombia.\n").format(grid.grid_fullname))
 
-def set_particular_grid(grid):
 
+def set_particular_grid(grid):
     grid.is_internal = False
 
     grid.shape_path = os.path.realpath(grid.shape_path)
 
     if not os.path.isfile(os.path.join(grid.shape_path, grid.grid_name + ".shp")) or \
-       not os.path.isfile(os.path.join(grid.shape_path, grid.grid_name + ".prj")) or \
-       not os.path.isfile(os.path.join(grid.shape_path, grid.grid_name + ".sbn")) or \
-       not os.path.isfile(os.path.join(grid.shape_path, grid.grid_name + ".sbx")) or \
-       not os.path.isfile(os.path.join(grid.shape_path, grid.grid_name + ".shx")):
+            not os.path.isfile(os.path.join(grid.shape_path, grid.grid_name + ".prj")) or \
+            not os.path.isfile(os.path.join(grid.shape_path, grid.grid_name + ".sbn")) or \
+            not os.path.isfile(os.path.join(grid.shape_path, grid.grid_name + ".sbx")) or \
+            not os.path.isfile(os.path.join(grid.shape_path, grid.grid_name + ".shx")):
         raise ValueError(_("Can't set particular shape, please check files in shape path\n"
-                            "this must be contain inside .shp .prj .sbn .sbx .shx\n"
-                            "and each file must be named with the same name defined\n"
-                            "for the 'grid' parameter.\n\n"
-                            "For example, if you define in 'grid' as 'region_A' \n"
-                            "the files inside shape_path directory must be named:\n"
-                            "region_A.shp, region_A.prj, region_A.sbn,\n"
-                            "region_A.sbx and region_A.shx."))
+                           "this must be contain inside .shp .prj .sbn .sbx .shx\n"
+                           "and each file must be named with the same name defined\n"
+                           "for the 'grid' parameter.\n\n"
+                           "For example, if you define in 'grid' as 'region_A' \n"
+                           "the files inside shape_path directory must be named:\n"
+                           "region_A.shp, region_A.prj, region_A.sbn,\n"
+                           "region_A.sbx and region_A.shx."))
 
     if os.path.isfile(os.path.join(grid.shape_path, grid.grid_name + ".py")):
         particular_grid = imp.load_source("particular_grid", os.path.join(grid.shape_path, grid.grid_name + ".py"))

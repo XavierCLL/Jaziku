@@ -19,7 +19,7 @@
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#class Config(object):
+# class Config(object):
 #
 #    def __init__(self, name):
 #        self._name = name
@@ -38,7 +38,7 @@
 #        self._value = value
 
 
-#==============================================================================
+# ==============================================================================
 # settings and list_of_all_settings is global configuration settings (and are
 # not particulars by station) for run Jaziku based on runfile and after reset
 # and check in settings_to_run functions
@@ -213,6 +213,7 @@ list_of_all_settings = [
     'marks_stations'
 ]
 
+
 def init():
     """Initialize all settings variables in None
     """
@@ -220,17 +221,17 @@ def init():
         settings[settings_item] = None
 
 
-#def gett(config_name):
+# def gett(config_name):
 #    return all[config_name].value
 #
-#def set(config_name, value):
+# def set(config_name, value):
 #    if config_name in settings:
 #        all[config_name].value = value
 #    else:
 #        raise ValueError("not in standard configurations")
 
 
-#==============================================================================
+# ==============================================================================
 # SOME FUNCTIONS
 
 def get_CATEGORIES_LABELS_VAR_I():
@@ -250,16 +251,18 @@ def get_CATEGORIES_LABELS_VAR_I():
              settings['categories_labels_var_I']['above3']]
     return None
 
+
 def get_ANALYSIS_INTERVAL_i18n():
     global settings
 
-    _freq_data ={'5days': _('5 days'),
-                 '10days': _('10 days'),
-                 '15days': _('15 days'),
-                 'monthly': _('monthly'),
-                 'bimonthly': _('bimonthly'),
-                 'trimonthly': _('trimonthly')}
+    _freq_data = {'5days': _('5 days'),
+                  '10days': _('10 days'),
+                  '15days': _('15 days'),
+                  'monthly': _('monthly'),
+                  'bimonthly': _('bimonthly'),
+                  'trimonthly': _('trimonthly')}
     return _freq_data[settings['analysis_interval']]
+
 
 def get_MODE_CALCULATION_SERIES_i18n(var):
     global settings
@@ -267,4 +270,4 @@ def get_MODE_CALCULATION_SERIES_i18n(var):
     mode_calculation_series_i18n = [_('accumulate'), _('mean')]
 
     if var in ["D", "I"]:
-        return mode_calculation_series_i18n[['accumulate', 'mean'].index(settings['mode_calculation_series_'+var])]
+        return mode_calculation_series_i18n[['accumulate', 'mean'].index(settings['mode_calculation_series_' + var])]

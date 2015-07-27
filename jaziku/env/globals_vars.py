@@ -20,11 +20,11 @@
 
 from math import isnan
 
-#==============================================================================
+# ==============================================================================
 # GLOBAL VARIABLES AND FUNCTIONS
-#==============================================================================
+# ==============================================================================
 
-#==============================================================================
+# ==============================================================================
 # general
 
 PROG_NAME = "jaziku"
@@ -40,7 +40,7 @@ JAZIKU_DIR = None
 # default of number of significant figures, only for output result
 DEFAULT_N_SIG_FIGS = 4
 
-#==============================================================================
+# ==============================================================================
 # arguments, inputs and outputs
 
 # delimiter for inputs and outputs
@@ -55,10 +55,11 @@ ARGS = None
 # this variable is set in jaziku.py
 OUTPUT_DIR = None
 
-#==============================================================================
+# ==============================================================================
 # valid nulls
 
 OLD_VALID_NULL = [99999, -99999]  # these are deprecate valid null but now used for maps files interpolation
+
 
 def is_valid_null(value):
     """
@@ -72,21 +73,22 @@ def is_valid_null(value):
         return True
     else:
         try:
-            if isinstance(value,(float,int)) and isnan(value):
+            if isinstance(value, (float, int)) and isnan(value):
                 return True
-            if int(float(value)) in OLD_VALID_NULL: # TODO: delete deprecated valid null
+            if int(float(value)) in OLD_VALID_NULL:  # TODO: delete deprecated valid null
                 return True
         except:
             return False
     return False
 
-#==============================================================================
+
+# ==============================================================================
 # analysis_interval
 
 ALL_ANALYSIS_INTERVALS = ["5days", "10days", "15days", "monthly", "bimonthly", "trimonthly"]
 NUM_DAYS_OF_ANALYSIS_INTERVAL = None
 
-#==============================================================================
+# ==============================================================================
 # PROCESS_PERIOD is the period for process and make all results in Jaziku,
 # this is the process period define by the user in runfile  but this
 # should be inside in the maximum global common period or are the values
@@ -96,37 +98,38 @@ NUM_DAYS_OF_ANALYSIS_INTERVAL = None
 
 PROCESS_PERIOD = {}
 
-#==============================================================================
+
+# ==============================================================================
 # categories of var I
 
 def categories(key_label=False, include_normal=True, translated=True, as_list=False):
     from jaziku.env.config_run import settings
     if settings['class_category_analysis'] == 3:
         if translated:
-            labels = {'below':unicode(_('below'), 'utf-8'),
-                      'normal':unicode(_('normal'), 'utf-8'),
-                      'above':unicode(_('above'), 'utf-8')}
+            labels = {'below': unicode(_('below'), 'utf-8'),
+                      'normal': unicode(_('normal'), 'utf-8'),
+                      'above': unicode(_('above'), 'utf-8')}
         else:
-            labels = {'below':'below',
-                      'normal':'normal',
-                      'above':'above'}
+            labels = {'below': 'below',
+                      'normal': 'normal',
+                      'above': 'above'}
     if settings['class_category_analysis'] == 7:
         if translated:
-            labels = {'below3':unicode(_('strong below'), 'utf-8'),
-                      'below2':unicode(_('moderate below'), 'utf-8'),
-                      'below1':unicode(_('weak below'), 'utf-8'),
-                      'normal':unicode(_('normal'), 'utf-8'),
-                      'above1':unicode(_('weak above'), 'utf-8'),
-                      'above2':unicode(_('moderate above'), 'utf-8'),
-                      'above3':unicode(_('strong above'), 'utf-8')}
+            labels = {'below3': unicode(_('strong below'), 'utf-8'),
+                      'below2': unicode(_('moderate below'), 'utf-8'),
+                      'below1': unicode(_('weak below'), 'utf-8'),
+                      'normal': unicode(_('normal'), 'utf-8'),
+                      'above1': unicode(_('weak above'), 'utf-8'),
+                      'above2': unicode(_('moderate above'), 'utf-8'),
+                      'above3': unicode(_('strong above'), 'utf-8')}
         else:
-            labels = {'below3':'strong below',
-                      'below2':'moderate below',
-                      'below1':'weak below',
-                      'normal':'normal',
-                      'above1':'weak above',
-                      'above2':'moderate above',
-                      'above3':'strong above'}
+            labels = {'below3': 'strong below',
+                      'below2': 'moderate below',
+                      'below1': 'weak below',
+                      'normal': 'normal',
+                      'above1': 'weak above',
+                      'above2': 'moderate above',
+                      'above3': 'strong above'}
 
     if include_normal is False:
         del labels['normal']
@@ -164,19 +167,20 @@ def categories(key_label=False, include_normal=True, translated=True, as_list=Fa
     else:
         return labels
 
-#==============================================================================
+
+# ==============================================================================
 # maps
 
 # maps files for climate:
 maps_files_climate = {}  # [lag][month][var_I_labels]
 # maps files for correlation:
-#maps_files_correlation = {'5days': None, '10days': None, '15days': None, 'trimonthly': None}  # [lag][month][var_I_labels]
+# maps_files_correlation = {'5days': None, '10days': None, '15days': None, 'trimonthly': None}  # [lag][month][var_I_labels]
 maps_files_correlation = {}  # [lag][month][var_I_labels]
 # maps files for forecast:
-#maps_files_forecast = {'5days': {}, '10days': {}, '15days': {}, 'trimonthly': {}}  # [lag][month][var_I_labels]
+# maps_files_forecast = {'5days': {}, '10days': {}, '15days': {}, 'trimonthly': {}}  # [lag][month][var_I_labels]
 maps_files_forecast = {}  # [lag][month][var_I_labels]
 
-#==============================================================================
+# ==============================================================================
 # graphics properties
 
 colors = {
@@ -191,10 +195,12 @@ colors = {
     'grey_S5': '#3F3F3F',  # Strong
 }
 
+
 def graphs_subplot_properties(bg_color=colors['grey_W2']):
     subplot_properties = {}
     subplot_properties["axisbg"] = bg_color
     return subplot_properties
+
 
 def graphs_axis_properties(fs=15, fa='center', fw='bold', fc=colors['grey_S2']):
     axis_properties = {}
@@ -203,6 +209,7 @@ def graphs_axis_properties(fs=15, fa='center', fw='bold', fc=colors['grey_S2']):
     axis_properties["weight"] = fw
     axis_properties["color"] = fc
     return axis_properties
+
 
 def graphs_title_properties(fs=17, fa='center', fva='bottom', ff='sans-serif', fw='bold', fc=colors['grey_S5']):
     title_properties = {}
@@ -214,12 +221,14 @@ def graphs_title_properties(fs=17, fa='center', fva='bottom', ff='sans-serif', f
     title_properties["color"] = fc
     return title_properties
 
+
 def figure_plot_properties(color=colors['plt_default'], mec=colors['plt_default'], ms=8):
     plot_properties = {}
     plot_properties["color"] = color
     plot_properties["markersize"] = ms
     plot_properties["mec"] = mec
     return plot_properties
+
 
 def figure_bar_properties(color=colors['plt_default'], eg_color=None, align='center'):
     bar_properties = {}
@@ -230,25 +239,26 @@ def figure_bar_properties(color=colors['plt_default'], eg_color=None, align='cen
         bar_properties["align"] = align
     return bar_properties
 
+
 def set_others_properties(ax, ts=15.5):
     # text in axes
     ax.tick_params(axis='both', which='major', labelsize=ts, labelcolor=colors['grey_S3'])
-    #ax.tick_params(axis='both', which='minor', labelsize=8)
+    # ax.tick_params(axis='both', which='minor', labelsize=8)
     # line border of box of subplot
     for spine in ax.spines.values():
         spine.set_edgecolor(colors['grey_S1'])
         spine.set_linewidth(1.2)
 
 
-#==============================================================================
+# ==============================================================================
 # settings to run, this si a global variable of 'settings' inside of settings_to_run
 input_settings = {}
 
-#==============================================================================
+# ==============================================================================
 # globals variable for defined lags, lags = [ 0, 1 and/or 2 ]
 ALL_LAGS = [0, 1, 2]
 
-#==============================================================================
+# ==============================================================================
 # globals directories
 
 CLIMATE_DIR = None
@@ -257,7 +267,7 @@ FORECAST_DIR = None
 
 DATA_ANALYSIS_DIR = None
 
-#==============================================================================
+# ==============================================================================
 # this is the probability_forecast_values for forecast process to use in
 # the forecast_contingency_table.
 # probability_forecast_values:
@@ -267,7 +277,7 @@ DATA_ANALYSIS_DIR = None
 
 probability_forecast_values = {'type': None}
 
-#==============================================================================
+# ==============================================================================
 # this is the forecast_contingency_table for forecast process
 # type = '3x3' '3x7' '7x7'
 

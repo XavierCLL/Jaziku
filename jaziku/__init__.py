@@ -1,4 +1,4 @@
-#from __future__ import absolute_import
+# from __future__ import absolute_import
 
 import sys
 import platform
@@ -13,9 +13,9 @@ try:
 except TypeError:
     use("AGG", warn=False)  # for old version of matplotlib
 
-#VERSION = (1, 4, 0, 'b')
+# VERSION = (1, 4, 0, 'b')
 
-#__version__ = ('.'.join((str(each) for each in VERSION[:3])) +
+# __version__ = ('.'.join((str(each) for each in VERSION[:3])) +
 #               '.'.join(VERSION[3:]))
 
 __platform__ = platform.system()

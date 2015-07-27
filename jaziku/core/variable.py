@@ -55,7 +55,7 @@ class Variable(object):
     """
 
     def __init__(self, type, station):
-        if type in ['D','I']:
+        if type in ['D', 'I']:
             self.type = type
         else:
             raise
@@ -72,7 +72,7 @@ class Variable(object):
             self.file_name = os.path.basename(file)
             # if path to file is relative convert to absolute
             if not os.path.isabs(file):
-                self.file_path = os.path.abspath(os.path.join(os.path.dirname(env.globals_vars.ARGS.runfile),file))
+                self.file_path = os.path.abspath(os.path.join(os.path.dirname(env.globals_vars.ARGS.runfile), file))
             else:
                 self.file_path = os.path.abspath(file)
 
@@ -89,7 +89,7 @@ class Variable(object):
                 self.file_name = os.path.basename(file)
                 # if path to file is relative convert to absolute
                 if not os.path.isabs(file):
-                    self.file_path = os.path.abspath(os.path.join(os.path.dirname(env.globals_vars.ARGS.runfile),file))
+                    self.file_path = os.path.abspath(os.path.join(os.path.dirname(env.globals_vars.ARGS.runfile), file))
                 else:
                     self.file_path = os.path.abspath(file)
 
@@ -149,7 +149,7 @@ class Variable(object):
                         "Reading var {0} from file '{1}':\n"
                         "don't have the minimum data required (november and december)\n"
                         "for the first year ({2}) of the series.")
-                    .format(self.type, self.file_name, first_year))
+                                      .format(self.type, self.file_name, first_year))
 
                 iter_date = first_date
 
@@ -171,7 +171,7 @@ class Variable(object):
                 if last_month == 12 and last_day == 31:
                     return
 
-                end_date_required = date(last_year, 3, 1) + relativedelta(days=-1) # last day of february
+                end_date_required = date(last_year, 3, 1) + relativedelta(days=-1)  # last day of february
 
                 # if the variable don't have the minimum data required for the last year,
                 # this is, full data in january and february for the last year
@@ -180,7 +180,7 @@ class Variable(object):
                         "Reading var {0} from file '{1}':\n"
                         "don't have the minimum data required (january and february)\n"
                         "for the last year ({2}) of the series.")
-                    .format(self.type, self.file_name, last_year))
+                                      .format(self.type, self.file_name, last_year))
 
                 iter_date = last_date
 
@@ -217,7 +217,7 @@ class Variable(object):
                         "Reading var {0} from file '{1}':\n"
                         "don't have the minimum data required (november and december)\n"
                         "for the first year ({2}) of the series.")
-                    .format(self.type, self.file_name, first_year))
+                                      .format(self.type, self.file_name, first_year))
 
                 iter_date = first_date
 
@@ -247,7 +247,7 @@ class Variable(object):
                         "Reading var {0} from file '{1}':\n"
                         "don't have the minimum data required (january and february)\n"
                         "for the last year ({2}) of the series.")
-                    .format(self.type, self.file_name, last_year))
+                                      .format(self.type, self.file_name, last_year))
 
                 iter_date = last_date
 
@@ -346,10 +346,10 @@ class Variable(object):
         for idx_data, data in enumerate(self.data):
             n_month_list = []
             for n in range(n_month):
-                if idx_data+n >= size_data:
+                if idx_data + n >= size_data:
                     n_month_list = [float('nan')]
                     continue
-                n_month_list.append(self.data[idx_data+n])
+                n_month_list.append(self.data[idx_data + n])
             # calculate the N-month value
             value = calculate_specific_values_of_time_series(self, n_month_list)
             data_n_monthly.append(value)
@@ -427,22 +427,24 @@ class Variable(object):
                 # calculate the mean N multi-year
                 multiyear_values = {}
                 for month in range(1, 13):
-                    #range_analysis_interval = get_range_analysis_interval()
-                    #for idx_day, day in enumerate(range_analysis_interval):
+                    # range_analysis_interval = get_range_analysis_interval()
+                    # for idx_day, day in enumerate(range_analysis_interval):
                     if env.var_[self.type].FREQUENCY_DATA in ['daily']:
-                        n_days_range = range(1, monthrange(2000, month)[1]+1)
+                        n_days_range = range(1, monthrange(2000, month)[1] + 1)
                     if env.var_[self.type].FREQUENCY_DATA in ['5days', '10days', '15days']:
                         n_days_range = get_range_analysis_interval()
 
                     for n_day in n_days_range:
                         multiyear = []
                         for idx, value in enumerate(self.data_in_process_period):
-                            if self.date_in_process_period[idx].month == month and self.date_in_process_period[idx].day == n_day:
+                            if self.date_in_process_period[idx].month == month and self.date_in_process_period[
+                                idx].day == n_day:
                                 multiyear.append(value)
                         multiyear_values[(month, n_day)] = array.mean(multiyear)
                 if env.var_[self.type].FREQUENCY_DATA in ['daily']:
                     # fix for leap year, put the average of the two mean-multiyear neighbors values (+-1 day) with its value if exists
-                    multiyear_values[(2, 29)] = array.mean([multiyear_values[(2, 28)], multiyear_values[(2, 29)], multiyear_values[(3, 1)]])
+                    multiyear_values[(2, 29)] = array.mean(
+                        [multiyear_values[(2, 28)], multiyear_values[(2, 29)], multiyear_values[(3, 1)]])
 
                 # filling the nan values with the respective multiyear value
                 for idx, value in enumerate(self.data_in_process_period):
@@ -497,19 +499,18 @@ class Variable(object):
             # set to end year of process period for this station
             end_year = env.globals_vars.PROCESS_PERIOD['end']
 
-        start_date_var = min([d for d in self.date if d.year==start_year])
-        end_date_var = max([d for d in self.date if d.year==end_year])
+        start_date_var = min([d for d in self.date if d.year == start_year])
+        end_date_var = max([d for d in self.date if d.year == end_year])
 
-        data_in_period = self.data[self.date.index(start_date_var):\
-                                                self.date.index(end_date_var) + 1]
-        date_in_period = self.date[self.date.index(start_date_var):\
-                                      self.date.index(end_date_var) + 1]
+        data_in_period = self.data[self.date.index(start_date_var): \
+            self.date.index(end_date_var) + 1]
+        date_in_period = self.date[self.date.index(start_date_var): \
+            self.date.index(end_date_var) + 1]
         nulls_in_period, \
         percentage_of_nulls_in_period = array.check_nulls(data_in_period)
 
         # delete all valid nulls and clean
         data_filtered_in_period = array.clean(data_in_period)
-
 
         if is_process_period:
             # return with data inside the process period
@@ -556,6 +557,3 @@ class Variable(object):
         self.kurtosis = kurtosis(self.data_filtered_in_process_period, bias=False)
         # c-variation
         self.coef_variation = variation(self.data_filtered_in_process_period)
-
-
-

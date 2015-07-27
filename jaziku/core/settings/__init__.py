@@ -20,6 +20,7 @@
 
 from jaziku.core.settings import get, check_and_set, show
 
+
 def main(stations_list):
     """
     Get, set and check settings to run
@@ -27,7 +28,7 @@ def main(stations_list):
 
     import sys
 
-    from jaziku.utils import  console, query
+    from jaziku.utils import console, query
 
     # -------------------------------------------------------------------------
     # GET/SET SETTINGS
@@ -51,6 +52,6 @@ def main(stations_list):
     query_check_continue = query.yes_no(_("\nPlease check the configuration to run, continue?"))
 
     if not query_check_continue:
-        console.msg(_("\nexit"),color='red')
+        console.msg(_("\nexit"), color='red')
         console.msg_footer()
         sys.exit()

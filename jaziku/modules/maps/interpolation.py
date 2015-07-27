@@ -21,7 +21,7 @@
 import os
 
 from jaziku import env
-from jaziku.utils import  console
+from jaziku.utils import console
 
 
 def ordinary_kriging(base_grid, inc_file):
@@ -35,8 +35,8 @@ def ordinary_kriging(base_grid, inc_file):
         data = load_cont_property(os.path.abspath(inc_file.encode('utf-8')), env.globals_vars.OLD_VALID_NULL[1], size)
 
         semivariogram = CovarianceModel(type=base_grid.num_semivariogram_type,
-                                     ranges=(base_grid.radiuses[0] / 2,
-                                             base_grid.radiuses[1] / 2, 1), sill=1)
+                                        ranges=(base_grid.radiuses[0] / 2,
+                                                base_grid.radiuses[1] / 2, 1), sill=1)
 
         ik_result = hpgl.ordinary_kriging(data,
                                           grid,
@@ -46,20 +46,20 @@ def ordinary_kriging(base_grid, inc_file):
                                           cov_model=semivariogram)
 
 
-        #from matplotlib import *
-        #from pylab import *
-        #import pylab
+        # from matplotlib import *
+        # from pylab import *
+        # import pylab
 
-        #write_property(ik_result, os.path.abspath(inc_out), "OK_RESULT", globals_vars.VALID_NULL[1])
+        # write_property(ik_result, os.path.abspath(inc_out), "OK_RESULT", globals_vars.VALID_NULL[1])
 
-        #figure()
-        #pylab.imshow(ik_result[0][:, :, 0])
-        #pylab.savefig(os.path.abspath(inc_file) + "_plot.png")
-        #clf()
+        # figure()
+        # pylab.imshow(ik_result[0][:, :, 0])
+        # pylab.savefig(os.path.abspath(inc_file) + "_plot.png")
+        # clf()
 
-        #figure()
-        #pylab.imshow(data[0][:, :, 0])
-        #pylab.savefig(os.path.abspath(inc_file) + "_origin.png")
-        #clf()
+        # figure()
+        # pylab.imshow(data[0][:, :, 0])
+        # pylab.savefig(os.path.abspath(inc_file) + "_origin.png")
+        # clf()
 
     return ik_result[0][:, :, 0]

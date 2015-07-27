@@ -25,7 +25,8 @@ from clint.textui import colored
 
 from jaziku.env import globals_vars
 
-#==============================================================================
+
+# ==============================================================================
 # PRINT FUNCTIONS
 # color text console  #http://pypi.python.org/pypi/clint/
 
@@ -69,15 +70,16 @@ def msg(text, color=False, newline=True, indentation=0):
         else:
             print colored.red(text)
 
-def msg_footer(text=False):
 
-    footer = _("\nJaziku, version {0} - {1}.\nCopyright (C) 2011-2014 IDEAM - Colombia")\
-              .format(globals_vars.VERSION, globals_vars.VERSION_DATE)
+def msg_footer(text=False):
+    footer = _("\nJaziku, version {0} - {1}.\nCopyright (C) 2011-2014 IDEAM - Colombia") \
+        .format(globals_vars.VERSION, globals_vars.VERSION_DATE)
 
     if text:
         return footer
     else:
         print footer
+
 
 def msg_error(text_error, wait_value=True):
     """
@@ -101,8 +103,8 @@ def msg_error_line_stations(station, text_error):
     """
 
     msg_error(_("Reading the station from the runfile in line {0}:\n")
-                .format(station.line_num) + ' > ' +
-                ' '.join(station.line_station) + "\n\n" + str(text_error))
+              .format(station.line_num) + ' > ' +
+              ' '.join(station.line_station) + "\n\n" + str(text_error))
 
 
 def msg_error_configuration(variable, text_error, show_settings=True, stop_in_grid=None):
@@ -129,7 +131,7 @@ def msg_error_configuration(variable, text_error, show_settings=True, stop_in_gr
                 stop_in_grid_counter += 1
                 continue
             msg_error(_("The Configuration run from the runfile in line {0}:\n")
-                      .format(num_line+1) + ' > ' + line_in_run_file[0] + ' = ' +
+                      .format(num_line + 1) + ' > ' + line_in_run_file[0] + ' = ' +
                       ' '.join(line_in_run_file[1::]) + "\n\n" + str(text_error), False)
 
     # else
@@ -139,7 +141,8 @@ def msg_error_configuration(variable, text_error, show_settings=True, stop_in_gr
     runfile_open.close()
     del runfile
 
-#==============================================================================
+
+# ==============================================================================
 # OTHERS
 
 class redirectStdStreams(object):
@@ -162,7 +165,8 @@ class redirectStdStreams(object):
 
     def __enter__(self):
         self.old_stdout, self.old_stderr = sys.stdout, sys.stderr
-        self.old_stdout.flush(); self.old_stderr.flush()
+        self.old_stdout.flush()
+        self.old_stderr.flush()
         self.normal_stdout = os.dup(1)
         devnull = os.open(os.devnull, os.O_WRONLY)
         os.dup2(devnull, 1)
@@ -172,7 +176,8 @@ class redirectStdStreams(object):
     def __exit__(self, exc_type, exc_value, traceback):
         sys.stdout = os.fdopen(self.normal_stdout, 'w')
         os.dup2(self.normal_stdout, 1)
-        self._stdout.flush(); self._stderr.flush()
+        self._stdout.flush()
+        self._stderr.flush()
         sys.stdout = self.old_stdout
         sys.stderr = self.old_stderr
 

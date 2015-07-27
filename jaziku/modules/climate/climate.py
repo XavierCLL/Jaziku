@@ -47,7 +47,8 @@ def pre_process():
     if env.globals_vars.ARGS.output:
         print "   " + colored.cyan(env.globals_vars.CLIMATE_DIR)
     else:
-        print "   " + colored.cyan(os.path.relpath(env.globals_vars.CLIMATE_DIR, os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile))))
+        print "   " + colored.cyan(os.path.relpath(env.globals_vars.CLIMATE_DIR,
+                                                   os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile))))
 
 
 def process(station):
@@ -73,10 +74,12 @@ def process(station):
     elif env.config_run.settings['analysis_interval'] == "trimonthly":
         console.msg(_("Results will be made trimonthly (each three months)"), color='cyan')
     else:
-        console.msg(_("Results will be made every {} days").format(env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL), color='cyan')
+        console.msg(_("Results will be made every {} days").format(env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL),
+                    color='cyan')
 
     # inform the period to process
-    console.msg(_("Period to process: {0}-{1}").format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']), color='cyan')
+    console.msg(_("Period to process: {0}-{1}").format(env.globals_vars.PROCESS_PERIOD['start'],
+                                                       env.globals_vars.PROCESS_PERIOD['end']), color='cyan')
 
     if env.config_run.settings['analog_year']:
         console.msg(_("Will use thresholds with analog year for var_D "), color='cyan')
@@ -88,7 +91,7 @@ def process(station):
     console.msg(_("Processing climate ............................ "), newline=False)
 
     station.climate_dir \
-        = os.path.join(env.globals_vars.CLIMATE_DIR, _('stations'), station.code + '_' + station.name)   # 'results'
+        = os.path.join(env.globals_vars.CLIMATE_DIR, _('stations'), station.code + '_' + station.name)  # 'results'
 
     output.make_dirs(station.climate_dir)
 

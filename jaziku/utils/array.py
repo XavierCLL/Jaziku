@@ -23,6 +23,7 @@ from jaziku import env
 
 from jaziku.env import globals_vars
 
+
 def mean(values):
     """
     Return the mean from all values, ignoring valid null values.
@@ -44,6 +45,7 @@ def mean(values):
 
     return sums / count
 
+
 def maximum(values):
     """
     max function for Jaziku with special behavior
@@ -55,6 +57,7 @@ def maximum(values):
     else:
         return max(values_cleaned)
 
+
 def minimum(values):
     """
     min function for Jaziku with special behavior
@@ -65,6 +68,7 @@ def minimum(values):
         return float('nan')
     else:
         return min(values_cleaned)
+
 
 def clean(values):
     """Clean the list of empty elements and valid nulls
@@ -79,7 +83,7 @@ def clean(values):
     values = [e for e in values if e or e == 0]
 
     # delete all valid nulls
-    values = [ value for value in values if not globals_vars.is_valid_null(value) ]
+    values = [value for value in values if not globals_vars.is_valid_null(value)]
 
     return values
 
@@ -103,6 +107,6 @@ def check_nulls(values):
         if env.globals_vars.is_valid_null(value):
             number_of_nulls += 1
 
-    percentage_of_nulls = round((number_of_nulls / float((len(values))))*100, 1)
+    percentage_of_nulls = round((number_of_nulls / float((len(values)))) * 100, 1)
 
     return number_of_nulls, percentage_of_nulls
