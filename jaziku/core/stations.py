@@ -29,8 +29,6 @@ from jaziku.utils import console
 
 
 def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_data_for_climate_forecast):
-
-
     if prepare_data_for_data_analysis:
         print _("\n\n"
                 "############ PREPARE ALL STATIONS FOR DATA ANALYSIS ############\n")
@@ -40,7 +38,7 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
                 "####### PREPARE ALL STATIONS FOR CLIMATE/FORECAST PROCESS ######\n")
 
     if prepare_data_for_data_analysis or \
-      (prepare_data_for_climate_forecast and not env.config_run.settings['data_analysis']):
+            (prepare_data_for_climate_forecast and not env.config_run.settings['data_analysis']):
 
         # Read vars
         console.msg(_("Reading var D and var I of all stations ................. "), newline=False)
@@ -57,7 +55,8 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
         console.msg(_("has data {0}").format(env.var_I.FREQUENCY_DATA), color='cyan')
 
         # show thresholds tu use
-        console.msg(_("Thresholds to use (for {0} categories):").format(env.config_run.settings['class_category_analysis']))
+        console.msg(
+            _("Thresholds to use (for {0} categories):").format(env.config_run.settings['class_category_analysis']))
 
         console.msg(_("   var_D ({0}):").format(env.var_D.TYPE_SERIES), newline=False)
 
@@ -85,7 +84,7 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
         if not env.config_run.settings['process_period']:
             console.msg(_("   The maximum global common period is:"), newline=False)
             console.msg("{0}-{1}".format(env.globals_vars.PROCESS_PERIOD['start'],
-                                          env.globals_vars.PROCESS_PERIOD['end']), color='cyan')
+                                         env.globals_vars.PROCESS_PERIOD['end']), color='cyan')
 
         # data, date and null
         console.msg(_("Prepare data, date and null in process period ........... "), newline=False)
@@ -104,7 +103,6 @@ def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_
         console.msg(_("Check analysis interval ................................. "), newline=False)
         analysis_interval.check_analysis_interval()
         console.msg(_("done"), color='green')
-
 
     if prepare_data_for_climate_forecast:
         # when var D is monthly and var I is daily, only can process with data monthly,
@@ -173,7 +171,7 @@ def global_process_period(stations_list):
     end_year = global_common_date[-1].year - 1
 
     return {'start': start_year,
-             'end': end_year}
+            'end': end_year}
 
 
 def calculate_process_period(stations_list):
@@ -194,22 +192,22 @@ def calculate_process_period(stations_list):
 
     if max_global_period is False:
         console.msg_error(_(
-                    "There is no a global common period for all stations,\n"
-                    "this mean that two or more stations don't have any\n"
-                    "data for a common date. Please check the data of\n"
-                    "stations."))
+            "There is no a global common period for all stations,\n"
+            "this mean that two or more stations don't have any\n"
+            "data for a common date. Please check the data of\n"
+            "stations."))
 
     # if the period was defined in runfile
     if env.config_run.settings['process_period']:
         # check if the period defined are inside the global period
         if not (env.config_run.settings['process_period']['start'] >= max_global_period['start'] and
-                env.config_run.settings['process_period']['end'] <= max_global_period['end']):
-                console.msg_error(_(
-                    "The period defined in runfile {0}-{1} is outside in the\n"
-                    "maximum global common period possible {2}-{3}.")
-                .format(env.config_run.settings['process_period']['start'],
-                    env.config_run.settings['process_period']['end'],
-                    max_global_period['start'], max_global_period['end']))
+                        env.config_run.settings['process_period']['end'] <= max_global_period['end']):
+            console.msg_error(_(
+                "The period defined in runfile {0}-{1} is outside in the\n"
+                "maximum global common period possible {2}-{3}.")
+                              .format(env.config_run.settings['process_period']['start'],
+                                      env.config_run.settings['process_period']['end'],
+                                      max_global_period['start'], max_global_period['end']))
 
         # set the process_period
         env.globals_vars.PROCESS_PERIOD = \
@@ -220,7 +218,7 @@ def calculate_process_period(stations_list):
         if (env.globals_vars.PROCESS_PERIOD['end'] - env.globals_vars.PROCESS_PERIOD['start']) < 3:
             console.msg_error(_("The process period {0}-{1} has less than 3 years,\n"
                                 "Jaziku need at least 3 years for run.")
-                .format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']))
+                              .format(env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']))
 
     # if the period is the maximum global period (maximum in runfile)
     else:
@@ -235,4 +233,5 @@ def calculate_process_period(stations_list):
                                 "for all stations and {0} time series is {1}-{2},\n"
                                 "Jaziku need at least 3 years for run, please check the\n"
                                 "data of stations.")
-                .format(env.var_I.TYPE_SERIES, env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']))
+                              .format(env.var_I.TYPE_SERIES, env.globals_vars.PROCESS_PERIOD['start'],
+                                      env.globals_vars.PROCESS_PERIOD['end']))

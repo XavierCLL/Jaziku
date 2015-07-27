@@ -25,7 +25,7 @@ from scipy.stats import t
 from jaziku.utils import console
 
 
-def contingency_test(O, E = None, alpha = 0.10, side = 0):
+def contingency_test(O, E=None, alpha=0.10, side=0):
     """
     O     - input observed values matrix, each column is a category.
     E     - expected values, will be computed if None.
@@ -46,7 +46,7 @@ def contingency_test(O, E = None, alpha = 0.10, side = 0):
     n = len(O[0])
 
     if E is None:
-        E = [[0.0] * n  for i in range(m)]
+        E = [[0.0] * n for i in range(m)]
     colsum = [0.0] * n
     rowsum = [0.0] * m
 
@@ -82,7 +82,8 @@ def contingency_test(O, E = None, alpha = 0.10, side = 0):
         df = (m - 1) * (n - 1)
 
     if side == -1:
-        critvalue = stats.chi2.ppf(alpha, df)  # http://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.chi2.html#scipy.stats.chi2
+        critvalue = stats.chi2.ppf(alpha,
+                                   df)  # http://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.chi2.html#scipy.stats.chi2
         pvalue = stats.chi2.cdf(teststat, df)
     elif side == 0:
         critvalue = stats.chi2.ppf(1 - alpha / 2.0, df)
@@ -91,10 +92,10 @@ def contingency_test(O, E = None, alpha = 0.10, side = 0):
         critvalue = stats.chi2.ppf(1 - alpha, df)
         pvalue = 1.0 - stats.chi2.cdf(teststat, df)
 
-    return  O, E, teststat, critvalue, df, pvalue, alpha
+    return O, E, teststat, critvalue, df, pvalue, alpha
 
 
-#----------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------
 
 # the following two functions are base on:
 #
@@ -152,12 +153,12 @@ def significance_correlation(rho, r, n, alpha=0.05, side=0):
         se = sqrt((1 - r * r) / (n - 2.0))
         return ttest(r - rho, se, n - 2, alpha, side)
 
-# example
-# rho = 0
-# r = 0.951
-# alpha = 0.05
-# side = 1
-# n = 14
-# print "Berenson's example, p. 546"
-# print significance_correlation(rho, r, n, alpha, side)
-# exit()
+        # example
+        # rho = 0
+        # r = 0.951
+        # alpha = 0.05
+        # side = 1
+        # n = 14
+        # print "Berenson's example, p. 546"
+        # print significance_correlation(rho, r, n, alpha, side)
+        # exit()

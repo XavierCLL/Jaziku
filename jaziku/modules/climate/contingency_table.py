@@ -155,15 +155,15 @@ def get_specific_contingency_table(station, lag, n_month, start_day=None):
     if env.config_run.settings['class_category_analysis'] == 3:
         thresholds_idx = ['below', 'above']
     if env.config_run.settings['class_category_analysis'] == 7:
-        thresholds_idx = ['below3', 'below2','below1', 'above1', 'above2', 'above3']
+        thresholds_idx = ['below3', 'below2', 'below1', 'above1', 'above2', 'above3']
     epsilon = 1e-10
-    for thres_idx in range(len(thresholds_idx)-1):
-        if thresholds_var_D[thresholds_idx[thres_idx]] == thresholds_var_D[thresholds_idx[thres_idx+1]]:
+    for thres_idx in range(len(thresholds_idx) - 1):
+        if thresholds_var_D[thresholds_idx[thres_idx]] == thresholds_var_D[thresholds_idx[thres_idx + 1]]:
             thresholds_var_D[thresholds_idx[thres_idx]] -= epsilon
-            thresholds_var_D[thresholds_idx[thres_idx+1]] += epsilon
-        if thresholds_var_I[thresholds_idx[thres_idx]] == thresholds_var_I[thresholds_idx[thres_idx+1]]:
+            thresholds_var_D[thresholds_idx[thres_idx + 1]] += epsilon
+        if thresholds_var_I[thresholds_idx[thres_idx]] == thresholds_var_I[thresholds_idx[thres_idx + 1]]:
             thresholds_var_I[thresholds_idx[thres_idx]] -= epsilon
-            thresholds_var_I[thresholds_idx[thres_idx+1]] += epsilon
+            thresholds_var_I[thresholds_idx[thres_idx + 1]] += epsilon
 
     # -------------------------------------------------------------------------
     # -------------------------------------------------------------------------
@@ -300,14 +300,14 @@ def get_specific_contingency_table(station, lag, n_month, start_day=None):
 
     if env.config_run.settings['class_category_analysis'] == 7:
         # for 7 categories the sum of var I is by categories [below*=sb+mb+wb, normal=n, above*=wa+ma+sa]
-        sum_per_column_CT = [sum(sum_per_column_CT[0:3])]*3 + \
+        sum_per_column_CT = [sum(sum_per_column_CT[0:3])] * 3 + \
                             [sum_per_column_CT[3]] + \
-                            [sum(sum_per_column_CT[4::])]*3
+                            [sum(sum_per_column_CT[4::])] * 3
 
     # calculate the percentage of contingency table evaluating each value with the sum value of its respective category
     with console.redirectStdStreams():
         contingency_table_in_percentage \
-            = [(column/sum_per_column_CT[i]*100).tolist()[0] for i,column in enumerate(matrix(contingency_table))]
+            = [(column / sum_per_column_CT[i] * 100).tolist()[0] for i, column in enumerate(matrix(contingency_table))]
 
     # fix table when the value is nan (replace with zero) it is due to while it calculate the contingency
     # table and there are not values with independent variable for one category (thresholds problem)
@@ -319,26 +319,28 @@ def get_specific_contingency_table(station, lag, n_month, start_day=None):
     # for forecast type 3x7
     if env.globals_vars.forecast_contingency_table['type'] == '3x7':
         # init list 7x7 with zeros
-        contingency_table_3x7 = [[0]*7]*7
+        contingency_table_3x7 = [[0] * 7] * 7
         tags = ['below3', 'below2', 'below1', 'normal', 'above1', 'above2', 'above3']
         for idx_var_I in range(7):
             # only set the real values for columns of var I for selected categories
             # in below, and above selected and normal
             if tags.index(env.globals_vars.probability_forecast_values[lag]['below']) == idx_var_I or \
-               idx_var_I == 3 or \
-               tags.index(env.globals_vars.probability_forecast_values[lag]['above']) == idx_var_I:
+                            idx_var_I == 3 or \
+                            tags.index(env.globals_vars.probability_forecast_values[lag]['above']) == idx_var_I:
                 contingency_table_3x7[idx_var_I] = contingency_table[idx_var_I]
 
         sum_per_column_CT_3x7 = matrix(contingency_table_3x7).sum(axis=1)
         sum_per_column_CT_3x7 = [float(x) for x in sum_per_column_CT_3x7]
         with console.redirectStdStreams():
             contingency_table_in_percentage_3x7 \
-                = [(column/sum_per_column_CT_3x7[i]*100).tolist()[0] for i,column in enumerate(matrix(contingency_table_3x7))]
+                = [(column / sum_per_column_CT_3x7[i] * 100).tolist()[0] for i, column in
+                   enumerate(matrix(contingency_table_3x7))]
 
         # fix table when the value is nan (replace with zero) it is due to while it calculate the contingency
         # table and there are not values with independent variable for one category (thresholds problem)
         # this cause division by zero and nan values
-        contingency_table_in_percentage_3x7 = [[i if not isnan(i) else 0 for i in c] for c in contingency_table_in_percentage_3x7]
+        contingency_table_in_percentage_3x7 = [[i if not isnan(i) else 0 for i in c] for c in
+                                               contingency_table_in_percentage_3x7]
 
     # -------------------------------------------------------------------------
     # threshold_problem is global variable for detect problem with
@@ -352,7 +354,7 @@ def get_specific_contingency_table(station, lag, n_month, start_day=None):
         sum_per_column_CT = [sum_per_column_CT[0], sum_per_column_CT[3], sum_per_column_CT[6]]
 
     # iterate and check for each 3 blocks: BELOW, NORMAL and ABOVE
-    for index, label in enumerate([_('below'),_('normal'),_('above')]):
+    for index, label in enumerate([_('below'), _('normal'), _('above')]):
         if float(sum_per_column_CT[index]) == 0 and not station.threshold_problem[index]:
             console.msg(
                 _(u"\n > WARNING: The thresholds defined for var I\n"
@@ -361,7 +363,7 @@ def get_specific_contingency_table(station, lag, n_month, start_day=None):
                   u"   '{1}' inside the block category '{2}'.\n"
                   u"   Is recommended review the thresholds\n"
                   u"   of two variables, or the series data .......")
-                .format(env.var_D.TYPE_SERIES, env.var_I.TYPE_SERIES, label.upper()), color='yellow', newline=False)
+                    .format(env.var_D.TYPE_SERIES, env.var_I.TYPE_SERIES, label.upper()), color='yellow', newline=False)
             station.threshold_problem[index] = True
 
     # -------------------------------------------------------------------------
@@ -373,27 +375,27 @@ def get_specific_contingency_table(station, lag, n_month, start_day=None):
         for row in contingency_table_in_percentage:
             contingency_table_in_percentage_formatted.append(
                 [output.number(row[0], decimals=1),
-                output.number(row[1], decimals=1),
-                output.number(row[2], decimals=1)])
+                 output.number(row[1], decimals=1),
+                 output.number(row[2], decimals=1)])
     if env.config_run.settings['class_category_analysis'] == 7:
         for row in contingency_table_in_percentage:
             contingency_table_in_percentage_formatted.append(
                 [output.number(row[0], decimals=1),
-                output.number(row[1], decimals=1),
-                output.number(row[2], decimals=1),
-                output.number(row[3], decimals=1),
-                output.number(row[4], decimals=1),
-                output.number(row[5], decimals=1),
-                output.number(row[6], decimals=1)])
+                 output.number(row[1], decimals=1),
+                 output.number(row[2], decimals=1),
+                 output.number(row[3], decimals=1),
+                 output.number(row[4], decimals=1),
+                 output.number(row[5], decimals=1),
+                 output.number(row[6], decimals=1)])
 
     # -------------------------------------------------------------------------
     # save and return
 
-    specific_contingency_table = {'in_values':contingency_table,
-                                  'in_percentage':contingency_table_in_percentage,
-                                  'in_percentage_formatted':contingency_table_in_percentage_formatted,
-                                  'thresholds_var_D':thresholds_var_D,
-                                  'thresholds_var_I':thresholds_var_I}
+    specific_contingency_table = {'in_values': contingency_table,
+                                  'in_percentage': contingency_table_in_percentage,
+                                  'in_percentage_formatted': contingency_table_in_percentage_formatted,
+                                  'thresholds_var_D': thresholds_var_D,
+                                  'thresholds_var_I': thresholds_var_I}
 
     # added the special contingency table in percentage for 3x7
     if env.globals_vars.forecast_contingency_table['type'] == '3x7':
@@ -417,7 +419,7 @@ def get_contingency_tables(station):
     """
     # init threshold problem for this station
     # for 3 and 7 categories there are 3 blocks: BELOW, NORMAL and ABOVE
-    station.threshold_problem = [False]*3
+    station.threshold_problem = [False] * 3
 
     # [lag][month][phenomenon][data(0,1,2)]
     # [lag][month][day][phenomenon][data(0,1,2)]
@@ -443,7 +445,7 @@ def get_contingency_tables(station):
                 for day in get_range_analysis_interval():
 
                     specific_contingency_table = get_specific_contingency_table(station, lag,
-                        n_month, day)
+                                                                                n_month, day)
                     tmp_day_list.append(specific_contingency_table)
 
                     if station.first_iter:

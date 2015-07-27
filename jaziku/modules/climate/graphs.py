@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-#===============================================================================
+# ===============================================================================
 # GRAPHS
 # Generate bar charts and mosaics for climate
 # http://matplotlib.sourceforge.net/api/pyplot_api.html
@@ -33,7 +33,7 @@ from PIL import Image
 
 from jaziku import env
 from jaziku.core.analysis_interval import get_range_analysis_interval
-from jaziku.utils import  watermarking, output
+from jaziku.utils import watermarking, output
 from jaziku.utils.array import minimum, maximum
 from jaziku.utils.matrix import transpose
 
@@ -75,13 +75,14 @@ def climate_graphs(station):
                     if 95 <= height <= 100:
                         adjust_h = - 12
                     else:
-                        if rotation=='vertical':
+                        if rotation == 'vertical':
                             adjust_h = 0.5
                         else:
                             adjust_h = 0
 
                     pyplot.text(rect.get_x() + rect.get_width() / 2.0, 0.015 * max_height + height + adjust_h,
-                                output.number(height, decimals=1), ha='center', va='bottom', fontsize=fontsize, rotation=rotation)
+                                output.number(height, decimals=1), ha='center', va='bottom', fontsize=fontsize,
+                                rotation=rotation)
 
         # -------------------------------------------------------------------------
         # climate graphics for 3 categories
@@ -126,33 +127,34 @@ def climate_graphs(station):
 
 
             # the x locations for the groups
-            all_groups_distance = [0, width*3.5, width*7]
-            var_I_bars_groups_distance =  array(all_groups_distance[0:num_categ])
+            all_groups_distance = [0, width * 3.5, width * 7]
+            var_I_bars_groups_distance = array(all_groups_distance[0:num_categ])
 
             dpi = 75.0
             image_height = 375
-            image_width_by_num_categ = {1:385, 2:385, 3:430}
+            image_width_by_num_categ = {1: 385, 2: 385, 3: 430}
             image_width = image_width_by_num_categ[num_categ]
             fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
-            #fig = pyplot.figure()
+            # fig = pyplot.figure()
 
             ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
             # graphics title
             fig.suptitle(unicode(_('Composite analysis - {0} ({1})\n{2} - {3} - lag {6} - {7} - ({4}-{5})').
-                format(station.name, station.code, station.var_D.type_series,
-                    station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'],
-                    env.globals_vars.PROCESS_PERIOD['end'], lag, title_period), 'utf-8'), **env.globals_vars.graphs_title_properties(fs=15, fva='top'))
+                                 format(station.name, station.code, station.var_D.type_series,
+                                        station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'],
+                                        env.globals_vars.PROCESS_PERIOD['end'], lag, title_period), 'utf-8'),
+                         **env.globals_vars.graphs_title_properties(fs=15, fva='top'))
 
             # label for axis Y
             ax.set_ylabel(_('probability (%)'))
             #  adjust the max leaving min unchanged in Y
             ax.set_ylim(ymin=0, ymax=100)
             #  adjust the max leaving min unchanged in X
-            ax.set_xlim(xmin= -(width/4), xmax=width*(num_categ*3+(num_categ-1)*0.5+0.25))
+            ax.set_xlim(xmin=-(width / 4), xmax=width * (num_categ * 3 + (num_categ - 1) * 0.5 + 0.25))
             # pyplot.xticks([0.3, 1.1, 1.9], ('var Ind Below', 'var Ind Normal', 'var Ind Above'),)
             ax.set_xticks([])
-            #ax.set_yticks(range(0,101,10))
+            # ax.set_yticks(range(0,101,10))
             # colors for paint bars and labels: below, normal , above
             colours = ['#DD4620', '#62AD29', '#6087F1']
 
@@ -160,9 +162,12 @@ def climate_graphs(station):
             _var_D_values = [[0 if isnan(value) else value for value in l] for l in _var_D_values]
 
             # create bars
-            var_D_below = pyplot.bar(var_I_bars_groups_distance, _var_D_values[0], width, **env.globals_vars.figure_bar_properties(color=colours[0],align='edge'))
-            var_D_normal = pyplot.bar(var_I_bars_groups_distance + width, _var_D_values[1], width, **env.globals_vars.figure_bar_properties(color=colours[1],align='edge'))
-            var_D_above = pyplot.bar(var_I_bars_groups_distance + 2 * width, _var_D_values[2], width, **env.globals_vars.figure_bar_properties(color=colours[2],align='edge'))
+            var_D_below = pyplot.bar(var_I_bars_groups_distance, _var_D_values[0], width,
+                                     **env.globals_vars.figure_bar_properties(color=colours[0], align='edge'))
+            var_D_normal = pyplot.bar(var_I_bars_groups_distance + width, _var_D_values[1], width,
+                                      **env.globals_vars.figure_bar_properties(color=colours[1], align='edge'))
+            var_D_above = pyplot.bar(var_I_bars_groups_distance + 2 * width, _var_D_values[2], width,
+                                     **env.globals_vars.figure_bar_properties(color=colours[2], align='edge'))
 
             # assign value label for each bar
             auto_label(var_D_below)
@@ -186,7 +191,7 @@ def climate_graphs(station):
                 cell.set_fontsize(12)
                 cell.set_height(0.08)
 
-            x_text_position = {1:0.155, 2:0.08, 3:0.01}
+            x_text_position = {1: 0.155, 2: 0.08, 3: 0.01}
             fig.text(x_text_position[num_categ], 0.185, _('Var D'), fontsize=12, rotation='vertical')
 
             ## Footnote of historical values
@@ -195,40 +200,42 @@ def climate_graphs(station):
             # threshold and the correspondent value for this contingency
             # table
             global_thresholds_D = env.var_D.get_global_thresholds()
-            thresholds_D = [None]*len(global_thresholds_D)
+            thresholds_D = [None] * len(global_thresholds_D)
             for num_thres, thres in enumerate(thresholds_to_list(specific_contingency_table['thresholds_var_D'])):
                 try:
-                    thresholds_D[num_thres] = output.number(float(global_thresholds_D[num_thres]),3)
+                    thresholds_D[num_thres] = output.number(float(global_thresholds_D[num_thres]), 3)
                 except:
                     thresholds_D[num_thres] = '{0}: {1}'.format(global_thresholds_D[num_thres],
-                                                         output.number(thres,3))
+                                                                output.number(thres, 3))
 
             fig.text(0.5, 0.02,
                      unicode(_('Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n'
                                'Min: {min}  ( {thresholds} )  Max: {max}')
-                                .format(anal_inter=title_period, units=env.var_D.UNITS,
-                                        start_year=env.globals_vars.PROCESS_PERIOD['start'],
-                                        end_year=env.globals_vars.PROCESS_PERIOD['end'],
-                                        min=output.number(minimum(specific_time_series['var_D']),3),
-                                        thresholds=' | '.join([str(x) for x in thresholds_D]),
-                                        max=output.number(maximum(specific_time_series['var_D']),3)), 'utf-8'),
-                                        fontsize=12, ha='center')
+                             .format(anal_inter=title_period, units=env.var_D.UNITS,
+                                     start_year=env.globals_vars.PROCESS_PERIOD['start'],
+                                     end_year=env.globals_vars.PROCESS_PERIOD['end'],
+                                     min=output.number(minimum(specific_time_series['var_D']), 3),
+                                     thresholds=' | '.join([str(x) for x in thresholds_D]),
+                                     max=output.number(maximum(specific_time_series['var_D']), 3)), 'utf-8'),
+                     fontsize=12, ha='center')
 
             ## Save image
             image_dir_save \
                 = os.path.join(graphics_dir_ca, _('lag_{0}').format(lag),
                                _('CA_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
-                              .format(lag, filename_period, station.code, station.name, station.var_D.type_series,
-                                      station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']))
+                               .format(lag, filename_period, station.code, station.name, station.var_D.type_series,
+                                       station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'],
+                                       env.globals_vars.PROCESS_PERIOD['end']))
 
-            #env.globals_vars.set_others_properties(ax)
+            # env.globals_vars.set_others_properties(ax)
             ax.grid(True, color='gray')
             fig.tight_layout()
 
-            left_by_num_categ = {1:0.345, 2:0.27, 3:0.173}
-            right_by_num_categ = {1:0.655, 2:0.86, 3:0.98}
-            #pyplot.subplots_adjust(bottom=0.25, left=0.22, right=0.97)
-            pyplot.subplots_adjust(bottom=0.28, top=0.85, left=left_by_num_categ[num_categ], right=right_by_num_categ[num_categ])
+            left_by_num_categ = {1: 0.345, 2: 0.27, 3: 0.173}
+            right_by_num_categ = {1: 0.655, 2: 0.86, 3: 0.98}
+            # pyplot.subplots_adjust(bottom=0.25, left=0.22, right=0.97)
+            pyplot.subplots_adjust(bottom=0.28, top=0.85, left=left_by_num_categ[num_categ],
+                                   right=right_by_num_categ[num_categ])
 
         # -------------------------------------------------------------------------
         # climate graphics for 7 categories
@@ -272,50 +279,58 @@ def climate_graphs(station):
             _table_values = transpose(_CT_p)
 
             # the x locations for the groups
-            all_groups_distance = [0, width*7.5, width*15 , width*22.5, width*30, width*37.5, width*45]
-            var_I_bars_groups_distance =  array(all_groups_distance[0:num_categ])
+            all_groups_distance = [0, width * 7.5, width * 15, width * 22.5, width * 30, width * 37.5, width * 45]
+            var_I_bars_groups_distance = array(all_groups_distance[0:num_categ])
 
             dpi = 75.0
             image_height = 500
-            image_width_by_num_categ = {1:375, 2:480, 7:950}
+            image_width_by_num_categ = {1: 375, 2: 480, 7: 950}
             image_width = image_width_by_num_categ[num_categ]
             fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
-            #fig = pyplot.figure()
+            # fig = pyplot.figure()
 
             ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
             # graphics title
             fig.suptitle(unicode(_('Composite analysis - {0} ({1})\n{2} - {3} - lag {6} - {7} - ({4}-{5})').
-                format(station.name, station.code, station.var_D.type_series,
-                    station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'],
-                    env.globals_vars.PROCESS_PERIOD['end'], lag, title_period), 'utf-8'), **env.globals_vars.graphs_title_properties(fs=15, fva='top'))
+                                 format(station.name, station.code, station.var_D.type_series,
+                                        station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'],
+                                        env.globals_vars.PROCESS_PERIOD['end'], lag, title_period), 'utf-8'),
+                         **env.globals_vars.graphs_title_properties(fs=15, fva='top'))
 
             # label for axis Y
             ax.set_ylabel(_('probability (%)'))
             #  adjust the max leaving min unchanged in Y
             ax.set_ylim(ymin=0, ymax=100)
             #  adjust the max leaving min unchanged in X
-            ax.set_xlim(xmin= -(width/4), xmax=width*(num_categ*7+(num_categ-1)*0.5+0.25))
+            ax.set_xlim(xmin=-(width / 4), xmax=width * (num_categ * 7 + (num_categ - 1) * 0.5 + 0.25))
             # pyplot.xticks([0.3, 1.1, 1.9], ('var Ind Below', 'var Ind Normal', 'var Ind Above'),)
             ax.set_xticks([])
-            #ax.set_yticks(range(0,101,10))
+            # ax.set_yticks(range(0,101,10))
             # colors for paint bars and labels: below, normal , above
-            colours = ['#DD4620', '#DD8620','#DDC620', '#62AD29', '#60C7F1', '#6087F1', '#6047F1']
+            colours = ['#DD4620', '#DD8620', '#DDC620', '#62AD29', '#60C7F1', '#6087F1', '#6047F1']
 
             # convert NaN values in 0 for preserve plot bars
             _var_D_values = [[0 if isnan(value) else value for value in l] for l in _var_D_values]
 
             # create bars
-            var_D_strong_below = pyplot.bar(var_I_bars_groups_distance, _var_D_values[0], width, **env.globals_vars.figure_bar_properties(color=colours[0],align='edge'))
-            var_D_moderate_below = pyplot.bar(var_I_bars_groups_distance + width, _var_D_values[1], width, **env.globals_vars.figure_bar_properties(color=colours[1],align='edge'))
-            var_D_weak_below = pyplot.bar(var_I_bars_groups_distance + width*2, _var_D_values[2], width, **env.globals_vars.figure_bar_properties(color=colours[2],align='edge'))
-            var_D_normal = pyplot.bar(var_I_bars_groups_distance + width*3, _var_D_values[3], width, **env.globals_vars.figure_bar_properties(color=colours[3],align='edge'))
-            var_D_weak_above = pyplot.bar(var_I_bars_groups_distance + width*4, _var_D_values[4], width, **env.globals_vars.figure_bar_properties(color=colours[4],align='edge'))
-            var_D_moderate_above = pyplot.bar(var_I_bars_groups_distance + width*5, _var_D_values[5], width, **env.globals_vars.figure_bar_properties(color=colours[5],align='edge'))
-            var_D_strong_above = pyplot.bar(var_I_bars_groups_distance + width*6, _var_D_values[6], width, **env.globals_vars.figure_bar_properties(color=colours[6],align='edge'))
+            var_D_strong_below = pyplot.bar(var_I_bars_groups_distance, _var_D_values[0], width,
+                                            **env.globals_vars.figure_bar_properties(color=colours[0], align='edge'))
+            var_D_moderate_below = pyplot.bar(var_I_bars_groups_distance + width, _var_D_values[1], width,
+                                              **env.globals_vars.figure_bar_properties(color=colours[1], align='edge'))
+            var_D_weak_below = pyplot.bar(var_I_bars_groups_distance + width * 2, _var_D_values[2], width,
+                                          **env.globals_vars.figure_bar_properties(color=colours[2], align='edge'))
+            var_D_normal = pyplot.bar(var_I_bars_groups_distance + width * 3, _var_D_values[3], width,
+                                      **env.globals_vars.figure_bar_properties(color=colours[3], align='edge'))
+            var_D_weak_above = pyplot.bar(var_I_bars_groups_distance + width * 4, _var_D_values[4], width,
+                                          **env.globals_vars.figure_bar_properties(color=colours[4], align='edge'))
+            var_D_moderate_above = pyplot.bar(var_I_bars_groups_distance + width * 5, _var_D_values[5], width,
+                                              **env.globals_vars.figure_bar_properties(color=colours[5], align='edge'))
+            var_D_strong_above = pyplot.bar(var_I_bars_groups_distance + width * 6, _var_D_values[6], width,
+                                            **env.globals_vars.figure_bar_properties(color=colours[6], align='edge'))
 
             # assign value label for each bar
-            fontsize_by_num_categ = {1:11, 2:11, 7:11}
+            fontsize_by_num_categ = {1: 11, 2: 11, 7: 11}
             auto_label(var_D_strong_below, fontsize=fontsize_by_num_categ[num_categ], rotation='vertical')
             auto_label(var_D_moderate_below, fontsize=fontsize_by_num_categ[num_categ], rotation='vertical')
             auto_label(var_D_weak_below, fontsize=fontsize_by_num_categ[num_categ], rotation='vertical')
@@ -349,13 +364,13 @@ def climate_graphs(station):
             # threshold and the correspondent value for this contingency
             # table
             global_thresholds_D = env.var_D.get_global_thresholds()
-            thresholds_D = [None]*len(global_thresholds_D)
+            thresholds_D = [None] * len(global_thresholds_D)
             for num_thres, thres in enumerate(thresholds_to_list(specific_contingency_table['thresholds_var_D'])):
                 try:
-                    thresholds_D[num_thres] = str(output.number(float(global_thresholds_D[num_thres]),3))
+                    thresholds_D[num_thres] = str(output.number(float(global_thresholds_D[num_thres]), 3))
                 except:
                     thresholds_D[num_thres] = '{0}: {1}'.format(global_thresholds_D[num_thres],
-                                                         output.number(thres,3))
+                                                                output.number(thres, 3))
 
             # select only thresholds for the respective relevant climate categories selected in runfile
             thres_list = env.globals_vars.categories(include_normal=True, translated=False, as_list=True)
@@ -366,40 +381,43 @@ def climate_graphs(station):
                     if num_thres == 0:
                         thresholds_D_txt.append('( < | ' + thresholds_D[num_thres] + ' )')
                     elif num_thres == 6:
-                        thresholds_D_txt.append('( ' + thresholds_D[num_thres-1] + ' | > )')
+                        thresholds_D_txt.append('( ' + thresholds_D[num_thres - 1] + ' | > )')
                     else:
-                        thresholds_D_txt.append('( ' + thresholds_D[num_thres-1]+ ' | ' + thresholds_D[num_thres] + ' )')
+                        thresholds_D_txt.append(
+                            '( ' + thresholds_D[num_thres - 1] + ' | ' + thresholds_D[num_thres] + ' )')
                 thresholds_D_txt = ' '.join(thresholds_D_txt)
             else:
                 thresholds_D_txt = '( ' + ' | '.join(thresholds_D) + ' )'
 
             fig.text(0.5, 0.01,
                      unicode(_('Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n'
-                                'Min: {min}  {thresholds}  Max: {max}')
-                                .format(anal_inter=title_period, units=env.var_D.UNITS,
-                                        start_year=env.globals_vars.PROCESS_PERIOD['start'],
-                                        end_year=env.globals_vars.PROCESS_PERIOD['end'],
-                                        min=output.number(minimum(specific_time_series['var_D']),3),
-                                        thresholds=thresholds_D_txt,
-                                        max=output.number(maximum(specific_time_series['var_D']),3)), 'utf-8'),
-                                        fontsize=11, ha='center')
+                               'Min: {min}  {thresholds}  Max: {max}')
+                             .format(anal_inter=title_period, units=env.var_D.UNITS,
+                                     start_year=env.globals_vars.PROCESS_PERIOD['start'],
+                                     end_year=env.globals_vars.PROCESS_PERIOD['end'],
+                                     min=output.number(minimum(specific_time_series['var_D']), 3),
+                                     thresholds=thresholds_D_txt,
+                                     max=output.number(maximum(specific_time_series['var_D']), 3)), 'utf-8'),
+                     fontsize=11, ha='center')
 
             ## Save image
             image_dir_save \
                 = os.path.join(graphics_dir_ca, _('lag_{0}').format(lag),
                                _('CA_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
-                              .format(lag, filename_period, station.code, station.name, station.var_D.type_series,
-                                      station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']))
+                               .format(lag, filename_period, station.code, station.name, station.var_D.type_series,
+                                       station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'],
+                                       env.globals_vars.PROCESS_PERIOD['end']))
 
-            #env.globals_vars.set_others_properties(ax)
+            # env.globals_vars.set_others_properties(ax)
             ax.grid(True, color='gray')
             fig.tight_layout()
 
-            left_by_num_categ = {1:0.37, 2:0.29, 7:0.148}
-            right_by_num_categ = {1:0.78, 2:0.88, 7:0.995}
-            top_by_num_categ = {1:0.89, 2:0.89, 7:0.9}
-            #pyplot.subplots_adjust(bottom=0.25, left=0.22, right=0.97)
-            pyplot.subplots_adjust(bottom=0.302, top=top_by_num_categ[num_categ], left=left_by_num_categ[num_categ], right=right_by_num_categ[num_categ])
+            left_by_num_categ = {1: 0.37, 2: 0.29, 7: 0.148}
+            right_by_num_categ = {1: 0.78, 2: 0.88, 7: 0.995}
+            top_by_num_categ = {1: 0.89, 2: 0.89, 7: 0.9}
+            # pyplot.subplots_adjust(bottom=0.25, left=0.22, right=0.97)
+            pyplot.subplots_adjust(bottom=0.302, top=top_by_num_categ[num_categ], left=left_by_num_categ[num_categ],
+                                   right=right_by_num_categ[num_categ])
 
         # save image
         pyplot.savefig(image_dir_save, dpi=dpi)
@@ -408,7 +426,6 @@ def climate_graphs(station):
 
         # save dir image for mosaic
         image_open_list.append(image_dir_save)
-
 
     # -------------------------------------------------------------------------
     # MAIN
@@ -425,15 +442,15 @@ def climate_graphs(station):
 
             if env.var_D.is_n_monthly():
 
-                specific_contingency_table = station.contingency_tables[lag][n_month-1]
+                specific_contingency_table = station.contingency_tables[lag][n_month - 1]
 
                 title_period = output.analysis_interval_text(n_month)
                 filename_period = output.analysis_interval_text(n_month, join_result=True)
 
                 # get all values of the time series only for this N-month
                 # for all years inside the process period
-                specific_time_series = {'var_D':[], 'var_I':[]}
-                for time_series in station.time_series['lag_'+str(lag)]:
+                specific_time_series = {'var_D': [], 'var_I': []}
+                for time_series in station.time_series['lag_' + str(lag)]:
                     if time_series[0].month == n_month:
                         specific_time_series['var_D'].append(time_series[1])
                         specific_time_series['var_I'].append(time_series[2])
@@ -444,15 +461,15 @@ def climate_graphs(station):
 
                 for idx_day, day in enumerate(get_range_analysis_interval()):
 
-                    specific_contingency_table = station.contingency_tables[lag][n_month-1][idx_day]
+                    specific_contingency_table = station.contingency_tables[lag][n_month - 1][idx_day]
 
                     title_period = output.analysis_interval_text(n_month, day)
                     filename_period = output.analysis_interval_text(n_month, day, join_result=True)
 
                     # get all values of the time series only for this N-month
                     # for all years inside the process period
-                    specific_time_series = {'var_D':[], 'var_I':[]}
-                    for time_series in station.time_series['lag_'+str(lag)]:
+                    specific_time_series = {'var_D': [], 'var_I': []}
+                    for time_series in station.time_series['lag_' + str(lag)]:
                         if time_series[0].month == n_month and time_series[0].day == day:
                             specific_time_series['var_D'].append(time_series[1])
                             specific_time_series['var_I'].append(time_series[2])
@@ -464,9 +481,10 @@ def climate_graphs(station):
 
         mosaic_dir_save \
             = os.path.join(graphics_dir_ca, _('mosaic_lag_{0}_{1}_{2}_{3}_{4}_{5}_({6}-{7}).png')
-                          .format(lag, env.config_run.get_ANALYSIS_INTERVAL_i18n(), station.code, station.name,
-                                  station.var_D.type_series, station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'],
-                                  env.globals_vars.PROCESS_PERIOD['end']))
+                           .format(lag, env.config_run.get_ANALYSIS_INTERVAL_i18n(), station.code, station.name,
+                                   station.var_D.type_series, station.var_I.type_series,
+                                   env.globals_vars.PROCESS_PERIOD['start'],
+                                   env.globals_vars.PROCESS_PERIOD['end']))
 
         if env.var_D.is_n_monthly():
             # http://stackoverflow.com/questions/4567409/python-image-library-how-to-combine-4-images-into-a-2-x-2-grid
@@ -505,7 +523,7 @@ def climate_graphs(station):
             watermarking.logo(image)
 
         del mosaic
-        #del image_open_list
+        # del image_open_list
         pyplot.clf()
         pyplot.close('all')
 

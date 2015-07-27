@@ -26,10 +26,10 @@ from dateutil.relativedelta import relativedelta
 
 from jaziku import env
 from jaziku.core.input import validation
-from jaziku.utils import  console, input, output
+from jaziku.utils import console, input, output
 
 
-#==============================================================================
+# ==============================================================================
 # INPUT DATA PROCESSING
 # Read and validation dependent and independent variables from file
 
@@ -62,7 +62,8 @@ def read_variable(variable):
         console.msg_error(
             _("Reading the station: {0} - {1}\n"
               "Can't open file '{2}' for var {3}, \nplease check filename and check that its path is relative\n"
-              "(to runfile) or absolute.").format(variable.station.code, variable.station.name, variable.file_path, variable.type))
+              "(to runfile) or absolute.").format(variable.station.code, variable.station.name, variable.file_path,
+                                                  variable.type))
 
     # Check is file is not empty
     if os.path.getsize(variable.file_path) == 0:
@@ -110,7 +111,7 @@ def read_variable(variable):
                 "Reading from file '{0}' in line: {1}\n\n"
                 "this could be caused by wrong line or strange character,\n"
                 "fix it manually or run 'normalize_format {0}'")
-            .format(variable.file_name, time_series_file.line_num))
+                              .format(variable.file_name, time_series_file.line_num))
 
         # check if variable is daily or month
         if first:
@@ -126,10 +127,11 @@ def read_variable(variable):
                     elif len(month) == 3:
                         env.var_[variable.type].set_FREQUENCY_DATA("trimonthly")
                     else:
-                        raise ValueError(_('date unknown: ')+'-'.join(date_value))
+                        raise ValueError(_('date unknown: ') + '-'.join(date_value))
             except ValueError as error:
                 console.msg_error(_("Problems settings the frequency data for the station\n"
-                                    "with code '{0}' and name '{1}':\n\n").format( variable.station.code, variable.station.name) + str(error))
+                                    "with code '{0}' and name '{1}':\n\n").format(variable.station.code,
+                                                                                  variable.station.name) + str(error))
 
         try:
             # delete strange characters and convert format
@@ -140,51 +142,55 @@ def read_variable(variable):
                 month = int(month)
                 day = int(re.sub(r'[^\w]', '', date_value[2]))
                 # check if the values are continuous
-                if not first and date(year, month, day) + relativedelta(days= -1) != var_date[-1]:
-                    missing_date = var_date[-1] + relativedelta(days= +1)
+                if not first and date(year, month, day) + relativedelta(days=-1) != var_date[-1]:
+                    missing_date = var_date[-1] + relativedelta(days=+1)
                     console.msg_error(_(
                         "Reading var {0} from file '{1}' in line: {2}\n\n"
                         "Jaziku detected missing value for date: {3}\n\n"
                         "fix it manually or run 'normalize_format {1}'")
-                    .format(variable.type, variable.file_name, time_series_file.line_num, missing_date))
+                                      .format(variable.type, variable.file_name, time_series_file.line_num,
+                                              missing_date))
 
             if env.var_[variable.type].is_monthly():
                 month = int(month)
                 day = 1
                 # check if the values are continuous
-                if not first and date(year, month, day) + relativedelta(months= -1) != var_date[-1]:
-                    missing_date = var_date[-1] + relativedelta(months= +1)
+                if not first and date(year, month, day) + relativedelta(months=-1) != var_date[-1]:
+                    missing_date = var_date[-1] + relativedelta(months=+1)
                     console.msg_error(_(
                         "Reading var {0} from file '{1}' in line: {2}\n\n"
                         "Jaziku detected missing value for date: {3}-{4}\n\n"
                         "fix it manually or run 'normalize_format {1}'")
-                    .format(variable.type, variable.file_name, time_series_file.line_num, missing_date.year, missing_date.month))
+                                      .format(variable.type, variable.file_name, time_series_file.line_num,
+                                              missing_date.year, missing_date.month))
 
             if env.var_[variable.type].is_bimonthly():
                 month = input.bimonthly_char2int(month)
                 day = 1
                 # check if the values are continuous
-                if not first and date(year, month, day) + relativedelta(months= -1) != var_date[-1]:
-                    missing_date = var_date[-1] + relativedelta(months= +1)
+                if not first and date(year, month, day) + relativedelta(months=-1) != var_date[-1]:
+                    missing_date = var_date[-1] + relativedelta(months=+1)
                     console.msg_error(_(
                         "Reading var {0} from file '{1}' in line: {2}\n\n"
                         "Jaziku detected missing value for date: {3}-{4}\n\n"
                         "fix it manually or run 'normalize_format {1}'")
-                    .format(variable.type, variable.file_name, time_series_file.line_num, missing_date.year,
-                            output.bimonthly_int2char(missing_date.month)))
+                                      .format(variable.type, variable.file_name, time_series_file.line_num,
+                                              missing_date.year,
+                                              output.bimonthly_int2char(missing_date.month)))
 
             if env.var_[variable.type].is_trimonthly():
                 month = input.trimonthly_char2int(month)
                 day = 1
                 # check if the values are continuous
-                if not first and date(year, month, day) + relativedelta(months= -1) != var_date[-1]:
-                    missing_date = var_date[-1] + relativedelta(months= +1)
+                if not first and date(year, month, day) + relativedelta(months=-1) != var_date[-1]:
+                    missing_date = var_date[-1] + relativedelta(months=+1)
                     console.msg_error(_(
                         "Reading var {0} from file '{1}' in line: {2}\n\n"
                         "Jaziku detected missing value for date: {3}-{4}\n\n"
                         "fix it manually or run 'normalize_format {1}'")
-                    .format(variable.type, variable.file_name, time_series_file.line_num, missing_date.year,
-                            output.trimonthly_int2char(missing_date.month)))
+                                      .format(variable.type, variable.file_name, time_series_file.line_num,
+                                              missing_date.year,
+                                              output.trimonthly_int2char(missing_date.month)))
 
             value = float(value)
             if env.globals_vars.is_valid_null(value):  # TODO: deprecated valid null
@@ -199,7 +205,7 @@ def read_variable(variable):
 
         except Exception as error:
             console.msg_error(_("Reading from file '{0}' in line: {1}\n\n{2}")
-            .format(variable.file_name, time_series_file.line_num, error))
+                              .format(variable.file_name, time_series_file.line_num, error))
 
         if first:
             first = False

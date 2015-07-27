@@ -50,7 +50,6 @@ from jaziku.utils.scripts import runfile_skeleton, normalize_format
 
 
 def main():
-
     print "\nTRANSFORM DATA SCRIPT FROM CLIMATE PREDICTABILITY TOOL FORMAT TO JAZIKU FORMAT\n"
 
     # -------------------------------------------------------------------------
@@ -58,10 +57,10 @@ def main():
 
     # Create parser arguments
     arguments = argparse.ArgumentParser(
-                     prog="cpt2jaziku",
-                     description=_("This script transform from Climate Predictability Tool format to Jaziku format."),
-                     epilog=console.msg_footer(text=True),
-                     formatter_class=argparse.RawTextHelpFormatter)
+        prog="cpt2jaziku",
+        description=_("This script transform from Climate Predictability Tool format to Jaziku format."),
+        epilog=console.msg_footer(text=True),
+        formatter_class=argparse.RawTextHelpFormatter)
 
     # file input argument
     arguments.add_argument('input_file', type=str, help=_('CPT file input'))
@@ -88,10 +87,11 @@ def main():
         path = os.path.join(dir_output_name, dir_var_D_stations)
         try:
             os.makedirs(path)
-        except OSError as exc: # Python >2.5
+        except OSError as exc:  # Python >2.5
             if exc.errno == errno.EEXIST and os.path.isdir(path):
                 pass
-            else: raise
+            else:
+                raise
 
     # -------------------------------------------------------------------------
     # prepare runfile
@@ -133,9 +133,9 @@ def main():
 
     # get values from file input
     with open(arg.input_file, 'rb') as csvfile:
-        #dialect = csv.Sniffer().sniff(csvfile.read(4096))
-        #csvfile.seek(0)
-        #reader = csv.reader(csvfile, dialect)
+        # dialect = csv.Sniffer().sniff(csvfile.read(4096))
+        # csvfile.seek(0)
+        # reader = csv.reader(csvfile, dialect)
         reader = csv.reader(csvfile, delimiter='\t')
 
         values = []
@@ -173,18 +173,19 @@ def main():
             is_first_time_run = False
 
             for idx_station, station_name in enumerate(stations_list):
-
                 file_name = os.path.join(dir_output_name, dir_var_D_stations, station_name)
                 stations_files.append(open(file_name + ".txt", 'w'))
                 lat = latitude[idx_station] if latitude is not None else 'lat'
                 lon = longitude[idx_station] if longitude is not None else 'lon'
                 # write station list
-                runfile.writerow(['code', station_name, lat, lon, 'alt', os.path.join(dir_var_D_stations, station_name + ".txt")])
+                runfile.writerow(
+                    ['code', station_name, lat, lon, 'alt', os.path.join(dir_var_D_stations, station_name + ".txt")])
 
         for month in range(12):
             for number, station_file in enumerate(stations_files):
                 csv_file = csv.writer(station_file, delimiter=' ')
-                csv_file.writerow(["{0}-{1}".format(values[month * years + year][0], values[month * years + year][1]), values[month * years + year][number + 2]])
+                csv_file.writerow(["{0}-{1}".format(values[month * years + year][0], values[month * years + year][1]),
+                                   values[month * years + year][number + 2]])
                 station_file.flush()
 
     # applying normalize format for each station
