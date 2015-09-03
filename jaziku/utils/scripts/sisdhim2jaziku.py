@@ -207,6 +207,8 @@ def main():
 
     with open(arg.input_file, 'rb+') as fileobject:
 
+        line_in_station_properties = None
+
         for line_num, line in enumerate(fileobject):
 
             # continue if line is null, empty or with ****
