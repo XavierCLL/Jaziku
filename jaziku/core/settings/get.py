@@ -26,7 +26,6 @@ from jaziku.utils import console, input
 
 
 def configuration_run():
-
     # set settings by default
     settings = {"data_analysis": colored.red(_("disabled")),
                 "climate_process": colored.red(_("disabled")),
@@ -60,7 +59,7 @@ def configuration_run():
         settings["climate_process"] = colored.green(_("enabled"))
     elif not env.config_run.settings['climate_process'] == False:
         console.msg_error_configuration('climate_process', _("'climate_process' variable in runfile is wrong,\n"
-                            "this must be 'enable' or 'disable'"))
+                                                             "this must be 'enable' or 'disable'"))
 
     # ------------------------
     # forecast_process
@@ -68,15 +67,17 @@ def configuration_run():
         settings["forecast_process"] = colored.green(_("enabled"))
     elif not env.config_run.settings['forecast_process'] == False:
         console.msg_error_configuration('forecast_process', _("'forecast_process' variable in runfile is wrong,\n"
-                            "this must be 'enable' or 'disable'"))
+                                                              "this must be 'enable' or 'disable'"))
 
     ## GENERAL OPTIONS
     # ------------------------
     # analysis interval
     if env.config_run.settings['analysis_interval'] not in env.globals_vars.ALL_ANALYSIS_INTERVALS:
         console.msg_error_configuration('analysis_interval',
-            _("The 'analysis_interval' defined in runfile {0} is invalid,\nmust be one of these: {1}")
-            .format(env.config_run.settings['analysis_interval'], ', '.join(env.globals_vars.ALL_ANALYSIS_INTERVALS)))
+                                        _(
+                                            "The 'analysis_interval' defined in runfile {0} is invalid,\nmust be one of these: {1}")
+                                        .format(env.config_run.settings['analysis_interval'],
+                                                ', '.join(env.globals_vars.ALL_ANALYSIS_INTERVALS)))
 
     if env.config_run.settings['analysis_interval'] not in ["monthly", "bimonthly", "trimonthly"]:
         # extract the number of analysis_interval
@@ -97,7 +98,8 @@ def configuration_run():
 
     # ------------------------
     # class_category_analysis
-    env.config_run.settings['class_category_analysis'] = input.to_int(env.config_run.settings['class_category_analysis'])
+    env.config_run.settings['class_category_analysis'] = input.to_int(
+        env.config_run.settings['class_category_analysis'])
     settings["class_category_analysis"] = colored.green(str(env.config_run.settings['class_category_analysis']))
 
     # ------------------------
@@ -114,15 +116,15 @@ def configuration_run():
             settings["process_period"] = colored.green("{0}-{1}".format(args_period_start, args_period_end))
         except:
             console.msg_error_configuration('process_period',
-                _("The period must be: start_year and end_year (in different column)\n"
-                  "or 'maximum' for take the process period maximum possible by station."))
+                                            _("The period must be: start_year and end_year (in different column)\n"
+                                              "or 'maximum' for take the process period maximum possible by station."))
 
     # ------------------------
     # analog_year
     if env.config_run.settings['analog_year'] is None:
         console.msg_error_configuration('analog_year',
-            _("The '{0}' no was defined.")
-            .format('analog_year'))
+                                        _("The '{0}' no was defined.")
+                                        .format('analog_year'))
     elif env.config_run.settings['analog_year'] is not False:
         try:
             env.config_run.settings['analog_year'] = int(env.config_run.settings['analog_year'])
@@ -152,7 +154,8 @@ def configuration_run():
                 if lag not in [0, 1, 2]:
                     raise
         except:
-            console.msg_error_configuration('lags', _("The lags may be: 0, 1 and/or 2 (in different column), 'all' or 'default'"))
+            console.msg_error_configuration('lags', _(
+                "The lags may be: 0, 1 and/or 2 (in different column), 'all' or 'default'"))
         settings["lags"] = colored.green(', '.join(map(str, env.config_run.settings['lags'])))
 
     # ------------------------
@@ -164,9 +167,10 @@ def configuration_run():
     # consistent_data
     if env.config_run.settings['consistent_data'] == "default":
         env.config_run.settings['consistent_data'] = 15
-    if isinstance(env.config_run.settings['consistent_data'], (int,float)) and \
-         env.config_run.settings['consistent_data'] not in [True, False]:
-        settings["consistent_data"] = _('max ')+colored.green(str(env.config_run.settings['consistent_data'])+'%')+_(' of nulls')
+    if isinstance(env.config_run.settings['consistent_data'], (int, float)) and \
+                    env.config_run.settings['consistent_data'] not in [True, False]:
+        settings["consistent_data"] = _('max ') + colored.green(
+            str(env.config_run.settings['consistent_data']) + '%') + _(' of nulls')
 
 
     # ------------------------
@@ -189,29 +193,34 @@ def configuration_run():
     # graphics
     if env.config_run.settings['categories_labels_var_I'] is None:
         console.msg_error_configuration('categories_labels_var_I',
-            _("The '{0}' no was defined.")
-            .format('categories_labels_var_I'))
+                                        _("The '{0}' no was defined.")
+                                        .format('categories_labels_var_I'))
     elif env.config_run.settings['categories_labels_var_I'] == "default":
         settings["categories_labels_var_I"] = [env.config_run.settings['categories_labels_var_I']]
     else:
-        settings["categories_labels_var_I"] = ["'"+label+"'" for label in env.config_run.settings['categories_labels_var_I']]
+        settings["categories_labels_var_I"] = ["'" + label + "'" for label in
+                                               env.config_run.settings['categories_labels_var_I']]
 
     # ------------------------
     # relevant_climate_categories_var_I
     if env.config_run.settings['relevant_climate_categories_var_I'] is None:
         console.msg_error_configuration('relevant_climate_categories_var_I',
-            _("The '{0}' no was defined.")
-            .format('relevant_climate_categories_var_I'))
+                                        _("The '{0}' no was defined.")
+                                        .format('relevant_climate_categories_var_I'))
     if env.config_run.settings['relevant_climate_categories_var_I'] == "all":
         settings["relevant_climate_categories_var_I"] = "all"
     else:
         # convert to list if there is one category
         if not isinstance(env.config_run.settings['relevant_climate_categories_var_I'], list):
-            l = []; l.append(env.config_run.settings['relevant_climate_categories_var_I'])
+            l = [];
+            l.append(env.config_run.settings['relevant_climate_categories_var_I'])
             env.config_run.settings['relevant_climate_categories_var_I'] = l
         # clean ' character
-        env.config_run.settings['relevant_climate_categories_var_I'] = [s.replace("'","") for s in env.config_run.settings['relevant_climate_categories_var_I']]
-        settings["relevant_climate_categories_var_I"] = colored.green(', '.join(env.config_run.settings['relevant_climate_categories_var_I']))
+        env.config_run.settings['relevant_climate_categories_var_I'] = [s.replace("'", "") for s in
+                                                                        env.config_run.settings[
+                                                                            'relevant_climate_categories_var_I']]
+        settings["relevant_climate_categories_var_I"] = colored.green(
+            ', '.join(env.config_run.settings['relevant_climate_categories_var_I']))
 
     ## VAR D OPTIONS
     # ------------------------
@@ -229,8 +238,8 @@ def configuration_run():
     # limits var D below
     if env.config_run.settings['limits_var_D'] is None:
         console.msg_error_configuration('limits_var_D',
-            _("The '{0}' no was defined.")
-            .format('limits_var_D'))
+                                        _("The '{0}' no was defined.")
+                                        .format('limits_var_D'))
     elif not isinstance(env.config_run.settings['limits_var_D'], list):
         if env.config_run.settings['limits_var_D'] == 'none':
             env.config_run.settings['limits_var_D'] = {'below': None, 'above': None}
@@ -240,12 +249,13 @@ def configuration_run():
             settings["limits_var_D"] = _('default')
         else:
             console.msg_error_configuration('limits_var_D',
-                (_("Problem with particular range validation for "
-                   "dependent\nvariable: '{0}' this must be "
-                   "a valid number: <below>;<above>,\n'none' or 'default'.").format(env.config_run.settings['limits_var_D'])))
+                                            (_("Problem with particular range validation for "
+                                               "dependent\nvariable: '{0}' this must be "
+                                               "a valid number: <below>;<above>,\n'none' or 'default'.").format(
+                                                env.config_run.settings['limits_var_D'])))
     else:
         env.config_run.settings['limits_var_D'] = {'below': env.config_run.settings['limits_var_D'][0],
-                                               'above': env.config_run.settings['limits_var_D'][1]}
+                                                   'above': env.config_run.settings['limits_var_D'][1]}
         # below
         if env.config_run.settings['limits_var_D']['below'] == 'none':
             env.config_run.settings['limits_var_D']['below'] = None
@@ -270,12 +280,13 @@ def configuration_run():
     # thresholds var D
     if env.config_run.settings['thresholds_var_D'] is None:
         console.msg_error_configuration('thresholds_var_D',
-            _("The '{0}' no was defined.")
-            .format('thresholds_var_D'))
+                                        _("The '{0}' no was defined.")
+                                        .format('thresholds_var_D'))
     elif env.config_run.settings['thresholds_var_D'] == 'default':
         settings["thresholds_var_D"] = _('default')
     else:
-        settings["thresholds_var_D"] = colored.green(' | '.join([str(thr) for thr in env.config_run.settings['thresholds_var_D']]))
+        settings["thresholds_var_D"] = colored.green(
+            ' | '.join([str(thr) for thr in env.config_run.settings['thresholds_var_D']]))
 
     ## VAR I OPTIONS
     # ------------------------
@@ -292,15 +303,16 @@ def configuration_run():
     if env.config_run.settings['path_to_file_var_I'] == 'internal':
         settings["path_to_file_var_I"] = colored.green(env.config_run.settings['path_to_file_var_I'])
     else:
-        #settings["path_to_file_var_I"] = env.config_run.settings['path_to_file_var_I']
-        settings["path_to_file_var_I"] = os.path.relpath(env.config_run.settings['path_to_file_var_I'], os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile)))
+        # settings["path_to_file_var_I"] = env.config_run.settings['path_to_file_var_I']
+        settings["path_to_file_var_I"] = os.path.relpath(env.config_run.settings['path_to_file_var_I'], os.path.abspath(
+            os.path.dirname(env.globals_vars.ARGS.runfile)))
 
     # ------------------------
     # limits var I below
     if env.config_run.settings['limits_var_I'] is None:
         console.msg_error_configuration('limits_var_I',
-            _("The '{0}' no was defined.")
-            .format('limits_var_I'))
+                                        _("The '{0}' no was defined.")
+                                        .format('limits_var_I'))
     elif not isinstance(env.config_run.settings['limits_var_I'], list):
         if env.config_run.settings['limits_var_I'] == 'none':
             env.config_run.settings['limits_var_I'] = {'below': None, 'above': None}
@@ -310,12 +322,13 @@ def configuration_run():
             settings["limits_var_I"] = _('default')
         else:
             console.msg_error_configuration('limits_var_I',
-                (_("Problem with particular range validation for "
-                   "independent\nvariable: '{0}' this must be "
-                   "a valid number: <below>;<above>,\n'none' or 'default'.").format(env.config_run.settings['limits_var_I'])))
+                                            (_("Problem with particular range validation for "
+                                               "independent\nvariable: '{0}' this must be "
+                                               "a valid number: <below>;<above>,\n'none' or 'default'.").format(
+                                                env.config_run.settings['limits_var_I'])))
     else:
         env.config_run.settings['limits_var_I'] = {'below': env.config_run.settings['limits_var_I'][0],
-                                               'above': env.config_run.settings['limits_var_I'][1]}
+                                                   'above': env.config_run.settings['limits_var_I'][1]}
         # below
         if env.config_run.settings['limits_var_I']['below'] == 'none':
             env.config_run.settings['limits_var_I']['below'] = None
@@ -340,12 +353,13 @@ def configuration_run():
     # thresholds var I
     if env.config_run.settings['thresholds_var_I'] is None:
         console.msg_error_configuration('thresholds_var_I',
-            _("The '{0}' no was defined.")
-            .format('thresholds_var_I'))
+                                        _("The '{0}' no was defined.")
+                                        .format('thresholds_var_I'))
     if env.config_run.settings['thresholds_var_I'] == 'default':
         settings["thresholds_var_I"] = _('default')
     else:
-        settings["thresholds_var_I"] = colored.green(' | '.join([str(thr) for thr in env.config_run.settings['thresholds_var_I']]))
+        settings["thresholds_var_I"] = colored.green(
+            ' | '.join([str(thr) for thr in env.config_run.settings['thresholds_var_I']]))
 
     ## FORECAST OPTION
     # ------------------------
@@ -375,11 +389,12 @@ def configuration_run():
                         raise
                     env.config_run.settings['maps'][map_to_run] = True
             except:
-                console.msg_error_configuration('maps',_("the maps options are: 'climate', 'forecast', "
-                                                         "'correlation' (in different column), or 'all'."))
+                console.msg_error_configuration('maps', _("the maps options are: 'climate', 'forecast', "
+                                                          "'correlation' (in different column), or 'all'."))
 
         settings["maps"] = colored.green(_("enabled")) + ' (' + \
-                           (', '.join(map(str, [m for m in env.config_run.settings['maps'] if env.config_run.settings['maps'][m]]))) + \
+                           (', '.join(map(str, [m for m in env.config_run.settings['maps'] if
+                                                env.config_run.settings['maps'][m]]))) + \
                            ')'
 
     # maps settings
@@ -402,7 +417,7 @@ def configuration_run():
             settings['overlapping'] = colored.green(env.config_run.settings['overlapping'])
         else:
             console.msg_error_configuration('overlapping', _("The overlapping solution is wrong, the options are:\n"
-                                "default, average, maximum, minimum or neither"))
+                                                             "default, average, maximum, minimum or neither"))
         # shape_boundary method
         # TODO: add more method for cut map interpolation around shape
         if env.config_run.settings['shape_boundary'] in ["enable", True]:
@@ -411,7 +426,7 @@ def configuration_run():
             env.config_run.settings['shape_boundary'] = False
         else:
             console.msg_error_configuration('shape_boundary', _("The shape_boundary is wrong, the options are:\n"
-                                "disable, enable or default."))
+                                                                "disable, enable or default."))
 
     ## post-get
     # ------------------------

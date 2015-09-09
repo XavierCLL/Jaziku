@@ -35,13 +35,14 @@ def pre_process():
 
     # directory for the forecast results
     env.globals_vars.FORECAST_DIR \
-        = os.path.join(env.globals_vars.OUTPUT_DIR, _('Jaziku_Forecast'))   # 'results'
+        = os.path.join(env.globals_vars.OUTPUT_DIR, _('Jaziku_Forecast'))  # 'results'
 
     print _("\nSaving the result for forecast in:").format(env.globals_vars.FORECAST_DIR)
     if env.globals_vars.ARGS.output:
         print "   " + colored.cyan(env.globals_vars.FORECAST_DIR)
     else:
-        print "   " + colored.cyan(os.path.relpath(env.globals_vars.FORECAST_DIR, os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile))))
+        print "   " + colored.cyan(os.path.relpath(env.globals_vars.FORECAST_DIR,
+                                                   os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile))))
 
     # reset forecast_var_I_lag_N
     if env.config_run.settings['class_category_analysis'] == 3:
@@ -50,15 +51,15 @@ def pre_process():
             env.globals_vars.probability_forecast_values[lag] = {}
             for idx, tag in enumerate(['below', 'normal', 'above']):
                 env.globals_vars.probability_forecast_values[lag][tag] \
-                    = env.config_run.settings['forecast_var_I_lag_'+str(lag)][idx]
+                    = env.config_run.settings['forecast_var_I_lag_' + str(lag)][idx]
 
     if env.config_run.settings['class_category_analysis'] == 7:
         for lag in env.globals_vars.ALL_LAGS:
 
             env.globals_vars.probability_forecast_values[lag] = {}
-            for idx, tag in enumerate(['below3', 'below2','below1', 'normal', 'above1', 'above2', 'above3']):
+            for idx, tag in enumerate(['below3', 'below2', 'below1', 'normal', 'above1', 'above2', 'above3']):
                 env.globals_vars.probability_forecast_values[lag][tag] \
-                    = env.config_run.settings['forecast_var_I_lag_'+str(lag)][idx]
+                    = env.config_run.settings['forecast_var_I_lag_' + str(lag)][idx]
 
             if env.globals_vars.forecast_contingency_table['type'] == '3x7':
                 for tag in ['below3', 'below2', 'below1']:
@@ -86,7 +87,8 @@ def process(station):
     # console message
     console.msg(_("Processing forecast:"))
 
-    console.msg(_("   making forecast for date: ")+env.config_run.settings['forecast_date']['text']+' ...', color="cyan", newline=False)
+    console.msg(_("   making forecast for date: ") + env.config_run.settings['forecast_date']['text'] + ' ...',
+                color="cyan", newline=False)
 
     prob_var_D = {}
 
@@ -103,43 +105,48 @@ def process(station):
         else:
             in_percentage = 'in_percentage'
         if env.var_D.is_n_monthly():
-            CT_for_forecast_date = station.contingency_tables[lag][env.config_run.settings['forecast_date']['month'] - 1][in_percentage]
+            CT_for_forecast_date = \
+            station.contingency_tables[lag][env.config_run.settings['forecast_date']['month'] - 1][in_percentage]
         if env.var_D.is_n_daily():
             month = env.config_run.settings['forecast_date']['month']
             day = get_range_analysis_interval().index(env.config_run.settings['forecast_date']['day'])
             CT_for_forecast_date = station.contingency_tables[lag][month - 1][day][in_percentage]
 
         # convert from percentage to 0-1
-        CT_for_forecast_date = (matrix(CT_for_forecast_date)/100.0).tolist()
+        CT_for_forecast_date = (matrix(CT_for_forecast_date) / 100.0).tolist()
 
         # when there are 3 categories
         if env.globals_vars.forecast_contingency_table['type'] == '3x3':
             for idx_varD, tag in enumerate(['below', 'normal', 'above']):
                 prob_var_D[lag][tag] = \
-                    (CT_for_forecast_date[0][idx_varD] * env.globals_vars.probability_forecast_values[lag]['below']) +\
-                    (CT_for_forecast_date[1][idx_varD] * env.globals_vars.probability_forecast_values[lag]['normal']) +\
+                    (CT_for_forecast_date[0][idx_varD] * env.globals_vars.probability_forecast_values[lag]['below']) + \
+                    (CT_for_forecast_date[1][idx_varD] * env.globals_vars.probability_forecast_values[lag]['normal']) + \
                     (CT_for_forecast_date[2][idx_varD] * env.globals_vars.probability_forecast_values[lag]['above'])
 
         # when there are 7 categories but only 3 values for the categories in forecast options
         if env.globals_vars.forecast_contingency_table['type'] == '3x7':
-            tags = ['below3', 'below2','below1', 'normal', 'above1', 'above2', 'above3']
+            tags = ['below3', 'below2', 'below1', 'normal', 'above1', 'above2', 'above3']
             forecast_position_selected_below = env.globals_vars.probability_forecast_values[lag]['below']
-            forecast_var_I_selected_below = env.globals_vars.probability_forecast_values[lag][forecast_position_selected_below]
+            forecast_var_I_selected_below = env.globals_vars.probability_forecast_values[lag][
+                forecast_position_selected_below]
 
             forecast_var_I_selected_normal = env.globals_vars.probability_forecast_values[lag]['normal']
 
             forecast_position_selected_above = env.globals_vars.probability_forecast_values[lag]['above']
-            forecast_var_I_selected_above = env.globals_vars.probability_forecast_values[lag][forecast_position_selected_above]
+            forecast_var_I_selected_above = env.globals_vars.probability_forecast_values[lag][
+                forecast_position_selected_above]
 
-            for idx_varD, tag in enumerate(['below3', 'below2','below1', 'normal', 'above1', 'above2', 'above3']):
+            for idx_varD, tag in enumerate(['below3', 'below2', 'below1', 'normal', 'above1', 'above2', 'above3']):
                 prob_var_D[lag][tag] = \
-                    (CT_for_forecast_date[tags.index(forecast_position_selected_below)][idx_varD] * forecast_var_I_selected_below) +\
-                    (CT_for_forecast_date[3][idx_varD] * forecast_var_I_selected_normal) +\
-                    (CT_for_forecast_date[tags.index(forecast_position_selected_above)][idx_varD] * forecast_var_I_selected_above)
+                    (CT_for_forecast_date[tags.index(forecast_position_selected_below)][
+                         idx_varD] * forecast_var_I_selected_below) + \
+                    (CT_for_forecast_date[3][idx_varD] * forecast_var_I_selected_normal) + \
+                    (CT_for_forecast_date[tags.index(forecast_position_selected_above)][
+                         idx_varD] * forecast_var_I_selected_above)
 
         # when there are 7 categories and 7 values for the categories in forecast options
         if env.globals_vars.forecast_contingency_table['type'] == '7x7':
-            for idx_varD, tag in enumerate(['below3', 'below2','below1', 'normal', 'above1', 'above2', 'above3']):
+            for idx_varD, tag in enumerate(['below3', 'below2', 'below1', 'normal', 'above1', 'above2', 'above3']):
                 prob_var_D[lag][tag] = \
                     ((CT_for_forecast_date[0][idx_varD] +
                       CT_for_forecast_date[1][idx_varD] +
@@ -161,7 +168,8 @@ def process(station):
 
     if env.config_run.settings['graphics']:
         # settings directories to save forecast graphics
-        station.forecast_dir = os.path.join(env.globals_vars.FORECAST_DIR, _('stations'), station.code + '_' + station.name)   # 'results'
+        station.forecast_dir = os.path.join(env.globals_vars.FORECAST_DIR, _('stations'),
+                                            station.code + '_' + station.name)  # 'results'
         output.make_dirs(station.forecast_dir)
         # do graphics for forecast
         with console.redirectStdStreams():

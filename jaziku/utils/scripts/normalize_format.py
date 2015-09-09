@@ -44,10 +44,13 @@ def external_run():
     for time_series_file in all_input_files:
         main(time_series_file)
 
+
 def get_int_month(month):
-    if isinstance(month, str) and len(month) in [2,3]:
-        bim_char = {1:'jf', 2: 'fm', 3: 'ma',4: 'am', 5: 'mj', 6: 'jj', 7: 'ja', 8: 'as', 9: 'so', 10: 'on', 11: 'nd', 12: 'dj'}
-        trim_char = {1:'jfm', 2: 'fma', 3: 'mam',4: 'amj', 5: 'mjj', 6: 'jja', 7: 'jas', 8: 'aso', 9: 'son', 10: 'ond', 11: 'ndj', 12: 'djf'}
+    if isinstance(month, str) and len(month) in [2, 3]:
+        bim_char = {1: 'jf', 2: 'fm', 3: 'ma', 4: 'am', 5: 'mj', 6: 'jj', 7: 'ja', 8: 'as', 9: 'so', 10: 'on', 11: 'nd',
+                    12: 'dj'}
+        trim_char = {1: 'jfm', 2: 'fma', 3: 'mam', 4: 'amj', 5: 'mjj', 6: 'jja', 7: 'jas', 8: 'aso', 9: 'son',
+                     10: 'ond', 11: 'ndj', 12: 'djf'}
 
         if len(month) == 2:
             return bim_char.keys()[bim_char.values().index(month)]
@@ -56,23 +59,26 @@ def get_int_month(month):
     else:
         return int(month)
 
+
 def get_char_month(month, type_of_month):
     if type_of_month == 'monthly':
         return output.fix_zeros(month)
     if type_of_month == 'bimonthly':
-        bim_char = {1:'jf', 2: 'fm', 3: 'ma',4: 'am', 5: 'mj', 6: 'jj', 7: 'ja', 8: 'as', 9: 'so', 10: 'on', 11: 'nd', 12: 'dj'}
+        bim_char = {1: 'jf', 2: 'fm', 3: 'ma', 4: 'am', 5: 'mj', 6: 'jj', 7: 'ja', 8: 'as', 9: 'so', 10: 'on', 11: 'nd',
+                    12: 'dj'}
         return bim_char[month]
     if type_of_month == 'trimonthly':
-        trim_char = {1:'jfm', 2: 'fma', 3: 'mam',4: 'amj', 5: 'mjj', 6: 'jja', 7: 'jas', 8: 'aso', 9: 'son', 10: 'ond', 11: 'ndj', 12: 'djf'}
+        trim_char = {1: 'jfm', 2: 'fma', 3: 'mam', 4: 'amj', 5: 'mjj', 6: 'jja', 7: 'jas', 8: 'aso', 9: 'son',
+                     10: 'ond', 11: 'ndj', 12: 'djf'}
         return trim_char[month]
 
-def main(time_series_file, make_backup=True):
 
+def main(time_series_file, make_backup=True):
     output.console.msg('processing file: ' + time_series_file, color='cyan')
 
     if make_backup:
-        output.console.msg('  making backup in ' + time_series_file+'~')
-        copyfile(time_series_file, time_series_file+'~')
+        output.console.msg('  making backup in ' + time_series_file + '~')
+        copyfile(time_series_file, time_series_file + '~')
 
     input_file = open(time_series_file, 'rU')
     lines = input_file.readlines()
@@ -89,7 +95,7 @@ def main(time_series_file, make_backup=True):
         # continue (delete) in line with strange characters
         if len(re.sub(r'[^\w]', '', line)) == 0:
             output.console.msg('  deleting strange characters "{0}" in line {1}'
-                    .format(line.encode('string-escape').replace('\\n',''), num_line+1), color='yellow')
+                               .format(line.encode('string-escape').replace('\\n', ''), num_line + 1), color='yellow')
             continue
 
         is_daily = False
@@ -97,14 +103,14 @@ def main(time_series_file, make_backup=True):
         type_of_month = False
 
         # normalize characters and divisions, and clean
-        line = line.replace('/','-')
-        line = line.replace('\t',' ')
-        line = line.replace(';',' ')
-        line = line.replace('  ',' ')
-        line = line.replace('\"','')
-        line = line.replace('\'','')
-        line = line.replace('NaN','nan')
-        line = line.replace('NAN','nan')
+        line = line.replace('/', '-')
+        line = line.replace('\t', ' ')
+        line = line.replace(';', ' ')
+        line = line.replace('  ', ' ')
+        line = line.replace('\"', '')
+        line = line.replace('\'', '')
+        line = line.replace('NaN', 'nan')
+        line = line.replace('NAN', 'nan')
         line = line.strip()
 
         year = re.sub(r'[^\w]', '', line.split(' ')[0].split('-')[0])
@@ -113,14 +119,14 @@ def main(time_series_file, make_backup=True):
         if month.isdigit():
             month = int(month)
             type_of_month = 'monthly'
-        elif len(month) in [2,3]:
+        elif len(month) in [2, 3]:
             month = month.lower()
             if len(month) == 2:
                 type_of_month = 'bimonthly'
             if len(month) == 3:
                 type_of_month = 'trimonthly'
         else:
-            output.console.msg_error('unknown month format in line '+str(num_line+1),wait_value=False)
+            output.console.msg_error('unknown month format in line ' + str(num_line + 1), wait_value=False)
 
         if len(line.split(' ')[0].split('-')) == 3:
             day = re.sub(r'[^\w]', '', line.split(' ')[0].split('-')[2])
@@ -134,37 +140,41 @@ def main(time_series_file, make_backup=True):
         if len(line.split(' ')) >= 2 and line.split(' ')[1].strip() != '':
             value = line.split(' ')[1]
             # transform the old null to new valid null "nan"
-            if value.startswith(('-99999','99999')) and int(float(value)) in [-99999,99999]:
+            if value.startswith(('-99999', '99999')) and int(float(value)) in [-99999, 99999]:
                 value = 'nan'
         else:
             value = 'nan'
             if is_n_monthly:
                 output.console.msg('  filling missing values for date {0}-{1} in line {2}'
-                    .format(year, month, num_line+1), color='yellow')
+                                   .format(year, month, num_line + 1), color='yellow')
             if is_daily:
                 output.console.msg('  filling missing values for date {0}-{1}-{2} in line {3}'
-                    .format(year, get_char_month(month, type_of_month), day, num_line+1), color='yellow')
+                                   .format(year, get_char_month(month, type_of_month), day, num_line + 1),
+                                   color='yellow')
 
-        date_value = date(int(year),get_int_month(month),int(day))
+        date_value = date(int(year), get_int_month(month), int(day))
 
         # fill the empty months or days with nan if not exists
         if old_date_value is not False:
             if is_n_monthly:
                 while date_value > old_date_value + relativedelta(months=1):
                     old_date_value = old_date_value + relativedelta(months=1)
-                    output_file.write(str(old_date_value.year)+'-'+get_char_month(old_date_value.month, type_of_month)+' '+'nan'+'\n')
+                    output_file.write(str(old_date_value.year) + '-' + get_char_month(old_date_value.month,
+                                                                                      type_of_month) + ' ' + 'nan' + '\n')
 
                     output.console.msg('  filling missing dates with nan for {0}-{1} in line {2}'
-                        .format(old_date_value.year, get_char_month(old_date_value.month, type_of_month), num_line+1), color='yellow')
-
+                                       .format(old_date_value.year, get_char_month(old_date_value.month, type_of_month),
+                                               num_line + 1), color='yellow')
 
             if is_daily:
                 while date_value > old_date_value + relativedelta(days=1):
                     old_date_value = old_date_value + relativedelta(days=1)
-                    output_file.write(str(old_date_value.year)+'-'+output.fix_zeros(old_date_value.month)+'-'+output.fix_zeros(old_date_value.day)+' '+'nan'+'\n')
+                    output_file.write(str(old_date_value.year) + '-' + output.fix_zeros(
+                        old_date_value.month) + '-' + output.fix_zeros(old_date_value.day) + ' ' + 'nan' + '\n')
 
                     output.console.msg('  filling missing dates with nan for {0}-{1}-{2} in line {3}'
-                            .format(old_date_value.year, get_char_month(old_date_value.month, type_of_month), old_date_value.day, num_line+1), color='yellow')
+                                       .format(old_date_value.year, get_char_month(old_date_value.month, type_of_month),
+                                               old_date_value.day, num_line + 1), color='yellow')
 
         old_date_value = date_value
 
@@ -172,8 +182,8 @@ def main(time_series_file, make_backup=True):
             month = output.fix_zeros(int(month))
 
         if is_n_monthly:
-            output_file.write(year+'-'+str(month)+' '+str(value)+'\n')
+            output_file.write(year + '-' + str(month) + ' ' + str(value) + '\n')
         if is_daily:
-            output_file.write(year+'-'+str(month)+'-'+str(day)+' '+str(value)+'\n')
+            output_file.write(year + '-' + str(month) + '-' + str(day) + ' ' + str(value) + '\n')
 
     output_file.close()

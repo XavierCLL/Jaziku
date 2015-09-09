@@ -92,7 +92,8 @@ def composite_analysis(station):
         pearson = stats.pearsonr(var_D_values, var_I_values)[0]
         # significance correlation
         singr, T_test, t_crit \
-            = statistic_tests.significance_correlation(rho=0, r=pearson, n=len(station.common_period) + 1, alpha=0.05, side=0)
+            = statistic_tests.significance_correlation(rho=0, r=pearson, n=len(station.common_period) + 1, alpha=0.05,
+                                                       side=0)
 
         # contingency test
         Observed, Expected, test_stat, crit_value, df, p_value, alpha \
@@ -100,7 +101,8 @@ def composite_analysis(station):
 
         # calculate the correlation of contingency table
         chi_cdf = 1 - p_value
-        corr_CT = ((chi_cdf ** 2) / (station.size_time_series*(env.config_run.settings['class_category_analysis'] - 1))) ** 0.5
+        corr_CT = ((chi_cdf ** 2) / (
+            station.size_time_series * (env.config_run.settings['class_category_analysis'] - 1))) ** 0.5
 
         # test:
         # Is significant the contingency table?
@@ -116,7 +118,7 @@ def composite_analysis(station):
         else:
             is_significant_singr = _('no')
 
-        #===============================================================================
+        # ===============================================================================
         # result table (csv file) - main contain
 
         if env.config_run.settings['class_category_analysis'] == 3:
@@ -127,15 +129,15 @@ def composite_analysis(station):
                 [output.number(item) for item in thresholds_to_list(specific_contingency_table['thresholds_var_D'])] + \
                 [output.number(item) for item in thresholds_to_list(specific_contingency_table['thresholds_var_I'])] + \
                 ([''] + [
-                env.config_run.settings['categories_labels_var_I']['below'],
-                env.config_run.settings['categories_labels_var_I']['normal'],
-                env.config_run.settings['categories_labels_var_I']['above']])*3 + \
+                    env.config_run.settings['categories_labels_var_I']['below'],
+                    env.config_run.settings['categories_labels_var_I']['normal'],
+                    env.config_run.settings['categories_labels_var_I']['above']]) * 3 + \
                 [output.number(test_stat), output.number(crit_value),
                  is_significant_CT, output.number(corr_CT)])
             # second/third and fourth line for value
             for index, label in enumerate(env.var_D.get_generic_labels()):
                 csv_result_table.writerow(
-                    ['']*9 + \
+                    [''] * 9 + \
                     [label] + \
                     column(specific_contingency_table['in_values'], index) + \
                     [label] + \
@@ -153,19 +155,19 @@ def composite_analysis(station):
                 [output.number(item) for item in thresholds_to_list(specific_contingency_table['thresholds_var_D'])] + \
                 [output.number(item) for item in thresholds_to_list(specific_contingency_table['thresholds_var_I'])] + \
                 ([''] + [
-                env.config_run.settings['categories_labels_var_I']['below3'],
-                env.config_run.settings['categories_labels_var_I']['below2'],
-                env.config_run.settings['categories_labels_var_I']['below1'],
-                env.config_run.settings['categories_labels_var_I']['normal'],
-                env.config_run.settings['categories_labels_var_I']['above1'],
-                env.config_run.settings['categories_labels_var_I']['above2'],
-                env.config_run.settings['categories_labels_var_I']['above3']])*3 + \
+                    env.config_run.settings['categories_labels_var_I']['below3'],
+                    env.config_run.settings['categories_labels_var_I']['below2'],
+                    env.config_run.settings['categories_labels_var_I']['below1'],
+                    env.config_run.settings['categories_labels_var_I']['normal'],
+                    env.config_run.settings['categories_labels_var_I']['above1'],
+                    env.config_run.settings['categories_labels_var_I']['above2'],
+                    env.config_run.settings['categories_labels_var_I']['above3']]) * 3 + \
                 [output.number(test_stat), output.number(crit_value),
                  is_significant_CT, output.number(corr_CT)])
             # second/third and fourth line for value
             for index, label in enumerate(env.var_D.get_generic_labels()):
                 csv_result_table.writerow(
-                    ['']*17 + \
+                    [''] * 17 + \
                     [label] + \
                     column(specific_contingency_table['in_values'], index) + \
                     [label] + \
@@ -182,8 +184,9 @@ def composite_analysis(station):
         # dir and name to save the result table
         csv_name \
             = os.path.join(station.climate_dir, _('Result_Table_CA_lag_{0}_{1}_{2}_{3}_{4}_({5}-{6}).csv')
-                .format(lag, station.code, station.name, station.var_D.type_series, station.var_I.type_series,
-                        env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']))
+                           .format(lag, station.code, station.name, station.var_D.type_series,
+                                   station.var_I.type_series,
+                                   env.globals_vars.PROCESS_PERIOD['start'], env.globals_vars.PROCESS_PERIOD['end']))
 
         if os.path.isfile(csv_name):
             os.remove(csv_name)
@@ -191,7 +194,7 @@ def composite_analysis(station):
         open_file = open(csv_name, 'w')
         csv_result_table = csv.writer(open_file, delimiter=env.globals_vars.OUTPUT_CSV_DELIMITER)
 
-        #===============================================================================
+        # ===============================================================================
         # result table (csv file) - headers
         if env.config_run.settings['class_category_analysis'] == 3:
             # print first line of header
@@ -199,30 +202,30 @@ def composite_analysis(station):
                 [_('VAR_D'), _('VAR_I'), _('PEARSON'), _('SIGN. PEARSON'),
                  _("IS SIGN 'SIGN PEARSON'?"), _('THRESHOLDS VAR D')] + \
                 [''] + [_('THRESHOLDS VAR I')] + [''] + \
-                [_('CONTINGENCY TABLE (CT)')] + ['']*3 + \
-                [_('CONTINGENCY TABLE IN %')] + ['']*3 + \
-                [_('IS SIGN RISK ANALYSIS?')] + ['']*3 + \
+                [_('CONTINGENCY TABLE (CT)')] + [''] * 3 + \
+                [_('CONTINGENCY TABLE IN %')] + [''] * 3 + \
+                [_('IS SIGN RISK ANALYSIS?')] + [''] * 3 + \
                 [_('TEST STAT - CHI2'), _('CRIT VALUE - Chi2'), _('IS SIGN CT?'), _('CORREL CT')])
             # print second line of header
             csv_result_table.writerow(
-                ['']*5 + \
-                [_('below'),_('above')]*2)
+                [''] * 5 + \
+                [_('below'), _('above')] * 2)
 
         if env.config_run.settings['class_category_analysis'] == 7:
             # print first line of header
             csv_result_table.writerow(
                 [_('VAR_D'), _('VAR_I'), _('PEARSON'), _('SIGN. PEARSON'),
                  _("IS SIGN 'SIGN PEARSON'?"), _('THRESHOLDS VAR D')] + \
-                ['']*5 + [_('THRESHOLDS VAR I')] + ['']*5 + \
-                [_('CONTINGENCY TABLE (CT)')] + ['']*7 + \
-                [_('CONTINGENCY TABLE IN %')] + ['']*7 + \
-                [_('IS SIGN RISK ANALYSIS?')] + ['']*7 + \
+                [''] * 5 + [_('THRESHOLDS VAR I')] + [''] * 5 + \
+                [_('CONTINGENCY TABLE (CT)')] + [''] * 7 + \
+                [_('CONTINGENCY TABLE IN %')] + [''] * 7 + \
+                [_('IS SIGN RISK ANALYSIS?')] + [''] * 7 + \
                 [_('TEST STAT - CHI2'), _('CRIT VALUE - Chi2'), _('IS SIGN CT?'), _('CORREL CT')])
             # print second line of header
             csv_result_table.writerow(
-                ['']*5 + \
+                [''] * 5 + \
                 [_('strong below'), _('moderate below'), _('weak below'),
-                 _('weak above'), _('moderate above'), _('strong above')]*2)
+                 _('weak above'), _('moderate above'), _('strong above')] * 2)
 
         pearson_list_month = []
         is_sig_risk_analysis_month = []
@@ -233,7 +236,7 @@ def composite_analysis(station):
             if env.var_D.is_n_monthly():
                 # get the contingency tables and thresholds
 
-                specific_contingency_table = station.contingency_tables[lag][month-1]
+                specific_contingency_table = station.contingency_tables[lag][month - 1]
 
                 # for print text date in result table
                 var_D_text = output.analysis_interval_text(month)
@@ -251,7 +254,7 @@ def composite_analysis(station):
                 for idx_day, day in enumerate(range_analysis_interval):
                     # get the contingency tables and thresholds
 
-                    specific_contingency_table = station.contingency_tables[lag][month-1][idx_day]
+                    specific_contingency_table = station.contingency_tables[lag][month - 1][idx_day]
 
                     # this is for calculate date for print in result table
                     # this depend on range analysis interval and lags (var_I)
@@ -262,8 +265,9 @@ def composite_analysis(station):
                     # output.months_in_initials(date_now.month - 1) + " " + str(day)
                     var_D_text = output.analysis_interval_text(date_now.month, day)
                     # output.months_in_initials((date_now - relativedelta(days=(range_analysis_interval[1] - 1) * lag)).month - 1)+ " " + str(range_analysis_interval[idx_day - lag])
-                    var_I_text = output.analysis_interval_text((date_now - relativedelta(days=(range_analysis_interval[1] - 1) * lag)).month,
-                                                               range_analysis_interval[idx_day - lag])
+                    var_I_text = output.analysis_interval_text(
+                        (date_now - relativedelta(days=(range_analysis_interval[1] - 1) * lag)).month,
+                        range_analysis_interval[idx_day - lag])
 
                     pearson, is_sig_risk_analysis_list = main_process()  # <-
 
@@ -274,7 +278,7 @@ def composite_analysis(station):
                 is_sig_risk_analysis_month.append(is_sig_risk_analysis_list_day)
 
         open_file.close()
-        #del csv_result_table
+        # del csv_result_table
 
         pearson_list[lag] = pearson_list_month
         is_sig_risk_analysis[lag] = is_sig_risk_analysis_month

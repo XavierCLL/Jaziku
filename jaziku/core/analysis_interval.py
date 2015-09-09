@@ -22,10 +22,10 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from jaziku import env
-from jaziku.utils import  console
+from jaziku.utils import console
 
 
-#TODO
+# TODO
 class PeriodOfAnalysisInterval(object):
     def __init__(self, type, month=None, day=None):
         self.type = type
@@ -116,8 +116,8 @@ def check_analysis_interval():
                             "this is incompatible and Jaziku can't convert the times\n"
                             "series properly for this case. Or change the analysis\n"
                             "interval or change the data of var {0}.")
-            .format(env.var_.keys()[env.var_.values().index(env_variable)], env_variable.TYPE_SERIES,
-                    env_variable.FREQUENCY_DATA, env.config_run.settings['analysis_interval']))
+                          .format(env.var_.keys()[env.var_.values().index(env_variable)], env_variable.TYPE_SERIES,
+                                  env_variable.FREQUENCY_DATA, env.config_run.settings['analysis_interval']))
 
     if env.var_I.FREQUENCY_DATA in ['bimonthly'] and env.config_run.settings['analysis_interval'] in ["trimonthly"]:
         analysis_interval_error(env.var_I)
@@ -125,10 +125,12 @@ def check_analysis_interval():
         analysis_interval_error(env.var_D)
     if env.var_I.FREQUENCY_DATA in ['trimonthly'] and env.config_run.settings['analysis_interval'] in ["bimonthly"]:
         analysis_interval_error(env.var_I)
-    if env.var_D.FREQUENCY_DATA in ['trimonthly'] and env.config_run.settings['analysis_interval'] not in ["trimonthly"]:
+    if env.var_D.FREQUENCY_DATA in ['trimonthly'] and env.config_run.settings['analysis_interval'] not in [
+        "trimonthly"]:
         analysis_interval_error(env.var_D)
 
-    if env.var_D.FREQUENCY_DATA in ['monthly','bimonthly','trimonthly'] and env.config_run.settings['analysis_interval'] not in ["monthly","bimonthly","trimonthly"]:
+    if env.var_D.FREQUENCY_DATA in ['monthly', 'bimonthly', 'trimonthly'] and env.config_run.settings[
+        'analysis_interval'] not in ["monthly", "bimonthly", "trimonthly"]:
         analysis_interval_error(env.var_D)
 
 
@@ -148,7 +150,7 @@ def adjust_data_of_variables(stations_list, force_same_frequencies=False, messag
         if messages:
             console.msg(_("done"), color='green')
 
-    was_converted_to = {'D':False, 'I':False}
+    was_converted_to = {'D': False, 'I': False}
 
     freq_order = ["daily", "5days", "10days", "15days", "monthly", "bimonthly", "trimonthly"]
 
@@ -173,7 +175,6 @@ def adjust_data_of_variables(stations_list, force_same_frequencies=False, messag
 
 
 def get_text_of_frequency_data(var):
-
     if env.var_[var].FREQUENCY_DATA == "daily":
         text_of_frequency_data = _("*calculated from daily data")
     elif env.var_[var].FREQUENCY_DATA in ["5days", "10days", "15days"]:
@@ -187,7 +188,7 @@ def get_text_of_frequency_data(var):
             text_of_frequency_data = _("*calculated from (overlapping) trimonthly data")
 
     if env.var_[var].was_converted:
-        text_of_frequency_data += _( " (converted)")
+        text_of_frequency_data += _(" (converted)")
 
     return text_of_frequency_data
 
@@ -256,7 +257,7 @@ def get_values_in_range_analysis_interval(variable, year, n_month, day=None, lag
             start_date = date(year, n_month, start_interval)
 
             if range_analysis_interval.index(day) - lag < 0:
-                start_date += relativedelta(months= -1)
+                start_date += relativedelta(months=-1)
 
             iter_date = start_date
 
@@ -270,7 +271,8 @@ def get_values_in_range_analysis_interval(variable, year, n_month, day=None, lag
                 var_I_values.append(variable.data[index_var_I])
         if env.var_I.is_n_monthly():
             if env.config_run.settings['analysis_interval'] in ["5days", "10days", "15days"]:
-                real_date = date(year, n_month, day) + relativedelta(days= -env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL * lag)
+                real_date = date(year, n_month, day) + relativedelta(
+                    days=-env.globals_vars.NUM_DAYS_OF_ANALYSIS_INTERVAL * lag)
                 # e.g if lag 2 in march and calculate to 15days go to february and not january
                 if n_month - real_date.month > 1:
                     real_date = date(real_date.year, real_date.month + 1, 1)
@@ -279,7 +281,6 @@ def get_values_in_range_analysis_interval(variable, year, n_month, day=None, lag
                     date(real_date.year, real_date.month, 1))])
             else:
                 var_I_values.append(variable.data[variable.date.index(
-                        date(year, n_month, 1) + relativedelta(months=-lag))])
+                    date(year, n_month, 1) + relativedelta(months=-lag))])
 
         return var_I_values
-

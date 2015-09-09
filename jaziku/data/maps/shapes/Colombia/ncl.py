@@ -21,20 +21,21 @@
 import os
 from jaziku.utils import globals_vars
 
+
 # this ncl code for regions of Colombia
 
 def code(map_properties):
-
-#  if particular_properties_map not defined in {region}.py, these are the default values:
+    #  if particular_properties_map not defined in {region}.py, these are the default values:
     if map_properties.particular_properties_map == {}:
-        map_properties.particular_properties_map = {"tiMainFontHeightF": 0.021, # main font height
-                                                    "lbTitleFontHeightF": 0.015, # colorbar title font height
-                                                    "space_label_title": 25, # number of space between label title in colorbar
+        map_properties.particular_properties_map = {"tiMainFontHeightF": 0.021,  # main font height
+                                                    "lbTitleFontHeightF": 0.015,  # colorbar title font height
+                                                    "space_label_title": 25,
+                                                    # number of space between label title in colorbar
                                                     "lbLabelFontHeightF": 0.0095}  # colorbar mark font height
 
     map_properties_vars = {
         'ncarg_root': os.environ.get('NCARG_ROOT'),
-        'jaziku_ncl_plugins': os.path.abspath(os.path.join(globals_vars.JAZIKU_DIR,'data','maps','ncl_plugins')),
+        'jaziku_ncl_plugins': os.path.abspath(os.path.join(globals_vars.JAZIKU_DIR, 'data', 'maps', 'ncl_plugins')),
         'shape': map_properties.shape,
         'interpolation_file': os.path.abspath(map_properties.base_path_file) + '.tsv',
         'stations_file': os.path.abspath(map_properties.base_path_file) + '_stations.tsv',
@@ -42,8 +43,8 @@ def code(map_properties):
         'label_marks_stations': _('Stations'),
         'save_map': os.path.abspath(map_properties.base_path_file),
         'title': map_properties.title,
-        'label_title': _("Below") + " " * map_properties.particular_properties_map["space_label_title"] +\
-                       _("Normal") + " " * map_properties.particular_properties_map["space_label_title"] +\
+        'label_title': _("Below") + " " * map_properties.particular_properties_map["space_label_title"] + \
+                       _("Normal") + " " * map_properties.particular_properties_map["space_label_title"] + \
                        _("Above"),
         'tiMainFontHeightF': map_properties.particular_properties_map["tiMainFontHeightF"],
         'lbTitleFontHeightF': map_properties.particular_properties_map["lbTitleFontHeightF"],
@@ -513,5 +514,3 @@ begin
 end
 
     '''.format(**map_properties_vars)
-
-

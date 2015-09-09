@@ -25,11 +25,14 @@ from jaziku import env
 from jaziku.utils import console
 from jaziku.utils.output import make_dirs
 
+
 def true(): return True
+
+
 def false(): return False
 
-def base_query(question, prompt, options, default, wrong_ans):
 
+def base_query(question, prompt, options, default, wrong_ans):
     if not default in options:
         raise ValueError("invalid default answer: {0}".format(default))
 
@@ -48,9 +51,8 @@ def base_query(question, prompt, options, default, wrong_ans):
 
 
 def yes_no(question, default="y"):
-
-    options = {"yes":true, "y":true, "YES":true, "Y":true,
-               "no":false, "n":false, "NO":false, "N":false}
+    options = {"yes": true, "y": true, "YES": true, "Y": true,
+               "no": false, "n": false, "NO": false, "N": false}
 
     prompt = " [y/n]"
 
@@ -60,7 +62,6 @@ def yes_no(question, default="y"):
 
 
 def directory(question, dirs, default="m"):
-
     def replace():
         for _dir in dirs:
             # delete
@@ -69,7 +70,7 @@ def directory(question, dirs, default="m"):
             make_dirs(_dir)
         return True
 
-    options = {"r":replace, "R":replace, "m":true, "M":true, "c":false, "C":false}
+    options = {"r": replace, "R": replace, "m": true, "M": true, "c": false, "C": false}
 
     prompt = " [r/m/c]"
 

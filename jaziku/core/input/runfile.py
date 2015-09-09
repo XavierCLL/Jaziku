@@ -24,7 +24,7 @@ import csv
 from jaziku import env
 from jaziku.core.station import Station
 from jaziku.modules.maps.grid import Grid
-from jaziku.utils import  console, input
+from jaziku.utils import console, input
 
 
 def read_runfile():
@@ -71,7 +71,7 @@ def read_runfile():
                     env.config_run.settings[line[0]] = input.to_float(line[1])
                 except:
                     env.config_run.settings[line[0]] = line[1]
-            else: # >2
+            else:  # >2
                 # save values of this settings as list
                 try:
                     env.config_run.settings[line[0]] = [input.to_float(item) for item in line[1::]]
@@ -87,7 +87,7 @@ def read_runfile():
         if not line_in_runfile or not line_in_runfile[0].strip() or line_in_runfile == []:
             continue
 
-        if line_in_runfile[0].strip() not in ['forecast_var_I_lag_0','forecast_var_I_lag_1','forecast_var_I_lag_2']:
+        if line_in_runfile[0].strip() not in ['forecast_var_I_lag_0', 'forecast_var_I_lag_1', 'forecast_var_I_lag_2']:
             # trim all items in line_in_runfile and clean empty items
             line_in_runfile = [i.strip() for i in line_in_runfile if i != '']
         else:
@@ -104,7 +104,7 @@ def read_runfile():
         if in_config_run:
             # skip line if start with # but if this is not a starts the next section
             if line_in_runfile[0].startswith("#") and not \
-                (len(line_in_runfile) >= 2 and line_in_runfile[1] == "MAPS"):
+                    (len(line_in_runfile) >= 2 and line_in_runfile[1] == "MAPS"):
                 continue
 
             if line_in_runfile[0] in env.config_run.settings:
@@ -122,14 +122,14 @@ def read_runfile():
                         "error read line in 'CONFIGURATION RUN' in runfile,\n"
                         "unknown option in line {0}:\n\n"
                         "{1}")
-                    .format(runfile.line_num, line_in_runfile[0]), False)
+                                      .format(runfile.line_num, line_in_runfile[0]), False)
 
         # read MAPS
         if in_maps:
             # skip line if start with # but if this is not a starts the next section
             if line_in_runfile[0].startswith("#") and not \
-                (line_in_runfile[0].startswith("## GRID DEFINITION") or \
-                (len(line_in_runfile) >= 2 and line_in_runfile[1] == "STATIONS LIST")):
+                    (line_in_runfile[0].startswith("## GRID DEFINITION") or \
+                             (len(line_in_runfile) >= 2 and line_in_runfile[1] == "STATIONS LIST")):
                 continue
 
             if line_in_runfile[0] in env.config_run.settings:
@@ -147,7 +147,7 @@ def read_runfile():
                         "error read line in 'MAPS' in runfile,\n"
                         "unknown option in line {0}:\n\n"
                         "{1}")
-                    .format(runfile.line_num, line_in_runfile[0]), False)
+                                      .format(runfile.line_num, line_in_runfile[0]), False)
 
         # read GRIDS LIST
         if in_grids_list:
@@ -161,7 +161,7 @@ def read_runfile():
 
             # skip line if start with # but if this is not a starts the next section
             if line_in_runfile[0].startswith("#") and not \
-                (len(line_in_runfile) >= 2 and line_in_runfile[1] == "STATIONS LIST"):
+                    (len(line_in_runfile) >= 2 and line_in_runfile[1] == "STATIONS LIST"):
                 continue
 
             if line_in_runfile[0] in Grid.fields:
@@ -171,7 +171,7 @@ def read_runfile():
                         console.msg_error(_(
                             "error reading the settings line in runfile,"
                             " line {0}:\n'{1}' no was defined.")
-                        .format(runfile.line_num, line_in_runfile[0]), False)
+                                          .format(runfile.line_num, line_in_runfile[0]), False)
                 if len(line_in_runfile) == 2:
                     try:
                         setattr(Grid.all_grids[-1], line_in_runfile[0], input.to_float(line_in_runfile[1]))
@@ -179,7 +179,8 @@ def read_runfile():
                         setattr(Grid.all_grids[-1], line_in_runfile[0], line_in_runfile[1])
                 if len(line_in_runfile) >= 3:
                     try:
-                        setattr(Grid.all_grids[-1], line_in_runfile[0], [input.to_float(item) for item in line_in_runfile[1::]])
+                        setattr(Grid.all_grids[-1], line_in_runfile[0],
+                                [input.to_float(item) for item in line_in_runfile[1::]])
                     except:
                         setattr(Grid.all_grids[-1], line_in_runfile[0], [item for item in line_in_runfile[1::]])
             else:
@@ -188,7 +189,7 @@ def read_runfile():
                     in_station_list = True
                 else:
                     console.msg_error(_("error read line in 'GRIDS LIST' in runfile, line {0}:\n{1}")
-                    .format(runfile.line_num, line_in_runfile[0]), False)
+                                      .format(runfile.line_num, line_in_runfile[0]), False)
 
         # read STATIONS LIST
         if in_station_list:
@@ -211,11 +212,11 @@ def read_runfile():
     # check path_to_file_var_I
     if env.config_run.settings["path_to_file_var_I"] is None:
         console.msg_error(_("The '{0}' no was defined.")
-                           .format('path_to_file_var_I'), wait_value=False)
+                          .format('path_to_file_var_I'), wait_value=False)
 
     # if path_to_file_var_I is relative convert to absolute, except if is 'internal'
-    if not os.path.isabs(env.config_run.settings["path_to_file_var_I"]) and\
-       not env.config_run.settings["path_to_file_var_I"] == 'internal':
+    if not os.path.isabs(env.config_run.settings["path_to_file_var_I"]) and \
+            not env.config_run.settings["path_to_file_var_I"] == 'internal':
         env.config_run.settings["path_to_file_var_I"] \
             = os.path.abspath(os.path.join(os.path.dirname(env.globals_vars.ARGS.runfile),
                                            env.config_run.settings["path_to_file_var_I"]))
@@ -293,11 +294,11 @@ def read_stations(lines_of_stations):
             station.alt = input.to_float(line_station[4])
 
             station.var_D.type_series = env.var_D.TYPE_SERIES
-            #station.file_D = open(line_station[5], 'rb')
+            # station.file_D = open(line_station[5], 'rb')
             station.var_D.set_file(line_station[5])
 
             station.var_I.type_series = env.var_I.TYPE_SERIES
-            #station.file_I = env.config_run.get['path_to_file_var_I']
+            # station.file_I = env.config_run.get['path_to_file_var_I']
             station.var_I.set_file(env.config_run.settings['path_to_file_var_I'])
 
         except Exception as error:

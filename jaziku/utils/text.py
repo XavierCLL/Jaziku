@@ -26,6 +26,6 @@ def slugify(value):
     underscores) and converts spaces to hyphens. Also strips leading and
     trailing whitespace. (based on django function)
     """
-    #value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
+    # value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
     value = re.sub('[^\w\s-]', '', value).strip()
     return re.sub('[-\s]+', '_', value)

@@ -21,17 +21,17 @@
 import os
 from jaziku import env
 
+
 # this ncl code for generic regions
 
 def code(map_properties):
-
-#  if particular_properties_deterministic_map not defined in {region}.py, these are the default values:
+    #  if particular_properties_deterministic_map not defined in {region}.py, these are the default values:
     if map_properties.particular_properties_deterministic_map == {}:
-        map_properties.particular_properties_deterministic_map = {"tiMainFontHeightF": 0.0185} # main font height
+        map_properties.particular_properties_deterministic_map = {"tiMainFontHeightF": 0.0185}  # main font height
 
     map_properties_vars = {
         'ncarg_root': os.environ.get('NCARG_ROOT'),
-        'jaziku_ncl_plugins': os.path.abspath(os.path.join(env.globals_vars.JAZIKU_DIR,'data','maps','ncl_plugins')),
+        'jaziku_ncl_plugins': os.path.abspath(os.path.join(env.globals_vars.JAZIKU_DIR, 'data', 'maps', 'ncl_plugins')),
         'shape': map_properties.shape,
         'stations_file': os.path.abspath(map_properties.base_path_file) + '_stations.tsv',
         'label_marks_stations': _('Stations'),
@@ -480,5 +480,3 @@ begin
 end
 
     '''.format(**map_properties_vars)
-
-

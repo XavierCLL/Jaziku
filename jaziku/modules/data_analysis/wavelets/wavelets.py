@@ -258,7 +258,7 @@ class Paul(object):
         x = t / s
 
         const = (2 ** m * 1j ** m * factorial(m)) \
-            / (np.pi * factorial(2 * m)) ** .5
+                / (np.pi * factorial(2 * m)) ** .5
         functional_form = (1 - 1j * x) ** -(m + 1)
 
         output = const * functional_form
@@ -505,6 +505,7 @@ class WaveletAnalysis(object):
     The equivalent fourier period is defined as where the wavelet
     power spectrum reaches its maximum and can be found analytically.
     """
+
     def __init__(self, data=np.random.random(1000), time=None, dt=1,
                  dj=0.125, wavelet=Morlet(), unbias=False, mask_coi=False,
                  compute_with_freq=False):
@@ -567,6 +568,7 @@ class WaveletAnalysis(object):
 
         def f(s):
             return self.fourier_period(s) - 2 * dt
+
         return scipy.optimize.fsolve(f, 1)[0]
 
     @property
@@ -837,6 +839,5 @@ class WaveletAnalysis(object):
         sS = S[iC]
 
         return sC, sS
-
 
 # TODO: derive C_d for given wavelet

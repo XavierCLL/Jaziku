@@ -36,24 +36,24 @@ LOCALE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 languages = [name for name in os.listdir(LOCALE_DIR) if os.path.isdir(os.path.join(LOCALE_DIR, name))]
 
-#DEFAULT_LANGUAGES = ['en']
+# DEFAULT_LANGUAGES = ['en']
 
 # Concat all languages (env + default locale),
 #  and here we have the languages and location of the translations
-#languages += DEFAULT_LANGUAGES
+# languages += DEFAULT_LANGUAGES
 
 # Lets tell those details to gettext
 #  (nothing to change here for you)
 
-#gettext.install (True,localedir=None, unicode=1)
+# gettext.install (True,localedir=None, unicode=1)
 
-#gettext.find(APP_NAME, LOCALE_DIR)
+# gettext.find(APP_NAME, LOCALE_DIR)
 
-#gettext.textdomain(APP_NAME)
+# gettext.textdomain(APP_NAME)
 
-#gettext.bind_textdomain_codeset(APP_NAME, "UTF-8")
+# gettext.bind_textdomain_codeset(APP_NAME, "UTF-8")
 
-#language = gettext.translation(APP_NAME, LOCALE_DIR, languages = languages, fallback = True)
+# language = gettext.translation(APP_NAME, LOCALE_DIR, languages = languages, fallback = True)
 
 
 # init languages
@@ -61,15 +61,14 @@ languages = [name for name in os.listdir(LOCALE_DIR) if os.path.isdir(os.path.jo
 try:
     locale_language = locale.getdefaultlocale()[0][0:2]
     lang = gettext.translation(APP_NAME, LOCALE_DIR,
-        languages=[locale_language],
-        codeset="utf-8")
+                               languages=[locale_language],
+                               codeset="utf-8")
     os.environ["LANG"] = locale_language
     lang.install()
 except:
     lang = gettext.NullTranslations()
     os.environ["LANG"] = "en"
     lang.install()
-
 
 
 # -------------------------------------------------------------------------
@@ -81,7 +80,7 @@ def set_language(language):
     i.e "es", and this language should exits in i18n directory, else
     return to english as default language.
     """
-    #_ = language.ugettext
+    # _ = language.ugettext
 
     from jaziku.env import config_run
     from jaziku.utils import console
@@ -93,11 +92,11 @@ def set_language(language):
         else:
             try:
                 lang = gettext.translation(APP_NAME, LOCALE_DIR,
-                    languages=[language],
-                    codeset="utf-8")
+                                           languages=[language],
+                                           codeset="utf-8")
             except:
                 console.msg_error(_("'{0}' language not available.").format(language), False)
-    
+
         if 'lang' in locals():
             os.environ["LANG"] = language
             lang.install()
@@ -111,12 +110,13 @@ def set_language(language):
             try:
                 if locale_language != "en":
                     lang = gettext.translation(APP_NAME, LOCALE_DIR,
-                        languages=[locale_language],
-                        codeset="utf-8")
+                                               languages=[locale_language],
+                                               codeset="utf-8")
                     os.environ["LANG"] = locale_language
                     lang.install()
             except:
-                settings_language = colored.green("en") + _(" (language \'{0}\' has not was translated yet)").format(locale_language)
+                settings_language = colored.green("en") + _(" (language \'{0}\' has not was translated yet)").format(
+                    locale_language)
                 lang = gettext.NullTranslations()
                 os.environ["LANG"] = "en"
                 lang.install()
@@ -136,6 +136,3 @@ def set_language(language):
     from jaziku.env import var_D, var_I
     var_D.INTERNAL_UNITS_i18n()
     var_I.INTERNAL_UNITS_i18n()
-
-
-
