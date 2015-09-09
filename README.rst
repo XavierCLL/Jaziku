@@ -43,7 +43,7 @@ Source code
 -----------
 
 The latest sources can be obtained from official Jaziku repository:
-http://hg.ideam.gov.co:8000/meteorologia/jaziku/summary
+https://bitbucket.org/XavierCLL/jaziku
     
 Install
 -------
