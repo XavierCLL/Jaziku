@@ -24,7 +24,6 @@ from jaziku.modules.maps import maps
 
 
 def configuration_run(stop_in=None, stop_in_grid=None):
-
     # load input settings saved
     settings = env.globals_vars.input_settings
 
@@ -130,7 +129,7 @@ def configuration_run(stop_in=None, stop_in_grid=None):
         print "   {0} ------------ {1}".format("shape boundary", settings["shape_boundary"])
         if stop_in == "shape_boundary": return
         for idx_grid in range(len(maps.Grid.all_grids)):
-            console.msg("  Grid definition #{0}:".format(idx_grid+1), color='cyan')
+            console.msg("  Grid definition #{0}:".format(idx_grid + 1), color='cyan')
             print "   {0} ---------------------- {1}".format("grid", settings["grid"][idx_grid])
             if stop_in == "grid" and idx_grid == stop_in_grid: return
             print "   {0} ---------------- {1}".format("shape path", settings["shape_path"][idx_grid])
@@ -159,14 +158,14 @@ def configuration_run(stop_in=None, stop_in_grid=None):
               "   {1} to {2} and the source of data was\n"
               "   obtained in {3}.\n"
               "   url: {4}")
-            .format(split_internal_var_I[0], split_internal_var_I[1],
-                split_internal_var_I[2], ' '.join(split_internal_var_I[3::]),
-                env.var_I.INTERNAL_URLS[env.var_I.TYPE_SERIES]))
+                .format(split_internal_var_I[0], split_internal_var_I[1],
+                        split_internal_var_I[2], ' '.join(split_internal_var_I[3::]),
+                        env.var_I.INTERNAL_URLS[env.var_I.TYPE_SERIES]))
 
     if (not env.config_run.settings['limits_var_D']['below'] or
-        not env.config_run.settings['limits_var_D']['above'] or
-        not env.config_run.settings['limits_var_I']['below'] or
-        not env.config_run.settings['limits_var_I']['above']):
+            not env.config_run.settings['limits_var_D']['above'] or
+            not env.config_run.settings['limits_var_I']['below'] or
+            not env.config_run.settings['limits_var_I']['above']):
         console.msg(_("\n > WARNING: you are using one or more limits as\n"
                       "   'none' value, this means that series values\n"
                       "   will not be checked if they are valid in\n"
@@ -182,5 +181,3 @@ def configuration_run(stop_in=None, stop_in_grid=None):
         console.msg(_("\n > WARNING: you are defined the var I as accumulate,\n"
                       "   please make sure the time series is accumulative\n"
                       "   if it is monthly, bimonthly or trimonthly"), color='yellow')
-
-

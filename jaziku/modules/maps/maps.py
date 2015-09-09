@@ -39,13 +39,12 @@ def pre_process():
     """
 
     print _("\n\n"
-        "############################# MAPS  ############################\n"
-        "# Map Process, here is made the Kriging interpolation on the   #\n"
-        "# results of historical scenarios and forecasts most probable  #\n"
-        "# of the dependent variable, also interpolation of linear      #\n"
-        "# correlations.                                                #\n"
-        "################################################################")
-
+            "############################# MAPS  ############################\n"
+            "# Map Process, here is made the Kriging interpolation on the   #\n"
+            "# results of historical scenarios and forecasts most probable  #\n"
+            "# of the dependent variable, also interpolation of linear      #\n"
+            "# correlations.                                                #\n"
+            "################################################################")
 
     console.msg(_("\nChecking basic requirements for make maps:"), newline=False)
 
@@ -64,10 +63,10 @@ def pre_process():
                             'For more information read: http://goo.gl/4dAeH'))
 
     # second check if NCARG_ROOT is right
-    if not os.path.isdir(os.environ.get('NCARG_ROOT')) or\
-       not os.path.isfile(os.path.join(os.environ.get('NCARG_ROOT'),'lib/ncarg/nclscripts/csm/gsn_code.ncl')) or\
-       not os.path.isfile(os.path.join(os.environ.get('NCARG_ROOT'),'lib/ncarg/nclscripts/csm/gsn_csm.ncl')) or\
-       not os.path.isfile(os.path.join(os.environ.get('NCARG_ROOT'),'lib/ncarg/nclscripts/csm/contributed.ncl')):
+    if not os.path.isdir(os.environ.get('NCARG_ROOT')) or \
+            not os.path.isfile(os.path.join(os.environ.get('NCARG_ROOT'), 'lib/ncarg/nclscripts/csm/gsn_code.ncl')) or \
+            not os.path.isfile(os.path.join(os.environ.get('NCARG_ROOT'), 'lib/ncarg/nclscripts/csm/gsn_csm.ncl')) or \
+            not os.path.isfile(os.path.join(os.environ.get('NCARG_ROOT'), 'lib/ncarg/nclscripts/csm/contributed.ncl')):
         console.msg_error(_('The NCARG_ROOT variable is defined in your system,\n'
                             'but there are problems for found nclscripts files,\n'
                             'please check the NCARG_ROOT variable in your system.\n'
@@ -156,25 +155,25 @@ def process(grid):
                         _("\n > WARNING: The point lat:{lat} lon:{lon}\n"
                           "   of the station code: {code} was not added\n"
                           "   because the value of index is 'nan' (null).").
-                        format(lat=latitude, lon=longitude, code=line[0]), color='yellow', newline=False)
+                            format(lat=latitude, lon=longitude, code=line[0]), color='yellow', newline=False)
                 if point_state == "point not added" and message_warning:
                     console.msg(
                         _("\n > WARNING: The point lat:{lat} lon:{lon}\n"
                           "   of the station code: {code} was not added\n"
                           "   because the point is outside of the grid.").
-                        format(lat=latitude, lon=longitude, code=line[0]), color='yellow', newline=False)
+                            format(lat=latitude, lon=longitude, code=line[0]), color='yellow', newline=False)
                 if point_state in [_("average"), _("maximum"), _("minimum")] and message_warning:
                     console.msg(
                         _("\n > WARNING: for the point lat:{lat} lon:{lon}\n"
                           "   Jaziku detect overlapping of two values, it\n"
                           "   will put the {state} value.").
-                        format(lat=latitude, lon=longitude, state=point_state), color='yellow', newline=False)
+                            format(lat=latitude, lon=longitude, state=point_state), color='yellow', newline=False)
                 if point_state == _("neither") and message_warning:
                     console.msg(
                         _("\n > WARNING: for the point lat:{lat} lon:{lon}\n"
                           "   Jaziku detect overlapping of two values, Jaziku\n"
                           "   will not put the {state} values.").
-                        format(lat=latitude, lon=longitude, state=point_state), color='yellow', newline=False)
+                            format(lat=latitude, lon=longitude, state=point_state), color='yellow', newline=False)
 
             # if index_position is not 'nan', replace index_position to not translate category text
             if index_position != 'nan':
@@ -216,9 +215,9 @@ def process(grid):
 
             # TODO: test if interpolation worked
 
-            #matrix_interpolation = np.matrix(matrix_interpolation)
+            # matrix_interpolation = np.matrix(matrix_interpolation)
 
-            #matrix_interpolation_vector = np.asarray(matrix_interpolation.T).reshape(-1)
+            # matrix_interpolation_vector = np.asarray(matrix_interpolation.T).reshape(-1)
 
             # save .TSV interpolation file for NCL
             interpolation_file = open(tsv_interpolation_file, 'wb')
@@ -286,7 +285,7 @@ def process(grid):
 
         del matrix
 
-    grid.if_running = {"climate":False, "correlation":False, "forecast":False}
+    grid.if_running = {"climate": False, "correlation": False, "forecast": False}
 
     # -------------------------------------------------------------------------
     # Process maps for CLIMATE
@@ -315,7 +314,7 @@ def process(grid):
 
                     if env.config_run.settings['analysis_interval'] in ['monthly', 'bimonthly', 'trimonthly']:
                         for var_I_idx, label in enumerate(env.config_run.get_CATEGORIES_LABELS_VAR_I()):
-                            label = label.strip().replace(' ','_')
+                            label = label.strip().replace(' ', '_')
                             # show only once
                             if lag == env.config_run.settings['lags'][0] and month == 1 and var_I_idx == 0:
                                 message_warning = True
@@ -337,10 +336,10 @@ def process(grid):
                             output.make_dirs(base_path)
 
                             if map_type == _("probabilistic"):
-                                base_file = _(u'Prob_Map_lag_{0}_{1}_{2}')\
+                                base_file = _(u'Prob_Map_lag_{0}_{1}_{2}') \
                                     .format(lag, output.analysis_interval_text(month, join_result=True), label)
                             if map_type == _("deterministic"):
-                                base_file = _(u'Deter_Map_lag_{0}_{1}_{2}')\
+                                base_file = _(u'Deter_Map_lag_{0}_{1}_{2}') \
                                     .format(lag, output.analysis_interval_text(month, join_result=True), label)
 
                             grid.date = output.analysis_interval_text(month)
@@ -364,9 +363,10 @@ def process(grid):
 
                         for day in range(len(range_analysis_interval)):
                             for var_I_idx, label in enumerate(env.config_run.get_CATEGORIES_LABELS_VAR_I()):
-                                label = label.strip().replace(' ','_')
+                                label = label.strip().replace(' ', '_')
                                 # show only once
-                                if lag == env.config_run.settings['lags'][0] and month == 1 and var_I_idx == 0 and day == 0:
+                                if lag == env.config_run.settings['lags'][
+                                    0] and month == 1 and var_I_idx == 0 and day == 0:
                                     message_warning = True
                                 else:
                                     message_warning = False
@@ -386,14 +386,16 @@ def process(grid):
                                 output.make_dirs(base_path)
 
                                 if map_type == _("probabilistic"):
-                                    base_file = _(u'Prob_Map_lag_{0}_{1}_{2}')\
+                                    base_file = _(u'Prob_Map_lag_{0}_{1}_{2}') \
                                         .format(lag,
-                                                output.analysis_interval_text(month, range_analysis_interval[day], join_result=True),
+                                                output.analysis_interval_text(month, range_analysis_interval[day],
+                                                                              join_result=True),
                                                 label)
                                 if map_type == _("deterministic"):
-                                    base_file = _(u'Deter_Map_lag_{0}_{1}_{2}')\
+                                    base_file = _(u'Deter_Map_lag_{0}_{1}_{2}') \
                                         .format(lag,
-                                                output.analysis_interval_text(month, range_analysis_interval[day], join_result=True),
+                                                output.analysis_interval_text(month, range_analysis_interval[day],
+                                                                              join_result=True),
                                                 label)
 
                                 grid.date = output.analysis_interval_text(month, range_analysis_interval[day])
@@ -450,9 +452,9 @@ def process(grid):
 
                     # save matrix for interpolation
                     base_path = os.path.join(env.globals_vars.CLIMATE_DIR, _('maps'),
-                        _('lag_{0}').format(lag),
-                        _('Correlation'),
-                        grid.grid_name)
+                                             _('lag_{0}').format(lag),
+                                             _('Correlation'),
+                                             grid.grid_name)
 
                     # create the temporal directory
                     tmp_dir = tempfile.mkdtemp()
@@ -460,7 +462,8 @@ def process(grid):
                     # make dir with the name of grid
                     output.make_dirs(base_path)
 
-                    base_file = _(u'Map_correlation_lag_{0}_{1}').format(lag, output.analysis_interval_text(month, join_result=True))
+                    base_file = _(u'Map_correlation_lag_{0}_{1}').format(lag, output.analysis_interval_text(month,
+                                                                                                            join_result=True))
 
                     grid.date = output.analysis_interval_text(month)
                     grid.lag = lag
@@ -495,9 +498,9 @@ def process(grid):
 
                         # save matrix for interpolation
                         base_path = os.path.join(env.globals_vars.CLIMATE_DIR, _('maps'),
-                            _('lag_{0}').format(lag),
-                            _('Correlation'),
-                            grid.grid_name)
+                                                 _('lag_{0}').format(lag),
+                                                 _('Correlation'),
+                                                 grid.grid_name)
 
                         # create the temporal directory
                         tmp_dir = tempfile.mkdtemp()
@@ -505,8 +508,9 @@ def process(grid):
                         # make dir with the name of grid
                         output.make_dirs(base_path)
 
-                        base_file = _(u'Map_correlation_lag_{0}_{1}')\
-                            .format(lag, output.analysis_interval_text(month, range_analysis_interval[day], join_result=True))
+                        base_file = _(u'Map_correlation_lag_{0}_{1}') \
+                            .format(lag, output.analysis_interval_text(month, range_analysis_interval[day],
+                                                                       join_result=True))
 
                         grid.date = output.analysis_interval_text(month, range_analysis_interval[day])
                         grid.lag = lag
@@ -526,7 +530,7 @@ def process(grid):
     # -------------------------------------------------------------------------
     # Process maps for FORECAST
 
-    if env.config_run.settings['forecast_process'] and  env.config_run.settings['maps']['forecast']:
+    if env.config_run.settings['forecast_process'] and env.config_run.settings['maps']['forecast']:
 
         grid.if_running["forecast"] = True
 

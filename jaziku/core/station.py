@@ -21,10 +21,11 @@
 from datetime import date
 
 from jaziku import env
-from jaziku.utils import  console
+from jaziku.utils import console
 from jaziku.core.variable import Variable
 
-#==============================================================================
+
+# ==============================================================================
 # STATION CLASS
 # for storage several variables of each station
 
@@ -44,8 +45,7 @@ class Station(object):
         self.var_D = Variable(type='D', station=self)
         self.var_I = Variable(type='I', station=self)
 
-        self.var_ = {'D':self.var_D, 'I':self.var_I}
-
+        self.var_ = {'D': self.var_D, 'I': self.var_I}
 
     def calculate_common_and_process_period(self):
         """Calculate common period (interception) in years of dates from
@@ -67,33 +67,34 @@ class Station(object):
         if not common_date:
             console.msg_error(_("For the series '{0}-{1}' together with var I '{2}'\n"
                                 "don't have any common period, Jaziku need at least \n"
-                                "3 year of common period between the two series.").format(self.code, self.name, self.var_I.type_series))
+                                "3 year of common period between the two series.").format(self.code, self.name,
+                                                                                          self.var_I.type_series))
 
         # initialized variable common_period
         # format list: [[  date ,  var_D ,  var_I ],... ]
         if env.config_run.settings['process_period']:
             if (env.config_run.settings['process_period']['start'] < common_date[0].year + 1 or
-                env.config_run.settings['process_period']['end'] > common_date[-1].year - 1):
-
+                        env.config_run.settings['process_period']['end'] > common_date[-1].year - 1):
                 console.msg_error(_(
                     "The period defined in argument {0}-{1} is outside in the\n"
                     "maximum possible period {2}-{3} of intersection between station\n"
                     "{4}-{5} and {6}.")
-                .format(env.config_run.settings['process_period']['start'],
-                    env.config_run.settings['process_period']['end'],
-                    common_date[0].year + 1, common_date[-1].year - 1,
-                    self.code, self.name, self.var_I.type_series))
+                                  .format(env.config_run.settings['process_period']['start'],
+                                          env.config_run.settings['process_period']['end'],
+                                          common_date[0].year + 1, common_date[-1].year - 1,
+                                          self.code, self.name, self.var_I.type_series))
 
-            common_date = common_date[common_date.index(date(env.config_run.settings['process_period']['start'] - 1, 1, 1)):
-            common_date.index(date(env.config_run.settings['process_period']['end'] + 1, 12, 1)) + 1]
+            common_date = common_date[
+                          common_date.index(date(env.config_run.settings['process_period']['start'] - 1, 1, 1)):
+                          common_date.index(date(env.config_run.settings['process_period']['end'] + 1, 12, 1)) + 1]
 
         self.common_period = []
         # set values matrix for common_period
         for date_period in common_date:
             # common_period format list: [[  date ,  var_D ,  var_I ],... ]
             self.common_period.append([date_period,
-                                      self.var_D.data[self.var_D.date.index(date_period)],
-                                      self.var_I.data[self.var_I.date.index(date_period)]])
+                                       self.var_D.data[self.var_D.date.index(date_period)],
+                                       self.var_I.data[self.var_I.date.index(date_period)]])
 
         # calculate the process period
         self.process_period = {'start': self.common_period[0][0].year + 1,

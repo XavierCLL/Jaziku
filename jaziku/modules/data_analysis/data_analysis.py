@@ -23,7 +23,7 @@ from clint.textui import colored
 
 import eda
 from jaziku import env
-from jaziku.utils import  console
+from jaziku.utils import console
 
 
 def main(stations_list):
@@ -44,11 +44,10 @@ def main(stations_list):
     if env.globals_vars.ARGS.output:
         print "   " + colored.cyan(env.globals_vars.DATA_ANALYSIS_DIR)
     else:
-        print "   " + colored.cyan(os.path.relpath(env.globals_vars.DATA_ANALYSIS_DIR, os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile))))
+        print "   " + colored.cyan(os.path.relpath(env.globals_vars.DATA_ANALYSIS_DIR,
+                                                   os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile))))
 
     # -------------------------------------------------------------------------
     # Exploratory data analysis process
 
     eda.main(stations_list)
-
-

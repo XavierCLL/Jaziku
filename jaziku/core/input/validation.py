@@ -22,7 +22,7 @@ from jaziku import env
 from jaziku.utils import console, input
 
 
-#==============================================================================
+# ==============================================================================
 # VALIDATION OF LIMITS FOR DEPENDENT AND INDEPENDENT VARIABLE
 
 
@@ -44,25 +44,25 @@ def is_the_value_within_limits(value, variable):
         return True
 
     # get input values for limits define in runfile
-    if not env.config_run.settings['limits_var_'+variable.type]['ready']:
+    if not env.config_run.settings['limits_var_' + variable.type]['ready']:
         # set global limits for var D only once
         set_limits(variable)
-    limit_below = env.config_run.settings['limits_var_'+variable.type]['below']
-    limit_above = env.config_run.settings['limits_var_'+variable.type]['above']
+    limit_below = env.config_run.settings['limits_var_' + variable.type]['below']
+    limit_above = env.config_run.settings['limits_var_' + variable.type]['above']
 
     ## check
     if limit_below is not None:
         # check by below
         if value < limit_below:
             raise ValueError(_("Error validating the value '{0}' it isn't within\n"
-                                "limits ({1} to {2}) defined for the var {3} ({4}).")
-            .format(round(value, 4), limit_below, limit_above, variable.type, variable.type_series))
+                               "limits ({1} to {2}) defined for the var {3} ({4}).")
+                             .format(round(value, 4), limit_below, limit_above, variable.type, variable.type_series))
     if limit_above is not None:
         # check by above
         if value > limit_above:
             raise ValueError(_("Error validating the value '{0}' it isn't within\n"
-                                "limits ({1} to {2}) defined for the var {3} ({4}).")
-            .format(round(value, 4), limit_below, limit_above, variable.type, variable.type_series))
+                               "limits ({1} to {2}) defined for the var {3} ({4}).")
+                             .format(round(value, 4), limit_below, limit_above, variable.type, variable.type_series))
 
     return True
 
@@ -82,8 +82,8 @@ def set_limits(variable):
     .. note:: Only needs to run once for variable
     """
     # get input values for limits define in runfile
-    input_limit_below = env.config_run.settings['limits_var_'+variable.type]['below']
-    input_limit_above = env.config_run.settings['limits_var_'+variable.type]['above']
+    input_limit_below = env.config_run.settings['limits_var_' + variable.type]['below']
+    input_limit_above = env.config_run.settings['limits_var_' + variable.type]['above']
     limits_by_default = env.var_[variable.type].get_internal_limits()
 
     if input_limit_below is not None:
@@ -98,12 +98,12 @@ def set_limits(variable):
                 console.msg_error(_("The type '{0}' for var {1} hasn't limits by default for\n"
                                     "data {2}, use a internal valid type and/or valid data frequency\n"
                                     "or defined the particular limits in the runfile")
-                .format(variable.type_series, variable.type, env.var_[variable.type].FREQUENCY_DATA))
+                                  .format(variable.type_series, variable.type, env.var_[variable.type].FREQUENCY_DATA))
         else:
             limit_below = input.to_float(input_limit_below)
             if limit_below is None:
                 console.msg_error(_("The limit '{0}' for var {1} is not valid limit")
-                .format(input_limit_below, variable.type))
+                                  .format(input_limit_below, variable.type))
     else:
         limit_below = None
 
@@ -119,21 +119,21 @@ def set_limits(variable):
                 console.msg_error(_("The type '{0}' for var {1} hasn't limits by default for\n"
                                     "data {2}, use a internal valid type and/or valid data frequency\n"
                                     "or defined the particular limits in the runfile")
-                .format(variable.type_series, variable.type, env.var_[variable.type].FREQUENCY_DATA))
+                                  .format(variable.type_series, variable.type, env.var_[variable.type].FREQUENCY_DATA))
         else:
             limit_above = input.to_float(input_limit_above)
             if limit_above is None:
                 console.msg_error(_("The limit '{0}' for var {1} is not valid limit")
-                .format(input_limit_above, variable.type))
+                                  .format(input_limit_above, variable.type))
     else:
         limit_above = None
 
-    env.config_run.settings['limits_var_'+variable.type]['below'] = limit_below
-    env.config_run.settings['limits_var_'+variable.type]['above'] = limit_above
-    env.config_run.settings['limits_var_'+variable.type]['ready'] = True
+    env.config_run.settings['limits_var_' + variable.type]['below'] = limit_below
+    env.config_run.settings['limits_var_' + variable.type]['above'] = limit_above
+    env.config_run.settings['limits_var_' + variable.type]['ready'] = True
 
 
-#==============================================================================
+# ==============================================================================
 # VALIDATION OF NULL VALUES FOR DEPENDENT AND INDEPENDENT VARIABLE
 
 def check_consistent_data(station):
@@ -146,21 +146,24 @@ def check_consistent_data(station):
     # check if the data are consistent for variable
 
     # transform of percentage of validation to 0 -> 1
-    value_of_validation = env.config_run.settings['consistent_data']/100.0
+    value_of_validation = env.config_run.settings['consistent_data'] / 100.0
 
     # station for check
     console.msg("   {0} - {1}:".format(station.code, station.name))
 
     def check(var_type):
         console.msg(_("      var {0}: {1} ({2}%) nulls of {3}:")
-                    .format(var_type, station.var_[var_type].nulls_in_process_period, station.var_[var_type].percentage_of_nulls_in_process_period,
+                    .format(var_type, station.var_[var_type].nulls_in_process_period,
+                            station.var_[var_type].percentage_of_nulls_in_process_period,
                             len(station.var_[var_type].data_in_process_period)), newline=False)
         # check var
-        if  station.var_[var_type].nulls_in_process_period / float(len(station.var_[var_type].data_in_process_period)) > value_of_validation:
+        if station.var_[var_type].nulls_in_process_period / float(
+                len(station.var_[var_type].data_in_process_period)) > value_of_validation:
             console.msg_error(_("The number of null values is greater than {0}% of total\n"
                                 "of values inside common period, therefore, for Jaziku\n"
                                 "the data are not consistent for process. You can disable\n"
-                                "this check in the option 'consistent_data' of runfile.").format(value_of_validation*100.0))
+                                "this check in the option 'consistent_data' of runfile.").format(
+                value_of_validation * 100.0))
 
         console.msg(_("ok"), color='green')
 

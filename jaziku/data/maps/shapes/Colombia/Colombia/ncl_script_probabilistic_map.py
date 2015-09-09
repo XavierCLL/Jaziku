@@ -21,11 +21,11 @@
 import os
 from jaziku import env
 
-def code(map_properties):
 
+def code(map_properties):
     map_properties_vars = {
         'ncarg_root': os.environ.get('NCARG_ROOT'),
-        'jaziku_ncl_plugins': os.path.abspath(os.path.join(env.globals_vars.JAZIKU_DIR,'data','maps','ncl_plugins')),
+        'jaziku_ncl_plugins': os.path.abspath(os.path.join(env.globals_vars.JAZIKU_DIR, 'data', 'maps', 'ncl_plugins')),
         'shape': map_properties.shape,
         'interpolation_file': os.path.abspath(map_properties.base_path_file) + '.tsv',
         'stations_file': os.path.abspath(map_properties.base_path_file) + '_stations.tsv',
@@ -409,5 +409,3 @@ begin
 end
 
     '''.format(**map_properties_vars)
-
-
