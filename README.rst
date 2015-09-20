@@ -49,7 +49,7 @@ https://bitbucket.org/XavierCLL/jaziku
 Install
 -------
 
-Please read the `instruction install <https://docs.google.com/uc?id=0B2KQf7Dbx7DUaVVMTHBJUG80MkU&export=download>`_ or `this <http://hg.ideam.gov.co:8000/meteorologia/jaziku/files/tip/docs/installation.rst>`_ file.
+Please read the `instruction install <https://docs.google.com/uc?id=0B2KQf7Dbx7DUaVVMTHBJUG80MkU&export=download>`_ or `this <https://bitbucket.org/XavierCLL/jaziku/src/tip/docs/installation.rst>`_ file.
 
 Synopsis run
 ------------
