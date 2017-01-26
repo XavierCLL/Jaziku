@@ -79,6 +79,15 @@ How to cite Jaziku
     Jaziku is statistical inference software for the teleconnections analysis, (version 1.0.0).
     (2014) IDEAM, Colombia. Jaziku is a free and open source software GPLv3. https://bitbucket.org/XavierCLL/jaziku
 
+Papers
+------
+
+    Jaziku - Statistical inference software for the teleconnections analysis.
+    S&T Digest - NWS Science & Technology Infusion Climate Bulletin Supplement .p 119-122, 2014.
+    NOAA's 38th Climate Diagnostics and Prediction
+    http://www.nws.noaa.gov/ost/climate/STIP/Collections.htm
+    http://issuu.com/climatesti/docs/38cdpwdigest
+
 Licence
 -------
 
