@@ -77,7 +77,8 @@ How to cite Jaziku
 ------------------
 
     Jaziku is statistical inference software for the teleconnections analysis, (version 1.0.0).
-    (2015) IDEAM, Colombia. Jaziku is a free and open source software GPLv3. https://bitbucket.org/XavierCLL/jaziku
+    (2015) Ines Sanchez, Xavier Corredor. IDEAM. Jaziku is a free and open source software GPLv3.
+    https://bitbucket.org/XavierCLL/jaziku
 
 Papers
 ------
@@ -91,10 +92,8 @@ Papers
 Licence
 -------
 
-| GNU General Public License - GPLv3_
-| Copyright © 2011-2015 IDEAM
-| Instituto de Hidrología, Meteorología y Estudios Ambientales
-| Carrera 10 No. 20-30
-| Bogotá, Colombia
+| General Public License - GPLv3_
+| Copyright © 2011-2015 Ines Sanchez, Xavier Corredor
+| IDEAM
 
 .. _GPLv3: https://bitbucket.org/XavierCLL/jaziku/src/tip/COPYING
