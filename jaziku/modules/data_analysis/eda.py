@@ -1456,7 +1456,7 @@ def get_frequency_histogram(data):
     # bins based on sturges formula
     bins = 1 + 3.3 * log10(n)
 
-    hist, bin_edges = histogram(data, bins=bins)
+    hist, bin_edges = histogram(data, bins=int(round(bins)))
 
     return hist, bin_edges
 
