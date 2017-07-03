@@ -187,3 +187,9 @@ def main(time_series_file, make_backup=True):
             output_file.write(year + '-' + str(month) + '-' + str(day) + ' ' + str(value) + '\n')
 
     output_file.close()
+
+if __name__ == "__main__":
+    # process all file passed by argument
+    args = sys.argv[1::]
+    for time_series_file in args:
+        main(time_series_file)
