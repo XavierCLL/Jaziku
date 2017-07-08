@@ -357,12 +357,12 @@ def get_specific_contingency_table(station, lag, n_month, start_day=None):
     for index, label in enumerate([_('below'), _('normal'), _('above')]):
         if float(sum_per_column_CT[index]) == 0 and not station.threshold_problem[index]:
             console.msg(
-                _(u"\n > WARNING: The thresholds defined for var I\n"
-                  u"   are not suitable in some time series for \n"
-                  u"   compound analysis of '{0}' with relation to\n"
-                  u"   '{1}' inside the block category '{2}'.\n"
-                  u"   Is recommended review the thresholds\n"
-                  u"   of two variables, or the series data .......")
+                _("\n > WARNING: The thresholds defined for var I\n"
+                  "   are not suitable in some time series for \n"
+                  "   compound analysis of '{0}' with relation to\n"
+                  "   '{1}' inside the block category '{2}'.\n"
+                  "   Is recommended review the thresholds\n"
+                  "   of two variables, or the series data .......")
                     .format(env.var_D.TYPE_SERIES, env.var_I.TYPE_SERIES, label.upper()), color='yellow', newline=False)
             station.threshold_problem[index] = True
 

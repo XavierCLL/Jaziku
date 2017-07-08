@@ -110,7 +110,7 @@ def validate_thresholds(variable, force=False):
                                             "check the (sd) thresholds calculated are within limits.")
                                           .format(env.var_[variable.type].TYPE_SERIES))
             # check thresholds if are within limits of variable
-            for key, threshold in thresholds.items():
+            for key, threshold in list(thresholds.items()):
                 try:
                     validation.is_the_value_within_limits(threshold, variable)
                 except ValueError as error:

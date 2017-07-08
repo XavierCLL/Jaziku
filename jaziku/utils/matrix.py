@@ -44,4 +44,4 @@ def transpose(matrix):
     :rtype: list
     """
 
-    return map(list, zip(*matrix))
+    return list(map(list, list(zip(*matrix))))

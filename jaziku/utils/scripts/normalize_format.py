@@ -53,9 +53,9 @@ def get_int_month(month):
                      10: 'ond', 11: 'ndj', 12: 'djf'}
 
         if len(month) == 2:
-            return bim_char.keys()[bim_char.values().index(month)]
+            return list(bim_char.keys())[list(bim_char.values()).index(month)]
         if len(month) == 3:
-            return trim_char.keys()[trim_char.values().index(month)]
+            return list(trim_char.keys())[list(trim_char.values()).index(month)]
     else:
         return int(month)
 

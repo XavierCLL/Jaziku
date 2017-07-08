@@ -116,7 +116,7 @@ def check_analysis_interval():
                             "this is incompatible and Jaziku can't convert the times\n"
                             "series properly for this case. Or change the analysis\n"
                             "interval or change the data of var {0}.")
-                          .format(env.var_.keys()[env.var_.values().index(env_variable)], env_variable.TYPE_SERIES,
+                          .format(list(env.var_.keys())[list(env.var_.values()).index(env_variable)], env_variable.TYPE_SERIES,
                                   env_variable.FREQUENCY_DATA, env.config_run.settings['analysis_interval']))
 
     if env.var_I.FREQUENCY_DATA in ['bimonthly'] and env.config_run.settings['analysis_interval'] in ["trimonthly"]:
@@ -228,7 +228,7 @@ def get_values_in_range_analysis_interval(variable, year, n_month, day=None, lag
                 rai_plus.append(32)
                 # from day to next iterator based on analysis interval
                 # e.g. [0,1,2,3,4] for first iteration for 5 days
-                interval_day_var_D = range(day - 1, rai_plus[rai_plus.index(day) + 1] - 1)
+                interval_day_var_D = list(range(day - 1, rai_plus[rai_plus.index(day) + 1] - 1))
 
                 for iter_day in interval_day_var_D:
                     now = date(year, n_month, 1) + relativedelta(days=iter_day)

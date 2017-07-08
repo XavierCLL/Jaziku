@@ -430,7 +430,7 @@ class Variable(object):
                     # range_analysis_interval = get_range_analysis_interval()
                     # for idx_day, day in enumerate(range_analysis_interval):
                     if env.var_[self.type].FREQUENCY_DATA in ['daily']:
-                        n_days_range = range(1, monthrange(2000, month)[1] + 1)
+                        n_days_range = list(range(1, monthrange(2000, month)[1] + 1))
                     if env.var_[self.type].FREQUENCY_DATA in ['5days', '10days', '15days']:
                         n_days_range = get_range_analysis_interval()
 

@@ -38,37 +38,37 @@ def msg(text, color=False, newline=True, indentation=0):
 
     if not color:
         if not newline:
-            print (text),
+            print((text), end=' ')
             sys.stdout.flush()
         else:
             print (text)
 
     if color == "yellow":
         if not newline:
-            print colored.yellow(text),
+            print(colored.yellow(text), end=' ')
             sys.stdout.flush()
         else:
-            print colored.yellow(text)
+            print(colored.yellow(text))
     if color == "cyan":
         if not newline:
-            print colored.cyan(text),
+            print(colored.cyan(text), end=' ')
             sys.stdout.flush()
         else:
-            print colored.cyan(text)
+            print(colored.cyan(text))
 
     if color == "green":
         if not newline:
-            print colored.green(text),
+            print(colored.green(text), end=' ')
             sys.stdout.flush()
         else:
-            print colored.green(text)
+            print(colored.green(text))
 
     if color == "red":
         if not newline:
-            print colored.red(text),
+            print(colored.red(text), end=' ')
             sys.stdout.flush()
         else:
-            print colored.red(text)
+            print(colored.red(text))
 
 
 def msg_footer(text=False):
@@ -78,7 +78,7 @@ def msg_footer(text=False):
     if text:
         return footer
     else:
-        print footer
+        print(footer)
 
 
 def msg_error(text_error, wait_value=True):
@@ -88,11 +88,11 @@ def msg_error(text_error, wait_value=True):
     """
 
     if wait_value:
-        print colored.red(_('fail\n\nERROR:\n{0}\n\n').format(text_error))
+        print(colored.red(_('fail\n\nERROR:\n{0}\n\n').format(text_error)))
     else:
-        print colored.red(_('\nERROR:\n{0}\n').format(text_error))
-    print _("Please check the error and read the manual if is necessary.\n"
-            "If this is an error of Jaziku, please report it with Jaziku developers.")
+        print(colored.red(_('\nERROR:\n{0}\n').format(text_error)))
+    print(_("Please check the error and read the manual if is necessary.\n"
+            "If this is an error of Jaziku, please report it with Jaziku developers."))
     msg_footer()
     sys.exit()
 

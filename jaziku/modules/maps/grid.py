@@ -120,7 +120,7 @@ class Grid(object):
             console.msg_error_configuration("semivariogram_type",
                                             _("The semivariogram type '{0}' is wrong, the options are:\n"
                                               "default, {1}").format(self.semivariogram_type,
-                                                                     ', '.join(self.all_semivariogram_type.keys())),
+                                                                     ', '.join(list(self.all_semivariogram_type.keys()))),
                                             stop_in_grid=self.num)
 
         env.globals_vars.input_settings["semivariogram_type"].append(self.semivariogram_type)

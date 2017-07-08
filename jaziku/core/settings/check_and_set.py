@@ -71,7 +71,7 @@ def configuration_run():
         else:
             if len(env.config_run.settings['categories_labels_var_I']) == 3:
                 env.config_run.settings['categories_labels_var_I'] \
-                    = [unicode(label, 'utf-8') for label in env.config_run.settings['categories_labels_var_I']]
+                    = [str(label, 'utf-8') for label in env.config_run.settings['categories_labels_var_I']]
             else:
                 console.msg_error_configuration('categories_labels_var_I',
                                                 _("The 'categories_labels_var_I' is not valid,\n"
@@ -83,7 +83,7 @@ def configuration_run():
         else:
             if len(env.config_run.settings['categories_labels_var_I']) == 7:
                 env.config_run.settings['categories_labels_var_I'] \
-                    = [unicode(label, 'utf-8') for label in env.config_run.settings['categories_labels_var_I']]
+                    = [str(label, 'utf-8') for label in env.config_run.settings['categories_labels_var_I']]
             else:
                 console.msg_error_configuration('categories_labels_var_I',
                                                 _("The 'categories_labels_var_I' is not valid,\n"
@@ -135,16 +135,16 @@ def configuration_run():
                                               "'all' or one or two valid labels for {0} categories\n"
                                               "(in different column), such as:\n\n{1}")
                                             .format(env.config_run.settings['class_category_analysis'],
-                                                    labels.values()))
+                                                    list(labels.values())))
         # check if are valid labels
         for _label in env.config_run.settings['relevant_climate_categories_var_I']:
-            if _label not in labels.values():
+            if _label not in list(labels.values()):
                 console.msg_error_configuration('relevant_climate_categories_var_I',
                                                 _("The '{0}' in 'relevant_climate_categories_var_I'\n"
                                                   "not is a valid label for {1} categories, should be\n"
                                                   "one of these:\n\n{2}")
                                                 .format(_label, env.config_run.settings['class_category_analysis'],
-                                                        labels.values()))
+                                                        list(labels.values())))
 
     # ------------------------
     # type_var_D

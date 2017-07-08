@@ -50,7 +50,7 @@ from jaziku.utils.scripts import runfile_skeleton, normalize_format
 
 
 def main():
-    print "\nTRANSFORM DATA SCRIPT FROM CLIMATE PREDICTABILITY TOOL FORMAT TO JAZIKU FORMAT\n"
+    print("\nTRANSFORM DATA SCRIPT FROM CLIMATE PREDICTABILITY TOOL FORMAT TO JAZIKU FORMAT\n")
 
     # -------------------------------------------------------------------------
     # PARSER AND CHECK ARGUMENTS
@@ -67,7 +67,7 @@ def main():
 
     arg = arguments.parse_args()
 
-    print "Processing file: " + colored.green(arg.input_file)
+    print("Processing file: " + colored.green(arg.input_file))
 
     # -------------------------------------------------------------------------
     # prepare names directories
@@ -110,18 +110,18 @@ def main():
 
     # test if dos2unix exists
     if not console.which('dos2unix'):
-        print colored.red("Error: this script need the program 'dos2unix' for\n"
+        print(colored.red("Error: this script need the program 'dos2unix' for\n"
                           "convert and clean all 'DOS' characters inside the CPT format.\n"
-                          "Install 'dos2unix' from repositories of your Linux distribution.\n")
+                          "Install 'dos2unix' from repositories of your Linux distribution.\n"))
         exit()
 
-    print "\nConverting and cleaning all 'DOS' characters inside the CPT format of input file:"
+    print("\nConverting and cleaning all 'DOS' characters inside the CPT format of input file:")
 
     # standard clean with dos2unix
     call([console.which('dos2unix'), '-f', arg.input_file], shell=False)
     # convert ^M in extra newline
     call([console.which('dos2unix'), '-f', '-l', arg.input_file], shell=False)
-    print ""
+    print("")
 
     # -------------------------------------------------------------------------
     # process input file and all stations
@@ -193,7 +193,7 @@ def main():
         normalize_format.main(station_file.name, make_backup=False)
         station_file.close()
 
-    print "\nSaving result in dir: " + colored.green(dir_output_name)
-    print "\nSaving stations list file: " + colored.green(stations_list_name)
-    print colored.yellow("\nComplete the stations_list.csv file before running with Jaziku")
-    print colored.green("\nDone\n")
+    print("\nSaving result in dir: " + colored.green(dir_output_name))
+    print("\nSaving stations list file: " + colored.green(stations_list_name))
+    print(colored.yellow("\nComplete the stations_list.csv file before running with Jaziku"))
+    print(colored.green("\nDone\n"))
