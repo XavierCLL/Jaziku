@@ -59,7 +59,7 @@ def forecast_graphs(station):
             dpi = 100.0
             fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
 
-            fig.suptitle(unicode(_('Probability forecasts of {0} / {1}\n{2} ({3})\nlag {4} - {5} - ({6}-{7})')
+            fig.suptitle(str(_('Probability forecasts of {0} / {1}\n{2} ({3})\nlag {4} - {5} - ({6}-{7})')
                                  .format(station.var_D.type_series, station.var_I.type_series, station.name,
                                          station.code, lag, env.config_run.settings['forecast_date']['text'],
                                          env.globals_vars.PROCESS_PERIOD['start'],
@@ -70,7 +70,7 @@ def forecast_graphs(station):
             colours = ['#DD4620', '#62AD29', '#6087F1']
             colours = list(reversed(colours))
 
-            labels = (unicode(_('Decrease'), 'utf-8'), unicode(_('Normal'), 'utf-8'), unicode(_('Exceed'), 'utf-8'))
+            labels = (str(_('Decrease'), 'utf-8'), str(_('Normal'), 'utf-8'), str(_('Exceed'), 'utf-8'))
 
             labels = tuple(reversed(labels))
 
@@ -88,7 +88,7 @@ def forecast_graphs(station):
 
             if True in [isnan(value) for value in values_pie]:
                 # this append when there are NaN values in contingency table in percentage for this series
-                fig.text(0.5, 0.4, unicode(_("For this time series there aren't suitable\n"
+                fig.text(0.5, 0.4, str(_("For this time series there aren't suitable\n"
                                              "probabilities, because there are thresholds\n"
                                              "problems in contingency table, or the series data."), 'utf-8'),
                          fontsize=10, ha='center')
@@ -121,7 +121,7 @@ def forecast_graphs(station):
             dpi = 100.0
             fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
 
-            fig.suptitle(unicode(_('Probability forecasts of {0} / {1}\n{2} ({3})\nlag {4} - {5} - ({6}-{7})')
+            fig.suptitle(str(_('Probability forecasts of {0} / {1}\n{2} ({3})\nlag {4} - {5} - ({6}-{7})')
                                  .format(station.var_D.type_series, station.var_I.type_series, station.name,
                                          station.code, lag, env.config_run.settings['forecast_date']['text'],
                                          env.globals_vars.PROCESS_PERIOD['start'],
@@ -132,10 +132,10 @@ def forecast_graphs(station):
             colours = ['#DD4620', '#DD8620', '#DDC620', '#62AD29', '#60C7F1', '#6087F1', '#6047F1']
             colours = list(reversed(colours))
 
-            labels = (unicode(_('Strong decrease'), 'utf-8'), unicode(_('Moderate decrease'), 'utf-8'),
-                      unicode(_('Weak decrease'), 'utf-8'), unicode(_('Normal'), 'utf-8'),
-                      unicode(_('Weak exceed'), 'utf-8'), unicode(_('Moderate exceed'), 'utf-8'),
-                      unicode(_('Strong exceed'), 'utf-8'))
+            labels = (str(_('Strong decrease'), 'utf-8'), str(_('Moderate decrease'), 'utf-8'),
+                      str(_('Weak decrease'), 'utf-8'), str(_('Normal'), 'utf-8'),
+                      str(_('Weak exceed'), 'utf-8'), str(_('Moderate exceed'), 'utf-8'),
+                      str(_('Strong exceed'), 'utf-8'))
 
             labels = tuple(reversed(labels))
 
@@ -157,7 +157,7 @@ def forecast_graphs(station):
 
             if True in [isnan(value) for value in values_pie]:
                 # this append when there are NaN values in contingency table in percentage for this series
-                fig.text(0.5, 0.4, unicode(_("For this time series there aren't suitable\n"
+                fig.text(0.5, 0.4, str(_("For this time series there aren't suitable\n"
                                              "probabilities, because there are thresholds\n"
                                              "problems in contingency table, or the series data."), 'utf-8'),
                          fontsize=10, ha='center')
@@ -244,7 +244,7 @@ def forecast_graphs(station):
             dpi = 100.0
             fig = pyplot.figure(figsize=((image_width) / dpi, (image_height) / dpi))
 
-            fig.suptitle(unicode(_('Deterministic forecasts of {0} / {1}\n{2} ({3})\nlag {4} - {5} - ({6}-{7})')
+            fig.suptitle(str(_('Deterministic forecasts of {0} / {1}\n{2} ({3})\nlag {4} - {5} - ({6}-{7})')
                                  .format(station.var_D.type_series, station.var_I.type_series, station.name,
                                          station.code, lag, env.config_run.settings['forecast_date']['text'],
                                          env.globals_vars.PROCESS_PERIOD['start'],
@@ -271,7 +271,7 @@ def forecast_graphs(station):
             # thresholds of var D for deterministic values for use in labels on legend
             thresholds_var_D = get_thresholds(station, station.var_D)
 
-            for tag, value in thresholds_var_D.items():
+            for tag, value in list(thresholds_var_D.items()):
                 thresholds_var_D[tag] = round(value, 1)
 
             labels = (_('< {0}').format(thresholds_var_D['below3']),
@@ -302,7 +302,7 @@ def forecast_graphs(station):
 
             if True in [isnan(value) for value in values_pie]:
                 # this append when there are NaN values in contingency table in percentage for this series
-                fig.text(0.5, 0.4, unicode(_("For this time series there aren't suitable\n"
+                fig.text(0.5, 0.4, str(_("For this time series there aren't suitable\n"
                                              "probabilities, because there are thresholds\n"
                                              "problems in contingency table, or the series data."), 'utf-8'),
                          fontsize=10, ha='center')

@@ -37,12 +37,12 @@ def pre_process():
     env.globals_vars.FORECAST_DIR \
         = os.path.join(env.globals_vars.OUTPUT_DIR, _('Jaziku_Forecast'))  # 'results'
 
-    print _("\nSaving the result for forecast in:").format(env.globals_vars.FORECAST_DIR)
+    print(_("\nSaving the result for forecast in:").format(env.globals_vars.FORECAST_DIR))
     if env.globals_vars.ARGS.output:
-        print "   " + colored.cyan(env.globals_vars.FORECAST_DIR)
+        print("   " + colored.cyan(env.globals_vars.FORECAST_DIR))
     else:
-        print "   " + colored.cyan(os.path.relpath(env.globals_vars.FORECAST_DIR,
-                                                   os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile))))
+        print("   " + colored.cyan(os.path.relpath(env.globals_vars.FORECAST_DIR,
+                                                   os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile)))))
 
     # reset forecast_var_I_lag_N
     if env.config_run.settings['class_category_analysis'] == 3:

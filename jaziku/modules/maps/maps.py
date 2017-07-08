@@ -38,13 +38,13 @@ def pre_process():
     """Check basic requirements for make maps
     """
 
-    print _("\n\n"
+    print(_("\n\n"
             "############################# MAPS  ############################\n"
             "# Map Process, here is made the Kriging interpolation on the   #\n"
             "# results of historical scenarios and forecasts most probable  #\n"
             "# of the dependent variable, also interpolation of linear      #\n"
             "# correlations.                                                #\n"
-            "################################################################")
+            "################################################################"))
 
     console.msg(_("\nChecking basic requirements for make maps:"), newline=False)
 
@@ -98,7 +98,7 @@ def process(grid):
     # restart counter
     Grid.maps_created_in_grid = 0
 
-    print "\n################# {0}: {1}".format(_("MAP"), grid.grid_fullname)
+    print("\n################# {0}: {1}".format(_("MAP"), grid.grid_fullname))
 
     # show the mainly properties
     grid.print_grid_properties()
@@ -301,7 +301,7 @@ def process(grid):
 
         for map_type in types_of_maps:
 
-            print _("Processing {map_type} maps for climate:").format(map_type=map_type)
+            print(_("Processing {map_type} maps for climate:").format(map_type=map_type))
 
             # console message
             console.msg("   {0} ... ".format(env.config_run.settings['analysis_interval']), newline=False)
@@ -336,10 +336,10 @@ def process(grid):
                             output.make_dirs(base_path)
 
                             if map_type == _("probabilistic"):
-                                base_file = _(u'Prob_Map_lag_{0}_{1}_{2}') \
+                                base_file = _('Prob_Map_lag_{0}_{1}_{2}') \
                                     .format(lag, output.analysis_interval_text(month, join_result=True), label)
                             if map_type == _("deterministic"):
-                                base_file = _(u'Deter_Map_lag_{0}_{1}_{2}') \
+                                base_file = _('Deter_Map_lag_{0}_{1}_{2}') \
                                     .format(lag, output.analysis_interval_text(month, join_result=True), label)
 
                             grid.date = output.analysis_interval_text(month)
@@ -386,13 +386,13 @@ def process(grid):
                                 output.make_dirs(base_path)
 
                                 if map_type == _("probabilistic"):
-                                    base_file = _(u'Prob_Map_lag_{0}_{1}_{2}') \
+                                    base_file = _('Prob_Map_lag_{0}_{1}_{2}') \
                                         .format(lag,
                                                 output.analysis_interval_text(month, range_analysis_interval[day],
                                                                               join_result=True),
                                                 label)
                                 if map_type == _("deterministic"):
-                                    base_file = _(u'Deter_Map_lag_{0}_{1}_{2}') \
+                                    base_file = _('Deter_Map_lag_{0}_{1}_{2}') \
                                         .format(lag,
                                                 output.analysis_interval_text(month, range_analysis_interval[day],
                                                                               join_result=True),
@@ -424,7 +424,7 @@ def process(grid):
         grid.if_running["correlation"] = True
         map_type = _("probabilistic")
 
-        print _("Processing maps for correlation:")
+        print(_("Processing maps for correlation:"))
 
         # console message
         console.msg("   {0} ... ".format(env.config_run.settings['analysis_interval']), newline=False)
@@ -462,7 +462,7 @@ def process(grid):
                     # make dir with the name of grid
                     output.make_dirs(base_path)
 
-                    base_file = _(u'Map_correlation_lag_{0}_{1}').format(lag, output.analysis_interval_text(month,
+                    base_file = _('Map_correlation_lag_{0}_{1}').format(lag, output.analysis_interval_text(month,
                                                                                                             join_result=True))
 
                     grid.date = output.analysis_interval_text(month)
@@ -508,7 +508,7 @@ def process(grid):
                         # make dir with the name of grid
                         output.make_dirs(base_path)
 
-                        base_file = _(u'Map_correlation_lag_{0}_{1}') \
+                        base_file = _('Map_correlation_lag_{0}_{1}') \
                             .format(lag, output.analysis_interval_text(month, range_analysis_interval[day],
                                                                        join_result=True))
 
@@ -541,7 +541,7 @@ def process(grid):
 
         for map_type in types_of_maps:
 
-            print _("Processing {map_type} maps for forecast:").format(map_type=map_type)
+            print(_("Processing {map_type} maps for forecast:").format(map_type=map_type))
 
             # console message
             console.msg("   {0} ... ".format(env.config_run.settings['forecast_date']['text']), newline=False)
@@ -570,9 +570,9 @@ def process(grid):
                     output.make_dirs(base_path)
 
                     if map_type == _("probabilistic"):
-                        base_file = _(u'Prob_Map_lag_{0}_{1}').format(lag, slugify(forecast_date))
+                        base_file = _('Prob_Map_lag_{0}_{1}').format(lag, slugify(forecast_date))
                     if map_type == _("deterministic"):
-                        base_file = _(u'Deter_Map_lag_{0}_{1}').format(lag, slugify(forecast_date))
+                        base_file = _('Deter_Map_lag_{0}_{1}').format(lag, slugify(forecast_date))
 
                     grid.date = forecast_date
                     grid.lag = lag

@@ -3,7 +3,7 @@
 ## License: MIT, url: https://github.com/aaren/wavelets
 ##
 
-from __future__ import division
+
 
 import numpy as np
 import scipy

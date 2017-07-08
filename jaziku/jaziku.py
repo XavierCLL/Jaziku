@@ -38,19 +38,19 @@ from matplotlib import use
 
 # internationalization and init languages variable "_()"
 import gettext
-from i18n import i18n
+from .i18n import i18n
 
 # jaziku imports
-import env
-from core import settings
-from core import stations
-from core.input import runfile, arg
-from core.station import Station
-from modules.climate import climate
-from modules.forecast import forecast
-from modules.data_analysis import data_analysis
-from modules.maps import maps
-from utils import console, output
+from . import env
+from .core import settings
+from .core import stations
+from .core.input import runfile, arg
+from .core.station import Station
+from .modules.climate import climate
+from .modules.forecast import forecast
+from .modules.data_analysis import data_analysis
+from .modules.maps import maps
+from .utils import console, output
 
 
 # ==============================================================================
@@ -63,13 +63,9 @@ def main():
     """
 
     # check python version
-    if sys.version_info[0] != 2 or sys.version_info[1] < 6:
+    if sys.version_info[0] != 3:
         console.msg_error(_("You version of python is {0}, please use Jaziku with "
-                            "python v2.6 or v2.7").format(sys.version_info[0:2]), False)
-
-    # set encoding to utf-8
-    reload(sys)
-    sys.setdefaultencoding("utf-8")
+                            "python 3").format(sys.version_info[0:2]), False)
 
     # initialize matplotlib backend in raster graphics (png)
     try:
@@ -107,7 +103,7 @@ def main():
     # -------------------------------------------------------------------------
     # Start message
 
-    print _("\n"
+    print(_("\n"
             "############################ JAZIKU ############################\n"
             "#           Jaziku is statistical inference software           #\n"
             "#               for the teleconnections analysis.              #\n"
@@ -115,7 +111,7 @@ def main():
             "#                 Version {0} - {1}\t               #\n"
             "#           Copyright (C) 2011-2014 IDEAM - Colombia           #\n"
             "################################################################") \
-        .format(env.globals_vars.VERSION, env.globals_vars.VERSION_DATE)
+        .format(env.globals_vars.VERSION, env.globals_vars.VERSION_DATE))
 
     # -------------------------------------------------------------------------
     # GET/SET AND CHECK SETTINGS TO RUN
@@ -175,7 +171,7 @@ def main():
         for station in stations_list:
 
             # console message
-            print _("\n################# STATION: {0} ({1})").format(station.name, station.code)
+            print(_("\n################# STATION: {0} ({1})").format(station.name, station.code))
 
             ## process climate and forecast for this station
             # run climate process
@@ -220,7 +216,7 @@ def main():
 
     console.msg(_("\nProcess completed!"), color='green')
 
-    print _("Good bye :)")
+    print(_("Good bye :)"))
 
     console.msg_footer()
 

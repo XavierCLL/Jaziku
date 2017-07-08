@@ -49,7 +49,7 @@ def calculate_index(category, values):
     """
 
     # first check if all values are zero
-    if not False in [value == 0 for value in values.values()]:
+    if not False in [value == 0 for value in list(values.values())]:
         return {'value': float('NaN'),
                 'position': None}
 
@@ -139,7 +139,7 @@ def climate_data_for_maps(station):
                         output.make_dirs(maps_data_for_category_label)
 
                         csv_name \
-                            = os.path.join(maps_data_for_category_label, _(u'Map_Data_lag_{0}_{1}_{2}.csv')
+                            = os.path.join(maps_data_for_category_label, _('Map_Data_lag_{0}_{1}_{2}.csv')
                                            .format(lag, output.analysis_interval_text(month, join_result=True),
                                                    category_label))
 
@@ -149,7 +149,7 @@ def climate_data_for_maps(station):
                         # special label 'SUM' for below* and above for 7 categories
                         _list = env.config_run.settings['categories_labels_var_I']
                         if env.config_run.settings['class_category_analysis'] == 7 and \
-                                        _list.keys()[_list.values().index(_category_label)] != "normal":
+                                        list(_list.keys())[list(_list.values()).index(_category_label)] != "normal":
                             sum_header = _('SUM (partial)')
                             del _list
                         else:
@@ -181,7 +181,7 @@ def climate_data_for_maps(station):
                             output.make_dirs(maps_data_for_category_label)
 
                             csv_name \
-                                = os.path.join(maps_data_for_category_label, _(u'Map_Data_lag_{0}_{1}_{2}.csv')
+                                = os.path.join(maps_data_for_category_label, _('Map_Data_lag_{0}_{1}_{2}.csv')
                                                .format(lag,
                                                        output.analysis_interval_text(month, day, join_result=True),
                                                        category_label))
@@ -192,7 +192,7 @@ def climate_data_for_maps(station):
                             # special label 'SUM' for below* and above for 7 categories
                             _list = env.config_run.settings['categories_labels_var_I']
                             if env.config_run.settings['class_category_analysis'] == 7 and \
-                                            _list.keys()[_list.values().index(_category_label)] != "normal":
+                                            list(_list.keys())[list(_list.values()).index(_category_label)] != "normal":
                                 sum_header = _('SUM (partial)')
                                 del _list
                             else:
@@ -250,7 +250,7 @@ def climate_data_for_maps(station):
                                            output.number(values_CT['below']),
                                            output.number(values_CT['normal']),
                                            output.number(values_CT['above']),
-                                           output.number(sum([float(value_CT) for value_CT in values_CT.values()])),
+                                           output.number(sum([float(value_CT) for value_CT in list(values_CT.values())])),
                                            output.number(index['value']),
                                            env.globals_vars.categories(index['position'])])
                     if env.config_run.settings['class_category_analysis'] == 7:
@@ -263,7 +263,7 @@ def climate_data_for_maps(station):
                                            output.number(values_CT['above1']),
                                            output.number(values_CT['above2']),
                                            output.number(values_CT['above3']),
-                                           output.number(sum([float(value_CT) for value_CT in values_CT.values()])),
+                                           output.number(sum([float(value_CT) for value_CT in list(values_CT.values())])),
                                            output.number(index['value']),
                                            env.globals_vars.categories(index['position'])])
                     open_file.close()
@@ -307,7 +307,7 @@ def climate_data_for_maps(station):
                                                output.number(values_CT['below']),
                                                output.number(values_CT['normal']),
                                                output.number(values_CT['above']),
-                                               output.number(sum([float(value_CT) for value_CT in values_CT.values()])),
+                                               output.number(sum([float(value_CT) for value_CT in list(values_CT.values())])),
                                                output.number(index['value']),
                                                env.globals_vars.categories(index['position'])])
                         if env.config_run.settings['class_category_analysis'] == 7:
@@ -320,7 +320,7 @@ def climate_data_for_maps(station):
                                                output.number(values_CT['above1']),
                                                output.number(values_CT['above2']),
                                                output.number(values_CT['above3']),
-                                               output.number(sum([float(value_CT) for value_CT in values_CT.values()])),
+                                               output.number(sum([float(value_CT) for value_CT in list(values_CT.values())])),
                                                output.number(index['value']),
                                                env.globals_vars.categories(index['position'])])
                         open_file.close()
@@ -354,7 +354,7 @@ def forecast_data_for_maps(station):
             for lag in env.config_run.settings['lags']:
 
                 # write the headers in file
-                csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}_{1}.csv')
+                csv_name = os.path.join(maps_dir, _('Map_Data_lag_{0}_{1}.csv')
                                         .format(lag, output.tri_months_in_initials(
                     env.config_run.settings['forecast_date']['month'] - 1)))
 
@@ -378,7 +378,7 @@ def forecast_data_for_maps(station):
             for lag in env.config_run.settings['lags']:
 
                 # write the headers in file
-                csv_name = os.path.join(maps_dir, _(u'Map_Data_lag_{0}_{1}.csv')
+                csv_name = os.path.join(maps_dir, _('Map_Data_lag_{0}_{1}.csv')
                                         .format(lag, slugify(env.config_run.settings['forecast_date']['text'])))
 
                 if os.path.isfile(csv_name):

@@ -106,22 +106,22 @@ def categories(key_label=False, include_normal=True, translated=True, as_list=Fa
     from jaziku.env.config_run import settings
     if settings['class_category_analysis'] == 3:
         if translated:
-            labels = {'below': unicode(_('below'), 'utf-8'),
-                      'normal': unicode(_('normal'), 'utf-8'),
-                      'above': unicode(_('above'), 'utf-8')}
+            labels = {'below': str(_('below'), 'utf-8'),
+                      'normal': str(_('normal'), 'utf-8'),
+                      'above': str(_('above'), 'utf-8')}
         else:
             labels = {'below': 'below',
                       'normal': 'normal',
                       'above': 'above'}
     if settings['class_category_analysis'] == 7:
         if translated:
-            labels = {'below3': unicode(_('strong below'), 'utf-8'),
-                      'below2': unicode(_('moderate below'), 'utf-8'),
-                      'below1': unicode(_('weak below'), 'utf-8'),
-                      'normal': unicode(_('normal'), 'utf-8'),
-                      'above1': unicode(_('weak above'), 'utf-8'),
-                      'above2': unicode(_('moderate above'), 'utf-8'),
-                      'above3': unicode(_('strong above'), 'utf-8')}
+            labels = {'below3': str(_('strong below'), 'utf-8'),
+                      'below2': str(_('moderate below'), 'utf-8'),
+                      'below1': str(_('weak below'), 'utf-8'),
+                      'normal': str(_('normal'), 'utf-8'),
+                      'above1': str(_('weak above'), 'utf-8'),
+                      'above2': str(_('moderate above'), 'utf-8'),
+                      'above3': str(_('strong above'), 'utf-8')}
         else:
             labels = {'below3': 'strong below',
                       'below2': 'moderate below',
@@ -245,7 +245,7 @@ def set_others_properties(ax, ts=15.5):
     ax.tick_params(axis='both', which='major', labelsize=ts, labelcolor=colors['grey_S3'])
     # ax.tick_params(axis='both', which='minor', labelsize=8)
     # line border of box of subplot
-    for spine in ax.spines.values():
+    for spine in list(ax.spines.values()):
         spine.set_edgecolor(colors['grey_S1'])
         spine.set_linewidth(1.2)
 

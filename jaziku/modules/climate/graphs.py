@@ -140,7 +140,7 @@ def climate_graphs(station):
             ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
             # graphics title
-            fig.suptitle(unicode(_('Composite analysis - {0} ({1})\n{2} - {3} - lag {6} - {7} - ({4}-{5})').
+            fig.suptitle(str(_('Composite analysis - {0} ({1})\n{2} - {3} - lag {6} - {7} - ({4}-{5})').
                                  format(station.name, station.code, station.var_D.type_series,
                                         station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'],
                                         env.globals_vars.PROCESS_PERIOD['end'], lag, title_period), 'utf-8'),
@@ -209,7 +209,7 @@ def climate_graphs(station):
                                                                 output.number(thres, 3))
 
             fig.text(0.5, 0.02,
-                     unicode(_('Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n'
+                     str(_('Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n'
                                'Min: {min}  ( {thresholds} )  Max: {max}')
                              .format(anal_inter=title_period, units=env.var_D.UNITS,
                                      start_year=env.globals_vars.PROCESS_PERIOD['start'],
@@ -292,7 +292,7 @@ def climate_graphs(station):
             ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
             # graphics title
-            fig.suptitle(unicode(_('Composite analysis - {0} ({1})\n{2} - {3} - lag {6} - {7} - ({4}-{5})').
+            fig.suptitle(str(_('Composite analysis - {0} ({1})\n{2} - {3} - lag {6} - {7} - ({4}-{5})').
                                  format(station.name, station.code, station.var_D.type_series,
                                         station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'],
                                         env.globals_vars.PROCESS_PERIOD['end'], lag, title_period), 'utf-8'),
@@ -390,7 +390,7 @@ def climate_graphs(station):
                 thresholds_D_txt = '( ' + ' | '.join(thresholds_D) + ' )'
 
             fig.text(0.5, 0.01,
-                     unicode(_('Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n'
+                     str(_('Historical values for {anal_inter} in {start_year}-{end_year} ({units})\n'
                                'Min: {min}  {thresholds}  Max: {max}')
                              .format(anal_inter=title_period, units=env.var_D.UNITS,
                                      start_year=env.globals_vars.PROCESS_PERIOD['start'],

@@ -141,7 +141,7 @@ def make_ncl_probabilistic_map(grid, base_path_file, globals_vars):
 
         return ncl_file
     except Exception as error:
-        print error
+        print(error)
 
 
 def make_ncl_deterministic_map(grid, base_path_file, globals_vars):
@@ -221,4 +221,4 @@ def make_ncl_deterministic_map(grid, base_path_file, globals_vars):
 
         return ncl_file
     except Exception as error:
-        print error
+        print(error)

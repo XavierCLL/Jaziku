@@ -33,7 +33,7 @@ def pre_process():
     """Show message and prepare directory
     """
 
-    print _("\n\n"
+    print(_("\n\n"
             "################# CLIMATE AND FORECAST PROCESS #################\n"
             "# Climate Module, here are calculated contingency tables,      #\n"
             "# correlations and parametric tests of interest.               #\n"
@@ -41,14 +41,14 @@ def pre_process():
             "# Modulo forecasts, predictions are calculated here associated #\n"
             "# with the dependent variable as a function of contingency     #\n"
             "# tables and the probability of the independent variable.      #\n"
-            "################################################################\n")
+            "################################################################\n"))
 
-    print _("Saving the result for climate in:")
+    print(_("Saving the result for climate in:"))
     if env.globals_vars.ARGS.output:
-        print "   " + colored.cyan(env.globals_vars.CLIMATE_DIR)
+        print("   " + colored.cyan(env.globals_vars.CLIMATE_DIR))
     else:
-        print "   " + colored.cyan(os.path.relpath(env.globals_vars.CLIMATE_DIR,
-                                                   os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile))))
+        print("   " + colored.cyan(os.path.relpath(env.globals_vars.CLIMATE_DIR,
+                                                   os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile)))))
 
 
 def process(station):

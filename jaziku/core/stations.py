@@ -30,12 +30,12 @@ from jaziku.utils import console
 
 def prepare_all_stations(stations_list, prepare_data_for_data_analysis, prepare_data_for_climate_forecast):
     if prepare_data_for_data_analysis:
-        print _("\n\n"
-                "############ PREPARE ALL STATIONS FOR DATA ANALYSIS ############\n")
+        print(_("\n\n"
+                "############ PREPARE ALL STATIONS FOR DATA ANALYSIS ############\n"))
 
     if prepare_data_for_climate_forecast:
-        print _("\n\n"
-                "####### PREPARE ALL STATIONS FOR CLIMATE/FORECAST PROCESS ######\n")
+        print(_("\n\n"
+                "####### PREPARE ALL STATIONS FOR CLIMATE/FORECAST PROCESS ######\n"))
 
     if prepare_data_for_data_analysis or \
             (prepare_data_for_climate_forecast and not env.config_run.settings['data_analysis']):

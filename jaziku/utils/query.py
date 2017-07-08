@@ -40,10 +40,10 @@ def base_query(question, prompt, options, default, wrong_ans):
         console.msg(colored.yellow(question) + colored.yellow(prompt), newline=False)
 
         if env.globals_vars.ARGS.force:
-            print default
+            print(default)
             return options[default]()
         else:
-            choice = raw_input().lower()
+            choice = input().lower()
             if choice in options:
                 return options[choice]()
             else:

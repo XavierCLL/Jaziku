@@ -288,7 +288,7 @@ def read_stations(lines_of_stations):
                                   "the stations list need for run climate process.\n"))
 
             station.code = line_station[0]
-            station.name = unicode(line_station[1], 'utf-8')
+            station.name = str(line_station[1], 'utf-8')
             station.lat = input.to_float(line_station[2])
             station.lon = input.to_float(line_station[3])
             station.alt = input.to_float(line_station[4])

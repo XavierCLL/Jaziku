@@ -21,7 +21,7 @@
 import os
 from clint.textui import colored
 
-import eda
+from . import eda
 from jaziku import env
 from jaziku.utils import console
 
@@ -34,18 +34,18 @@ def main(stations_list):
     files folder of time series.
     """
 
-    print _("\n\n"
+    print(_("\n\n"
             "#################### DATA ANALYSIS PROCESS #####################\n"
             "# Data analysis module, here is verified linearity, outliers   #\n"
             "# are reported and the primary statistical time series.        #\n"
-            "################################################################\n")
+            "################################################################\n"))
 
-    print _("Saving the result for data analysis in:")
+    print(_("Saving the result for data analysis in:"))
     if env.globals_vars.ARGS.output:
-        print "   " + colored.cyan(env.globals_vars.DATA_ANALYSIS_DIR)
+        print("   " + colored.cyan(env.globals_vars.DATA_ANALYSIS_DIR))
     else:
-        print "   " + colored.cyan(os.path.relpath(env.globals_vars.DATA_ANALYSIS_DIR,
-                                                   os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile))))
+        print("   " + colored.cyan(os.path.relpath(env.globals_vars.DATA_ANALYSIS_DIR,
+                                                   os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile)))))
 
     # -------------------------------------------------------------------------
     # Exploratory data analysis process

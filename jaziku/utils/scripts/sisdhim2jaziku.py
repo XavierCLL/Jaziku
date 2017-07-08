@@ -51,7 +51,7 @@ from jaziku.utils.scripts import runfile_skeleton
 
 
 def main():
-    print "\nTRANSFORM DATA SCRIPT FROM IDEAM FORMAT TO JAZIKU FORMAT\n"
+    print("\nTRANSFORM DATA SCRIPT FROM IDEAM FORMAT TO JAZIKU FORMAT\n")
     # print colored.yellow("Important: This transform data script version is input valid for Jaziku 0.3.x")
 
     # -------------------------------------------------------------------------
@@ -84,15 +84,15 @@ def main():
 
     # check arguments
     if arg.start_year is not None and arg.end_year is not None and arg.min_years is not None:
-        print colored.red("ERROR: you can't defined all arguments 'start_year', "
-                          "'end_year' and 'min_years' at the same time\n")
+        print(colored.red("ERROR: you can't defined all arguments 'start_year', "
+                          "'end_year' and 'min_years' at the same time\n"))
         exit()
 
     if not os.path.isfile(arg.input_file):
-        print colored.red("ERROR: no such file or directory: {0}\n".format(arg.input_file))
+        print(colored.red("ERROR: no such file or directory: {0}\n".format(arg.input_file)))
         exit()
 
-    print "Processing file: " + colored.green(arg.input_file)
+    print("Processing file: " + colored.green(arg.input_file))
 
     # -------------------------------------------------------------------------
     # prepare names directories
@@ -136,18 +136,18 @@ def main():
 
     # test if dos2unix exists
     if not console.which('dos2unix'):
-        print colored.red("Error: this script need the program 'dos2unix' for\n"
+        print(colored.red("Error: this script need the program 'dos2unix' for\n"
                           "convert and clean all 'DOS' characters inside the SISDHIM format.\n"
-                          "Install 'dos2unix' from repositories of your Linux distribution.\n")
+                          "Install 'dos2unix' from repositories of your Linux distribution.\n"))
         exit()
 
-    print "\nConverting and cleaning all 'DOS' characters inside the SISDHIM format of input file:"
+    print("\nConverting and cleaning all 'DOS' characters inside the SISDHIM format of input file:")
 
     # standard clean with dos2unix
     call([console.which('dos2unix'), '-f', arg.input_file], shell=False)
     # convert ^M in extra newline
     call([console.which('dos2unix'), '-f', '-l', arg.input_file], shell=False)
-    print ""
+    print("")
 
     # -------------------------------------------------------------------------
     # utility functions
@@ -288,8 +288,8 @@ def main():
                     # check if station is repeat
                     if (code, name) in variables[name_variable]['stations_processed'] and \
                                     variables[name_variable]['stations_processed'][(code, name)] is True:
-                        print colored.yellow(
-                            "WARNING: detect repeat station for {0} - {1}: ignore and continue".format(code, name))
+                        print(colored.yellow(
+                            "WARNING: detect repeat station for {0} - {1}: ignore and continue".format(code, name)))
                         in_station_properties = False
                         in_station_data = False
                     # continue read the same station in the next block
@@ -304,13 +304,13 @@ def main():
                             if variable.startswith(name_variable):
                                 name_variable = variable
                         if variables[name_variable]['stations_processed'][(station['code'], station['name'])] is False:
-                            print colored.blue(
-                                "Continue the station:   {0} - {1}".format(station['code'], station['name']))
+                            print(colored.blue(
+                                "Continue the station:   {0} - {1}".format(station['code'], station['name'])))
 
                         # check if for daily data the year is repeat
                         if frequency_data == 'daily' and before_year == year:
-                            print colored.yellow("WARNING: detected the year {0} is repeat for the same station\n"
-                                                 "         save only the data of first year.".format(year))
+                            print(colored.yellow("WARNING: detected the year {0} is repeat for the same station\n"
+                                                 "         save only the data of first year.".format(year)))
                             in_station_properties = False
                             in_station_data = False
                     # start new station
@@ -336,11 +336,11 @@ def main():
                         if (station['code'], station['name']) in variables[name_variable]['stations_processed'] and \
                                         variables[name_variable]['stations_processed'][
                                             (station['code'], station['name'])] is True:
-                            print colored.yellow(
+                            print(colored.yellow(
                                 "The station {0} - {1} is already exist: Overwriting".format(station['code'],
-                                                                                             station['name']))
+                                                                                             station['name'])))
                         else:
-                            print "Processing the station: {0} - {1}".format(station['code'], station['name'])
+                            print("Processing the station: {0} - {1}".format(station['code'], station['name']))
                             variables[name_variable]['stations_processed'][(station['code'], station['name'])] = False
 
                         if frequency_data == 'daily':
@@ -432,9 +432,9 @@ def main():
 
                 # check if station is repeat
                 if continue_station and year < before_year:
-                    print colored.yellow(
+                    print(colored.yellow(
                         "WARNING: detect repeat station for {0} - {1}: ignore and continue".format(station['code'],
-                                                                                                   station['name']))
+                                                                                                   station['name'])))
                     variables[name_variable]['stations_processed'][(station['code'], station['name'])] = True
                     in_station_properties = False
                     in_station_data = False
@@ -520,20 +520,20 @@ def main():
                     # finish
                     break
 
-    print "\nStations processed and inside runfile for " + str(len(variables)) + " different variables :"
+    print("\nStations processed and inside runfile for " + str(len(variables)) + " different variables :")
     for variable in variables:
         stations_in_runfile = []
         for _station in variables[variable]['stations_processed']:
             if variables[variable]['stations_processed'][_station]:
                 stations_in_runfile.append(_station)
 
-        print "  " + str(variable) + ": " + str(len(stations_in_runfile)) + " stations (inside runfile: " + str(
-            variables[variable]['stations_in_runfile']) + " stations that pass all filters)"
+        print("  " + str(variable) + ": " + str(len(stations_in_runfile)) + " stations (inside runfile: " + str(
+            variables[variable]['stations_in_runfile']) + " stations that pass all filters)")
 
-    print "\nSaving result in: " + os.path.splitext(arg.input_file)[0]
+    print("\nSaving result in: " + os.path.splitext(arg.input_file)[0])
     # print "Saving runfile in: " + os.path.join(os.path.splitext(arg.input_file)[0], runfile_name)
     # print "Saving stations list files in: " + os.path.join(os.path.splitext(arg.input_file)[0], dir_var_D_stations)
-    print colored.yellow("Complete the runfile.csv before run with Jaziku")
-    print colored.green("\nDone\n")
+    print(colored.yellow("Complete the runfile.csv before run with Jaziku"))
+    print(colored.green("\nDone\n"))
 
     exit()
