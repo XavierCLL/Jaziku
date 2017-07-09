@@ -71,7 +71,7 @@ def configuration_run():
         else:
             if len(env.config_run.settings['categories_labels_var_I']) == 3:
                 env.config_run.settings['categories_labels_var_I'] \
-                    = [str(label, 'utf-8') for label in env.config_run.settings['categories_labels_var_I']]
+                    = [str(label) for label in env.config_run.settings['categories_labels_var_I']]
             else:
                 console.msg_error_configuration('categories_labels_var_I',
                                                 _("The 'categories_labels_var_I' is not valid,\n"
@@ -83,7 +83,7 @@ def configuration_run():
         else:
             if len(env.config_run.settings['categories_labels_var_I']) == 7:
                 env.config_run.settings['categories_labels_var_I'] \
-                    = [str(label, 'utf-8') for label in env.config_run.settings['categories_labels_var_I']]
+                    = [str(label) for label in env.config_run.settings['categories_labels_var_I']]
             else:
                 console.msg_error_configuration('categories_labels_var_I',
                                                 _("The 'categories_labels_var_I' is not valid,\n"

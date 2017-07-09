@@ -473,7 +473,7 @@ def descriptive_statistic_graphs(stations_list):
             title += ' ({0}-{1})'.format(env.globals_vars.PROCESS_PERIOD['start'],
                                          env.globals_vars.PROCESS_PERIOD['end'])
 
-            ax.set_title(str(title, 'utf-8'), env.globals_vars.graphs_title_properties())
+            ax.set_title(str(title), env.globals_vars.graphs_title_properties())
 
             if graph == _('vs_Stations'):
                 if graph_options[statistics[enum]] == 'dots':
@@ -485,7 +485,7 @@ def descriptive_statistic_graphs(stations_list):
 
             ## X
             if graph == _('vs_Stations'):
-                ax.set_xlabel(str(_('Stations'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+                ax.set_xlabel(str(_('Stations')), env.globals_vars.graphs_axis_properties())
                 xticks(list(range(1, len(x) + 1)), x, rotation='vertical')
             if graph == _('vs_Altitude'):
                 ax.set_xlabel(_('Altitude (m)'), env.globals_vars.graphs_axis_properties())
@@ -499,7 +499,7 @@ def descriptive_statistic_graphs(stations_list):
                 units = env.var_D.UNITS
             else:
                 units = '--'
-            ax.set_ylabel(str('{0} ({1})'.format(statistic.replace('_', ' '), units), 'utf-8'),
+            ax.set_ylabel(str('{0} ({1})'.format(statistic.replace('_', ' '), units)),
                           env.globals_vars.graphs_axis_properties())
 
             pyplot.subplots_adjust(bottom=0.2)
@@ -517,7 +517,7 @@ def descriptive_statistic_graphs(stations_list):
 
             if graph == _('vs_Stations') and graph_options[statistics[enum]] == 'bars' and \
                     all(v == 0 for v in y):
-                ax.text(0.5, 0.5, str(_("All values are zeros"), 'utf-8'),
+                ax.text(0.5, 0.5, str(_("All values are zeros")),
                         fontsize=14, horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
 
             fig.tight_layout()
@@ -719,7 +719,7 @@ def graphs_inspection_of_series(stations_list):
             fig = pyplot.figure(figsize=(with_fig, 5))
             # fig = pyplot.figure()
             ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
-            ax.set_title(str(name_graph.replace('_', ' '), 'utf-8'), env.globals_vars.graphs_title_properties())
+            ax.set_title(str(name_graph.replace('_', ' ')), env.globals_vars.graphs_title_properties())
 
             # default zoom values
             x_scale_below = -1.0 / len_x
@@ -767,7 +767,7 @@ def graphs_inspection_of_series(stations_list):
             # then render text message in the graph
             if len([item for item in y if not env.globals_vars.is_valid_null(item)]) == 0:
                 pyplot.cla()
-                ax.text(0.5, 0.5, str(_("All values are nulls"), 'utf-8'),
+                ax.text(0.5, 0.5, str(_("All values are nulls")),
                         fontsize=14, horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
                 image_path = os.path.join(station_image_path, name_graph + '.png')
                 # save image
@@ -792,7 +792,7 @@ def graphs_inspection_of_series(stations_list):
             if type in ['special_I', 'I']:
                 units = env.var_I.UNITS
 
-            ax.set_ylabel(str('{0} ({1})'.format(type_var, units), 'utf-8'),
+            ax.set_ylabel(str('{0} ({1})'.format(type_var, units)),
                           env.globals_vars.graphs_axis_properties())
 
             pyplot.subplots_adjust(bottom=0.2)
@@ -1023,7 +1023,7 @@ def climatology(stations_list):
             fig = pyplot.figure(figsize=(8, 5.5))
             ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
-            ax.set_title(str(title, 'utf-8'), env.globals_vars.graphs_title_properties())
+            ax.set_title(str(title), env.globals_vars.graphs_title_properties())
 
             type_var = env.var_D.TYPE_SERIES
 
@@ -1038,10 +1038,10 @@ def climatology(stations_list):
             ## Y
             # get units os type of var D or I
             if env.config_run.settings['mode_calculation_series_D'] == 'mean':
-                ax.set_ylabel(str('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[mean]'), 'utf-8'),
+                ax.set_ylabel(str('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[mean]')),
                               env.globals_vars.graphs_axis_properties())
             if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
-                ax.set_ylabel(str('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[accumulate]'), 'utf-8'),
+                ax.set_ylabel(str('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[accumulate]')),
                               env.globals_vars.graphs_axis_properties())
 
             # pyplot.subplots_adjust(bottom=0.2)
@@ -1092,7 +1092,7 @@ def climatology(stations_list):
             fig = pyplot.figure(figsize=(8, 5.5))
             ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
-            ax.set_title(str(title, 'utf-8'), env.globals_vars.graphs_title_properties())
+            ax.set_title(str(title), env.globals_vars.graphs_title_properties())
 
             type_var = env.var_D.TYPE_SERIES
 
@@ -1108,11 +1108,11 @@ def climatology(stations_list):
             # get units os type of var D or I
             if env.config_run.settings['mode_calculation_series_D'] == 'mean':
                 ax.set_ylabel(
-                    str(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, env.var_D.UNITS), 'utf-8'),
+                    str(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, env.var_D.UNITS)),
                     env.globals_vars.graphs_axis_properties())
             if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
                 ax.set_ylabel(
-                    str(('{0} ({1}) - ' + _('[min-accum-max]')).format(type_var, env.var_D.UNITS), 'utf-8'),
+                    str(('{0} ({1}) - ' + _('[min-accum-max]')).format(type_var, env.var_D.UNITS)),
                     env.globals_vars.graphs_axis_properties())
 
             # pyplot.subplots_adjust(bottom=0.2)
@@ -1211,7 +1211,7 @@ def climatology(stations_list):
             with_fig = 5 + len(y_mean) / 9.0
             fig = pyplot.figure(figsize=(with_fig, 5.5))
             ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
-            ax.set_title(str(title, 'utf-8'), env.globals_vars.graphs_title_properties())
+            ax.set_title(str(title), env.globals_vars.graphs_title_properties())
 
             type_var = env.var_D.TYPE_SERIES
 
@@ -1222,10 +1222,10 @@ def climatology(stations_list):
             ## Y
             # get units os type of var D or I
             if env.config_run.settings['mode_calculation_series_D'] == 'mean':
-                ax.set_ylabel(str('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[mean]'), 'utf-8'),
+                ax.set_ylabel(str('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[mean]')),
                               env.globals_vars.graphs_axis_properties())
             if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
-                ax.set_ylabel(str('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[accumulate]'), 'utf-8'),
+                ax.set_ylabel(str('{0} ({1}) - '.format(type_var, env.var_D.UNITS) + _('[accumulate]')),
                               env.globals_vars.graphs_axis_properties())
 
             # pyplot.subplots_adjust(bottom=0.2)
@@ -1279,7 +1279,7 @@ def climatology(stations_list):
             with_fig = 5 + len(y_mean) / 9.0
             fig = pyplot.figure(figsize=(with_fig, 5.5))
             ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
-            ax.set_title(str(title, 'utf-8'), env.globals_vars.graphs_title_properties())
+            ax.set_title(str(title), env.globals_vars.graphs_title_properties())
 
             type_var = env.var_D.TYPE_SERIES
 
@@ -1291,11 +1291,11 @@ def climatology(stations_list):
             # get units os type of var D or I
             if env.config_run.settings['mode_calculation_series_D'] == 'mean':
                 ax.set_ylabel(
-                    str(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, env.var_D.UNITS), 'utf-8'),
+                    str(('{0} ({1}) - ' + _('[min-mean-max]')).format(type_var, env.var_D.UNITS)),
                     env.globals_vars.graphs_axis_properties())
             if env.config_run.settings['mode_calculation_series_D'] == 'accumulate':
                 ax.set_ylabel(
-                    str(('{0} ({1}) - ' + _('[min-accum-max]')).format(type_var, env.var_D.UNITS), 'utf-8'),
+                    str(('{0} ({1}) - ' + _('[min-accum-max]')).format(type_var, env.var_D.UNITS)),
                     env.globals_vars.graphs_axis_properties())
 
             # pyplot.subplots_adjust(bottom=0.2)
@@ -1405,7 +1405,7 @@ def scatter_plots_of_series(stations_list):
                                                                              env.globals_vars.PROCESS_PERIOD['start'],
                                                                              env.globals_vars.PROCESS_PERIOD['end'])
 
-    pyplot.suptitle(str(title_plot, 'utf-8'), y=(fig_height - 0.1) / fig_height,
+    pyplot.suptitle(str(title_plot), y=(fig_height - 0.1) / fig_height,
                     **env.globals_vars.graphs_title_properties(fs=14, fva='top'))
 
     for iter_v, station_v in enumerate(stations_list):
@@ -1423,7 +1423,7 @@ def scatter_plots_of_series(stations_list):
             else:
                 ax.set_yticklabels([])
             if iter_v == len(stations_list) - 1:
-                ax.set_xlabel(str(station_h.code, 'utf-8'), env.globals_vars.graphs_axis_properties())
+                ax.set_xlabel(str(station_h.code), env.globals_vars.graphs_axis_properties())
             else:
                 ax.set_xticklabels([])
 
@@ -1477,13 +1477,13 @@ def frequency_histogram(stations_list):
                                                                                       env.globals_vars.PROCESS_PERIOD[
                                                                                           'start'],
                                                                                       env.globals_vars.PROCESS_PERIOD[
-                                                                                          'end']), 'utf-8'),
+                                                                                          'end'])),
                      env.globals_vars.graphs_title_properties())
 
 
         ## X
         type_var = env.var_D.TYPE_SERIES
-        ax.set_xlabel(str('{0} ({1})'.format(type_var, env.var_D.UNITS), 'utf-8'),
+        ax.set_xlabel(str('{0} ({1})'.format(type_var, env.var_D.UNITS)),
                       env.globals_vars.graphs_axis_properties())
 
         ## Y
@@ -1492,7 +1492,7 @@ def frequency_histogram(stations_list):
         # check if all values (var D) are nulls inside the period to process,
         # then render text message in the graph
         if len(station.var_D.data_filtered_in_process_period) == 0:
-            ax.text(0.5, 0.5, str(_("All values are nulls"), 'utf-8'),
+            ax.text(0.5, 0.5, str(_("All values are nulls")),
                     fontsize=14, horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
         else:
             hist, bin_edges = get_frequency_histogram(station.var_D.data_filtered_in_process_period)
@@ -1611,23 +1611,23 @@ def outliers(stations_list):
             ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
             ax.set_title(str(_("Outliers") + "\n{0} ({1}-{2})".format(env.var_D.TYPE_SERIES,
                                                                           env.globals_vars.PROCESS_PERIOD['start'],
-                                                                          env.globals_vars.PROCESS_PERIOD['end']),
-                                 'utf-8'), env.globals_vars.graphs_title_properties())
+                                                                          env.globals_vars.PROCESS_PERIOD['end'])),
+                         env.globals_vars.graphs_title_properties())
 
             ## X
             ax.tick_params(axis='x', which='both', bottom='off', top='off', labelbottom='off')
-            ax.set_xlabel(str('{0}\n{1}'.format(station.code, station.name), 'utf-8'),
+            ax.set_xlabel(str('{0}\n{1}'.format(station.code, station.name)),
                           env.globals_vars.graphs_axis_properties())
 
             ## Y
             type_var = env.var_D.TYPE_SERIES
-            ax.set_ylabel(str('{0} ({1})'.format(type_var, env.var_D.UNITS), 'utf-8'),
+            ax.set_ylabel(str('{0} ({1})'.format(type_var, env.var_D.UNITS)),
                           env.globals_vars.graphs_axis_properties())
             # ax.set_ylabel(_('Frequency'))
 
             # check if all values (var D) are nulls inside the period to process
             if len(station.var_D.data_filtered_in_process_period) == 0:
-                ax.text(0.5, 0.5, str(_("All values are nulls"), 'utf-8'),
+                ax.text(0.5, 0.5, str(_("All values are nulls")),
                         fontsize=14, horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
                 with console.redirectStdStreams():
                     boxplot_station = boxplot([float('nan')] * 3)
@@ -1774,16 +1774,16 @@ def outliers(stations_list):
 
         ax.set_title(str(_part_title + "{0} ({1}-{2})".format(env.var_D.TYPE_SERIES,
                                                                   env.globals_vars.PROCESS_PERIOD['start'],
-                                                                  env.globals_vars.PROCESS_PERIOD['end']), 'utf-8'),
+                                                                  env.globals_vars.PROCESS_PERIOD['end'])),
                      env.globals_vars.graphs_title_properties())
 
         ## X
         # xticks(range(len(stations_list)), codes_stations, rotation='vertical')
-        ax.set_xlabel(str(_('Stations'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+        ax.set_xlabel(str(_('Stations')), env.globals_vars.graphs_axis_properties())
 
         ## Y
         type_var = env.var_D.TYPE_SERIES
-        ax.set_ylabel(str('{0} ({1})'.format(type_var, env.var_D.UNITS), 'utf-8'),
+        ax.set_ylabel(str('{0} ({1})'.format(type_var, env.var_D.UNITS)),
                       env.globals_vars.graphs_axis_properties())
         # ax.set_ylabel(_('Frequency'))
 
@@ -2059,15 +2059,15 @@ def correlation(stations_list, type_correlation):
 
             ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
-            ax.set_title(str(title, 'utf-8'), env.globals_vars.graphs_title_properties())
+            ax.set_title(str(title), env.globals_vars.graphs_title_properties())
 
             ## X
-            ax.set_xlabel(str(_('Lags'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            ax.set_xlabel(str(_('Lags')), env.globals_vars.graphs_axis_properties())
             # xticks(correlation_values['lags'], x_labels)
 
             ## Y
             # get units os type of var D or I
-            ax.set_ylabel(str(_("Correlation"), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            ax.set_ylabel(str(_("Correlation")), env.globals_vars.graphs_axis_properties())
 
             pyplot.axhline(linewidth=1, color='k')
 
@@ -2081,7 +2081,7 @@ def correlation(stations_list, type_correlation):
 
             pyplot.ylim(-1, 1)
 
-            ax.text(24, -1, str(get_text_of_frequency_data('D'), 'utf-8'), horizontalalignment='right',
+            ax.text(24, -1, str(get_text_of_frequency_data('D')), horizontalalignment='right',
                     verticalalignment='center')
 
             env.globals_vars.set_others_properties(ax)
@@ -2202,8 +2202,8 @@ def homogeneity(stations_list):
 
         len_s = len(series)
 
-        s1 = series[0:len_s / 2]
-        s2 = series[len_s / 2::]
+        s1 = series[0:round(len_s / 2)]
+        s2 = series[round(len_s / 2)::]
 
         u, prob = stats.mannwhitneyu(s1, s2, use_continuity=False)
 
@@ -2240,8 +2240,8 @@ def homogeneity(stations_list):
 
         len_s = len(series)
 
-        s1 = series[0:len_s / 2]
-        s2 = series[len_s / 2::]
+        s1 = series[0:round(len_s / 2)]
+        s2 = series[round(len_s / 2)::]
 
         t, p_value = stats.ttest_ind(s1, s2)
 
@@ -2276,8 +2276,8 @@ def homogeneity(stations_list):
 
         len_s = len(series)
 
-        s1 = series[0:len_s / 2]
-        s2 = series[len_s / 2::]
+        s1 = series[0:round(len_s / 2)]
+        s2 = series[round(len_s / 2)::]
 
         w, p_value = stats.levene(s1, s2)
 
@@ -2321,16 +2321,16 @@ def homogeneity(stations_list):
 
             titulo = _("{0}\n{1}-{2}") \
                 .format(_('Mass Curve'), station.code, station.name)
-            ax.set_title(str(titulo, 'utf-8'), env.globals_vars.graphs_title_properties())
+            ax.set_title(str(titulo), env.globals_vars.graphs_title_properties())
 
             ## X
-            ax.set_xlabel(str(_("Time"), 'utf-8'), env.globals_vars.graphs_axis_properties())
+            ax.set_xlabel(str(_("Time")), env.globals_vars.graphs_axis_properties())
             # xticks(station.var_D.date_in_process_period)
             # xticks(rotation='vertical')
 
             ## Y
             # get units os type of var D or I
-            ax.set_ylabel(str(_('{0} accumulated ({1})').format(env.var_D.TYPE_SERIES, env.var_D.UNITS), 'utf-8'),
+            ax.set_ylabel(str(_('{0} accumulated ({1})').format(env.var_D.TYPE_SERIES, env.var_D.UNITS)),
                           env.globals_vars.graphs_axis_properties())
 
             pyplot.axhline(linewidth=1, color='k')
@@ -2439,14 +2439,14 @@ def anomaly(stations_list):
                                                                                          env.globals_vars.PROCESS_PERIOD[
                                                                                              'start'],
                                                                                          env.globals_vars.PROCESS_PERIOD[
-                                                                                             'end']), 'utf-8'),
+                                                                                             'end'])),
                 env.globals_vars.graphs_title_properties())
 
             ## X
             type_var = env.var_D.TYPE_SERIES
             ax.set_xlabel(str('{0} ({1})\n{2}'
                                   .format(type_var, env.var_D.UNITS,
-                                          get_text_of_frequency_data('D')), 'utf-8'),
+                                          get_text_of_frequency_data('D'))),
                           env.globals_vars.graphs_axis_properties())
 
             ## Y
@@ -2455,7 +2455,7 @@ def anomaly(stations_list):
             # check if all values (var D) are nulls inside the period to process,
             # then render text message in the graph
             if len(anomaly_values_cleaned) == 0:
-                ax.text(0.5, 0.5, str(_("All values are nulls"), 'utf-8'),
+                ax.text(0.5, 0.5, str(_("All values are nulls")),
                         fontsize=14, horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
             else:
                 hist, bin_edges = get_frequency_histogram(anomaly_values_cleaned)
@@ -2543,22 +2543,22 @@ def make_periodogram(station, path_to_save, data, variable):
         fig = pyplot.figure(figsize=(10, 6))
         ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
-        ax.set_title(str(title, 'utf-8'), env.globals_vars.graphs_title_properties())
+        ax.set_title(str(title), env.globals_vars.graphs_title_properties())
 
         ## X
         if env.var_[variable].FREQUENCY_DATA in ['bimonthly', 'trimonthly']:
-            ax.set_xlabel(str(_('Period') + ' (' + _('months') + ')', 'utf-8'),
+            ax.set_xlabel(str(_('Period') + ' (' + _('months') + ')'),
                           env.globals_vars.graphs_axis_properties())
         else:
             ax.set_xlabel(
-                str(_('Period') + ' (' + env.var_[variable].get_FREQUENCY_DATA(adverb=False) + ')', 'utf-8'),
+                str(_('Period') + ' (' + env.var_[variable].get_FREQUENCY_DATA(adverb=False) + ')'),
                 env.globals_vars.graphs_axis_properties())
         # xticks(correlation_values['lags'], x_labels)
 
         ## Y
         # get units os type of var D or I
-        ax.set_ylabel(str(_("Power spectral density"), 'utf-8'), env.globals_vars.graphs_axis_properties())
-        # ax.set_ylabel(unicode(_('Densidad de potencia espectral'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+        ax.set_ylabel(str(_("Power spectral density")), env.globals_vars.graphs_axis_properties())
+        # ax.set_ylabel(unicode(_('Densidad de potencia espectral')), env.globals_vars.graphs_axis_properties())
 
         # pyplot.axhline(linewidth=0.8, color=env.globals_vars.colors['grey_S1'])
 
@@ -2593,7 +2593,7 @@ def make_periodogram(station, path_to_save, data, variable):
         # set color for legend border
         l.get_frame().set_edgecolor(env.globals_vars.colors['grey_S3'])
 
-        ax.text(0.01, 0.97, str(get_text_of_frequency_data('D'), 'utf-8'), horizontalalignment='left',
+        ax.text(0.01, 0.97, str(get_text_of_frequency_data('D')), horizontalalignment='left',
                 verticalalignment='center', transform=ax.transAxes)
 
         # pyplot.ylim(-1, 1)
@@ -2631,22 +2631,22 @@ def make_periodogram(station, path_to_save, data, variable):
         fig = pyplot.figure(figsize=(10, 6))
         ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
 
-        ax.set_title(str(title, 'utf-8'), env.globals_vars.graphs_title_properties())
+        ax.set_title(str(title), env.globals_vars.graphs_title_properties())
 
         ## X
         if env.var_[variable].FREQUENCY_DATA in ['bimonthly', 'trimonthly']:
-            ax.set_xlabel(str(_('Frequency') + ' (1/' + _('months') + ')', 'utf-8'),
+            ax.set_xlabel(str(_('Frequency') + ' (1/' + _('months') + ')'),
                           env.globals_vars.graphs_axis_properties())
         else:
             ax.set_xlabel(
-                str(_('Frequency') + ' (1/' + env.var_[variable].get_FREQUENCY_DATA(adverb=False) + ')', 'utf-8'),
+                str(_('Frequency') + ' (1/' + env.var_[variable].get_FREQUENCY_DATA(adverb=False) + ')'),
                 env.globals_vars.graphs_axis_properties())
         # xticks(correlation_values['lags'], x_labels)
 
         ## Y
         # get units os type of var D or I
-        ax.set_ylabel(str(_("Power spectral density"), 'utf-8'), env.globals_vars.graphs_axis_properties())
-        # ax.set_ylabel(unicode(_('Densidad de potencia espectral'), 'utf-8'), env.globals_vars.graphs_axis_properties())
+        ax.set_ylabel(str(_("Power spectral density")), env.globals_vars.graphs_axis_properties())
+        # ax.set_ylabel(unicode(_('Densidad de potencia espectral')), env.globals_vars.graphs_axis_properties())
 
         # pyplot.axhline(linewidth=0.8, color=env.globals_vars.colors['grey_S1'])
 
@@ -2680,7 +2680,7 @@ def make_periodogram(station, path_to_save, data, variable):
         # set color for legend border
         l.get_frame().set_edgecolor(env.globals_vars.colors['grey_S3'])
 
-        ax.text(0.01, 0.97, str(get_text_of_frequency_data('D'), 'utf-8'), horizontalalignment='left',
+        ax.text(0.01, 0.97, str(get_text_of_frequency_data('D')), horizontalalignment='left',
                 verticalalignment='center', transform=ax.transAxes)
 
         # pyplot.ylim(-1, 1)
@@ -2839,12 +2839,12 @@ def make_wavelets(station, path_to_save, variable):
     if variable == 'D':
         ax1.set_title(str(_("Station {0} {1} - {2}-{3}")
                               .format(station.code, station.name, env.globals_vars.PROCESS_PERIOD['start'],
-                                      env.globals_vars.PROCESS_PERIOD['end']), 'utf-8'),
+                                      env.globals_vars.PROCESS_PERIOD['end'])),
                       env.globals_vars.graphs_title_properties())
     else:
         ax1.set_title(str(_("Independent Variable {0} - {1}-{2}")
                               .format(env.var_[variable].TYPE_SERIES, env.globals_vars.PROCESS_PERIOD['start'],
-                                      env.globals_vars.PROCESS_PERIOD['end']), 'utf-8'),
+                                      env.globals_vars.PROCESS_PERIOD['end'])),
                       env.globals_vars.graphs_title_properties())
 
     x = list(station.var_[variable].date_in_process_period)
@@ -2926,13 +2926,13 @@ def make_wavelets(station, path_to_save, variable):
 
     # ax1.autoscale(tight=True)
     ax1.grid(True, color='gray')
-    ax1.set_ylabel(str('{0} ({1})'.format(env.var_[variable].TYPE_SERIES, env.var_[variable].UNITS), 'utf-8'),
+    ax1.set_ylabel(str('{0} ({1})'.format(env.var_[variable].TYPE_SERIES, env.var_[variable].UNITS)),
                    env.globals_vars.graphs_axis_properties())
     env.globals_vars.set_others_properties(ax1)
 
     ###### second graphic
 
-    ax2.set_title(str(_("Wavelet power spectrum"), 'utf-8'), env.globals_vars.graphs_title_properties())
+    ax2.set_title(str(_("Wavelet power spectrum")), env.globals_vars.graphs_title_properties())
     t, s = wa.time, wa.scales
 
     # colors = [(229, 236, 240), (56, 99, 128), (85, 175, 105), (210,196,0), (182,0,0)]
@@ -2948,11 +2948,11 @@ def make_wavelets(station, path_to_save, variable):
     CT = ax2.contourf(T, S, wa.wavelet_power, 256, cmap=my_cmap)
 
     if env.var_[variable].FREQUENCY_DATA in ['bimonthly', 'trimonthly']:
-        ax2.set_ylabel(str(_("Period (" + _('months') + ")"), 'utf-8'), env.globals_vars.graphs_axis_properties())
+        ax2.set_ylabel(str(_("Period (" + _('months') + ")")), env.globals_vars.graphs_axis_properties())
     else:
-        ax2.set_ylabel(str(_("Period ({0})").format(env.var_[variable].get_FREQUENCY_DATA(adverb=False)), 'utf-8'),
+        ax2.set_ylabel(str(_("Period ({0})").format(env.var_[variable].get_FREQUENCY_DATA(adverb=False))),
                        env.globals_vars.graphs_axis_properties())
-    ax2.set_xlabel(str(_("Years"), 'utf-8'), env.globals_vars.graphs_axis_properties())
+    ax2.set_xlabel(str(_("Years")), env.globals_vars.graphs_axis_properties())
     ax2.set_yscale('log')
     ax2.grid(True, color='gray')
 
@@ -2965,7 +2965,7 @@ def make_wavelets(station, path_to_save, variable):
     ax2.xaxis.set_ticks(x_idx_years)
     ax2.xaxis.set_ticklabels(xticklabels)
 
-    ax2.text(0, 1.013, str(get_text_of_frequency_data('D'), 'utf-8'), horizontalalignment='left',
+    ax2.text(0, 1.013, str(get_text_of_frequency_data('D')), horizontalalignment='left',
              verticalalignment='center', transform=ax2.transAxes)
 
     # shade the region between the edge and coi
@@ -2978,7 +2978,7 @@ def make_wavelets(station, path_to_save, variable):
     ax2.fill_between(x=C, y1=S, y2=s.max(), color='gray', edgecolor='black', alpha=0.2, hatch='x')
 
     cbar = pyplot.colorbar(CT, fraction=1, pad=0.01, ax=ax3)
-    # cbar.ax.set_ylabel(unicode(_("Wavelets units"), 'utf-8'), env.globals_vars.graphs_axis_properties())
+    # cbar.ax.set_ylabel(unicode(_("Wavelets units")), env.globals_vars.graphs_axis_properties())
 
     for cbar_label in cbar.ax.get_yticklabels():
         cbar_label.set_fontsize(15)

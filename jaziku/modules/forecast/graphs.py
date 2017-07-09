@@ -63,14 +63,14 @@ def forecast_graphs(station):
                                  .format(station.var_D.type_series, station.var_I.type_series, station.name,
                                          station.code, lag, env.config_run.settings['forecast_date']['text'],
                                          env.globals_vars.PROCESS_PERIOD['start'],
-                                         env.globals_vars.PROCESS_PERIOD['end']),
-                                 'utf-8'), **env.globals_vars.graphs_title_properties(fs=12, fva='top'))
+                                         env.globals_vars.PROCESS_PERIOD['end'])),
+                         **env.globals_vars.graphs_title_properties(fs=12, fva='top'))
 
             # colors for paint pie: below, normal , above
             colours = ['#DD4620', '#62AD29', '#6087F1']
             colours = list(reversed(colours))
 
-            labels = (str(_('Decrease'), 'utf-8'), str(_('Normal'), 'utf-8'), str(_('Exceed'), 'utf-8'))
+            labels = (str(_('Decrease')), str(_('Normal')), str(_('Exceed')))
 
             labels = tuple(reversed(labels))
 
@@ -90,7 +90,7 @@ def forecast_graphs(station):
                 # this append when there are NaN values in contingency table in percentage for this series
                 fig.text(0.5, 0.4, str(_("For this time series there aren't suitable\n"
                                              "probabilities, because there are thresholds\n"
-                                             "problems in contingency table, or the series data."), 'utf-8'),
+                                             "problems in contingency table, or the series data.")),
                          fontsize=10, ha='center')
             else:
                 ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
@@ -125,17 +125,17 @@ def forecast_graphs(station):
                                  .format(station.var_D.type_series, station.var_I.type_series, station.name,
                                          station.code, lag, env.config_run.settings['forecast_date']['text'],
                                          env.globals_vars.PROCESS_PERIOD['start'],
-                                         env.globals_vars.PROCESS_PERIOD['end']),
-                                 'utf-8'), **env.globals_vars.graphs_title_properties(fs=12, fva='top'))
+                                         env.globals_vars.PROCESS_PERIOD['end'])),
+                         **env.globals_vars.graphs_title_properties(fs=12, fva='top'))
 
             # colors for paint pie: *below, normal , *above
             colours = ['#DD4620', '#DD8620', '#DDC620', '#62AD29', '#60C7F1', '#6087F1', '#6047F1']
             colours = list(reversed(colours))
 
-            labels = (str(_('Strong decrease'), 'utf-8'), str(_('Moderate decrease'), 'utf-8'),
-                      str(_('Weak decrease'), 'utf-8'), str(_('Normal'), 'utf-8'),
-                      str(_('Weak exceed'), 'utf-8'), str(_('Moderate exceed'), 'utf-8'),
-                      str(_('Strong exceed'), 'utf-8'))
+            labels = (str(_('Strong decrease')), str(_('Moderate decrease')),
+                      str(_('Weak decrease')), str(_('Normal')),
+                      str(_('Weak exceed')), str(_('Moderate exceed')),
+                      str(_('Strong exceed')))
 
             labels = tuple(reversed(labels))
 
@@ -159,7 +159,7 @@ def forecast_graphs(station):
                 # this append when there are NaN values in contingency table in percentage for this series
                 fig.text(0.5, 0.4, str(_("For this time series there aren't suitable\n"
                                              "probabilities, because there are thresholds\n"
-                                             "problems in contingency table, or the series data."), 'utf-8'),
+                                             "problems in contingency table, or the series data.")),
                          fontsize=10, ha='center')
             else:
                 ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())
@@ -248,8 +248,8 @@ def forecast_graphs(station):
                                  .format(station.var_D.type_series, station.var_I.type_series, station.name,
                                          station.code, lag, env.config_run.settings['forecast_date']['text'],
                                          env.globals_vars.PROCESS_PERIOD['start'],
-                                         env.globals_vars.PROCESS_PERIOD['end']),
-                                 'utf-8'), **env.globals_vars.graphs_title_properties(fs=12, fva='top'))
+                                         env.globals_vars.PROCESS_PERIOD['end'])),
+                         **env.globals_vars.graphs_title_properties(fs=12, fva='top'))
 
             # colors for paint pie: *below, normal , *above
             colours = ['#DD4620', '#DD8620', '#DDC620', '#62AD29', '#60C7F1', '#6087F1', '#6047F1']
@@ -304,7 +304,7 @@ def forecast_graphs(station):
                 # this append when there are NaN values in contingency table in percentage for this series
                 fig.text(0.5, 0.4, str(_("For this time series there aren't suitable\n"
                                              "probabilities, because there are thresholds\n"
-                                             "problems in contingency table, or the series data."), 'utf-8'),
+                                             "problems in contingency table, or the series data.")),
                          fontsize=10, ha='center')
             else:
                 ax = fig.add_subplot(111, **env.globals_vars.graphs_subplot_properties())

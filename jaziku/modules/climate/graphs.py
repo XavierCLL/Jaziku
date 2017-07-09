@@ -143,7 +143,7 @@ def climate_graphs(station):
             fig.suptitle(str(_('Composite analysis - {0} ({1})\n{2} - {3} - lag {6} - {7} - ({4}-{5})').
                                  format(station.name, station.code, station.var_D.type_series,
                                         station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'],
-                                        env.globals_vars.PROCESS_PERIOD['end'], lag, title_period), 'utf-8'),
+                                        env.globals_vars.PROCESS_PERIOD['end'], lag, title_period)),
                          **env.globals_vars.graphs_title_properties(fs=15, fva='top'))
 
             # label for axis Y
@@ -216,7 +216,7 @@ def climate_graphs(station):
                                      end_year=env.globals_vars.PROCESS_PERIOD['end'],
                                      min=output.number(minimum(specific_time_series['var_D']), 3),
                                      thresholds=' | '.join([str(x) for x in thresholds_D]),
-                                     max=output.number(maximum(specific_time_series['var_D']), 3)), 'utf-8'),
+                                     max=output.number(maximum(specific_time_series['var_D']), 3))),
                      fontsize=12, ha='center')
 
             ## Save image
@@ -295,7 +295,7 @@ def climate_graphs(station):
             fig.suptitle(str(_('Composite analysis - {0} ({1})\n{2} - {3} - lag {6} - {7} - ({4}-{5})').
                                  format(station.name, station.code, station.var_D.type_series,
                                         station.var_I.type_series, env.globals_vars.PROCESS_PERIOD['start'],
-                                        env.globals_vars.PROCESS_PERIOD['end'], lag, title_period), 'utf-8'),
+                                        env.globals_vars.PROCESS_PERIOD['end'], lag, title_period)),
                          **env.globals_vars.graphs_title_properties(fs=15, fva='top'))
 
             # label for axis Y
@@ -397,7 +397,7 @@ def climate_graphs(station):
                                      end_year=env.globals_vars.PROCESS_PERIOD['end'],
                                      min=output.number(minimum(specific_time_series['var_D']), 3),
                                      thresholds=thresholds_D_txt,
-                                     max=output.number(maximum(specific_time_series['var_D']), 3)), 'utf-8'),
+                                     max=output.number(maximum(specific_time_series['var_D']), 3))),
                      fontsize=11, ha='center')
 
             ## Save image
