@@ -17,17 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Jaziku.  If not, see <http://www.gnu.org/licenses/>.
 
-# select the python version
-if type -p python2 > /dev/null; then
-	python_version="python2"
-elif type -p python2.7 > /dev/null; then
-    python_version="python2.7"
-elif type -p python2.6 > /dev/null; then
-    python_version="python2.6"
-else
-	python_version="python"
-fi
-
 # run scripts in Linux environment
 #/usr/bin/env python2 -c "from jaziku import jaziku; jaziku.main()" "$@"
-exec `echo $python_version` -c "from jaziku.utils.scripts import normalize_format; normalize_format.external_run()" "$@"
+exec python3 -c "from jaziku.utils.scripts import normalize_format; normalize_format.external_run()" "$@"
