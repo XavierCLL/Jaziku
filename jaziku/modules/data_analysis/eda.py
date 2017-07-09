@@ -2866,6 +2866,7 @@ def make_wavelets(station, path_to_save, variable):
     xticklabels = [i if i in x_years[0::inter_x] else '' for i in x_years]
 
     ax1.set_xticklabels(xticklabels)
+    ax1.set_xlim(x[0], x[-1])
 
     # graphs the background var I categories
     # colors for paint bars and labels: below, normal , above
