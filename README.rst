@@ -93,7 +93,7 @@ Licence
 -------
 
 | General Public License - GPLv3_
-| Copyright © 2011-2015 Ines Sanchez, Xavier Corredor
+| Copyright © Ines Sanchez R, Xavier Corredor Ll
 | IDEAM
 
 .. _GPLv3: https://bitbucket.org/XavierCLL/jaziku/src/tip/COPYING
