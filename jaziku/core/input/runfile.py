@@ -48,7 +48,7 @@ def read_runfile():
     runfile_open = open(env.globals_vars.ARGS.runfile, 'rb')
 
     # delete all NULL byte inside the runfile.csv
-    runfile = (x.replace('\0', '') for x in runfile_open)
+    runfile = (x.replace(b'\0', b'').decode('utf8') for x in runfile_open)
 
     # open runfile as csv
     runfile = csv.reader(runfile, delimiter=env.globals_vars.INPUT_CSV_DELIMITER)
@@ -282,13 +282,13 @@ def read_stations(lines_of_stations):
         station.line_station = line_station
         station.line_num = line_num
 
-        try:
+        if True:
             if len(line_station) < 6:
                 raise Exception(_("Problems with the numbers of parameters inside\n"
                                   "the stations list need for run climate process.\n"))
 
             station.code = line_station[0]
-            station.name = str(line_station[1], 'utf-8')
+            station.name = str(line_station[1])
             station.lat = input.to_float(line_station[2])
             station.lon = input.to_float(line_station[3])
             station.alt = input.to_float(line_station[4])
@@ -301,8 +301,8 @@ def read_stations(lines_of_stations):
             # station.file_I = env.config_run.get['path_to_file_var_I']
             station.var_I.set_file(env.config_run.settings['path_to_file_var_I'])
 
-        except Exception as error:
-            console.msg_error_line_stations(station, error)
+        #except Exception as error:
+        #    console.msg_error_line_stations(station, error)
 
         stations.append(station)
 

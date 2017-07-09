@@ -106,22 +106,22 @@ def categories(key_label=False, include_normal=True, translated=True, as_list=Fa
     from jaziku.env.config_run import settings
     if settings['class_category_analysis'] == 3:
         if translated:
-            labels = {'below': str(_('below'), 'utf-8'),
-                      'normal': str(_('normal'), 'utf-8'),
-                      'above': str(_('above'), 'utf-8')}
+            labels = {'below': str(_('below')),
+                      'normal': str(_('normal')),
+                      'above': str(_('above'))}
         else:
             labels = {'below': 'below',
                       'normal': 'normal',
                       'above': 'above'}
     if settings['class_category_analysis'] == 7:
         if translated:
-            labels = {'below3': str(_('strong below'), 'utf-8'),
-                      'below2': str(_('moderate below'), 'utf-8'),
-                      'below1': str(_('weak below'), 'utf-8'),
-                      'normal': str(_('normal'), 'utf-8'),
-                      'above1': str(_('weak above'), 'utf-8'),
-                      'above2': str(_('moderate above'), 'utf-8'),
-                      'above3': str(_('strong above'), 'utf-8')}
+            labels = {'below3': str(_('strong below')),
+                      'below2': str(_('moderate below')),
+                      'below1': str(_('weak below')),
+                      'normal': str(_('normal')),
+                      'above1': str(_('weak above')),
+                      'above2': str(_('moderate above')),
+                      'above3': str(_('strong above'))}
         else:
             labels = {'below3': 'strong below',
                       'below2': 'moderate below',
