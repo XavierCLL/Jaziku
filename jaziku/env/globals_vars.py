@@ -198,7 +198,7 @@ colors = {
 
 def graphs_subplot_properties(bg_color=colors['grey_W2']):
     subplot_properties = {}
-    subplot_properties["axisbg"] = bg_color
+    subplot_properties["facecolor"] = bg_color
     return subplot_properties
 
 
