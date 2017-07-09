@@ -2927,7 +2927,7 @@ msgstr ""
 msgid ""
 "\n"
 "Jaziku, version {0} - {1}.\n"
-"Copyright (C) 2011-2014 IDEAM - Colombia"
+"Copyright (C) 2011-2017 Xavier Corredor Ll. - IDEAM - Colombia"
 msgstr ""
 
 #: utils/console.py:89
@@ -2988,7 +2988,7 @@ msgid ""
 "#               for the teleconnections analysis.              #\n"
 "#                                                              #\n"
 "#                 Version {0} - {1}\t               #\n"
-"#           Copyright (C) 2011-2014 IDEAM - Colombia           #\n"
+"#           Copyright (C) 2011-2017 Xavier Corredor Ll. - IDEAM - Colombia           #\n"
 "################################################################"
 msgstr ""
 
