@@ -58,6 +58,7 @@ def get_FREQUENCY_DATA(adverb=True):
 INTERNAL_TYPES = [
     'ONI1',  # Oceanic Nino Index
     'ONI2',  # Oceanic Nino Index
+    'ONI3',  # Oceanic Nino Index
     'SOI',  # Index of the Southern Oscillation NOAA
     'SOI_TROUP',  # Index of the Southern Oscillation calculated between Tahiti and Darwin
     'MEI',  # Multivariate ENSO index
@@ -77,7 +78,8 @@ INTERNAL_TYPES = [
     'ARH',  # % Amazon relative humidity
     'QBO',  # quasibienal oscillation index
     'NAO',  # North atlantic oscillation index
-    'CAR',  # Caribbean (CAR) Index
+    'CAR1',  # Caribbean (CAR) Index
+    'CAR2',  # Caribbean (CAR) Index
     'AREA_WHWP'  # Monthly anomaly of the ocean surface area Ocean region
 ]
 
@@ -85,6 +87,7 @@ INTERNAL_TYPES = [
 INTERNAL_UNITS = {
     'ONI1': 'anomaly',
     'ONI2': 'anomaly',
+    'ONI3': 'anomaly',
     'SOI': 'Std anomaly',
     'SOI_TROUP': 'Std anomaly',
     'MEI': '-',
@@ -104,7 +107,8 @@ INTERNAL_UNITS = {
     'ARH': '%',
     'QBO': 'Km/h',
     'NAO': 'anomaly',
-    'CAR': 'Celsius',
+    'CAR1': 'Celsius',
+    'CAR2': 'Celsius',
     'AREA_WHWP': 'anomaly scaled 10e6 km^2'
 }
 
@@ -114,6 +118,7 @@ def INTERNAL_UNITS_i18n():
     global INTERNAL_UNITS
     INTERNAL_UNITS['ONI1'] = _('anomaly')
     INTERNAL_UNITS['ONI2'] = _('anomaly')
+    INTERNAL_UNITS['ONI3'] = _('anomaly')
     INTERNAL_UNITS['SOI'] = _('Std anomaly')
     INTERNAL_UNITS['SOI_TROUP'] = _('Std anomaly')
     INTERNAL_UNITS['W200'] = _('Std anomaly')
@@ -141,6 +146,7 @@ UNITS = None
 MODE_CALCULATION_SERIES = {
     'ONI1': ['mean'],
     'ONI2': ['mean'],
+    'ONI3': ['mean'],
     'SOI': ['mean'],
     'SOI_TROUP': ['mean'],
     'MEI': ['mean'],
@@ -160,14 +166,15 @@ MODE_CALCULATION_SERIES = {
     'ARH': ['mean'],
     'QBO': ['mean'],
     'NAO': ['mean'],
-    'CAR': ['mean'],
+    'CAR1': ['mean'],
+    'CAR2': ['mean'],
     'AREA_WHWP': ['mean'],
 }
 
 # Internal limits for var_I (independent variable)
 #
 #     Variable                     Abbreviation     Units          Range of variation
-# Oceanic Nino Index--------------ONI1 and ONI2    anomaly             -5 to 5
+# Oceanic Nino Index--------------ONI1, ONI2, ONI3  anomaly             -5 to 5
 # Index of the Southern
 # Oscillation NOAA--------------------SOI        std anomaly           -7 to 7
 # Index of the Southern
@@ -187,7 +194,7 @@ MODE_CALCULATION_SERIES = {
 # % Amazon relative humidity----------ARH             %              -100 to 100
 # quasibienal oscillation index-------QBO           m/s            -59.1 to 33.24
 # North atlantic oscillation index----NAO         anomaly           -6.36 to 6.08
-# Caribbean (CAR) Index------------CAR         °C               -1.3 to 1.3
+# Caribbean (CAR) Index------------CAR 1 y 2        °C               -1.3 to 1.3
 # Monthly anomaly of the
 # ocean surface area Ocean                    Area anomaly scaled
 # region >28.5C--------------------AREA_WHWP     by 10e6 km^2         -13 to 14
@@ -199,6 +206,11 @@ INTERNAL_LIMITS = {
              'trimonthly': [-5, 5]},
 
     'ONI2': {'daily': None,
+             'monthly': [-5, 5],
+             'bimonthly': [-5, 5],
+             'trimonthly': [-5, 5]},
+
+    'ONI3': {'daily': None,
              'monthly': [-5, 5],
              'bimonthly': [-5, 5],
              'trimonthly': [-5, 5]},
@@ -296,7 +308,12 @@ INTERNAL_LIMITS = {
             'bimonthly': [-11.9, 11.9],
             'trimonthly': [-11.9, 11.9]},
 
-    'CAR': {'daily': None,
+    'CAR1': {'daily': None,
+            'monthly': [-1.3, 1.3],
+            'bimonthly': [-1.3, 1.3],
+            'trimonthly': [-1.3, 1.3]},
+
+    'CAR2': {'daily': None,
             'monthly': [-1.3, 1.3],
             'bimonthly': [-1.3, 1.3],
             'trimonthly': [-1.3, 1.3]},
@@ -333,6 +350,12 @@ THRESHOLDS_3_CATEGORIES = {
              'normal_inclusive': False},
 
     'ONI2': {'daily': [-0.5, 0.5],
+             'monthly': [-0.5, 0.5],
+             'bimonthly': [-0.5, 0.5],
+             'trimonthly': [-0.5, 0.5],
+             'normal_inclusive': False},
+
+    'ONI3': {'daily': [-0.5, 0.5],
              'monthly': [-0.5, 0.5],
              'bimonthly': [-0.5, 0.5],
              'trimonthly': [-0.5, 0.5],
@@ -419,6 +442,12 @@ THRESHOLDS_7_CATEGORIES = {
              'trimonthly': [-1.5, -1, -0.5, 0.5, 1, 1.5],
              'normal_inclusive': False},
 
+    'ONI3': {'daily': [-1.5, -1, -0.5, 0.5, 1, 1.5],
+             'monthly': [-1.5, -1, -0.5, 0.5, 1, 1.5],
+             'bimonthly': [-1.5, -1, -0.5, 0.5, 1, 1.5],
+             'trimonthly': [-1.5, -1, -0.5, 0.5, 1, 1.5],
+             'normal_inclusive': False},
+
     'SOI': {'daily': [-2.86, -1.62, -1, 1, 1.62, 2.86],
             'monthly': [-2.86, -1.62, -1, 1, 1.62, 2.86],
             'bimonthly': [-2.86, -1.62, -1, 1, 1.62, 2.86],
@@ -462,8 +491,9 @@ THRESHOLDS_7_CATEGORIES = {
 INTERNAL_FILES = {
     "ONI1": "ONI1_1950_2017_CPC_CurrentVrs_ERSSTv4.txt",
     "ONI2": "ONI2_1950_2017_CPC_OLD_ERSSTv4.txt",
-    "SOI": "SOI_1951_2013_CPC_NOAA.txt",
-    "SOI_TROUP": "SOI_TROUP_1876_2013_AustralinaBureau.txt",
+    "ONI3": "ONI3_1950_2012_CPC_3mon_ERSSTv3b.txt",
+    "SOI": "SOI_1951_2017_CPC_NOAA.txt",
+    "SOI_TROUP": "SOI_TROUP_1876_2017_AustralinaBureau.txt",
     "MEI": "MEI_1950_2017_ESRL_NOAA.txt",
     "OLR": "OLR_1974_2017_CPC_NCEP_NOAA.txt",
     "W200": "W200_1979_2017_CPC_NCEP_NOAA.txt",
@@ -481,39 +511,38 @@ INTERNAL_FILES = {
     "ARH": "ARH_DIPOLE_1979_2009_NCEPNCAR_REAL.txt",  # TODO: update series
     "NAO": "NAO_1865_2017_Hurrel1995.txt",
     "QBO": "QBO_1979_2017_CPC_NOAA.txt",
-    "CAR": "SSTA_CAR_1951_2010_ESRL_NOAA.txt",
+    "CAR1": "SSTA_CAR1_1950_2017_ESRL_NOAA.txt",
+    "CAR2": "SSTA_CAR2_1951_2010_ESRL_NOAA.txt",
     "AREA_WHWP": "AREA_WHWP_1948_2017_ESRL_NOAA.txt"
 }
 
 # urls where get the internal files for independent variables for each type
 INTERNAL_URLS = {
-    "ONI1": "http://goo.gl/6tXjh",
-    # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears_1971-2000_climo.shtml
-    "ONI2": "http://goo.gl/e7unc",
-    # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears.shtml
-    "SOI": "http://goo.gl/scbO7",  # http://www.cpc.ncep.noaa.gov/data/indices/soi
-    "SOI_TROUP": "http://goo.gl/2hDk8",  # http://www.bom.gov.au/climate/current/soihtm1.shtml
-    "MEI": "http://goo.gl/0IAItw",  # http://www.esrl.noaa.gov/psd/enso/mei/table.html
-    "OLR": "http://goo.gl/goMpA",  # http://www.cpc.ncep.noaa.gov/data/indices/olr
-    "W200": "http://goo.gl/aliLh",  # http://www.cpc.ncep.noaa.gov/data/indices/zwnd200
-    "W850w": "http://goo.gl/w4yiO",  # http://www.cpc.ncep.noaa.gov/data/indices/wpac850
-    "W850c": "http://goo.gl/gks7x",  # http://www.cpc.ncep.noaa.gov/data/indices/cpac850
-    "W850e": "http://goo.gl/N7cQ5",  # http://www.cpc.ncep.noaa.gov/data/indices/epac850
-    "SST12": "http://goo.gl/6vzgrB",  # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
-    "SST3": "http://goo.gl/6vzgrB",  # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
-    "SST4": "http://goo.gl/6vzgrB",  # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
-    "SST34": "http://goo.gl/6vzgrB",  # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
-    "ASST12": "http://goo.gl/6vzgrB",  # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
-    "ASST3": "http://goo.gl/6vzgrB",  # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
-    "ASST4": "http://goo.gl/6vzgrB",  # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
-    "ASST34": "http://goo.gl/6vzgrB",  # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
-    "ARH": "http://goo.gl/5oiZJ",  # http://nomad1.ncep.noaa.gov/ncep_data/index.html
-    "NAO": "http://goo.gl/ArdVn",
-    # http://climatedataguide.ucar.edu/sites/default/files/cas_data_files/asphilli/nao_station_monthly_2.txt
-    "QBO": "http://goo.gl/erjsJ and http://goo.gl/qKTrT",
-    # http://www.cpc.ncep.noaa.gov/data/indices/qbo.u50.index and http://www.cpc.ncep.noaa.gov/data/indices/qbo.u30.index
-    "CAR": "http://goo.gl/zeY7eP",  # http://www.esrl.noaa.gov/psd/data/correlation/CAR.data
-    "AREA_WHWP": "http://goo.gl/mV4QI"  # http://www.esrl.noaa.gov/psd/data/correlation/whwp.data
+    "ONI1": "https://goo.gl/6tXjh",  # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears_1971-2000_climo.shtml
+    "ONI2": "https://goo.gl/e7unc",  # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears.shtml
+    "ONI3": "https://goo.gl/pC5Smm",  # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears_ERSSTv3b.shtml
+    "SOI": "https://goo.gl/scbO7",  # http://www.cpc.ncep.noaa.gov/data/indices/soi
+    "SOI_TROUP": "https://goo.gl/2hDk8",  # http://www.bom.gov.au/climate/current/soihtm1.shtml
+    "MEI": "https://goo.gl/0IAItw",  # http://www.esrl.noaa.gov/psd/enso/mei/table.html
+    "OLR": "https://goo.gl/goMpA",  # http://www.cpc.ncep.noaa.gov/data/indices/olr
+    "W200": "https://goo.gl/aliLh",  # http://www.cpc.ncep.noaa.gov/data/indices/zwnd200
+    "W850w": "https://goo.gl/w4yiO",  # http://www.cpc.ncep.noaa.gov/data/indices/wpac850
+    "W850c": "https://goo.gl/gks7x",  # http://www.cpc.ncep.noaa.gov/data/indices/cpac850
+    "W850e": "https://goo.gl/N7cQ5",  # http://www.cpc.ncep.noaa.gov/data/indices/epac850
+    "SST12": "https://goo.gl/6vzgrB",  # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
+    "SST3": "https://goo.gl/6vzgrB",  # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
+    "SST4": "https://goo.gl/6vzgrB",  # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
+    "SST34": "https://goo.gl/6vzgrB",  # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
+    "ASST12": "https://goo.gl/6vzgrB",  # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
+    "ASST3": "https://goo.gl/6vzgrB",  # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
+    "ASST4": "https://goo.gl/6vzgrB",  # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
+    "ASST34": "https://goo.gl/6vzgrB",  # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
+    "ARH": "https://goo.gl/5oiZJ",  # http://nomad1.ncep.noaa.gov/ncep_data/index.html
+    "NAO": "https://goo.gl/ArdVn",  # http://climatedataguide.ucar.edu/sites/default/files/cas_data_files/asphilli/nao_station_monthly_2.txt
+    "QBO": "https://goo.gl/erjsJ and https://goo.gl/qKTrT",  # http://www.cpc.ncep.noaa.gov/data/indices/qbo.u50.index and http://www.cpc.ncep.noaa.gov/data/indices/qbo.u30.index
+    "CAR1": "https://goo.gl/zeY7eP",  # http://www.esrl.noaa.gov/psd/data/correlation/CAR.data
+    "CAR2": "https://goo.gl/zeY7eP",  # http://www.esrl.noaa.gov/psd/data/correlation/CAR.data
+    "AREA_WHWP": "https://goo.gl/mV4QI"  # http://www.esrl.noaa.gov/psd/data/correlation/whwp.data
 }
 
 
