@@ -518,10 +518,10 @@ INTERNAL_FILES = {
 
 # urls where get the internal files for independent variables for each type
 INTERNAL_URLS = {
-    "ONI1": "https://goo.gl/6tXjh",  # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears_1971-2000_climo.shtml
-    "ONI2": "https://goo.gl/e7unc",  # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears.shtml
-    "ONI3": "https://goo.gl/pC5Smm",  # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears_ERSSTv3b.shtml
-    "SOI": "https://goo.gl/scbO7",  # http://www.cpc.ncep.noaa.gov/data/indices/soi
+    "ONI1": "https://goo.gl/zXGomF",  # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears.shtml
+    "ONI2": "https://goo.gl/HxhRjS",  # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears2011.shtml
+    "ONI3": "https://goo.gl/ywBcGq",  # http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ensoyears_1971-2000_climo.shtml
+    "SOI": "https://goo.gl/VumjXj",  # https://www.ncdc.noaa.gov/teleconnections/enso/indicators/soi/data.csv
     "SOI_TROUP": "https://goo.gl/2hDk8",  # http://www.bom.gov.au/climate/current/soihtm1.shtml
     "MEI": "https://goo.gl/0IAItw",  # http://www.esrl.noaa.gov/psd/enso/mei/table.html
     "OLR": "https://goo.gl/goMpA",  # http://www.cpc.ncep.noaa.gov/data/indices/olr
@@ -538,9 +538,9 @@ INTERNAL_URLS = {
     "ASST4": "https://goo.gl/6vzgrB",  # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
     "ASST34": "https://goo.gl/6vzgrB",  # http://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
     "ARH": "https://goo.gl/5oiZJ",  # http://nomad1.ncep.noaa.gov/ncep_data/index.html
-    "NAO": "https://goo.gl/ArdVn",  # http://climatedataguide.ucar.edu/sites/default/files/cas_data_files/asphilli/nao_station_monthly_2.txt
+    "NAO": "https://goo.gl/rECnWF",  # https://climatedataguide.ucar.edu/sites/default/files/nao_station_monthly.txt
     "QBO": "https://goo.gl/erjsJ and https://goo.gl/qKTrT",  # http://www.cpc.ncep.noaa.gov/data/indices/qbo.u50.index and http://www.cpc.ncep.noaa.gov/data/indices/qbo.u30.index
-    "CAR1": "https://goo.gl/zeY7eP",  # http://www.esrl.noaa.gov/psd/data/correlation/CAR.data
+    "CAR1": "https://goo.gl/8izauf",  # https://www.esrl.noaa.gov/psd/data/correlation/CAR_ersst.data
     "CAR2": "https://goo.gl/zeY7eP",  # http://www.esrl.noaa.gov/psd/data/correlation/CAR.data
     "AREA_WHWP": "https://goo.gl/mV4QI"  # http://www.esrl.noaa.gov/psd/data/correlation/whwp.data
 }
