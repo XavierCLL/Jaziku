@@ -114,9 +114,8 @@ def msg_error_configuration(variable, text_error, show_settings=True, stop_in_gr
         from jaziku.core import settings
         settings.show.configuration_run(stop_in=variable, stop_in_grid=stop_in_grid)
 
-    runfile_open = open(globals_vars.ARGS.runfile, 'rb')
-    runfile = (x.replace('\0', '') for x in runfile_open)
-    runfile = csv.reader(runfile, delimiter=globals_vars.INPUT_CSV_DELIMITER)
+    runfile_open = open(globals_vars.ARGS.runfile, 'r')
+    runfile = csv.reader(runfile_open, delimiter=globals_vars.INPUT_CSV_DELIMITER)
 
     stop_in_grid_counter = 0
 
