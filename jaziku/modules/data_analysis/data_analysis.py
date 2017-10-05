@@ -41,11 +41,11 @@ def main(stations_list):
             "################################################################\n"))
 
     print(_("Saving the result for data analysis in:"))
-    if env.globals_vars.ARGS.output:
+    if env.globals_vars.arg_output:
         print("   " + colored.cyan(env.globals_vars.DATA_ANALYSIS_DIR))
     else:
         print("   " + colored.cyan(os.path.relpath(env.globals_vars.DATA_ANALYSIS_DIR,
-                                                   os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile)))))
+                                                   os.path.abspath(os.path.dirname(env.globals_vars.arg_runfile)))))
 
     # -------------------------------------------------------------------------
     # Exploratory data analysis process

@@ -45,7 +45,7 @@ def read_runfile():
     grid = None
     lines_of_stations = []
 
-    runfile_open = open(env.globals_vars.ARGS.runfile, 'rb')
+    runfile_open = open(env.globals_vars.arg_runfile, 'rb')
 
     # delete all NULL byte inside the runfile.csv
     runfile = (x.replace(b'\0', b'').decode('utf8') for x in runfile_open)
@@ -218,7 +218,7 @@ def read_runfile():
     if not os.path.isabs(env.config_run.settings["path_to_file_var_I"]) and \
             not env.config_run.settings["path_to_file_var_I"] == 'internal':
         env.config_run.settings["path_to_file_var_I"] \
-            = os.path.abspath(os.path.join(os.path.dirname(env.globals_vars.ARGS.runfile),
+            = os.path.abspath(os.path.join(os.path.dirname(env.globals_vars.arg_runfile),
                                            env.config_run.settings["path_to_file_var_I"]))
 
     # Set type and units for variables D and I

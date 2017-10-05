@@ -44,11 +44,11 @@ def pre_process():
             "################################################################\n"))
 
     print(_("Saving the result for climate in:"))
-    if env.globals_vars.ARGS.output:
+    if env.globals_vars.arg_output:
         print("   " + colored.cyan(env.globals_vars.CLIMATE_DIR))
     else:
         print("   " + colored.cyan(os.path.relpath(env.globals_vars.CLIMATE_DIR,
-                                                   os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile)))))
+                                                   os.path.abspath(os.path.dirname(env.globals_vars.arg_runfile)))))
 
 
 def process(station):
