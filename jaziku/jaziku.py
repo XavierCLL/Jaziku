@@ -57,7 +57,7 @@ from .utils import console, output
 # MAIN PROCESS
 
 
-def main():
+def main(arg_runfile=False, arg_force=False, arg_output=False):
     """
     Main process of Jaziku
     """
@@ -77,7 +77,15 @@ def main():
     env.globals_vars.JAZIKU_DIR = os.path.dirname(os.path.realpath(__file__))
 
     # Parser and check arguments
-    env.globals_vars.ARGS = arg.arguments.parse_args()
+    if not arg_runfile:
+        env.globals_vars.ARGS = arg.arguments.parse_args()
+        env.globals_vars.arg_runfile = env.globals_vars.ARGS.runfile
+        env.globals_vars.arg_force = env.globals_vars.ARGS.force
+        env.globals_vars.arg_output = env.globals_vars.ARGS.output
+    else:
+        env.globals_vars.arg_runfile = arg_runfile
+        env.globals_vars.arg_force = arg_force
+        env.globals_vars.arg_output = arg_output
 
     # -------------------------------------------------------------------------
     # Initialize all settings variables in None
@@ -89,8 +97,8 @@ def main():
     # reading configuration run, list of grids and stations from runfile
 
     # test if runfile exist
-    if not os.path.isfile(env.globals_vars.ARGS.runfile):
-        console.msg_error(_("[runfile] no such file or directory: {0}".format(env.globals_vars.ARGS.runfile)), False)
+    if not os.path.isfile(env.globals_vars.arg_runfile):
+        console.msg_error(_("[runfile] no such file or directory: {0}".format(env.globals_vars.arg_runfile)), False)
 
     # read all settings and all stations from runfile
     stations_list = runfile.read_runfile()
@@ -121,13 +129,13 @@ def main():
     # -------------------------------------------------------------------------
     # DEFINED OUTPUT DIRECTORY FOR SAVE RESULTS
 
-    if env.globals_vars.ARGS.output:
+    if env.globals_vars.arg_output:
         # absolute directory to save all results defined in arguments
-        env.globals_vars.OUTPUT_DIR = os.path.abspath(env.globals_vars.ARGS.output)
+        env.globals_vars.OUTPUT_DIR = os.path.abspath(env.globals_vars.arg_output)
     else:
         # absolute directory to save all results,
         # this is absolute directory where is the runfile + filename of runfile
-        env.globals_vars.OUTPUT_DIR = os.path.abspath(os.path.splitext(env.globals_vars.ARGS.runfile)[0])
+        env.globals_vars.OUTPUT_DIR = os.path.abspath(os.path.splitext(env.globals_vars.arg_runfile)[0])
 
     # -------------------------------------------------------------------------
     # PREPARE ALL OUTPUT DIRECTORIES FOR SAVE RESULTS

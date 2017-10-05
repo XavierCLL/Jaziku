@@ -72,7 +72,7 @@ class Variable(object):
             self.file_name = os.path.basename(file)
             # if path to file is relative convert to absolute
             if not os.path.isabs(file):
-                self.file_path = os.path.abspath(os.path.join(os.path.dirname(env.globals_vars.ARGS.runfile), file))
+                self.file_path = os.path.abspath(os.path.join(os.path.dirname(env.globals_vars.arg_runfile), file))
             else:
                 self.file_path = os.path.abspath(file)
 
@@ -89,12 +89,12 @@ class Variable(object):
                 self.file_name = os.path.basename(file)
                 # if path to file is relative convert to absolute
                 if not os.path.isabs(file):
-                    self.file_path = os.path.abspath(os.path.join(os.path.dirname(env.globals_vars.ARGS.runfile), file))
+                    self.file_path = os.path.abspath(os.path.join(os.path.dirname(env.globals_vars.arg_runfile), file))
                 else:
                     self.file_path = os.path.abspath(file)
 
         # relative path to file
-        self.file_relpath = os.path.relpath(file, os.path.abspath(os.path.dirname(env.globals_vars.ARGS.runfile)))
+        self.file_relpath = os.path.relpath(file, os.path.abspath(os.path.dirname(env.globals_vars.arg_runfile)))
 
     def read_data_from_file(self):
         """Read var I or var D from files, validated and check consistent.

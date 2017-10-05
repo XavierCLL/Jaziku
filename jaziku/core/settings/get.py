@@ -305,7 +305,7 @@ def configuration_run():
     else:
         # settings["path_to_file_var_I"] = env.config_run.settings['path_to_file_var_I']
         settings["path_to_file_var_I"] = os.path.relpath(env.config_run.settings['path_to_file_var_I'], os.path.abspath(
-            os.path.dirname(env.globals_vars.ARGS.runfile)))
+            os.path.dirname(env.globals_vars.arg_runfile)))
 
     # ------------------------
     # limits var I below

@@ -39,7 +39,7 @@ def base_query(question, prompt, options, default, wrong_ans):
     while True:
         console.msg(colored.yellow(question) + colored.yellow(prompt), newline=False)
 
-        if env.globals_vars.ARGS.force:
+        if env.globals_vars.arg_force:
             print(default)
             return options[default]()
         else:
