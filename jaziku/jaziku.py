@@ -230,7 +230,7 @@ def main(arg_runfile=False, arg_force=False, arg_output=False):
 
     # clear all variables and exit
     # sys.modules[__name__].__dict__.clear()
-    sys.exit()
+    # sys.exit()
 
 
 # Run main() when call jaziku.py
