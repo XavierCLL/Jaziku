@@ -217,6 +217,8 @@ list_of_all_settings = [
 def init():
     """Initialize all settings variables in None
     """
+    global settings
+    settings = {}
     for settings_item in list_of_all_settings:
         settings[settings_item] = None
 
@@ -235,6 +237,7 @@ def init():
 # SOME FUNCTIONS
 
 def get_CATEGORIES_LABELS_VAR_I():
+    global settings
     if settings['class_category_analysis'] == 3:
         return \
             [settings['categories_labels_var_I']['below'],
