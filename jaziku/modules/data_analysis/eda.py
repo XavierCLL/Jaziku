@@ -1617,7 +1617,7 @@ def outliers(stations_list):
                          env.globals_vars.graphs_title_properties())
 
             ## X
-            ax.tick_params(axis='x', which='both', bottom='off', top='off', labelbottom='off')
+            ax.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
             ax.set_xlabel(str('{0}\n{1}'.format(station.code, station.name)),
                           env.globals_vars.graphs_axis_properties())
 
