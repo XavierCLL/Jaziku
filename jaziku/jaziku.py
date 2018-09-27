@@ -38,19 +38,19 @@ from matplotlib import use
 
 # internationalization and init languages variable "_()"
 import gettext
-from .i18n import i18n
+from jaziku.i18n import i18n
 
 # jaziku imports
-from . import env
-from .core import settings
-from .core import stations
-from .core.input import runfile, arg
-from .core.station import Station
-from .modules.climate import climate
-from .modules.forecast import forecast
-from .modules.data_analysis import data_analysis
-from .modules.maps import maps
-from .utils import console, output
+from jaziku import env
+from jaziku.core import settings
+from jaziku.core import stations
+from jaziku.core.input import runfile, arg
+from jaziku.core.station import Station
+from jaziku.modules.climate import climate
+from jaziku.modules.forecast import forecast
+from jaziku.modules.data_analysis import data_analysis
+from jaziku.modules.maps import maps
+from jaziku.utils import console, output
 
 
 # ==============================================================================

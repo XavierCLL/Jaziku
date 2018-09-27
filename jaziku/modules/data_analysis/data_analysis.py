@@ -21,9 +21,8 @@
 import os
 from clint.textui import colored
 
-from . import eda
+from jaziku.modules.data_analysis import eda
 from jaziku import env
-from jaziku.utils import console
 
 
 def main(stations_list):
