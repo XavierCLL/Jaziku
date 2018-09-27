@@ -117,7 +117,7 @@ def main(arg_runfile=False, arg_force=False, arg_output=False):
             "#               for the teleconnections analysis.              #\n"
             "#                                                              #\n"
             "#                 Version {0} - {1}\t               #\n"
-            "#           Copyright (C) 2011-2017 Xavier Corredor Ll. - IDEAM - Colombia           #\n"
+            "#           Copyright (C) 2011-2018 Xavier Corredor Ll. - IDEAM - Colombia           #\n"
             "################################################################") \
         .format(env.globals_vars.VERSION, env.globals_vars.VERSION_DATE))
 
