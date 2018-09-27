@@ -2865,6 +2865,8 @@ def make_wavelets(station, path_to_save, variable):
     ax1.xaxis.set_ticks(x_idx_years1)
 
     inter_x = int(round(len(x_years) / 15.0, 0))
+    if inter_x == 0:
+        inter_x = 1
     xticklabels = [i if i in x_years[0::inter_x] else '' for i in x_years]
 
     ax1.set_xticklabels(xticklabels)
