@@ -184,11 +184,12 @@ maps_files_forecast = {}  # [lag][month][var_I_labels]
 # graphics properties
 
 colors = {
-    'plt_default': '#617C8D',
+    'plt_default': '#3680B9',
+    'plt2_default': '#FFCF3E',
+    'plt3_default': '#FF753E',
 
-    'grey_W2': '#F0F0F0',  # Weak
-    'grey_W1': '#D8D8D8',
-    'grey_S1': '#8A8A8A',
+    'grey_W2': '#fafafa',  # Weak
+    'grey_S1': '#c8c8c8',
     'grey_S2': '#646464',
     'grey_S3': '#535353',
     'grey_S4': '#4E4E4E',
