@@ -5,7 +5,7 @@ import platform
 from matplotlib import use
 
 # init and define _()
-from .i18n import i18n
+from jaziku.i18n import i18n
 
 # initialize matplotlib backend in raster graphics (png)
 try:
