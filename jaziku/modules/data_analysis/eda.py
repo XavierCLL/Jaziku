@@ -1122,18 +1122,19 @@ def climatology(stations_list):
 
             if type_var not in types_var_D:
                 # default for generic type for var D
-                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', mec=env.globals_vars.colors['plt_default'], mew=3,
-                            linewidth=2.5, elinewidth=1, **env.globals_vars.figure_bar_properties(align=None))
+                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', ecolor=env.globals_vars.colors['plt3_default'], mew=3,
+                            linewidth=2.5, elinewidth=2.5, **env.globals_vars.figure_bar_properties(align=None))
                 # bar(x, y_mean, align='center', color=env.globals_vars.colors['plt_default'])
                 zoom_graph(ax=ax, x_scale_below=-0.04, x_scale_above=-0.04, y_scale_below=-0.04, y_scale_above=-0.04)
             else:
                 if types_var_D[type_var]['graph'] == 'bar':
                     bar(x, y_mean, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
-                    ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
+                    ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor=env.globals_vars.colors['plt_default'],
+                                mew=3, elinewidth=2.5)
                     zoom_graph(ax=ax, x_scale_below=-0.04, x_scale_above=-0.04, y_scale_above=-0.04)
                 else:
-                    ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=types_var_D[type_var]['color'],
-                                mec=types_var_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
+                    ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', ecolor=types_var_D[type_var]['color'],
+                                mec=types_var_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=2.5)
                     # ax.plot(x, y_mean, TYPES_VAR_D[type_var]['graph'], color=TYPES_VAR_D[type_var]['color'])
                     zoom_graph(ax=ax, x_scale_below=-0.04, x_scale_above=-0.04, y_scale_below=-0.04,
                                y_scale_above=-0.04)
@@ -1307,8 +1308,8 @@ def climatology(stations_list):
 
             if type_var not in types_var_D:
                 # default for generic type for var D
-                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=env.globals_vars.colors['plt_default'],
-                            mec=env.globals_vars.colors['plt_default'], mew=3, linewidth=2.5, elinewidth=1,
+                ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', ecolor=env.globals_vars.colors['plt3_default'],
+                            mec=env.globals_vars.colors['plt_default'], mew=3, linewidth=2.5, elinewidth=2.5,
                             **env.globals_vars.figure_bar_properties(align=None))
                 zoom_graph(ax=ax, x_scale_below=x_scale_value, x_scale_above=x_scale_value, y_scale_below=-0.04,
                            y_scale_above=-0.04)
@@ -1316,12 +1317,13 @@ def climatology(stations_list):
             else:
                 if types_var_D[type_var]['graph'] == 'bar':
                     bar(x, y_mean, **env.globals_vars.figure_bar_properties(color=types_var_D[type_var]['color']))
-                    ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor='#2F4C6F', mew=3, elinewidth=1)
+                    ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt=None, ecolor=env.globals_vars.colors['plt_default'],
+                                mew=3, elinewidth=2.5)
                     zoom_graph(ax=ax, x_scale_below=x_scale_value, x_scale_above=x_scale_value, y_scale_above=-0.04)
                 else:
                     # ax.plot(x, y_mean, TYPES_VAR_D[type_var]['graph'], color=TYPES_VAR_D[type_var]['color'])
-                    ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', color=types_var_D[type_var]['color'],
-                                mec=types_var_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=1)
+                    ax.errorbar(x, y_mean, yerr=[y_min, y_max], fmt='o-', ecolor=types_var_D[type_var]['color'],
+                                mec=types_var_D[type_var]['color'], mew=3, linewidth=2.5, elinewidth=2.5)
                     zoom_graph(ax=ax, x_scale_below=x_scale_value, x_scale_above=x_scale_value, y_scale_below=-0.04,
                                y_scale_above=-0.04)
 
