@@ -50,8 +50,14 @@ def get_label_of_var_I_category(value, station):
     :rtype: str
     """
 
+    # defined if is first iteration
+    station.first_iter = True
+
     # get thresholds of var I in the period of outlier
     thresholds_var_I = get_thresholds(station, station.var_I)
+
+    if station.first_iter:
+        station.first_iter = False
 
     # categorize the value of var I and get the label_of_var_I_category based in the label phenomenon
 
