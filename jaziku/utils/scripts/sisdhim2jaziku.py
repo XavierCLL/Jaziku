@@ -403,7 +403,7 @@ def main():
             if in_station_data:
 
                 # continue for some special characters inside data
-                if line.strip().startswith("MEDIA VECTORIAL"):
+                if line.strip().startswith("MEDIA"):
                     continue
 
                 if frequency_data == 'monthly':
