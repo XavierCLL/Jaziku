@@ -205,7 +205,7 @@ def main():
     # -------------------------------------------------------------------------
     # process input file and all stations
 
-    with open(arg.input_file, 'rb+') as fileobject:
+    with open(arg.input_file, 'r') as fileobject:
 
         line_in_station_properties = None
 
