@@ -44,12 +44,12 @@ Source code
 
 The latest sources can be obtained from official Jaziku repository:
 
-https://bitbucket.org/XavierCLL/jaziku
+https://github.com/XavierCLL/Jaziku
     
 Install
 -------
 
-Please read the `instruction install <https://docs.google.com/uc?id=0B2KQf7Dbx7DUaVVMTHBJUG80MkU&export=download>`_ or `this <https://bitbucket.org/XavierCLL/jaziku/src/tip/docs/installation.rst>`_ file.
+Please read the `instruction install <https://docs.google.com/uc?id=0B2KQf7Dbx7DUaVVMTHBJUG80MkU&export=download>`_ or `this <https://github.com/XavierCLL/Jaziku/src/tip/docs/installation.rst>`_ file.
 
 Synopsis run
 ------------
@@ -62,9 +62,9 @@ Team
 ----
 
 **Developer:**
-    Xavier Corredor Llano < xcorredorl (a) ideam.gov.co >
+    Xavier Corredor Llano < xavier.corredor.llano (a) gmail.com >
 **Roadmap, technical-theoretical support, tester and product verification, doc-user and manual:**
-    Ines Sánchez Rodriguez < icsanchez (a) ideam.gov.co >
+    Ines Sánchez Rodriguez < incsanchezro (a) gmail.com >
 
 Help and discussion
 -------------------
@@ -78,7 +78,7 @@ How to cite Jaziku
 
     Jaziku is statistical inference software for the teleconnections analysis, (version 1.0.0).
     (2015) Ines Sanchez, Xavier Corredor. IDEAM. Jaziku is a free and open source software GPLv3.
-    https://bitbucket.org/XavierCLL/jaziku
+    https://github.com/XavierCLL/Jaziku
 
 Papers
 ------
@@ -95,5 +95,3 @@ Licence
 | General Public License - GPLv3_
 | Copyright © Ines Sanchez R, Xavier Corredor Ll
 | IDEAM
-
-.. _GPLv3: https://bitbucket.org/XavierCLL/jaziku/src/tip/COPYING
