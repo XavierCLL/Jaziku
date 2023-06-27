@@ -69,9 +69,9 @@ def main(arg_runfile=False, arg_force=False, arg_output=False):
 
     # initialize matplotlib backend in raster graphics (png)
     try:
-        use("AGG", warn=False, force=True)
+        use("AGG", force=True)
     except TypeError:
-        use("AGG", warn=False)  # for old version of matplotlib
+        use("AGG")  # for old version of matplotlib
 
     # set the root directory where jaziku was installed
     env.globals_vars.JAZIKU_DIR = os.path.dirname(os.path.realpath(__file__))

@@ -9,9 +9,9 @@ from jaziku.i18n import i18n
 
 # initialize matplotlib backend in raster graphics (png)
 try:
-    use("AGG", warn=False, force=True)
+    use("AGG", force=True)
 except TypeError:
-    use("AGG", warn=False)  # for old version of matplotlib
+    use("AGG")  # for old version of matplotlib
 
 # VERSION = (1, 4, 0, 'b')
 
