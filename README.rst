@@ -58,20 +58,17 @@ Synopsis run
 
 Read manual for more information.
 
-Team
-----
+Authors
+-------
 
-**Developer:**
-    Xavier Corredor Llano < xavier.corredor.llano (a) gmail.com >
-**Roadmap, technical-theoretical support, tester and product verification, doc-user and manual:**
-    Ines Sánchez Rodriguez < incsanchezro (a) gmail.com >
+- `Xavier Corredor Llano <https://github.com/XavierCLL>`_ (xavier.corredor.llano@gmail.com)
+- `Ines Sánchez Rodriguez <https://github.com/incsanchezro>`_ (incsanchezro@gmail.com)
 
 Help and discussion
 -------------------
 
 - `Jaziku Manual v1.0.0 <https://docs.google.com/uc?id=0B2KQf7Dbx7DUZHJHbVBwTHB2akU&export=download>`_
 - `Reference Card <https://docs.google.com/uc?id=0B2KQf7Dbx7DUeWpGV0Z5RDhmUnM&export=download>`_
-- Mailing list `Jaziku google group <http://groups.google.com/group/jaziku>`_
 
 How to cite Jaziku
 ------------------
